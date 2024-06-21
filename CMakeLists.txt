@@ -34,7 +34,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -march=native -funro
 
 ## CORE:
 
-# ADD FINALYEARPROJECT:
+# ADD PATHFINDING:
 add_library(Pathfinding STATIC
         src/core/AStar/AStar.hpp
         src/core/foo.cpp

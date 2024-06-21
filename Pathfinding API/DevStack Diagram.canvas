@@ -1,0 +1,12 @@
+{
+	"nodes":[
+		{"id":"ec7e1225ee88a960","type":"group","x":-400,"y":-195,"width":722,"height":755,"label":"Pathfinding API Dev Stack"},
+		{"id":"ceee1512113781a1","type":"group","x":-359,"y":-120,"width":639,"height":180,"label":"Core"},
+		{"id":"111549fddfe1822b","type":"text","text":"# Test","x":-180,"y":300,"width":280,"height":80},
+		{"id":"c51715b5d6bf751a","type":"text","text":"# Distribution","x":980,"y":-40,"width":460,"height":70}
+	],
+	"edges":[
+		{"id":"39e6422710fa591e","fromNode":"ceee1512113781a1","fromSide":"bottom","toNode":"111549fddfe1822b","toSide":"top"},
+		{"id":"88b7935a75a5eec6","fromNode":"ceee1512113781a1","fromSide":"right","toNode":"c51715b5d6bf751a","toSide":"left"}
+	]
+}

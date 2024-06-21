@@ -1,0 +1,2 @@
+- Threadpooled
+- User can define how many threads to dedicate to pathfinding.
