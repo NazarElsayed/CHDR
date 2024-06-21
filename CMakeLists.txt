@@ -49,15 +49,18 @@ add_library(CHDR INTERFACE
         src/core/chdr.hpp
 
         src/core/mazes/base/IMaze.hpp
-        src/core/mazes/base/INode.hpp
         src/core/mazes/Graph.hpp
         src/core/mazes/Grid.hpp
         src/core/mazes/Tree.hpp
 
-        src/core/solvers/base/ISolver.hpp
+        src/core/Node.hpp
+
         src/core/solvers/AStar.hpp
+        src/core/solvers/base/ISolver.hpp
         src/core/solvers/Djikstra.hpp
         src/core/solvers/JPS.hpp
+
+        src/core/Utils.hpp
 )
 
 target_link_libraries(CHDR INTERFACE

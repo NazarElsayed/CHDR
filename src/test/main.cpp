@@ -8,7 +8,7 @@
  */
 int main([[maybe_unused]] int _argc, [[maybe_unused]] char* _argv[]) {
 
-    auto maze = CHDR::Mazes::Grid();
+    auto maze = CHDR::Mazes::Grid<2>();
     auto solver = CHDR::Solvers::AStar();
 
     Debug::Log("Hello World");
