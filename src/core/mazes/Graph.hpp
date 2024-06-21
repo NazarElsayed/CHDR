@@ -3,6 +3,8 @@
 
 #include "base/IMaze.hpp"
 
+#include "../../../contrib/LouiEriksson/Debug.hpp"
+
 namespace CHDR::Mazes {
 
     class Graph : IMaze {

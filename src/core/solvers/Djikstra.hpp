@@ -3,6 +3,8 @@
 
 #include "base/ISolver.hpp"
 
+#include "../../../contrib/LouiEriksson/Debug.hpp"
+
 namespace CHDR::Solvers {
 
     class Djikstra {
