@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION ${CMAKE_VERSION})
-project(Pathfinding)
+project(CHDR LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -32,21 +32,40 @@ set(CMAKE_CXX_FLAGS_NOSANITIZERS "-Wall -Wextra -fno-omit-frame-pointer -g -O0")
 
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -march=native -funroll-loops -DNDEBUG")
 
-## CORE:
+## LOUIERIKSSON::DEBUG:
 
-# ADD PATHFINDING:
-add_library(Pathfinding STATIC
-        src/core/AStar/AStar.hpp
-        src/core/foo.cpp
+add_library(LOUIERIKSSON_DEBUG_HPP INTERFACE
+    contrib/LouiEriksson/Debug.hpp
 )
 
-target_precompile_headers(Pathfinding PRIVATE src/core/stdafx.hpp)
+## CORE:
 
-# LINK LIBS:
+# ADD CHDR:
+add_library(CHDR INTERFACE
+        src/core/chdr.hpp
+
+        src/core/mazes/base/IMaze.hpp
+        src/core/mazes/Graph.hpp
+        src/core/mazes/Grid.hpp
+        src/core/mazes/Tree.hpp
+
+        src/core/solvers/base/ISolver.hpp
+        src/core/solvers/AStar.hpp
+        src/core/solvers/Djikstra.hpp
+        src/core/solvers/JPS.hpp
+)
+
+target_link_libraries(CHDR INTERFACE
+        LOUIERIKSSON_DEBUG_HPP
+)
+
+target_precompile_headers(CHDR INTERFACE src/core/stdafx.hpp)
+
+# LINK OPTIONS:
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
-    target_link_options(Pathfinding PRIVATE -flto=auto -Wl,--strip-all -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
+    target_link_options(CHDR INTERFACE -flto=auto -Wl,--strip-all -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
 else()
-    target_link_options(Pathfinding PRIVATE -flto=auto -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
+    target_link_options(CHDR INTERFACE -flto=auto -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
 endif()
 
 ## TEST:
@@ -56,10 +75,16 @@ add_executable(Test
         src/test/main.cpp
 )
 
+target_link_libraries(CHDR INTERFACE
+        LOUIERIKSSON_DEBUG_HPP
+)
+
+# LINK OPTIONS:
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     target_link_options(Test PRIVATE  -flto=auto -Wl,--strip-all -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
 else()
     target_link_options(Test PRIVATE -flto=auto -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
 endif()
 
-target_link_libraries(Test PRIVATE Pathfinding)
+# LINK CORE TO TEST:
+target_link_libraries(Test PRIVATE CHDR)

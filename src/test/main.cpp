@@ -1,12 +1,19 @@
 #include <iostream>
 
+#include "../core/chdr.hpp"
+
+#include "../../contrib/LouiEriksson/Debug.hpp"
+
 /**
  * @file main.cpp
  * @brief Global entry point.
  */
 int main([[maybe_unused]] int _argc, [[maybe_unused]] char* _argv[]) {
 
-    std::cout << "Hello, World!" << std::endl;
+    auto maze = CHDR::Mazes::Grid();
+    auto solver = CHDR::Solvers::AStar();
+
+    Debug::Log("Hello World");
 
     return 0;
 }
