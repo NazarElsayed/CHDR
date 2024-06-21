@@ -32,6 +32,10 @@ set(CMAKE_CXX_FLAGS_NOSANITIZERS "-Wall -Wextra -fno-omit-frame-pointer -g -O0")
 
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -march=native -funroll-loops -DNDEBUG")
 
+include_directories(
+        contrib/LouiEriksson
+)
+
 ## LOUIERIKSSON::DEBUG:
 
 add_library(LOUIERIKSSON_DEBUG_HPP INTERFACE
@@ -45,6 +49,7 @@ add_library(CHDR INTERFACE
         src/core/chdr.hpp
 
         src/core/mazes/base/IMaze.hpp
+        src/core/mazes/base/INode.hpp
         src/core/mazes/Graph.hpp
         src/core/mazes/Grid.hpp
         src/core/mazes/Tree.hpp
@@ -75,9 +80,11 @@ add_executable(Test
         src/test/main.cpp
 )
 
-target_link_libraries(CHDR INTERFACE
-        LOUIERIKSSON_DEBUG_HPP
+target_include_directories(Test PRIVATE
+        src/core
 )
+
+target_precompile_headers(CHDR INTERFACE src/core/stdafx.hpp)
 
 # LINK OPTIONS:
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
@@ -86,5 +93,7 @@ else()
     target_link_options(Test PRIVATE -flto=auto -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
 endif()
 
-# LINK CORE TO TEST:
-target_link_libraries(Test PRIVATE CHDR)
+target_link_libraries(Test INTERFACE
+        LOUIERIKSSON_DEBUG_HPP
+        CHDR
+)

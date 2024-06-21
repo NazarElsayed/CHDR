@@ -3,7 +3,7 @@
 
 #include "base/IMaze.hpp"
 
-#include "../../../contrib/LouiEriksson/Debug.hpp"
+#include <Debug.hpp>
 
 namespace CHDR::Mazes {
 

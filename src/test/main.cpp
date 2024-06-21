@@ -1,6 +1,6 @@
-#include "../core/chdr.hpp"
+#include <chdr.hpp>
 
-#include "../../contrib/LouiEriksson/Debug.hpp"
+#include <Debug.hpp>
 
 /**
  * @file main.cpp
