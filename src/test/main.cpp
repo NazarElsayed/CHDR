@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "../core/chdr.hpp"
 
 #include "../../contrib/LouiEriksson/Debug.hpp"
