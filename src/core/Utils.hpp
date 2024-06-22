@@ -148,26 +148,27 @@ namespace CHDR {
 		 * \endcode
 		 */
 		template<typename T, typename... Args>
-		static constexpr auto ToND(T _index, const Args&... _dimensions) {
+		static constexpr auto ToND(const T _index, const Args... _dimensions) {
 
 			static_assert(std::is_integral_v<T>, "Only integer types are allowed.");
 
 			constexpr auto N = sizeof...(Args);
 
-			Coord<T, N> result;
+			Coord<T, N> result{};
 
 			std::array<T, N> dims = { _dimensions... };
-			std::array<T, N> strides;
+			std::array<T, N> strides{};
 
 			strides[0] = 1;
-			for (T i = 1; i < N; ++i){
+			for (size_t i = 1; i < N; ++i) {
 				strides[i] = strides[i - 1] * dims[i - 1];
 			}
 
 			// Please note this loop uses integer underflow to bypass a quirk of reverse for-loops.
+			auto idx = _index;
 			for (size_t i = N - 1; i < N; --i) {
-				result[i] = _index / strides[i];
-				_index %= strides[i];
+				result[i] = idx / strides[i];
+				idx %= strides[i];
 			}
 
 			return result;
@@ -184,7 +185,7 @@ namespace CHDR {
 		 * corresponding index value.
 		 */
 		template<typename T, typename... Args>
-		static constexpr auto To1D(const Coord<T, sizeof...(Args)>& _indices, const Args&... _sizes) {
+		static constexpr auto To1D(const Coord<T, sizeof...(Args)>& _indices, const Args... _sizes) {
 
 			static_assert(std::is_integral_v<T>, "Only integer types are allowed.");
 
