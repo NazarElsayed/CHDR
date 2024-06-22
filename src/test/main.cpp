@@ -14,10 +14,10 @@ int main([[maybe_unused]] int _argc, [[maybe_unused]] char* _argv[]) {
     const auto& size = maze.Size();
     Debug::Log(std::to_string(size[0]) + ", " + std::to_string(size[1]));
 
-    auto& node1 = maze[0, 0];
+    auto& node1 = maze.At(0, 0);
     node1.Value(true);
 
-    const auto& node2 = maze[0, 0];
+    const auto& node2 = maze.At(0, 0);
     Debug::Log(node2.Value() ? "True" : "False");
 
     node1.Value(false);
