@@ -13,6 +13,10 @@ namespace CHDR::Solvers {
 
     public:
 
+        void Solve() override {
+            throw std::runtime_error("Not implemented!");
+        }
+
     };
 
 } // CHDR::Solvers

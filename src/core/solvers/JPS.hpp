@@ -7,12 +7,15 @@
 
 namespace CHDR::Solvers {
 
-    class JPS {
+    class JPS : ISolver {
 
     private:
 
     public:
 
+        void Solve() override {
+            throw std::runtime_error("Not implemented!");
+        }
     };
 
 } // CHDR::Solvers

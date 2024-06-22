@@ -7,6 +7,8 @@ namespace CHDR::Solvers {
 
     public:
 
+        virtual void Solve() = 0;
+
     };
 
 } // CHDR::Solvers

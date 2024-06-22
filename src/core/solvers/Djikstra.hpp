@@ -7,11 +7,15 @@
 
 namespace CHDR::Solvers {
 
-    class Djikstra {
+    class Djikstra : ISolver {
 
     private:
 
     public:
+
+        void Solve() override {
+            throw std::runtime_error("Not implemented!");
+        }
 
     };
 
