@@ -6,18 +6,30 @@
 namespace CHDR {
 
     template <typename W = bool>
-    struct Node {
+    class Node {
 
         static_assert(std::is_integral<W>::value, "Type W must be an integral type.");
 
+    private:
+
         W m_Value;
 
-        constexpr Node(const W& _value) {
+    public:
+
+        constexpr Node(const W& _value = 0) {
             m_Value = _value;
         }
 
         [[nodiscard]] constexpr bool IsActive() const {
             return m_Value != 0;
+        }
+
+        [[nodiscard]] constexpr W Value() const {
+            return m_Value;
+        }
+
+        constexpr void Value(const W& value) {
+            m_Value = value;
         }
     };
 

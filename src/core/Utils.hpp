@@ -128,15 +128,44 @@ namespace CHDR {
 		}
 
 		/**
+		 * Calculate the product of the elements in the given coordinate.
+		 *
+		 * @tparam T The type of the elements in the coordinate.
+		 * @tparam Tc The type of the coordinate.
+		 * @tparam Kd The dimension of the coordinate.
+		 * @param _coord The coordinate to calculate the product of its elements.
+		 * @return The product of the elements in the coordinate.
+		 *
+		 * @pre Kd must be greater than 0.
+		 *
+		 * @note This method assumes that the coordinate has at least one element.
+		 * @note This method uses the generic type T and requires proper multiplication operator overloading.
+		 * @note The input coordinate is not modified.
+		 */
+		template <typename T, typename Tc, std::size_t Kd>
+		static constexpr T Product(const Coord<Tc, Kd>& _coord) {
+
+			static_assert(Kd > 0, "Kd must be greater than 0.");
+
+			T result = _coord[0];
+
+			for (size_t i = 1; i < _coord.size(); ++i) {
+				result *= _coord[i];
+			}
+
+			return result;
+		}
+
+		/**
 		 * @brief Converts a one-dimensional index to an N-dimensional coordinate.
 		 *
 		 * This function takes a one-dimensional index and a list of dimensions, and calculates the corresponding
 		 * N-dimensional coordinate. The dimensions represent the size of each dimension in the N-dimensional space.
 		 *
 		 * @tparam T The type of the index. Only integer types are allowed.
-		 * @tparam Args The types of the dimensions.
+		 * @tparam Args The dimensions to convert into.
 		 * @param _index The one-dimensional index to be converted.
-		 * @param _dimensions The dimensions of the N-dimensional space.
+		 * @param _sizes The dimensions of the N-dimensional space.
 		 * @return A Coord object representing the N-dimensional coordinate.
 		 * @throws std::runtime_error If the type of _index is not an integral type.
 		 *
@@ -148,7 +177,7 @@ namespace CHDR {
 		 * \endcode
 		 */
 		template<typename T, typename... Args>
-		static constexpr auto ToND(const T _index, const Args... _dimensions) {
+		static constexpr auto ToND(const T& _index, const Args&... _sizes) {
 
 			static_assert(std::is_integral_v<T>, "Only integer types are allowed.");
 
@@ -156,7 +185,7 @@ namespace CHDR {
 
 			Coord<T, N> result{};
 
-			std::array<T, N> dims = { _dimensions... };
+			std::array<T, N> dims = { _sizes... };
 			std::array<T, N> strides{};
 
 			strides[0] = 1;
@@ -166,7 +195,51 @@ namespace CHDR {
 
 			// Please note this loop uses integer underflow to bypass a quirk of reverse for-loops.
 			auto idx = _index;
-			for (size_t i = N - 1; i < N; --i) {
+			for (size_t i = N - 1; i != std::numeric_limits<size_t>::max(); --i) {
+				result[i] = idx / strides[i];
+				idx %= strides[i];
+			}
+
+			return result;
+		}
+
+		/**
+		 * @brief Converts a one-dimensional index to an N-dimensional coordinate.
+		 *
+		 * This function takes a one-dimensional index and a list of dimensions, and calculates the corresponding
+		 * N-dimensional coordinate. The dimensions represent the size of each dimension in the N-dimensional space.
+		 *
+		 * @tparam T The type of the index. Only integer types are allowed.
+		 * @tparam Kd The dimensions to convert into.
+		 * @param _index The one-dimensional index to be converted.
+		 * @param _sizes The dimensions of the N-dimensional space.
+		 * @return A Coord object representing the N-dimensional coordinate.
+		 * @throws std::runtime_error If the type of _index is not an integral type.
+		 *
+		 * @note The function assumes that the number of dimensions (_dimensions) is greater than 0.
+		 *
+		 * Example usage:
+		 * \code{cpp}
+		 * static const auto as3d = ToND(63, { 4, 4, 4 });
+		 * \endcode
+		 */
+		template<typename T, size_t Kd>
+		static constexpr auto ToND(const T& _index, const Coord<T, Kd>& _sizes) {
+
+			static_assert(std::is_integral_v<T>, "Only integer types are allowed.");
+
+			Coord<T, Kd> result{};
+
+			std::array<T, Kd> strides{};
+
+			strides[0] = 1;
+			for (size_t i = 1; i < Kd; ++i) {
+				strides[i] = strides[i - 1] * _sizes[i - 1];
+			}
+
+			// Please note this loop uses integer underflow to bypass a quirk of reverse for-loops.
+			auto idx = _index;
+			for (size_t i = Kd - 1; i != std::numeric_limits<size_t>::max(); --i) {
 				result[i] = idx / strides[i];
 				idx %= strides[i];
 			}
@@ -180,24 +253,45 @@ namespace CHDR {
 		 * @return The one-dimensional index corresponding to the given multi-dimensional indices.
 		 *
 		 * This method takes in multi-dimensional indices and array sizes and returns the corresponding one-dimensional index.
-		 * Only integer types are allowed for the indices. The sizes are stored in a std::array. The method uses a loop to
-		 * calculate the one-dimensional index by multiplying the result with the size of each dimension and adding the
-		 * corresponding index value.
+		 * Only integer types are allowed for the indices.
 		 */
 		template<typename T, typename... Args>
-		static constexpr auto To1D(const Coord<T, sizeof...(Args)>& _indices, const Args... _sizes) {
+		static constexpr auto To1D(const Coord<T, sizeof...(Args)>& _indices, const Args&... _sizes) {
 
 			static_assert(std::is_integral_v<T>, "Only integer types are allowed.");
 
 			constexpr size_t N = sizeof...(Args);
 
-			T result { 0 };
+			T result{0};
 
-			std::array<T, N> sizes{ _sizes... };
+			std::array sizes{ _sizes... };
 
 			// Please note this loop uses integer underflow to bypass a quirk of reverse for-loops.
-			for (size_t i = N - 1; i < N; --i){
+			for (size_t i = N - 1; i != std::numeric_limits<size_t>::max(); --i) {
 				result = (result * sizes[i]) + _indices[i];
+			}
+
+			return result;
+		}
+
+		/**
+		 * @param _indices The indices of the element in each dimension.
+		 * @param _sizes The sizes of the array in each dimension.
+		 * @return The one-dimensional index corresponding to the given multi-dimensional indices.
+		 *
+		 * This method takes in multi-dimensional indices and array sizes and returns the corresponding one-dimensional index.
+		 * Only integer types are allowed for the indices.
+		 */
+		template<typename T, size_t Kd>
+		static constexpr auto To1D(const Coord<T, Kd>& _indices, const Coord<T, Kd>& _sizes) {
+
+			static_assert(std::is_integral_v<T>, "Only integer types are allowed.");
+
+			T result{0};
+
+			// Please note this loop uses integer underflow to bypass a quirk of reverse for-loops.
+			for (size_t i = Kd - 1; i != std::numeric_limits<size_t>::max(); --i) {
+				result = (result * _sizes[i]) + _indices[i];
 			}
 
 			return result;
