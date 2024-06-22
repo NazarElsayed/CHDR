@@ -127,41 +127,76 @@ namespace CHDR {
 			);
 		}
 
+		/**
+		 * @brief Converts a one-dimensional index to an N-dimensional coordinate.
+		 *
+		 * This function takes a one-dimensional index and a list of dimensions, and calculates the corresponding
+		 * N-dimensional coordinate. The dimensions represent the size of each dimension in the N-dimensional space.
+		 *
+		 * @tparam T The type of the index. Only integer types are allowed.
+		 * @tparam Args The types of the dimensions.
+		 * @param _index The one-dimensional index to be converted.
+		 * @param _dimensions The dimensions of the N-dimensional space.
+		 * @return A Coord object representing the N-dimensional coordinate.
+		 * @throws std::runtime_error If the type of _index is not an integral type.
+		 *
+		 * @note The function assumes that the number of dimensions (_dimensions) is greater than 0.
+		 *
+		 * Example usage:
+		 * \code{cpp}
+		 * static const auto as3d = ToND(63, 4, 4, 4);
+		 * \endcode
+		 */
 		template<typename T, typename... Args>
-		static constexpr auto ToND(size_t index, Args... dimensions) {
-			constexpr size_t N = sizeof...(Args);
+		static constexpr auto ToND(T _index, const Args&... _dimensions) {
 
 			static_assert(std::is_integral_v<T>, "Only integer types are allowed.");
 
-			Coord<T, N> indices;
+			constexpr auto N = sizeof...(Args);
 
-			std::array<T, N> dims = {dimensions...};
-			std::array<T, N> _strides{};
+			Coord<T, N> result;
 
-			_strides[0] = 1;
-			for (size_t i = 1; i < N; ++i){
-				_strides[i] = _strides[i - 1] * dims[i - 1];
+			std::array<T, N> dims = { _dimensions... };
+			std::array<T, N> strides;
+
+			strides[0] = 1;
+			for (T i = 1; i < N; ++i){
+				strides[i] = strides[i - 1] * dims[i - 1];
 			}
 
-			for (int i = N-1; i >= 0; --i) {
-				indices[i] = index / _strides[i];
-				index %= _strides[i];
+			// Please note this loop uses integer underflow to bypass a quirk of reverse for-loops.
+			for (size_t i = N - 1; i < N; --i) {
+				result[i] = _index / strides[i];
+				_index %= strides[i];
 			}
 
-			return indices;
+			return result;
 		}
 
+		/**
+		 * @param _indices The indices of the element in each dimension.
+		 * @param _sizes The sizes of the array in each dimension.
+		 * @return The one-dimensional index corresponding to the given multi-dimensional indices.
+		 *
+		 * This method takes in multi-dimensional indices and array sizes and returns the corresponding one-dimensional index.
+		 * Only integer types are allowed for the indices. The sizes are stored in a std::array. The method uses a loop to
+		 * calculate the one-dimensional index by multiplying the result with the size of each dimension and adding the
+		 * corresponding index value.
+		 */
 		template<typename T, typename... Args>
-		static constexpr auto To1D(const Coord<T, sizeof...(Args)>& indices, Args... sizes) {
-			constexpr size_t N = sizeof...(Args);
+		static constexpr auto To1D(const Coord<T, sizeof...(Args)>& _indices, const Args&... _sizes) {
 
 			static_assert(std::is_integral_v<T>, "Only integer types are allowed.");
 
-			std::array<T, N> _sizes{ sizes... };
+			constexpr size_t N = sizeof...(Args);
 
-			T result = 0;
-			for (int i = N-1; i >= 0; --i){
-				result = (result * _sizes[i]) + indices[i];
+			T result { 0 };
+
+			std::array<T, N> sizes{ _sizes... };
+
+			// Please note this loop uses integer underflow to bypass a quirk of reverse for-loops.
+			for (size_t i = N - 1; i < N; --i){
+				result = (result * sizes[i]) + _indices[i];
 			}
 
 			return result;
