@@ -4,6 +4,7 @@
 #include <vector>
 #include <unordered_map>
 #include <algorithm>
+#include <cassert>
 #include <random>
 
 class Ellers {
@@ -23,7 +24,10 @@ public:
      * @param _height The height of the maze.
      * @return A vector representing the generated maze.
      */
-    static auto Generate(size_t _seed, size_t _width, size_t _height) {
+    static auto Generate(const size_t& _seed, const size_t& _width, const size_t& _height) {
+
+        assert(( _width < std::numeric_limits<size_t>::max() - 1) &&  "_width is too large. Risk of overflow.");
+        assert((_height < std::numeric_limits<size_t>::max() - 1) && "_height is too large. Risk of overflow.");
 
         std::vector maze(_height, std::vector(_width, Cell::WALL));
 
