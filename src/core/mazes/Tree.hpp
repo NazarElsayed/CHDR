@@ -7,7 +7,7 @@
 
 namespace CHDR::Mazes {
 
-    class Tree : IMaze {
+    class Tree : public IMaze {
 
     private:
 

@@ -7,7 +7,7 @@
 
 namespace CHDR::Mazes {
 
-    class Graph : IMaze {
+    class Graph : public IMaze {
 
     private:
 

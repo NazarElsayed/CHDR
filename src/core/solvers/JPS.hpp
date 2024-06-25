@@ -7,13 +7,13 @@
 
 namespace CHDR::Solvers {
 
-    class JPS : ISolver {
+    class JPS : public ISolver {
 
     private:
 
     public:
 
-        void Solve() override {
+        void Solve(const Mazes::IMaze& _maze) override {
             throw std::runtime_error("Not implemented!");
         }
     };

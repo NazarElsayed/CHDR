@@ -81,6 +81,8 @@ endif()
 # ADD EXECUTABLE:
 add_executable(Test
         src/test/main.cpp
+
+        src/test/Ellers.hpp
 )
 
 target_include_directories(Test PRIVATE

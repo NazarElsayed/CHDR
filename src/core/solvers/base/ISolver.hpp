@@ -7,7 +7,7 @@ namespace CHDR::Solvers {
 
     public:
 
-        virtual void Solve() = 0;
+        virtual void Solve(const Mazes::IMaze& _maze) = 0;
 
     };
 

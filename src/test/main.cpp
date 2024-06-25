@@ -2,25 +2,49 @@
 
 #include <Debug.hpp>
 
-void AStarTest() {
+#include "Ellers.hpp"
+
+template <typename T, typename... Args>
+static constexpr auto GenerateMaze(const size_t& _seed = -1, const Args&... _sizes) {
+
+	static_assert(std::is_integral_v<T>, "Type T must be an integer type.");
+
+	std::array sizes { _sizes... };
+
+	auto layout = Ellers::Generate(_seed, sizes[0], sizes[1]);
+
+	std::vector<CHDR::Node<T>> result;
+	result.reserve(layout.size());
+
+	std::ostringstream oss;
+
+	for (size_t i = 0; i < layout.size(); ++i) {
+		auto& node = result[i];
+
+		bool nodeVal = layout[i];
+		node.Value(nodeVal);
+
+		oss << (node.Value() ? "##" : "  ");
+
+		if (i % sizes[0] == 0) {
+			oss << '\n';
+		}
+	}
+
+	std::cout << oss.str() << std::endl;
+
+	return result;
+}
+
+static void AStarTest() {
 
     try {
-
-        auto maze = CHDR::Mazes::Grid<2>(32, 32);
+        auto maze = CHDR::Mazes::Grid<2>(12, 12);
         auto solver = CHDR::Solvers::AStar();
-        solver.Solve();
 
-        const auto& size = maze.Size();
-        Debug::Log(std::to_string(size[0]) + ", " + std::to_string(size[1]));
+		auto vals = GenerateMaze<bool>(0, maze.Size());
 
-        auto& node1 = maze.At(0, 0);
-        node1.Value(true);
-
-        const auto& node2 = maze.At(0, 0);
-        Debug::Log(node2.Value() ? "True" : "False");
-
-        node1.Value(false);
-        Debug::Log(node2.Value() ? "True" : "False");
+    	//solver.Solve(maze);
     }
     catch (const std::exception& e){
         Debug::Log("ERROR: AStarTest() failed! REASON: " + std::string(e.what()), LogType::Error);

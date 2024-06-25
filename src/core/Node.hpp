@@ -16,12 +16,12 @@ namespace CHDR {
 
     public:
 
-        constexpr Node(const W& _value = 0) {
-            m_Value = _value;
-        }
-
         [[nodiscard]] constexpr bool IsActive() const {
             return m_Value != 0;
+        }
+
+        constexpr Node(const W& _value = 0) {
+            m_Value = _value;
         }
 
         [[nodiscard]] constexpr W Value() const {

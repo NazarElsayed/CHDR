@@ -128,29 +128,32 @@ namespace CHDR {
 		}
 
 		/**
-		 * Calculate the product of the elements in the given coordinate.
+		 * Calculate the product of the elements in the given array.
 		 *
-		 * @tparam T The type of the elements in the coordinate.
-		 * @tparam Tc The type of the coordinate.
-		 * @tparam Kd The dimension of the coordinate.
-		 * @param _coord The coordinate to calculate the product of its elements.
-		 * @return The product of the elements in the coordinate.
+		 * @tparam T The type to return.
+		 * @tparam Ta The type of the array.
+		 * @param _array The array to calculate the product of its elements.
+		 * @return The product of the elements in the array.
 		 *
-		 * @pre Kd must be greater than 0.
-		 *
-		 * @note This method assumes that the coordinate has at least one element.
-		 * @note This method uses the generic type T and requires proper multiplication operator overloading.
-		 * @note The input coordinate is not modified.
+		 * @note The input is not modified.
 		 */
-		template <typename T, typename Tc, std::size_t Kd>
-		static constexpr T Product(const Coord<Tc, Kd>& _coord) {
+		template <typename T, typename Ta, std::size_t Kd>
+		static constexpr T Product(const std::array<Ta, Kd>& _array) {
 
 			static_assert(Kd > 0, "Kd must be greater than 0.");
 
-			T result = _coord[0];
+			T result;
 
-			for (size_t i = 1; i < _coord.size(); ++i) {
-				result *= _coord[i];
+			if constexpr (Kd == 0) {
+				result = 0;
+			}
+			else {
+
+				result = _array[0];
+
+				for (size_t i = 1; i < _array.size(); ++i) {
+					result *= _array[i];
+				}
 			}
 
 			return result;
@@ -185,7 +188,7 @@ namespace CHDR {
 
 			Coord<T, N> result{};
 
-			std::array<T, N> dims = { _sizes... };
+			std::array<T, N> dims { _sizes... };
 			std::array<T, N> strides{};
 
 			strides[0] = 1;
@@ -264,7 +267,7 @@ namespace CHDR {
 
 			T result{0};
 
-			std::array sizes{ _sizes... };
+			std::array sizes { _sizes... };
 
 			// Please note this loop uses integer underflow to bypass a quirk of reverse for-loops.
 			for (size_t i = N - 1; i != std::numeric_limits<size_t>::max(); --i) {
