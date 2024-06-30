@@ -17,87 +17,51 @@ public:
 
 private:
 
-    static constexpr auto GetDirections(const CHDR::Coord<size_t, Kd>& _coord, const CHDR::Coord<size_t, Kd>& _size, const size_t& _multiplier = 1U) {
+    static constexpr auto GetDirections(const CHDR::Coord<size_t, Kd>& _coord, const CHDR::Coord<size_t, Kd>& _size) {
 
-        using int_t = long;
-
-        std::vector<CHDR::Coord<int_t, Kd>> result;
-
-        // Positive directions:
-        for (size_t i = 0U; i < Kd; ++i) {
-
-            CHDR::Coord<int_t, Kd> dir{};
-
-            if (_coord[i] < _size[i] - _multiplier) {
-                dir[i] += _multiplier;
-
-                result.emplace_back(dir);
-            }
-        }
-
-        // Negative directions:
-        for (size_t i = 0U; i < Kd; ++i) {
-
-            CHDR::Coord<int_t, Kd> dir{};
-
-            if (_coord[i] >= _multiplier) {
-                dir[i] -= _multiplier;
-
-                result.emplace_back(dir);
-            }
-        }
-
-        return result;
-    }
-
-    static constexpr auto GetNeighbors(const CHDR::Coord<size_t, Kd>& _coord, const CHDR::Coord<size_t, Kd>& _size, const size_t& _multiplier = 1U) {
+        constexpr size_t step(1);
 
         std::vector<CHDR::Coord<size_t, Kd>> result;
 
-        // Positive directions:
+        // Positive:
         for (size_t i = 0U; i < Kd; ++i) {
 
-            auto n = _coord;
+            CHDR::Coord<size_t, Kd> dir{};
 
-            auto& element = n[i];
+            if (_coord[i] < _size[i] - step) {
+                dir[i] += step;
 
-            if (element < _size[i] - 1U * _multiplier) {
-                element += 1U * _multiplier;
-
-                result.emplace_back(n);
+                result.emplace_back(dir);
             }
         }
 
-        // Negative directions:
+        // Negative:
         for (size_t i = 0U; i < Kd; ++i) {
 
-            auto n = _coord;
+            CHDR::Coord<size_t, Kd> dir{};
 
-            auto& element = n[i];
+            if (_coord[i] >= step) {
+                dir[i] -= step;
 
-            if (element >= _multiplier) {
-                element -= _multiplier;
-
-                result.emplace_back(n);
+                result.emplace_back(dir);
             }
         }
 
         return result;
     }
 
-    static void GOCarveFrom(CHDR::Coord<size_t, Kd> _coord, const CHDR::Coord<size_t, Kd>& _size, std::vector<Cell> &_grid) {
-        CarveFrom(_coord, _size, _grid);
-    }
-
-    static void CarveFrom(const CHDR::Coord<size_t, Kd>& _coord, const CHDR::Coord<size_t, Kd>& _size, std::vector<Cell> &_grid) {
+    static constexpr void CarveFrom(const CHDR::Coord<size_t, Kd>& _coord, std::pair<CHDR::Coord<size_t, Kd>, size_t>& _farthest, const size_t& _depth, const CHDR::Coord<size_t, Kd>& _size, std::vector<Cell>& _grid, std::mt19937 _random) {
 
         _grid[CHDR::Utils::To1D(_coord, _size)] = PATH;
 
-        auto dirs = GetDirections(_coord, _size, 1U);
+        if (_depth > _farthest.second) {
+            _farthest.first  = _coord;
+            _farthest.second = _depth;
+        }
 
-        std::random_device rd;
-        std::mt19937 g(rd());
-        std::shuffle(dirs.begin(), dirs.end(), g);
+        auto dirs = GetDirections(_coord, _size);
+
+        std::shuffle(dirs.begin(), dirs.end(), _random);
 
         // Attempt to find unvisited cells:
         for (size_t i = 0U; i < dirs.size(); ++i) {
@@ -129,7 +93,7 @@ private:
                 if (cn == WALL) {
                     ln = PATH;
 
-                    CarveFrom(cc, _size, _grid);
+                    CarveFrom(cc, _farthest, _depth + 1, _size, _grid, _random);
                 }
             }
         }
@@ -144,7 +108,7 @@ public:
      * @param _size The size of the maze.
      * @return A vector representing the generated maze.
      */
-    static auto Generate(const size_t& _seed, CHDR::Coord<size_t, Kd> _size) {
+    static auto Generate(const CHDR::Coord<size_t, Kd>& _start, CHDR::Coord<size_t, Kd>& _end, CHDR::Coord<size_t, Kd> _size, const size_t& _seed) {
 
         static constexpr size_t null_v = -1U;
 
@@ -165,10 +129,11 @@ public:
 
         // Attempt to allocate the desired amount of space in memory.
         const auto product = CHDR::Utils::Product<size_t>(_size);
-
         if (product > 0U) {
 
             // TODO: Ensure that product does not overflow!
+
+
 
             result.resize(product, WALL);
 
@@ -177,9 +142,11 @@ public:
 
                 std::mt19937 gen(_seed == null_v ? std::random_device().operator()() : _seed);
 
-                CHDR::Coord<size_t, Kd> start{0U, 0U};
+                std::pair<CHDR::Coord<size_t, Kd>, size_t> farthest {_start, 0};
 
-                GOCarveFrom(start, _size, result);
+                CarveFrom(_start, farthest, 0, _size, result, gen);
+
+                _end = farthest.first;
             }
             catch (const std::exception& e) {
                 Debug::Log(e);

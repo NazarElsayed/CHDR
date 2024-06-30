@@ -4,46 +4,109 @@
 
 #include "RecursiveBacktrack.hpp"
 
-template <typename T, typename... Args>
-static constexpr auto GenerateMaze(const size_t& _seed = -1, const Args&... _sizes) {
+#include <iomanip>
 
-	static_assert(std::is_integral_v<T>, "Type T must be an integer type.");
+template <typename T, size_t Kd>
+static constexpr void DisplayMaze(const CHDR::Coord<size_t, Kd>& _start, const CHDR::Coord<size_t, Kd>& _end, const CHDR::Coord<size_t, Kd>& _size, const std::vector<CHDR::Node<T>>& _maze) {
 
-	std::array sizes { _sizes... };
-
-	auto layout = RecursiveBacktrack<sizes.size()>::Generate(_seed, sizes);
-
-	std::vector<CHDR::Node<T>> result;
-	result.reserve(layout.size());
+	static_assert(               Kd < 3, "This maze renderer does not support dimensions higher than 2.");
+	static_assert(std::is_integral_v<T>, "Template parameter T must be an integral type."               );
 
 	std::ostringstream oss;
 
-	for (size_t i = 0; i < layout.size(); ++i) {
+	constexpr auto* path_str = "  ";
+	constexpr auto* wall_str = "██";
+	constexpr auto  line_brk = '\n';
 
-		auto& node = result[i];
-		node.Value(layout[i] == RecursiveBacktrack<sizes.size()>::Cell::WALL);
+	const bool even_width = _size[0U] % 2U == 0U;
 
-		switch (layout[i]) {
-			case RecursiveBacktrack<sizes.size()>::Cell::PATH: {
-				oss << "  ";
-				break;
-			}
-			case RecursiveBacktrack<sizes.size()>::Cell::WALL: {
-				oss << "██";
-				break;
-			}
-			default: {
-				oss << "??";
-				break;
-			}
+	// Add an upper boundary:
+	{
+		const auto columns = _size[0U] + (even_width ? 1U : 2U);
+
+		for (size_t i = 0U; i < columns; ++i) {
+			oss << wall_str;
 		}
+		oss << line_brk;
+	}
 
-		if ((i + 1) % sizes[0] == 0) {
-			oss << '\n';
+	for (size_t i = 0U; i < _maze.size(); ++i) {
+
+		if (i % _size[0U] == 0U) { oss << wall_str; }
+
+		auto s = CHDR::Utils::To1D(_start, _size);
+		auto e = CHDR::Utils::To1D(_end,   _size);
+
+		     if (i == s) { oss << "St"; }
+		else if (i == e) { oss << "En"; }
+		else {
+
+			auto val = _maze[i].Value();
+
+			if constexpr (std::is_same_v<T, bool>) {
+				oss << (val ? wall_str : path_str);
+			}
+			else {
+				oss << std::hex << std::setfill('0') << std::setw(2) << static_cast<unsigned>(val);
+			}
+
+			// Handle end of line:
+			if constexpr (Kd == 1) {
+
+				const bool end_of_line = i == _size[0U] - 1U;
+				if (end_of_line) {
+
+					if (!even_width) {
+						oss << wall_str;
+					}
+					oss << line_brk;
+				}
+			}
+			else {
+
+				const bool end_of_line = (i + 1U) % _size[0U] == 0U;
+				if (end_of_line) {
+
+					if (!even_width) {
+						oss << wall_str;
+					}
+					oss << line_brk;
+				}
+			}
+
 		}
 	}
 
-	std::cout << oss.str() << "\n";
+	// Handle the addition of a lower boundary:
+	{
+		const bool even_height = Kd > 1U && _size[1U] % 2U == 0U;
+		if (!even_height) {
+
+			const auto columns = _size[0U] + (even_width ? 1U : 2U);
+			for (size_t i = 0U; i < columns; ++i) {
+				oss << wall_str;
+			}
+			oss << line_brk;
+		}
+	}
+
+	std::cout << oss.str();
+}
+
+template <typename T, size_t Kd, typename... Args>
+static constexpr auto GenerateMaze(const CHDR::Coord<size_t, Kd>& _start, CHDR::Coord<size_t, Kd>& _end, const size_t& _seed = -1, const Args&... _size) {
+
+	static_assert(std::is_integral_v<T>, "Type T must be an integer type.");
+
+	std::array size { _size... };
+
+	auto layout = RecursiveBacktrack<Kd>::Generate(_start, _end, size, _seed);
+
+	std::vector<CHDR::Node<T>> result;
+	result.reserve(layout.size());
+	for (size_t i = 0U; i < layout.size(); ++i) {
+		result.emplace_back(layout[i] == RecursiveBacktrack<Kd>::WALL);
+	}
 
 	return result;
 }
@@ -51,10 +114,19 @@ static constexpr auto GenerateMaze(const size_t& _seed = -1, const Args&... _siz
 static void AStarTest() {
 
     try {
-        auto maze = CHDR::Mazes::Grid<2>(50, 50);
+		using coord_t = CHDR::Coord<std::size_t, 2U>;
+
+		coord_t dimensions { 33U, 33U };
+
+        auto maze = CHDR::Mazes::Grid(dimensions);
         auto solver = CHDR::Solvers::AStar();
 
-		auto vals = GenerateMaze<bool>(-1, maze.Size());
+    	coord_t start{};
+		coord_t end  {};
+
+		auto vals = GenerateMaze<bool>(start, end, 0U, maze.Size());
+
+		DisplayMaze(start, end, dimensions, vals);
 
     	//solver.Solve(maze);
     }

@@ -4,6 +4,7 @@
 #include <Debug.hpp>
 
 #include <array>
+#include <limits>
 #include <stdexcept>
 #include <type_traits>
 #include <vector>

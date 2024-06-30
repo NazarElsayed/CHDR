@@ -672,7 +672,7 @@ namespace {
 						}
 						
 						auto trace = StackTrace(max_frames);
-						for (size_t i = 0; i < trace.size(); ++i) {
+						for (size_t i = 0U; i < trace.size(); ++i) {
 							
 							// Indent each trace:
 							for (size_t j = 0; j < i; ++j) {

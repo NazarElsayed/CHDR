@@ -4,7 +4,9 @@
 #include <Debug.hpp>
 
 #include <array>
+#include <limits>
 #include <stdexcept>
+#include <type_traits>
 #include <vector>
 
 #include "Coord.hpp"
@@ -143,7 +145,7 @@ namespace CHDR {
 
 			bool result = true;
 
-			for (size_t i = 0; i < Kd; ++i) {
+			for (size_t i = 0U; i < Kd; ++i) {
 				if (_a[i] != _b[i]) {
 					result = false;
 
@@ -167,18 +169,16 @@ namespace CHDR {
 		template <typename T, typename Ta, size_t Kd>
 		static constexpr T Product(const std::array<Ta, Kd>& _array) {
 
-			static_assert(Kd > 0, "Kd must be greater than 0.");
-
 			T result;
 
-			if constexpr (Kd == 0) {
+			if constexpr (Kd == 0U) {
 				result = 0;
 			}
 			else {
 
-				result = _array[0];
+				result = _array[0U];
 
-				for (size_t i = 1; i < _array.size(); ++i) {
+				for (size_t i = 1U; i < _array.size(); ++i) {
 					result *= _array[i];
 				}
 			}
@@ -219,13 +219,13 @@ namespace CHDR {
 			std::array<T, N> strides{};
 
 			strides[0] = 1;
-			for (size_t i = 1; i < N; ++i) {
-				strides[i] = strides[i - 1] * dims[i - 1];
+			for (size_t i = 1U; i < N; ++i) {
+				strides[i] = strides[i - 1U] * dims[i - 1U];
 			}
 
 			// Please note this loop uses integer underflow to bypass a quirk of reverse for-loops.
 			auto idx = _index;
-			for (size_t i = N - 1; i != std::numeric_limits<size_t>::max(); --i) {
+			for (size_t i = N - 1U; i != std::numeric_limits<size_t>::max(); --i) {
 				result[i] = idx / strides[i];
 				idx %= strides[i];
 			}
@@ -262,14 +262,14 @@ namespace CHDR {
 
 			std::array<T, Kd> strides{};
 
-			strides[0] = 1;
-			for (size_t i = 1; i < Kd; ++i) {
-				strides[i] = strides[i - 1] * _sizes[i - 1];
+			strides[0U] = 1;
+			for (size_t i = 1U; i < Kd; ++i) {
+				strides[i] = strides[i - 1U] * _sizes[i - 1U];
 			}
 
 			// Please note this loop uses integer underflow to bypass a quirk of reverse for-loops.
 			auto idx = _index;
-			for (size_t i = Kd - 1; i != std::numeric_limits<size_t>::max(); --i) {
+			for (size_t i = Kd - 1U; i != std::numeric_limits<size_t>::max(); --i) {
 				result[i] = idx / strides[i];
 				idx %= strides[i];
 			}
@@ -327,6 +327,18 @@ namespace CHDR {
 			return result;
 		}
 
+		template <typename T>
+		static constexpr typename std::enable_if<std::is_integral<T>::value, bool>::type CheckMulOverflow(const T& a, const T& b) {
+
+			bool result;
+
+			     if (a == 0 || b == 0) { result = false;                                   }
+			else if (a >  0 && b >  0) { result = a > (std::numeric_limits<T>::max() / b); }
+			else if (a <  0 && b <  0) { result = a < (std::numeric_limits<T>::max() / b); }
+			else {                       result = a < (std::numeric_limits<T>::min() / b); }
+
+			return result;
+		}
 	};
 
 } // CHDR
