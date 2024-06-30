@@ -506,7 +506,7 @@ namespace {
 			inline static std::mutex s_Lock;
 			
 			inline static size_t s_Ctr;
-			inline static std::unordered_map<std::thread::id, std::size_t> s_ThreadIDs;
+			inline static std::unordered_map<std::thread::id, size_t> s_ThreadIDs;
 		
 		public:
 		

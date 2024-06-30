@@ -82,7 +82,7 @@ endif()
 add_executable(Test
         src/test/main.cpp
 
-        src/test/Ellers.hpp
+        src/test/RecursiveBacktrack.hpp
 )
 
 target_include_directories(Test PRIVATE

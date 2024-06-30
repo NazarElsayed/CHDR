@@ -2,7 +2,7 @@
 
 #include <Debug.hpp>
 
-#include "Ellers.hpp"
+#include "RecursiveBacktrack.hpp"
 
 template <typename T, typename... Args>
 static constexpr auto GenerateMaze(const size_t& _seed = -1, const Args&... _sizes) {
@@ -11,7 +11,7 @@ static constexpr auto GenerateMaze(const size_t& _seed = -1, const Args&... _siz
 
 	std::array sizes { _sizes... };
 
-	auto layout = Ellers::Generate(_seed, sizes[0], sizes[1]);
+	auto layout = RecursiveBacktrack<sizes.size()>::Generate(_seed, sizes);
 
 	std::vector<CHDR::Node<T>> result;
 	result.reserve(layout.size());
@@ -19,19 +19,31 @@ static constexpr auto GenerateMaze(const size_t& _seed = -1, const Args&... _siz
 	std::ostringstream oss;
 
 	for (size_t i = 0; i < layout.size(); ++i) {
+
 		auto& node = result[i];
+		node.Value(layout[i] == RecursiveBacktrack<sizes.size()>::Cell::WALL);
 
-		bool nodeVal = layout[i];
-		node.Value(nodeVal);
+		switch (layout[i]) {
+			case RecursiveBacktrack<sizes.size()>::Cell::PATH: {
+				oss << "  ";
+				break;
+			}
+			case RecursiveBacktrack<sizes.size()>::Cell::WALL: {
+				oss << "██";
+				break;
+			}
+			default: {
+				oss << "??";
+				break;
+			}
+		}
 
-		oss << (node.Value() ? "##" : "  ");
-
-		if (i % sizes[0] == 0) {
+		if ((i + 1) % sizes[0] == 0) {
 			oss << '\n';
 		}
 	}
 
-	std::cout << oss.str() << std::endl;
+	std::cout << oss.str() << "\n";
 
 	return result;
 }
@@ -39,10 +51,10 @@ static constexpr auto GenerateMaze(const size_t& _seed = -1, const Args&... _siz
 static void AStarTest() {
 
     try {
-        auto maze = CHDR::Mazes::Grid<2>(12, 12);
+        auto maze = CHDR::Mazes::Grid<2>(50, 50);
         auto solver = CHDR::Solvers::AStar();
 
-		auto vals = GenerateMaze<bool>(0, maze.Size());
+		auto vals = GenerateMaze<bool>(-1, maze.Size());
 
     	//solver.Solve(maze);
     }

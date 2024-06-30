@@ -128,6 +128,33 @@ namespace CHDR {
 		}
 
 		/**
+		 * @brief Checks if two arrays are equal element-wise.
+		 *
+		 * This function compares each element of the two arrays and returns true if all elements are equal.
+		 *
+		 * @tparam T The element type of the arrays.
+		 * @tparam Kd The size of the arrays.
+		 * @param _a The first array to compare.
+		 * @param _b The second array to compare.
+		 * @return True if the two arrays are equal, false otherwise.
+		 */
+		template <typename T, size_t Kd>
+		static constexpr bool Equals(const std::array<T, Kd>& _a, const std::array<T, Kd>& _b) {
+
+			bool result = true;
+
+			for (size_t i = 0; i < Kd; ++i) {
+				if (_a[i] != _b[i]) {
+					result = false;
+
+					break;
+				}
+			}
+
+			return result;
+		}
+
+		/**
 		 * Calculate the product of the elements in the given array.
 		 *
 		 * @tparam T The type to return.
@@ -137,7 +164,7 @@ namespace CHDR {
 		 *
 		 * @note The input is not modified.
 		 */
-		template <typename T, typename Ta, std::size_t Kd>
+		template <typename T, typename Ta, size_t Kd>
 		static constexpr T Product(const std::array<Ta, Kd>& _array) {
 
 			static_assert(Kd > 0, "Kd must be greater than 0.");

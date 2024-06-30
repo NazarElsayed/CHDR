@@ -38,7 +38,7 @@ namespace CHDR::Mazes {
         constexpr Grid(const coord_t& _size) {
             m_Size = _size;
 
-            m_Nodes.resize(Utils::Product<std::size_t>(m_Size));
+            m_Nodes.resize(Utils::Product<size_t>(m_Size));
         }
 
         template <typename... Args>
@@ -48,7 +48,7 @@ namespace CHDR::Mazes {
 
             m_Size = { _size... };
 
-            m_Nodes.resize(Utils::Product<std::size_t>(m_Size));
+            m_Nodes.resize(Utils::Product<size_t>(m_Size));
         }
 
         [[nodiscard]] constexpr const std::vector<Node<T>>& Nodes() const {
