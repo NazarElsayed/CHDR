@@ -24,8 +24,8 @@ namespace CHDR::Mazes {
 
         static constexpr auto Rank = Kd;
 
-        static_assert(Kd > 0, "Kd must be greater than 0.");
-        static_assert(std::is_integral_v<T>, "T must be integral.");
+        static_assert(              Kd > 0U, "Kd must be greater than 0.");
+        static_assert(std::is_integral_v<T>, "T must be integral."       );
 
     private:
 
@@ -87,6 +87,16 @@ namespace CHDR::Mazes {
             return m_Nodes.at(index);
 #else
             return m_Nodes[index];
+#endif // NDEBUG
+        }
+
+        template<typename... Args>
+        [[nodiscard]] constexpr Node<T>& At(const size_t& _index) {
+
+#ifndef NDEBUG
+            return m_Nodes.at(_index);
+#else
+            return m_Nodes[_index];
 #endif // NDEBUG
         }
 

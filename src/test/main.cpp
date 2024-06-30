@@ -7,10 +7,10 @@
 #include <iomanip>
 
 template <typename T, size_t Kd>
-static constexpr void DisplayMaze(const CHDR::Coord<size_t, Kd>& _start, const CHDR::Coord<size_t, Kd>& _end, const CHDR::Coord<size_t, Kd>& _size, const std::vector<CHDR::Node<T>>& _maze) {
+static constexpr void DisplayGridMaze(const CHDR::Coord<size_t, Kd>& _start, const CHDR::Coord<size_t, Kd>& _end, const CHDR::Coord<size_t, Kd>& _size, const CHDR::Mazes::Grid<Kd, T>& _maze) {
 
-	static_assert(               Kd < 3, "This maze renderer does not support dimensions higher than 2.");
-	static_assert(std::is_integral_v<T>, "Template parameter T must be an integral type."               );
+	static_assert(              Kd < 3U, "This maze renderer does not support dimensions higher than 2.");
+	static_assert(std::is_integral_v<T>, "Maze type must be an integral type."                          );
 
 	std::ostringstream oss;
 
@@ -30,7 +30,8 @@ static constexpr void DisplayMaze(const CHDR::Coord<size_t, Kd>& _start, const C
 		oss << line_brk;
 	}
 
-	for (size_t i = 0U; i < _maze.size(); ++i) {
+	const auto& nodes = _maze.Nodes();
+	for (size_t i = 0U; i < nodes.size(); ++i) {
 
 		if (i % _size[0U] == 0U) { oss << wall_str; }
 
@@ -41,7 +42,7 @@ static constexpr void DisplayMaze(const CHDR::Coord<size_t, Kd>& _start, const C
 		else if (i == e) { oss << "En"; }
 		else {
 
-			auto val = _maze[i].Value();
+			auto val = nodes[i].Value();
 
 			if constexpr (std::is_same_v<T, bool>) {
 				oss << (val ? wall_str : path_str);
@@ -51,27 +52,13 @@ static constexpr void DisplayMaze(const CHDR::Coord<size_t, Kd>& _start, const C
 			}
 
 			// Handle end of line:
-			if constexpr (Kd == 1) {
+			const bool end_of_line = (Kd == 1 && i == _size[0U] - 1U) || ((i + 1U) % _size[0U] == 0U);
 
-				const bool end_of_line = i == _size[0U] - 1U;
-				if (end_of_line) {
-
-					if (!even_width) {
-						oss << wall_str;
-					}
-					oss << line_brk;
-				}
-			}
-			else {
-
-				const bool end_of_line = (i + 1U) % _size[0U] == 0U;
-				if (end_of_line) {
-
-					if (!even_width) {
-						oss << wall_str;
-					}
-					oss << line_brk;
-				}
+			if (end_of_line) {
+			    if (!even_width) {
+			        oss << wall_str;
+			    }
+			    oss << line_brk;
 			}
 
 		}
@@ -96,7 +83,7 @@ static constexpr void DisplayMaze(const CHDR::Coord<size_t, Kd>& _start, const C
 template <typename T, size_t Kd, typename... Args>
 static constexpr auto GenerateMaze(const CHDR::Coord<size_t, Kd>& _start, CHDR::Coord<size_t, Kd>& _end, const size_t& _seed = -1, const Args&... _size) {
 
-	static_assert(std::is_integral_v<T>, "Type T must be an integer type.");
+	static_assert(std::is_integral_v<T>, "Type T must be an integral type.");
 
 	std::array size { _size... };
 
@@ -111,27 +98,28 @@ static constexpr auto GenerateMaze(const CHDR::Coord<size_t, Kd>& _start, CHDR::
 	return result;
 }
 
+template <typename T, size_t Kd>
 static void AStarTest() {
 
+	static_assert(std::is_integral_v<T>, "Type T must be an integral type.");
+
     try {
-		using coord_t = CHDR::Coord<std::size_t, 2U>;
+		using coord_t = CHDR::Coord<size_t, Kd>;
 
-		coord_t dimensions { 33U, 33U };
+    	coord_t start {};
+    	coord_t end   {};
+		coord_t size  { 33U, 33U };
 
-        auto maze = CHDR::Mazes::Grid(dimensions);
-        auto solver = CHDR::Solvers::AStar();
+        auto maze = CHDR::Mazes::Grid<Kd, T>(size);
+    	maze.Nodes(GenerateMaze<T>(start, end, 0U, size));
 
-    	coord_t start{};
-		coord_t end  {};
+		DisplayGridMaze(start, end, size, maze);
 
-		auto vals = GenerateMaze<bool>(start, end, 0U, maze.Size());
-
-		DisplayMaze(start, end, dimensions, vals);
-
+    	auto solver = CHDR::Solvers::AStar();
     	//solver.Solve(maze);
     }
     catch (const std::exception& e){
-        Debug::Log("ERROR: AStarTest() failed! REASON: " + std::string(e.what()), LogType::Error);
+        Debug::Log("ERROR: AStarTest() failed! REASON: " + std::string(e.what()), Error);
     }
 }
 
@@ -146,12 +134,12 @@ static void Finalise() noexcept {
 
 	try {
 
-		Debug::Log("Finalise()", LogType::Info);
+		Debug::Log("Finalise()", Info);
 
 	    try {
 		}
 		catch (const std::exception& e) {
-			Debug::Log(e, LogType::Critical);
+			Debug::Log(e, Critical);
 		}
 
 		Debug::Flush();
@@ -189,13 +177,13 @@ static void OnTerminate() noexcept {
 			    }
 			}
 
-			Debug::Log("OnTerminate()! [REASON]: \"" + reason + "\"", LogType::Critical);
+			Debug::Log("OnTerminate()! [REASON]: \"" + reason + "\"", Critical);
 		}
 		catch (...) {}
 
 		Finalise();
 
-		Debug::Log("Finalised.", LogType::Trace);
+		Debug::Log("Finalised.", Trace);
 	}
 	catch (...) {}
 
@@ -210,17 +198,17 @@ int main([[maybe_unused]] int _argc, [[maybe_unused]] char* _argv[]) {
 
     try {
 
-    	Debug::Log("main()", LogType::Info);
+    	Debug::Log("main()", Info);
 
     	// Set custom termination behaviour:
     	std::set_terminate(&OnTerminate);
 
-    	AStarTest();
+    	AStarTest<bool, 2U>();
 
     	Finalise();
     }
     catch (const std::exception& e) {
-        Debug::Log(e, LogType::Critical);
+        Debug::Log(e, Critical);
     }
 
     return 0;
