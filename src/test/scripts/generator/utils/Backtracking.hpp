@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <random>
+#include <stack>
 #include <vector>
 
 namespace Test::Generator::Utils {
@@ -52,51 +53,63 @@ namespace Test::Generator::Utils {
             return result;
         }
 
-        static constexpr void CarveFrom(const CHDR::Coord<size_t, Kd>& _coord, std::pair<CHDR::Coord<size_t, Kd>, size_t>& _farthest, const size_t& _depth, const CHDR::Coord<size_t, Kd>& _size, std::vector<Cell>& _grid, std::mt19937 _random) {
+        static constexpr void CarveFrom(const CHDR::Coord<size_t, Kd>& _coord, std::pair<CHDR::Coord<size_t, Kd>, size_t>& _farthest, const CHDR::Coord<size_t, Kd>& _size, std::vector<Cell>& _grid, std::mt19937 _random) {
 
-            _grid[CHDR::Utils::To1D(_coord, _size)] = PATH;
+            std::stack<std::pair<CHDR::Coord<size_t, Kd>, size_t>> stack;
+            stack.push({ _coord, 0U });
 
-            if (_depth > _farthest.second) {
-                _farthest.first  = _coord;
-                _farthest.second = _depth;
-            }
+            while (!stack.empty()) {
 
-            auto dirs = GetDirections(_coord, _size);
+                auto [currentCoord, depth] = stack.top();
+                _grid[CHDR::Utils::To1D(currentCoord, _size)] = PATH;
 
-            std::shuffle(dirs.begin(), dirs.end(), _random);
+                if (depth > _farthest.second) {
+                    _farthest.first = currentCoord;
+                    _farthest.second = depth;
+                }
 
-            // Attempt to find unvisited cells:
-            for (size_t i = 0U; i < dirs.size(); ++i) {
+                auto dirs = GetDirections(currentCoord, _size);
+                std::shuffle(dirs.begin(), dirs.end(),_random);
 
-                const auto& dir = dirs[i];
+                bool hasUnvisited = false;
+                for (const auto& dir : dirs) {
 
-                auto lc = _coord;
-                auto cc = _coord;
+                    auto lc = currentCoord;
+                    auto cc = currentCoord;
 
-                bool validCellNeighbor = true;
+                    bool validCellNeighbor = true;
 
-                for (size_t j = 0U; j < Kd; ++j) {
+                    // as in original function
+                    for (size_t j = 0U; j < Kd; ++j) {
 
-                    lc[j] += dir[j];
-                    cc[j] += dir[j] * 2U;
+                        lc[j] +=     dir[j];
+                        cc[j] += 2 * dir[j];
 
-                    if (cc[j] >= _size[j]) {
-                        validCellNeighbor = false;
+                        if (cc[j] >= _size[j]) {
+                            validCellNeighbor = false;
+                            break;
+                        }
+                    }
 
-                        break;
+                    if (validCellNeighbor) {
+
+                        auto& ln = _grid[CHDR::Utils::To1D(lc, _size)];
+                        auto& cn = _grid[CHDR::Utils::To1D(cc, _size)];
+
+                        if (cn == WALL) {
+                            ln = PATH;
+
+                            stack.push({ cc, depth + 1 });
+
+                            hasUnvisited = true;
+
+                            break;
+                        }
                     }
                 }
 
-                if (validCellNeighbor) {
-
-                    auto& ln = _grid[CHDR::Utils::To1D(lc, _size)];
-                    auto& cn = _grid[CHDR::Utils::To1D(cc, _size)];
-
-                    if (cn == WALL) {
-                        ln = PATH;
-
-                        CarveFrom(cc, _farthest, _depth + 1, _size, _grid, _random);
-                    }
+                if (!hasUnvisited) {
+                    stack.pop();
                 }
             }
         }
@@ -142,9 +155,9 @@ namespace Test::Generator::Utils {
 
                     std::mt19937 gen(_seed == null_v ? std::random_device().operator()() : _seed);
 
-                    std::pair<CHDR::Coord<size_t, Kd>, size_t> farthest { _start, 0 };
+                    std::pair<CHDR::Coord<size_t, Kd>, size_t> farthest { _start, 0U };
 
-                    CarveFrom(_start, farthest, 0, _size, result, gen);
+                    CarveFrom(_start, farthest, _size, result, gen);
 
                     _end = farthest.first;
                 }

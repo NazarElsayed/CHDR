@@ -20,7 +20,7 @@ namespace Test::Tests {
 
             /***************************************/
 
-            coord_t size  { 33U, 33U };
+            coord_t size  { 50U, 50U };
             coord_t start {  0U,  0U };
             coord_t end;
 
