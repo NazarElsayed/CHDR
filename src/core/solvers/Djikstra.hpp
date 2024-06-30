@@ -7,14 +7,15 @@
 
 namespace CHDR::Solvers {
 
-    class Djikstra : public ISolver {
+    template <typename T>
+    class Djikstra : public ISolver<T> {
 
     private:
 
     public:
 
-        void Solve(const Mazes::IMaze& _maze) override {
-            throw std::runtime_error("Not implemented!");
+        void Solve(const Mazes::IMaze<T>& _maze) override {
+            throw std::runtime_error("Djikstra::Solve(const Mazes::IMaze& _maze) Not implemented!");
         }
 
     };

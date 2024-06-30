@@ -1,9 +1,9 @@
 #ifndef CHDR_GRID_HPP
 #define CHDR_GRID_HPP
 
-#include "../Coord.hpp"
-#include "../Node.hpp"
-#include "../Utils.hpp"
+#include "../types/Coord.hpp"
+#include "../types/Node.hpp"
+#include "../utils/Utils.hpp"
 #include "base/IMaze.hpp"
 
 #include <Debug.hpp>
@@ -16,7 +16,7 @@ namespace CHDR::Mazes {
      * @tparam Kd Dimensionality of the grid.
      */
     template <size_t Kd, typename T = uint32_t>
-    class Grid : public IMaze {
+    class Grid : public IMaze<T> {
 
         using coord_t = Coord<size_t, Kd>;
 

@@ -9,7 +9,7 @@
 #include <type_traits>
 #include <vector>
 
-#include "Coord.hpp"
+#include "types/Coord.hpp"
 
 namespace CHDR {
 

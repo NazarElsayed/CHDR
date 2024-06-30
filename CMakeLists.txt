@@ -53,14 +53,14 @@ add_library(CHDR INTERFACE
         src/core/mazes/Grid.hpp
         src/core/mazes/Tree.hpp
 
-        src/core/Node.hpp
+        src/core/types/Node.hpp
 
         src/core/solvers/AStar.hpp
         src/core/solvers/base/ISolver.hpp
         src/core/solvers/Djikstra.hpp
         src/core/solvers/JPS.hpp
 
-        src/core/Utils.hpp
+        src/core/utils/Utils.hpp
 )
 
 target_link_libraries(CHDR INTERFACE
@@ -82,7 +82,10 @@ endif()
 add_executable(Test
         src/test/main.cpp
 
-        src/test/RecursiveBacktrack.hpp
+        src/test/scripts/core/Application.hpp
+        src/test/scripts/generator/Grid.hpp
+        src/test/scripts/generator/utils/Backtracking.hpp
+        src/test/scripts/tests/AStar.hpp
 )
 
 target_include_directories(Test PRIVATE

@@ -3,6 +3,7 @@
 
 namespace CHDR::Mazes {
 
+    template <typename T>
     class IMaze {
 
     public:

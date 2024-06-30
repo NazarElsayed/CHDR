@@ -7,7 +7,8 @@
 
 namespace CHDR::Mazes {
 
-    class Graph : public IMaze {
+    template <typename T>
+    class Graph : public IMaze<T> {
 
     private:
 
