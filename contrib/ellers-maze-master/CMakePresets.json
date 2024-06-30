@@ -1,0 +1,38 @@
+{
+    "version": 2,
+    "configurePresets": [
+        {
+            "name": "osx-debug",
+            "displayName": "osx degug",
+            "description": "Configure for the debug build with Clang and Ninja",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_CXX_FLAGS": "-v -stdlib=libc++",
+                "CMAKE_CXX_COMPILER": "clang++",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+            }
+        },
+        {
+            "name": "x64-debug",
+            "displayName": "windows x64 debug",
+            "description": "Debug build with Clang and Ninja",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_CXX_COMPILER": "cl",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "osx-debug",
+            "configurePreset": "osx-debug",
+            "displayName": "Build osx-debug.",
+            "description": "Build osx-debug."
+        }
+    ]
+}

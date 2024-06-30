@@ -1,0 +1,45 @@
+BasedOnStyle: LLVM
+---
+SortIncludes: false
+TabWidth: 4
+ColumnLimit: 80
+IndentWidth: 4
+UseTab: Never
+IndentPPDirectives: None
+Language: Cpp
+Standard: Latest
+AlignTrailingComments: Never
+PointerAlignment: Left
+AccessModifierOffset: -4
+AlignEscapedNewlines: DontAlign
+AllowShortBlocksOnASingleLine: Empty
+AllowShortEnumsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortLoopsOnASingleLine: true
+AlwaysBreakTemplateDeclarations: Yes
+BreakBeforeBinaryOperators: NonAssignment
+BreakBeforeTernaryOperators: true
+DerivePointerAlignment: false
+IncludeCategories:
+  - Regex: '<[[:alnum:]_]+>'
+    Priority: 1
+  - Regex: '<(gtest|gmock)/'
+    Priority: 2
+  - Regex: '<[[:alnum:]_./]+>'
+    Priority: 3
+  - Regex: '"engine/'
+    Priority: 4
+  - Regex: '"game/'
+    Priority: 6
+  - Regex: '.*'
+    Priority: 6
+KeepEmptyLinesAtTheStartOfBlocks: false
+SpaceAfterCStyleCast: false
+SpaceAfterTemplateKeyword: false
+SpaceAroundPointerQualifiers: After
+SpaceBeforeCaseColon: false
+SpaceBeforeCtorInitializerColon: false
+SpaceBeforeInheritanceColon: false
+SpaceBeforeParens: Never
+SpaceBeforeRangeBasedForLoopColon: false
