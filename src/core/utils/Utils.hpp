@@ -169,7 +169,9 @@ namespace CHDR {
 		template <typename T, typename Ta, size_t Kd>
 		static constexpr T Product(const std::array<Ta, Kd>& _array) {
 
-			T result;
+			// TODO: Ensure that product does not overflow!
+
+			T result{};
 
 			if constexpr (Kd == 0U) {
 				result = 0;

@@ -22,32 +22,28 @@ namespace Test::Generator::Utils {
 
         static constexpr auto GetDirections(const CHDR::Coord<size_t, Kd>& _coord, const CHDR::Coord<size_t, Kd>& _size) {
 
-            constexpr size_t step(1);
+            constexpr size_t step(1U);
 
-            std::vector<CHDR::Coord<size_t, Kd>> result;
+            std::array<std::pair<bool, CHDR::Coord<size_t, Kd>>, Kd * 2U> result;
 
             // Positive:
             for (size_t i = 0U; i < Kd; ++i) {
 
                 CHDR::Coord<size_t, Kd> dir{};
+                dir[i] += step;
 
-                if (_coord[i] < _size[i] - step) {
-                    dir[i] += step;
-
-                    result.emplace_back(dir);
-                }
+                result[i].first = _coord[i] < _size[i] - step;
+                result[i].second = dir;
             }
 
             // Negative:
             for (size_t i = 0U; i < Kd; ++i) {
 
                 CHDR::Coord<size_t, Kd> dir{};
+                dir[i] -= step;
 
-                if (_coord[i] >= step) {
-                    dir[i] -= step;
-
-                    result.emplace_back(dir);
-                }
+                result[Kd + i].first = _coord[i] >= step;
+                result[Kd + i].second = dir;
             }
 
             return result;
@@ -72,38 +68,41 @@ namespace Test::Generator::Utils {
                 std::shuffle(dirs.begin(), dirs.end(),_random);
 
                 bool hasUnvisited = false;
-                for (const auto& dir : dirs) {
+                for (const auto& [inBounds, dir] : dirs) {
 
-                    auto lc = currentCoord;
-                    auto cc = currentCoord;
+                    if (inBounds) {
 
-                    bool validCellNeighbor = true;
+                        auto lc = currentCoord;
+                        auto cc = currentCoord;
 
-                    // as in original function
-                    for (size_t j = 0U; j < Kd; ++j) {
+                        bool validCellNeighbor = true;
 
-                        lc[j] +=     dir[j];
-                        cc[j] += 2 * dir[j];
+                        // as in original function
+                        for (size_t j = 0U; j < Kd; ++j) {
 
-                        if (cc[j] >= _size[j]) {
-                            validCellNeighbor = false;
-                            break;
+                            lc[j] +=      dir[j];
+                            cc[j] += 2U * dir[j];
+
+                            if (cc[j] >= _size[j]) {
+                                validCellNeighbor = false;
+                                break;
+                            }
                         }
-                    }
 
-                    if (validCellNeighbor) {
+                        if (validCellNeighbor) {
 
-                        auto& ln = _grid[CHDR::Utils::To1D(lc, _size)];
-                        auto& cn = _grid[CHDR::Utils::To1D(cc, _size)];
+                                  auto& ln = _grid[CHDR::Utils::To1D(lc, _size)];
+                            const auto& cn = _grid[CHDR::Utils::To1D(cc, _size)];
 
-                        if (cn == WALL) {
-                            ln = PATH;
+                            if (cn == WALL) {
+                                ln = PATH;
 
-                            stack.push({ cc, depth + 1 });
+                                stack.push({ cc, depth + 1 });
 
-                            hasUnvisited = true;
+                                hasUnvisited = true;
 
-                            break;
+                                break;
+                            }
                         }
                     }
                 }
@@ -116,18 +115,17 @@ namespace Test::Generator::Utils {
 
     public:
 
+
         /**
-         * Generate a maze using the Ellers algorithm.
+         * Generate a maze using the backtracking algorithm.
          *
          * @param _seed The seed used for random number generation. Set to -1 to use a random seed.
          * @param _size The size of the maze.
          * @return A vector representing the generated maze.
+         *
+         * @see Buck, J., 2010. Buckblog: Maze Generation: Recursive Backtracking. The Buckblog [online]. Available from: https://weblog.jamisbuck.org/2010/12/27/maze-generation-recursive-backtracking [Accessed 1 Jul 2024].
          */
-        static auto Generate(const CHDR::Coord<size_t, Kd>& _start, CHDR::Coord<size_t, Kd>& _end, CHDR::Coord<size_t, Kd> _size, const size_t& _seed) {
-
-            static constexpr size_t null_v = -1U;
-
-            std::vector<Cell> result;
+        static auto Generate(const CHDR::Coord<size_t, Kd>& _start, CHDR::Coord<size_t, Kd>& _end, const CHDR::Coord<size_t, Kd>& _size, const size_t& _seed) {
 
             /*
              * 1. Choose a starting point in the field.
@@ -140,7 +138,13 @@ namespace Test::Generator::Utils {
              *    back up to the last cell that has uncarved walls and repeat.
              *
              * 4. The algorithm ends when the process has backed all the way up to the starting point.
+             *
+             * (Buck, 2010)
              */
+
+            static constexpr size_t null_v = -1U;
+
+            std::vector<Cell> result;
 
             // Attempt to allocate the desired amount of space in memory.
             const auto product = CHDR::Utils::Product<size_t>(_size);
