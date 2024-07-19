@@ -20,7 +20,7 @@ namespace Test::Tests {
 
             /***************************************/
 
-            coord_t size  { 50U, 50U };
+            coord_t size  { 100U, 100U };
             coord_t start {  0U,  0U };
             coord_t end;
 
@@ -33,11 +33,9 @@ namespace Test::Tests {
 
             // Solve the maze:
             auto solver = CHDR::Solvers::AStar<T>();
-            solver.Solve(maze);
+            solver.Solve(maze, start, end);
         }
     };
-
 }
-
 
 #endif //TEST_ASTAR_HPP
