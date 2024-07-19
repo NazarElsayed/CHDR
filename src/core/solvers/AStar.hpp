@@ -16,20 +16,19 @@ namespace CHDR::Solvers {
     private:
 
     	template <size_t Kd>
-    	struct ASNode {
+    	struct ASData {
 
-    		ASNode* m_Parent;
-
-    		std::vector<ASNode*> m_Neighbors;
-
-			Coord<size_t, Kd> m_Position;
+    		Coord<size_t, Kd> m_Parent;
 
     		float m_GScore;
+    		float m_HScore;
     		float m_FScore;
 
-    		ASNode() {
-    			m_GScore = std::numeric_limits<float>::max();
-    		}
+    		ASData() :
+    			m_Parent(nullptr),
+    			m_GScore(std::numeric_limits<float>::max()),
+    			m_HScore(0.0f),
+    			m_FScore(0.0f) {}
     	};
 
     public:
@@ -41,21 +40,25 @@ namespace CHDR::Solvers {
         template <size_t Kd>
         auto Solve(const Mazes::Grid<Kd, T>& _maze, const Coord<size_t, Kd>& _start, const Coord<size_t, Kd>& _end) {
 
-			using node_t = ASNode<Kd>;
+			using node_t = ASData<Kd>;
         	using coord_t = Coord<size_t, Kd>;
+
+			std::unordered_map<coord_t, ASData<Kd>> openSet;
 
 			std::vector<coord_t> result;
 
-			_start.m_Parent = nullptr;
-			_start.m_GScore = 0;
-			_start.m_FScore = EulerDistance(_start, _end);
+			node_t start = _maze.At(_start);
+
+			start.m_Parent = nullptr;
+			start.m_GScore = 0;
+			start.m_FScore = EuclideanDistance(start.m_Position, _end);
 
 			// Custom comparitor for open set. Orders the set like a min heap.
 			auto min = [](node_t* _A, node_t* _B) { return _A->m_FScore > _B->m_FScore; };
 
 			// Create a priority queue to contain nodes as we process them.
 			std::priority_queue<node_t*, std::vector<node_t*>, decltype(min)> workingSet(min);
-			workingSet.push(&_start);
+			workingSet.push(&start);
 
 			/* Solve the path */
 			node_t* curr = nullptr;
@@ -100,7 +103,7 @@ namespace CHDR::Solvers {
         }
 
     	template <size_t Kd>
-		static auto _distanceHeuristic(const ASNode<Kd>& _A, const ASNode<Kd>& _B) {
+		static constexpr auto _distanceHeuristic(const Coord<size_t, Kd>& _A, const Coord<size_t, Kd>& _B) {
 	        return ManhattanDistance(_A, _B);
         }
 
@@ -115,7 +118,7 @@ namespace CHDR::Solvers {
 		 * @return The Euclidean distance between _A and _B.
 		 */
     	template <size_t Kd>
-    	static auto EuclideanDistance(const ASNode<Kd>& _A, const ASNode<Kd>& _B) {
+    	static constexpr auto EuclideanDistance(const Coord<size_t, Kd>& _A, const Coord<size_t, Kd>& _B) {
         	return sqrt(SqrEulerDistance(_A, _B));
         }
 
@@ -128,11 +131,11 @@ namespace CHDR::Solvers {
 		 * @return The squared Euclidean distance between _A and _B.
 		 */
     	template <size_t Kd>
-    	static auto SqrEuclideanDistance(const ASNode<Kd>& _A, const ASNode<Kd>& _B) {
+    	static constexpr auto SqrEuclideanDistance(const Coord<size_t, Kd>&& _A, const Coord<size_t, Kd>&& _B) {
 
 			float result = 0.0F;
 
-        	for (auto i = 0U; i < Kd; ++i) {
+        	for (size_t i = 0U; i < Kd; ++i) {
 
 				auto val = _B.m_Position[i] - _A.m_Position[i];
         		result += val * val;
@@ -150,11 +153,11 @@ namespace CHDR::Solvers {
 		  * @return The Manhattan distance between _A and _B.
 		  */
     	template <size_t Kd>
-    	static auto ManhattanDistance(const ASNode<Kd>& _A, const ASNode<Kd>& _B) {
+    	static constexpr auto ManhattanDistance(const Coord<size_t, Kd>& _A, const Coord<size_t, Kd>& _B) {
 
         	float result = 0.0F;
 
-        	for (auto i = 0U; i < Kd; ++i) {
+        	for (size_t i = 0U; i < Kd; ++i) {
         		result += abs(_B.m_Position[i] - _A.m_Position[i]);
         	}
 
