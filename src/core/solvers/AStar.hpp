@@ -14,23 +14,35 @@ namespace CHDR::Solvers {
     class AStar : public ISolver<T> {
 
     private:
+
         using coord_t = Coord<size_t, Kd>;
 
         struct ASData {
             float m_GScore;
             float m_FScore;
 
-            Coord<size_t, Kd> m_Parent;
+            coord_t m_Parent;
 
             constexpr ASData(const float& _gScore, const float& _hScore, const coord_t& _parent = {}) :
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
                 m_Parent(_parent) {}
+
         };
 
-        struct NodeCompare {
-            bool operator()(const std::pair<coord_t, ASData>& _a, const std::pair<coord_t, ASData>& _b) {
-                return _a.second.m_FScore > _b.second.m_FScore;
+        struct ASNode {
+
+            coord_t coord;
+            ASData  data;
+
+            ASNode(const coord_t& coord, const ASData& data) :
+                coord(coord),
+                data(data) {}
+        };
+
+        struct ASNodeCompare {
+            bool operator()(const ASNode& _a, const ASNode& _b) {
+                return _a.data.m_FScore > _b.data.m_FScore;
             }
         };
 
@@ -40,15 +52,28 @@ namespace CHDR::Solvers {
             throw std::runtime_error("AStar::Solve(const Mazes::IMaze& _maze) Not implemented!");
         }
 
-        auto Solve(const Mazes::Grid<Kd, T>& _maze, const Coord<size_t, Kd>& _start, const Coord<size_t, Kd>& _end) {
-
-            using node_t = std::pair<coord_t, ASData>;
-
+        auto Solve(const Mazes::Grid<Kd, T>& _maze, const coord_t& _start, const coord_t& _end) {
             std::vector<coord_t> result;
 
-            std::priority_queue<node_t, std::vector<node_t>, NodeCompare> openSet;
+            std::priority_queue<ASNode, std::vector<ASNode>, ASNodeCompare> openSet;
 
-            ASData startData(0.0f, EuclideanDistance(_start, _end));
+            ASNode start(_start, ASData(0.0f   , EuclideanDistance(_start, _end)));
+            ASNode data1(_start, ASData(98.887f, 0.5f  ));
+            ASNode data2(_start, ASData(17.5f  , 3.51f ));
+            ASNode data3(_start, ASData(103.23f, 145.5f));
+            ASNode data4(_start, ASData(27.05f , 12.2f ));
+
+            openSet.push(start);
+            openSet.push(data1);
+            openSet.push(data2);
+            openSet.push(data3);
+            openSet.push(data4);
+
+            const int size = openSet.size();
+            for (int i = 0; i < size; i++) {
+                std::cout << openSet.top().data.m_FScore << "\n";
+                openSet.pop();
+            }
         }
 
         static constexpr auto _distanceHeuristic(const Coord<size_t, Kd>& _A, const Coord<size_t, Kd>& _B) {
