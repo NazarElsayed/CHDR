@@ -32,17 +32,17 @@ namespace CHDR::Solvers {
 
         struct ASNode {
 
-            coord_t coord;
-            ASData  data;
+            coord_t m_Coord;
+            ASData  m_Data;
 
             ASNode(const coord_t& coord, const ASData& data) :
-                coord(coord),
-                data(data) {}
+                m_Coord(coord),
+                m_Data(data) {}
         };
 
         struct ASNodeCompare {
             bool operator()(const ASNode& _a, const ASNode& _b) {
-                return _a.data.m_FScore > _b.data.m_FScore;
+                return _a.m_Data.m_FScore > _b.m_Data.m_FScore;
             }
         };
 
