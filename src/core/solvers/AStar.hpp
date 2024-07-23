@@ -49,34 +49,6 @@ namespace CHDR::Solvers {
             std::priority_queue<node_t, std::vector<node_t>, NodeCompare> openSet;
 
             ASData startData(0.0f, EuclideanDistance(_start, _end));
-            ASData data1(101.5f, 6.4f);
-            ASData data2(13.5f, 5.4f);
-            ASData data3(123.4f, 4.321f);
-            ASData data4(2.4f, 44.321f);
-
-            node_t start(_start, startData);
-            node_t node1(_start, data1);
-            node_t node2(_start, data2);
-            node_t node3(_start, data3);
-            node_t node4(_start, data4);
-
-            openSet.push(start);
-            openSet.push(node1);
-            openSet.push(node2);
-            openSet.push(node3);
-            openSet.push(node4);
-
-            std::cout << std::endl;
-
-            const int size = openSet.size();
-            for (int i = 0; i < size; i++) {
-                std::cout << "\n";
-                std::cout << "start: " << start.second.m_FScore << "\n";
-                std::cout << openSet.top().second.m_FScore << "\n";
-                openSet.pop();
-            }
-
-            std::cout << std::endl;
         }
 
         static constexpr auto _distanceHeuristic(const Coord<size_t, Kd>& _A, const Coord<size_t, Kd>& _B) {
