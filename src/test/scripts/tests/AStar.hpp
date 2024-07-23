@@ -32,7 +32,7 @@ namespace Test::Tests {
             Generator::Display(start, end, size, maze);
 
             // Solve the maze:
-            auto solver = CHDR::Solvers::AStar<T>();
+            auto solver = CHDR::Solvers::AStar<T, Kd>();
             solver.Solve(maze, start, end);
         }
     };

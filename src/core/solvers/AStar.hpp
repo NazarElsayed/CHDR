@@ -10,28 +10,27 @@
 
 namespace CHDR::Solvers {
 
-    template<typename T>
+    template<typename T, size_t Kd>
     class AStar : public ISolver<T> {
 
     private:
+        using coord_t = Coord<size_t, Kd>;
 
-        template<size_t Kd>
         struct ASData {
             float m_GScore;
             float m_FScore;
 
             Coord<size_t, Kd> m_Parent;
 
-            constexpr ASData(const float& _gScore, const float& _hScore, const Coord<size_t, Kd>& _parent = {}) :
+            constexpr ASData(const float& _gScore, const float& _hScore, const coord_t& _parent = {}) :
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
                 m_Parent(_parent) {}
         };
 
-        template<size_t Kd>
         struct NodeCompare {
-            bool operator()(const ASData<Kd>& _a, const ASData<Kd>& _b) {
-                return _a.m_FScore > _b.m_FScore;
+            bool operator()(const std::pair<coord_t, ASData>& _a, const std::pair<coord_t, ASData>& _b) {
+                return _a.second.m_FScore > _b.second.m_FScore;
             }
         };
 
@@ -41,47 +40,45 @@ namespace CHDR::Solvers {
             throw std::runtime_error("AStar::Solve(const Mazes::IMaze& _maze) Not implemented!");
         }
 
-        template<size_t Kd>
         auto Solve(const Mazes::Grid<Kd, T>& _maze, const Coord<size_t, Kd>& _start, const Coord<size_t, Kd>& _end) {
-            using data_t  = ASData<Kd>;
-            using coord_t = Coord<size_t, Kd>;
+
+            using node_t = std::pair<coord_t, ASData>;
 
             std::vector<coord_t> result;
 
-            std::priority_queue<data_t, std::vector<data_t>, NodeCompare<Kd>> openSet;
+            std::priority_queue<node_t, std::vector<node_t>, NodeCompare> openSet;
 
-            data_t startData(0.0f, EuclideanDistance(_start, _end));
-            data_t data1(17.0f, 10.2f);
-            data_t data2(53.0f, 16.4f);
-            data_t data3(34.0f, 11.8f);
-            data_t data4(21.0f, 53.2f);
+            ASData startData(0.0f, EuclideanDistance(_start, _end));
+            ASData data1(101.5f, 6.4f);
+            ASData data2(13.5f, 5.4f);
+            ASData data3(123.4f, 4.321f);
+            ASData data4(2.4f, 44.321f);
 
-            openSet.push(startData);
-            openSet.push(data1);
-            openSet.push(data2);
-            openSet.push(data3);
-            openSet.push(data4);
+            node_t start(_start, startData);
+            node_t node1(_start, data1);
+            node_t node2(_start, data2);
+            node_t node3(_start, data3);
+            node_t node4(_start, data4);
+
+            openSet.push(start);
+            openSet.push(node1);
+            openSet.push(node2);
+            openSet.push(node3);
+            openSet.push(node4);
 
             std::cout << std::endl;
-            std::cout << "Priority queue data" << "\n";
 
             const int size = openSet.size();
             for (int i = 0; i < size; i++) {
-                std::cout << openSet.top().m_FScore << "\n";
+                std::cout << "\n";
+                std::cout << "start: " << start.second.m_FScore << "\n";
+                std::cout << openSet.top().second.m_FScore << "\n";
                 openSet.pop();
             }
 
             std::cout << std::endl;
-
-            //std::unordered_map<coord_t, data_t> openSet;
-            //openQueue.push(_start);
-
-            //std::pair<coord_t, data_t> start = std::make_pair(_start, startData);
-
-            //openSet.insert(start);
         }
 
-        template<size_t Kd>
         static constexpr auto _distanceHeuristic(const Coord<size_t, Kd>& _A, const Coord<size_t, Kd>& _B) {
             return ManhattanDistance(_A, _B);
         }
@@ -96,7 +93,6 @@ namespace CHDR::Solvers {
          * @param _B The second node.
          * @return The Euclidean distance between _A and _B.
          */
-        template<size_t Kd>
         static constexpr auto EuclideanDistance(const Coord<size_t, Kd>& _A, const Coord<size_t, Kd>& _B) {
             return sqrtf(SqrEuclideanDistance(_A, _B));
         }
@@ -109,7 +105,6 @@ namespace CHDR::Solvers {
          * @param _B The second node.
          * @return The squared Euclidean distance between _A and _B.
          */
-        template<size_t Kd>
         static constexpr auto SqrEuclideanDistance(const Coord<size_t, Kd>& _A, const Coord<size_t, Kd>& _B) {
             float result = 0.0F;
 
@@ -129,7 +124,6 @@ namespace CHDR::Solvers {
           * @param _B The second node.
           * @return The Manhattan distance between _A and _B.
           */
-        template<size_t Kd>
         static constexpr auto ManhattanDistance(const Coord<size_t, Kd>& _A, const Coord<size_t, Kd>& _B) {
             float result = 0.0F;
 
