@@ -57,12 +57,52 @@ namespace CHDR::Solvers {
 
             std::priority_queue<ASNode, std::vector<ASNode>, ASNodeCompare> openSet;
 
-            ASNode start(_start, ASData(0.0f   , EuclideanDistance(_start, _end)));
+            ASNode start(_start, ASData(0.0f, EuclideanDistance(_start, _end)));
 
             openSet.push(start);
+
+            bool complete = false;
+            while (!complete) {
+                ASNode current = openSet.top();
+                openSet.pop();
+
+                if (current.m_Coord == _end) {
+                    complete = true;
+                    result.push_back(current.m_Coord);
+                }
+                else {
+                    //Grab adjacent neighbours in each dimention. Does not include diagonals.
+                    for (size_t i = 0U; i < Kd; i++) {
+                        coord_t leftCoord  = current.m_Coord;
+                        coord_t rightCoord = current.m_Coord;
+
+                        --leftCoord[i];
+                        ++rightCoord[i];
+
+                        ASNode leftNeighbour(
+                            leftCoord,
+                            ASData(EuclideanDistance(current.m_Coord, leftCoord), EuclideanDistance(leftCoord, _end), current.m_Coord));
+
+                        ASNode rightNeighbour(
+                            rightCoord,
+                            ASData(EuclideanDistance(current.m_Coord, rightCoord), EuclideanDistance(rightCoord, _end), current.m_Coord));
+
+                        openSet.push(leftNeighbour);
+                        openSet.push(rightNeighbour);
+                    }
+                }
+
+                if (openSet.empty()) {
+                    complete = true;
+                }
+            }
+
+            //std::cout << result[0][0] << std::endl;
+
+            return result;
         }
 
-        static constexpr auto _distanceHeuristic(const Coord<size_t, Kd>& _A, const Coord<size_t, Kd>& _B) {
+        static constexpr auto _distanceHeuristic(const coord_t& _A, const coord_t& _B) {
             return ManhattanDistance(_A, _B);
         }
 
@@ -76,7 +116,7 @@ namespace CHDR::Solvers {
          * @param _B The second node.
          * @return The Euclidean distance between _A and _B.
          */
-        static constexpr auto EuclideanDistance(const Coord<size_t, Kd>& _A, const Coord<size_t, Kd>& _B) {
+        static constexpr auto EuclideanDistance(const coord_t& _A, const coord_t& _B) {
             return sqrtf(SqrEuclideanDistance(_A, _B));
         }
 
@@ -88,7 +128,7 @@ namespace CHDR::Solvers {
          * @param _B The second node.
          * @return The squared Euclidean distance between _A and _B.
          */
-        static constexpr auto SqrEuclideanDistance(const Coord<size_t, Kd>& _A, const Coord<size_t, Kd>& _B) {
+        static constexpr auto SqrEuclideanDistance(const coord_t& _A, const coord_t& _B) {
             float result = 0.0F;
 
             for (size_t i = 0U; i < Kd; ++i) {
@@ -107,7 +147,7 @@ namespace CHDR::Solvers {
           * @param _B The second node.
           * @return The Manhattan distance between _A and _B.
           */
-        static constexpr auto ManhattanDistance(const Coord<size_t, Kd>& _A, const Coord<size_t, Kd>& _B) {
+        static constexpr auto ManhattanDistance(const coord_t& _A, const coord_t& _B) {
             float result = 0.0F;
 
             for (size_t i = 0U; i < Kd; ++i) {
