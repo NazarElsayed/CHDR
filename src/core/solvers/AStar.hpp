@@ -7,6 +7,7 @@
 
 #include <Debug.hpp>
 #include <queue>
+#include <unordered_set>
 
 namespace CHDR::Solvers {
 
@@ -31,13 +32,16 @@ namespace CHDR::Solvers {
         };
 
         struct ASNode {
-
             coord_t m_Coord;
             ASData  m_Data;
 
             ASNode(const coord_t& coord, const ASData& data) :
                 m_Coord(coord),
                 m_Data(data) {}
+
+            bool operator == (const ASNode& _node) {
+                return m_Coord == _node.m_Coord;
+            }
         };
 
         struct ASNodeCompare {
@@ -52,10 +56,12 @@ namespace CHDR::Solvers {
             throw std::runtime_error("AStar::Solve(const Mazes::IMaze& _maze) Not implemented!");
         }
 
-        auto Solve(const Mazes::Grid<Kd, T>& _maze, const coord_t& _start, const coord_t& _end) {
+        auto Solve(const Mazes::Grid<Kd, T>& _maze, const coord_t& _start, const coord_t& _end) const {
+
             std::vector<coord_t> result;
 
             std::priority_queue<ASNode, std::vector<ASNode>, ASNodeCompare> openSet;
+            std::unordered_set<coord_t> closedSet;
 
             ASNode start(_start, ASData(0.0f, EuclideanDistance(_start, _end)));
 
@@ -67,8 +73,8 @@ namespace CHDR::Solvers {
                 openSet.pop();
 
                 if (current.m_Coord == _end) {
-                    complete = true;
                     result.push_back(current.m_Coord);
+                    complete = true;
                 }
                 else {
                     //Grab adjacent neighbours in each dimention. Does not include diagonals.
@@ -81,11 +87,13 @@ namespace CHDR::Solvers {
 
                         ASNode leftNeighbour(
                             leftCoord,
-                            ASData(EuclideanDistance(current.m_Coord, leftCoord), EuclideanDistance(leftCoord, _end), current.m_Coord));
+                            ASData(EuclideanDistance(current.m_Coord, leftCoord), EuclideanDistance(leftCoord, _end),
+                                   current.m_Coord));
 
                         ASNode rightNeighbour(
                             rightCoord,
-                            ASData(EuclideanDistance(current.m_Coord, rightCoord), EuclideanDistance(rightCoord, _end), current.m_Coord));
+                            ASData(EuclideanDistance(current.m_Coord, rightCoord), EuclideanDistance(rightCoord, _end),
+                                   current.m_Coord));
 
                         openSet.push(leftNeighbour);
                         openSet.push(rightNeighbour);
@@ -96,8 +104,6 @@ namespace CHDR::Solvers {
                     complete = true;
                 }
             }
-
-            //std::cout << result[0][0] << std::endl;
 
             return result;
         }
