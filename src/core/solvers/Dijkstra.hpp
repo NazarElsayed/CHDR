@@ -8,7 +8,7 @@
 namespace CHDR::Solvers {
 
     template <typename T>
-    class Djikstra : public ISolver<T> {
+    class Dijkstra : public ISolver<T> {
 
     private:
 

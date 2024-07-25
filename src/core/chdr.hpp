@@ -8,7 +8,7 @@
 
 #include "solvers/base/ISolver.hpp"
 #include "solvers/AStar.hpp"
-#include "solvers/Djikstra.hpp"
+#include "solvers/Dijkstra.hpp"
 #include "solvers/JPS.hpp"
 
 #include "types/Coord.hpp"

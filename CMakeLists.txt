@@ -57,7 +57,7 @@ add_library(CHDR INTERFACE
 
         src/core/solvers/AStar.hpp
         src/core/solvers/base/ISolver.hpp
-        src/core/solvers/Djikstra.hpp
+        src/core/solvers/Dijkstra.hpp
         src/core/solvers/JPS.hpp
 
         src/core/utils/Utils.hpp
