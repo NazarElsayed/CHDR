@@ -35,20 +35,29 @@ namespace CHDR::Mazes {
 
     public:
 
-        constexpr Grid(const coord_t& _size) {
-            m_Size = _size;
+        constexpr Grid(const coord_t& _size) :
+            m_Size(_size),
+            m_Nodes(Utils::Product<size_t>(m_Size)) {}
 
-            m_Nodes.resize(Utils::Product<size_t>(m_Size));
+
+        constexpr Grid(const coord_t& _size, const std::vector<Node<T>>& _nodes) :
+            m_Size(_size),
+            m_Nodes(_nodes) {}
+
+        template <typename... Args>
+        constexpr Grid(const Args&... _size) :
+            m_Size { _size... },
+            m_Nodes(Utils::Product<size_t>(m_Size))
+        {
+            static_assert(sizeof...(Args) == Rank, "Number of arguments must equal the Grid's rank.");
         }
 
         template <typename... Args>
-        constexpr Grid(const Args&... _size) {
-
+        constexpr Grid(const Args&... _size, const std::vector<Node<T>>& _nodes) :
+            m_Size { _size... },
+            m_Nodes(_nodes)
+        {
             static_assert(sizeof...(Args) == Rank, "Number of arguments must equal the Grid's rank.");
-
-            m_Size = { _size... };
-
-            m_Nodes.resize(Utils::Product<size_t>(m_Size));
         }
 
         [[nodiscard]] constexpr const std::vector<Node<T>>& Nodes() const {
