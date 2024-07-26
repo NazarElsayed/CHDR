@@ -9,6 +9,8 @@
 #include <Debug.hpp>
 
 #include <vector>
+#include <array>
+#include <optional>
 
 namespace CHDR::Mazes {
 
@@ -74,6 +76,34 @@ namespace CHDR::Mazes {
 
         constexpr void Size(const coord_t& _value) {
             m_Size = _value;
+        }
+
+        auto GetActiveNeighbours(const coord_t& _coord) const {
+
+            std::vector<coord_t> result;
+
+            for (size_t i = 0U; i < Kd; i++) {
+
+                if (_coord[i] > 0) {
+                    coord_t nCoord = _coord;
+                    --nCoord[i];
+
+                    if (At(nCoord).IsActive()) {
+                        result.emplace_back(std::move(nCoord));
+                    }
+                }
+
+                if (_coord[i] < m_Size[i] - 1) {
+                    coord_t pCoord = _coord;
+                    ++pCoord[i];
+
+                    if (At(pCoord).IsActive()) {
+                        result.emplace_back(std::move(pCoord));
+                    }
+                }
+            }
+
+            return result;
         }
 
         template<typename... Args>

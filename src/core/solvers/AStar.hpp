@@ -9,6 +9,8 @@
 #include <queue>
 #include <unordered_set>
 
+#include <functional>
+
 namespace CHDR::Solvers {
 
     template<typename T, size_t Kd>
@@ -46,6 +48,22 @@ namespace CHDR::Solvers {
             }
         };
 
+        struct ASNodeHash {
+
+            size_t operator()(const ASNode& _node) const {
+
+                size_t result = 0U;
+
+                std::hash<T> hashing_func;
+
+                for (size_t i = 0U; i < Kd; ++i) {
+                    result ^= hashing_func(_node.m_Coord[i]) << (i % (sizeof(size_t)*8));
+                }
+
+                return result;
+            }
+        };
+
         struct ASNodeCompare {
 
             [[nodiscard]] constexpr bool operator () (const ASNode& _a, const ASNode& _b) const {
@@ -63,58 +81,47 @@ namespace CHDR::Solvers {
 
             std::vector<coord_t> result;
 
-            std::unordered_set<coord_t> closedSet;
-
+            std::unordered_set<ASNode, ASNodeHash> allNodes;
             std::priority_queue<ASNode, std::vector<ASNode>, ASNodeCompare> openSet;
-            openSet.emplace(ASNode(_start, { 0.0F, _h(_start, _end) }));
+
+            ASNode start(_start, ASData(0.0f, _h(_start, _end)));
+
+            openSet.emplace(std::move(start));
 
             bool complete(false);
             while (!complete) {
 
-                const auto curr = std::move(openSet.top());
+                const auto current = std::move(openSet.top());
                 openSet.pop();
 
-                if (curr.m_Coord == _end) {
-                    result.push_back(curr.m_Coord);
+                if (current.m_Coord == _end) {
+                    result.push_back(current.m_Coord);
 
                     complete = true;
                 }
                 else {
 
-                    // Grab adjacent neighbours in each dimention. Does not include diagonals.
-                    for (size_t i = 0U; i < Kd; i++) {
+                    for (const auto& neighbour : _maze.GetActiveNeighbours(current.m_Coord)) {
 
-                        {
-                            auto leftCoord = curr.m_Coord;
-                            --leftCoord[i];
+                        ASNode node (neighbour, ASData(current.m_Data.m_GScore + 1, _h(neighbour, _end), current.m_Coord));
 
-                            openSet.emplace(
-                                ASNode(
-                                    leftCoord,
-                                    {
-                                        _h(curr.m_Coord, leftCoord),
-                                        _h(leftCoord, _end),
-                                        curr.m_Coord
-                                    }
-                                )
-                            );
+                        /*//Check node already exists in collections
+                        auto search = allNodes.find(node);
+                        if (search != allNodes.end()) {
+                            //Update node in collections
+
+                            auto& existingNode = *search;
+                            if (node.m_Data.m_FScore < existingNode.m_Data.m_FScore) {
+
+                                //Update item in openSet and resort value.
+                            }
                         }
+                        else {
+                            //Add node to collections
 
-                        {
-                            auto rightCoord = curr.m_Coord;
-                            ++rightCoord[i];
-
-                            openSet.emplace(
-                                ASNode(
-                                    rightCoord,
-                                    {
-                                        _h(curr.m_Coord, rightCoord),
-                                        _h(rightCoord, _end),
-                                        curr.m_Coord
-                                    }
-                                )
-                            );
-                        }
+                            openSet.emplace(node);
+                            allNodes.emplace(node);
+                        }*/
                     }
                 }
 

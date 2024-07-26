@@ -17,7 +17,7 @@ namespace CHDR {
     public:
 
         [[nodiscard]] constexpr bool IsActive() const {
-            return m_Value != 0;
+            return m_Value != std::numeric_limits<W>::max();
         }
 
         constexpr Node(const W& _value = 0) {
