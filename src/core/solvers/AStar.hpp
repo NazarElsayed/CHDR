@@ -19,12 +19,13 @@ namespace CHDR::Solvers {
         using coord_t = Coord<size_t, Kd>;
 
         struct ASData {
+
             float m_GScore;
             float m_FScore;
 
             coord_t m_Parent;
 
-            constexpr ASData(const float& _gScore, const float& _hScore, const coord_t& _parent = {}) :
+            [[nodiscard]] constexpr ASData(const float& _gScore, const float& _hScore, const coord_t& _parent = {}) :
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
                 m_Parent(_parent) {}
@@ -32,20 +33,22 @@ namespace CHDR::Solvers {
         };
 
         struct ASNode {
+
             coord_t m_Coord;
             ASData  m_Data;
 
-            ASNode(const coord_t& coord, const ASData& data) :
+            [[nodiscard]] constexpr ASNode(const coord_t& coord, const ASData& data) :
                 m_Coord(coord),
                 m_Data(data) {}
 
-            bool operator == (const ASNode& _node) {
+            [[nodiscard]] constexpr bool operator == (const ASNode& _node) const {
                 return m_Coord == _node.m_Coord;
             }
         };
 
         struct ASNodeCompare {
-            bool operator()(const ASNode& _a, const ASNode& _b) {
+
+            [[nodiscard]] constexpr bool operator () (const ASNode& _a, const ASNode& _b) const {
                 return _a.m_Data.m_FScore > _b.m_Data.m_FScore;
             }
         };
@@ -60,43 +63,58 @@ namespace CHDR::Solvers {
 
             std::vector<coord_t> result;
 
-            std::priority_queue<ASNode, std::vector<ASNode>, ASNodeCompare> openSet;
             std::unordered_set<coord_t> closedSet;
 
-            ASNode start(_start, ASData(0.0f, EuclideanDistance(_start, _end)));
+            std::priority_queue<ASNode, std::vector<ASNode>, ASNodeCompare> openSet;
+            openSet.emplace(ASNode(_start, { 0.0F, _h(_start, _end) }));
 
-            openSet.push(start);
-
-            bool complete = false;
+            bool complete(false);
             while (!complete) {
-                ASNode current = openSet.top();
+
+                const auto curr = std::move(openSet.top());
                 openSet.pop();
 
-                if (current.m_Coord == _end) {
-                    result.push_back(current.m_Coord);
+                if (curr.m_Coord == _end) {
+                    result.push_back(curr.m_Coord);
+
                     complete = true;
                 }
                 else {
-                    //Grab adjacent neighbours in each dimention. Does not include diagonals.
+
+                    // Grab adjacent neighbours in each dimention. Does not include diagonals.
                     for (size_t i = 0U; i < Kd; i++) {
-                        coord_t leftCoord  = current.m_Coord;
-                        coord_t rightCoord = current.m_Coord;
 
-                        --leftCoord[i];
-                        ++rightCoord[i];
+                        {
+                            auto leftCoord = curr.m_Coord;
+                            --leftCoord[i];
 
-                        ASNode leftNeighbour(
-                            leftCoord,
-                            ASData(EuclideanDistance(current.m_Coord, leftCoord), EuclideanDistance(leftCoord, _end),
-                                   current.m_Coord));
+                            openSet.emplace(
+                                ASNode(
+                                    leftCoord,
+                                    {
+                                        _h(curr.m_Coord, leftCoord),
+                                        _h(leftCoord, _end),
+                                        curr.m_Coord
+                                    }
+                                )
+                            );
+                        }
 
-                        ASNode rightNeighbour(
-                            rightCoord,
-                            ASData(EuclideanDistance(current.m_Coord, rightCoord), EuclideanDistance(rightCoord, _end),
-                                   current.m_Coord));
+                        {
+                            auto rightCoord = curr.m_Coord;
+                            ++rightCoord[i];
 
-                        openSet.push(leftNeighbour);
-                        openSet.push(rightNeighbour);
+                            openSet.emplace(
+                                ASNode(
+                                    rightCoord,
+                                    {
+                                        _h(curr.m_Coord, rightCoord),
+                                        _h(rightCoord, _end),
+                                        curr.m_Coord
+                                    }
+                                )
+                            );
+                        }
                     }
                 }
 
@@ -108,8 +126,10 @@ namespace CHDR::Solvers {
             return result;
         }
 
-        static constexpr auto _distanceHeuristic(const coord_t& _A, const coord_t& _B) {
-            return ManhattanDistance(_A, _B);
+        [[nodiscard]] static constexpr auto _h(const coord_t& _A, const coord_t& _B) {
+            return EuclideanDistance(_A, _B);
+            //return SqrEuclideanDistance(_A, _B);
+            //return ManhattanDistance(_A, _B);
         }
 
 #pragma region Heuristics
@@ -122,7 +142,7 @@ namespace CHDR::Solvers {
          * @param _B The second node.
          * @return The Euclidean distance between _A and _B.
          */
-        static constexpr auto EuclideanDistance(const coord_t& _A, const coord_t& _B) {
+        [[nodiscard]] static constexpr auto EuclideanDistance(const coord_t& _A, const coord_t& _B) {
             return sqrtf(SqrEuclideanDistance(_A, _B));
         }
 
@@ -134,7 +154,8 @@ namespace CHDR::Solvers {
          * @param _B The second node.
          * @return The squared Euclidean distance between _A and _B.
          */
-        static constexpr auto SqrEuclideanDistance(const coord_t& _A, const coord_t& _B) {
+        [[nodiscard]] static constexpr auto SqrEuclideanDistance(const coord_t& _A, const coord_t& _B) {
+
             float result = 0.0F;
 
             for (size_t i = 0U; i < Kd; ++i) {
@@ -153,7 +174,8 @@ namespace CHDR::Solvers {
           * @param _B The second node.
           * @return The Manhattan distance between _A and _B.
           */
-        static constexpr auto ManhattanDistance(const coord_t& _A, const coord_t& _B) {
+        [[nodiscard]] static constexpr auto ManhattanDistance(const coord_t& _A, const coord_t& _B) {
+
             float result = 0.0F;
 
             for (size_t i = 0U; i < Kd; ++i) {
@@ -164,6 +186,7 @@ namespace CHDR::Solvers {
         }
 
 #pragma endregion Heuristics
+
     };
 } // CHDR::Solvers
 
