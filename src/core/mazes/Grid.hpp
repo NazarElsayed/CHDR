@@ -68,7 +68,7 @@ namespace CHDR::Mazes {
         }
 
         template<typename... Args>
-        [[nodiscard]] constexpr Node<T>& At(const Args&... _coord) const {
+        [[nodiscard]] constexpr Node<T>& At(const Args&... _coord) {
 
             const size_t index = Utils::To1D({ _coord... }, m_Size);
 
@@ -79,7 +79,7 @@ namespace CHDR::Mazes {
 #endif // NDEBUG
         }
 
-        [[nodiscard]] constexpr Node<T>& At(const coord_t& _coord) const {
+        [[nodiscard]] constexpr Node<T>& At(const coord_t& _coord) {
 
             const size_t index = Utils::To1D(_coord, m_Size);
 
@@ -91,7 +91,7 @@ namespace CHDR::Mazes {
         }
 
         template<typename... Args>
-        [[nodiscard]] constexpr Node<T>& At(const size_t& _index) const {
+        [[nodiscard]] constexpr Node<T>& At(const size_t& _index) {
 
 #ifndef NDEBUG
             return m_Nodes.at(_index);
