@@ -109,6 +109,39 @@ namespace CHDR::Mazes {
 #endif // NDEBUG
         }
 
+        template<typename... Args>
+        [[nodiscard]] const Node<T>& At(const Args&... _coord) const {
+
+            const size_t index = Utils::To1D({ _coord... }, m_Size);
+
+#ifndef NDEBUG
+            return m_Nodes.at(index);
+#else
+            return m_Nodes[index];
+#endif // NDEBUG
+        }
+
+        [[nodiscard]] const Node<T>& At(const coord_t& _coord) const {
+
+            const size_t index = Utils::To1D(_coord, m_Size);
+
+#ifndef NDEBUG
+            return m_Nodes.at(index);
+#else
+            return m_Nodes[index];
+#endif // NDEBUG
+        }
+
+        template<typename... Args>
+        [[nodiscard]] const Node<T>& At(const size_t& _index) const {
+
+#ifndef NDEBUG
+            return m_Nodes.at(_index);
+#else
+            return m_Nodes[_index];
+#endif // NDEBUG
+        }
+
     };
 
 } // CHDR::Mazes
