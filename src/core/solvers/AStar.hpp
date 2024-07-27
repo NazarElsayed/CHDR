@@ -87,17 +87,15 @@ namespace CHDR::Solvers {
             std::vector<coord_t> result;
 
             std::unordered_set<ASNode, ASNodeHash> closedSet;
-            Heap<ASNode, ASNodeCompare> openSet;
+            std::priority_queue<ASNode, std::vector<ASNode>, ASNodeCompare> openSet;
 
-            ASNode start(_start, ASData(0.0f, _h(_start, _end)));
-
-            openSet.Push(start);
+            openSet.emplace(ASNode(_start, ASData(0.0f, _h(_start, _end))));
 
             bool complete(false);
             while (!complete) {
 
-                const auto current = openSet.Top();
-                openSet.Pop();
+                const auto current = openSet.top();
+                openSet.pop();
 
                 if (current.m_Coord == _end) {
                     result.push_back(current.m_Coord);
@@ -112,26 +110,16 @@ namespace CHDR::Solvers {
 
                         //Check node already exists in collections
                         auto search = closedSet.find(node);
-                        if (search != closedSet.end()) {
-                            //Update node in collections
-
-                            auto& existingNode = *search;
-                            if (node.m_Data.m_FScore < existingNode.m_Data.m_FScore) {
-
-                                //Update item in openSet and resort value.
-                                openSet.Push(node);
-                            }
-                        }
-                        else {
+                        if (search == closedSet.end()) {
                             //Add node to openSet
-                            openSet.Push(node);
+                            openSet.emplace(node);
                         }
                     }
 
                     closedSet.insert(current);
                 }
 
-                if (openSet.Empty()) {
+                if (openSet.empty()) {
                     complete = true;
                 }
             }
