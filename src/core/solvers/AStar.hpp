@@ -11,6 +11,8 @@
 
 #include <functional>
 
+#include "types/Heap.hpp"
+
 namespace CHDR::Solvers {
 
     template<typename T, size_t Kd>
@@ -36,10 +38,13 @@ namespace CHDR::Solvers {
 
         struct ASNode {
 
+            size_t m_HeapIndex;
+
             coord_t m_Coord;
             ASData  m_Data;
 
             [[nodiscard]] constexpr ASNode(const coord_t& coord, const ASData& data) :
+                m_HeapIndex(0U),
                 m_Coord(coord),
                 m_Data(data) {}
 
@@ -57,7 +62,7 @@ namespace CHDR::Solvers {
                 std::hash<T> hashing_func;
 
                 for (size_t i = 0U; i < Kd; ++i) {
-                    result ^= hashing_func(_node.m_Coord[i]) << (i % (sizeof(size_t)*8));
+                    result ^= hashing_func(_node.m_Coord[i]) << i % (sizeof(size_t)*8);
                 }
 
                 return result;
@@ -81,18 +86,18 @@ namespace CHDR::Solvers {
 
             std::vector<coord_t> result;
 
-            std::unordered_set<ASNode, ASNodeHash> allNodes;
-            std::priority_queue<ASNode, std::vector<ASNode>, ASNodeCompare> openSet;
+            std::unordered_set<ASNode, ASNodeHash> closedSet;
+            Heap<ASNode, ASNodeCompare> openSet;
 
             ASNode start(_start, ASData(0.0f, _h(_start, _end)));
 
-            openSet.emplace(std::move(start));
+            openSet.Push(start);
 
             bool complete(false);
             while (!complete) {
 
-                const auto current = std::move(openSet.top());
-                openSet.pop();
+                const auto current = openSet.Top();
+                openSet.Pop();
 
                 if (current.m_Coord == _end) {
                     result.push_back(current.m_Coord);
@@ -105,30 +110,33 @@ namespace CHDR::Solvers {
 
                         ASNode node (neighbour, ASData(current.m_Data.m_GScore + 1, _h(neighbour, _end), current.m_Coord));
 
-                        /*//Check node already exists in collections
-                        auto search = allNodes.find(node);
-                        if (search != allNodes.end()) {
+                        //Check node already exists in collections
+                        auto search = closedSet.find(node);
+                        if (search != closedSet.end()) {
                             //Update node in collections
 
                             auto& existingNode = *search;
                             if (node.m_Data.m_FScore < existingNode.m_Data.m_FScore) {
 
                                 //Update item in openSet and resort value.
+                                openSet.Push(node);
                             }
                         }
                         else {
-                            //Add node to collections
-
-                            openSet.emplace(node);
-                            allNodes.emplace(node);
-                        }*/
+                            //Add node to openSet
+                            openSet.Push(node);
+                        }
                     }
+
+                    closedSet.insert(current);
                 }
 
-                if (openSet.empty()) {
+                if (openSet.Empty()) {
                     complete = true;
                 }
             }
+
+            std::cout << result[0][0] << ", " << result[0][1] << std::endl;
 
             return result;
         }
