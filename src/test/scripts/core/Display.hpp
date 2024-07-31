@@ -173,12 +173,13 @@ namespace Test {
             auto size = _maze.Size();
             size[0] += even_width ? 2 : 3;
 
+            const int offset = size[0] + 1;
             for (auto coord : _path) {
-                coord[0] += 1;
-                coord[1] += 1;
 
-                auto index = CHDR::Utils::To1D(coord, size);
-                image[index] = "🐁";
+                if (coord != _end) {
+                    auto index   = CHDR::Utils::To1D(coord, size) + offset;
+                    image[index] = "🐁";
+                }
             }
 
             for (const auto& item : image) {

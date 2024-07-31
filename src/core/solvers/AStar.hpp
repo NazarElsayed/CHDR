@@ -98,6 +98,8 @@ namespace CHDR::Solvers {
 
                 if (current.m_Coord == _end) {
 
+                    result.push_back(current.m_Coord);
+
                     ASNode node = closedSet.at(current.m_Data.m_Parent);
                     while (node.m_Coord != _start) {
                         result.push_back(node.m_Coord);
@@ -128,11 +130,34 @@ namespace CHDR::Solvers {
                 }
             }
 
-            /*for (const auto &coord : result) {
-                std::cout << coord[0] << ", " << coord[1] << std::endl;
-            }*/
+            std::cout << std::endl;
+
+            for (const auto& coord : result) {
+
+                std::cout << "[";
+
+                for (size_t i = 0; i < Kd; i++) {
+                    std::cout << coord[i] << (i < Kd - 1 ? ", " : "");
+                }
+                std::cout << "]" << "\n";
+            }
+
+            PrintPath(result);
 
             return result;
+        }
+
+        constexpr void PrintPath(std::vector<coord_t>& _path) const {
+
+            for (const auto& coord : _path) {
+
+                std::cout << "[";
+
+                for (size_t i = 0; i < Kd; i++) {
+                    std::cout << coord[i] << (i < Kd - 1 ? ", " : "");
+                }
+                std::cout << "]" << "\n";
+            }
         }
 
         [[nodiscard]] static constexpr auto _h(const coord_t& _A, const coord_t& _B) {

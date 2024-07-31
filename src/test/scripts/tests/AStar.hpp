@@ -37,6 +37,7 @@ namespace Test::Tests {
             auto solver = CHDR::Solvers::AStar<T, Kd>();
             auto path = solver.Solve(maze, start, end);
 
+            // Display result:
             Display<T, Kd>::DrawMaze(start, end, size, maze, path);
         }
     };
