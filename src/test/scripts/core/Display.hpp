@@ -2,9 +2,9 @@
 #define DISPLAY_HPP
 
 #include <vector>
-#include <types/Coord.hpp>
 
-#include "mazes/Grid.hpp"
+#include <types/Coord.hpp>
+#include <mazes/Grid.hpp>
 
 namespace Test {
 
@@ -27,7 +27,7 @@ namespace Test {
 
             constexpr auto* empty_str = "  ";
             constexpr auto*  wall_str = "██";
-            constexpr auto   line_brk = '\n';
+            constexpr auto*  line_brk = "\n";
 
             const bool even_width = _size[0U] % 2U == 0U;
 
