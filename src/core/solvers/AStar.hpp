@@ -130,24 +130,14 @@ namespace CHDR::Solvers {
                 }
             }
 
-            std::cout << std::endl;
-
-            for (const auto& coord : result) {
-
-                std::cout << "[";
-
-                for (size_t i = 0; i < Kd; i++) {
-                    std::cout << coord[i] << (i < Kd - 1 ? ", " : "");
-                }
-                std::cout << "]" << "\n";
-            }
-
             PrintPath(result);
 
             return result;
         }
 
         constexpr void PrintPath(std::vector<coord_t>& _path) const {
+
+            std::cout << std::endl;
 
             for (const auto& coord : _path) {
 
@@ -156,6 +146,7 @@ namespace CHDR::Solvers {
                 for (size_t i = 0; i < Kd; i++) {
                     std::cout << coord[i] << (i < Kd - 1 ? ", " : "");
                 }
+
                 std::cout << "]" << "\n";
             }
         }
