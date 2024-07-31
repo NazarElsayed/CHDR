@@ -1,5 +1,5 @@
-#ifndef DISPLAY_HPP
-#define DISPLAY_HPP
+#ifndef TEST_DISPLAY_HPP
+#define TEST_DISPLAY_HPP
 
 #include <vector>
 
@@ -189,4 +189,4 @@ namespace Test {
     };
 }
 
-#endif //DISPLAY_HPP
+#endif //TEST_DISPLAY_HPP
