@@ -33,7 +33,6 @@ namespace CHDR::Solvers {
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
                 m_Parent(_parent) {}
-
         };
 
         struct ASNode {
@@ -86,7 +85,7 @@ namespace CHDR::Solvers {
 
             std::vector<coord_t> result;
 
-            std::unordered_set<ASNode, ASNodeHash> closedSet;
+            std::unordered_map<coord_t, ASNode> closedSet;
             std::priority_queue<ASNode, std::vector<ASNode>, ASNodeCompare> openSet;
 
             openSet.emplace(ASNode(_start, ASData(0.0f, _h(_start, _end))));
@@ -100,23 +99,29 @@ namespace CHDR::Solvers {
                 if (current.m_Coord == _end) {
                     result.push_back(current.m_Coord);
 
+                    ASNode node = closedSet.at(current.m_Data.m_Parent);
+                    while (node.m_Coord != _start) {
+                        result.push_back(node.m_Coord);
+                        node = closedSet.at(node.m_Data.m_Parent);
+                    }
+
+                    std::reverse(result.begin(), result.end());
+
                     complete = true;
                 }
                 else {
 
                     for (const auto& neighbour : _maze.GetActiveNeighbours(current.m_Coord)) {
 
-                        ASNode node (neighbour, ASData(current.m_Data.m_GScore + 1, _h(neighbour, _end), current.m_Coord));
-
                         //Check node already exists in collections
-                        auto search = closedSet.find(node);
+                        auto search = closedSet.find(neighbour);
                         if (search == closedSet.end()) {
                             //Add node to openSet
-                            openSet.emplace(node);
+                            openSet.emplace(ASNode(neighbour, ASData(current.m_Data.m_GScore + 1, _h(neighbour, _end), current.m_Coord)));
                         }
                     }
 
-                    closedSet.insert(current);
+                    closedSet.emplace(current.m_Coord ,current);
                 }
 
                 if (openSet.empty()) {
@@ -124,7 +129,9 @@ namespace CHDR::Solvers {
                 }
             }
 
-            std::cout << result[0][0] << ", " << result[0][1] << std::endl;
+            for (const auto &coord : result) {
+                std::cout << coord[0] << ", " << coord[1] << std::endl;
+            }
 
             return result;
         }
