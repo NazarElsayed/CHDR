@@ -130,7 +130,7 @@ namespace CHDR::Solvers {
                 }
             }
 
-            PrintPath(result);
+            //PrintPath(result);
 
             return result;
         }
@@ -152,9 +152,9 @@ namespace CHDR::Solvers {
         }
 
         [[nodiscard]] static constexpr auto _h(const coord_t& _A, const coord_t& _B) {
-            return EuclideanDistance(_A, _B);
+            //return EuclideanDistance(_A, _B);
             //return SqrEuclideanDistance(_A, _B);
-            //return ManhattanDistance(_A, _B);
+            return ManhattanDistance(_A, _B);
         }
 
 #pragma region Heuristics
