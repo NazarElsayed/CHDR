@@ -81,6 +81,7 @@ namespace CHDR::Mazes {
         auto GetActiveNeighbours(const coord_t& _coord) const {
 
             std::vector<coord_t> result;
+            result.reserve(Kd * 2U);
 
             for (size_t i = 0U; i < Kd; i++) {
 

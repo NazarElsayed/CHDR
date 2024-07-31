@@ -129,9 +129,9 @@ namespace CHDR::Solvers {
                 }
             }
 
-            for (const auto &coord : result) {
+            /*for (const auto &coord : result) {
                 std::cout << coord[0] << ", " << coord[1] << std::endl;
-            }
+            }*/
 
             return result;
         }
