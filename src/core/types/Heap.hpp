@@ -35,8 +35,11 @@ namespace CHDR {
         constexpr void Rebuild() {
             std::make_heap(m_Data.begin(), m_Data.end(), m_CompareFunction);
         }
-    };
 
+        size_t GetPosition(T& _data) {
+            return (&_data * sizeof(_data)) - &m_Data;
+        }
+    };
 }
 
 #endif

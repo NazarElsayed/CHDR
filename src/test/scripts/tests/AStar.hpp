@@ -3,6 +3,7 @@
 
 #include <chdr.hpp>
 
+#include "../core/Display.hpp"
 #include "../generator/Grid.hpp"
 
 namespace Test::Tests {
@@ -21,7 +22,7 @@ namespace Test::Tests {
             /***************************************/
 
             // Generate a maze:
-            coord_t size  { 100U, 100U };
+            coord_t size  { 25U, 25U };
             coord_t start {  0U,  0U };
             coord_t end;
 
@@ -34,7 +35,9 @@ namespace Test::Tests {
 
             // Solve the maze:
             auto solver = CHDR::Solvers::AStar<T, Kd>();
-            solver.Solve(maze, start, end);
+            auto path = solver.Solve(maze, start, end);
+
+            Display<T, Kd>::DrawMaze(start, end, size, maze, path);
         }
     };
 }

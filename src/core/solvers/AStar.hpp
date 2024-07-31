@@ -97,7 +97,6 @@ namespace CHDR::Solvers {
                 openSet.pop();
 
                 if (current.m_Coord == _end) {
-                    result.push_back(current.m_Coord);
 
                     ASNode node = closedSet.at(current.m_Data.m_Parent);
                     while (node.m_Coord != _start) {
