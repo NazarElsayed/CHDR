@@ -226,7 +226,7 @@ NestedBreak:
          */
         [[nodiscard]] static constexpr auto SqrEuclideanDistance(const coord_t& _A, const coord_t& _B) {
 
-            Ts result = 0;
+            Ts result(0);
 
             for (size_t i = 0U; i < Kd; ++i) {
                 const auto val = _B[i] - _A[i];
@@ -246,7 +246,7 @@ NestedBreak:
           */
         [[nodiscard]] static constexpr auto ManhattanDistance(const coord_t& _A, const coord_t& _B) {
 
-            Ts result = 0;
+            Ts result(0);
 
             for (size_t i = 0U; i < Kd; ++i) {
                 result += abs(_B[i] - _A[i]);
