@@ -83,7 +83,7 @@ namespace CHDR::Solvers {
             throw std::runtime_error("AStar::Solve(const Mazes::IMaze& _maze) Not implemented!");
         }
 
-        auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, float (*_h)(const coord_t&, const coord_t&) = ManhattanDistance) const {
+        auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&) = EuclideanDistance) const {
 
             std::vector<coord_t> result;
 
@@ -100,11 +100,13 @@ namespace CHDR::Solvers {
 
                 if (current.m_Coord == _end) {
 
-                    result.push_back(current.m_Coord);
+                    result.reserve(current.m_Data.m_GScore);
+                    result.emplace_back(std::move(current.m_Coord));
 
-                    auto node = closedSet.at(current.m_Data.m_Parent);
+                    auto& node = closedSet.at(current.m_Data.m_Parent);
+
                     while (node.m_Coord != _start) {
-                        result.push_back(node.m_Coord);
+                        result.emplace_back(std::move(node.m_Coord));
                         node = closedSet.at(node.m_Data.m_Parent);
                     }
 

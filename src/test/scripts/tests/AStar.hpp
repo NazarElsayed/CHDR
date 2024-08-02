@@ -22,8 +22,8 @@ namespace Test::Tests {
             /***************************************/
 
             // Generate a maze:
-            coord_t size  { 32U, 32U };
-            coord_t start {  0U,  0U };
+            coord_t size  { 1000U, 1000U };
+            coord_t start {    0U,    0U };
             coord_t end;
 
             size_t seed = 0U;
@@ -33,8 +33,8 @@ namespace Test::Tests {
             // Solve the maze:
             if (CHDR::Solvers::AStar<Tm, Kd>().HasSolution(maze, start, end)) {
 
-                auto solver = CHDR::Solvers::AStar<Tm, Kd, Ts>();
-                auto path = solver.Solve(maze, start, end);
+                auto solver = CHDR::Solvers::AStar<Tm, Kd, int>();
+                auto path = solver.Solve(maze, start, end, CHDR::Solvers::AStar<Tm, Kd, int>::ManhattanDistance);
 
                 Display<Tm, Kd>::DrawMaze(start, end, size, maze, path);
             }
