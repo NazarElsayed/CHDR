@@ -22,7 +22,7 @@ namespace Test::Tests {
             /***************************************/
 
             // Generate a maze:
-            coord_t size  { 100U, 100U };
+            coord_t size  { 32U, 32U };
             coord_t start {  0U,  0U };
             coord_t end;
 
@@ -30,15 +30,17 @@ namespace Test::Tests {
 
             const auto maze = CHDR::Mazes::Grid<Kd, T>(size, Generator::Generate<T>(start, end, seed, size));
 
-            // Display the maze:
-            //Generator::Display(start, end, size, maze);
-
             // Solve the maze:
-            auto solver = CHDR::Solvers::AStar<T, Kd>();
-            auto path = solver.Solve(maze, start, end);
+            if (CHDR::Solvers::AStar<T, Kd>().HasSolution(maze, start, end)) {
 
-            // Display result:
-            Display<T, Kd>::DrawMaze(start, end, size, maze, path);
+                auto solver = CHDR::Solvers::AStar<T, Kd>();
+                auto path = solver.Solve(maze, start, end);
+
+                Display<T, Kd>::DrawMaze(start, end, size, maze, path);
+            }
+            else {
+                Display<T, Kd>::DrawMaze(start, end, size, maze);
+            }
         }
     };
 }

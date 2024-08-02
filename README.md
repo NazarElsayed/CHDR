@@ -1,4 +1,4 @@
-# Computational Helper for Direction and Routing (CHDR)
+# CHDR: Computational Helper for Direction and Routing
 
 ## Table of Contents
 

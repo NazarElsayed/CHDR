@@ -88,7 +88,7 @@ namespace CHDR::Solvers {
             std::unordered_map<coord_t, ASNode> closedSet;
             std::priority_queue<ASNode, std::vector<ASNode>, ASNodeCompare> openSet;
 
-            openSet.emplace(ASNode(_start, ASData(0.0f, _h(_start, _end))));
+            openSet.emplace(ASNode(_start, ASData(0.0F, _h(_start, _end))));
 
             bool complete(false);
             while (!complete) {
@@ -100,7 +100,7 @@ namespace CHDR::Solvers {
 
                     result.push_back(current.m_Coord);
 
-                    ASNode node = closedSet.at(current.m_Data.m_Parent);
+                    auto node = closedSet.at(current.m_Data.m_Parent);
                     while (node.m_Coord != _start) {
                         result.push_back(node.m_Coord);
                         node = closedSet.at(node.m_Data.m_Parent);
@@ -112,12 +112,13 @@ namespace CHDR::Solvers {
                 }
                 else {
 
-                    for (const auto& neighbour : _maze.GetActiveNeighbours(current.m_Coord)) {
+                    for (const auto neighbour : _maze.GetActiveNeighbours(current.m_Coord)) {
 
-                        //Check node already exists in collections
+                        // Check node already exists in collections:
                         auto search = closedSet.find(neighbour);
                         if (search == closedSet.end()) {
-                            //Add node to openSet
+
+                            // Add node to openSet.
                             openSet.emplace(ASNode(neighbour, ASData(current.m_Data.m_GScore + 1, _h(neighbour, _end), current.m_Coord)));
                         }
                     }
@@ -135,6 +136,53 @@ namespace CHDR::Solvers {
             return result;
         }
 
+
+    static bool HasSolution(const Mazes::Grid<Kd, T>& _maze, const coord_t& _start, const coord_t& _end) {
+
+	        bool result = false;
+
+            if (_maze.Contains(_start) &&
+                _maze.Contains(_end  ) &&
+                _maze.At(_start).IsActive() &&
+                _maze.At(_end  ).IsActive()
+            ) {
+                    std::vector<coord_t> openSet;
+                    openSet.emplace_back(_start);
+
+                    std::unordered_set<coord_t> closedSet;
+                    closedSet.emplace(_start);
+
+                    while (!openSet.empty()) {
+
+                        for (size_t i = 0U; i < openSet.size(); ++i) {
+
+                            const auto& curr = openSet[i];
+
+                            for (auto neighbour : _maze.GetActiveNeighbours(curr)) {
+
+                                auto search = closedSet.find(neighbour);
+                                if (search == closedSet.end()) {
+
+                                    if (neighbour == _end) {
+                                        result = true;
+
+                                        goto NestedBreak;
+                                    }
+
+                                    openSet.emplace_back(neighbour);
+                                    closedSet.emplace(neighbour);
+                                }
+                            }
+
+                            openSet.erase(openSet.begin() + i);
+                        }
+                    }
+                }
+
+NestedBreak:
+                return result;
+        }
+
         constexpr void PrintPath(std::vector<coord_t>& _path) const {
 
             std::cout << std::endl;
@@ -143,7 +191,7 @@ namespace CHDR::Solvers {
 
                 std::cout << "[";
 
-                for (size_t i = 0; i < Kd; i++) {
+                for (size_t i = 0; i < Kd; ++i) {
                     std::cout << coord[i] << (i < Kd - 1 ? ", " : "");
                 }
 

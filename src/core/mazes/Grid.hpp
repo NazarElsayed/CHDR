@@ -10,7 +10,6 @@
 
 #include <vector>
 #include <array>
-#include <optional>
 
 namespace CHDR::Mazes {
 
@@ -74,8 +73,18 @@ namespace CHDR::Mazes {
             return m_Size;
         }
 
+        template<typename... Args>
+        constexpr void Size(const Args&... _value) {
+            Size({ _value... });
+        }
+
         constexpr void Size(const coord_t& _value) {
             m_Size = _value;
+        }
+
+        template<typename... Args>
+        auto GetActiveNeighbours(const Args&... _coord) const {
+            return GetActiveNeighbours({ _coord... });
         }
 
         auto GetActiveNeighbours(const coord_t& _coord) const {
@@ -83,9 +92,9 @@ namespace CHDR::Mazes {
             std::vector<coord_t> result;
             result.reserve(Kd * 2U);
 
-            for (size_t i = 0U; i < Kd; i++) {
+            for (size_t i = 0U; i < Kd; ++i) {
 
-                if (_coord[i] > 0) {
+                if (_coord[i] > 0U) {
                     coord_t nCoord = _coord;
                     --nCoord[i];
 
@@ -94,7 +103,7 @@ namespace CHDR::Mazes {
                     }
                 }
 
-                if (_coord[i] < m_Size[i] - 1) {
+                if (_coord[i] < m_Size[i] - 1U) {
                     coord_t pCoord = _coord;
                     ++pCoord[i];
 
@@ -109,14 +118,7 @@ namespace CHDR::Mazes {
 
         template<typename... Args>
         [[nodiscard]] constexpr Node<T>& At(const Args&... _coord) {
-
-            const size_t index = Utils::To1D({ _coord... }, m_Size);
-
-#ifndef NDEBUG
-            return m_Nodes.at(index);
-#else
-            return m_Nodes[index];
-#endif // NDEBUG
+            return At({ _coord... });
         }
 
         [[nodiscard]] constexpr Node<T>& At(const coord_t& _coord) {
@@ -142,14 +144,7 @@ namespace CHDR::Mazes {
 
         template<typename... Args>
         [[nodiscard]] const Node<T>& At(const Args&... _coord) const {
-
-            const size_t index = Utils::To1D({ _coord... }, m_Size);
-
-#ifndef NDEBUG
-            return m_Nodes.at(index);
-#else
-            return m_Nodes[index];
-#endif // NDEBUG
+            return At({ _coord... });
         }
 
         [[nodiscard]] const Node<T>& At(const coord_t& _coord) const {
@@ -173,6 +168,26 @@ namespace CHDR::Mazes {
 #endif // NDEBUG
         }
 
+        template<typename... Args>
+        [[nodiscard]] constexpr bool Contains(const Args&... _coord) const {
+            return Contains({ _coord... });
+        }
+
+        [[nodiscard]] constexpr bool Contains(const coord_t _coord) const {
+
+            bool result = true;
+
+            for (size_t i = 0U; i < Kd; ++i) {
+
+                if (_coord[i] >= m_Size[i]) {
+                    result = false;
+
+                    break;
+                }
+            }
+
+            return result;
+        }
     };
 
 } // CHDR::Mazes
