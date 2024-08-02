@@ -111,13 +111,9 @@ namespace CHDR::Solvers {
                     result.reserve(current.m_Data.m_GScore);
                     result.emplace_back(std::move(current.m_Coord));
 
-                    auto* node = current.m_Data.m_Parent;
-                    while (node != nullptr) {
-
+                    for (auto* node = current.m_Data.m_Parent; node != nullptr; node = node->m_Data.m_Parent) {
                         result.emplace_back(std::move(node->m_Coord));
-                        node = node->m_Data.m_Parent;
                     }
-
                     std::reverse(result.begin(), result.end());
 
                     complete = true;

@@ -12,7 +12,7 @@ namespace Test::Tests {
 
     public:
 
-        template <typename Tm, size_t Kd, typename Ts = int>
+        template <typename Tm, size_t Kd, typename Ts = float>
         static void Run() {
 
             // Define some aliases for types to simplify the syntax a little:
