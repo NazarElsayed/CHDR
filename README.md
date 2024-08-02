@@ -12,9 +12,9 @@
 
 CHDR is a C++ library aiming to offer a comprehensive cross-platform solution for pathfinding in K-dimensions. It provides routing support for a variety of maze types including grid-based, graph-based, recursive, and weighted mazes (fields) using an extensive range of algorithms.
 
-### Features
-
 CHDR is designed to be fast and lightweight. Alongside data and algorithmic optimisations, it makes heavy use of metaprogramming to resolve expensive code paths at compile time.
+
+### Features
 
 #### Algorithms
 
@@ -22,9 +22,9 @@ CHDR is designed to be fast and lightweight. Alongside data and algorithmic opti
 |:---------------------------|:---------------:|
 | A-star (A*)                | In Progress 🏗️ |
 | Dijkstra's Algorithm       |   Planned 📝    |
-| Jump-point Search (JPS)    |   Planned 📝    |
-| Depth-first Search (DFS)   |   Planned 📝    |
-| Breadth-first Search (BFS) |   Planned 📝    |
+| Jump-Point Search (JPS)    |   Planned 📝    |
+| Depth-First Search (DFS)   |   Planned 📝    |
+| Breadth-First Search (BFS) |   Planned 📝    |
 | Fast Marching Method (FMM) |   Planned 📝    |
 
 #### Maze types
@@ -38,12 +38,13 @@ CHDR is designed to be fast and lightweight. Alongside data and algorithmic opti
 
 #### Computational
 
-| Feature                                 |     Status      |
-|:----------------------------------------|:---------------:|
-| Concurrent capabilities                 |   Planned 📝    |
-| Static (compile-time) routing           |   Planned 📝    |
-| Dynamic mazes and obstacle avoidance    |   Planned 📝    |
-| Maze optimisation (trimming) and baking | In Progress 🏗️ |
+| Feature                              |     Status      |
+|:-------------------------------------|:---------------:|
+| Concurrent Capabilities              |   Planned 📝    |
+| Compile-Time Routing                 |   Planned 📝    |
+| Dynamic Mazes and Obstacle-Avoidance |   Planned 📝    |
+| Maze Optimisation (Baking)           | In Progress 🏗️ |
+
 ### Instructions
 
 #### C++ (17 and above)
