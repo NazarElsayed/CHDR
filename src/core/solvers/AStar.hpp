@@ -83,7 +83,7 @@ namespace CHDR::Solvers {
             throw std::runtime_error("AStar::Solve(const Mazes::IMaze& _maze) Not implemented!");
         }
 
-        auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end) const {
+        auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, float (*_h)(const coord_t&, const coord_t&) = ManhattanDistance) const {
 
             std::vector<coord_t> result;
 
@@ -202,12 +202,6 @@ NestedBreak:
             }
         }
 
-        [[nodiscard]] static constexpr auto _h(const coord_t& _A, const coord_t& _B) {
-            //return EuclideanDistance(_A, _B);
-            //return SqrEuclideanDistance(_A, _B);
-            return ManhattanDistance(_A, _B);
-        }
-
 #pragma region Heuristics
 
         /**
@@ -235,7 +229,7 @@ NestedBreak:
             Ts result = 0;
 
             for (size_t i = 0U; i < Kd; ++i) {
-                auto val = _B[i] - _A[i];
+                const auto val = _B[i] - _A[i];
                 result += val * val;
             }
 
