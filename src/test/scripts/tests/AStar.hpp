@@ -12,34 +12,36 @@ namespace Test::Tests {
 
     public:
 
-        template <typename Tm, size_t Kd, typename Ts = float>
+        template <typename Tm, size_t Kd, typename Ts = int>
         static void Run() {
 
             // Define some aliases for types to simplify the syntax a little:
-            using Generator = Generator::Grid;
-            using coord_t   = CHDR::Coord<size_t, Kd>;
+            using generator_t = Generator::Grid;
+            using     coord_t = CHDR::Coord<size_t, Kd>;
+            using    solver_t = CHDR::Solvers::AStar<Tm, Kd, Ts>;
+            using   display_t = Display<Tm, Kd>;
 
             /***************************************/
 
             // Generate a maze:
             coord_t size  { 1000U, 1000U };
-            coord_t start {    0U,    0U };
+            coord_t start {  0U,  0U };
             coord_t end;
 
             size_t seed = 0U;
 
-            const auto maze = CHDR::Mazes::Grid<Kd, Tm>(size, Generator::Generate<Tm>(start, end, seed, size));
+            const auto maze = CHDR::Mazes::Grid<Kd, Tm>(size, generator_t::Generate<Tm>(start, end, seed, size));
 
             // Solve the maze:
-            if (CHDR::Solvers::AStar<Tm, Kd>().HasSolution(maze, start, end)) {
+            if (solver_t::HasSolution(maze, start, end)) {
 
-                auto solver = CHDR::Solvers::AStar<Tm, Kd, int>();
-                auto path = solver.Solve(maze, start, end, CHDR::Solvers::AStar<Tm, Kd, int>::ManhattanDistance);
+                auto solver = solver_t();
+                auto path = solver.Solve(maze, start, end, solver_t::ManhattanDistance);
 
-                Display<Tm, Kd>::DrawMaze(start, end, size, maze, path);
+                display_t::DrawMaze(start, end, size, maze, path);
             }
             else {
-                Display<Tm, Kd>::DrawMaze(start, end, size, maze);
+                display_t::DrawMaze(start, end, size, maze);
             }
         }
     };

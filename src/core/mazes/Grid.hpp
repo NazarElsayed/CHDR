@@ -104,6 +104,7 @@ namespace CHDR::Mazes {
                 }
 
                 if (_coord[i] < m_Size[i] - 1U) {
+
                     coord_t pCoord = _coord;
                     ++pCoord[i];
 

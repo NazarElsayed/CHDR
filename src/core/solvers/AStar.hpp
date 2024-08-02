@@ -56,17 +56,8 @@ namespace CHDR::Solvers {
 
         struct ASNodeHash {
 
-            size_t operator()(const ASNode& _node) const {
-
-                size_t result = 0U;
-
-                std::hash<Tm> hashing_func;
-
-                for (size_t i = 0U; i < Kd; ++i) {
-                    result ^= hashing_func(_node.m_Coord[i]) << i % (sizeof(size_t) * 8U);
-                }
-
-                return result;
+            constexpr size_t operator()(const ASNode& _node) const {
+                return std::hash<coord_t>(_node.m_Coord);
             }
         };
 
@@ -88,8 +79,8 @@ namespace CHDR::Solvers {
             std::vector<coord_t> result;
 
             std::unordered_map<coord_t, ASNode> closedSet;
-            std::priority_queue<ASNode, std::vector<ASNode>, ASNodeCompare> openSet;
 
+            std::priority_queue<ASNode, std::vector<ASNode>, ASNodeCompare> openSet;
             openSet.emplace(ASNode(_start, ASData(0, _h(_start, _end))));
 
             bool complete(false);
@@ -104,8 +95,8 @@ namespace CHDR::Solvers {
                     result.emplace_back(std::move(current.m_Coord));
 
                     auto& node = closedSet.at(current.m_Data.m_Parent);
-
                     while (node.m_Coord != _start) {
+
                         result.emplace_back(std::move(node.m_Coord));
                         node = closedSet.at(node.m_Data.m_Parent);
                     }
@@ -127,7 +118,7 @@ namespace CHDR::Solvers {
                         }
                     }
 
-                    closedSet.emplace(current.m_Coord ,current);
+                    closedSet.emplace(current.m_Coord, current);
                 }
 
                 if (openSet.empty()) {
@@ -150,8 +141,8 @@ namespace CHDR::Solvers {
                 _maze.At(_start).IsActive() &&
                 _maze.At(_end  ).IsActive()
             ) {
-                    std::vector<coord_t> openSet;
-                    openSet.emplace_back(_start);
+                    std::queue<coord_t> openSet;
+                    openSet.emplace(_start);
 
                     std::unordered_set<coord_t> closedSet;
                     closedSet.emplace(_start);
@@ -160,12 +151,13 @@ namespace CHDR::Solvers {
 
                         for (size_t i = 0U; i < openSet.size(); ++i) {
 
-                            const auto& curr = openSet[i];
+                            const auto curr = openSet.front();
+                            openSet.pop();
 
                             for (auto neighbour : _maze.GetActiveNeighbours(curr)) {
 
-                                auto search = closedSet.find(neighbour);
-                                if (search == closedSet.end()) {
+                                auto [iter, inserted] = closedSet.insert(neighbour);
+                                if (inserted) {
 
                                     if (neighbour == _end) {
                                         result = true;
@@ -173,12 +165,9 @@ namespace CHDR::Solvers {
                                         goto NestedBreak;
                                     }
 
-                                    openSet.emplace_back(neighbour);
-                                    closedSet.emplace(neighbour);
+                                    openSet.emplace(std::move(neighbour));
                                 }
                             }
-
-                            openSet.erase(openSet.begin() + i);
                         }
                     }
                 }
