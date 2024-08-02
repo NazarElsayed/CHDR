@@ -3,14 +3,14 @@
 
 namespace CHDR::Solvers {
 
-    template <typename T>
+    template <typename Tm>
     class ISolver {
 
-        static_assert(std::is_integral<T>::value, "T must be an integral type");
+        static_assert(std::is_integral<Tm>::value, "Tm must be an integral type");
 
     public:
 
-        virtual void Solve(const Mazes::IMaze<T>& _maze) = 0;
+        virtual void Solve(const Mazes::IMaze<Tm>& _maze) = 0;
 
     };
 

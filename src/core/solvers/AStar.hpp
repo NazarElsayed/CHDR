@@ -15,8 +15,10 @@
 
 namespace CHDR::Solvers {
 
-    template<typename T, size_t Kd>
-    class AStar : public ISolver<T> {
+    template<typename Tm, size_t Kd, typename Ts = float>
+    class AStar : public ISolver<Tm> {
+
+        static_assert(std::is_integral<Ts>::value || std::is_floating_point<Ts>::value, "Ts must be either an integral or floating point type");
 
     private:
 
@@ -24,12 +26,12 @@ namespace CHDR::Solvers {
 
         struct ASData {
 
-            float m_GScore;
-            float m_FScore;
+            Ts m_GScore;
+            Ts m_FScore;
 
             coord_t m_Parent;
 
-            [[nodiscard]] constexpr ASData(const float& _gScore, const float& _hScore, const coord_t& _parent = {}) :
+            [[nodiscard]] constexpr ASData(const Ts& _gScore, const Ts& _hScore, const coord_t& _parent = {}) :
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
                 m_Parent(_parent) {}
@@ -58,7 +60,7 @@ namespace CHDR::Solvers {
 
                 size_t result = 0U;
 
-                std::hash<T> hashing_func;
+                std::hash<Tm> hashing_func;
 
                 for (size_t i = 0U; i < Kd; ++i) {
                     result ^= hashing_func(_node.m_Coord[i]) << i % (sizeof(size_t)*8);
@@ -77,18 +79,18 @@ namespace CHDR::Solvers {
 
     public:
 
-        void Solve(const Mazes::IMaze<T>& _maze) override {
+        void Solve(const Mazes::IMaze<Tm>& _maze) override {
             throw std::runtime_error("AStar::Solve(const Mazes::IMaze& _maze) Not implemented!");
         }
 
-        auto Solve(const Mazes::Grid<Kd, T>& _maze, const coord_t& _start, const coord_t& _end) const {
+        auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end) const {
 
             std::vector<coord_t> result;
 
             std::unordered_map<coord_t, ASNode> closedSet;
             std::priority_queue<ASNode, std::vector<ASNode>, ASNodeCompare> openSet;
 
-            openSet.emplace(ASNode(_start, ASData(0.0F, _h(_start, _end))));
+            openSet.emplace(ASNode(_start, ASData(0, _h(_start, _end))));
 
             bool complete(false);
             while (!complete) {
@@ -137,7 +139,7 @@ namespace CHDR::Solvers {
         }
 
 
-    static bool HasSolution(const Mazes::Grid<Kd, T>& _maze, const coord_t& _start, const coord_t& _end) {
+    static bool HasSolution(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end) {
 
 	        bool result = false;
 
@@ -229,7 +231,7 @@ NestedBreak:
          */
         [[nodiscard]] static constexpr auto SqrEuclideanDistance(const coord_t& _A, const coord_t& _B) {
 
-            float result = 0.0F;
+            Ts result = 0;
 
             for (size_t i = 0U; i < Kd; ++i) {
                 auto val = _B[i] - _A[i];
@@ -249,7 +251,7 @@ NestedBreak:
           */
         [[nodiscard]] static constexpr auto ManhattanDistance(const coord_t& _A, const coord_t& _B) {
 
-            float result = 0.0F;
+            Ts result = 0;
 
             for (size_t i = 0U; i < Kd; ++i) {
                 result += abs(_B[i] - _A[i]);

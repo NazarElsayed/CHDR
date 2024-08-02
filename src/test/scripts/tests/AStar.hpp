@@ -12,7 +12,7 @@ namespace Test::Tests {
 
     public:
 
-        template <typename T, size_t Kd>
+        template <typename T, size_t Kd, typename Ts = float>
         static void Run() {
 
             // Define some aliases for types to simplify the syntax a little:
@@ -33,7 +33,7 @@ namespace Test::Tests {
             // Solve the maze:
             if (CHDR::Solvers::AStar<T, Kd>().HasSolution(maze, start, end)) {
 
-                auto solver = CHDR::Solvers::AStar<T, Kd>();
+                auto solver = CHDR::Solvers::AStar<T, Kd, Ts>();
                 auto path = solver.Solve(maze, start, end);
 
                 Display<T, Kd>::DrawMaze(start, end, size, maze, path);
