@@ -18,7 +18,7 @@ namespace CHDR::Solvers {
     template<typename Tm, size_t Kd, typename Ts = float>
     class AStar : public ISolver<Tm> {
 
-        static_assert(std::is_integral<Ts>::value || std::is_floating_point<Ts>::value, "Ts must be either an integral or floating point type");
+        static_assert(std::is_integral_v<Ts> || std::is_floating_point_v<Ts>, "Ts must be either an integral or floating point type");
 
     private:
 
@@ -63,7 +63,7 @@ namespace CHDR::Solvers {
                 std::hash<Tm> hashing_func;
 
                 for (size_t i = 0U; i < Kd; ++i) {
-                    result ^= hashing_func(_node.m_Coord[i]) << i % (sizeof(size_t)*8);
+                    result ^= hashing_func(_node.m_Coord[i]) << i % (sizeof(size_t) * 8U);
                 }
 
                 return result;
@@ -187,17 +187,18 @@ NestedBreak:
 
         constexpr void PrintPath(std::vector<coord_t>& _path) const {
 
-            std::cout << std::endl;
-
             for (const auto& coord : _path) {
 
-                std::cout << "[";
+                std::ostringstream oss;
+                oss << "(";
 
                 for (size_t i = 0U; i < Kd; ++i) {
-                    std::cout << coord[i] << (i < Kd - 1U ? ", " : "");
+                    oss << coord[i] << (i < Kd - 1U ? ", " : "");
                 }
 
-                std::cout << "]" << "\n";
+                oss << ")";
+
+                Debug::Log(oss.str(), Info);
             }
         }
 
