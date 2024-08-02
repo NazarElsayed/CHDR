@@ -107,6 +107,9 @@ namespace CHDR::Solvers {
                 }
                 else {
 
+                    // Clear unused entries.
+                    std::priority_queue<ASNode, std::vector<ASNode>, ASNodeCompare>().swap(openSet);
+
                     // Solution reached!
                     result.reserve(current.m_Data.m_GScore);
                     result.emplace_back(std::move(current.m_Coord));
