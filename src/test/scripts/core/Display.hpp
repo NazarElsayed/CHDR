@@ -104,8 +104,6 @@ namespace Test {
 
             const bool even_width = _size[0U] % 2U == 0U;
 
-            std::cout << std::endl;
-
             // Add an upper boundary:
             {
                 const auto columns = _size[0U] + (even_width ? 1U : 2U);
