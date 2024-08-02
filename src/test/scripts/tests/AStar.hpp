@@ -12,7 +12,7 @@ namespace Test::Tests {
 
     public:
 
-        template <typename T, size_t Kd, typename Ts = float>
+        template <typename Tm, size_t Kd, typename Ts = float>
         static void Run() {
 
             // Define some aliases for types to simplify the syntax a little:
@@ -28,18 +28,18 @@ namespace Test::Tests {
 
             size_t seed = 0U;
 
-            const auto maze = CHDR::Mazes::Grid<Kd, T>(size, Generator::Generate<T>(start, end, seed, size));
+            const auto maze = CHDR::Mazes::Grid<Kd, Tm>(size, Generator::Generate<Tm>(start, end, seed, size));
 
             // Solve the maze:
-            if (CHDR::Solvers::AStar<T, Kd>().HasSolution(maze, start, end)) {
+            if (CHDR::Solvers::AStar<Tm, Kd>().HasSolution(maze, start, end)) {
 
-                auto solver = CHDR::Solvers::AStar<T, Kd, Ts>();
+                auto solver = CHDR::Solvers::AStar<Tm, Kd, Ts>();
                 auto path = solver.Solve(maze, start, end);
 
-                Display<T, Kd>::DrawMaze(start, end, size, maze, path);
+                Display<Tm, Kd>::DrawMaze(start, end, size, maze, path);
             }
             else {
-                Display<T, Kd>::DrawMaze(start, end, size, maze);
+                Display<Tm, Kd>::DrawMaze(start, end, size, maze);
             }
         }
     };
