@@ -191,8 +191,8 @@ NestedBreak:
 
                 std::cout << "[";
 
-                for (size_t i = 0; i < Kd; ++i) {
-                    std::cout << coord[i] << (i < Kd - 1 ? ", " : "");
+                for (size_t i = 0U; i < Kd; ++i) {
+                    std::cout << coord[i] << (i < Kd - 1U ? ", " : "");
                 }
 
                 std::cout << "]" << "\n";
