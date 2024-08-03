@@ -30,9 +30,9 @@ namespace CHDR::Solvers {
             Ts m_GScore;
             Ts m_FScore;
 
-            ASNode* m_Parent;
+            const ASNode* m_Parent;
 
-            [[nodiscard]] constexpr ASData(const Ts& _gScore, const Ts& _hScore, ASNode* _parent) :
+            [[nodiscard]] constexpr ASData(const Ts& _gScore, const Ts& _hScore, const ASNode* const _parent) :
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
                 m_Parent(_parent) {}
@@ -91,9 +91,11 @@ namespace CHDR::Solvers {
 
                     /* SEARCH FOR SOLUTION */
 
-                    auto [iter, inserted] = closedSet.emplace(current.m_Coord, current);
+                    const auto [iter, inserted] = closedSet.emplace(current.m_Coord, std::move(current));
 
-                    for (const auto neighbour : _maze.GetActiveNeighbours(current.m_Coord)) {
+                    const auto& moved = iter->second; // 'current' no longer exists... it has been moved.
+
+                    for (const auto neighbour : _maze.GetActiveNeighbours(moved.m_Coord)) {
 
                         const auto n = Utils::To1D(neighbour, _maze.Size());
 
@@ -102,7 +104,7 @@ namespace CHDR::Solvers {
                         if (search == closedSet.end()) {
 
                             // Add node to openSet.
-                            openSet.emplace(ASNode(n, { current.m_Data.m_GScore + 1, _h(neighbour, _end), &(iter->second) }));
+                            openSet.emplace(ASNode(n, { moved.m_Data.m_GScore + 1, _h(neighbour, _end), &moved }));
                         }
                     }
                 }
