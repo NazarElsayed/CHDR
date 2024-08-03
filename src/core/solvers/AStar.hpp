@@ -40,12 +40,10 @@ namespace CHDR::Solvers {
 
         struct ASNode {
 
-            size_t  m_HeapIndex;
             size_t  m_Coord;
             ASData  m_Data;
 
             [[nodiscard]] constexpr ASNode(const size_t& coord, const ASData& data) :
-                m_HeapIndex(0U),
                 m_Coord(coord),
                 m_Data(data) {}
 
@@ -74,7 +72,9 @@ namespace CHDR::Solvers {
             const auto s = Utils::To1D(_start, _maze.Size());
             const auto e = Utils::To1D(_end,   _maze.Size());
 
-            std::unordered_map<size_t, ASNode, std::function<const size_t&(const size_t&)>> closedSet(
+            std::vector<ASNode> buffer;
+
+            std::unordered_set<size_t, std::function<const size_t&(const size_t&)>> closed(
                 static_cast<size_t>(ceil(_h(_start, _end))),
                 [](const size_t& _seed) constexpr -> const size_t& { return _seed; }
             );
@@ -90,18 +90,18 @@ namespace CHDR::Solvers {
                 if (current.m_Coord != e) {
 
                     /* SEARCH FOR SOLUTION */
+                    closed.emplace(current.m_Coord);
 
-                    const auto [iter, inserted] = closedSet.emplace(current.m_Coord, std::move(current));
-
-                    const auto& moved = iter->second; // 'current' no longer exists... it has been moved.
+                    buffer.emplace_back(std::move(current));
+                    const auto& moved = buffer.back(); // 'current' no longer exists... it has been moved.
 
                     for (const auto neighbour : _maze.GetActiveNeighbours(moved.m_Coord)) {
 
                         const auto n = Utils::To1D(neighbour, _maze.Size());
 
-                        // Check node already exists in collections:
-                        auto search = closedSet.find(n);
-                        if (search == closedSet.end()) {
+                        // Check if node is not already visited:
+                        auto search = closed.find(n);
+                        if (search == closed.end()) {
 
                             // Add node to openSet.
                             openSet.emplace(ASNode(n, { moved.m_Data.m_GScore + static_cast<Ts>(1), _h(neighbour, _end), &moved }));
@@ -117,10 +117,15 @@ namespace CHDR::Solvers {
 
                     // Recurse from end node to start node, inserting into a result buffer:
                     result.reserve(current.m_Data.m_GScore);
-                    result.emplace_back(Utils::ToND<size_t, 2>(current.m_Coord, _maze.Size()));
 
-                    for (auto* node = current.m_Data.m_Parent; node->m_Data.m_Parent != nullptr; node = node->m_Data.m_Parent) {
-                        result.emplace_back(Utils::ToND<size_t, 2>(node->m_Coord, _maze.Size()));
+                    const auto* temp = &current;
+                    while (temp != nullptr) {
+
+                        auto coord = temp->m_Coord;
+                        auto nd = Utils::ToND(coord, _maze.Size());
+
+                        result.push_back(nd);
+                        temp = temp->m_Data.m_Parent;
                     }
 
                     // Reverse the buffer:

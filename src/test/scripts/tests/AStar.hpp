@@ -24,16 +24,16 @@ namespace Test::Tests {
             /***************************************/
 
             // Generate a maze:
-            coord_t size  { 10000U, 10000U };
-            coord_t start {    0U,    0U };
+            coord_t size  { 3U, 3U };
+            coord_t start {   0U,   0U };
             coord_t end;
 
             size_t seed = 0U;
 
             const auto maze = CHDR::Mazes::Grid<Kd, Tm>(size, generator_t::Generate<Tm>(start, end, seed, size));
 
-            Debug::Log("Maze Generated!");
-
+            // Debug::Log("Maze Generated!");
+            //
             // // Solve the maze:
             // if (solver_t::HasSolution(maze, start, end, static_cast<size_t>(ceil(solver_t::ManhattanDistance(start, end))))) {
             //

@@ -23,8 +23,6 @@ namespace Test {
             static_assert(Kd < 3U, "This maze renderer does not support dimensions higher than 2.");
             static_assert(std::is_integral_v<T>, "Maze type must be an integral type.");
 
-            std::ostringstream oss;
-
             constexpr auto* empty_str = "  ";
             constexpr auto*  wall_str = "██";
             constexpr auto*  line_brk = "\n";
@@ -36,28 +34,28 @@ namespace Test {
                 const auto columns = _size[0U] + (even_width ? 1U : 2U);
 
                 for (size_t i = 0U; i < columns; ++i) {
-                    oss << wall_str;
+                    std::cout << wall_str;
                 }
-                oss << line_brk;
+                std::cout << line_brk;
             }
 
             const auto& nodes = _maze.Nodes();
             for (size_t i = 0U; i < nodes.size(); ++i) {
-                if (i % _size[0U] == 0U) { oss << wall_str; }
+                if (i % _size[0U] == 0U) { std::cout << wall_str; }
 
                 auto s = CHDR::Utils::To1D(_start, _size);
                 auto e = CHDR::Utils::To1D(_end, _size);
 
-                if (i == s) { oss << "St"; }
-                else if (i == e) { oss << "En"; }
+                if      (i == s) { std::cout << "St"; }
+                else if (i == e) { std::cout << "En"; }
                 else {
                     auto val = nodes[i].Value();
 
                     if constexpr (std::is_same_v<T, bool>) {
-                        oss << (val ? wall_str : empty_str);
+                        std::cout << (val ? wall_str : empty_str);
                     }
                     else {
-                        oss << std::hex << std::setfill('0') << std::setw(2) << static_cast<unsigned>(val);
+                        std::cout << std::hex << std::setfill('0') << std::setw(2) << static_cast<unsigned>(val);
                     }
 
                     // Handle end of line:
@@ -65,9 +63,9 @@ namespace Test {
 
                     if (end_of_line) {
                         if (!even_width) {
-                            oss << wall_str;
+                            std::cout << wall_str;
                         }
-                        oss << line_brk;
+                        std::cout << line_brk;
                     }
                 }
             }
@@ -79,9 +77,9 @@ namespace Test {
 
                     const auto columns = _size[0U] + (even_width ? 1U : 2U);
                     for (size_t i = 0U; i < columns; ++i) {
-                        oss << wall_str;
+                        std::cout << wall_str;
                     }
-                    oss << line_brk;
+                    std::cout << line_brk;
                 }
             }
         }
@@ -94,9 +92,9 @@ namespace Test {
             static_assert(std::is_integral_v<T>, "Maze type must be an integral type.");
 
             std::ostringstream oss;
-            std::vector<std::string> image;
 
-            image.reserve(CHDR::Utils::To1D(_maze.Size(), _maze.Size()));
+            std::vector<std::string> image;
+            image.reserve(CHDR::Utils::Product<size_t>(_maze.Size()));
 
             constexpr const auto* const empty_str = "  ";
             constexpr const auto* const  wall_str = "██";
@@ -175,7 +173,7 @@ namespace Test {
             for (auto coord : _path) {
 
                 if (coord != _end) {
-                    auto index   = CHDR::Utils::To1D(coord, size) + offset;
+                    const auto index = CHDR::Utils::To1D(coord, size) + offset;
                     image[index] = "🐁";
                 }
             }
