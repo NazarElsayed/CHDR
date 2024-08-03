@@ -80,7 +80,7 @@ namespace CHDR::Solvers {
             );
 
             std::priority_queue<ASNode, std::vector<ASNode>, ASNodeCompare> openSet;
-            openSet.emplace(ASNode(s, { 0, _h(_start, _end), nullptr }));
+            openSet.emplace(ASNode(s, { static_cast<Ts>(0), _h(_start, _end), nullptr }));
 
             while (!openSet.empty()) {
 
@@ -104,7 +104,7 @@ namespace CHDR::Solvers {
                         if (search == closedSet.end()) {
 
                             // Add node to openSet.
-                            openSet.emplace(ASNode(n, { moved.m_Data.m_GScore + 1, _h(neighbour, _end), &moved }));
+                            openSet.emplace(ASNode(n, { moved.m_Data.m_GScore + static_cast<Ts>(1), _h(neighbour, _end), &moved }));
                         }
                     }
                 }
