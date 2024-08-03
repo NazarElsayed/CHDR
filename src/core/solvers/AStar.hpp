@@ -6,6 +6,7 @@
 #include <Debug.hpp>
 
 #include <functional>
+#include <list>
 #include <queue>
 #include <unordered_set>
 
@@ -72,7 +73,7 @@ namespace CHDR::Solvers {
             const auto s = Utils::To1D(_start, _maze.Size());
             const auto e = Utils::To1D(_end,   _maze.Size());
 
-            std::vector<ASNode> buffer;
+            std::list<ASNode> buffer;
 
             std::unordered_set<size_t, std::function<const size_t&(const size_t&)>> closed(
                 static_cast<size_t>(ceil(_h(_start, _end))),
@@ -121,10 +122,7 @@ namespace CHDR::Solvers {
                     const auto* temp = &current;
                     while (temp != nullptr) {
 
-                        auto coord = temp->m_Coord;
-                        auto nd = Utils::ToND(coord, _maze.Size());
-
-                        result.push_back(nd);
+                        result.push_back(Utils::ToND(temp->m_Coord, _maze.Size()));
                         temp = temp->m_Data.m_Parent;
                     }
 

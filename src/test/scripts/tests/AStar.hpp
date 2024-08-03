@@ -24,20 +24,20 @@ namespace Test::Tests {
             /***************************************/
 
             // Generate a maze:
-            coord_t size  { 3U, 3U };
-            coord_t start {   0U,   0U };
+            coord_t size  { 1000U, 1000U };
+            coord_t start {    0U,    0U };
             coord_t end;
 
             size_t seed = 0U;
 
             const auto maze = CHDR::Mazes::Grid<Kd, Tm>(size, generator_t::Generate<Tm>(start, end, seed, size));
 
-            // Debug::Log("Maze Generated!");
-            //
-            // // Solve the maze:
-            // if (solver_t::HasSolution(maze, start, end, static_cast<size_t>(ceil(solver_t::ManhattanDistance(start, end))))) {
-            //
-            //     Debug::Log("Flood fill done!", Debug);
+            Debug::Log("Maze Generated!");
+
+            // Solve the maze:
+            if (solver_t::HasSolution(maze, start, end, static_cast<size_t>(ceil(solver_t::ManhattanDistance(start, end))))) {
+
+                Debug::Log("Flood fill done!", Debug);
 
                 auto solver = solver_t();
                 auto path = solver.Solve(maze, start, end, solver_t::ManhattanDistance);
@@ -45,10 +45,10 @@ namespace Test::Tests {
                 Debug::Log("Solved!");
 
                 display_t::DrawMaze(start, end, size, maze, path);
-            // }
-            // else {
-            //     display_t::DrawMaze(start, end, size, maze);
-            // }
+            }
+            else {
+                display_t::DrawMaze(start, end, size, maze);
+            }
         }
     };
 }
