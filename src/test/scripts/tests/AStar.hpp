@@ -33,7 +33,7 @@ namespace Test::Tests {
             const auto maze = CHDR::Mazes::Grid<Kd, Tm>(size, generator_t::Generate<Tm>(start, end, seed, size));
 
             // Solve the maze:
-            if (solver_t::HasSolution(maze, start, end, static_cast<size_t>(solver_t::ManhattanDistance(start, end)))) {
+            if (solver_t::HasSolution(maze, start, end, static_cast<size_t>(ceil(solver_t::ManhattanDistance(start, end))))) {
 
                 auto solver = solver_t();
                 auto path = solver.Solve(maze, start, end, solver_t::ManhattanDistance);

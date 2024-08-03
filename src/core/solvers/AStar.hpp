@@ -79,7 +79,10 @@ namespace CHDR::Solvers {
 
             std::vector<coord_t> result;
 
-            std::unordered_map<coord_t, ASNode> closedSet;
+            std::unordered_map<size_t, ASNode, std::function<const size_t&(const size_t&)>> closedSet(
+                static_cast<size_t>(ceil(_h(_start, _end))),
+                [](const size_t& _seed) constexpr -> const size_t& { return _seed; }
+            );
 
             std::priority_queue<ASNode, std::vector<ASNode>, ASNodeCompare> openSet;
             openSet.emplace(ASNode(_start, ASData(0, _h(_start, _end), nullptr)));
@@ -92,12 +95,12 @@ namespace CHDR::Solvers {
 
                 if (current.m_Coord != _end) {
 
-                    auto [iter, inserted] = closedSet.emplace(current.m_Coord, current);
+                    auto [iter, inserted] = closedSet.emplace(CHDR::Utils::To1D(current.m_Coord, _maze.Size()), current);
 
                     for (const auto neighbour : _maze.GetActiveNeighbours(current.m_Coord)) {
 
                         // Check node already exists in collections:
-                        auto search = closedSet.find(neighbour);
+                        auto search = closedSet.find(CHDR::Utils::To1D(neighbour, _maze.Size()));
                         if (search == closedSet.end()) {
 
                             // Add node to openSet.
