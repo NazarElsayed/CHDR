@@ -40,7 +40,6 @@ namespace CHDR::Mazes {
             m_Size(_size),
             m_Nodes(Utils::Product<size_t>(m_Size)) {}
 
-
         constexpr Grid(const coord_t& _size, const std::vector<Node<T>>& _nodes) :
             m_Size(_size),
             m_Nodes(_nodes) {}
@@ -106,6 +105,38 @@ namespace CHDR::Mazes {
                 if (_coord[i] < m_Size[i] - 1U) {
 
                     coord_t pCoord = _coord;
+                    ++pCoord[i];
+
+                    if (At(pCoord).IsActive()) {
+                        result.emplace_back(std::move(pCoord));
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        auto GetActiveNeighbours(const size_t& _coord) const {
+
+            std::vector<coord_t> result;
+            result.reserve(Kd * 2U);
+
+            const auto c = Utils::ToND<size_t, Kd>(_coord, Size());
+
+            for (size_t i = 0U; i < Kd; ++i) {
+
+                if (c[i] > 0U) {
+                    coord_t nCoord = c;
+                    --nCoord[i];
+
+                    if (At(nCoord).IsActive()) {
+                        result.emplace_back(std::move(nCoord));
+                    }
+                }
+
+                if (c[i] < m_Size[i] - 1U) {
+
+                    coord_t pCoord = c;
                     ++pCoord[i];
 
                     if (At(pCoord).IsActive()) {
@@ -188,6 +219,10 @@ namespace CHDR::Mazes {
             }
 
             return result;
+        }
+
+        [[nodiscard]] constexpr bool Contains(const size_t _coord) const {
+            return _coord < CHDR::Utils::Product<size_t>(m_Size);
         }
     };
 
