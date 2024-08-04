@@ -101,8 +101,7 @@ namespace CHDR::Solvers {
                         const auto n = Utils::To1D(neighbour, _maze.Size());
 
                         // Check if node is not already visited:
-                        auto search = closed.find(n);
-                        if (search == closed.end()) {
+                        if (closed.find(n) == closed.end()) {
 
                             // Add node to openSet.
                             openSet.emplace(ASNode(n, { moved.m_Data.m_GScore + static_cast<Ts>(1), _h(neighbour, _end), &moved }));
@@ -119,11 +118,8 @@ namespace CHDR::Solvers {
                     // Recurse from end node to start node, inserting into a result buffer:
                     result.reserve(current.m_Data.m_GScore);
 
-                    const auto* temp = &current;
-                    while (temp != nullptr) {
-
+                    for (const auto* temp = &current; temp->m_Data.m_Parent != nullptr; temp = temp->m_Data.m_Parent){
                         result.push_back(Utils::ToND(temp->m_Coord, _maze.Size()));
-                        temp = temp->m_Data.m_Parent;
                     }
 
                     // Reverse the buffer:

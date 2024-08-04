@@ -23,6 +23,9 @@ namespace Test {
             static_assert(Kd < 3U, "This maze renderer does not support dimensions higher than 2.");
             static_assert(std::is_integral_v<T>, "Maze type must be an integral type.");
 
+            auto s = CHDR::Utils::To1D(_start, _size);
+            auto e = CHDR::Utils::To1D(_end, _size);
+
             constexpr auto* empty_str = "  ";
             constexpr auto*  wall_str = "██";
             constexpr auto*  line_brk = "\n";
@@ -42,9 +45,6 @@ namespace Test {
             const auto& nodes = _maze.Nodes();
             for (size_t i = 0U; i < nodes.size(); ++i) {
                 if (i % _size[0U] == 0U) { std::cout << wall_str; }
-
-                auto s = CHDR::Utils::To1D(_start, _size);
-                auto e = CHDR::Utils::To1D(_end, _size);
 
                 if      (i == s) { std::cout << "St"; }
                 else if (i == e) { std::cout << "En"; }
@@ -91,6 +91,9 @@ namespace Test {
             static_assert(Kd < 3U, "This maze renderer does not support dimensions higher than 2.");
             static_assert(std::is_integral_v<T>, "Maze type must be an integral type.");
 
+            auto s = CHDR::Utils::To1D(_start, _size);
+            auto e = CHDR::Utils::To1D(_end, _size);
+
             std::ostringstream oss;
 
             std::vector<std::string> image;
@@ -117,9 +120,6 @@ namespace Test {
                 if (i % _size[0U] == 0U) {
                     image.emplace_back(wall_str);
                 }
-
-                auto s = CHDR::Utils::To1D(_start, _size);
-                auto e = CHDR::Utils::To1D(_end, _size);
 
                 if (i == s) {
                     image.emplace_back("🏠");
