@@ -145,7 +145,7 @@ namespace CHDR::Solvers {
                         const auto curr = openSet.front();
                         openSet.pop();
 
-                        for (auto neighbour : _maze.GetActiveNeighbours(curr)) {
+                        for (const auto neighbour : _maze.GetActiveNeighbours(curr)) {
 
                             const auto n = Utils::To1D(neighbour, _maze.Size());
 
