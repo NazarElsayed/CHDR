@@ -24,29 +24,20 @@ namespace CHDR::Solvers {
 
         using coord_t = Coord<size_t, Kd>;
 
-        struct ASNode;
+        struct ASNode {
 
-        struct ASData {
+            size_t m_Coord;
 
             Ts m_GScore;
             Ts m_FScore;
 
             const ASNode* m_Parent;
 
-            [[nodiscard]] constexpr ASData(const Ts& _gScore, const Ts& _hScore, const ASNode* const _parent) :
+            [[nodiscard]] constexpr ASNode(const size_t& _coord, const Ts& _gScore, const Ts& _hScore, const ASNode* const _parent) :
+                m_Coord (_coord),
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
                 m_Parent(_parent) {}
-        };
-
-        struct ASNode {
-
-            size_t  m_Coord;
-            ASData  m_Data;
-
-            [[nodiscard]] constexpr ASNode(const size_t& coord, const ASData& data) :
-                m_Coord(coord),
-                m_Data(data) {}
 
             [[nodiscard]] constexpr bool operator == (const ASNode& _node) const {
                 return m_Coord == _node.m_Coord;
@@ -56,7 +47,7 @@ namespace CHDR::Solvers {
         struct ASNodeCompare {
 
             [[nodiscard]] constexpr bool operator () (const ASNode& _a, const ASNode& _b) const {
-                return _a.m_Data.m_FScore > _b.m_Data.m_FScore;
+                return _a.m_FScore > _b.m_FScore;
             }
         };
 
@@ -75,13 +66,13 @@ namespace CHDR::Solvers {
 
             std::list<ASNode> buffer;
 
-            std::unordered_set<size_t, std::function<const size_t&(const size_t&)>> closed(
+            std::unordered_set<size_t, std::function<const size_t&(const size_t&)>> closedSet(
                 static_cast<size_t>(ceil(_h(_start, _end))),
                 [](const size_t& _seed) constexpr -> const size_t& { return _seed; }
             );
 
             std::priority_queue<ASNode, std::vector<ASNode>, ASNodeCompare> openSet;
-            openSet.emplace(ASNode(s, { static_cast<Ts>(0), _h(_start, _end), nullptr }));
+            openSet.emplace(s, static_cast<Ts>(0), _h(_start, _end), nullptr);
 
             while (!openSet.empty()) {
 
@@ -93,17 +84,18 @@ namespace CHDR::Solvers {
                 if (current.m_Coord != e) {
 
                     /* SEARCH FOR SOLUTION */
-                    closed.emplace(current.m_Coord);
+
+                    closedSet.emplace(current.m_Coord);
 
                     for (const auto neighbour : _maze.GetActiveNeighbours(current.m_Coord)) {
 
                         const auto n = Utils::To1D(neighbour, _maze.Size());
 
                         // Check if node is not already visited:
-                        if (closed.find(n) == closed.end()) {
+                        if (closedSet.find(n) == closedSet.end()) {
 
                             // Add node to openSet.
-                            openSet.emplace(ASNode(n, { current.m_Data.m_GScore + static_cast<Ts>(1), _h(neighbour, _end), &current }));
+                            openSet.emplace(n, current.m_GScore + static_cast<Ts>(1), _h(neighbour, _end), &current);
                         }
                     }
                 }
@@ -115,9 +107,9 @@ namespace CHDR::Solvers {
                     std::priority_queue<ASNode, std::vector<ASNode>, ASNodeCompare>().swap(openSet);
 
                     // Recurse from end node to start node, inserting into a result buffer:
-                    result.reserve(current.m_Data.m_GScore);
+                    result.reserve(current.m_GScore);
 
-                    for (const auto* temp = &current; temp->m_Data.m_Parent != nullptr; temp = temp->m_Data.m_Parent){
+                    for (const auto* temp = &current; temp->m_Parent != nullptr; temp = temp->m_Parent){
                         result.push_back(Utils::ToND(temp->m_Coord, _maze.Size()));
                     }
 
