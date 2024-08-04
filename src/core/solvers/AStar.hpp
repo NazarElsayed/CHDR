@@ -39,16 +39,12 @@ namespace CHDR::Solvers {
                 m_FScore(_gScore + _hScore),
                 m_Parent(_parent) {}
 
-            [[nodiscard]] constexpr bool operator == (const ASNode& _node) const {
-                return m_Coord == _node.m_Coord;
-            }
+            [[nodiscard]] constexpr bool operator == (const ASNode& _node) const { return m_Coord == _node.m_Coord; }
         };
 
         struct ASNodeCompare {
 
-            [[nodiscard]] constexpr bool operator () (const ASNode& _a, const ASNode& _b) const {
-                return _a.m_FScore > _b.m_FScore;
-            }
+            [[nodiscard]] constexpr bool operator () (const ASNode& _a, const ASNode& _b) const { return _a.m_FScore > _b.m_FScore; }
         };
 
     public:
