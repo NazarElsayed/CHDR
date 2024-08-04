@@ -85,18 +85,17 @@ namespace CHDR::Solvers {
 
             while (!openSet.empty()) {
 
-                auto current = openSet.top();
+                buffer.emplace_back(std::move(openSet.top()));
                 openSet.pop();
+
+                const auto& current = buffer.back();
 
                 if (current.m_Coord != e) {
 
                     /* SEARCH FOR SOLUTION */
                     closed.emplace(current.m_Coord);
 
-                    buffer.emplace_back(std::move(current));
-                    const auto& moved = buffer.back(); // 'current' no longer exists... it has been moved.
-
-                    for (const auto neighbour : _maze.GetActiveNeighbours(moved.m_Coord)) {
+                    for (const auto neighbour : _maze.GetActiveNeighbours(current.m_Coord)) {
 
                         const auto n = Utils::To1D(neighbour, _maze.Size());
 
@@ -104,7 +103,7 @@ namespace CHDR::Solvers {
                         if (closed.find(n) == closed.end()) {
 
                             // Add node to openSet.
-                            openSet.emplace(ASNode(n, { moved.m_Data.m_GScore + static_cast<Ts>(1), _h(neighbour, _end), &moved }));
+                            openSet.emplace(ASNode(n, { current.m_Data.m_GScore + static_cast<Ts>(1), _h(neighbour, _end), &current }));
                         }
                     }
                 }
