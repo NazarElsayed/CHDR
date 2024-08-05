@@ -16,7 +16,7 @@ namespace CHDR::Mazes {
     /**
      * @tparam Kd Dimensionality of the grid.
      */
-    template <size_t Kd, typename T = uint32_t>
+    template <const size_t Kd, typename T = uint32_t>
     class Grid : public IMaze<T> {
 
         using coord_t = Coord<size_t, Kd>;

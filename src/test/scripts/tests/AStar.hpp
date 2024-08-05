@@ -12,7 +12,7 @@ namespace Test::Tests {
 
     public:
 
-        template <typename Tm, size_t Kd, typename Ts = uint16_t>
+        template <typename Tm, const size_t Kd, typename Ts = uint16_t>
         static void Run() {
 
             // Define some aliases for types to simplify the syntax a little:
@@ -24,8 +24,8 @@ namespace Test::Tests {
             /***************************************/
 
             // Generate a maze:
-            coord_t size  { 32U, 32U };
-            coord_t start {  0U,  0U };
+            coord_t size  { 1000U, 1000U };
+            coord_t start {    0U,    0U };
             coord_t end;
 
             size_t seed = 0U;

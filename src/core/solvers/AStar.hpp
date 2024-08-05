@@ -13,9 +13,15 @@
 #include "base/ISolver.hpp"
 #include "types/Heap.hpp"
 
+#ifdef __SSE2__
+
+#include <emmintrin.h> // For SSE2 operations.
+
+#endif // __SSE2__
+
 namespace CHDR::Solvers {
 
-    template<typename Tm, size_t Kd, typename Ts = float>
+    template<typename Tm, const size_t Kd, typename Ts = float>
     class AStar : public ISolver<Tm> {
 
         static_assert(std::is_integral_v<Ts> || std::is_floating_point_v<Ts>, "Ts must be either an integral or floating point type");
@@ -186,6 +192,89 @@ NestedBreak:
             }
         }
 
+#ifdef __SSE2__
+
+        static constexpr Ts simd_sub_64bit_128(const coord_t& _A, const coord_t& _B) {
+
+            const auto regA = _mm_load_si128(reinterpret_cast<__m128i const*>(&_A));
+            const auto regB = _mm_load_si128(reinterpret_cast<__m128i const*>(&_B));
+
+            const auto notB = _mm_xor_si128(regB, _mm_set1_epi64x(-1));
+            const auto minusB = _mm_add_epi64(notB, _mm_set1_epi64x(1));
+
+            const auto sub = _mm_add_epi64(regA, minusB);
+
+            __m128i resultOut{};
+            _mm_store_si128(&resultOut, sub);
+
+            const auto* const output = reinterpret_cast<size_t*>(&resultOut);
+            return static_cast<Ts>(output[0U] + output[1U]);
+        }
+
+        static constexpr Ts simd_sub_64bit_128(
+            const size_t& _A0, const size_t& _A1,
+            const size_t& _B0, const size_t& _B1
+        ) {
+
+            const auto regA = _mm_set_epi64x(_A0, _A1);
+            const auto regB = _mm_set_epi64x(_B0, _B1);
+
+            const auto notB = _mm_xor_si128(regB, _mm_set1_epi64x(-1));
+            const auto minusB = _mm_add_epi64(notB, _mm_set1_epi64x(1));
+
+            const auto sub = _mm_add_epi64(regA, minusB);
+
+            __m128i resultOut{};
+            _mm_store_si128(&resultOut, sub);
+
+            const auto* const output = reinterpret_cast<size_t*>(&resultOut);
+            return static_cast<Ts>(output[0U] + output[1U]);
+        }
+
+        static constexpr Ts simd_sub_32_bit_128(const coord_t& _A, const coord_t& _B) {
+
+            // Load the coordinates into SSE registers:
+            const auto regA = _mm_load_si128(reinterpret_cast<__m128i const*>(&_A));
+            const auto regB = _mm_load_si128(reinterpret_cast<__m128i const*>(&_B));
+
+            // Compute -B:
+            const auto   notB = _mm_xor_si128(regB, _mm_set1_epi32(-1)); // bitwise not
+            const auto minusB = _mm_add_epi32(notB, _mm_set1_epi32( 1)); // add 1
+
+            // Perform A - B by computing A + (-B):
+            const auto sub = _mm_add_epi32(regA, minusB);
+
+            __m128i resultOut{};
+            _mm_store_si128(&resultOut, sub);
+
+            const auto* const output = reinterpret_cast<size_t*>(&resultOut);
+            return static_cast<Ts>(output[0U] + output[1U] + output[2U] + output[3U]);
+        }
+
+        static constexpr Ts simd_sub_32_bit_128(
+            const size_t& _A0, const size_t& _A1, const size_t& _A2, const size_t& _A3,
+            const size_t& _B0, const size_t& _B1, const size_t& _B2, const size_t& _B3
+        ) {
+
+            const auto regA = _mm_set_epi32(_A3, _A2, _A1, _A0); // Load as {0, A3, A2, A1}
+            const auto regB = _mm_set_epi32(_B3, _B2, _B1, _B0); // Load as {0, B3, B2, B1}
+
+            // Compute -B:
+            const auto   notB = _mm_xor_si128(regB, _mm_set1_epi32(-1)); // bitwise not
+            const auto minusB = _mm_add_epi32(notB, _mm_set1_epi32( 1)); // add 1
+
+            // Perform A - B by computing A + (-B):
+            const auto sub = _mm_add_epi32(regA, minusB);
+
+            __m128i resultOut{};
+            _mm_store_si128(&resultOut, sub);
+
+            const auto* const output = reinterpret_cast<size_t*>(&resultOut);
+            return static_cast<Ts>(output[0U] + output[1U] + output[2U] + output[3U]);
+        }
+
+#endif __SSE2__
+
 #pragma region Heuristics
 
         /**
@@ -232,8 +321,70 @@ NestedBreak:
 
             Ts result(0);
 
-            for (size_t i = 0U; i < Kd; ++i) {
-                result += abs(_B[i] - _A[i]);
+            constexpr bool is_32bit((sizeof(size_t) * 8U) == 32U);
+            constexpr bool is_64bit((sizeof(size_t) * 8U) == 64U);
+
+            if constexpr (Kd == 1U) {
+                result = _B[0U] - _A[0U];
+            }
+//TODO: Add SIMD for AVX2 (and possibly AVX-512 too?).
+#ifdef __SSE2__
+            else if constexpr (is_64bit) {
+
+                if constexpr (Kd == 2U) {
+                    result = AStar::simd_sub_64bit_128(_A, _B);
+                }
+                else {
+
+                    constexpr auto r = Kd % 2U;
+
+                    size_t i;
+                    for (i = 0U; i < (Kd - r); i += 2U) {
+                        result += AStar::simd_sub_64bit_128(
+                            _A[i], _A[i + 1],
+                            _B[i], _B[i + 1]
+                        );
+                    }
+
+                    if constexpr (r != 0U) {
+                        result += _B[i] - _A[i];
+                    }
+                }
+            }
+            else if constexpr (is_32bit) {
+
+                if constexpr (Kd == 3U) {
+                    result = AStar::simd_sub_32_bit_128(
+                        0U, _A[0], _A[1], _A[2],
+                        0U, _B[0], _B[1], _B[2]
+                    );
+                }
+                if constexpr (Kd == 4U) {
+                    result = AStar::simd_sub_32_bit_128(_A, _B);
+                }
+                else {
+
+                    constexpr auto r = Kd % 4U;
+
+                    size_t i;
+                    for (i = 0U; i < (Kd - r); i += 4U) {
+                        result += AStar::simd_sub_32bit_128(
+                            _A[i], _A[i + 1], _A[i + 2], _A[i + 3],
+                            _B[i], _B[i + 1], _B[i + 2], _B[i + 3]
+                        );
+                    }
+
+                    for (; i < Kd; ++i) {
+                        result += _B[i] - _A[i];
+                    }
+                }
+            }
+#endif // __SSE2__
+            else {
+
+                for (size_t i = 0U; i < Kd; ++i) {
+                    result += _B[i] - _A[i];
+                }
             }
 
             return result;

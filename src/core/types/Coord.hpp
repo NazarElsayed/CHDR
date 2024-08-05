@@ -7,7 +7,7 @@
 
 namespace CHDR {
 
-    template<typename T, size_t Kd>
+    template<typename T, const size_t Kd>
     using Coord = std::array<T, Kd>;
 
     template<typename T>
@@ -42,7 +42,7 @@ namespace CHDR {
 
 namespace std {
 
-    template<typename T, size_t Kd>
+    template<typename T, const size_t Kd>
     struct hash<CHDR::Coord<T, Kd>> {
 
         size_t operator()(const CHDR::Coord<T, Kd>& _value) const {

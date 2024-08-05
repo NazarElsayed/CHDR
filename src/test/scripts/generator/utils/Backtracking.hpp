@@ -8,7 +8,7 @@
 
 namespace Test::Generator::Utils {
 
-    template<size_t Kd = 2U>
+    template<const size_t Kd = 2U>
     class Backtracking {
 
     public:

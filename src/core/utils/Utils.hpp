@@ -28,7 +28,7 @@ namespace CHDR {
 		 * @return The resulting array.
 		 * @throws std::runtime_error if the size of the vector does not match the size of the array.
 		 */
-		template<typename _Tp, size_t _Nm>
+		template<typename _Tp, const size_t _Nm>
 		static constexpr std::array<_Tp, _Nm> ToArray(const std::vector<_Tp>&& _vector) {
 
 			if (_vector.size() != _Nm) {
@@ -65,7 +65,7 @@ namespace CHDR {
 		 * or equal to the maximum value of size_t. If this condition is not met, a
 		 * static_assert will be triggered.
 		 */
-		template<typename _Tp, size_t _Nm>
+		template<typename _Tp, const size_t _Nm>
 		static constexpr std::vector<_Tp> ToVector(const std::array<_Tp, _Nm>&& _array) {
 
 			std::vector<_Tp> result;
@@ -139,7 +139,7 @@ namespace CHDR {
 		 *
 		 * @note The input is not modified.
 		 */
-		template <typename T, typename Ta, size_t Kd>
+		template <typename T, typename Ta, const size_t Kd>
 		static constexpr T Product(const std::array<Ta, Kd>& _array) {
 
 			// TODO: Ensure that product does not overflow!
@@ -228,7 +228,7 @@ namespace CHDR {
 		 * static const auto as3d = ToND(63, { 4, 4, 4 });
 		 * \endcode
 		 */
-		template<typename T, size_t Kd>
+		template<typename T, const size_t Kd>
 		static constexpr auto ToND(const T& _index, const Coord<T, Kd>& _sizes) {
 
 			static_assert(std::is_integral_v<T>, "Only integer types are allowed.");
@@ -287,7 +287,7 @@ namespace CHDR {
 		 * This method takes in multi-dimensional indices and array sizes and returns the corresponding one-dimensional index.
 		 * Only integer types are allowed for the indices.
 		 */
-		template<typename T, size_t Kd>
+		template<typename T, const size_t Kd>
 		static constexpr auto To1D(const Coord<T, Kd>& _indices, const Coord<T, Kd>& _sizes) {
 
 			static_assert(std::is_integral_v<T>, "Only integer types are allowed.");
