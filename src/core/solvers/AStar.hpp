@@ -325,7 +325,13 @@ NestedBreak:
                     result = _B[0U] - _A[0U];
                 }
 
-                //TODO: Add SIMD for AVX2 (and possibly AVX-512 too?).
+                /* TODO: Add SIMD for other instructions sets than SSE2:
+                 *
+                 *  MMX: MMX registers are 64 bits wide.
+                 *  SSE: Streaming SIMD Extensions (SSE) registers are 128 bits wide.
+                 *  AVX: Advanced Vector Extensions (AVX) registers are 256 bits wide.
+                 *  AVX-512: Advanced Vector Extensions 512 (AVX-512) registers are 512 bits wide.
+                 */
 #ifdef __SSE2__
                 else if constexpr (is_64bit) {
 
