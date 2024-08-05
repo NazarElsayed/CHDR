@@ -199,9 +199,10 @@ NestedBreak:
             const auto regA = _mm_load_si128(reinterpret_cast<__m128i const*>(&_A));
             const auto regB = _mm_load_si128(reinterpret_cast<__m128i const*>(&_B));
 
-            const auto notB = _mm_xor_si128(regB, _mm_set1_epi64x(-1));
-            const auto minusB = _mm_add_epi64(notB, _mm_set1_epi64x(1));
+            const auto   notB = _mm_xor_si128(regB, _mm_set1_epi64x(-1)); // bitwise not
+            const auto minusB = _mm_add_epi64(notB, _mm_set1_epi64x( 1)); // add 1
 
+            // Perform A - B by computing A + (-B):
             const auto sub = _mm_add_epi64(regA, minusB);
 
             __m128i resultOut{};
@@ -219,9 +220,10 @@ NestedBreak:
             const auto regA = _mm_set_epi64x(_A0, _A1);
             const auto regB = _mm_set_epi64x(_B0, _B1);
 
-            const auto   notB = _mm_xor_si128(regB, _mm_set1_epi64x(-1));
-            const auto minusB = _mm_add_epi64(notB, _mm_set1_epi64x(1));
+            const auto   notB = _mm_xor_si128(regB, _mm_set1_epi64x(-1)); // bitwise not
+            const auto minusB = _mm_add_epi64(notB, _mm_set1_epi64x( 1)); // add 1
 
+            // Perform A - B by computing A + (-B):
             const auto sub = _mm_add_epi64(regA, minusB);
 
             __m128i resultOut{};
@@ -237,12 +239,8 @@ NestedBreak:
             const auto regA = _mm_load_si128(reinterpret_cast<__m128i const*>(&_A));
             const auto regB = _mm_load_si128(reinterpret_cast<__m128i const*>(&_B));
 
-            // Compute -B:
-            const auto   notB = _mm_xor_si128(regB, _mm_set1_epi32(-1)); // bitwise not
-            const auto minusB = _mm_add_epi32(notB, _mm_set1_epi32( 1)); // add 1
-
-            // Perform A - B by computing A + (-B):
-            const auto sub = _mm_add_epi32(regA, minusB);
+            // Perform A - B:
+            const auto sub = _mm_sub_epi32(regA, regB);
 
             __m128i resultOut{};
             _mm_store_si128(&resultOut, sub);
