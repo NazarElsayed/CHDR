@@ -267,7 +267,7 @@ NestedBreak:
             return static_cast<Ts>(output[0U] + output[1U] + output[2U] + output[3U]);
         }
 
-#endif __SSE2__
+#endif //__SSE2__
 
 #pragma region Heuristics
 
@@ -318,70 +318,98 @@ NestedBreak:
             constexpr bool is_32bit((sizeof(size_t) * 8U) == 32U);
             constexpr bool is_64bit((sizeof(size_t) * 8U) == 64U);
 
-            if constexpr (Kd == 1U) {
-                result = _B[0U] - _A[0U];
-            }
-//TODO: Add SIMD for AVX2 (and possibly AVX-512 too?).
+            if constexpr (Kd > 0U) {
+
+                if constexpr (Kd == 1U) {
+                    result = _B[0U] - _A[0U];
+                }
+
+                //TODO: Add SIMD for AVX2 (and possibly AVX-512 too?).
 #ifdef __SSE2__
-            else if constexpr (is_64bit) {
+                else if constexpr (is_64bit) {
 
-                if constexpr (Kd == 2U) {
-                    result = AStar::simd_sub_64bit_128(_A, _B);
+                    if constexpr (Kd == 2U) {
+
+#ifdef __GNUC__
+                        _mm_prefetch((const char*)&_A[8], _MM_HINT_T0);
+                        _mm_prefetch((const char*)&_B[8], _MM_HINT_T0);
+#endif // __GNUC__
+
+                        result = AStar::simd_sub_64bit_128(_A, _B);
+                    }
+                    else {
+
+                        constexpr auto r = Kd % 2U;
+
+                        size_t i;
+                        for (i = 0U; i < (Kd - r); i += 2U) {
+
+#ifdef __GNUC__
+                            _mm_prefetch((const char*)&_A[8], _MM_HINT_T0);
+                            _mm_prefetch((const char*)&_B[8], _MM_HINT_T0);
+#endif // __GNUC__
+
+                            result += AStar::simd_sub_64bit_128(
+                                _A[i], _A[i + 1],
+                                _B[i], _B[i + 1]
+                            );
+                        }
+
+                        if constexpr (r != 0U) {
+                            result += _B[i] - _A[i];
+                        }
+                    }
                 }
-                else {
+                else if constexpr (is_32bit) {
 
-                    constexpr auto r = Kd % 2U;
+                    if constexpr (Kd == 3U) {
 
-                    size_t i;
-                    for (i = 0U; i < (Kd - r); i += 2U) {
-                        result += AStar::simd_sub_64bit_128(
-                            _A[i], _A[i + 1],
-                            _B[i], _B[i + 1]
+#ifdef __GNUC__
+                        _mm_prefetch((const char*)&_A[8], _MM_HINT_T0);
+                        _mm_prefetch((const char*)&_B[8], _MM_HINT_T0);
+#endif // __GNUC__
+
+                        result = AStar::simd_sub_32_bit_128(
+                            0U, _A[0], _A[1], _A[2],
+                            0U, _B[0], _B[1], _B[2]
                         );
                     }
+                    if constexpr (Kd == 4U) {
+                        result = AStar::simd_sub_32_bit_128(_A, _B);
+                    }
+                    else {
 
-                    if constexpr (r != 0U) {
-                        result += _B[i] - _A[i];
+                        constexpr auto r = Kd % 4U;
+
+                        size_t i;
+                        for (i = 0U; i < (Kd - r); i += 4U) {
+
+#ifdef __GNUC__
+                            _mm_prefetch((const char*)&_A[8], _MM_HINT_T0);
+                            _mm_prefetch((const char*)&_B[8], _MM_HINT_T0);
+#endif // __GNUC__
+
+                            result += AStar::simd_sub_32bit_128(
+                                _A[i], _A[i + 1], _A[i + 2], _A[i + 3],
+                                _B[i], _B[i + 1], _B[i + 2], _B[i + 3]
+                            );
+                        }
+
+                        for (; i < Kd; ++i) {
+                            result += _B[i] - _A[i];
+                        }
                     }
                 }
-            }
-            else if constexpr (is_32bit) {
-
-                if constexpr (Kd == 3U) {
-                    result = AStar::simd_sub_32_bit_128(
-                        0U, _A[0], _A[1], _A[2],
-                        0U, _B[0], _B[1], _B[2]
-                    );
-                }
-                if constexpr (Kd == 4U) {
-                    result = AStar::simd_sub_32_bit_128(_A, _B);
-                }
-                else {
-
-                    constexpr auto r = Kd % 4U;
-
-                    size_t i;
-                    for (i = 0U; i < (Kd - r); i += 4U) {
-                        result += AStar::simd_sub_32bit_128(
-                            _A[i], _A[i + 1], _A[i + 2], _A[i + 3],
-                            _B[i], _B[i + 1], _B[i + 2], _B[i + 3]
-                        );
-                    }
-
-                    for (; i < Kd; ++i) {
-                        result += _B[i] - _A[i];
-                    }
-                }
-            }
 #endif // __SSE2__
-            else {
+                else {
 
-                for (size_t i = 0U; i < Kd; ++i) {
-                    result += _B[i] - _A[i];
+                    for (size_t i = 0U; i < Kd; ++i) {
+                        result += _B[i] - _A[i];
+                    }
                 }
-            }
 
-            return result;
+                return result;
+            }
         }
 
 #pragma endregion Heuristics
