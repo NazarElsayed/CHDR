@@ -112,7 +112,7 @@ namespace CHDR::Solvers {
                     // Recurse from end node to start node, inserting into a result buffer:
                     result.reserve(current.m_GScore);
 
-                    for (const auto* temp = &current; temp->m_Parent != nullptr; temp = temp->m_Parent){
+                    for (const auto* temp = &current; temp->m_Parent != nullptr; temp = temp->m_Parent) {
                         result.push_back(Utils::ToND(temp->m_Coord, _maze.Size()));
                     }
 
@@ -195,7 +195,7 @@ NestedBreak:
 
 #ifdef __SSE2__
 
-        static constexpr Ts simd_sub_64bit_128(const coord_t& _A, const coord_t& _B) {
+        [[nodiscard]] static constexpr Ts simd_sub_64bit_128(const coord_t& _A, const coord_t& _B) {
 
             const auto regA = _mm_load_si128(reinterpret_cast<__m128i const*>(&_A));
             const auto regB = _mm_load_si128(reinterpret_cast<__m128i const*>(&_B));
@@ -213,7 +213,7 @@ NestedBreak:
             return static_cast<Ts>(output[0U] + output[1U]);
         }
 
-        static constexpr Ts simd_sub_64bit_128(
+        [[nodiscard]] static constexpr Ts simd_sub_64bit_128(
             const size_t& _A0, const size_t& _A1,
             const size_t& _B0, const size_t& _B1
         ) {
@@ -234,7 +234,7 @@ NestedBreak:
             return static_cast<Ts>(output[0U] + output[1U]);
         }
 
-        static constexpr Ts simd_sub_32_bit_128(const coord_t& _A, const coord_t& _B) {
+        [[nodiscard]] static constexpr Ts simd_sub_32_bit_128(const coord_t& _A, const coord_t& _B) {
 
             // Load the coordinates into SSE registers:
             const auto regA = _mm_load_si128(reinterpret_cast<__m128i const*>(&_A));
@@ -250,7 +250,7 @@ NestedBreak:
             return static_cast<Ts>(output[0U] + output[1U] + output[2U] + output[3U]);
         }
 
-        static constexpr Ts simd_sub_32_bit_128(
+        [[nodiscard]] static constexpr Ts simd_sub_32_bit_128(
             const size_t& _A0, const size_t& _A1, const size_t& _A2, const size_t& _A3,
             const size_t& _B0, const size_t& _B1, const size_t& _B2, const size_t& _B3
         ) {
