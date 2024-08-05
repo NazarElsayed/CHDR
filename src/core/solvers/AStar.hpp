@@ -105,8 +105,9 @@ namespace CHDR::Solvers {
 
                     /* SOLUTION REACHED */
 
-                    // Clear the open set of all data:
+                    // Free data which is no longer relevant:
                     std::priority_queue<ASNode, std::vector<ASNode>, ASNodeCompare>().swap(openSet);
+                    closedSet.clear();
 
                     // Recurse from end node to start node, inserting into a result buffer:
                     result.reserve(current.m_GScore);
