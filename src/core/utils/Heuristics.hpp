@@ -6,16 +6,26 @@
 #include <cmath>
 #include <cstring>
 
-#if defined(__SSE__)
-    #include <emmintrin.h>
-#endif
-
-#if defined(__SSE4_2__)
-    #include <nmmintrin.h>
-#endif
-
-#if defined(__AVX__)
+#if defined(__AVX512__)
     #include <immintrin.h>
+#elif defined(__AVX2__)
+    #include <immintrin.h>
+#elif defined(__AVX__)
+    #include <immintrin.h>
+#elif defined(__SSE4_2__)
+    #include <nmmintrin.h>
+#elif defined(__SSE4_1__)
+    #include <smmintrin.h>
+#elif defined(__SSSE3__)
+    #include <tmmintrin.h>
+#elif defined(__SSE3__)
+    #include <pmmintrin.h>
+#elif defined(__SSE2__)
+    #include <emmintrin.h>
+#elif defined(__SSE__)
+    #include <xmmintrin.h>
+#elif defined(__MMX__)
+    #include <mmintrin.h>
 #endif
 
 #include "types/Coord.hpp"
@@ -65,14 +75,14 @@ namespace CHDR {
                     const auto sub = _mm_sub_epi16(_regA, _regB);
 
                     // Horizontal add:
-#ifdef __SSE3__
+#ifdef __SSSE3__
                     const __m128i temp1 = _mm_hadd_epi16(sub, _mm_setzero_si128());
                     const __m128i temp2 = _mm_hadd_epi16(temp1, _mm_setzero_si128());
                     const __m128i finalSum = _mm_hadd_epi16(temp2, _mm_setzero_si128());
 
                     uint32_t resultOut;
                     memcpy(&resultOut, &finalSum, sizeof(resultOut));  // Copy first 2 bytes.
-#else // ifndef __SSE3__
+#else // ifndef __SSSE3__
                     // First step: 16-bit pairs -> 32-bit pairs
                     const __m128i zero = _mm_setzero_si128();
                     const __m128i lo = _mm_unpacklo_epi16(sub, zero); // Zero extend lower 4 values.
@@ -84,7 +94,7 @@ namespace CHDR {
 
                     // Extract the lower 32 bits, which is the sum of 16-bit integers.
                     auto resultOut = static_cast<uint32_t>(_mm_cvtsi128_si32(sum3));
-#endif // __SSE3__
+#endif // __SSSE3__
 
                     return resultOut;
                 }
@@ -125,12 +135,13 @@ namespace CHDR {
                     __m128i resultOut{};
 
                     // Horizontal add:
-#ifdef __SSE3__
+#ifdef __SSSE3__
                     __m128i hadd = _mm_hadd_epi32(sub, sub);
                     hadd = _mm_hadd_epi32(hadd, hadd);
 
                     _mm_store_si128(&resultOut, hadd);
-#else
+#else // #ifndef __SSSE3__
+
                     // Shift and add:
                     __m128i high64 = _mm_shuffle_epi32(sub, _MM_SHUFFLE(1, 0, 3, 2));
                     __m128i sums = _mm_add_epi32(sub, high64);
@@ -140,12 +151,12 @@ namespace CHDR {
                     sums = _mm_add_epi32(sums, high64);
 
                     _mm_store_si128(&resultOut, sums);
-#endif
+#endif // __SSSE3__
 
                     return reinterpret_cast<uint32_t*>(&resultOut)[0U];
                 }
 
-#endif //__SSE2__
+#endif // __SSE2__
 
             };
 
@@ -153,7 +164,7 @@ namespace CHDR {
 
 #ifdef __SSE2__
 
-#ifdef __SSE4_2__
+#ifdef __SSE4_1__
 
                 [[nodiscard]] static auto Abs(__m128i& _value) {
 
@@ -173,12 +184,12 @@ namespace CHDR {
                     const auto tmp = _mm_sub_epi64(_value, _mm_and_si128(negative_mask, _mm_set1_epi64x(1))); // if sub is negative, increase its absolute value by 1
 
                     result = _mm_xor_si128(tmp, negative_mask); // if sub is negative, flip all its bits (turns it into a positive number)
-#endif // __AVX2__
+#endif // __AVX512F__
 
                     return result;
                 }
 
-#endif // __SSE4_2__
+#endif // __SSE4_1__
 
                 [[nodiscard]] static auto AbsSub_128v(const __m128i& _regA, const __m128i& _regB) {
 
@@ -198,7 +209,7 @@ namespace CHDR {
                     // Extract the lower 64-bit integer:
                     result = _mm_extract_epi64(sum, 0);
 
-#else // ifndef __SSE4_2__
+#else // #ifndef __SSE4_1__
 
                     const auto   notB = _mm_xor_si128(_regB, _mm_set1_epi64x(-1)); // bitwise not
                     const auto minusB = _mm_add_epi64( notB, _mm_set1_epi64x( 1)); // add 1
@@ -211,7 +222,7 @@ namespace CHDR {
                     const auto* const output = reinterpret_cast<int64_t*>(&resultOut);
 
                     result = std::abs(output[0U]) + std::abs(output[1U]);
-#endif // __SSE4_2__
+#endif // __SSE4_1__
 
                     return result;
                 }
@@ -224,24 +235,26 @@ namespace CHDR {
 
 #ifdef __SSE2__
 
-                [[nodiscard]] static auto Sub_128v(const __m128& _regA, const __m128& _regB) {
+                [[nodiscard]] static auto SqrSub_128v(const __m128& _regA, const __m128& _regB) {
 
                     float result;
 
                     const auto sub = _mm_sub_ps(_regA, _regB);
+                    const auto sqr = _mm_mul_ps(sub, sub);
 
-#ifdef __SSE3__
+                    // Horizontal add:
+#ifdef __SSSE3__
 
-                    const auto hadd = _mm_hadd_ps(sub, sub);
+                    const auto hadd = _mm_hadd_ps(sqr, sqr);
                     result = _mm_cvtss_f32(hadd);
 
-#else //ifndef __SSE3__
+#else // #ifndef __SSSE3__
 
                     float output[4U];
                     _mm_storeu_ps(output, sub);
 
                     result = output[0U] + output[1U] + output[2U] + output[3U];
-#endif
+#endif // __SSSE3__
 
                     return result;
                 }
@@ -254,24 +267,26 @@ namespace CHDR {
 
 #ifdef __SSE2__
 
-                [[nodiscard]] static constexpr auto Sub_128v(const __m128d& _regA, const __m128d& _regB) {
+                [[nodiscard]] static constexpr auto SqrSub_128v(const __m128d& _regA, const __m128d& _regB) {
 
                     double result;
 
                     const auto sub = _mm_sub_pd(_regA, _regB);
+                    const auto sqr = _mm_mul_pd(sub, sub);
 
-#ifdef __SSE3__
+                    // Horizontal add:
+#ifdef __SSSE3__
 
-                    const auto hadd = _mm_hadd_pd(sub, sub);
+                    const auto hadd = _mm_hadd_pd(sqr, sqr);
                     result = _mm_cvtsd_f64(hadd);
 
-#else //ifndef __SSE3__
+#else // #ifndef __SSSE3__
 
                     double output[2U];
                     _mm_storeu_pd(output, sub);
 
                     result = output[0U] + output[1U];
-#endif
+#endif // __SSSE3__
 
                     return result;
                 }
@@ -315,6 +330,12 @@ namespace CHDR {
 
                 // No need for SIMD if there's only one element.
                 if constexpr (Kd == 1U) {
+
+#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
+                    _mm_prefetch(reinterpret_cast<const char* const>(&_A[0U]), _MM_HINT_T0);
+                    _mm_prefetch(reinterpret_cast<const char* const>(&_B[0U]), _MM_HINT_T0);
+#endif // __GNUC__ || __clang__
+
                     const auto val = _B[0U] - _A[0U];
                     result = static_cast<Ts>(val * val);
                 }
@@ -330,34 +351,34 @@ namespace CHDR {
 
                 if constexpr (std::is_same_v<Ts, float> || std::is_same_v<Ts, uint32_t> || std::is_same_v<Ts, int32_t>) {
 
-                    float cr = 0.0;
+                    float cr = 0.0F;
 
                     const auto cA = Utils::ArrayCast<float>(_A);
                     const auto cB = Utils::ArrayCast<float>(_B);
 
                     if constexpr (Kd == 3U) {
 
-#if defined(__GNUC__) || defined(__clang__)
+#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
                         _mm_prefetch(reinterpret_cast<const char* const>(&cA[2U]), _MM_HINT_T0);
                         _mm_prefetch(reinterpret_cast<const char* const>(&cB[2U]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
 
-                        cr = static_cast<float>(SIMDExtensions::Float32::Sub_128v(
+                        cr = SIMDExtensions::Float32::SqrSub_128v(
                             _mm_set_ps(0, cA[0U], cA[1U], cA[2U]),
                             _mm_set_ps(0, cB[0U], cB[1U], cB[2U])
-                        ));
+                        );
                     }
                     if constexpr (Kd == 4U) {
 
-#if defined(__GNUC__) || defined(__clang__)
+#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
                         _mm_prefetch(reinterpret_cast<const char* const>(&cA[3U]), _MM_HINT_T0);
                         _mm_prefetch(reinterpret_cast<const char* const>(&cB[3U]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
 
-                        cr = static_cast<float>(SIMDExtensions::Float32::Sub_128v(
+                        cr = SIMDExtensions::Float32::Sub_128v(
                             _mm_load_ps(&cA),
                             _mm_load_ps(&cB)
-                        ));
+                        );
                     }
                     else {
 
@@ -366,22 +387,20 @@ namespace CHDR {
                         size_t j;
                         for (j = 0U; j < (Kd - r); j += 4U) {
 
-#if defined(__GNUC__) || defined(__clang__)
+#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
                             _mm_prefetch(reinterpret_cast<const char* const>(&cA[j + 3U]), _MM_HINT_T0);
                             _mm_prefetch(reinterpret_cast<const char* const>(&cB[j + 3U]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
 
-                            const auto val = SIMDExtensions::Float32::Sub_128v(
+                            cr += SIMDExtensions::Float32::Sub_128v(
                                 _mm_set_ps(cA[j], cA[j + 1U], cA[j + 2U], cA[j + 3U]),
                                 _mm_set_ps(cB[j], cB[j + 1U], cB[j + 2U], cB[j + 3U])
                             );
-
-                            cr += static_cast<float>(val * val);
                         }
 
                         for (; j < Kd; ++j) {
 
-#if defined(__GNUC__) || defined(__clang__)
+#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
                             _mm_prefetch(reinterpret_cast<const char* const>(&_A[j]), _MM_HINT_T0);
                             _mm_prefetch(reinterpret_cast<const char* const>(&_B[j]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
@@ -402,15 +421,15 @@ namespace CHDR {
 
                     if constexpr (Kd == 2U) {
 
-#if defined(__GNUC__) || defined(__clang__)
+#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
                         _mm_prefetch(reinterpret_cast<const char* const>(&cA[1U]), _MM_HINT_T0);
                         _mm_prefetch(reinterpret_cast<const char* const>(&cB[1U]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
 
-                        cr = static_cast<double>(SIMDExtensions::Float64::Sub_128v(
+                        cr = SIMDExtensions::Float64::Sub_128v(
                             _mm_load_pd(&cA[0]),
                             _mm_load_pd(&cB[0])
-                        ));
+                        );
                     }
                     else {
 
@@ -419,22 +438,20 @@ namespace CHDR {
                         size_t j;
                         for (j = 0U; j < (Kd - r); j += 2U) {
 
-#if defined(__GNUC__) || defined(__clang__)
+#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
                             _mm_prefetch(reinterpret_cast<const char* const>(&cA[j + 1U]), _MM_HINT_T0);
                             _mm_prefetch(reinterpret_cast<const char* const>(&cB[j + 1U]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
 
-                            const auto val = SIMDExtensions::Float64::Sub_128v(
+                            cr += SIMDExtensions::Float64::SqrSub_128v(
                                 _mm_set_pd(cA[j], cA[j + 1U]),
                                 _mm_set_pd(cB[j], cB[j + 1U])
                             );
-
-                            cr += static_cast<double>(val * val);
                         }
 
                         for (; j < Kd; ++j) {
 
-#if defined(__GNUC__) || defined(__clang__)
+#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
                             _mm_prefetch(reinterpret_cast<const char* const>(&cA[j]), _MM_HINT_T0);
                             _mm_prefetch(reinterpret_cast<const char* const>(&cB[j]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
@@ -453,7 +470,7 @@ namespace CHDR {
                     // Non-SIMD fallback:
                     for (size_t i = 0U; i < Kd; ++i) {
 
-#if defined(__GNUC__) || defined(__clang__)
+#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
                         _mm_prefetch(reinterpret_cast<const char* const>(&_A[i]), _MM_HINT_T0);
                         _mm_prefetch(reinterpret_cast<const char* const>(&_B[i]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
@@ -485,6 +502,12 @@ namespace CHDR {
 
                 // No need for SIMD if there's only one element.
                 if constexpr (Kd == 1U) {
+
+#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
+                    _mm_prefetch(reinterpret_cast<const char* const>(&_A[0U]), _MM_HINT_T0);
+                    _mm_prefetch(reinterpret_cast<const char* const>(&_B[0U]), _MM_HINT_T0);
+#endif // __GNUC__ || __clang__
+
                     result = static_cast<Ts>(std::abs(static_cast<signed>(_B[0U]) - static_cast<signed>(_A[0U])));
                 }
 
@@ -504,7 +527,7 @@ namespace CHDR {
 
                     if constexpr (Kd == 3U) {
 
-#if defined(__GNUC__) || defined(__clang__)
+#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
                         _mm_prefetch(reinterpret_cast<const char* const>(&cA[2U]), _MM_HINT_T0);
                         _mm_prefetch(reinterpret_cast<const char* const>(&cB[2U]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
@@ -516,7 +539,7 @@ namespace CHDR {
                     }
                     if constexpr (Kd == 4U) {
 
-#if defined(__GNUC__) || defined(__clang__)
+#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
                         _mm_prefetch(reinterpret_cast<const char* const>(&cA[3U]), _MM_HINT_T0);
                         _mm_prefetch(reinterpret_cast<const char* const>(&cB[3U]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
@@ -533,7 +556,7 @@ namespace CHDR {
                         size_t j;
                         for (j = 0U; j < (Kd - r); j += 4U) {
 
-#if defined(__GNUC__) || defined(__clang__)
+#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
                             _mm_prefetch(reinterpret_cast<const char* const>(&cA[j + 3U]), _MM_HINT_T0);
                             _mm_prefetch(reinterpret_cast<const char* const>(&cB[j + 3U]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
@@ -546,7 +569,7 @@ namespace CHDR {
 
                         if (j - r == 1U) {
 
-#if defined(__GNUC__) || defined(__clang__)
+#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
                             _mm_prefetch(reinterpret_cast<const char* const>(&cA[j + 2U]), _MM_HINT_T0);
                             _mm_prefetch(reinterpret_cast<const char* const>(&cB[j + 2U]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
@@ -558,7 +581,7 @@ namespace CHDR {
                         }
                         else if (j - r == 2U) {
 
-#if defined(__GNUC__) || defined(__clang__)
+#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
                             _mm_prefetch(reinterpret_cast<const char* const>(&cA[j + 1U]), _MM_HINT_T0);
                             _mm_prefetch(reinterpret_cast<const char* const>(&cB[j + 1U]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
@@ -571,7 +594,7 @@ namespace CHDR {
 
                         for (; j < Kd; ++j) {
 
-#if defined(__GNUC__) || defined(__clang__)
+#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
                             _mm_prefetch(reinterpret_cast<const char* const>(&cA[j]), _MM_HINT_T0);
                             _mm_prefetch(reinterpret_cast<const char* const>(&cB[j]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
@@ -587,7 +610,7 @@ namespace CHDR {
 
                     if constexpr (Kd == 2U) {
 
-#if defined(__GNUC__) || defined(__clang__)
+#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
                         _mm_prefetch(reinterpret_cast<const char* const>(&cA[1U]), _MM_HINT_T0);
                         _mm_prefetch(reinterpret_cast<const char* const>(&cB[1U]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
@@ -604,7 +627,7 @@ namespace CHDR {
                         size_t j;
                         for (j = 0U; j < (Kd - r); j += 2U) {
 
-#if defined(__GNUC__) || defined(__clang__)
+#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
                             _mm_prefetch(reinterpret_cast<const char* const>(&cA[j + 1U]), _MM_HINT_T0);
                             _mm_prefetch(reinterpret_cast<const char* const>(&cB[j + 1U]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
@@ -617,7 +640,7 @@ namespace CHDR {
 
                         for (; j < Kd; ++j) {
 
-#if defined(__GNUC__) || defined(__clang__)
+#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
                             _mm_prefetch(reinterpret_cast<const char* const>(&cA[j]), _MM_HINT_T0);
                             _mm_prefetch(reinterpret_cast<const char* const>(&cB[j]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
@@ -634,7 +657,7 @@ namespace CHDR {
                     // Non-SIMD fallback:
                     for (size_t i = 0U; i < Kd; ++i) {
 
-#if defined(__GNUC__) || defined(__clang__)
+#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
                         _mm_prefetch(reinterpret_cast<const char* const>(&_A[i]), _MM_HINT_T0);
                         _mm_prefetch(reinterpret_cast<const char* const>(&_B[i]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__

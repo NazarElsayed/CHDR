@@ -12,7 +12,7 @@ namespace Test::Tests {
 
     public:
 
-        template <typename Tm, const size_t Kd, typename Ts = uint16_t>
+        template <typename Tm, const size_t Kd, typename Ts = uint64_t>
         static void Run() {
 
             // Define some aliases for types to simplify the syntax a little:
