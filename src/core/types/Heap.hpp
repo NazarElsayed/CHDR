@@ -100,7 +100,6 @@ namespace CHDR {
         }
 
         constexpr void Swap(T& _item1, T& _item2) {
-
             T temp1 =  m_Data[_item1.m_HeapIndex];
             T temp2 =  m_Data[_item2.m_HeapIndex];
 
@@ -109,8 +108,10 @@ namespace CHDR {
 
             m_Data[_item1.m_HeapIndex] = temp2;
             m_Data[_item2.m_HeapIndex] = temp1;
+        }
 
-            //m_Data[_item1.m_HeapIndex].m_HeapIndex =
+        constexpr bool Contains(T& _item) {
+            return _item == m_Data[_item.m_HeapIndex];
         }
 
         constexpr void printHeap() {
