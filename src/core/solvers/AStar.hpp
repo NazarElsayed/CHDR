@@ -67,8 +67,10 @@ namespace CHDR::Solvers {
 
             std::list<ASNode> buffer;
 
+            const auto presize_capacity = static_cast<size_t>(std::abs(ceil(CHDR::Heuristics<Kd, Ts>::ManhattanDistance(_start, _end))));
+
             std::unordered_set<size_t, std::function<const size_t&(const size_t&)>> closedSet(
-                static_cast<size_t>(std::abs(ceil(CHDR::Heuristics<Kd, Ts>::ManhattanDistance(_start, _end)))),
+                presize_capacity,
                 [](const size_t& _seed) constexpr -> const size_t& { return _seed; }
             );
 
