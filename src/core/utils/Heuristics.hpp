@@ -70,11 +70,43 @@ namespace CHDR {
 
             };
 
-            struct Float {
+            struct Float32 {
 
+#ifdef __SSE2__
+
+                [[nodiscard]] static constexpr Ts Sub_SSEX(const __m128& _regA, const __m128& _regB) {
+
+                    const auto sub = _mm_sub_ps(_regA, _regB);
+
+                    float resultOut[4U];
+                    _mm_storeu_ps(resultOut, sub);
+
+                    const auto* const output = reinterpret_cast<size_t*>(&resultOut);
+                    return static_cast<Ts>(output[0U] + output[1U] + output[2U] + output[3U]);
+                }
+
+#endif // __SSE2__
 
             };
 
+            struct Float64 {
+
+#ifdef __SSE2__
+
+                [[nodiscard]] static constexpr Ts Sub_SSEX(const __m128d& _regA, const __m128d& _regB) {
+
+                    const auto sub = _mm_sub_pd(_regA, _regB);
+
+                    double resultOut[4U];
+                    _mm_storeu_pd(resultOut, sub);
+
+                    const auto* const output = reinterpret_cast<size_t*>(&resultOut);
+                    return static_cast<Ts>(output[0U] + output[1U]);
+                }
+
+#endif // __SSE2__
+
+            };
         };
 
 	public:
@@ -103,7 +135,7 @@ namespace CHDR {
          */
         [[nodiscard]] static constexpr auto SqrEuclideanDistance(const coord_t& _A, const coord_t& _B) {
 
-            static_assert(Kd >= 0, "Kd must be more than or equal to 0");
+            static_assert(Kd >= 0U, "Kd must be more than or equal to 0");
 
             Ts result(0);
 
@@ -129,7 +161,7 @@ namespace CHDR {
           */
         [[nodiscard]] static constexpr auto ManhattanDistance(const coord_t& _A, const coord_t& _B) {
 
-            static_assert(Kd >= 0, "Kd must be more than or equal to 0");
+            static_assert(Kd >= 0U, "Kd must be more than or equal to 0");
 
             Ts result(0);
 
@@ -155,8 +187,8 @@ namespace CHDR {
                     if constexpr (Kd == 3U) {
 
 #ifdef __GNUC__
-                        _mm_prefetch((const char*)&_A[8U], _MM_HINT_T0);
-                        _mm_prefetch((const char*)&_B[8U], _MM_HINT_T0);
+                        _mm_prefetch((const char*)&_A[2U], _MM_HINT_T0);
+                        _mm_prefetch((const char*)&_B[2U], _MM_HINT_T0);
 #endif // __GNUC__
 
                         result += SIMDExtensions::Uint32::Sub_SSEX(
@@ -165,6 +197,11 @@ namespace CHDR {
                         );
                     }
                     if constexpr (Kd == 4U) {
+
+#ifdef __GNUC__
+                        _mm_prefetch((const char*)&_A[3U], _MM_HINT_T0);
+                        _mm_prefetch((const char*)&_B[3U], _MM_HINT_T0);
+#endif // __GNUC__
 
                         result = SIMDExtensions::Uint32::Sub_SSEX(
                             _mm_load_si128(reinterpret_cast<__m128i const*>(&_A)),
@@ -179,8 +216,8 @@ namespace CHDR {
                         for (i = 0U; i < (Kd - r); i += 4U) {
 
 #ifdef __GNUC__
-                            _mm_prefetch((const char*)&_A[8U], _MM_HINT_T0);
-                            _mm_prefetch((const char*)&_B[8U], _MM_HINT_T0);
+                            _mm_prefetch((const char*)&_A[i + 3U], _MM_HINT_T0);
+                            _mm_prefetch((const char*)&_B[i + 3U], _MM_HINT_T0);
 #endif // __GNUC__
 
                             result += SIMDExtensions::Uint32::Sub_SSEX(
@@ -199,8 +236,8 @@ namespace CHDR {
                     if constexpr (Kd == 2U) {
 
 #ifdef __GNUC__
-                        _mm_prefetch((const char*)&_A[8U], _MM_HINT_T0);
-                        _mm_prefetch((const char*)&_B[8U], _MM_HINT_T0);
+                        _mm_prefetch((const char*)&_A[2U], _MM_HINT_T0);
+                        _mm_prefetch((const char*)&_B[2U], _MM_HINT_T0);
 #endif // __GNUC__
 
                         result = SIMDExtensions::Uint64::Sub_SSEX(
@@ -216,8 +253,8 @@ namespace CHDR {
                         for (i = 0U; i < (Kd - r); i += 2U) {
 
 #ifdef __GNUC__
-                            _mm_prefetch((const char*)&_A[8U], _MM_HINT_T0);
-                            _mm_prefetch((const char*)&_B[8U], _MM_HINT_T0);
+                            _mm_prefetch((const char*)&_A[i + 1U], _MM_HINT_T0);
+                            _mm_prefetch((const char*)&_B[i + 1U], _MM_HINT_T0);
 #endif // __GNUC__
 
                             result += SIMDExtensions::Uint64::Sub_SSEX(
