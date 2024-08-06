@@ -21,6 +21,8 @@ namespace Test::Tests {
             using    solver_t = CHDR::Solvers::AStar<Tm, Kd, Ts>;
             using   display_t = Display<Tm, Kd>;
 
+            #define HEURISTIC CHDR::Heuristics<Kd, Ts>::ManhattanDistance
+
             /***************************************/
 
             // Generate a maze:
@@ -35,12 +37,12 @@ namespace Test::Tests {
             Debug::Log("Maze Generated!");
 
             // Solve the maze:
-            if (solver_t::HasSolution(maze, start, end, static_cast<size_t>(ceil(solver_t::ManhattanDistance(start, end))))) {
+            if (solver_t::HasSolution(maze, start, end, static_cast<size_t>(ceil(HEURISTIC(start, end))))) {
 
                 Debug::Log("Flood fill done!", Debug);
 
                 auto solver = solver_t();
-                auto path = solver.Solve(maze, start, end, solver_t::ManhattanDistance);
+                auto path = solver.Solve(maze, start, end, HEURISTIC);
 
                 Debug::Log("Solved!");
 

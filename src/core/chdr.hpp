@@ -15,5 +15,6 @@
 #include "types/Node.hpp"
 
 #include "utils/Utils.hpp"
+#include "utils/Heuristics.hpp"
 
 #endif //CHDR_COMMON_HPP
