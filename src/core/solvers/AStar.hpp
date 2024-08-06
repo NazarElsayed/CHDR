@@ -66,7 +66,7 @@ namespace CHDR::Solvers {
             std::list<ASNode> buffer;
 
             std::unordered_set<size_t, std::function<const size_t&(const size_t&)>> closedSet(
-                static_cast<size_t>(ceil(_h(_start, _end))),
+                static_cast<size_t>(std::abs(ceil(_h(_start, _end)))),
                 [](const size_t& _seed) constexpr -> const size_t& { return _seed; }
             );
 

@@ -15,11 +15,29 @@ namespace CHDR {
 
 	struct Utils {
 
-		template<typename T, size_t N, T... Is>
-		constexpr std::array<T, N> Fetch(const std::array<T, N> &_arr, std::index_sequence<Is...>) { return { static_cast<T>(_arr[Is])...}; }
+	private:
 
-		template<typename Tsrc, typename Tdst, size_t N, Tsrc... Is>
-		constexpr std::array<Tdst, N> Convert(const std::array<Tsrc, N> &_arr) { return Utils::Fetch<Tdst>(_arr, std::make_index_sequence<N>{}); }
+		// http://loungecpp.wikidot.com/tips-and-tricks%3aindices
+		template <std::size_t... Is>
+		struct indices {};
+
+		template <std::size_t N, std::size_t... Is>
+		struct build_indices: build_indices<N-1, N-1, Is...> {};
+
+		template <std::size_t... Is>
+		struct build_indices<0, Is...>: indices<Is...> {};
+
+		template<typename T, typename U, size_t N, size_t... Is>
+		static constexpr auto ArrayCast_Helper(const std::array<U, N> &a, indices<Is...>) {
+			return std::array<T, N> { static_cast<T>(std::get<Is>(a))... };
+		}
+
+	public:
+
+		template<typename T, typename U, size_t N>
+		static constexpr auto ArrayCast(const std::array<U, N> &a) { // tag dispatch to helper with array indices
+			return ArrayCast_Helper<T>(a, build_indices<N>());
+		}
 
 		/**
 		 * @brief Converts an std::vector to an std::array of a specified size using move semantics.

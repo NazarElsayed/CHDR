@@ -3,6 +3,96 @@ project(CHDR LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
+# DETECT ARCHITECTURE FOR SIMD OPTIMISATION:
+
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(i[0-9]86|x86_64|AMD64)$") # x86 Processors
+    set(SIMD_FLAGS
+        -mmmx       # <- MMX Flags
+        -m3dnow     # <- 3DNOW
+        -msse       # <- SSE Flags
+        -msse2      # <- SSE2 Flags
+        -msse3      # <- SSE3 Flags
+        -mssse3     # <- Supplemental SSE3 Flags
+        -msse4.1    # <- SSE4.1 Flags
+        -msse4.2    # <- SSE4.2 Flags
+        -mavx       # <- AVX Flags
+        -mavx2      # <- AVX2 Flags
+        #-mavx512f -mavx512dq -mavx512bw -mavx512vl  # <- AVX-512 Flags
+    )
+
+elseif(${CMAKE_SYSTEM_PROCESSOR} MATCHES "^ppc64le") #PowerPC Processors
+    set(SIMD_FLAGS
+        -maltivec   # <- AltiVec/VMX Flags
+        -mvsx       # <- VSX Flags
+    )
+
+elseif(${CMAKE_SYSTEM_PROCESSOR} MATCHES "^arm") #ARM Processors
+    set(SIMD_FLAGS
+        -mfpu=neon  # <- NEON Flags
+        -march=armv8-a+crc+crypto
+    )
+
+elseif(${CMAKE_SYSTEM_PROCESSOR} MATCHES "^aarch64") #ARM64 Processors
+    set(SIMD_FLAGS
+        -march=armv8-a  # <- needed to have NEON support
+    )
+
+elseif(${CMAKE_SYSTEM_PROCESSOR} MATCHES "^sparc") #SPARC Processors
+    set(SIMD_FLAGS
+        -mv8
+        -mvis   # <- Visual Instruction Set Flags
+        -mvis2
+    )
+
+elseif(${CMAKE_SYSTEM_PROCESSOR} MATCHES "^mips") #MIPS Processors
+    set(SIMD_FLAGS
+        -mdspr2 # <- MIPS DSPr2 Flag
+        -mmmx   # <- MMX Flags
+        -msse   # <- SSE Flags
+        -msse2  # <- SSE2 Flags
+    )
+
+elseif(${CMAKE_SYSTEM_PROCESSOR} MATCHES "^ia64") #Itanium Processors
+    set(SIMD_FLAGS
+        -march=itanium-2
+    )
+
+elseif(${CMAKE_SYSTEM_PROCESSOR} MATCHES "^(s390|s390x)$") # IBM S/390 and z Series Processors
+    set(SIMD_FLAGS
+        -march=z13
+    )
+
+elseif(${CMAKE_SYSTEM_PROCESSOR} MATCHES "^riscv") #RISC-V Processors
+    set(SIMD_FLAGS
+        -march=rv64imafdc -mabi=lp64d
+    )
+
+elseif(${CMAKE_SYSTEM_PROCESSOR} MATCHES "^alpha") #DEC Alpha Processors
+    set(SIMD_FLAGS
+        -mieee
+    )
+
+elseif(${CMAKE_SYSTEM_PROCESSOR} MATCHES "^hppa") #HP PA-RISC Processors
+    set(SIMD_FLAGS
+        -mschedule=8000
+    )
+
+elseif(${CMAKE_SYSTEM_PROCESSOR} MATCHES "^(68000|68040|68060)$") #Motorola 68k Processors
+    set(SIMD_FLAGS
+        -m68060
+    )
+
+elseif(${CMAKE_SYSTEM_PROCESSOR} MATCHES "^(sh4|sh4a)$") #SuperH Processors
+    set(SIMD_FLAGS
+        -m4a
+    )
+
+else()
+    set(SIMD_FLAGS "")
+endif()
+
+add_compile_options(${SIMD_FLAGS})
+
 # DIFFERENT BUILD MODES:
 set(CMAKE_CXX_FLAGS_DEBUG "-fsanitize=address,leak,undefined -Wall -Wextra -fno-omit-frame-pointer -g -O0")
 
