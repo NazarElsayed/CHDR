@@ -103,11 +103,17 @@ namespace CHDR {
          */
         [[nodiscard]] static constexpr auto SqrEuclideanDistance(const coord_t& _A, const coord_t& _B) {
 
+            static_assert(Kd >= 0, "Kd must be more than or equal to 0");
+
             Ts result(0);
 
-            for (size_t i = 0U; i < Kd; ++i) {
-                const auto val = _B[i] - _A[i];
-                result += val * val;
+            if constexpr (Kd > 0U) {
+
+                // Non-SIMD fallback:
+                for (size_t i = 0U; i < Kd; ++i) {
+                    const auto val = _B[i] - _A[i];
+                    result += val * val;
+                }
             }
 
             return result;
@@ -123,6 +129,8 @@ namespace CHDR {
           */
         [[nodiscard]] static constexpr auto ManhattanDistance(const coord_t& _A, const coord_t& _B) {
 
+            static_assert(Kd >= 0, "Kd must be more than or equal to 0");
+
             Ts result(0);
 
             constexpr bool is_32bit((sizeof(size_t) * 8U) == 32U);
@@ -137,7 +145,7 @@ namespace CHDR {
                 /* TODO: Add SIMD for other instructions sets than SSE2:
                  *
                  *  MMX: MMX registers are 64 bits wide.
-                 *  SSE: Streaming SIMD Extensions (SSE) registers are 128 bits wide.
+                 *  SSE: Streaming SIMD Extensions (SSE) registers are 128 bits wide. [DONE]
                  *  AVX: Advanced Vector Extensions (AVX) registers are 256 bits wide.
                  *  AVX-512: Advanced Vector Extensions 512 (AVX-512) registers are 512 bits wide.
                  */
@@ -226,13 +234,14 @@ namespace CHDR {
 #endif // __SSE2__
                 else {
 
+                    // Non-SIMD fallback:
                     for (size_t i = 0U; i < Kd; ++i) {
                         result += _B[i] - _A[i];
                     }
                 }
-
-                return result;
             }
+
+            return result;
         }
 
 #pragma endregion Heuristics
