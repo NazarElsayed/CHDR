@@ -313,9 +313,10 @@ namespace CHDR {
 
             if constexpr (Kd > 0U) {
 
+                // No need for SIMD if there's only one element.
                 if constexpr (Kd == 1U) {
-                    // No need for SIMD if there's only one element.
-                    result = static_cast<Ts>(_B[0U] - _A[0U]);
+                    const auto val = _B[0U] - _A[0U];
+                    result = static_cast<Ts>(val * val);
                 }
 
                 /* TODO: Add SIMD for other instructions sets than SSE2:
@@ -464,9 +465,9 @@ namespace CHDR {
 
             if constexpr (Kd > 0U) {
 
+                // No need for SIMD if there's only one element.
                 if constexpr (Kd == 1U) {
-                    // No need for SIMD if there's only one element.
-                    result = static_cast<Ts>(_B[0U] - _A[0U]);
+                    result = static_cast<Ts>(std::abs(static_cast<signed>(_B[0U]) - static_cast<signed>(_A[0U])));
                 }
 
                 /* TODO: Add SIMD for other instructions sets than SSE2:
@@ -577,7 +578,7 @@ namespace CHDR {
 
                     // Non-SIMD fallback:
                     for (size_t i = 0U; i < Kd; ++i) {
-                        result += std::abs(static_cast<Ts>(_B[i] - _A[i]));
+                        result += static_cast<Ts>(std::abs(static_cast<signed>(_B[i]) - static_cast<signed>(_A[i])));
                     }
                 }
             }
