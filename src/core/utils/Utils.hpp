@@ -15,6 +15,12 @@ namespace CHDR {
 
 	struct Utils {
 
+		template<typename T, size_t N, T... Is>
+		constexpr std::array<T, N> Fetch(const std::array<T, N> &_arr, std::index_sequence<Is...>) { return { static_cast<T>(_arr[Is])...}; }
+
+		template<typename Tsrc, typename Tdst, size_t N, Tsrc... Is>
+		constexpr std::array<Tdst, N> Convert(const std::array<Tsrc, N> &_arr) { return Utils::Fetch<Tdst>(_arr, std::make_index_sequence<N>{}); }
+
 		/**
 		 * @brief Converts an std::vector to an std::array of a specified size using move semantics.
 		 *
