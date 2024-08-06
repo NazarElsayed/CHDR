@@ -358,7 +358,7 @@ namespace CHDR {
 
                     if constexpr (Kd == 3U) {
 
-#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
+#if defined(__GNUC__) || defined(__clang__)
                         _mm_prefetch(reinterpret_cast<const char* const>(&cA[2U]), _MM_HINT_T0);
                         _mm_prefetch(reinterpret_cast<const char* const>(&cB[2U]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
@@ -370,7 +370,7 @@ namespace CHDR {
                     }
                     if constexpr (Kd == 4U) {
 
-#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
+#if defined(__GNUC__) || defined(__clang__)
                         _mm_prefetch(reinterpret_cast<const char* const>(&cA[3U]), _MM_HINT_T0);
                         _mm_prefetch(reinterpret_cast<const char* const>(&cB[3U]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
@@ -387,7 +387,7 @@ namespace CHDR {
                         size_t j;
                         for (j = 0U; j < (Kd - r); j += 4U) {
 
-#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
+#if defined(__GNUC__) || defined(__clang__)
                             _mm_prefetch(reinterpret_cast<const char* const>(&cA[j + 3U]), _MM_HINT_T0);
                             _mm_prefetch(reinterpret_cast<const char* const>(&cB[j + 3U]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
@@ -398,9 +398,34 @@ namespace CHDR {
                             );
                         }
 
+                        if (j - r == 1U) {
+
+#if defined(__GNUC__) || defined(__clang__)
+                            _mm_prefetch(reinterpret_cast<const char* const>(&cA[j + 2U]), _MM_HINT_T0);
+                            _mm_prefetch(reinterpret_cast<const char* const>(&cB[j + 2U]), _MM_HINT_T0);
+#endif // __GNUC__ || __clang__
+
+                            result += static_cast<Ts>(SIMDExtensions::Float32::Sub_128v(
+                                _mm_set_epi32(0, cA[j], cA[j + 1U], cA[j + 2U]),
+                                _mm_set_epi32(0, cB[j], cB[j + 1U], cB[j + 2U])
+                            ));
+                        }
+                        else if (j - r == 2U) {
+
+#if defined(__GNUC__) || defined(__clang__)
+                            _mm_prefetch(reinterpret_cast<const char* const>(&cA[j + 1U]), _MM_HINT_T0);
+                            _mm_prefetch(reinterpret_cast<const char* const>(&cB[j + 1U]), _MM_HINT_T0);
+#endif // __GNUC__ || __clang__
+
+                            result += static_cast<Ts>(SIMDExtensions::Float32::Sub_128v(
+                                _mm_set_epi32(0, 0, cA[j], cA[j + 1U]),
+                                _mm_set_epi32(0, 0, cB[j], cB[j + 1U])
+                            ));
+                        }
+
                         for (; j < Kd; ++j) {
 
-#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
+#if defined(__GNUC__) || defined(__clang__)
                             _mm_prefetch(reinterpret_cast<const char* const>(&_A[j]), _MM_HINT_T0);
                             _mm_prefetch(reinterpret_cast<const char* const>(&_B[j]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
@@ -421,7 +446,7 @@ namespace CHDR {
 
                     if constexpr (Kd == 2U) {
 
-#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
+#if defined(__GNUC__) || defined(__clang__)
                         _mm_prefetch(reinterpret_cast<const char* const>(&cA[1U]), _MM_HINT_T0);
                         _mm_prefetch(reinterpret_cast<const char* const>(&cB[1U]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
@@ -438,7 +463,7 @@ namespace CHDR {
                         size_t j;
                         for (j = 0U; j < (Kd - r); j += 2U) {
 
-#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
+#if defined(__GNUC__) || defined(__clang__)
                             _mm_prefetch(reinterpret_cast<const char* const>(&cA[j + 1U]), _MM_HINT_T0);
                             _mm_prefetch(reinterpret_cast<const char* const>(&cB[j + 1U]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
@@ -451,7 +476,7 @@ namespace CHDR {
 
                         for (; j < Kd; ++j) {
 
-#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
+#if defined(__GNUC__) || defined(__clang__)
                             _mm_prefetch(reinterpret_cast<const char* const>(&cA[j]), _MM_HINT_T0);
                             _mm_prefetch(reinterpret_cast<const char* const>(&cB[j]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
@@ -527,7 +552,7 @@ namespace CHDR {
 
                     if constexpr (Kd == 3U) {
 
-#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
+#if defined(__GNUC__) || defined(__clang__)
                         _mm_prefetch(reinterpret_cast<const char* const>(&cA[2U]), _MM_HINT_T0);
                         _mm_prefetch(reinterpret_cast<const char* const>(&cB[2U]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
@@ -539,7 +564,7 @@ namespace CHDR {
                     }
                     if constexpr (Kd == 4U) {
 
-#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
+#if defined(__GNUC__) || defined(__clang__)
                         _mm_prefetch(reinterpret_cast<const char* const>(&cA[3U]), _MM_HINT_T0);
                         _mm_prefetch(reinterpret_cast<const char* const>(&cB[3U]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
@@ -556,7 +581,7 @@ namespace CHDR {
                         size_t j;
                         for (j = 0U; j < (Kd - r); j += 4U) {
 
-#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
+#if defined(__GNUC__) || defined(__clang__)
                             _mm_prefetch(reinterpret_cast<const char* const>(&cA[j + 3U]), _MM_HINT_T0);
                             _mm_prefetch(reinterpret_cast<const char* const>(&cB[j + 3U]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
@@ -569,7 +594,7 @@ namespace CHDR {
 
                         if (j - r == 1U) {
 
-#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
+#if defined(__GNUC__) || defined(__clang__)
                             _mm_prefetch(reinterpret_cast<const char* const>(&cA[j + 2U]), _MM_HINT_T0);
                             _mm_prefetch(reinterpret_cast<const char* const>(&cB[j + 2U]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
@@ -581,7 +606,7 @@ namespace CHDR {
                         }
                         else if (j - r == 2U) {
 
-#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
+#if defined(__GNUC__) || defined(__clang__)
                             _mm_prefetch(reinterpret_cast<const char* const>(&cA[j + 1U]), _MM_HINT_T0);
                             _mm_prefetch(reinterpret_cast<const char* const>(&cB[j + 1U]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
@@ -594,7 +619,7 @@ namespace CHDR {
 
                         for (; j < Kd; ++j) {
 
-#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
+#if defined(__GNUC__) || defined(__clang__)
                             _mm_prefetch(reinterpret_cast<const char* const>(&cA[j]), _MM_HINT_T0);
                             _mm_prefetch(reinterpret_cast<const char* const>(&cB[j]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
@@ -610,7 +635,7 @@ namespace CHDR {
 
                     if constexpr (Kd == 2U) {
 
-#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
+#if defined(__GNUC__) || defined(__clang__)
                         _mm_prefetch(reinterpret_cast<const char* const>(&cA[1U]), _MM_HINT_T0);
                         _mm_prefetch(reinterpret_cast<const char* const>(&cB[1U]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
@@ -627,7 +652,7 @@ namespace CHDR {
                         size_t j;
                         for (j = 0U; j < (Kd - r); j += 2U) {
 
-#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
+#if defined(__GNUC__) || defined(__clang__)
                             _mm_prefetch(reinterpret_cast<const char* const>(&cA[j + 1U]), _MM_HINT_T0);
                             _mm_prefetch(reinterpret_cast<const char* const>(&cB[j + 1U]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
@@ -640,7 +665,7 @@ namespace CHDR {
 
                         for (; j < Kd; ++j) {
 
-#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
+#if defined(__GNUC__) || defined(__clang__)
                             _mm_prefetch(reinterpret_cast<const char* const>(&cA[j]), _MM_HINT_T0);
                             _mm_prefetch(reinterpret_cast<const char* const>(&cB[j]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
