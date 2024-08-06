@@ -13,6 +13,8 @@
 #include "base/ISolver.hpp"
 #include "types/Heap.hpp"
 
+#include "../utils/Heuristics.hpp"
+
 namespace CHDR::Solvers {
 
     template<typename Tm, const size_t Kd, typename Ts>
@@ -66,7 +68,7 @@ namespace CHDR::Solvers {
             std::list<ASNode> buffer;
 
             std::unordered_set<size_t, std::function<const size_t&(const size_t&)>> closedSet(
-                static_cast<size_t>(std::abs(ceil(_h(_start, _end)))),
+                static_cast<size_t>(std::abs(ceil(CHDR::Heuristics<Kd, Ts>::ManhattanDistance(_start, _end)))),
                 [](const size_t& _seed) constexpr -> const size_t& { return _seed; }
             );
 

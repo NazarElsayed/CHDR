@@ -37,7 +37,7 @@ namespace Test::Tests {
             Debug::Log("Maze Generated!");
 
             // Solve the maze:
-            if (solver_t::HasSolution(maze, start, end, static_cast<size_t>(std::abs(ceil(HEURISTIC(start, end)))))) {
+            if (solver_t::HasSolution(maze, start, end, static_cast<size_t>(std::abs(ceil(CHDR::Heuristics<Kd, Ts>::ManhattanDistance(start, end)))))) {
 
                 Debug::Log("Flood fill done!", Debug);
 
