@@ -16,7 +16,7 @@
 namespace CHDR::Solvers {
 
     template<typename Tm, const size_t Kd, typename Ts>
-    class AStar : public ISolver<Tm> {
+    class AStar final : public ISolver<Tm> {
 
         static_assert(std::is_integral_v<Ts> || std::is_floating_point_v<Ts>, "Ts must be either an integral or floating point type");
 
@@ -24,7 +24,7 @@ namespace CHDR::Solvers {
 
         using coord_t = Coord<size_t, Kd>;
 
-        struct ASNode {
+        struct ASNode final : IHeapItem {
 
             size_t m_Coord;
 
@@ -33,7 +33,7 @@ namespace CHDR::Solvers {
 
             const ASNode* m_Parent;
 
-            [[nodiscard]] constexpr ASNode(const size_t& _coord, const Ts& _gScore, const Ts& _hScore, const ASNode* const _parent) :
+            [[nodiscard]] constexpr ASNode(const size_t& _coord, const Ts& _gScore, const Ts& _hScore, const ASNode* const _parent) : IHeapItem(),
                 m_Coord (_coord),
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
@@ -43,8 +43,11 @@ namespace CHDR::Solvers {
         };
 
         struct ASNodeCompare {
-
             [[nodiscard]] constexpr bool operator () (const ASNode& _a, const ASNode& _b) const { return _a.m_FScore > _b.m_FScore; }
+        };
+
+        struct TestFunctor {
+            bool operator () () const { return true; }
         };
 
     public:
@@ -67,13 +70,15 @@ namespace CHDR::Solvers {
                 [](const size_t& _seed) constexpr -> const size_t& { return _seed; }
             );
 
-            std::priority_queue<ASNode, std::vector<ASNode>, ASNodeCompare> openSet;
-            openSet.emplace(s, static_cast<Ts>(0), _h(_start, _end), nullptr);
+            Heap<ASNode, ASNodeCompare> openSet;
 
-            while (!openSet.empty()) {
+            ASNode start(s, static_cast<Ts>(0), _h(_start, _end), nullptr);
+            openSet.Add(start);
 
-                buffer.emplace_back(std::move(openSet.top()));
-                openSet.pop();
+            while (!openSet.Empty()) {
+
+                buffer.emplace_back(std::move(openSet.Top()));
+                openSet.RemoveFirst();
 
                 const auto& current = buffer.back();
 
@@ -91,7 +96,8 @@ namespace CHDR::Solvers {
                         if (closedSet.find(n) == closedSet.end()) {
 
                             // Add node to openSet.
-                            openSet.emplace(n, current.m_GScore + static_cast<Ts>(1), _h(neighbour, _end), &current);
+                            ASNode node(n, current.m_GScore + static_cast<Ts>(1), _h(neighbour, _end), &current);
+                            openSet.Add(node);
                         }
                     }
                 }
@@ -100,7 +106,9 @@ namespace CHDR::Solvers {
                     /* SOLUTION REACHED */
 
                     // Free data which is no longer relevant:
-                    std::priority_queue<ASNode, std::vector<ASNode>, ASNodeCompare>().swap(openSet);
+                    //std::priority_queue<ASNode, std::vector<ASNode>, ASNodeCompare>().swap(openSet);
+                    //TODO: Clear Heap Data Function;
+
                     closedSet.clear();
 
                     // Recurse from end node to start node, inserting into a result buffer:
@@ -114,8 +122,6 @@ namespace CHDR::Solvers {
                     std::reverse(result.begin(), result.end());
                 }
             }
-
-            //PrintPath(result);
 
             return result;
         }
