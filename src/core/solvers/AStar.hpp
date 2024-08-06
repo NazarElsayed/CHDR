@@ -120,6 +120,7 @@ namespace CHDR::Solvers {
 
                     // Reverse the buffer:
                     std::reverse(result.begin(), result.end());
+                    break;
                 }
             }
 
