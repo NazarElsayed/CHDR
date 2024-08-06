@@ -22,92 +22,58 @@ namespace CHDR {
 
         struct SIMDExtensions {
 
+            struct Uint32 {
+
 #ifdef __SSE2__
 
-        [[nodiscard]] static constexpr Ts simd_sub_64bit_128(const coord_t& _A, const coord_t& _B) {
+            [[nodiscard]] static constexpr Ts Sub_SSEX(const __m128i& _regA, const __m128i& _regB) {
 
-            const auto regA = _mm_load_si128(reinterpret_cast<__m128i const*>(&_A));
-            const auto regB = _mm_load_si128(reinterpret_cast<__m128i const*>(&_B));
+                // Perform A - B:
+                const auto sub = _mm_sub_epi32(_regA, _regB);
 
-#ifdef __SSE4_2__
-            const auto sub = _mm_sub_epi64(regA, regB);
-#else
+                __m128i resultOut{};
+                _mm_store_si128(&resultOut, sub);
 
-            const auto   notB = _mm_xor_si128(regB, _mm_set1_epi64x(-1)); // bitwise not
-            const auto minusB = _mm_add_epi64(notB, _mm_set1_epi64x( 1)); // add 1
-
-            // Perform A - B by computing A + (-B):
-            const auto sub = _mm_add_epi64(regA, minusB);
-#endif
-
-            __m128i resultOut{};
-            _mm_store_si128(&resultOut, sub);
-
-            const auto* const output = reinterpret_cast<size_t*>(&resultOut);
-            return static_cast<Ts>(output[0U] + output[1U]);
-        }
-
-        [[nodiscard]] static constexpr Ts simd_sub_64bit_128(
-            const size_t& _A0, const size_t& _A1,
-            const size_t& _B0, const size_t& _B1
-        ) {
-
-            const auto regA = _mm_set_epi64x(_A0, _A1);
-            const auto regB = _mm_set_epi64x(_B0, _B1);
-
-#ifdef __SSE4_2__
-            const auto sub = _mm_sub_epi64(regA, regB);
-#else
-
-            const auto   notB = _mm_xor_si128(regB, _mm_set1_epi64x(-1)); // bitwise not
-            const auto minusB = _mm_add_epi64(notB, _mm_set1_epi64x( 1)); // add 1
-
-            // Perform A - B by computing A + (-B):
-            const auto sub = _mm_add_epi64(regA, minusB);
-#endif
-
-            __m128i resultOut{};
-            _mm_store_si128(&resultOut, sub);
-
-            const auto* const output = reinterpret_cast<size_t*>(&resultOut);
-            return static_cast<Ts>(output[0U] + output[1U]);
-        }
-
-        [[nodiscard]] static constexpr Ts simd_sub_32_bit_128(const coord_t& _A, const coord_t& _B) {
-
-            // Load the coordinates into SSE registers:
-            const auto regA = _mm_load_si128(reinterpret_cast<__m128i const*>(&_A));
-            const auto regB = _mm_load_si128(reinterpret_cast<__m128i const*>(&_B));
-
-            // Perform A - B:
-            const auto sub = _mm_sub_epi32(regA, regB);
-
-            __m128i resultOut{};
-            _mm_store_si128(&resultOut, sub);
-
-            const auto* const output = reinterpret_cast<size_t*>(&resultOut);
-            return static_cast<Ts>(output[0U] + output[1U] + output[2U] + output[3U]);
-        }
-
-        [[nodiscard]] static constexpr Ts simd_sub_32_bit_128(
-            const size_t& _A0, const size_t& _A1, const size_t& _A2, const size_t& _A3,
-            const size_t& _B0, const size_t& _B1, const size_t& _B2, const size_t& _B3
-        ) {
-
-            const auto regA = _mm_set_epi32(_A3, _A2, _A1, _A0); // Load as { A3, A2, A1, A0 }
-            const auto regB = _mm_set_epi32(_B3, _B2, _B1, _B0); // Load as { A3, B2, B1, B0 }
-
-            // Perform A - B:
-            const auto sub = _mm_sub_epi32(regA, regB);
-
-            __m128i resultOut{};
-            _mm_store_si128(&resultOut, sub);
-
-            const auto* const output = reinterpret_cast<size_t*>(&resultOut);
-            return static_cast<Ts>(output[0U] + output[1U] + output[2U] + output[3U]);
-        }
+                const auto* const output = reinterpret_cast<size_t*>(&resultOut);
+                return static_cast<Ts>(output[0U] + output[1U] + output[2U] + output[3U]);
+            }
 
 #endif //__SSE2__
+
+            };
+
+            struct Uint64 {
+
+#ifdef __SSE2__
+
+                [[nodiscard]] static constexpr Ts Sub_SSEX(const __m128i& _regA, const __m128i& _regB) {
+
+#ifdef __SSE4_2__
+                    const auto sub = _mm_sub_epi64(_regA, _regB);
+#else // ifndef __SSE4_2__
+
+                    const auto   notB = _mm_xor_si128(_regB, _mm_set1_epi64x(-1)); // bitwise not
+                    const auto minusB = _mm_add_epi64(notB, _mm_set1_epi64x( 1)); // add 1
+
+                    // Perform A - B by computing A + (-B):
+                    const auto sub = _mm_add_epi64(_regA, minusB);
+#endif // __SSE4_2__
+
+                    __m128i resultOut{};
+                    _mm_store_si128(&resultOut, sub);
+
+                    const auto* const output = reinterpret_cast<size_t*>(&resultOut);
+                    return static_cast<Ts>(output[0U] + output[1U]);
+                }
+
+#endif // __SSE2__
+
+            };
+
+            struct Float {
+
+
+            };
 
         };
 
@@ -176,56 +142,26 @@ namespace CHDR {
                  *  AVX-512: Advanced Vector Extensions 512 (AVX-512) registers are 512 bits wide.
                  */
 #ifdef __SSE2__
-                else if constexpr (is_64bit) {
-
-                    if constexpr (Kd == 2U) {
-
-#ifdef __GNUC__
-                        _mm_prefetch((const char*)&_A[8], _MM_HINT_T0);
-                        _mm_prefetch((const char*)&_B[8], _MM_HINT_T0);
-#endif // __GNUC__
-
-                        result = SIMDExtensions::simd_sub_64bit_128(_A, _B);
-                    }
-                    else {
-
-                        constexpr auto r = Kd % 2U;
-
-                        size_t i;
-                        for (i = 0U; i < (Kd - r); i += 2U) {
-
-#ifdef __GNUC__
-                            _mm_prefetch((const char*)&_A[8], _MM_HINT_T0);
-                            _mm_prefetch((const char*)&_B[8], _MM_HINT_T0);
-#endif // __GNUC__
-
-                            result += SIMDExtensions::simd_sub_64bit_128(
-                                _A[i], _A[i + 1],
-                                _B[i], _B[i + 1]
-                            );
-                        }
-
-                        if constexpr (r != 0U) {
-                            result += _B[i] - _A[i];
-                        }
-                    }
-                }
                 else if constexpr (is_32bit) {
 
                     if constexpr (Kd == 3U) {
 
 #ifdef __GNUC__
-                        _mm_prefetch((const char*)&_A[8], _MM_HINT_T0);
-                        _mm_prefetch((const char*)&_B[8], _MM_HINT_T0);
+                        _mm_prefetch((const char*)&_A[8U], _MM_HINT_T0);
+                        _mm_prefetch((const char*)&_B[8U], _MM_HINT_T0);
 #endif // __GNUC__
 
-                        result = SIMDExtensions::simd_sub_32_bit_128(
-                            0U, _A[0], _A[1], _A[2],
-                            0U, _B[0], _B[1], _B[2]
+                        result += SIMDExtensions::Uint32::Sub_SSEX(
+                            _mm_set_epi32(0, _A[0U], _A[1U], _A[2U]),
+                            _mm_set_epi32(0, _B[0U], _B[1U], _B[2U])
                         );
                     }
                     if constexpr (Kd == 4U) {
-                        result = SIMDExtensions::simd_sub_32_bit_128(_A, _B);
+
+                        result = SIMDExtensions::Uint32::Sub_SSEX(
+                            _mm_load_si128(reinterpret_cast<__m128i const*>(&_A)),
+                            _mm_load_si128(reinterpret_cast<__m128i const*>(&_B))
+                        );
                     }
                     else {
 
@@ -235,17 +171,54 @@ namespace CHDR {
                         for (i = 0U; i < (Kd - r); i += 4U) {
 
 #ifdef __GNUC__
-                            _mm_prefetch((const char*)&_A[8], _MM_HINT_T0);
-                            _mm_prefetch((const char*)&_B[8], _MM_HINT_T0);
+                            _mm_prefetch((const char*)&_A[8U], _MM_HINT_T0);
+                            _mm_prefetch((const char*)&_B[8U], _MM_HINT_T0);
 #endif // __GNUC__
 
-                            result += SIMDExtensions::simd_sub_32bit_128(
-                                _A[i], _A[i + 1], _A[i + 2], _A[i + 3],
-                                _B[i], _B[i + 1], _B[i + 2], _B[i + 3]
+                            result += SIMDExtensions::Uint32::Sub_SSEX(
+                                _mm_set_epi32(_A[i], _A[i + 1U], _A[i + 2U], _A[i + 3U]),
+                                _mm_set_epi32(_B[i], _B[i + 1U], _B[i + 2U], _B[i + 3U])
                             );
                         }
 
                         for (; i < Kd; ++i) {
+                            result += _B[i] - _A[i];
+                        }
+                    }
+                }
+                else if constexpr (is_64bit) {
+
+                    if constexpr (Kd == 2U) {
+
+#ifdef __GNUC__
+                        _mm_prefetch((const char*)&_A[8U], _MM_HINT_T0);
+                        _mm_prefetch((const char*)&_B[8U], _MM_HINT_T0);
+#endif // __GNUC__
+
+                        result = SIMDExtensions::Uint64::Sub_SSEX(
+                            _mm_load_si128(reinterpret_cast<__m128i const*>(&_A)),
+                            _mm_load_si128(reinterpret_cast<__m128i const*>(&_B))
+                        );
+                    }
+                    else {
+
+                        constexpr auto r = Kd % 2U;
+
+                        size_t i;
+                        for (i = 0U; i < (Kd - r); i += 2U) {
+
+#ifdef __GNUC__
+                            _mm_prefetch((const char*)&_A[8U], _MM_HINT_T0);
+                            _mm_prefetch((const char*)&_B[8U], _MM_HINT_T0);
+#endif // __GNUC__
+
+                            result += SIMDExtensions::Uint64::Sub_SSEX(
+                                _mm_set_epi64x(_A[i], _A[i + 1U]),
+                                _mm_set_epi64x(_B[i], _B[i + 1U])
+                            );
+                        }
+
+                        if constexpr (r != 0U) {
                             result += _B[i] - _A[i];
                         }
                     }
