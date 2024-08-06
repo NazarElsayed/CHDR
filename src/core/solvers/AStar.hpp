@@ -24,7 +24,7 @@ namespace CHDR::Solvers {
 
         using coord_t = Coord<size_t, Kd>;
 
-        struct ASNode {
+        struct ASNode final : IHeapItem {
 
             size_t m_Coord;
 
@@ -43,8 +43,11 @@ namespace CHDR::Solvers {
         };
 
         struct ASNodeCompare {
-
             [[nodiscard]] constexpr bool operator () (const ASNode& _a, const ASNode& _b) const { return _a.m_FScore > _b.m_FScore; }
+        };
+
+        struct TestFunctor {
+            bool operator () () const { return true; }
         };
 
     public:
@@ -59,6 +62,30 @@ namespace CHDR::Solvers {
 
             const auto s = Utils::To1D(_start, _maze.Size());
             const auto e = Utils::To1D(_end,   _maze.Size());
+
+            ASNode test (5,  static_cast<Ts>(0), 3, nullptr);
+            ASNode test2(10, static_cast<Ts>(0), 3,  &test);
+            ASNode test3(10, static_cast<Ts>(0), 3,  &test);
+            ASNode test4(10, static_cast<Ts>(0), 3,  &test);
+            ASNode test5(10, static_cast<Ts>(0), 0,  &test);
+            ASNode test6(10, static_cast<Ts>(0), 40,  &test);
+            ASNode test7(10, static_cast<Ts>(0), 0,  &test);
+            ASNode test8(10, static_cast<Ts>(0), 0,  &test);
+            ASNode test9(10, static_cast<Ts>(0), 0,  &test);
+
+            Heap<ASNode, ASNodeCompare> heap;
+
+            heap.Add(test);
+            heap.Add(test2);
+            heap.Add(test3);
+            heap.Add(test4);
+            heap.Add(test5);
+            heap.Add(test6);
+            heap.Add(test7);
+            heap.Add(test8);
+            heap.Add(test9);
+
+            heap.printHeap();
 
             std::list<ASNode> buffer;
 
