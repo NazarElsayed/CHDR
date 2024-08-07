@@ -12,10 +12,6 @@ namespace CHDR {
 
         static_assert(std::is_base_of_v<IHeapItem, T>, "T must derive from IHeapItem");
 
-#define PARENT 0
-#define LCHILD 1
-#define RCHILD 2
-
     private:
         std::vector<T> m_Data;
         Comparitor compare;
