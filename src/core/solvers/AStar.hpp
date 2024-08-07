@@ -113,8 +113,7 @@ namespace CHDR::Solvers {
                     /* SOLUTION REACHED */
 
                     // Free data which is no longer relevant:
-                    //std::priority_queue<ASNode, std::vector<ASNode>, ASNodeCompare>().swap(openSet);
-                    //TODO: Clear Heap Data Function;
+                    openSet.Clear();
 
                     closedSet.clear();
 

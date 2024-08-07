@@ -12,10 +12,6 @@ namespace CHDR {
 
         static_assert(std::is_base_of_v<IHeapItem, T>, "T must derive from IHeapItem");
 
-#define PARENT 0
-#define LCHILD 1
-#define RCHILD 2
-
     private:
         std::vector<T> m_Data;
         Comparitor compare;
@@ -112,6 +108,10 @@ namespace CHDR {
 
         constexpr bool Contains(T& _item) {
             return _item == m_Data[_item.m_HeapIndex];
+        }
+
+        constexpr void Clear() {
+            m_Data.clear();
         }
 
         constexpr void printHeap() {
