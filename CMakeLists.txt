@@ -131,6 +131,7 @@ add_library(CHDR INTERFACE
         src/core/utils/Utils.hpp
         src/core/types/Heap.hpp
         src/core/types/RelationalNode.hpp
+        src/core/types/PerfectScalableBloomFilter.hpp
 )
 
 target_link_libraries(CHDR INTERFACE

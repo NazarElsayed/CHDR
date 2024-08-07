@@ -12,6 +12,7 @@
 
 #include "base/ISolver.hpp"
 #include "types/Heap.hpp"
+#include "types/PerfectScalableBloomFilter.hpp"
 
 #include "../utils/Heuristics.hpp"
 
@@ -67,12 +68,7 @@ namespace CHDR::Solvers {
 
             std::list<ASNode> buffer;
 
-            const auto presize_capacity = static_cast<size_t>(std::abs(ceil(CHDR::Heuristics<Kd, Ts>::ManhattanDistance(_start, _end))));
-
-            std::unordered_set<size_t, std::function<const size_t&(const size_t&)>> closedSet(
-                presize_capacity,
-                [](const size_t& _seed) constexpr -> const size_t& { return _seed; }
-            );
+            PerfectScalableBloomFilter closedSet;
 
             Heap<ASNode, ASNodeCompare> openSet;
 
@@ -89,7 +85,7 @@ namespace CHDR::Solvers {
 
                     /* SEARCH FOR SOLUTION */
 
-                    closedSet.emplace(current.m_Coord);
+                    closedSet.Add(current.m_Coord);
 
                     for (const auto neighbour : _maze.GetNeighbours(current.m_Coord)) {
 
@@ -98,7 +94,7 @@ namespace CHDR::Solvers {
                             const auto n = Utils::To1D(nValue, _maze.Size());
 
                             // Check if node is not already visited:
-                            if (closedSet.find(n) == closedSet.end()) {
+                            if (!closedSet.Contains(n)) {
 
                                 // Add node to openSet.
                                 openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), &current });
@@ -112,18 +108,20 @@ namespace CHDR::Solvers {
 
                     // Free data which is no longer relevant:
                     openSet.Clear();
-
-                    closedSet.clear();
+                    closedSet.Clear();
 
                     // Recurse from end node to start node, inserting into a result buffer:
                     result.reserve(current.m_GScore);
 
                     for (const auto* temp = &current; temp->m_Parent != nullptr; temp = temp->m_Parent) {
-                        result.push_back(Utils::ToND(temp->m_Coord, _maze.Size()));
+                        result.emplace_back(Utils::ToND(temp->m_Coord, _maze.Size()));
                     }
 
-                    // Reverse the buffer:
+                    buffer.clear();
+
+                    // Reverse the result:
                     std::reverse(result.begin(), result.end());
+
                     break;
                 }
             }
@@ -146,9 +144,8 @@ namespace CHDR::Solvers {
                 std::queue<size_t> openSet;
                 openSet.emplace(s);
 
-                std::unordered_set<size_t> closedSet;
-                closedSet.reserve(_capacity);
-                closedSet.emplace(s);
+                PerfectScalableBloomFilter closedSet;
+                closedSet.Add(s);
 
                 while (!openSet.empty()) {
 
@@ -163,8 +160,8 @@ namespace CHDR::Solvers {
 
                                 const auto n = Utils::To1D(nValue, _maze.Size());
 
-                                const auto [iter, inserted] = closedSet.emplace(n);
-                                if (inserted) {
+                                if (!closedSet.Contains(n)) {
+                                    closedSet.Add(n);
 
                                     if (n == e) {
                                         result = true;
