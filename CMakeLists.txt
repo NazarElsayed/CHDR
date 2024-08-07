@@ -121,7 +121,10 @@ add_library(CHDR INTERFACE
         src/core/mazes/Grid.hpp
         src/core/mazes/Tree.hpp
 
+        src/core/types/DenseExistenceSet.hpp
+        src/core/types/Heap.hpp
         src/core/types/Node.hpp
+        src/core/types/RelationalNode.hpp
 
         src/core/solvers/AStar.hpp
         src/core/solvers/base/ISolver.hpp
@@ -129,9 +132,6 @@ add_library(CHDR INTERFACE
         src/core/solvers/JPS.hpp
 
         src/core/utils/Utils.hpp
-        src/core/types/Heap.hpp
-        src/core/types/RelationalNode.hpp
-        src/core/types/PerfectScalableBloomFilter.hpp
 )
 
 target_link_libraries(CHDR INTERFACE

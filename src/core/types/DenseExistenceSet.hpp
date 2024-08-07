@@ -1,12 +1,12 @@
-#ifndef CHDR_PERFECT_SCALABLE_BLOOM_FILTER_HPP
-#define CHDR_PERFECT_SCALABLE_BLOOM_FILTER_HPP
+#ifndef CHDR_DENSE_EXISTENCE_SET_HPP
+#define CHDR_DENSE_EXISTENCE_SET_HPP
 
 #include <vector>
 
 namespace CHDR {
 
-    struct LowestMemory       {};
-    struct LowMemory          {};
+    struct LowestMemoryUsage  {};
+    struct LowMemoryUsage     {};
     struct Balanced           {};
     struct HighestPerformance {};
 
@@ -14,12 +14,12 @@ namespace CHDR {
     struct Alignment {};
 
     template<>
-    struct Alignment<LowestMemory> {
+    struct Alignment<LowestMemoryUsage> {
         using Type = bool;
     };
 
     template<>
-    struct Alignment<LowMemory> {
+    struct Alignment<LowMemoryUsage> {
         using Type = char;
     };
 
@@ -33,7 +33,7 @@ namespace CHDR {
         using Type = intptr_t;
     };
 
-    template <typename AlignmentType = LowestMemory>
+    template <typename AlignmentType = LowestMemoryUsage>
     class DenseExistenceSet {
 
     private:
@@ -58,15 +58,33 @@ namespace CHDR {
             }
         }
 
-        [[nodiscard]] bool Contains(const size_t& _hash) const {
-            return _hash >= m_Bits.size() ? false : static_cast<bool>(m_Bits[_hash]);
+        [[nodiscard]] inline bool Contains(const size_t& _hash) const {
+            return _hash < m_Bits.size() && static_cast<bool>(m_Bits[_hash]);
         }
 
-        void Clear() {
-            m_Bits.clear();
+        void Trim() {
+
+            const auto it = std::find_if(
+                m_Bits.rbegin(),
+                m_Bits.rend(),
+                [](const auto& bit) constexpr {
+                    return static_cast<bool>(bit);
+                }
+            );
+
+            if (it != m_Bits.rend()) {
+                m_Bits.resize(std::distance(it, m_Bits.rend()));
+            }
+            else {
+                Clear();
+            }
         }
+
+        void Clear() { m_Bits.clear(); }
+
+        constexpr auto Size() const { return m_Bits.size(); }
     };
 
 } // CHDR
 
-#endif //CHDR_PERFECT_SCALABLE_BLOOM_FILTER_HPP
+#endif //CHDR_DENSE_EXISTENCE_SET_HPP
