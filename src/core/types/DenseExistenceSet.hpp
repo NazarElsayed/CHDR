@@ -52,6 +52,16 @@ namespace CHDR {
             m_Bits[_hash] = static_cast<typename Alignment<AlignmentType>::Type>(true);
         }
 
+        void Remove(const size_t& _hash) {
+
+            if (_hash >= m_Bits.size()) {
+                m_Bits.resize(_hash + 1U);
+
+            }
+
+            m_Bits[_hash] = static_cast<typename Alignment<AlignmentType>::Type>(false);
+        }
+
         bool Contains(const size_t& _hash) {
 
             if (_hash >= m_Bits.size()) {
