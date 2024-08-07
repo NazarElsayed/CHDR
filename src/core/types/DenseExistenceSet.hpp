@@ -58,18 +58,8 @@ namespace CHDR {
             }
         }
 
-        bool Contains(const size_t& _hash) {
-
-            bool result;
-
-            if (_hash >= m_Bits.size()) {
-                result = false;
-            }
-            else {
-                result = static_cast<bool>(m_Bits[_hash]);
-            }
-
-            return result;
+        [[nodiscard]] bool Contains(const size_t& _hash) const {
+            return _hash >= m_Bits.size() ? false : static_cast<bool>(m_Bits[_hash]);
         }
 
         void Clear() {
