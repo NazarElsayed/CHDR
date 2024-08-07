@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <array>
+#include <optional>
 
 namespace CHDR::Mazes {
 
@@ -82,78 +83,64 @@ namespace CHDR::Mazes {
         }
 
         template<typename... Args>
-        auto GetActiveNeighbours(const Args&... _coord) const {
-            return GetActiveNeighbours({ _coord... });
+        auto GetNeighbours(const Args&... _coord) const {
+            return GetNeighbours({ _coord... });
         }
 
-        auto GetActiveNeighbours(const coord_t& _coord) const {
+        constexpr auto GetNeighbours(const coord_t& _coord) const {
 
-            std::vector<coord_t> result;
-            result.reserve(Kd * 2U);
+            std::array<std::pair<bool, coord_t>, Kd * 2U> result;
 
             for (size_t i = 0U; i < Kd; ++i) {
 
-                if (_coord[i] > 0U) {
-                    coord_t nCoord = _coord;
-                    --nCoord[i];
+                coord_t nCoord = _coord;
+                --nCoord[i];
 
-                    if (At(nCoord).IsActive()) {
-                        result.emplace_back(std::move(nCoord));
-                    }
-                }
+                result[i] = { _coord[i] > 0U && At(nCoord).IsActive(), nCoord };
+            }
 
-                if (_coord[i] < m_Size[i] - 1U) {
+            for (size_t i = 0U; i < Kd; ++i) {
 
-                    coord_t pCoord = _coord;
-                    ++pCoord[i];
+                coord_t pCoord = _coord;
+                ++pCoord[i];
 
-                    if (At(pCoord).IsActive()) {
-                        result.emplace_back(std::move(pCoord));
-                    }
-                }
+                result[Kd + i] = { _coord[i] < m_Size[i] - 1U && At(pCoord).IsActive(), pCoord };
             }
 
             return result;
         }
 
-        auto GetActiveNeighbours(const size_t& _coord) const {
+        constexpr auto GetNeighbours(const size_t& _coord) const {
 
-            std::vector<coord_t> result;
-            result.reserve(Kd * 2U);
+            std::array<std::pair<bool, coord_t>, Kd * 2U> result;
 
             const auto c = Utils::ToND<size_t, Kd>(_coord, Size());
 
             for (size_t i = 0U; i < Kd; ++i) {
 
-                if (c[i] > 0U) {
-                    coord_t nCoord = c;
-                    --nCoord[i];
+                coord_t nCoord = c;
+                --nCoord[i];
 
-                    if (At(nCoord).IsActive()) {
-                        result.emplace_back(std::move(nCoord));
-                    }
-                }
+                result[i] = { c[i] > 0U && At(nCoord).IsActive(), nCoord };
+            }
 
-                if (c[i] < m_Size[i] - 1U) {
+            for (size_t i = 0U; i < Kd; ++i) {
 
-                    coord_t pCoord = c;
-                    ++pCoord[i];
+                coord_t pCoord = c;
+                ++pCoord[i];
 
-                    if (At(pCoord).IsActive()) {
-                        result.emplace_back(std::move(pCoord));
-                    }
-                }
+                result[Kd + i] = { c[i] < m_Size[i] - 1U && At(pCoord).IsActive(), pCoord };
             }
 
             return result;
         }
 
         template<typename... Args>
-        [[nodiscard]] constexpr const Node<T>& At(const Args&... _coord) {
+        [[nodiscard]] constexpr const Node<T>& At(const Args&... _coord) const {
             return At({ _coord... });
         }
 
-        [[nodiscard]] constexpr const Node<T>& At(const coord_t& _coord) {
+        [[nodiscard]] constexpr const Node<T>& At(const coord_t& _coord) const {
 
             const size_t index = Utils::To1D(_coord, m_Size);
 
@@ -165,33 +152,7 @@ namespace CHDR::Mazes {
         }
 
         template<typename... Args>
-        [[nodiscard]] constexpr const Node<T>& At(const size_t& _index) {
-
-#ifndef NDEBUG
-            return m_Nodes.at(_index);
-#else
-            return m_Nodes[_index];
-#endif // NDEBUG
-        }
-
-        template<typename... Args>
-        [[nodiscard]] const Node<T>& At(const Args&... _coord) const {
-            return At({ _coord... });
-        }
-
-        [[nodiscard]] const Node<T>& At(const coord_t& _coord) const {
-
-            const size_t index = Utils::To1D(_coord, m_Size);
-
-#ifndef NDEBUG
-            return m_Nodes.at(index);
-#else
-            return m_Nodes[index];
-#endif // NDEBUG
-        }
-
-        template<typename... Args>
-        [[nodiscard]] const Node<T>& At(const size_t& _index) const {
+        [[nodiscard]] constexpr const Node<T>& At(const size_t& _index) const {
 
 #ifndef NDEBUG
             return m_Nodes.at(_index);

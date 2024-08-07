@@ -11,6 +11,8 @@ namespace Test::Generator::Utils {
     template<const size_t Kd = 2U>
     class Backtracking {
 
+        using coord_t = CHDR::Coord<size_t, Kd>;
+
     public:
 
         enum Cell : bool {
@@ -20,7 +22,7 @@ namespace Test::Generator::Utils {
 
     private:
 
-        static constexpr auto GetDirections(const CHDR::Coord<size_t, Kd>& _coord, const CHDR::Coord<size_t, Kd>& _size) {
+        static constexpr auto GetDirections(const coord_t& _coord, const coord_t& _size) {
 
             constexpr size_t step(1U);
 
@@ -29,29 +31,27 @@ namespace Test::Generator::Utils {
             // Positive:
             for (size_t i = 0U; i < Kd; ++i) {
 
-                CHDR::Coord<size_t, Kd> dir{};
+                coord_t dir{};
                 dir[i] += step;
 
-                result[i].first = _coord[i] < _size[i] - step;
-                result[i].second = dir;
+                result[i] = { _coord[i] < _size[i] - step, dir };
             }
 
             // Negative:
             for (size_t i = 0U; i < Kd; ++i) {
 
-                CHDR::Coord<size_t, Kd> dir{};
+                coord_t dir{};
                 dir[i] -= step;
 
-                result[Kd + i].first = _coord[i] >= step;
-                result[Kd + i].second = dir;
+                result[Kd + i] = { _coord[i] >= step, dir };
             }
 
             return result;
         }
 
-        static constexpr void CarveFrom(const CHDR::Coord<size_t, Kd>& _coord, std::pair<CHDR::Coord<size_t, Kd>, size_t>& _farthest, const CHDR::Coord<size_t, Kd>& _size, std::vector<Cell>& _grid, std::mt19937 _random) {
+        static constexpr void CarveFrom(const coord_t& _coord, std::pair<coord_t, size_t>& _farthest, const coord_t& _size, std::vector<Cell>& _grid, std::mt19937 _random) {
 
-            std::stack<std::pair<CHDR::Coord<size_t, Kd>, size_t>> stack;
+            std::stack<std::pair<coord_t, size_t>> stack;
             stack.push({ _coord, 0U });
 
             while (!stack.empty()) {
@@ -125,7 +125,7 @@ namespace Test::Generator::Utils {
          *
          * @see Buck, J., 2010. Buckblog: Maze Generation: Recursive Backtracking. The Buckblog [online]. Available from: https://weblog.jamisbuck.org/2010/12/27/maze-generation-recursive-backtracking [Accessed 1 Jul 2024].
          */
-        static auto Generate(const CHDR::Coord<size_t, Kd>& _start, CHDR::Coord<size_t, Kd>& _end, const CHDR::Coord<size_t, Kd>& _size, const size_t& _seed) {
+        static constexpr auto Generate(const coord_t& _start, coord_t& _end, const coord_t& _size, const size_t& _seed) {
 
             /*
              * 1. Choose a starting point in the field.
@@ -142,34 +142,31 @@ namespace Test::Generator::Utils {
              * (Buck, 2010)
              */
 
-            static constexpr size_t null_v = -1U;
-
-            std::vector<Cell> result;
+            constexpr size_t null_v = -1U;
 
             // Attempt to allocate the desired amount of space in memory.
             const auto product = CHDR::Utils::Product<size_t>(_size);
-            if (product > 0U) {
 
-                // TODO: Ensure that product does not overflow!
+            // TODO: Ensure that product does not overflow!
 
-                result.resize(product, WALL);
+            std::vector<Cell> result;
+            result.resize(product, WALL);
 
-                // Maze algo:
-                try {
+            // Maze algo:
+            try {
 
-                    std::mt19937 gen(_seed == null_v ? std::random_device().operator()() : _seed);
+                std::mt19937 gen(_seed == null_v ? std::random_device().operator()() : _seed);
 
-                    std::pair<CHDR::Coord<size_t, Kd>, size_t> farthest { _start, 0U };
+                std::pair<coord_t, size_t> farthest { _start, 0U };
 
-                    CarveFrom(_start, farthest, _size, result, gen);
+                CarveFrom(_start, farthest, _size, result, gen);
 
-                    _end = farthest.first;
-                }
-                catch (const std::exception& e) {
-                    Debug::Log(e);
+                _end = farthest.first;
+            }
+            catch (const std::exception& e) {
+                Debug::Log(e);
 
-                    _end = _start;
-                }
+                _end = _start;
             }
 
             return result;

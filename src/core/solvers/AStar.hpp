@@ -92,16 +92,19 @@ namespace CHDR::Solvers {
 
                     closedSet.emplace(current.m_Coord);
 
-                    for (const auto neighbour : _maze.GetActiveNeighbours(current.m_Coord)) {
+                    for (const auto neighbour : _maze.GetNeighbours(current.m_Coord)) {
 
-                        const auto n = Utils::To1D(neighbour, _maze.Size());
+                        if (const auto [nActive, nValue] = neighbour; nActive) {
 
-                        // Check if node is not already visited:
-                        if (closedSet.find(n) == closedSet.end()) {
+                            const auto n = Utils::To1D(nValue, _maze.Size());
 
-                            // Add node to openSet.
-                            ASNode node(n, current.m_GScore + static_cast<Ts>(1), _h(neighbour, _end), &current);
-                            openSet.Add(node);
+                            // Check if node is not already visited:
+                            if (closedSet.find(n) == closedSet.end()) {
+
+                                // Add node to openSet.
+                                ASNode node(n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), &current);
+                                openSet.Add(node);
+                            }
                         }
                     }
                 }
@@ -157,20 +160,23 @@ namespace CHDR::Solvers {
                         const auto curr = openSet.front();
                         openSet.pop();
 
-                        for (const auto neighbour : _maze.GetActiveNeighbours(curr)) {
+                        for (const auto neighbour : _maze.GetNeighbours(curr)) {
 
-                            const auto n = Utils::To1D(neighbour, _maze.Size());
+                            if (const auto [nActive, nValue] = neighbour; nActive) {
 
-                            const auto [iter, inserted] = closedSet.emplace(n);
-                            if (inserted) {
+                                const auto n = Utils::To1D(nValue, _maze.Size());
 
-                                if (n == e) {
-                                    result = true;
+                                const auto [iter, inserted] = closedSet.emplace(n);
+                                if (inserted) {
 
-                                    goto NestedBreak;
+                                    if (n == e) {
+                                        result = true;
+
+                                        goto NestedBreak;
+                                    }
+
+                                    openSet.emplace(n);
                                 }
-
-                                openSet.emplace(n);
                             }
                         }
                     }
