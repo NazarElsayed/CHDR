@@ -76,8 +76,7 @@ namespace CHDR::Solvers {
 
             Heap<ASNode, ASNodeCompare> openSet;
 
-            ASNode start(s, static_cast<Ts>(0), _h(_start, _end), nullptr);
-            openSet.Add(start);
+            openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
             while (!openSet.Empty()) {
 
@@ -102,8 +101,7 @@ namespace CHDR::Solvers {
                             if (closedSet.find(n) == closedSet.end()) {
 
                                 // Add node to openSet.
-                                ASNode node(n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), &current);
-                                openSet.Add(node);
+                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), &current });
                             }
                         }
                     }

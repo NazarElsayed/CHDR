@@ -23,14 +23,32 @@ namespace CHDR {
         [[nodiscard]] constexpr const T&   Top() const { return m_Data.front(); }
         [[nodiscard]] constexpr const T&  Back() const { return m_Data. back(); }
 
-        constexpr void Add(T& _item) {
-            _item.m_HeapIndex = m_Data.size();
-            m_Data.push_back(_item);
+        constexpr void Add(const T& _item) {
 
-            SortUp(m_Data[_item.m_HeapIndex]);
+            m_Data.push_back(_item);
+            m_Data.back().m_HeapIndex = m_Data.size() - 1U;
+
+            SortUp(m_Data.back());
+        }
+
+        constexpr void Add(const T&& _item) {
+
+            m_Data.push_back(_item);
+            m_Data.back().m_HeapIndex = m_Data.size() - 1U;
+
+            SortUp(m_Data.back());
+        }
+
+        constexpr void Emplace(T&& _item) {
+
+            m_Data.emplace_back(std::move(_item));
+            m_Data.back().m_HeapIndex = m_Data.size() - 1U;
+
+            SortUp(m_Data.back());
         }
 
         constexpr void RemoveFirst() {
+
             Swap(m_Data[0], m_Data.back());
             m_Data.pop_back();
 
@@ -42,6 +60,7 @@ namespace CHDR {
         }
 
         constexpr void SortUp(T& _item) {
+
             int itemIndex   = _item.m_HeapIndex;
             int parentIndex = (itemIndex - 1 ) / 2;
 
@@ -96,6 +115,7 @@ namespace CHDR {
         }
 
         constexpr void Swap(T& _item1, T& _item2) {
+
             T temp1 =  m_Data[_item1.m_HeapIndex];
             T temp2 =  m_Data[_item2.m_HeapIndex];
 
