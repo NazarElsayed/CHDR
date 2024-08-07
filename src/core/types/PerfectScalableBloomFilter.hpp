@@ -13,7 +13,7 @@ namespace CHDR {
 
     public:
 
-        constexpr void Add(const size_t& _hash) {
+        void Add(const size_t& _hash) {
 
             if (_hash >= m_Bits.size()) {
                 m_Bits.resize(_hash + 1U);
@@ -22,7 +22,7 @@ namespace CHDR {
             m_Bits[_hash] = true;
         }
 
-        constexpr bool Contains(const size_t& _hash) {
+        bool Contains(const size_t& _hash) {
 
             if (_hash >= m_Bits.size()) {
                 m_Bits.resize(_hash + 1U);
