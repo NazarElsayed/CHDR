@@ -10,7 +10,7 @@ namespace Test::Generator {
 	struct Grid final {
 
 		template <typename T, const size_t Kd, typename... Args>
-		static constexpr auto Generate(const CHDR::Coord<size_t, Kd>& _start, CHDR::Coord<size_t, Kd>& _end, const size_t& _seed = -1U, const Args&... _size) {
+		static constexpr auto Generate(const CHDR::Coord<size_t, Kd>& _start, CHDR::Coord<size_t, Kd>& _end, const float& _loops = 0.0F, const float& _obstacles = 0.0f, const size_t& _seed = -1U, const Args&... _size) {
 
 			static_assert(std::is_integral_v<T>, "Type T must be an integral type.");
 
@@ -18,7 +18,7 @@ namespace Test::Generator {
 
 			std::array size { _size... };
 
-			auto maze = Backtracking::Generate(_start, _end, size, _seed);
+			auto maze = Backtracking::Generate(_start, _end, size, _loops, _obstacles, _seed);
 
 			std::vector<CHDR::Node<T>> result;
 			result.reserve(maze.size());

@@ -52,7 +52,7 @@ namespace Test::Generator::Utils {
         static constexpr void CarveFrom(const coord_t& _coord, std::pair<coord_t, size_t>& _farthest, const coord_t& _size, std::vector<Cell>& _grid, std::mt19937 _random) {
 
             std::stack<std::pair<coord_t, size_t>> stack;
-            stack.push({ _coord, 0U });
+            stack.emplace(_coord, 0U);
 
             while (!stack.empty()) {
 
@@ -65,7 +65,7 @@ namespace Test::Generator::Utils {
                 }
 
                 auto dirs = GetDirections(currentCoord, _size);
-                std::shuffle(dirs.begin(), dirs.end(),_random);
+                std::shuffle(dirs.begin(), dirs.end(), _random);
 
                 bool hasUnvisited = false;
                 for (const auto& [inBounds, dir] : dirs) {
@@ -77,7 +77,6 @@ namespace Test::Generator::Utils {
 
                         bool validCellNeighbor = true;
 
-                        // as in original function
                         for (size_t j = 0U; j < Kd; ++j) {
 
                             lc[j] +=      dir[j];
@@ -85,6 +84,7 @@ namespace Test::Generator::Utils {
 
                             if (cc[j] >= _size[j]) {
                                 validCellNeighbor = false;
+
                                 break;
                             }
                         }
@@ -97,7 +97,7 @@ namespace Test::Generator::Utils {
                             if (cn == WALL) {
                                 ln = PATH;
 
-                                stack.push({ cc, depth + 1 });
+                                stack.emplace(cc, depth + 1);
 
                                 hasUnvisited = true;
 
@@ -115,17 +115,26 @@ namespace Test::Generator::Utils {
 
     public:
 
-
         /**
-         * Generate a maze using the backtracking algorithm.
+         * Generates a maze using the backtracking algorithm.
          *
-         * @param _seed The seed used for random number generation. Set to -1 to use a random seed.
-         * @param _size The size of the maze.
-         * @return A vector representing the generated maze.
+         * @param [in] _start The starting coordinates in the field.
+         * @param [in] _end The end coordinates in the field (updated by the method).
+         * @param [in] _size The size of the 2D maze grid.
+         * @param [in] _seed The seed value for the random number generator.
+         *
+         * @param [in] _loops (optional) Value between 0.0 and 1.0 indicating the possibility of the maze containing loops.
+         *                    The default value is 0.0, which yields no loops.
+         *
+         * @param [in] _obstacles (optional) Value between 0.0 and 1.0 indicating the possibility of the maze containing obstacles.
+         *                        The presence of obstacles may make some paths unsolvable.
+         *                        The default value is 0.0, which yields no obstacles.
+         *
+         * @return A vector representing the maze grid.
          *
          * @see Buck, J., 2010. Buckblog: Maze Generation: Recursive Backtracking. The Buckblog [online]. Available from: https://weblog.jamisbuck.org/2010/12/27/maze-generation-recursive-backtracking [Accessed 1 Jul 2024].
          */
-        static constexpr auto Generate(const coord_t& _start, coord_t& _end, const coord_t& _size, const size_t& _seed) {
+        static constexpr auto Generate(const coord_t& _start, coord_t& _end, const coord_t& _size, const float& _loops = 0.0F, const float& _obstacles = 0.0F, const size_t& _seed = -1U) {
 
             /*
              * 1. Choose a starting point in the field.
@@ -150,16 +159,66 @@ namespace Test::Generator::Utils {
             // TODO: Ensure that product does not overflow!
 
             std::vector<Cell> result;
-            result.resize(product, WALL);
 
             // Maze algo:
             try {
 
                 std::mt19937 gen(_seed == null_v ? std::random_device().operator()() : _seed);
 
+                result.resize(product, WALL);
+
                 std::pair<coord_t, size_t> farthest { _start, 0U };
 
+                // Carve a maze using the recursive backtracking algorithm:
                 CarveFrom(_start, farthest, _size, result, gen);
+
+                if (_loops > 0.0F || _obstacles > 0.0F) {
+
+                    // Randomly knock down walls if the maze is meant to contain loops:
+                    for (size_t i = 1U; i < result.size(); ++i) {
+
+                        auto c = CHDR::Utils::ToND<size_t, Kd>(i, _size);
+
+                        bool link = false;
+                        for (size_t j = 0U; j < Kd; ++j) {
+
+                             if (c[j] % 2U == 0U) {
+                                 link = true;
+
+                                 break;
+                             }
+                        }
+
+                        if (link) {
+
+                            bool edge = false;
+
+                            for (size_t k = 0U; k < Kd; ++k) {
+                                if (c[k] >= _size[k] - 1U) {
+                                    edge = true;
+
+                                    break;
+                                }
+                            }
+
+                            if (!edge) {
+
+                                const auto obstacle_chance = static_cast<float>(gen()) / static_cast<float>(std::mt19937::max());
+
+                                if (obstacle_chance < _obstacles) {
+                                    result[CHDR::Utils::To1D<size_t>(c, _size)] = WALL;
+                                }
+                                else {
+                                    const auto loop_chance = static_cast<float>(gen()) / static_cast<float>(std::mt19937::max());
+
+                                    if (loop_chance < _loops) {
+                                        result[CHDR::Utils::To1D<size_t>(c, _size)] = PATH;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
 
                 _end = farthest.first;
             }

@@ -107,7 +107,7 @@ namespace CHDR {
 
 #ifdef __SSE2__
 
-                [[nodiscard]] static auto Abs(__m128i& _value) {
+                [[nodiscard]] static auto Abs_128v(__m128i& _value) {
 
                     // Get absolute value to prevent underflow
 
@@ -166,7 +166,7 @@ namespace CHDR {
 
 #ifdef __SSE4_1__
 
-                [[nodiscard]] static auto Abs(__m128i& _value) {
+                [[nodiscard]] static auto Abs_128v(__m128i& _value) {
 
                     // Get absolute value to prevent underflow
 
@@ -197,7 +197,7 @@ namespace CHDR {
 
 #ifdef __SSE4_2__
                     auto sub = _mm_sub_epi64(_regA, _regB);
-                    sub = Abs(sub);
+                    sub = Abs_128v(sub);
 
                     // Unpack into 2 halves:
                     const auto high = _mm_unpackhi_epi64(sub, sub);
