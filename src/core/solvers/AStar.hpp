@@ -12,7 +12,7 @@
 
 #include "base/ISolver.hpp"
 #include "types/Heap.hpp"
-#include "types/PerfectScalableBloomFilter.hpp"
+#include "types/DenseExistenceSet.hpp"
 
 #include "../utils/Heuristics.hpp"
 
@@ -68,7 +68,7 @@ namespace CHDR::Solvers {
 
             std::list<ASNode> buffer;
 
-            PerfectScalableBloomFilter closedSet;
+            DenseExistenceSet closedSet;
 
             Heap<ASNode, ASNodeCompare> openSet;
 
@@ -144,7 +144,7 @@ namespace CHDR::Solvers {
                 std::queue<size_t> openSet;
                 openSet.emplace(s);
 
-                PerfectScalableBloomFilter closedSet;
+                DenseExistenceSet closedSet;
                 closedSet.Add(s);
 
                 while (!openSet.empty()) {
