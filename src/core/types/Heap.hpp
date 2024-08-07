@@ -114,6 +114,10 @@ namespace CHDR {
             return _item == m_Data[_item.m_HeapIndex];
         }
 
+        constexpr void Clear() {
+            m_Data.clear();
+        }
+
         constexpr void printHeap() {
 
             std::cout << std::endl << "Current Heap:" << "\n";
