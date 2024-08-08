@@ -6,7 +6,7 @@ namespace CHDR::Solvers {
     template <typename Tm>
     class ISolver {
 
-        static_assert(std::is_integral<Tm>::value, "Tm must be an integral type");
+        static_assert(std::is_integral_v<Tm>, "Tm must be an integral type");
 
     public:
 

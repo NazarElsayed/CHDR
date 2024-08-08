@@ -8,7 +8,7 @@
 namespace CHDR::Solvers {
 
     template<typename T>
-    class JPS : public ISolver<T> {
+    class JPS final : public ISolver<T> {
 
     private:
 

@@ -163,7 +163,10 @@ namespace Test::Generator::Utils {
             // Maze algo:
             try {
 
-                std::mt19937 gen(_seed == null_v ? std::random_device().operator()() : _seed);
+                const auto seed = _seed == null_v ? std::random_device().operator()() : _seed;
+                std::mt19937 gen(seed);
+
+                Debug::Log("Seed: " + std::to_string(seed));
 
                 result.resize(product, WALL);
 

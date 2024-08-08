@@ -8,7 +8,7 @@ namespace CHDR {
     template <typename W = bool>
     class Node {
 
-        static_assert(std::is_integral<W>::value, "Type W must be an integral type.");
+        static_assert(std::is_integral_v<W>, "Type W must be an integral type.");
 
     private:
 
@@ -20,16 +20,15 @@ namespace CHDR {
             return m_Value != std::numeric_limits<W>::max();
         }
 
-        constexpr Node(const W& _value = 0) {
-            m_Value = _value;
-        }
+        constexpr Node(const W& _value = 0) :
+            m_Value(_value) {}
 
         [[nodiscard]] constexpr W Value() const {
             return m_Value;
         }
 
-        constexpr void Value(const W& value) {
-            m_Value = value;
+        constexpr void Value(const W& _value) {
+            m_Value = _value;
         }
     };
 
