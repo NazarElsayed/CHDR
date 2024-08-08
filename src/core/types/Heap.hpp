@@ -116,14 +116,10 @@ namespace CHDR {
 
         constexpr void Swap(T& _item1, T& _item2) {
 
-            T temp1 =  m_Data[_item1.m_HeapIndex];
-            T temp2 =  m_Data[_item2.m_HeapIndex];
-
-            temp1.m_HeapIndex = _item2.m_HeapIndex;
-            temp2.m_HeapIndex = _item1.m_HeapIndex;
-
-            m_Data[_item1.m_HeapIndex] = temp2;
-            m_Data[_item2.m_HeapIndex] = temp1;
+            if (&_item1 != &_item2) {
+                std::swap(_item1, _item2);
+                std::swap(_item1.m_HeapIndex, _item2.m_HeapIndex);
+            }
         }
 
         constexpr bool Contains(T& _item) {
@@ -138,7 +134,7 @@ namespace CHDR {
 
             std::cout << std::endl << "Current Heap:" << "\n";
 
-            int size = m_Data.size();
+            const int size = m_Data.size();
             for (int i = 0; i < size; i++) {
                 std::cout << m_Data[0].m_FScore << "\n";
                 RemoveFirst();
