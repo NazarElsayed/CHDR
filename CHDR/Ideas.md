@@ -1,0 +1,4 @@
+- Clean-up A*
+	- Mark neighbour as dead when all neighbours, excluding parent are dead.
+	- Possibly handled on separate thread.
+- Bake data onto grid using array of IData pointers
