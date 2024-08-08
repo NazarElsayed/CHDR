@@ -8,7 +8,6 @@
 #include <functional>
 #include <list>
 #include <queue>
-#include <unordered_set>
 
 #include "base/ISolver.hpp"
 #include "types/Heap.hpp"
@@ -76,6 +75,7 @@ namespace CHDR::Solvers {
 
             while (!openSet.Empty()) {
 
+                buffer.emplace_back(std::move(openSet.Top()));
                 const auto current = openSet.Top();
                 openSet.RemoveFirst();
 
@@ -97,11 +97,8 @@ namespace CHDR::Solvers {
                             // Check if node is not already visited:
                             if (!closedSet.Contains(n)) {
 
-                                buffer.emplace_back(std::move(current));
-                                const auto& moved = buffer.back();
-
                                 // Add node to openSet.
-                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), &moved });
+                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), &current });
                             }
                         }
                     }
