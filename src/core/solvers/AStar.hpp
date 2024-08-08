@@ -48,10 +48,6 @@ namespace CHDR::Solvers {
             [[nodiscard]] constexpr bool operator () (const ASNode& _a, const ASNode& _b) const { return _a.m_FScore > _b.m_FScore; }
         };
 
-        struct TestFunctor {
-            bool operator () () const { return true; }
-        };
-
     public:
 
         void Solve(const Mazes::IMaze<Tm>& _maze) override {
