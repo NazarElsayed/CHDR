@@ -68,7 +68,7 @@ namespace CHDR::Solvers {
 
             std::list<ASNode> buffer;
 
-            DenseExistenceSet closedSet;
+            DenseExistenceSet closedSet(std::max(s, e));
 
             Heap<ASNode, ASNodeCompare> openSet;
 
@@ -144,8 +144,7 @@ namespace CHDR::Solvers {
                 std::queue<size_t> openSet;
                 openSet.emplace(s);
 
-                DenseExistenceSet closedSet;
-                closedSet.Add(s);
+                DenseExistenceSet closedSet({ s }, std::max(s, e));
 
                 while (!openSet.empty()) {
 

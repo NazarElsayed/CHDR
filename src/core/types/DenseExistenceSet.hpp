@@ -53,7 +53,7 @@ namespace CHDR {
          * @param[in] _capacity Initial capacity of the set. Must be larger than 0.
          */
         constexpr explicit DenseExistenceSet(const size_t& _capacity = 1U) {
-            m_Bits.resize(_capacity);
+            m_Bits.reserve(_capacity);
         }
 
         /**
@@ -85,7 +85,7 @@ namespace CHDR {
         void Add(const size_t& _hash) {
 
             if (_hash >= m_Bits.size()) {
-                m_Bits.resize(_hash + 1U);
+                Resize(_hash + 1U);
             }
 
             m_Bits[_hash] = static_cast<boolean_t>(true);
@@ -131,11 +131,15 @@ namespace CHDR {
             );
 
             if (it != m_Bits.rend()) {
-                m_Bits.resize(std::distance(it, m_Bits.rend()));
+                Resize(std::distance(it, m_Bits.rend()));
             }
             else {
                 Clear();
             }
+        }
+
+        void Resize(const size_t _new_size, const boolean_t _new_value = static_cast<boolean_t>(false)) {
+            m_Bits.resize(_new_size, _new_value);
         }
 
         /**
