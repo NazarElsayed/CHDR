@@ -53,7 +53,7 @@ namespace CHDR {
          * @param[in] _capacity Initial capacity of the set. Must be larger than 0.
          */
         constexpr explicit DenseExistenceSet(const size_t& _capacity = 1U) {
-            m_Bits.reserve(_capacity);
+            Reserve(_capacity);
         }
 
         /**
@@ -71,7 +71,7 @@ namespace CHDR {
                 auto_capacity = std::max<size_t>(_items.size(), 1U);
             }
 
-            m_Bits.reserve(auto_capacity);
+            Reserve(auto_capacity);
 
             for (const auto& item : _items) {
                 Add(item);
@@ -138,6 +138,10 @@ namespace CHDR {
             }
         }
 
+        void Reserve(const size_t _new_capacity) {
+            m_Bits.reserve(_new_capacity);
+        }
+
         void Resize(const size_t _new_size, const boolean_t _new_value = static_cast<boolean_t>(false)) {
             m_Bits.resize(_new_size, _new_value);
         }
@@ -157,6 +161,16 @@ namespace CHDR {
          * @return The size of the set.
          */
         constexpr auto Size() const {
+            return m_Bits.size();
+        }
+
+        /**
+         * @brief Get the capacity of the set.
+         * @details Returns the maximum number of elements that the set can hold.
+         *
+         * @return The capacity of the set.
+         */
+        constexpr auto Capacity() const {
             return m_Bits.size();
         }
     };

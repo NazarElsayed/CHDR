@@ -85,6 +85,9 @@ namespace CHDR::Solvers {
 
                     /* SEARCH FOR SOLUTION */
 
+                    if (closedSet.Capacity() <= current.m_Coord) {
+                        closedSet.Reserve(std::min(closedSet.Capacity() * 2U, Utils::Product<size_t>(_maze.Size())));
+                    }
                     closedSet.Add(current.m_Coord);
 
                     for (const auto neighbour : _maze.GetNeighbours(current.m_Coord)) {
@@ -160,6 +163,10 @@ namespace CHDR::Solvers {
                                 const auto n = Utils::To1D(nValue, _maze.Size());
 
                                 if (!closedSet.Contains(n)) {
+
+                                    if (closedSet.Capacity() <= n) {
+                                        closedSet.Reserve(std::min(closedSet.Capacity() * 2U, Utils::Product<size_t>(_maze.Size())));
+                                    }
                                     closedSet.Add(n);
 
                                     if (n == e) {
