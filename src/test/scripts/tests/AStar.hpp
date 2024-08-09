@@ -26,31 +26,32 @@ namespace Test::Tests {
             /***************************************/
 
             // Generate a maze:
-            coord_t size  { 1000U, 1000U };
-            coord_t start {    0U,    0U };
+            coord_t size  { 10U, 10U };
+            coord_t start {  0U,  0U };
             coord_t end;
 
             size_t seed = 0U;
 
-            const auto maze = CHDR::Mazes::Grid<Kd, Tm>(size, generator_t::Generate<Tm>(start, end, 0.0F, 0.0F, seed, size));
+            const auto nodes = generator_t::Generate<Tm>(start, end, 0.0F, 0.0F, seed, size);
+            const auto maze = CHDR::Mazes::HeavyGrid<Kd, Tm>(size, nodes);
 
             Debug::Log("Maze Generated!");
 
             // Solve the maze:
-            if (solver_t::HasSolution(maze, start, end, static_cast<size_t>(std::abs(ceil(CHDR::Heuristics<Kd, Ts>::ManhattanDistance(start, end)))))) {
+            //if (solver_t::HasSolution(maze, start, end, static_cast<size_t>(std::abs(ceil(CHDR::Heuristics<Kd, Ts>::ManhattanDistance(start, end)))))) {
 
-                Debug::Log("Flood fill done!", Debug);
+            Debug::Log("Flood fill done!", Debug);
 
-                auto solver = solver_t();
-                auto path = solver.Solve(maze, start, end, HEURISTIC);
+            auto solver = solver_t();
+            auto path = solver.Solve(maze, start, end, HEURISTIC);
 
-                Debug::Log("Solved!");
+            Debug::Log("Solved!");
 
-                display_t::DrawMaze(start, end, size, maze, path);
-            }
-            else {
-                display_t::DrawMaze(start, end, size, maze);
-            }
+            display_t::DrawMaze(start, end, size, maze, path);
+            // }
+            // else {
+            //     display_t::DrawMaze(start, end, size, maze);
+            // }
         }
     };
 }

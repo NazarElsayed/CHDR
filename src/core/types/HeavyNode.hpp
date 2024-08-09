@@ -7,7 +7,7 @@
 
 namespace CHDR {
 
-    template <typename Ts, typename W = bool>
+    template <typename W = bool>
     class HeavyNode {
 
         static_assert(std::is_integral_v<W>, "Type W must be an integral type.");
@@ -15,7 +15,7 @@ namespace CHDR {
     private:
 
         W m_Value;
-        NodeData<Ts> m_Data;
+        NodeData m_Data;
 
     public:
 
@@ -23,7 +23,7 @@ namespace CHDR {
             return m_Value != std::numeric_limits<W>::max();
         }
 
-        constexpr HeavyNode(NodeData<Ts> _data, const W& _value = 0) :
+        constexpr HeavyNode(const W& _value = 0, NodeData _data = {0, 0, 0}) :
             m_Value(_value),
             m_Data(_data) {}
 
@@ -35,11 +35,11 @@ namespace CHDR {
             m_Value = _value;
         }
 
-        [[nodiscard]] constexpr auto& Data() const {
+        constexpr auto& Data() {
             return m_Data;
         }
 
-        constexpr void Data(const NodeData<Ts>& _data) {
+        constexpr void Data(NodeData& _data) {
             m_Data = _data;
         }
     };

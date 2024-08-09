@@ -1,14 +1,17 @@
 #ifndef CHDR_HEAVYGRID_HPP
 #define CHDR_HEAVYGRID_HPP
 
+#include "../types/Coord.hpp"
+#include "../utils/Utils.hpp"
 #include "types/HeavyNode.hpp"
+#include "base/IMaze.hpp"
 
 namespace CHDR::Mazes {
 
     /**
      * @tparam Kd Dimensionality of the grid.
      */
-    template <const size_t Kd, typename Ts, typename T = uint32_t>
+    template <const size_t Kd, typename T = uint32_t>
     class HeavyGrid : public IMaze<T> {
 
         using coord_t = Coord<size_t, Kd>;
@@ -23,7 +26,7 @@ namespace CHDR::Mazes {
     private:
 
         coord_t m_Size;
-        std::vector<HeavyNode<Ts, T>> m_Nodes;
+        std::vector<HeavyNode<T>> m_Nodes;
 
     public:
 
@@ -31,7 +34,7 @@ namespace CHDR::Mazes {
             m_Size(_size),
             m_Nodes(Utils::Product<size_t>(m_Size)) {}
 
-        constexpr HeavyGrid(const coord_t& _size, const std::vector<HeavyNode<Ts,T>>& _nodes) :
+        constexpr HeavyGrid(const coord_t& _size, const std::vector<HeavyNode<T>>& _nodes) :
             m_Size(_size),
             m_Nodes(_nodes) {}
 
@@ -44,18 +47,18 @@ namespace CHDR::Mazes {
         }
 
         template <typename... Args>
-        constexpr HeavyGrid(const Args&... _size, const std::vector<HeavyNode<Ts, T>>& _nodes) :
+        constexpr HeavyGrid(const Args&... _size, const std::vector<HeavyNode<T>>& _nodes) :
             m_Size { _size... },
             m_Nodes(_nodes)
         {
             static_assert(sizeof...(Args) == Rank, "Number of arguments must equal the Grid's rank.");
         }
 
-        [[nodiscard]] constexpr const std::vector<HeavyNode<Ts,T>>& Nodes() const {
+        [[nodiscard]] constexpr const std::vector<HeavyNode<T>>& Nodes() const {
             return m_Nodes;
         }
 
-        constexpr void Nodes(const std::vector<HeavyNode<Ts, T>>& _value) {
+        constexpr void Nodes(const std::vector<HeavyNode<T>>& _value) {
             m_Nodes = _value;
         }
 
@@ -126,11 +129,11 @@ namespace CHDR::Mazes {
         }
 
         template<typename... Args>
-        [[nodiscard]] constexpr const HeavyNode<Ts, T>& At(const Args&... _coord) const {
+        [[nodiscard]] constexpr const HeavyNode<T>& At(const Args&... _coord) const {
             return At({ _coord... });
         }
 
-        [[nodiscard]] constexpr const HeavyNode<Ts, T>& At(const coord_t& _coord) const {
+        [[nodiscard]] constexpr const HeavyNode<T>& At(const coord_t& _coord) const {
 
             const size_t index = Utils::To1D(_coord, m_Size);
 
@@ -142,7 +145,7 @@ namespace CHDR::Mazes {
         }
 
         template<typename... Args>
-        [[nodiscard]] constexpr const HeavyNode<Ts, T>& At(const size_t& _index) const {
+        [[nodiscard]] constexpr const HeavyNode<T>& At(const size_t& _index) const {
 
 #ifndef NDEBUG
             return m_Nodes.at(_index);

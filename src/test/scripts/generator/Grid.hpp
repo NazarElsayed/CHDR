@@ -20,7 +20,7 @@ namespace Test::Generator {
 
 			auto maze = Backtracking::Generate(_start, _end, size, _loops, _obstacles, _seed);
 
-			std::vector<CHDR::Node<T>> result;
+			std::vector<CHDR::HeavyNode<T>> result;
 			result.reserve(maze.size());
 
 			for (size_t i = 0U; i < maze.size(); ++i) {
