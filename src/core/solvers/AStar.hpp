@@ -73,12 +73,11 @@ namespace CHDR::Solvers {
             DenseExistenceSet closedSet(std::max(s, e));
 
             Heap<ASNode, typename ASNode::Compare> openSet;
-
             openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
             while (!openSet.Empty()) {
 
-                const auto current = openSet.Top();
+                const ASNode current = openSet.Top();
                 openSet.RemoveFirst();
 
                 if (current.m_Coord != e) {
@@ -99,15 +98,12 @@ namespace CHDR::Solvers {
                             // Check if node is not already visited:
                             if (!closedSet.Contains(n)) {
 
-                                // Create room for current in unmanaged memory:
+                                // Create room for 'current' in unmanaged memory:
                                 void* memoryBlock = std::malloc(sizeof(ASNode));
                                 if (!memoryBlock) { throw std::bad_alloc(); }
 
-                                // Move current into the memory block:
-                                auto* movedObject = new (memoryBlock) ASNode(std::move(current));
-
-                                // Create a parent node and transfer ownership of current to it:
-                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), movedObject });
+                                // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
+                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), new (memoryBlock) ASNode(std::move(current)) });
                             }
                         }
                     }

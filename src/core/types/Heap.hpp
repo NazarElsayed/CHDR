@@ -20,7 +20,7 @@ namespace CHDR {
 
         [[nodiscard]] constexpr     bool Empty() const { return m_Data.empty(); }
         [[nodiscard]] constexpr   size_t  Size() const { return m_Data. size(); }
-        [[nodiscard]] constexpr T   Top() const { return m_Data.front(); }
+        [[nodiscard]] constexpr const T&   Top() const { return m_Data.front(); }
         [[nodiscard]] constexpr const T&  Back() const { return m_Data. back(); }
 
         constexpr void Add(const T& _item) {
