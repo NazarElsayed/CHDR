@@ -47,7 +47,7 @@ namespace Test::Tests {
 
             Debug::Log("Solved!");
 
-            display_t::DrawMaze(start, end, size, maze, path);
+            //display_t::DrawMaze(start, end, size, maze, path);
             // }
             // else {
             //     display_t::DrawMaze(start, end, size, maze);

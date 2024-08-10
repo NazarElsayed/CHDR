@@ -23,7 +23,7 @@ namespace CHDR {
             return m_Value != std::numeric_limits<W>::max();
         }
 
-        constexpr HeavyNode(const W& _value = 0, NodeData _data = {0, 0, 0}) :
+        constexpr HeavyNode(const W& _value = 0, NodeData _data = {0, 0, 0, 0}) :
             m_Value(_value),
             m_Data(_data) {}
 
