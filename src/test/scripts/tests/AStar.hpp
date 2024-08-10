@@ -44,17 +44,24 @@ namespace Test::Tests {
             size_t seed = 0U;
 
             coord_t size  { 1000U, 1000U };
-            coord_t start {    0U,    0U };
+            coord_t start {    0U,   0U };
             coord_t end;
 
             const bool checkSolvable = true;
 
-            // Generate a maze:
+            /* GENERATE MAZE */
             const auto maze = CHDR::Mazes::Grid<Kd, Tm>(size, generator_t::Generate<Tm>(start, end, 0.0F, 0.0F, seed, size));
 
+            Debug::Log("Maze Generated!");
+
+            /* GRID -> GRAPH */
             //auto graph = CHDR::Mazes::Graph<Tm>(size, generator_t::Generate<Tm>(start, end, 0.0F, 0.0F, seed, size));
 
-            Debug::Log("Maze Generated!");
+            /* MAX DRAW SIZE */
+            bool drawable (
+                            size[0] <= 100U &&
+                (Kd >= 1 || size[1] <= 100U)
+            );
 
             /* TEST FOR SOLVABILITY: */
             bool solvable(false);
@@ -78,13 +85,15 @@ namespace Test::Tests {
 
                 auto solver = solver_t();
                 auto path = solver.Solve(maze, start, end, HEURISTIC);
-;
-                pathfinding_log = "(A*): \t\t\t" + std::string(path.size() != 0 ? "[SOLVED]" : "[IMPOSSIBLE]") + "\t(" +
+
+                pathfinding_log = "(A*): \t\t\t" + std::string(path.size() != 0U ? "[SOLVED]" : "[IMPOSSIBLE]") + "\t(" +
                     ToString(std::chrono::duration_cast<std::chrono::duration<long double>>(std::chrono::high_resolution_clock::now() - sw_start).count()) + ")";
 
-                display_t::DrawMaze(start, end, size, maze, path);
+                if (drawable) {
+                    display_t::DrawMaze(start, end, size, maze, path);
+                }
             }
-            else {
+            else if (drawable) {
                 display_t::DrawMaze(start, end, size, maze);
             }
 
