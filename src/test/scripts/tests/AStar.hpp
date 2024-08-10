@@ -44,10 +44,10 @@ namespace Test::Tests {
             size_t seed = 0U;
 
             coord_t size  { 1000U, 1000U };
-            coord_t start {    0U,   0U };
+            coord_t start {};
             coord_t end;
 
-            const bool checkSolvable = true;
+            const bool checkSolvable = false;
 
             /* GENERATE MAZE */
             const auto maze = CHDR::Mazes::Grid<Kd, Tm>(size, generator_t::Generate<Tm>(start, end, 0.0F, 0.0F, seed, size));
