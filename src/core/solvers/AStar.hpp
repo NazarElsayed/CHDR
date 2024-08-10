@@ -72,7 +72,7 @@ namespace CHDR::Solvers {
             while (!openSet.Empty()) {
 
                 buffer.emplace_back(std::move(openSet.Top()));
-                const auto current = openSet.Top();
+                const auto& current = buffer.back();
                 openSet.RemoveFirst();
 
                 if (current.m_Coord != e) {
