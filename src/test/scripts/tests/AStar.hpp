@@ -34,6 +34,8 @@ namespace Test::Tests {
 
             const auto maze = CHDR::Mazes::Grid<Kd, Tm>(size, generator_t::Generate<Tm>(start, end, 0.0F, 0.0F, seed, size));
 
+            //auto graph = CHDR::Mazes::Graph<Tm>(size, generator_t::Generate<Tm>(start, end, 0.0F, 0.0F, seed, size));
+
             Debug::Log("Maze Generated!");
 
             // Solve the maze:
