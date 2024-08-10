@@ -165,6 +165,13 @@ namespace CHDR::Mazes {
 #endif // NDEBUG
         }
 
+        [[nodiscard]] HeavyNode<T>& GetNode(const size_t& _index)  {
+#ifndef NDEBUG
+            return m_Nodes.at(_index);
+#else
+            return m_Nodes[_index];
+#endif // NDEBUG
+        }
         template<typename... Args>
         [[nodiscard]] constexpr bool Contains(const Args&... _coord) const {
             return Contains({ _coord... });

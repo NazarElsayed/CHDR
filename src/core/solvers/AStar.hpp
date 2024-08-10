@@ -12,6 +12,7 @@
 #include "base/ISolver.hpp"
 #include "types/Heap.hpp"
 #include "types/DenseExistenceSet.hpp"
+#include "types/HeavyNode.hpp"
 
 #include "../utils/Heuristics.hpp"
 
@@ -27,7 +28,7 @@ namespace CHDR::Solvers {
 
         using coord_t = Coord<size_t, Kd>;
 
-        struct ASNode final : IHeapItem {
+        /*struct ASNode final : IHeapItem {
 
             size_t m_Coord;
 
@@ -43,10 +44,26 @@ namespace CHDR::Solvers {
                 m_Parent(_parent) {}
 
             [[nodiscard]] constexpr bool operator ==(const ASNode& _node) const { return m_Coord == _node.m_Coord; }
-        };
+        };*/
 
-        struct ASNodeCompare {
+        /*struct ASNodeCompare {
             [[nodiscard]] constexpr bool operator ()(const ASNode& _a, const ASNode& _b) const {
+                return _a.m_FScore > _b.m_FScore;
+            }
+        };*/
+
+        /*struct ASHeavyNode : IHeapItem {
+
+            size_t m_Position;
+            NodeData m_Data;
+
+            [[nodiscard]] constexpr bool operator ()(const NodeData& _a, const NodeData& _b) const {
+                return _a.m_FScore > _b.m_FScore;
+            }
+        };*/
+
+        struct NodeDataCompare {
+            [[nodiscard]] constexpr bool operator ()(const NodeData& _a, const NodeData& _b) const {
                 return _a.m_FScore > _b.m_FScore;
             }
         };
@@ -133,46 +150,51 @@ namespace CHDR::Solvers {
             const auto s = Utils::To1D(_start, mazeSize);
             const auto e = Utils::To1D(_end, mazeSize);
 
-            auto& t = _maze.GetNode(_start);
-            NodeData data(0, _h(_start, _end), -1U);
-            t.Data(data);
-
-            auto& t2 = _maze.GetNode(_start);
-
-            NodeData data2(0, 6, -1U);
-            t2.Data(data2);
-
-            std::list<ASNode> buffer;
-
             DenseExistenceSet closedSet(std::max(s, e));
+            Heap<NodeData, NodeDataCompare> openSet;
 
-            Heap<ASNode, ASNodeCompare> openSet;
-
-            openSet.Emplace({s, static_cast<Ts>(0), _h(_start, _end), nullptr});
+            NodeData start(s, 0, _h(_start, _end), -1U);
+            openSet.Add(start);
 
             while (!openSet.Empty()) {
-                buffer.emplace_back(std::move(openSet.Top()));
-                const auto current = openSet.Top();
 
+                const auto current = openSet.Top();
                 openSet.RemoveFirst();
 
-                if (current.m_Coord != e) {
+                if (current.m_Position != e) {
                     /* SEARCH FOR SOLUTION */
 
-                    if (closedSet.Capacity() <= current.m_Coord) {
+                    if (closedSet.Capacity() <= current.m_Position) {
                         closedSet.Reserve(std::min(closedSet.Capacity() * 2U, Utils::Product<size_t>(_maze.Size())));
                     }
-                    closedSet.Add(current.m_Coord);
+                    closedSet.Add(current.m_Position);
 
+                    auto& currentData = _maze.GetNode(current.m_Position).Data();
 
-                    for (const auto neighbour : _maze.GetNeighbours(current.m_Coord)) {
+                    for (const auto neighbour : _maze.GetNeighbours(Utils::ToND(current.m_Position, _maze.Size()))) {
                         if (const auto [nActive, nValue] = neighbour; nActive) {
                             const auto n = Utils::To1D(nValue, _maze.Size());
 
                             // Check if node is not already visited:
                             if (!closedSet.Contains(n)) {
+
+                                auto& neighbourData = _maze.GetNode(n).Data();
+
+                                Ts gScore = currentData.m_GScore + 1;
+
+                                if (gScore < neighbourData.m_GScore) {
+                                    neighbourData.m_GScore = gScore;
+                                    neighbourData.m_FScore = gScore + _h(nValue, _end);
+
+                                    if (openSet.Contains(neighbourData)) {
+                                        openSet.Update(neighbourData);
+                                    }
+                                }
+
+                                auto& data = _maze.GetNode(n).Data();
+
                                 // Add node to openSet.
-                                openSet.Emplace({n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), &current});
+                                openSet.Add(neighbourData);
                             }
                         }
                     }
@@ -187,8 +209,10 @@ namespace CHDR::Solvers {
                     // Recurse from end node to start node, inserting into a result buffer:
                     result.reserve(current.m_GScore);
 
-                    for (const auto* temp = &current; temp->m_Parent != nullptr; temp = temp->m_Parent) {
-                        result.emplace_back(Utils::ToND(temp->m_Coord, _maze.Size()));
+                    //auto temp = _maze.GetNode(temp.m_Parent).Data();
+
+                    for (auto temp = current; temp.m_Parent != -1; temp = _maze.GetNode(temp.m_Parent).Data()) {
+                        result.emplace_back(Utils::ToND(temp.m_Position, _maze.Size()));
                     }
 
                     // Reverse the result:
