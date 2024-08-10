@@ -6,7 +6,7 @@
 #include <Debug.hpp>
 
 #include <functional>
-#include <list>
+#include <forward_list>
 #include <queue>
 
 #include "base/ISolver.hpp"
@@ -41,11 +41,20 @@ namespace CHDR::Solvers {
                 m_FScore(_gScore + _hScore),
                 m_Parent(_parent) {}
 
-            [[nodiscard]] constexpr bool operator == (const ASNode& _node) const { return m_Coord == _node.m_Coord; }
-        };
+            ~ASNode() {
 
-        struct ASNodeCompare {
-            [[nodiscard]] constexpr bool operator () (const ASNode& _a, const ASNode& _b) const { return _a.m_FScore > _b.m_FScore; }
+                if (m_Parent == nullptr) {
+                    delete m_Parent;
+
+                    m_Parent = nullptr;
+                }
+            };
+
+            [[nodiscard]] constexpr bool operator == (const ASNode& _node) const { return m_Coord == _node.m_Coord; }
+
+            struct Compare {
+                [[nodiscard]] constexpr bool operator () (const ASNode& _a, const ASNode& _b) const { return _a.m_FScore > _b.m_FScore; }
+            };
         };
 
     public:
@@ -61,18 +70,15 @@ namespace CHDR::Solvers {
             const auto s = Utils::To1D(_start, _maze.Size());
             const auto e = Utils::To1D(_end,   _maze.Size());
 
-            std::list<ASNode> buffer;
-
             DenseExistenceSet closedSet(std::max(s, e));
 
-            Heap<ASNode, ASNodeCompare> openSet;
+            Heap<ASNode, typename ASNode::Compare> openSet;
 
             openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
             while (!openSet.Empty()) {
 
-                buffer.emplace_back(std::move(openSet.Top()));
-                const auto& current = buffer.back();
+                const auto current = openSet.Top();
                 openSet.RemoveFirst();
 
                 if (current.m_Coord != e) {
@@ -93,8 +99,15 @@ namespace CHDR::Solvers {
                             // Check if node is not already visited:
                             if (!closedSet.Contains(n)) {
 
-                                // Add node to openSet.
-                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), &current });
+                                // Create room for current in unmanaged memory:
+                                void* memoryBlock = std::malloc(sizeof(ASNode));
+                                if (!memoryBlock) { throw std::bad_alloc(); }
+
+                                // Move current into the memory block:
+                                auto* movedObject = new (memoryBlock) ASNode(std::move(current));
+
+                                // Create a parent node and transfer ownership of current to it:
+                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), movedObject });
                             }
                         }
                     }
@@ -113,8 +126,6 @@ namespace CHDR::Solvers {
                     for (const auto* temp = &current; temp->m_Parent != nullptr; temp = temp->m_Parent) {
                         result.emplace_back(Utils::ToND(temp->m_Coord, _maze.Size()));
                     }
-
-                    buffer.clear();
 
                     // Reverse the result:
                     std::reverse(result.begin(), result.end());

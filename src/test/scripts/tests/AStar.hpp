@@ -26,7 +26,7 @@ namespace Test::Tests {
             /***************************************/
 
             // Generate a maze:
-            coord_t size  { 1000U, 1000U };
+            coord_t size  { 10000U, 10000U };
             coord_t start {    0U,    0U };
             coord_t end;
 
@@ -38,8 +38,8 @@ namespace Test::Tests {
 
             Debug::Log("Maze Generated!");
 
-            // Solve the maze:
-            if (solver_t::HasSolution(maze, start, end, static_cast<size_t>(std::abs(ceil(CHDR::Heuristics<Kd, Ts>::ManhattanDistance(start, end)))))) {
+            // // Solve the maze:
+            // if (solver_t::HasSolution(maze, start, end, static_cast<size_t>(std::abs(ceil(CHDR::Heuristics<Kd, Ts>::ManhattanDistance(start, end)))))) {
 
                 Debug::Log("Flood fill done!", Debug);
 
@@ -49,10 +49,10 @@ namespace Test::Tests {
                 Debug::Log("Solved!");
 
                 display_t::DrawMaze(start, end, size, maze, path);
-            }
-            else {
-                display_t::DrawMaze(start, end, size, maze);
-            }
+            // }
+            // else {
+            //     display_t::DrawMaze(start, end, size, maze);
+            // }
         }
     };
 }
