@@ -41,13 +41,13 @@ namespace Test::Tests {
             /***************************************/
 
             // Test parameters:
-            size_t seed = 0U;
+            constexpr size_t seed = 0U;
 
-            coord_t size  { 1000U, 1000U };
-            coord_t start {};
-            coord_t end;
+            constexpr coord_t size  { 1000U, 1000U };
+            constexpr coord_t start {};
+                      coord_t end;
 
-            const bool checkSolvable = false;
+            constexpr bool checkSolvable = false;
 
             /* GENERATE MAZE */
             const auto maze = CHDR::Mazes::Grid<Kd, Tm>(size, generator_t::Generate<Tm>(start, end, 0.0F, 0.0F, seed, size));
@@ -64,10 +64,10 @@ namespace Test::Tests {
             );
 
             /* TEST FOR SOLVABILITY: */
-            bool solvable(false);
+            bool solvable(true);
 
             std::string solvable_log("(Flood Fill): \t" + std::string("[SKIPPED] \t(~0ns)"));
-            if (checkSolvable) {
+            if constexpr (checkSolvable) {
 
                 const auto sw_start = std::chrono::high_resolution_clock::now();
 
@@ -79,7 +79,7 @@ namespace Test::Tests {
 
             // Solve the maze:
             std::string pathfinding_log("(A*): \t\t\t" + std::string("[SKIPPED] \t(~0ns)"));
-            if (!checkSolvable || solvable) {
+            if (solvable) {
 
                 const auto sw_start = std::chrono::high_resolution_clock::now();
 
