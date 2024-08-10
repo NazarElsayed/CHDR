@@ -12,7 +12,7 @@ namespace Test::Tests {
 
     public:
 
-        template <typename Tm, const size_t Kd, typename Ts = uint32_t>
+        template <typename Tm, const size_t Kd, typename Ts = uint16_t>
         static void Run() {
 
             // Define some aliases for types to simplify the syntax a little:
@@ -27,7 +27,7 @@ namespace Test::Tests {
 
             // Generate a maze:
             coord_t size  { 10000U, 10000U };
-            coord_t start {    0U,    0U };
+            coord_t start {     0U,     0U };
             coord_t end;
 
             size_t seed = 0U;
@@ -36,12 +36,12 @@ namespace Test::Tests {
 
             //auto graph = CHDR::Mazes::Graph<Tm>(size, generator_t::Generate<Tm>(start, end, 0.0F, 0.0F, seed, size));
 
-            Debug::Log("Maze Generated!");
+            Debug::Log("Maze Generated! Candidate nodes: " + std::to_string(CHDR::Utils::Product<size_t>(size)));
 
-            // // Solve the maze:
-            // if (solver_t::HasSolution(maze, start, end, static_cast<size_t>(std::abs(ceil(CHDR::Heuristics<Kd, Ts>::ManhattanDistance(start, end)))))) {
+            // Solve the maze:
+            if (solver_t::HasSolution(maze, start, end, static_cast<size_t>(std::abs(ceil(CHDR::Heuristics<Kd, Ts>::ManhattanDistance(start, end)))))) {
 
-                Debug::Log("Flood fill done!", Debug);
+               Debug::Log("Flood fill done!", Debug);
 
                 auto solver = solver_t();
                 auto path = solver.Solve(maze, start, end, HEURISTIC);
@@ -49,10 +49,10 @@ namespace Test::Tests {
                 Debug::Log("Solved!");
 
                 display_t::DrawMaze(start, end, size, maze, path);
-            // }
-            // else {
-            //     display_t::DrawMaze(start, end, size, maze);
-            // }
+             }
+             else {
+                 display_t::DrawMaze(start, end, size, maze);
+             }
         }
     };
 }
