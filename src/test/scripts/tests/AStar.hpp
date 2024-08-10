@@ -32,8 +32,8 @@ namespace Test::Tests {
 
             size_t seed = 0U;
 
-            const auto nodes = generator_t::Generate<Tm>(start, end, 0.0F, 0.0F, seed, size);
-            const auto maze = CHDR::Mazes::HeavyGrid<Kd, Tm>(size, nodes);
+            auto nodes = generator_t::Generate<Tm>(start, end, 0.0F, 0.0F, seed, size);
+            auto maze = CHDR::Mazes::HeavyGrid<Kd, Tm>(size, nodes);
 
             Debug::Log("Maze Generated!");
 

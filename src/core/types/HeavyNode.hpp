@@ -39,7 +39,7 @@ namespace CHDR {
             return m_Data;
         }
 
-        constexpr void Data(NodeData& _data) {
+        constexpr void Data(const NodeData& _data) {
             m_Data = _data;
         }
     };

@@ -96,7 +96,8 @@ namespace CHDR::Mazes {
                 coord_t nCoord = _coord;
                 --nCoord[i];
 
-                result[i] = { _coord[i] > 0U && At(nCoord).IsActive(), nCoord };
+                result[i].first  = _coord[i] > 0U && At(nCoord).IsActive();
+                result[i].second = nCoord;
             }
 
             for (size_t i = 0U; i < Kd; ++i) {
@@ -104,7 +105,9 @@ namespace CHDR::Mazes {
                 coord_t pCoord = _coord;
                 ++pCoord[i];
 
-                result[Kd + i] = { _coord[i] < m_Size[i] - 1U && At(pCoord).IsActive(), pCoord };
+
+                result[Kd + i].first  = _coord[i] < m_Size[i] - 1U && At(pCoord).IsActive();
+                result[Kd + i].second = pCoord;
             }
 
             return result;
@@ -121,7 +124,8 @@ namespace CHDR::Mazes {
                 coord_t nCoord = c;
                 --nCoord[i];
 
-                result[i] = { c[i] > 0U && At(nCoord).IsActive(), nCoord };
+                result[i].first  = c[i] > 0U && At(nCoord).IsActive();
+                result[i].second = nCoord;
             }
 
             for (size_t i = 0U; i < Kd; ++i) {
@@ -129,7 +133,8 @@ namespace CHDR::Mazes {
                 coord_t pCoord = c;
                 ++pCoord[i];
 
-                result[Kd + i] = { c[i] < m_Size[i] - 1U && At(pCoord).IsActive(), pCoord };
+                result[Kd + i].first  = c[i] < m_Size[i] - 1U && At(pCoord).IsActive();
+                result[Kd + i].second = pCoord;
             }
 
             return result;

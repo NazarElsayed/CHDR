@@ -66,14 +66,14 @@ namespace CHDR::Mazes {
             return m_Size;
         }
 
-        template<typename... Args>
+        /*template<typename... Args>
         constexpr void Size(const Args&... _value) {
             Size({ _value... });
         }
 
         constexpr void Size(const coord_t& _value) {
             m_Size = _value;
-        }
+        }*/
 
         template<typename... Args>
         auto GetNeighbours(const Args&... _coord) const {
@@ -151,6 +151,17 @@ namespace CHDR::Mazes {
             return m_Nodes.at(_index);
 #else
             return m_Nodes[_index];
+#endif // NDEBUG
+        }
+
+        [[nodiscard]] HeavyNode<T>& GetNode(const coord_t& _coord) {
+
+            const size_t index = Utils::To1D(_coord, m_Size);
+
+#ifndef NDEBUG
+            return m_Nodes.at(index);
+#else
+            return m_Nodes[index];
 #endif // NDEBUG
         }
 

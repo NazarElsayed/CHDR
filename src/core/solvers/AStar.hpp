@@ -124,7 +124,7 @@ namespace CHDR::Solvers {
             return result;
         }*/
 
-        auto Solve(const Mazes::HeavyGrid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&)) const {
+        auto Solve(Mazes::HeavyGrid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&)) const {
 
             std::vector<coord_t> result;
 
@@ -133,11 +133,14 @@ namespace CHDR::Solvers {
             const auto s = Utils::To1D(_start, mazeSize);
             const auto e = Utils::To1D(_end, mazeSize);
 
-            auto& t = _maze.At(s);
-            NodeData data(0, _h(_start, _end), -1U );
-            //t.Data(data);
+            auto& t = _maze.GetNode(_start);
+            NodeData data(0, _h(_start, _end), -1U);
+            t.Data(data);
 
-            auto t2 = _maze.At(s);
+            auto& t2 = _maze.GetNode(_start);
+
+            NodeData data2(0, 6, -1U);
+            t2.Data(data2);
 
             std::list<ASNode> buffer;
 
