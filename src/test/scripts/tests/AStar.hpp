@@ -52,7 +52,7 @@ namespace Test::Tests {
             /* GENERATE MAZE */
             const auto maze = CHDR::Mazes::Grid<Kd, Tm>(size, generator_t::Generate<Tm>(start, end, 0.0F, 0.0F, seed, size));
 
-            Debug::Log("Maze Generated!");
+            Debug::Log("Maze: [GENERATED]");
 
             /* GRID -> GRAPH */
             //auto graph = CHDR::Mazes::Graph<Tm>(size, generator_t::Generate<Tm>(start, end, 0.0F, 0.0F, seed, size));
@@ -97,7 +97,7 @@ namespace Test::Tests {
                 display_t::DrawMaze(start, end, size, maze);
             }
 
-            Debug::Log("Candidate nodes: \t" + std::to_string(CHDR::Utils::Product<size_t>(size)));
+            Debug::Log(std::to_string(CHDR::Utils::Product<size_t>(size)) + " total candidate nodes.");
             Debug::Log(   solvable_log);
             Debug::Log(pathfinding_log);
         }
