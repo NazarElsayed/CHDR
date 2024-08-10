@@ -59,7 +59,7 @@ namespace Test::Tests {
             /* TEST FOR SOLVABILITY: */
             bool solvable(false);
 
-            std::string solvable_log("[SKIPPED] (~0ns)");
+            std::string solvable_log("(Flood Fill): \t" + std::string("[SKIPPED] \t(~0ns)"));
             if (checkSolvable) {
 
                 const auto sw_start = std::chrono::high_resolution_clock::now();
@@ -71,7 +71,7 @@ namespace Test::Tests {
             }
 
             // Solve the maze:
-            std::string pathfinding_log("[SKIPPED] (~0ns)");
+            std::string pathfinding_log("(A*): \t\t\t" + std::string("[SKIPPED] \t(~0ns)"));
             if (!checkSolvable || solvable) {
 
                 const auto sw_start = std::chrono::high_resolution_clock::now();
