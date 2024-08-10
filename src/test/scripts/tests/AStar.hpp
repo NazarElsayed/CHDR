@@ -52,9 +52,9 @@ namespace Test::Tests {
             /***************************************/
 
             // Test parameters:
-            constexpr size_t seed = 0U;
+            constexpr size_t seed(0U);
 
-            constexpr coord_t size  { 10000U, 10000U };
+            constexpr coord_t size  { 1024U, 1024U };
             constexpr coord_t start {};
                       coord_t end;
 
@@ -66,7 +66,7 @@ namespace Test::Tests {
             Debug::Log("Maze: [GENERATED]");
 
             /* GRID -> GRAPH */
-            //auto graph = CHDR::Mazes::Graph<Tm>(size, generator_t::Generate<Tm>(start, end, 0.0F, 0.0F, seed, size));
+            //auto graph = CHDR::Mazes::Graph<Tm>(maze);
 
             /* MAX DRAW SIZE */
             bool drawable (
