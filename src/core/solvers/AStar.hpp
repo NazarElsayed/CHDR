@@ -6,7 +6,6 @@
 #include <Debug.hpp>
 
 #include <functional>
-#include <forward_list>
 #include <queue>
 
 #include "base/ISolver.hpp"
@@ -52,8 +51,12 @@ namespace CHDR::Solvers {
 
             [[nodiscard]] constexpr bool operator == (const ASNode& _node) const { return m_Coord == _node.m_Coord; }
 
-            struct Compare {
+            struct CompareMax {
                 [[nodiscard]] constexpr bool operator () (const ASNode& _a, const ASNode& _b) const { return _a.m_FScore > _b.m_FScore; }
+            };
+
+            struct CompareMin {
+                [[nodiscard]] constexpr bool operator () (const ASNode& _a, const ASNode& _b) const { return _a.m_FScore < _b.m_FScore; }
             };
         };
 
@@ -72,7 +75,7 @@ namespace CHDR::Solvers {
 
             DenseExistenceSet closedSet(std::max(s, e));
 
-            Heap<ASNode, typename ASNode::Compare> openSet;
+            Heap<ASNode, typename ASNode::CompareMax> openSet;
             openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
             while (!openSet.Empty()) {
@@ -157,6 +160,12 @@ namespace CHDR::Solvers {
                         const auto curr = openSet.front();
                         openSet.pop();
 
+                        if (curr == e) {
+                            result = true;
+
+                            goto NestedBreak;
+                        }
+
                         for (const auto neighbour : _maze.GetNeighbours(curr)) {
 
                             if (const auto [nActive, nValue] = neighbour; nActive) {
@@ -169,12 +178,6 @@ namespace CHDR::Solvers {
                                         closedSet.Reserve(std::min(closedSet.Capacity() * 2U, Utils::Product<size_t>(_maze.Size())));
                                     }
                                     closedSet.Add(n);
-
-                                    if (n == e) {
-                                        result = true;
-
-                                        goto NestedBreak;
-                                    }
 
                                     openSet.emplace(n);
                                 }

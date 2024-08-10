@@ -10,6 +10,21 @@ namespace Test::Tests {
 
     class AStar final {
 
+    private:
+
+        static std::string ToString(long double _duration) {
+
+            static std::array<std::string, 4> units = { "s", "ms", "µs", "ns" };
+
+            size_t i = 0U;
+            while (i < units.size() && _duration < 1.0) {
+                _duration *= 1000.0;
+                ++i;
+            }
+
+            return std::to_string(_duration) + units[i];
+        }
+
     public:
 
         template <typename Tm, const size_t Kd, typename Ts = uint32_t>
@@ -25,34 +40,57 @@ namespace Test::Tests {
 
             /***************************************/
 
-            // Generate a maze:
+            // Test parameters:
+            size_t seed = 0U;
+
             coord_t size  { 1000U, 1000U };
             coord_t start {    0U,    0U };
             coord_t end;
 
-            size_t seed = 0U;
+            const bool checkSolvable = true;
 
+            // Generate a maze:
             const auto maze = CHDR::Mazes::Grid<Kd, Tm>(size, generator_t::Generate<Tm>(start, end, 0.0F, 0.0F, seed, size));
 
             //auto graph = CHDR::Mazes::Graph<Tm>(size, generator_t::Generate<Tm>(start, end, 0.0F, 0.0F, seed, size));
 
-            Debug::Log("Maze Generated! Candidate nodes: " + std::to_string(CHDR::Utils::Product<size_t>(size)));
+            Debug::Log("Maze Generated!");
+
+            /* TEST FOR SOLVABILITY: */
+            bool solvable(false);
+
+            std::string solvable_log("[SKIPPED] (~0ns)");
+            if (checkSolvable) {
+
+                const auto sw_start = std::chrono::high_resolution_clock::now();
+
+                solvable = solver_t::HasSolution(maze, start, end, static_cast<size_t>(std::abs(ceil(CHDR::Heuristics<Kd, Ts>::ManhattanDistance(start, end)))));
+
+                solvable_log = "(Flood Fill): \t" + std::string(solvable != 0U ? "[SOLVABLE]" : "[IMPOSSIBLE]") + "\t(" +
+                    ToString(std::chrono::duration_cast<std::chrono::duration<long double>>(std::chrono::high_resolution_clock::now() - sw_start).count()) + ")";
+            }
 
             // Solve the maze:
-            if (solver_t::HasSolution(maze, start, end, static_cast<size_t>(std::abs(ceil(CHDR::Heuristics<Kd, Ts>::ManhattanDistance(start, end)))))) {
+            std::string pathfinding_log("[SKIPPED] (~0ns)");
+            if (!checkSolvable || solvable) {
 
-               Debug::Log("Flood fill done!", Debug);
+                const auto sw_start = std::chrono::high_resolution_clock::now();
 
                 auto solver = solver_t();
                 auto path = solver.Solve(maze, start, end, HEURISTIC);
-
-                Debug::Log("Solved!");
+;
+                pathfinding_log = "(A*): \t\t\t" + std::string(path.size() != 0 ? "[SOLVED]" : "[IMPOSSIBLE]") + "\t(" +
+                    ToString(std::chrono::duration_cast<std::chrono::duration<long double>>(std::chrono::high_resolution_clock::now() - sw_start).count()) + ")";
 
                 display_t::DrawMaze(start, end, size, maze, path);
             }
             else {
                 display_t::DrawMaze(start, end, size, maze);
             }
+
+            Debug::Log("Candidate nodes: \t" + std::to_string(CHDR::Utils::Product<size_t>(size)));
+            Debug::Log(   solvable_log);
+            Debug::Log(pathfinding_log);
         }
     };
 }
