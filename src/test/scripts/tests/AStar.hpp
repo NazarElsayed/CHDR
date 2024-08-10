@@ -12,6 +12,17 @@ namespace Test::Tests {
 
     private:
 
+        static std::string Trim_Trailing_Zeros(std::string _str) {
+
+            _str.erase(_str.find_last_not_of('0') + 1, std::string::npos);
+
+            if (_str.back() == '.') {
+                _str.pop_back();
+            }
+
+            return _str;
+        }
+
         static std::string ToString(long double _duration) {
 
             static std::array<std::string, 4> units = { "s", "ms", "µs", "ns" };
@@ -22,7 +33,7 @@ namespace Test::Tests {
                 ++i;
             }
 
-            return std::to_string(_duration) + units[i];
+            return Trim_Trailing_Zeros(std::to_string(_duration)) + units[i];
         }
 
     public:
@@ -43,7 +54,7 @@ namespace Test::Tests {
             // Test parameters:
             constexpr size_t seed = 0U;
 
-            constexpr coord_t size  { 1000U, 1000U };
+            constexpr coord_t size  { 10000U, 10000U };
             constexpr coord_t start {};
                       coord_t end;
 
@@ -97,7 +108,7 @@ namespace Test::Tests {
                 display_t::DrawMaze(start, end, size, maze);
             }
 
-            Debug::Log(std::to_string(CHDR::Utils::Product<size_t>(size)) + " total candidate nodes.");
+            Debug::Log(Trim_Trailing_Zeros(std::to_string(CHDR::Utils::Product<size_t>(size) / static_cast<long double>(1000000000.0))) + "b total candidate nodes.");
             Debug::Log(   solvable_log);
             Debug::Log(pathfinding_log);
         }
