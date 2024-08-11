@@ -162,6 +162,7 @@ namespace CHDR::Solvers {
                 openSet.RemoveFirst();
 
                 if (current.m_Position != e) {
+
                     /* SEARCH FOR SOLUTION */
 
                     if (closedSet.Capacity() <= current.m_Position) {
@@ -205,8 +206,6 @@ namespace CHDR::Solvers {
 
                     // Recurse from end node to start node, inserting into a result buffer:
                     result.reserve(current.m_GScore);
-
-                    //auto temp = _maze.GetNode(temp.m_Parent).Data();
 
                     for (auto temp = current; temp.m_Parent != temp.m_Position; temp = _maze.GetNode(temp.m_Parent).Data()) {
                         result.emplace_back(Utils::ToND(temp.m_Position, _maze.Size()));
