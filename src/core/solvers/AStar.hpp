@@ -165,10 +165,6 @@ namespace CHDR::Solvers {
 
                 auto& current = *_maze.GetNode(openSet.Top().m_Position).Data();
 
-                if (current.m_Closed) {
-                    Debug::Log("Here");
-                }
-
                 openSet.RemoveFirst();
 
                 if (current.m_Position != e) {
