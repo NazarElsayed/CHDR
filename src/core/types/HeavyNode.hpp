@@ -16,7 +16,7 @@ namespace CHDR {
     private:
 
         W m_Value;
-        NodeData m_Data;
+        NodeData* m_Data;
 
     public:
 
@@ -24,9 +24,13 @@ namespace CHDR {
             return m_Value != std::numeric_limits<W>::max();
         }
 
-        constexpr HeavyNode(const W& _value = 0, NodeData _data = {0, INT_MAX, 0, 0}) :
+        constexpr explicit HeavyNode(const W& _value = 0, NodeData* _data = nullptr) :
             m_Value(_value),
             m_Data(_data) {}
+
+        ~HeavyNode() {
+            delete m_Data;
+        }
 
         [[nodiscard]] constexpr W Value() const {
             return m_Value;
@@ -37,11 +41,15 @@ namespace CHDR {
         }
 
         constexpr auto& Data() {
+            if (m_Data == nullptr) {
+                m_Data = new NodeData(0, INT_MAX, 0, 0);
+            }
+
             return m_Data;
         }
 
-        constexpr void Data(const NodeData& _data) {
-            m_Data = _data;
+        constexpr void Data(NodeData& _data) {
+            m_Data = &_data;
         }
     };
 } // CHDR

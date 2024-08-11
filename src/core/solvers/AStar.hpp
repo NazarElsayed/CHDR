@@ -153,7 +153,7 @@ namespace CHDR::Solvers {
             //DenseExistenceSet closedSet(std::max(s, e));
             Heap<NodeData, NodeDataCompare> openSet;
 
-            auto& start = _maze.GetNode(s).Data();
+            auto& start = *_maze.GetNode(s).Data();
             start.m_Position = s;
             start.m_GScore = 0;
             start.m_FScore = _h(_start, _end);
@@ -163,7 +163,7 @@ namespace CHDR::Solvers {
 
             while (!openSet.Empty()) {
 
-                auto& current = _maze.GetNode(openSet.Top().m_Position).Data();
+                auto& current = *_maze.GetNode(openSet.Top().m_Position).Data();
 
                 if (current.m_Closed) {
                     Debug::Log("Here");
@@ -180,7 +180,7 @@ namespace CHDR::Solvers {
                         if (const auto [nActive, nValue] = neighbour; nActive) {
                             const auto n = Utils::To1D(nValue, _maze.Size());
 
-                            auto& neighbourData = _maze.GetNode(n).Data();
+                            auto& neighbourData = *_maze.GetNode(n).Data();
 
                             // Check if node is not already visited:
                             if (!neighbourData.m_Closed) {
@@ -213,7 +213,7 @@ namespace CHDR::Solvers {
 
                     // Recurse from end node to start node, inserting into a result buffer:
                     result.reserve(current.m_GScore);
-                    for (auto temp = current; temp.m_Parent != temp.m_Position; temp = _maze.GetNode(temp.m_Parent).Data()) {
+                    for (auto temp = current; temp.m_Parent != temp.m_Position; temp = *_maze.GetNode(temp.m_Parent).Data()) {
                         result.emplace_back(Utils::ToND(temp.m_Position, _maze.Size()));
                     }
 
