@@ -55,6 +55,17 @@ namespace CHDR {
             SortDown(m_Data[0]);
         }
 
+        constexpr void RemoveLast() {
+
+            if (!m_Data.empty()) {
+                m_Data.erase(m_Data.begin());
+
+                if (!m_Data.empty()) {
+                    SortUp(m_Data[0]);
+                }
+            }
+        }
+
         constexpr void Update(T& _item) {
             SortUp(m_Data[_item.m_HeapIndex]);
         }
@@ -62,7 +73,7 @@ namespace CHDR {
         constexpr void SortUp(T& _item) {
 
             int itemIndex   = _item.m_HeapIndex;
-            int parentIndex = (itemIndex - 1 ) / 2;
+            int parentIndex = (itemIndex - 1) / 2;
 
             while (true) {
 

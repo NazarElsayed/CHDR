@@ -5,6 +5,7 @@
 
 #include <Debug.hpp>
 
+#include <forward_list>
 #include <functional>
 #include <queue>
 
@@ -51,12 +52,38 @@ namespace CHDR::Solvers {
 
             [[nodiscard]] constexpr bool operator == (const ASNode& _node) const { return m_Coord == _node.m_Coord; }
 
-            struct CompareMax {
+            struct Max {
                 [[nodiscard]] constexpr bool operator () (const ASNode& _a, const ASNode& _b) const { return _a.m_FScore > _b.m_FScore; }
             };
+        };
 
-            struct CompareMin {
-                [[nodiscard]] constexpr bool operator () (const ASNode& _a, const ASNode& _b) const { return _a.m_FScore < _b.m_FScore; }
+        struct SMASNode final : IHeapItem {
+
+            size_t m_Coord;
+
+            Ts m_GScore;
+            Ts m_FScore;
+
+            SMASNode* m_Parent;
+
+            std::vector<SMASNode> m_Successors;
+
+            [[nodiscard]] constexpr SMASNode(const size_t& _coord, const Ts& _gScore, const Ts& _hScore, SMASNode* const _parent) : IHeapItem(),
+                m_Coord (_coord),
+                m_GScore(_gScore),
+                m_FScore(_gScore + _hScore),
+                m_Parent(_parent),
+                m_Successors()
+            {
+                if (m_Parent != nullptr) {
+                    m_Parent->m_Children.emplace_back(*this);
+                }
+            }
+
+            [[nodiscard]] constexpr bool operator == (const SMASNode& _node) const { return m_Coord == _node.m_Coord; }
+
+            struct Max {
+                [[nodiscard]] constexpr bool operator () (const SMASNode& _a, const SMASNode& _b) const { return _a.m_FScore > _b.m_FScore; }
             };
         };
 
@@ -75,7 +102,7 @@ namespace CHDR::Solvers {
 
             DenseExistenceSet closedSet(std::max(s, e));
 
-            Heap<ASNode, typename ASNode::CompareMax> openSet;
+            Heap<ASNode, typename ASNode::Max> openSet;
             openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
             while (!openSet.Empty()) {
@@ -116,7 +143,7 @@ namespace CHDR::Solvers {
                     /* SOLUTION REACHED */
 
                     // Free data which is no longer relevant:
-                    openSet.Clear();
+                      openSet.Clear();
                     closedSet.Clear();
 
                     // Recurse from end node to start node, inserting into a result buffer:
@@ -135,6 +162,144 @@ namespace CHDR::Solvers {
 
             return result;
         }
+
+        // auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const size_t& _m) const {
+        //
+        //     /** @see: https://easychair.org/publications/open/TL2M */
+        //
+        //     std::vector<coord_t> result;
+        //
+        //     const auto s = Utils::To1D(_start, _maze.Size());
+        //     const auto e = Utils::To1D(_end,   _maze.Size());
+        //
+        //     Heap<SMASNode, typename ASNode::Max> openSet;
+        //     openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
+        //
+        //     size_t u = 1U; // counter for nodes in memory
+        //
+        //     // Main loop
+        //     while (!openSet.empty()) {
+        //
+        //         const SMASNode b = openSet.Top(); // Node with smallest f-cost in O
+        //         openSet.RemoveFirst();
+        //
+        //         // If node b is goal
+        //         if (b.m_Coord != e) {
+        //
+        //             if (b.m_FScore != std::numeric_limits<Ts>::infinity()) {
+        //
+        //                 std::vector<SMASNode> N; // Set N as successors of b
+        //
+        //                 if (/* condition for whether b has been expanded */) {
+        //                     // Assign forgotten successors of b to N
+        //                 }
+        //                 else {
+        //                     // Expand b and assign its successors to N
+        //                     N = b.m_Successors;
+        //                 }
+        //
+        //                 for (SMASNode& n : N) {
+        //
+        //                     const auto nIdx = Utils::ToND(n, _maze.Size());
+        //
+        //                     if (/* condition to check if s(n) is in forgotten f-cost table of b*/) {
+        //                         //n.m_FScore = f-value of s(n) in forgotten f-cost table of node b
+        //                         // Remove s(n) from forgotten f-cost table of node b.
+        //                     }
+        //                     else if (nIdx != e && (n.m_Successors.empty() || /* d(n) >= M - 1*/)) {
+        //                         n.m_FScore = std::numeric_limits<Ts>::infinity();
+        //                     }
+        //                     else {
+        //                         // Update properties of n according to the pseudocode
+        //                         n.m_FScore = std::max(b.m_FScore, n.m_GScore + _h(n.m_Coord, _end));
+        //                     }
+        //
+        //                     // Add n to O
+        //                     openSet.Emplace(n);
+        //                     u++;
+        //                 }
+        //
+        //                 while (u > _m) {
+        //                     cull_worst_leaf(openSet, u);
+        //                 }
+        //             }
+        //             else {
+        //                 break; // Return goal not found
+        //             }
+        //         }
+        //         else {
+        //
+        //             /* SOLUTION REACHED */
+        //
+        //             // Free data which is no longer relevant:
+        //             openSet.Clear();
+        //
+        //             // Recurse from end node to start node, inserting into a result buffer:
+        //             result.reserve(b.m_GScore);
+        //
+        //             for (const auto* temp = &b; temp->m_Parent != nullptr; temp = temp->m_Parent) {
+        //                 result.emplace_back(Utils::ToND(temp->m_Coord, _maze.Size()));
+        //             }
+        //
+        //             // Reverse the result:
+        //             std::reverse(result.begin(), result.end());
+        //
+        //             break;
+        //         }
+        //     }
+        //
+        //     return result;
+        // }
+        //
+        // // Algorithm 2
+        // void cull_worst_leaf(Heap<SMASNode, typename ASNode::Max>& O, size_t& u) {
+        //
+        //     const SMASNode w = safe_culling_heuristic(O);
+        //
+        //     auto p = w.m_Parent; // parent node of w
+        //
+        //     // Remove w from the successor list of p
+        //     for (size_t i = 0U; i < p->m_Successors.size(); ++i) {
+        //
+        //         // Code to remove w from the successor list of p goes here
+        //         if (p->m_Successors[i] == w) {
+        //             p->m_Successors.erase(p->m_Successors.begin() + i);
+        //
+        //             break;
+        //         }
+        //     }
+        //
+        //     // Add s(w) to forgotten f-cost table of p, with value of f (w)
+        //     // Code to add s(w) to forgotten f-cost table of p, with value of f (w) goes here
+        //
+        //     // f (p) ← min of forgotten f-costs of p
+        //     // Code to calculate the min of forgotten f-costs of p goes here
+        //
+        //     // if p is not in O then
+        //     if (!O.Contains(p)) {
+        //         O.push_back(p); // Add p to O
+        //     }
+        //
+        //     u--;
+        // }
+        //
+        // auto safe_culling_heuristic(Heap<SMASNode, typename ASNode::Max>& O) {
+        //
+        //     SMASNode w; // Worst leaf according to c(n) in O
+        //
+        //     const SMASNode b = O.Top(); // Best node according to f(n) in O
+        //
+        //     if (w == b) {
+        //         // Code to find second worst leaf according to c(n) goes here
+        //         // Assign the second worst leaf to w
+        //     }
+        //     else {
+        //         w = O.Back();
+        //         w.RemoveLast();
+        //     }
+        //
+        //     return w;
+        // }
 
         static bool HasSolution(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, size_t _capacity = 1U) {
 
@@ -209,6 +374,7 @@ NestedBreak:
         }
 
     };
+
 } // CHDR::Solvers
 
 #endif //CHDR_ASTAR_HPP

@@ -54,7 +54,7 @@ namespace Test::Tests {
             // Test parameters:
             constexpr size_t seed(0U);
 
-            constexpr coord_t size  { 1024U, 1024U };
+            constexpr coord_t size  { 32U, 32U };
             constexpr coord_t start {};
                       coord_t end;
 
@@ -108,7 +108,7 @@ namespace Test::Tests {
                 display_t::DrawMaze(start, end, size, maze);
             }
 
-            Debug::Log(Trim_Trailing_Zeros(std::to_string(CHDR::Utils::Product<size_t>(size) / static_cast<long double>(1000000000.0))) + "b total candidate nodes.");
+            Debug::Log("~" + Trim_Trailing_Zeros(std::to_string(CHDR::Utils::Product<size_t>(size) / static_cast<long double>(1000000000.0))) + "b total candidate nodes.");
             Debug::Log(   solvable_log);
             Debug::Log(pathfinding_log);
         }
