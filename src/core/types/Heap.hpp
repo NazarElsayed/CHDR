@@ -4,7 +4,7 @@
 namespace CHDR {
 
     struct IHeapItem {
-        int m_HeapIndex;
+        size_t m_HeapIndex = -1U;
     };
 
     template<typename T, typename Comparitor>
@@ -50,6 +50,7 @@ namespace CHDR {
         constexpr void RemoveFirst() {
 
             Swap(m_Data[0], m_Data.back());
+            m_Data.back().m_HeapIndex = -1U;
             m_Data.pop_back();
 
             SortDown(m_Data[0]);

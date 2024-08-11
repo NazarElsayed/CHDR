@@ -1,6 +1,7 @@
 #ifndef CHDR_HEAVYNODE_HPP
 #define CHDR_HEAVYNODE_HPP
 
+#include <limits.h>
 #include <type_traits>
 
 #include "NodeData.hpp"
@@ -23,7 +24,7 @@ namespace CHDR {
             return m_Value != std::numeric_limits<W>::max();
         }
 
-        constexpr HeavyNode(const W& _value = 0, NodeData _data = {0, 0, 0, 0}) :
+        constexpr HeavyNode(const W& _value = 0, NodeData _data = {0, INT_MAX, 0, 0}) :
             m_Value(_value),
             m_Data(_data) {}
 

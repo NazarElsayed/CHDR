@@ -158,7 +158,7 @@ namespace CHDR::Solvers {
 
             while (!openSet.Empty()) {
 
-                const auto current = openSet.Top();
+                const auto& current = openSet.Top();
                 openSet.RemoveFirst();
 
                 if (current.m_Position != e) {
@@ -169,8 +169,6 @@ namespace CHDR::Solvers {
                     }
                     closedSet.Add(current.m_Position);
 
-                    auto& currentData = _maze.GetNode(current.m_Position).Data();
-
                     for (const auto neighbour : _maze.GetNeighbours(Utils::ToND(current.m_Position, _maze.Size()))) {
                         if (const auto [nActive, nValue] = neighbour; nActive) {
                             const auto n = Utils::To1D(nValue, _maze.Size());
@@ -180,7 +178,7 @@ namespace CHDR::Solvers {
 
                                 auto& neighbourData = _maze.GetNode(n).Data();
 
-                                Ts gScore = currentData.m_GScore + 1;
+                                Ts gScore = current.m_GScore + 1;
 
                                 if (gScore < neighbourData.m_GScore) {
                                     neighbourData.m_GScore = gScore;
@@ -188,13 +186,10 @@ namespace CHDR::Solvers {
 
                                     if (openSet.Contains(neighbourData)) {
                                         openSet.Update(neighbourData);
+                                    } else {
+                                        openSet.Add(neighbourData);
                                     }
                                 }
-
-                                auto& data = _maze.GetNode(n).Data();
-
-                                // Add node to openSet.
-                                openSet.Add(neighbourData);
                             }
                         }
                     }
