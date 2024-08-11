@@ -153,7 +153,7 @@ namespace CHDR::Solvers {
             DenseExistenceSet closedSet(std::max(s, e));
             Heap<NodeData, NodeDataCompare> openSet;
 
-            NodeData start(s, 0, _h(_start, _end), -1U);
+            NodeData start(s, 0, _h(_start, _end), s);
             openSet.Add(start);
 
             while (!openSet.Empty()) {
@@ -181,8 +181,10 @@ namespace CHDR::Solvers {
                                 Ts gScore = current.m_GScore + 1;
 
                                 if (gScore < neighbourData.m_GScore) {
+                                    neighbourData.m_Position = n;
                                     neighbourData.m_GScore = gScore;
                                     neighbourData.m_FScore = gScore + _h(nValue, _end);
+                                    neighbourData.m_Parent = current.m_Position;
 
                                     if (openSet.Contains(neighbourData)) {
                                         openSet.Update(neighbourData);
@@ -206,7 +208,7 @@ namespace CHDR::Solvers {
 
                     //auto temp = _maze.GetNode(temp.m_Parent).Data();
 
-                    for (auto temp = current; temp.m_Parent != -1; temp = _maze.GetNode(temp.m_Parent).Data()) {
+                    for (auto temp = current; temp.m_Parent != temp.m_Position; temp = _maze.GetNode(temp.m_Parent).Data()) {
                         result.emplace_back(Utils::ToND(temp.m_Position, _maze.Size()));
                     }
 
