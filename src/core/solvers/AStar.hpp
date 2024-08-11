@@ -164,11 +164,6 @@ namespace CHDR::Solvers {
             while (!openSet.Empty()) {
 
                 auto& current = *_maze.GetNode(openSet.Top().m_Position).Data();
-
-                if (current.m_Closed) {
-                    Debug::Log("Here");
-                }
-
                 openSet.RemoveFirst();
 
                 if (current.m_Position != e) {
@@ -178,29 +173,17 @@ namespace CHDR::Solvers {
                     /* SEARCH FOR SOLUTION */
                     for (const auto neighbour : _maze.GetNeighbours(Utils::ToND(current.m_Position, _maze.Size()))) {
                         if (const auto [nActive, nValue] = neighbour; nActive) {
-                            const auto n = Utils::To1D(nValue, _maze.Size());
 
+                            const auto n = Utils::To1D(nValue, _maze.Size());
                             auto& neighbourData = *_maze.GetNode(n).Data();
 
                             // Check if node is not already visited:
                             if (!neighbourData.m_Closed) {
-
-                                Ts gScore = current.m_GScore + 1;
-
-                                //if (gScore < neighbourData.m_GScore) {
-
-                                    neighbourData.m_Position = n;
-                                    neighbourData.m_GScore = gScore;
-                                    neighbourData.m_FScore = gScore + _h(nValue, _end);
-                                    neighbourData.m_Parent = current.m_Position;
-                                    openSet.Add(neighbourData);
-
-                                    /*if (openSet.Contains(neighbourData)) {
-                                        openSet.Update(neighbourData);
-                                    } else {
-                                        openSet.Add(neighbourData);
-                                    }*/
-                                //}
+                                neighbourData.m_Position = n;
+                                neighbourData.m_GScore = current.m_GScore + 1;
+                                neighbourData.m_FScore = neighbourData.m_GScore + _h(nValue, _end);
+                                neighbourData.m_Parent = current.m_Position;
+                                openSet.Add(neighbourData);
                             }
                         }
                     }
