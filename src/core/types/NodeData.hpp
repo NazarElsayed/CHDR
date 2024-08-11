@@ -13,11 +13,14 @@ namespace CHDR {
 
         size_t m_Parent;
 
+        bool m_Closed;
+
         constexpr NodeData(const size_t _position, const size_t& _gScore, const size_t& _hScore, const size_t& _parent) : IHeapItem(),
             m_Position(_position),
             m_GScore(_gScore),
             m_FScore(_gScore + _hScore),
-            m_Parent(_parent) {}
+            m_Parent(_parent),
+            m_Closed(false) {}
     };
 }
 

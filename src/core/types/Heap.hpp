@@ -124,7 +124,10 @@ namespace CHDR {
         }
 
         constexpr bool Contains(T& _item) {
-            return _item.m_HeapIndex != -1 ? &_item == &m_Data[_item.m_HeapIndex] : false;
+            if(_item.m_HeapIndex != -1U) {
+                return &_item == &m_Data[_item.m_HeapIndex];
+            }
+            return false;
         }
 
         constexpr void Clear() {

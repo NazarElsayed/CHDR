@@ -150,49 +150,57 @@ namespace CHDR::Solvers {
             const auto s = Utils::To1D(_start, mazeSize);
             const auto e = Utils::To1D(_end, mazeSize);
 
-            DenseExistenceSet closedSet(std::max(s, e));
+            //DenseExistenceSet closedSet(std::max(s, e));
             Heap<NodeData, NodeDataCompare> openSet;
 
-            NodeData start(s, 0, _h(_start, _end), s);
+            auto& start = _maze.GetNode(s).Data();
+            start.m_Position = s;
+            start.m_GScore = 0;
+            start.m_FScore = _h(_start, _end);
+            start.m_Parent = s;
+
             openSet.Add(start);
 
             while (!openSet.Empty()) {
 
-                const auto& current = openSet.Top();
+                auto& current = _maze.GetNode(openSet.Top().m_Position).Data();
+
+                if (current.m_Closed) {
+                    Debug::Log("Here");
+                }
+
                 openSet.RemoveFirst();
 
                 if (current.m_Position != e) {
 
+                    current.m_Closed = true;
+
                     /* SEARCH FOR SOLUTION */
-
-                    if (closedSet.Capacity() <= current.m_Position) {
-                        closedSet.Reserve(std::min(closedSet.Capacity() * 2U, Utils::Product<size_t>(_maze.Size())));
-                    }
-                    closedSet.Add(current.m_Position);
-
                     for (const auto neighbour : _maze.GetNeighbours(Utils::ToND(current.m_Position, _maze.Size()))) {
                         if (const auto [nActive, nValue] = neighbour; nActive) {
                             const auto n = Utils::To1D(nValue, _maze.Size());
 
-                            // Check if node is not already visited:
-                            if (!closedSet.Contains(n)) {
+                            auto& neighbourData = _maze.GetNode(n).Data();
 
-                                auto& neighbourData = _maze.GetNode(n).Data();
+                            // Check if node is not already visited:
+                            if (!neighbourData.m_Closed) {
 
                                 Ts gScore = current.m_GScore + 1;
 
-                                if (gScore < neighbourData.m_GScore) {
+                                //if (gScore < neighbourData.m_GScore) {
+
                                     neighbourData.m_Position = n;
                                     neighbourData.m_GScore = gScore;
                                     neighbourData.m_FScore = gScore + _h(nValue, _end);
                                     neighbourData.m_Parent = current.m_Position;
+                                    openSet.Add(neighbourData);
 
-                                    if (openSet.Contains(neighbourData)) {
+                                    /*if (openSet.Contains(neighbourData)) {
                                         openSet.Update(neighbourData);
                                     } else {
                                         openSet.Add(neighbourData);
-                                    }
-                                }
+                                    }*/
+                                //}
                             }
                         }
                     }
@@ -202,11 +210,9 @@ namespace CHDR::Solvers {
 
                     // Free data which is no longer relevant:
                     openSet.Clear();
-                    closedSet.Clear();
 
                     // Recurse from end node to start node, inserting into a result buffer:
                     result.reserve(current.m_GScore);
-
                     for (auto temp = current; temp.m_Parent != temp.m_Position; temp = _maze.GetNode(temp.m_Parent).Data()) {
                         result.emplace_back(Utils::ToND(temp.m_Position, _maze.Size()));
                     }
@@ -221,8 +227,8 @@ namespace CHDR::Solvers {
             return result;
         }
 
-        static bool HasSolution(const Mazes::HeavyGrid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end,
-                                size_t                          _capacity = 1U) {
+        static bool HasSolution(const Mazes::HeavyGrid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, size_t _capacity = 1U) {
+
             bool result = false;
 
             const auto s = Utils::To1D(_start, _maze.Size());
