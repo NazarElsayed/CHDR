@@ -26,8 +26,8 @@ namespace Test::Tests {
             /***************************************/
 
             // Generate a maze:
-            coord_t size  { 100U, 100U };
-            coord_t start {   0U,  0U };
+            coord_t size  { 10000U, 10000U };
+            coord_t start {     0U,     0U };
             coord_t end;
 
             size_t seed = 0U;

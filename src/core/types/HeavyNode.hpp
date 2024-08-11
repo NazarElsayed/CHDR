@@ -1,7 +1,7 @@
 #ifndef CHDR_HEAVYNODE_HPP
 #define CHDR_HEAVYNODE_HPP
 
-#include <limits.h>
+#include <climits>
 #include <type_traits>
 
 #include "NodeData.hpp"
