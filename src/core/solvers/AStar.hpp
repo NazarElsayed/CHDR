@@ -8,6 +8,7 @@
 #include <forward_list>
 #include <functional>
 #include <queue>
+#include <unordered_set>
 
 #include "base/ISolver.hpp"
 #include "types/Heap.hpp"
@@ -59,6 +60,7 @@ namespace CHDR::Solvers {
 
         struct SMASNode final : IHeapItem {
 
+            size_t m_Depth;
             size_t m_Coord;
 
             Ts m_GScore;
@@ -68,7 +70,10 @@ namespace CHDR::Solvers {
 
             std::vector<SMASNode> m_Successors;
 
-            [[nodiscard]] constexpr SMASNode(const size_t& _coord, const Ts& _gScore, const Ts& _hScore, SMASNode* const _parent) : IHeapItem(),
+            std::unordered_set<size_t, size_t> m_ForgottenFCosts;
+
+            [[nodiscard]] constexpr SMASNode(const size_t& _depth, const size_t& _coord, const Ts& _gScore, const Ts& _hScore, SMASNode* const _parent) : IHeapItem(),
+                m_Depth (_depth),
                 m_Coord (_coord),
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
@@ -76,7 +81,7 @@ namespace CHDR::Solvers {
                 m_Successors()
             {
                 if (m_Parent != nullptr) {
-                    m_Parent->m_Children.emplace_back(*this);
+                    m_Parent->m_Successors.emplace_back(*this);
                 }
             }
 
@@ -163,7 +168,7 @@ namespace CHDR::Solvers {
             return result;
         }
 
-        // auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const size_t& _m) const {
+        // auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const size_t& _memoryLimit) const {
         //
         //     /** @see: https://easychair.org/publications/open/TL2M */
         //
@@ -172,15 +177,21 @@ namespace CHDR::Solvers {
         //     const auto s = Utils::To1D(_start, _maze.Size());
         //     const auto e = Utils::To1D(_end,   _maze.Size());
         //
-        //     Heap<SMASNode, typename ASNode::Max> openSet;
-        //     openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
+        //     Heap<SMASNode, typename SMASNode::Max> openSet;
+        //     openSet.Emplace({
+        //         0U,                 // Depth
+        //         s,                  // Coordinate
+        //         static_cast<Ts>(0), // G-Score
+        //         _h(_start, _end),   // F-Score
+        //         nullptr             // Parent
+        //     });
         //
         //     size_t u = 1U; // counter for nodes in memory
         //
         //     // Main loop
         //     while (!openSet.empty()) {
         //
-        //         const SMASNode b = openSet.Top(); // Node with smallest f-cost in O
+        //         SMASNode b = openSet.Top(); // Node with smallest f-cost in O
         //         openSet.RemoveFirst();
         //
         //         // If node b is goal
@@ -202,9 +213,9 @@ namespace CHDR::Solvers {
         //
         //                     const auto nIdx = Utils::ToND(n, _maze.Size());
         //
-        //                     if (/* condition to check if s(n) is in forgotten f-cost table of b*/) {
-        //                         //n.m_FScore = f-value of s(n) in forgotten f-cost table of node b
-        //                         // Remove s(n) from forgotten f-cost table of node b.
+        //                     if (b.m_ForgottenFCosts.find(n.m_Coord) != b.m_ForgottenFCosts.end()) { /* condition to check if s(n) is in forgotten f-cost table of b*/
+        //                         n.m_FScore = b.m_ForgottenFCosts(n); // f-value of s(n) in forgotten f-cost table of node b
+        //                         b.m_ForgottenFCosts.erase(n.m_Coord); // Remove s(n) from forgotten f-cost table of node b.
         //                     }
         //                     else if (nIdx != e && (n.m_Successors.empty() || /* d(n) >= M - 1*/)) {
         //                         n.m_FScore = std::numeric_limits<Ts>::infinity();
@@ -219,7 +230,7 @@ namespace CHDR::Solvers {
         //                     u++;
         //                 }
         //
-        //                 while (u > _m) {
+        //                 while (u > _memoryLimit) {
         //                     cull_worst_leaf(openSet, u);
         //                 }
         //             }
@@ -251,10 +262,9 @@ namespace CHDR::Solvers {
         //     return result;
         // }
         //
-        // // Algorithm 2
-        // void cull_worst_leaf(Heap<SMASNode, typename ASNode::Max>& O, size_t& u) {
+        // void cull_worst_leaf(Heap<SMASNode, typename ASNode::Max>& _openSet, size_t& _memoryLimit) {
         //
-        //     const SMASNode w = safe_culling_heuristic(O);
+        //     const SMASNode w = safe_culling_heuristic(_openSet);
         //
         //     auto p = w.m_Parent; // parent node of w
         //
@@ -270,31 +280,33 @@ namespace CHDR::Solvers {
         //     }
         //
         //     // Add s(w) to forgotten f-cost table of p, with value of f (w)
-        //     // Code to add s(w) to forgotten f-cost table of p, with value of f (w) goes here
+        //     p->m_ForgottenFCosts.insert_or_assign(p, w.m_FScore);
         //
         //     // f (p) ← min of forgotten f-costs of p
-        //     // Code to calculate the min of forgotten f-costs of p goes here
-        //
-        //     // if p is not in O then
-        //     if (!O.Contains(p)) {
-        //         O.push_back(p); // Add p to O
+        //     for (auto& [state, cost] : p->m_ForgottenFCosts) {
+        //         p->m_FScore = std::min(p->m_FScore, cost);
         //     }
         //
-        //     u--;
+        //     // if p is not in _openSet then
+        //     if (!_openSet.Contains(p)) {
+        //         _openSet.push_back(p); // Add p to _openSet
+        //     }
+        //
+        //     _memoryLimit--;
         // }
         //
-        // auto safe_culling_heuristic(Heap<SMASNode, typename ASNode::Max>& O) {
+        // auto safe_culling_heuristic(Heap<SMASNode, typename ASNode::Max>& _openSet) {
         //
-        //     SMASNode w; // Worst leaf according to c(n) in O
+        //     SMASNode w; // Worst leaf according to c(n) in _openSet
         //
-        //     const SMASNode b = O.Top(); // Best node according to f(n) in O
+        //     const SMASNode b = _openSet.Top(); // Best node according to f(n) in _openSet
         //
         //     if (w == b) {
         //         // Code to find second worst leaf according to c(n) goes here
         //         // Assign the second worst leaf to w
         //     }
         //     else {
-        //         w = O.Back();
+        //         w = _openSet.Back();
         //         w.RemoveLast();
         //     }
         //

@@ -3,6 +3,8 @@
 
 #include <chdr.hpp>
 
+#include <cmath>
+
 #include "../core/Display.hpp"
 #include "../generator/Grid.hpp"
 
