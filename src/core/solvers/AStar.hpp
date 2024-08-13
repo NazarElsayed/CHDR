@@ -60,6 +60,8 @@ namespace CHDR::Solvers {
 
         struct SMASNode final : IHeapItem {
 
+            bool m_Expanded;
+
             size_t m_Depth;
             size_t m_Coord;
 
@@ -73,6 +75,7 @@ namespace CHDR::Solvers {
             std::unordered_set<size_t, size_t> m_ForgottenFCosts;
 
             [[nodiscard]] constexpr SMASNode(const size_t& _depth, const size_t& _coord, const Ts& _gScore, const Ts& _hScore, SMASNode* const _parent) : IHeapItem(),
+                m_Expanded(false),
                 m_Depth (_depth),
                 m_Coord (_coord),
                 m_GScore(_gScore),
@@ -168,150 +171,179 @@ namespace CHDR::Solvers {
             return result;
         }
 
-        // auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const size_t& _memoryLimit) const {
-        //
-        //     /** @see: https://easychair.org/publications/open/TL2M */
-        //
-        //     std::vector<coord_t> result;
-        //
-        //     const auto s = Utils::To1D(_start, _maze.Size());
-        //     const auto e = Utils::To1D(_end,   _maze.Size());
-        //
-        //     Heap<SMASNode, typename SMASNode::Max> openSet;
-        //     openSet.Emplace({
-        //         0U,                 // Depth
-        //         s,                  // Coordinate
-        //         static_cast<Ts>(0), // G-Score
-        //         _h(_start, _end),   // F-Score
-        //         nullptr             // Parent
-        //     });
-        //
-        //     size_t u = 1U; // counter for nodes in memory
-        //
-        //     // Main loop
-        //     while (!openSet.empty()) {
-        //
-        //         SMASNode b = openSet.Top(); // Node with smallest f-cost in O
-        //         openSet.RemoveFirst();
-        //
-        //         // If node b is goal
-        //         if (b.m_Coord != e) {
-        //
-        //             if (b.m_FScore != std::numeric_limits<Ts>::infinity()) {
-        //
-        //                 std::vector<SMASNode> N; // Set N as successors of b
-        //
-        //                 if (/* condition for whether b has been expanded */) {
-        //                     // Assign forgotten successors of b to N
-        //                 }
-        //                 else {
-        //                     // Expand b and assign its successors to N
-        //                     N = b.m_Successors;
-        //                 }
-        //
-        //                 for (SMASNode& n : N) {
-        //
-        //                     const auto nIdx = Utils::ToND(n, _maze.Size());
-        //
-        //                     if (b.m_ForgottenFCosts.find(n.m_Coord) != b.m_ForgottenFCosts.end()) { /* condition to check if s(n) is in forgotten f-cost table of b*/
-        //                         n.m_FScore = b.m_ForgottenFCosts(n); // f-value of s(n) in forgotten f-cost table of node b
-        //                         b.m_ForgottenFCosts.erase(n.m_Coord); // Remove s(n) from forgotten f-cost table of node b.
-        //                     }
-        //                     else if (nIdx != e && (n.m_Successors.empty() || /* d(n) >= M - 1*/)) {
-        //                         n.m_FScore = std::numeric_limits<Ts>::infinity();
-        //                     }
-        //                     else {
-        //                         // Update properties of n according to the pseudocode
-        //                         n.m_FScore = std::max(b.m_FScore, n.m_GScore + _h(n.m_Coord, _end));
-        //                     }
-        //
-        //                     // Add n to O
-        //                     openSet.Emplace(n);
-        //                     u++;
-        //                 }
-        //
-        //                 while (u > _memoryLimit) {
-        //                     cull_worst_leaf(openSet, u);
-        //                 }
-        //             }
-        //             else {
-        //                 break; // Return goal not found
-        //             }
-        //         }
-        //         else {
-        //
-        //             /* SOLUTION REACHED */
-        //
-        //             // Free data which is no longer relevant:
-        //             openSet.Clear();
-        //
-        //             // Recurse from end node to start node, inserting into a result buffer:
-        //             result.reserve(b.m_GScore);
-        //
-        //             for (const auto* temp = &b; temp->m_Parent != nullptr; temp = temp->m_Parent) {
-        //                 result.emplace_back(Utils::ToND(temp->m_Coord, _maze.Size()));
-        //             }
-        //
-        //             // Reverse the result:
-        //             std::reverse(result.begin(), result.end());
-        //
-        //             break;
-        //         }
-        //     }
-        //
-        //     return result;
-        // }
-        //
-        // void cull_worst_leaf(Heap<SMASNode, typename ASNode::Max>& _openSet, size_t& _memoryLimit) {
-        //
-        //     const SMASNode w = safe_culling_heuristic(_openSet);
-        //
-        //     auto p = w.m_Parent; // parent node of w
-        //
-        //     // Remove w from the successor list of p
-        //     for (size_t i = 0U; i < p->m_Successors.size(); ++i) {
-        //
-        //         // Code to remove w from the successor list of p goes here
-        //         if (p->m_Successors[i] == w) {
-        //             p->m_Successors.erase(p->m_Successors.begin() + i);
-        //
-        //             break;
-        //         }
-        //     }
-        //
-        //     // Add s(w) to forgotten f-cost table of p, with value of f (w)
-        //     p->m_ForgottenFCosts.insert_or_assign(p, w.m_FScore);
-        //
-        //     // f (p) ← min of forgotten f-costs of p
-        //     for (auto& [state, cost] : p->m_ForgottenFCosts) {
-        //         p->m_FScore = std::min(p->m_FScore, cost);
-        //     }
-        //
-        //     // if p is not in _openSet then
-        //     if (!_openSet.Contains(p)) {
-        //         _openSet.push_back(p); // Add p to _openSet
-        //     }
-        //
-        //     _memoryLimit--;
-        // }
-        //
-        // auto safe_culling_heuristic(Heap<SMASNode, typename ASNode::Max>& _openSet) {
-        //
-        //     SMASNode w; // Worst leaf according to c(n) in _openSet
-        //
-        //     const SMASNode b = _openSet.Top(); // Best node according to f(n) in _openSet
-        //
-        //     if (w == b) {
-        //         // Code to find second worst leaf according to c(n) goes here
-        //         // Assign the second worst leaf to w
-        //     }
-        //     else {
-        //         w = _openSet.Back();
-        //         w.RemoveLast();
-        //     }
-        //
-        //     return w;
-        // }
+        auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const size_t& _memoryLimit) const {
+
+            /** @see: https://easychair.org/publications/open/TL2M */
+
+            std::vector<coord_t> result;
+
+            const auto s = Utils::To1D(_start, _maze.Size());
+            const auto e = Utils::To1D(_end,   _maze.Size());
+
+            Heap<SMASNode, typename SMASNode::Max> openSet;
+            openSet.Emplace({
+                0U,                 // Depth
+                s,                  // Coordinate
+                static_cast<Ts>(0), // G-Score
+                _h(_start, _end),   // F-Score
+                nullptr             // Parent
+            });
+
+            size_t u = 1U; // counter for nodes in memory
+
+            // Main loop
+            while (!openSet.empty()) {
+
+                SMASNode b = openSet.Top(); // Node with smallest f-cost in O
+                openSet.RemoveFirst();
+
+                // If node b is goal
+                if (b.m_Coord != e) {
+
+                    if (b.m_FScore != std::numeric_limits<Ts>::infinity()) {
+
+                        if (!b.m_Expanded) {
+                            b.m_Expanded = true;
+
+                            // Expand b and assign its successors to N
+                            auto neighbours = _maze.GetNeighbours(b.m_Coord);
+
+                            for (auto& neighbour : neighbours) {
+
+                                if (const auto [nActive, nValue] = neighbour; nActive) {
+
+                                    if (nValue != b.m_Coord) {
+
+                                        b.m_Successors.emplace_back({
+                                            b.m_Depth + 1U,     // Depth
+                                            nValue,             // Coordinate
+                                            b.m_GScore + 1U,    // G-Score
+                                            _h(nValue, _end),   // F-Score
+                                            b                   // Parent
+                                        });
+                                    }
+                                }
+                            }
+
+                        }
+
+                        std::vector<SMASNode> N = b.m_Successors; // Set N as successors of b
+
+                        for (SMASNode& n : N) {
+
+                            const auto nIdx = Utils::ToND(n, _maze.Size());
+
+                            if (b.m_ForgottenFCosts.find(n.m_Coord) != b.m_ForgottenFCosts.end()) { /* condition to check if s(n) is in forgotten f-cost table of b*/
+                                n.m_FScore = b.m_ForgottenFCosts(n); // f-value of s(n) in forgotten f-cost table of node b
+                                b.m_ForgottenFCosts.erase(n.m_Coord); // Remove s(n) from forgotten f-cost table of node b.
+                            }
+                            else if (nIdx != e && (n.m_Successors.empty() || n.m_Depth >= _memoryLimit - 1U)) {
+                                n.m_FScore = std::numeric_limits<Ts>::infinity();
+                            }
+                            else {
+                                // Update properties of n according to the pseudocode
+                                n.m_FScore = std::max(b.m_FScore, n.m_GScore + _h(n.m_Coord, _end));
+                            }
+
+                            // Add n to O
+                            openSet.Emplace(n);
+                            u++;
+                        }
+
+                        while (u > _memoryLimit) {
+                            cull_worst_leaf(openSet, u);
+                        }
+                    }
+                    else {
+                        break; // Return goal not found
+                    }
+                }
+                else {
+
+                    /* SOLUTION REACHED */
+
+                    // Free data which is no longer relevant:
+                    openSet.Clear();
+
+                    // Recurse from end node to start node, inserting into a result buffer:
+                    result.reserve(b.m_GScore);
+
+                    for (const auto* temp = &b; temp->m_Parent != nullptr; temp = temp->m_Parent) {
+                        result.emplace_back(Utils::ToND(temp->m_Coord, _maze.Size()));
+                    }
+
+                    // Reverse the result:
+                    std::reverse(result.begin(), result.end());
+
+                    break;
+                }
+            }
+
+            return result;
+        }
+
+        void cull_worst_leaf(Heap<SMASNode, typename ASNode::Max>& _openSet, size_t& _memoryLimit) {
+
+            const SMASNode w = safe_culling_heuristic(_openSet);
+
+            auto p = w.m_Parent; // parent node of w
+
+            // Remove w from the successor list of p
+            for (size_t i = 0U; i < p->m_Successors.size(); ++i) {
+
+                // Code to remove w from the successor list of p goes here
+                if (p->m_Successors[i] == w) {
+                    p->m_Successors.erase(p->m_Successors.begin() + i);
+
+                    break;
+                }
+            }
+
+            // Add s(w) to forgotten f-cost table of p, with value of f (w)
+            p->m_ForgottenFCosts.insert_or_assign(p, w.m_FScore);
+
+            // f (p) ← min of forgotten f-costs of p
+            for (auto& [state, cost] : p->m_ForgottenFCosts) {
+                p->m_FScore = std::min(p->m_FScore, cost);
+            }
+
+            // if p is not in _openSet then
+            if (!_openSet.Contains(p)) {
+                _openSet.push_back(p); // Add p to _openSet
+            }
+
+            _memoryLimit--;
+        }
+
+        auto safe_culling_heuristic(Heap<SMASNode, typename ASNode::Max>& _openSet) {
+
+            SMASNode w; // Worst leaf according to c(n) in _openSet
+
+            const SMASNode b = _openSet.Top(); // Best node according to f(n) in _openSet
+
+            if (w == b) {
+
+                // Code to find second worst leaf according to c(n) goes here
+                // Assign the second worst leaf to w
+
+                w = _openSet.Back();
+
+                for (size_t i = _openSet.Size() / 2U; i < _openSet.Size(); ++i) {
+
+                    if (SMASNode::Max(_openSet[i], w.val)) {
+                        w = _openSet[i];
+                    }
+                }
+
+                _openSet.Remove(w);
+            }
+            else {
+                w = _openSet.Back();
+                w.RemoveLast();
+            }
+
+            return w;
+        }
 
         static bool HasSolution(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, size_t _capacity = 1U) {
 

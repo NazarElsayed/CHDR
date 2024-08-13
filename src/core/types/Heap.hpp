@@ -1,6 +1,8 @@
 #ifndef CHDR_HEAP_HPP
 #define CHDR_HEAP_HPP
 
+//#define HASHSET_SUPPRESS_EXCEPTION_WARNING // Uncomment if you wish to remove the warning about possible unhandled exceptions.
+
 namespace CHDR {
 
     struct IHeapItem {
@@ -152,6 +154,18 @@ namespace CHDR {
             }
 
             std::cout << std::endl;
+        }
+
+#ifndef HEAP_SUPPRESS_UNSAFE_WARNING
+        [[deprecated("This function does not perform bounds checking in 'runtime' compiled builds.\nSuppress this warning by defining \"HEAP_SUPPRESS_UNSAFE_WARNING\".")]]
+#endif
+        const T& operator[](const size_t& _index) const {
+
+#ifndef NDEBUG
+            return m_Data.at(_index);
+#else
+            return m_Data[_index];
+#endif // NDEBUG
         }
     };
 }
