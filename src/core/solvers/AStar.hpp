@@ -28,7 +28,7 @@ namespace CHDR::Solvers {
 
         using coord_t = Coord<size_t, Kd>;
 
-        /*struct ASNode final : IHeapItem {
+        struct ASNode final : IHeapItem {
 
             size_t m_Coord;
 
@@ -44,15 +44,15 @@ namespace CHDR::Solvers {
                 m_Parent(_parent) {}
 
             [[nodiscard]] constexpr bool operator ==(const ASNode& _node) const { return m_Coord == _node.m_Coord; }
-        };*/
+        };
 
-        /*struct ASNodeCompare {
+        struct ASNodeCompare {
             [[nodiscard]] constexpr bool operator ()(const ASNode& _a, const ASNode& _b) const {
                 return _a.m_FScore > _b.m_FScore;
             }
-        };*/
+        };
 
-        /*struct ASHeavyNode : IHeapItem {
+        struct ASHeavyNode : IHeapItem {
 
             size_t m_Position;
             NodeData m_Data;
@@ -60,7 +60,7 @@ namespace CHDR::Solvers {
             [[nodiscard]] constexpr bool operator ()(const NodeData& _a, const NodeData& _b) const {
                 return _a.m_FScore > _b.m_FScore;
             }
-        };*/
+        };
 
         struct NodeDataCompare {
             [[nodiscard]] constexpr bool operator ()(const NodeData& _a, const NodeData& _b) const {
@@ -74,18 +74,15 @@ namespace CHDR::Solvers {
             throw std::runtime_error("AStar::Solve(const Mazes::IMaze& _maze) Not implemented!");
         }
 
-        /*
-        auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end,
-                   Ts (*                           _h)(const coord_t&, const coord_t&)) const {
+        auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h) (const coord_t&, const coord_t&)) const {
+
             std::vector<coord_t> result;
 
             const auto s = Utils::To1D(_start, _maze.Size());
             const auto e = Utils::To1D(_end, _maze.Size());
 
             std::list<ASNode> buffer;
-
             DenseExistenceSet closedSet(std::max(s, e));
-
             Heap<ASNode, ASNodeCompare> openSet;
 
             openSet.Emplace({s, static_cast<Ts>(0), _h(_start, _end), nullptr});
@@ -96,7 +93,7 @@ namespace CHDR::Solvers {
                 openSet.RemoveFirst();
 
                 if (current.m_Coord != e) {
-                    /* SEARCH FOR SOLUTION #1#
+                    /* SEARCH FOR SOLUTION */
 
                     if (closedSet.Capacity() <= current.m_Coord) {
                         closedSet.Reserve(std::min(closedSet.Capacity() * 2U, Utils::Product<size_t>(_maze.Size())));
@@ -116,7 +113,7 @@ namespace CHDR::Solvers {
                     }
                 }
                 else {
-                    /* SOLUTION REACHED #1#
+                    /* SOLUTION REACHED */
 
                     // Free data which is no longer relevant:
                     openSet.Clear();
@@ -139,9 +136,9 @@ namespace CHDR::Solvers {
             }
 
             return result;
-        }*/
+        }
 
-        auto Solve(Mazes::HeavyGrid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&)) const {
+        auto Solve(Mazes::MutableGrid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&)) const {
 
             std::vector<coord_t> result;
 
@@ -177,12 +174,15 @@ namespace CHDR::Solvers {
                             const auto n = Utils::To1D(nValue, _maze.Size());
                             auto& neighbourData = *_maze.GetNode(n).Data();
 
+                            //TODO: Check if item is already in OpenSet, and update it.
+
                             // Check if node is not already visited:
                             if (!neighbourData.m_Closed) {
                                 neighbourData.m_Position = n;
                                 neighbourData.m_GScore = current.m_GScore + 1;
                                 neighbourData.m_FScore = neighbourData.m_GScore + _h(nValue, _end);
                                 neighbourData.m_Parent = current.m_Position;
+
                                 openSet.Add(neighbourData);
                             }
                         }
@@ -210,7 +210,7 @@ namespace CHDR::Solvers {
             return result;
         }
 
-        static bool HasSolution(const Mazes::HeavyGrid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, size_t _capacity = 1U) {
+        static bool HasSolution(const Mazes::MutableGrid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, size_t _capacity = 1U) {
 
             bool result = false;
 

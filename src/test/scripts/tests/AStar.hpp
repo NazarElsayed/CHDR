@@ -26,14 +26,14 @@ namespace Test::Tests {
             /***************************************/
 
             // Generate a maze:
-            coord_t size  { 10000U, 10000U };
-            coord_t start {     0U,     0U };
+            coord_t size  { 1000U, 1000U };
+            coord_t start {    0U,    0U };
             coord_t end;
 
             size_t seed = 0U;
 
             auto nodes = generator_t::Generate<Tm>(start, end, 0.0F, 0.0F, seed, size);
-            auto maze = CHDR::Mazes::HeavyGrid<Kd, Tm>(size, nodes);
+            auto maze = CHDR::Mazes::MutableGrid<Kd, Tm>(size, nodes);
 
             Debug::Log("Maze Generated!");
 

@@ -12,7 +12,7 @@ namespace CHDR::Mazes {
      * @tparam Kd Dimensionality of the grid.
      */
     template <const size_t Kd, typename T = uint32_t>
-    class HeavyGrid : public IMaze<T> {
+    class MutableGrid : public IMaze<T> {
 
         using coord_t = Coord<size_t, Kd>;
 
@@ -30,16 +30,16 @@ namespace CHDR::Mazes {
 
     public:
 
-        constexpr HeavyGrid(const coord_t& _size) :
+        constexpr MutableGrid(const coord_t& _size) :
             m_Size(_size),
             m_Nodes(Utils::Product<size_t>(m_Size)) {}
 
-        constexpr HeavyGrid(const coord_t& _size, const std::vector<HeavyNode<T>>& _nodes) :
+        constexpr MutableGrid(const coord_t& _size, const std::vector<HeavyNode<T>>& _nodes) :
             m_Size(_size),
             m_Nodes(_nodes) {}
 
         template <typename... Args>
-        constexpr HeavyGrid(const Args&... _size) :
+        constexpr MutableGrid(const Args&... _size) :
             m_Size { _size... },
             m_Nodes(Utils::Product<size_t>(m_Size))
         {
@@ -47,7 +47,7 @@ namespace CHDR::Mazes {
         }
 
         template <typename... Args>
-        constexpr HeavyGrid(const Args&... _size, const std::vector<HeavyNode<T>>& _nodes) :
+        constexpr MutableGrid(const Args&... _size, const std::vector<HeavyNode<T>>& _nodes) :
             m_Size { _size... },
             m_Nodes(_nodes)
         {
@@ -66,6 +66,7 @@ namespace CHDR::Mazes {
             return m_Size;
         }
 
+        //TODO: Fix overload ambiguities:
         /*template<typename... Args>
         constexpr void Size(const Args&... _value) {
             Size({ _value... });

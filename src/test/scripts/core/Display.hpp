@@ -27,7 +27,7 @@ namespace Test {
     public:
 
         static constexpr void DrawMaze(const CHDR::Coord<size_t, Kd>& _start, const CHDR::Coord<size_t,  Kd>& _end,
-                                       const CHDR::Coord<size_t, Kd>& _size , const CHDR::Mazes::HeavyGrid<Kd, T>& _maze) {
+                                       const CHDR::Coord<size_t, Kd>& _size , const CHDR::Mazes::MutableGrid<Kd, T>& _maze) {
 
             static_assert(Kd < 3U, "This maze renderer does not support dimensions higher than 2.");
             static_assert(std::is_integral_v<T>, "Maze type must be an integral type.");
@@ -90,7 +90,7 @@ namespace Test {
         }
 
         static constexpr void DrawMaze(const CHDR::Coord<size_t, Kd>& _start, const CHDR::Coord<size_t,  Kd>& _end,
-                                       const CHDR::Coord<size_t, Kd>& _size , const CHDR::Mazes::HeavyGrid<Kd, T>& _maze,
+                                       const CHDR::Coord<size_t, Kd>& _size , const CHDR::Mazes::MutableGrid<Kd, T>& _maze,
                                        const std::vector<coord_t>& _path) {
 
             static_assert(Kd < 3U, "This maze renderer does not support dimensions higher than 2.");

@@ -4,7 +4,7 @@
 #include "mazes/base/IMaze.hpp"
 #include "mazes/Graph.hpp"
 #include "mazes/Grid.hpp"
-#include "mazes/HeavyGrid.hpp"
+#include "mazes/MutableGrid.hpp"
 #include "mazes/Tree.hpp"
 
 #include "solvers/base/ISolver.hpp"

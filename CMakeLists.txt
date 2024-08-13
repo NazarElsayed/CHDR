@@ -134,7 +134,7 @@ add_library(CHDR INTERFACE
         src/core/utils/Utils.hpp
         src/core/types/HeavyNode.hpp
         src/core/types/NodeData.hpp
-        src/core/mazes/HeavyGrid.hpp
+        src/core/mazes/MutableGrid.hpp
 )
 
 target_link_libraries(CHDR INTERFACE
