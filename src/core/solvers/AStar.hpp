@@ -109,6 +109,7 @@ namespace CHDR::Solvers {
             const auto e = Utils::To1D(_end,   _maze.Size());
 
             DenseExistenceSet closedSet(std::max(s, e));
+            DenseExistenceSet openSetContains(std::max(s, e));
 
             Heap<ASNode, typename ASNode::Max> openSet;
             openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
@@ -117,6 +118,7 @@ namespace CHDR::Solvers {
 
                 const ASNode current = openSet.Top();
                 openSet.RemoveFirst();
+                openSetContains.Remove(current.m_Coord);
 
                 if (current.m_Coord != e) {
 
@@ -134,13 +136,30 @@ namespace CHDR::Solvers {
                             const auto n = Utils::To1D(nValue, _maze.Size());
 
                             // Check if node is not already visited:
-                            if (!closedSet.Contains(n)) {
+                            if (!closedSet.Contains(n) && !openSetContains.Contains(n)) {
 
                                 // Create room for 'current' in unmanaged memory:
                                 void* memoryBlock = std::malloc(sizeof(ASNode));
                                 if (!memoryBlock) { throw std::bad_alloc(); }
 
+                                // // Dupe checking:
+                                //
+                                // bool isDuplicate = false;
+                                //
+                                // for (size_t i = 0U; i < openSet.Size(); ++i) {
+                                //     if (openSet[i].m_Coord == n) {
+                                //         isDuplicate = true;
+                                //
+                                //         break;
+                                //     }
+                                // }
+                                //
+                                // if (isDuplicate) {
+                                //     Debug::Log("Duplicate found!", Info);
+                                // }
+
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
+                                openSetContains.Add(n);
                                 openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), new (memoryBlock) ASNode(std::move(current)) });
                             }
                         }
@@ -153,6 +172,7 @@ namespace CHDR::Solvers {
                     // Free data which is no longer relevant:
                       openSet.Clear();
                     closedSet.Clear();
+                    openSetContains.Clear();
 
                     // Recurse from end node to start node, inserting into a result buffer:
                     result.reserve(current.m_GScore);
@@ -192,7 +212,7 @@ namespace CHDR::Solvers {
             size_t u = 1U; // counter for nodes in memory
 
             // Main loop
-            while (!openSet.empty()) {
+            while (!openSet.Empty()) {
 
                 SMASNode b = openSet.Top(); // Node with smallest f-cost in O
                 openSet.RemoveFirst();
@@ -212,15 +232,19 @@ namespace CHDR::Solvers {
 
                                 if (const auto [nActive, nValue] = neighbour; nActive) {
 
-                                    if (nValue != b.m_Coord) {
+                                    auto nCoord = CHDR::Utils::To1D(nValue, _maze.Size());
 
-                                        b.m_Successors.emplace_back({
+                                    if (nCoord != b.m_Coord) {
+
+                                        SMASNode n(
                                             b.m_Depth + 1U,     // Depth
-                                            nValue,             // Coordinate
+                                            nCoord,             // Coordinate
                                             b.m_GScore + 1U,    // G-Score
                                             _h(nValue, _end),   // F-Score
-                                            b                   // Parent
-                                        });
+                                            &b                  // Parent
+                                        );
+
+                                        b.m_Successors.emplace_back(std::move(n));
                                     }
                                 }
                             }
@@ -231,22 +255,20 @@ namespace CHDR::Solvers {
 
                         for (SMASNode& n : N) {
 
-                            const auto nIdx = Utils::ToND(n, _maze.Size());
-
                             if (b.m_ForgottenFCosts.find(n.m_Coord) != b.m_ForgottenFCosts.end()) { /* condition to check if s(n) is in forgotten f-cost table of b*/
-                                n.m_FScore = b.m_ForgottenFCosts(n); // f-value of s(n) in forgotten f-cost table of node b
-                                b.m_ForgottenFCosts.erase(n.m_Coord); // Remove s(n) from forgotten f-cost table of node b.
+                                n.m_FScore = b.m_ForgottenFCosts[n.m_Coord];    // f-value of s(n) in forgotten f-cost table of node b
+                                b.m_ForgottenFCosts.erase(n.m_Coord);           // Remove s(n) from forgotten f-cost table of node b.
                             }
-                            else if (nIdx != e && (n.m_Successors.empty() || n.m_Depth >= _memoryLimit - 1U)) {
+                            else if (n.m_Coord != e && (n.m_Successors.empty() || n.m_Depth >= _memoryLimit - 1U)) {
                                 n.m_FScore = std::numeric_limits<Ts>::infinity();
                             }
                             else {
                                 // Update properties of n according to the pseudocode
-                                n.m_FScore = std::max(b.m_FScore, n.m_GScore + _h(n.m_Coord, _end));
+                                n.m_FScore = std::max(b.m_FScore, n.m_GScore + _h(Utils::ToND(n.m_Coord, _maze.Size()), _end));
                             }
 
                             // Add n to O
-                            openSet.Emplace(n);
+                            openSet.Add(n);
                             u++;
                         }
 
@@ -282,7 +304,7 @@ namespace CHDR::Solvers {
             return result;
         }
 
-        void cull_worst_leaf(Heap<SMASNode, typename ASNode::Max>& _openSet, size_t& _memoryLimit) {
+        void cull_worst_leaf(Heap<SMASNode, typename SMASNode::Max>& _openSet, size_t& _memoryLimit) const {
 
             const SMASNode w = safe_culling_heuristic(_openSet);
 

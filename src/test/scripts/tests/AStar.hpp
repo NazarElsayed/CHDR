@@ -56,7 +56,7 @@ namespace Test::Tests {
             // Test parameters:
             constexpr size_t seed(0U);
 
-            constexpr coord_t size  { 32U, 32U };
+            constexpr coord_t size  { 40000U, 10000U };
             constexpr coord_t start {};
                       coord_t end;
 
