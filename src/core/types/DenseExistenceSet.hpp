@@ -193,7 +193,7 @@ namespace CHDR {
          * @return The capacity of the set.
          */
         constexpr auto Capacity() const {
-            return m_Bits.size();
+            return m_Bits.capacity();
         }
     };
 

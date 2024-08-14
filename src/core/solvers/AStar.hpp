@@ -34,9 +34,9 @@ namespace CHDR::Solvers {
             Ts m_GScore;
             Ts m_FScore;
 
-            ASNode* m_Parent;
+            const ASNode* m_Parent;
 
-            [[nodiscard]] constexpr ASNode(const size_t& _coord, const Ts& _gScore, const Ts& _hScore, ASNode* const _parent) : IHeapItem(),
+            [[nodiscard]] constexpr ASNode(const size_t& _coord, const Ts& _gScore, const Ts& _hScore, const ASNode* const _parent) : IHeapItem(),
                 m_Coord (_coord),
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
@@ -45,7 +45,20 @@ namespace CHDR::Solvers {
             [[nodiscard]] constexpr bool operator == (const ASNode& _node) const { return m_Coord == _node.m_Coord; }
 
             struct Max {
-                [[nodiscard]] constexpr bool operator () (const ASNode& _a, const ASNode& _b) const { return _a.m_FScore > _b.m_FScore; }
+
+                [[nodiscard]] constexpr bool operator () (const ASNode& _a, const ASNode& _b) const {
+
+                    bool result;
+
+                    if (_a.m_FScore == _b.m_FScore) {
+                        result = _a.m_GScore > _b.m_GScore;
+                    }
+                    else {
+                        result = _a.m_FScore > _b.m_FScore;
+                    }
+
+                    return result;
+                }
             };
         };
 
@@ -118,7 +131,7 @@ namespace CHDR::Solvers {
             Heap<ASNode, typename ASNode::Max> openSet;
             openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
-            std::forward_list<ASNode> buffer;
+            std::vector<ASNode*> buffer;
 
             while (!openSet.Empty()) {
 
@@ -126,11 +139,9 @@ namespace CHDR::Solvers {
                 openSet.RemoveFirst();
                 dupes.Remove(current.m_Coord);
 
-                if (current.m_Coord != e) {
+                if (current.m_Coord != e) { // SEARCH FOR SOLUTION...
 
-                    /* SEARCH FOR SOLUTION */
-
-                    if (closedSet.Capacity() <= current.m_Coord) {
+                    while (closedSet.Capacity() <= current.m_Coord) {
                         closedSet.Reserve(std::min(closedSet.Capacity() * 2U, Utils::Product<size_t>(_maze.Size())));
                     }
                     closedSet.Add(current.m_Coord);
@@ -145,22 +156,19 @@ namespace CHDR::Solvers {
                             if (!closedSet.Contains(n) && !dupes.Contains(n)) {
 
                                 // Add to dupe list:
-                                if (dupes.Capacity() <= n) {
-                                    dupes.Reserve(std::min(closedSet.Capacity() * 2U, Utils::Product<size_t>(_maze.Size())));
+                                while (dupes.Capacity() <= n) {
+                                    dupes.Reserve(std::min(dupes.Capacity() * 2U, Utils::Product<size_t>(_maze.Size())));
                                 }
                                 dupes.Add(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                buffer.emplace_front(ASNode(std::move(current)));
-
-                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), &buffer.front() });
+                                buffer.emplace_back(new ASNode(std::move(current)));
+                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), buffer.back() });
                             }
                         }
                     }
                 }
-                else {
-
-                    /* SOLUTION REACHED */
+                else { // SOLUTION REACHED ...
 
                     // Free data which is no longer relevant:
                       openSet.Clear();
@@ -174,6 +182,13 @@ namespace CHDR::Solvers {
                     }
 
                     // Clear the buffer:
+                    for (auto* item : buffer) {
+
+                        if (item != nullptr) {
+                            delete item;
+                            item = nullptr;
+                        }
+                    }
                     buffer.clear();
 
                     // Reverse the result:
