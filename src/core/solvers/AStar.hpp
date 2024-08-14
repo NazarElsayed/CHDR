@@ -34,22 +34,13 @@ namespace CHDR::Solvers {
             Ts m_GScore;
             Ts m_FScore;
 
-            const ASNode* m_Parent;
+            ASNode* m_Parent;
 
-            [[nodiscard]] constexpr ASNode(const size_t& _coord, const Ts& _gScore, const Ts& _hScore, const ASNode* const _parent) : IHeapItem(),
+            [[nodiscard]] constexpr ASNode(const size_t& _coord, const Ts& _gScore, const Ts& _hScore, ASNode* const _parent) : IHeapItem(),
                 m_Coord (_coord),
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
                 m_Parent(_parent) {}
-
-            ~ASNode() {
-
-                if (m_Parent == nullptr) {
-                    delete m_Parent;
-
-                    m_Parent = nullptr;
-                }
-            };
 
             [[nodiscard]] constexpr bool operator == (const ASNode& _node) const { return m_Coord == _node.m_Coord; }
 
@@ -91,7 +82,20 @@ namespace CHDR::Solvers {
             [[nodiscard]] constexpr bool operator == (const SMASNode& _node) const { return m_Coord == _node.m_Coord; }
 
             struct Max {
-                [[nodiscard]] constexpr bool operator () (const SMASNode& _a, const SMASNode& _b) const { return _a.m_FScore > _b.m_FScore; }
+
+                [[nodiscard]] constexpr bool operator () (const SMASNode& _a, const SMASNode& _b) const {
+
+                    bool result;
+
+                    if (_a.m_FScore == _b.m_FScore) {
+                        result = _a.m_GScore > _b.m_GScore;
+                    }
+                    else {
+                        result = _a.m_FScore > _b.m_FScore;
+                    }
+
+                    return result;
+                }
             };
         };
 
@@ -109,16 +113,18 @@ namespace CHDR::Solvers {
             const auto e = Utils::To1D(_end,   _maze.Size());
 
             DenseExistenceSet closedSet(std::max(s, e));
-            DenseExistenceSet openSetContains(std::max(s, e));
+            DenseExistenceSet dupes(std::max(s, e));
 
             Heap<ASNode, typename ASNode::Max> openSet;
             openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
+
+            std::forward_list<ASNode> buffer;
 
             while (!openSet.Empty()) {
 
                 const ASNode current = openSet.Top();
                 openSet.RemoveFirst();
-                openSetContains.Remove(current.m_Coord);
+                dupes.Remove(current.m_Coord);
 
                 if (current.m_Coord != e) {
 
@@ -136,31 +142,18 @@ namespace CHDR::Solvers {
                             const auto n = Utils::To1D(nValue, _maze.Size());
 
                             // Check if node is not already visited:
-                            if (!closedSet.Contains(n) && !openSetContains.Contains(n)) {
+                            if (!closedSet.Contains(n) && !dupes.Contains(n)) {
 
-                                // Create room for 'current' in unmanaged memory:
-                                void* memoryBlock = std::malloc(sizeof(ASNode));
-                                if (!memoryBlock) { throw std::bad_alloc(); }
-
-                                // // Dupe checking:
-                                //
-                                // bool isDuplicate = false;
-                                //
-                                // for (size_t i = 0U; i < openSet.Size(); ++i) {
-                                //     if (openSet[i].m_Coord == n) {
-                                //         isDuplicate = true;
-                                //
-                                //         break;
-                                //     }
-                                // }
-                                //
-                                // if (isDuplicate) {
-                                //     Debug::Log("Duplicate found!", Info);
-                                // }
+                                // Add to dupe list:
+                                if (dupes.Capacity() <= n) {
+                                    dupes.Reserve(std::min(closedSet.Capacity() * 2U, Utils::Product<size_t>(_maze.Size())));
+                                }
+                                dupes.Add(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                openSetContains.Add(n);
-                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), new (memoryBlock) ASNode(std::move(current)) });
+                                buffer.emplace_front(ASNode(std::move(current)));
+
+                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), &buffer.front() });
                             }
                         }
                     }
@@ -172,14 +165,16 @@ namespace CHDR::Solvers {
                     // Free data which is no longer relevant:
                       openSet.Clear();
                     closedSet.Clear();
-                    openSetContains.Clear();
+                        dupes.Clear();
 
                     // Recurse from end node to start node, inserting into a result buffer:
                     result.reserve(current.m_GScore);
-
                     for (const auto* temp = &current; temp->m_Parent != nullptr; temp = temp->m_Parent) {
                         result.emplace_back(Utils::ToND(temp->m_Coord, _maze.Size()));
                     }
+
+                    // Clear the buffer:
+                    buffer.clear();
 
                     // Reverse the result:
                     std::reverse(result.begin(), result.end());
@@ -255,8 +250,9 @@ namespace CHDR::Solvers {
 
                         for (SMASNode& n : N) {
 
-                            if (b.m_ForgottenFCosts.find(n.m_Coord) != b.m_ForgottenFCosts.end()) { /* condition to check if s(n) is in forgotten f-cost table of b*/
-                                n.m_FScore = b.m_ForgottenFCosts[n.m_Coord];    // f-value of s(n) in forgotten f-cost table of node b
+                            auto search = b.m_ForgottenFCosts.find(n.m_Coord);
+                            if (search != b.m_ForgottenFCosts.end()) {  /* condition to check if s(n) is in forgotten f-cost table of b*/
+                                n.m_FScore = *search;                           // f-value of s(n) in forgotten f-cost table of node b
                                 b.m_ForgottenFCosts.erase(n.m_Coord);           // Remove s(n) from forgotten f-cost table of node b.
                             }
                             else if (n.m_Coord != e && (n.m_Successors.empty() || n.m_Depth >= _memoryLimit - 1U)) {
@@ -339,7 +335,7 @@ namespace CHDR::Solvers {
 
         auto safe_culling_heuristic(Heap<SMASNode, typename ASNode::Max>& _openSet) {
 
-            SMASNode w; // Worst leaf according to c(n) in _openSet
+            SMASNode w = _openSet.Back(); // Worst leaf according to c(n) in _openSet
 
             const SMASNode b = _openSet.Top(); // Best node according to f(n) in _openSet
 
@@ -352,7 +348,7 @@ namespace CHDR::Solvers {
 
                 for (size_t i = _openSet.Size() / 2U; i < _openSet.Size(); ++i) {
 
-                    if (SMASNode::Max(_openSet[i], w.val)) {
+                    if (typename SMASNode::Max(_openSet[i], w)) {
                         w = _openSet[i];
                     }
                 }
@@ -360,7 +356,6 @@ namespace CHDR::Solvers {
                 _openSet.Remove(w);
             }
             else {
-                w = _openSet.Back();
                 w.RemoveLast();
             }
 

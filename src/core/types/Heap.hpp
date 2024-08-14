@@ -1,7 +1,7 @@
 #ifndef CHDR_HEAP_HPP
 #define CHDR_HEAP_HPP
 
-//#define HASHSET_SUPPRESS_EXCEPTION_WARNING // Uncomment if you wish to remove the warning about possible unhandled exceptions.
+#define HEAP_SUPPRESS_EXCEPTION_WARNING // Uncomment if you wish to remove the warning about possible unhandled exceptions.
 
 namespace CHDR {
 
@@ -167,6 +167,27 @@ namespace CHDR {
             return m_Data[_index];
 #endif // NDEBUG
         }
+
+        using               iterator = typename std::vector<T>::iterator;
+        using         const_iterator = typename std::vector<T>::const_iterator;
+        using       reverse_iterator = typename std::vector<T>::reverse_iterator;
+        using const_reverse_iterator = typename std::vector<T>::const_reverse_iterator;
+
+              iterator  begin()       { return m_Data.begin();  }
+        const_iterator  begin() const { return m_Data.begin();  }
+        const_iterator cbegin() const { return m_Data.cbegin(); }
+
+              iterator  end()       { return m_Data.end();  }
+        const_iterator  end() const { return m_Data.end();  }
+        const_iterator cend() const { return m_Data.cend(); }
+
+              reverse_iterator  rbegin()       { return m_Data.rbegin();  }
+        const_reverse_iterator  rbegin() const { return m_Data.rbegin();  }
+        const_reverse_iterator crbegin() const { return m_Data.crbegin(); }
+
+              reverse_iterator  rend()       { return m_Data.rend();  }
+        const_reverse_iterator  rend() const { return m_Data.rend();  }
+        const_reverse_iterator crend() const { return m_Data.crend(); }
     };
 }
 
