@@ -9,14 +9,14 @@ namespace CHDR {
         int m_HeapIndex;
     };
 
-    template<typename T, typename Comparitor>
+    template<typename T, typename Comparator>
     class Heap {
 
         static_assert(std::is_base_of_v<IHeapItem, T>, "T must derive from IHeapItem");
 
     private:
         std::vector<T> m_Data;
-        Comparitor compare;
+        Comparator compare;
 
     public:
 
