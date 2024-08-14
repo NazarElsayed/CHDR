@@ -66,7 +66,7 @@ namespace CHDR::Mazes {
             return m_Size;
         }
 
-        //TODO: Fix overload ambiguities:
+        // TODO: Fix overload ambiguities:
         /*template<typename... Args>
         constexpr void Size(const Args&... _value) {
             Size({ _value... });
