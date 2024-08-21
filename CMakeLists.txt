@@ -1,7 +1,10 @@
 cmake_minimum_required(VERSION ${CMAKE_VERSION})
-project(CHDR LANGUAGES CXX)
+project(CHDR VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+configure_file(CHDR_Version.h.in CHDR_Version.h)
 
 # DETECT ARCHITECTURE FOR SIMD OPTIMISATION:
 
@@ -101,11 +104,11 @@ set(CMAKE_CXX_FLAGS_NOSANITIZERS "-Wall -Wextra -fno-omit-frame-pointer -g -O0")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -march=native -mtune=native -funroll-loops -DNDEBUG")
 
 include_directories(
-        contrib/LouiEriksson
+    ${CHDR_BINARY_DIR}
+    contrib/LouiEriksson
 )
 
 ## LOUIERIKSSON::DEBUG:
-
 add_library(LOUIERIKSSON_DEBUG_HPP INTERFACE
     contrib/LouiEriksson/Debug.hpp
 )
@@ -114,24 +117,24 @@ add_library(LOUIERIKSSON_DEBUG_HPP INTERFACE
 
 # ADD CHDR:
 add_library(CHDR INTERFACE
-        src/core/chdr.hpp
+    src/core/chdr.hpp
 
-        src/core/mazes/base/IMaze.hpp
-        src/core/mazes/Graph.hpp
-        src/core/mazes/Grid.hpp
-        src/core/mazes/Tree.hpp
+    src/core/mazes/base/IMaze.hpp
+    src/core/mazes/Graph.hpp
+    src/core/mazes/Grid.hpp
+    src/core/mazes/Tree.hpp
 
-        src/core/types/DenseExistenceSet.hpp
-        src/core/types/Heap.hpp
-        src/core/types/Node.hpp
-        src/core/types/RelationalNode.hpp
+    src/core/types/DenseExistenceSet.hpp
+    src/core/types/Heap.hpp
+    src/core/types/Node.hpp
+    src/core/types/RelationalNode.hpp
 
-        src/core/solvers/AStar.hpp
-        src/core/solvers/base/ISolver.hpp
-        src/core/solvers/Dijkstra.hpp
-        src/core/solvers/JPS.hpp
+    src/core/solvers/AStar.hpp
+    src/core/solvers/base/ISolver.hpp
+    src/core/solvers/Dijkstra.hpp
+    src/core/solvers/JPS.hpp
 
-        src/core/utils/Utils.hpp
+    src/core/utils/Utils.hpp
 )
 
 target_link_libraries(CHDR INTERFACE
@@ -151,17 +154,17 @@ endif()
 
 # ADD EXECUTABLE:
 add_executable(Test
-        src/test/main.cpp
+    src/test/main.cpp
 
-        src/test/scripts/core/Application.hpp
-        src/test/scripts/generator/Grid.hpp
-        src/test/scripts/generator/utils/Backtracking.hpp
-        src/test/scripts/tests/AStar.hpp
-        src/test/scripts/core/Display.hpp
+    src/test/scripts/core/Application.hpp
+    src/test/scripts/generator/Grid.hpp
+    src/test/scripts/generator/utils/Backtracking.hpp
+    src/test/scripts/tests/AStar.hpp
+    src/test/scripts/core/Display.hpp
 )
 
 target_include_directories(Test PRIVATE
-        src/core
+    src/core
 )
 
 target_precompile_headers(CHDR INTERFACE src/core/stdafx.hpp)
@@ -174,6 +177,6 @@ else()
 endif()
 
 target_link_libraries(Test INTERFACE
-        LOUIERIKSSON_DEBUG_HPP
-        CHDR
+    LOUIERIKSSON_DEBUG_HPP
+    CHDR
 )

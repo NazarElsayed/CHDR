@@ -107,6 +107,9 @@ namespace Test {
 		 */
 		static int Main() {
 
+		    //Print Version
+		    std::cout << "CHDR Version: v" << CHDR_VERSION << std::endl;
+
 			Debug::Log("Application::Main()", Info);
 
 			// Restrict Main() to one instance.

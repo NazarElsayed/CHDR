@@ -1,6 +1,8 @@
 #ifndef CHDR_COMMON_HPP
 #define CHDR_COMMON_HPP
 
+#include "CHDR_Version.h"
+
 #include "mazes/base/IMaze.hpp"
 #include "mazes/Graph.hpp"
 #include "mazes/Grid.hpp"
