@@ -105,7 +105,8 @@ namespace Test {
 		 *
 		 * @return An integer error code (0 for successful execution)
 		 */
-		static int Main(const std::array<long unsigned, 2U> _dimensions) {
+		template<const size_t Kd>
+		static int Main(const CHDR::Coord<size_t, Kd> _dimensions) {
 
 		    //Print Version
 		    Debug::Log("CHDR Version: v" CHDR_VERSION, Info);
@@ -139,31 +140,7 @@ namespace Test {
 							/* Put tests here */
 
 							try {
-
-								switch (_dimensions.size()) {
-									case  1U: { Tests::AStar::Run<bool,  1U>(_dimensions); break; }
-									case  2U: { Tests::AStar::Run<bool,  2U>(_dimensions); break; }
-									case  3U: { Tests::AStar::Run<bool,  3U>(_dimensions); break; }
-									case  4U: { Tests::AStar::Run<bool,  4U>(_dimensions); break; }
-									case  5U: { Tests::AStar::Run<bool,  5U>(_dimensions); break; }
-									case  6U: { Tests::AStar::Run<bool,  6U>(_dimensions); break; }
-									case  7U: { Tests::AStar::Run<bool,  7U>(_dimensions); break; }
-									case  8U: { Tests::AStar::Run<bool,  8U>(_dimensions); break; }
-									case  9U: { Tests::AStar::Run<bool,  9U>(_dimensions); break; }
-									case  10: { Tests::AStar::Run<bool, 10U>(_dimensions); break; }
-									case 11U: { Tests::AStar::Run<bool, 11U>(_dimensions); break; }
-									case 12U: { Tests::AStar::Run<bool, 12U>(_dimensions); break; }
-									case 13U: { Tests::AStar::Run<bool, 13U>(_dimensions); break; }
-									case 14U: { Tests::AStar::Run<bool, 14U>(_dimensions); break; }
-									case 15U: { Tests::AStar::Run<bool, 15U>(_dimensions); break; }
-									case 16U: { Tests::AStar::Run<bool, 16U>(_dimensions); break; }
-									default: {
-											throw std::runtime_error(
-												"Runtime testing has a limit of no more than 16 dimensions. "
-												"Include CHDR in your own program to extend this limit."
-											);
-									}
-								}
+								Tests::AStar::Run<bool>(_dimensions);
 							}
 							catch (const std::exception& e) {
 								Debug::Log(e);

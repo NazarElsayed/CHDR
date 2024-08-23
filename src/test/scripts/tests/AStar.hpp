@@ -41,7 +41,7 @@ namespace Test::Tests {
     public:
 
         template <typename Tm, const size_t Kd, typename Ts = uint32_t>
-        static void Run(const std::array<long unsigned, 2U> _dimensions) {
+        static void Run(const std::array<long unsigned, Kd> _dimensions) {
 
             // Define some aliases for types to simplify the syntax a little:
             using generator_t = Generator::Grid;
@@ -72,8 +72,8 @@ namespace Test::Tests {
 
             /* MAX DRAW SIZE */
             bool drawable (
-                            size[0] <= 100U &&
-                (Kd >= 1 || size[1] <= 100U)
+                (size[0U] <= 100U && size[1U] <= 100U) &&
+                (Kd > 0U && Kd < 3U)
             );
 
             /* TEST FOR SOLVABILITY: */
@@ -102,11 +102,11 @@ namespace Test::Tests {
                 pathfinding_log = "(A*): \t\t\t" + std::string(path.size() != 0U ? "[SOLVED]" : "[IMPOSSIBLE]") + "\t(" +
                     ToString(std::chrono::duration_cast<std::chrono::duration<long double>>(std::chrono::high_resolution_clock::now() - sw_start).count()) + ")";
 
-                if (drawable) {
+                if (drawable && (Kd > 0U && Kd < 3U)) {
                     display_t::DrawMaze(start, end, size, maze, path);
                 }
             }
-            else if (drawable) {
+            else if (drawable && (Kd > 0U && Kd < 3U)) {
                 display_t::DrawMaze(start, end, size, maze);
             }
 
