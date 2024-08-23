@@ -16,25 +16,38 @@ CHDR is designed to be fast and lightweight. Alongside data and algorithmic opti
 
 ### Features
 
-#### Algorithms
+#### Pathfinding Algorithms
 
-| Type                       |     Status      |
-|:---------------------------|:---------------:|
-| A-star (A*)                | In Progress 🏗️ |
-| Dijkstra's Algorithm       |   Planned 📝    |
-| Jump-Point Search (JPS)    |   Planned 📝    |
-| Depth-First Search (DFS)   |   Planned 📝    |
-| Breadth-First Search (BFS) |   Planned 📝    |
-| Fast Marching Method (FMM) |   Planned 📝    |
+| Type                                          |     Status      |
+|:----------------------------------------------|:---------------:|
+| A-star (A*)                                   |  Completed ✔️   |
+| Enhanced Simple Memory Bounded A-star (SMA*+) | In Progress 🏗️ |
+| Dijkstra's Algorithm                          |   Planned 📝    |
+| Jump-Point Search (JPS)                       |   Planned 📝    |
+| Depth-First Search (DFS)                      | In Progress 🏗️ |
+| Breadth-First Search (BFS)                    | In Progress 🏗️ |
 
 #### Maze types
 
 | Type      |     Status      |
 |:----------|:---------------:|
-| Grids     |  Completed ✔️   |
+| Grids     |  ️Completed ✔   |
 | Graphs    | In Progress 🏗️ |
 | Recursive |   Planned 📝    |
 | Fields    |  Completed ✔️   |
+
+#### Post-Processing
+
+| Type                |   Status   |
+|:--------------------|:----------:|
+| Path Smoothing      | Planned 📝 |
+| Path Simplification | Planned 📝 |
+
+#### Eikonal Solvers
+
+| Type                          |   Status   |
+|:------------------------------|:----------:|
+| Jump Flooding Algorithm (JFA) | Planned 📝 |
 
 #### Computational
 
