@@ -20,8 +20,8 @@ CHDR is designed to be fast and lightweight. Alongside data and algorithmic opti
 
 | Type                                          |     Status      |
 |:----------------------------------------------|:---------------:|
-| A-star (A*)                                   |  Completed ✔️   |
-| Enhanced Simple Memory Bounded A-star (SMA*+) | In Progress 🏗️ |
+| A-Star (A*)                                   |  Completed ✔️   |
+| Enhanced Simple Memory Bounded A-Star (SMA*+) | In Progress 🏗️ |
 | Dijkstra's Algorithm                          |   Planned 📝    |
 | Jump-Point Search (JPS)                       |   Planned 📝    |
 | Depth-First Search (DFS)                      | In Progress 🏗️ |
