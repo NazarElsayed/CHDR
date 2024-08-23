@@ -138,7 +138,7 @@ int main([[maybe_unused]] const int _argc, [[maybe_unused]] const char* _argv[])
                 break;
             }
             default: {
-                throw std::runtime_error("ERROR: Invalid Dimensionality! Please choose a value between 0 and 16.");
+                throw std::runtime_error("ERROR: Invalid Dimensionality! Please use between 2 and 16 arguments.");
             }
         }
     }
