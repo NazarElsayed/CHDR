@@ -57,6 +57,8 @@ CHDR is designed to be fast and lightweight. Alongside data and algorithmic opti
 | Compile-Time Routing                 |   Planned 📝    |
 | Dynamic Mazes and Obstacle-Avoidance |   Planned 📝    |
 | Maze Optimisation (Baking)           | In Progress 🏗️ |
+| Compile-Time K-dimensionality        |  Completed ✔️   |
+| Runtime K-dimensionality             | In Progress 🏗️ |
 
 ### Instructions
 
