@@ -108,9 +108,6 @@ namespace Test {
 		template<const size_t Kd>
 		static int Main(const CHDR::Coord<size_t, Kd> _dimensions) {
 
-		    //Print Version
-		    Debug::Log("CHDR Version: v" CHDR_VERSION, Info);
-
 			Debug::Log("Application::Main()", Info);
 
 			// Restrict Main() to one instance.

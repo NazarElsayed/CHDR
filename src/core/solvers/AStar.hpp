@@ -115,6 +115,9 @@ namespace CHDR::Solvers {
     public:
 
         void Solve(const Mazes::IMaze<Tm>& _maze) override {
+
+            (void)_maze; // Suppress unused variable warning.
+
             throw std::runtime_error("AStar::Solve(const Mazes::IMaze& _maze) Not implemented!");
         }
 
@@ -146,7 +149,7 @@ namespace CHDR::Solvers {
                     }
                     closedSet.Add(current.m_Coord);
 
-                    for (const auto neighbour : _maze.GetNeighbours(current.m_Coord)) {
+                    for (const auto& neighbour : _maze.GetNeighbours(current.m_Coord)) {
 
                         if (const auto [nActive, nValue] = neighbour; nActive) {
 

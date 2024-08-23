@@ -160,9 +160,11 @@ namespace Test::Generator::Utils {
 
             std::vector<Cell> result;
 
-            // Maze algo:
+#if __cplusplus >= 202002L
             try {
+#endif // __cplusplus >= 202002L
 
+                // Maze algo:
                 const auto seed = _seed == null_v ? std::random_device().operator()() : _seed;
                 std::mt19937 gen(seed);
 
@@ -224,12 +226,15 @@ namespace Test::Generator::Utils {
                 }
 
                 _end = farthest.first;
+
+#if __cplusplus >= 202002L
             }
             catch (const std::exception& e) {
                 Debug::Log(e);
 
                 _end = _start;
             }
+#endif // __cplusplus >= 202002L
 
             return result;
         }

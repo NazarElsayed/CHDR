@@ -5,11 +5,16 @@
 #include <ctime>
 #include <memory>
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunknown-pragmas"
 
 #pragma clang diagnostic push
+#endif //ifdef __clang__
+
+#ifdef __JETBRAINS_IDE__
 #pragma ide diagnostic ignored "performance-avoid-endl"
+#endif
 
 #include <csignal>
 #include <cstddef>
@@ -736,6 +741,8 @@ namespace {
 	
 } //
 
+#if defined(__clang__)
 #pragma clang diagnostic pop
+#endif
 
 #endif //LOUIERIKSSON_DEBUG_HPP

@@ -5,6 +5,8 @@
 
 namespace CHDR {
 
+    // TODO: Make heap use size_t!
+
     struct IHeapItem {
         int m_HeapIndex;
     };
@@ -100,11 +102,11 @@ namespace CHDR {
 
             while (true) {
 
-                if (leftChildIndex < m_Data.size()) {
+                if (leftChildIndex < static_cast<signed>(m_Data.size())) {
 
                     swapIndex = leftChildIndex;
 
-                    if (rightChildIndex < m_Data.size()) {
+                    if (rightChildIndex < static_cast<signed>(m_Data.size())) {
                         if (compare(m_Data[leftChildIndex], m_Data[rightChildIndex])) {
                             swapIndex = rightChildIndex;
                         }

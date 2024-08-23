@@ -10,11 +10,10 @@ int main([[maybe_unused]] const int _argc, [[maybe_unused]] const char* _argv[])
 
     int result = -1;
 
+    Debug::Log("CHDR " CHDR_VERSION, Info);
     Debug::Log("main()", Info);
 
     try {
-
-        Debug::Log("CHDR Version: v" CHDR_VERSION, Info);
 
         switch (_argc) {
             case 2U: {
