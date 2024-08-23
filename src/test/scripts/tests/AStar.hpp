@@ -71,9 +71,9 @@ namespace Test::Tests {
             //auto graph = CHDR::Mazes::Graph<Tm>(maze);
 
             /* MAX DRAW SIZE */
-            bool drawable (
-                (size[0U] <= 100U && size[1U] <= 100U) &&
-                (Kd > 0U && Kd < 3U)
+            const bool drawable (
+                size[0U] <= 100U && size[1U] <= 100U &&
+                Kd > 0U && Kd < 3U
             );
 
             /* TEST FOR SOLVABILITY: */

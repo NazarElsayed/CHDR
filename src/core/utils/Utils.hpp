@@ -327,14 +327,14 @@ namespace CHDR {
 		}
 
 		template <typename T>
-		static constexpr typename std::enable_if<std::is_integral<T>::value, bool>::type CheckMulOverflow(const T& a, const T& b) {
+		static constexpr std::enable_if_t<std::is_integral_v<T>, bool> CheckMulOverflow(const T& a, const T& b) {
 
 			bool result;
 
-			     if (a == 0 || b == 0) { result = false;                                   }
-			else if (a >  0 && b >  0) { result = a > (std::numeric_limits<T>::max() / b); }
-			else if (a <  0 && b <  0) { result = a < (std::numeric_limits<T>::max() / b); }
-			else {                       result = a < (std::numeric_limits<T>::min() / b); }
+			     if (a == 0 || b == 0) { result = false;                                 }
+			else if (a >  0 && b >  0) { result = a > std::numeric_limits<T>::max() / b; }
+			else if (a <  0 && b <  0) { result = a < std::numeric_limits<T>::max() / b; }
+			else {                       result = a < std::numeric_limits<T>::min() / b; }
 
 			return result;
 		}

@@ -5,7 +5,6 @@
 
 #include <Debug.hpp>
 
-#include <forward_list>
 #include <functional>
 #include <queue>
 #include <unordered_set>
@@ -121,15 +120,15 @@ namespace CHDR::Solvers {
             throw std::runtime_error("AStar::Solve(const Mazes::IMaze& _maze) Not implemented!");
         }
 
-        auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&)) const {
+        auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const size_t _capacity = 0U) const {
 
             std::vector<coord_t> result;
 
             const auto s = Utils::To1D(_start, _maze.Size());
             const auto e = Utils::To1D(_end,   _maze.Size());
 
-            DenseExistenceSet closedSet(std::max(s, e));
-            DenseExistenceSet dupes(std::max(s, e));
+            DenseExistenceSet closedSet({ s }, std::max(_capacity, std::max(s, e)));
+            DenseExistenceSet dupes(std::max(_capacity, std::max(s, e)));
 
             Heap<ASNode, typename ASNode::Max> openSet;
             openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
@@ -245,7 +244,7 @@ namespace CHDR::Solvers {
 
                                 if (const auto [nActive, nValue] = neighbour; nActive) {
 
-                                    auto nCoord = CHDR::Utils::To1D(nValue, _maze.Size());
+                                    auto nCoord = Utils::To1D(nValue, _maze.Size());
 
                                     if (nCoord != b.m_Coord) {
 
@@ -380,7 +379,7 @@ namespace CHDR::Solvers {
             return w;
         }
 
-        static bool HasSolution(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, size_t _capacity = 1U) {
+        static bool HasSolution(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, size_t _capacity = 0U) {
 
 	        bool result = false;
 
@@ -395,7 +394,7 @@ namespace CHDR::Solvers {
                 std::queue<size_t> openSet;
                 openSet.emplace(s);
 
-                DenseExistenceSet closedSet({ s }, std::max(s, e));
+                DenseExistenceSet closedSet({ s }, std::max(_capacity, std::max(s, e)));
 
                 while (!openSet.empty()) {
 

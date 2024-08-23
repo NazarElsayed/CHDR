@@ -16,10 +16,6 @@ namespace CHDR {
 
     public:
 
-        RelationalNode(const W& _value, const std::vector<Node<W>> _neighbors) :
-            Node<W>(_value),
-            m_Neighbors(_neighbors) {};
-
         /**
          * @brief Sets the node's neighbors.
          * @param _end The new neighbors.

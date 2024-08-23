@@ -10,7 +10,7 @@ namespace CHDR {
     struct Balanced           {}; /** @brief Each item is represented by 32 bits in memory. */
     struct HighestPerformance {}; /** @brief Each item is represented by the system size of a DWORD in memory. */
 
-    template<typename T>
+    template<typename>
     struct Alignment {};
     template<> struct Alignment<LowestMemoryUsage>  { using Type =      bool; };
     template<> struct Alignment<LowMemoryUsage>     { using Type =      char; };
@@ -111,7 +111,7 @@ namespace CHDR {
          * @param[in] _hash The hash value to check.
          * @return True if the hash exists in the set, false otherwise.
          */
-        [[nodiscard]] inline bool Contains(const size_t& _hash) const {
+        [[nodiscard]] bool Contains(const size_t& _hash) const {
             return _hash < m_Bits.size() && static_cast<bool>(m_Bits[_hash]);
         }
 

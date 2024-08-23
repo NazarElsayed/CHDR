@@ -10,7 +10,6 @@
 
 #include <vector>
 #include <array>
-#include <optional>
 
 namespace CHDR::Mazes {
 
@@ -188,7 +187,7 @@ namespace CHDR::Mazes {
         }
 
         [[nodiscard]] constexpr bool Contains(const size_t _coord) const {
-            return _coord < CHDR::Utils::Product<size_t>(m_Size);
+            return _coord < Utils::Product<size_t>(m_Size);
         }
     };
 

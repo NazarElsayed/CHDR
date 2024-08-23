@@ -98,13 +98,11 @@ namespace CHDR {
             int leftChildIndex  = (itemIndex * 2) + 1;
             int rightChildIndex = leftChildIndex + 1;
 
-            int swapIndex = 0;
-
             while (true) {
 
                 if (leftChildIndex < static_cast<signed>(m_Data.size())) {
 
-                    swapIndex = leftChildIndex;
+                    int swapIndex = leftChildIndex;
 
                     if (rightChildIndex < static_cast<signed>(m_Data.size())) {
                         if (compare(m_Data[leftChildIndex], m_Data[rightChildIndex])) {

@@ -48,12 +48,12 @@ namespace CHDR {
                 [[nodiscard]] static auto AbsSub_128v(const __m128i& _regA, const __m128i& _regB) {
 
                     // Perform A - B:
-                    const auto sub = _mm_sub_epi8(_regA, _regB);
+                    const auto sub = _mm_sub_epi8(_regA, _regB);                        // NOLINT(*-simd-intrinsics)
 
                     // Horizontal add:
                     __m128i sum1 = _mm_sad_epu8(sub, _mm_setzero_si128());
                     __m128i sum2 = _mm_shuffle_epi32(sum1, _MM_SHUFFLE(2, 3, 0, 1));
-                    __m128i finalSum = _mm_add_epi16(sum1, sum2);
+                    __m128i finalSum = _mm_add_epi16(sum1, sum2);                       // NOLINT(*-simd-intrinsics)
 
                     uint16_t resultOut;
                     memcpy(&resultOut, &finalSum, sizeof(resultOut)); // Copy first 2 bytes.
@@ -72,7 +72,7 @@ namespace CHDR {
                 [[nodiscard]] static auto AbsSub_128v(const __m128i& _regA, const __m128i& _regB) {
 
                     // Perform A - B:
-                    const auto sub = _mm_sub_epi16(_regA, _regB);
+                    const auto sub = _mm_sub_epi16(_regA, _regB);                       // NOLINT(*-simd-intrinsics)
 
                     // Horizontal add:
 #ifdef __SSSE3__
@@ -130,7 +130,7 @@ namespace CHDR {
                 [[nodiscard]] static auto AbsSub_128v(const __m128i& _regA, const __m128i& _regB) {
 
                     // Perform A - B:
-                    const auto sub = _mm_sub_epi32(_regA, _regB);
+                    const auto sub = _mm_sub_epi32(_regA, _regB);                       // NOLINT(*-simd-intrinsics)
 
                     __m128i resultOut{};
 
@@ -176,7 +176,7 @@ namespace CHDR {
                     result = _mm_abs_epi64(_value);
 #elif defined(__AVX2__)
                     __m128i sign = _mm_cmpgt_epi64(_mm_set1_epi64x(0), _value);
-                    result = _mm_sub_epi64(_mm_xor_si128(_value,sign), sign);
+                    result = _mm_sub_epi64(_mm_xor_si128(_value,sign), sign);           // NOLINT(*-simd-intrinsics)
 #else // #ifndef __AVX2__
 
                     // Implement it manually for older CPUs
@@ -196,7 +196,7 @@ namespace CHDR {
                     uint64_t result;
 
 #ifdef __SSE4_2__
-                    auto sub = _mm_sub_epi64(_regA, _regB);
+                    auto sub = _mm_sub_epi64(_regA, _regB);                             // NOLINT(*-simd-intrinsics)
                     sub = Abs_128v(sub);
 
                     // Unpack into 2 halves:
@@ -204,12 +204,12 @@ namespace CHDR {
                     const auto low = _mm_unpacklo_epi64(sub, sub);
 
                     // Horizontal add:
-                    const auto sum = _mm_add_epi64(high, low);
+                    const auto sum = _mm_add_epi64(high, low);                          // NOLINT(*-simd-intrinsics)
 
                     // Extract the lower 64-bit integer:
                     result = _mm_extract_epi64(sum, 0);
 
-#else // #ifndef __SSE4_1__
+#else // #ifndef __SSE4_2__
 
                     const auto   notB = _mm_xor_si128(_regB, _mm_set1_epi64x(-1)); // bitwise not
                     const auto minusB = _mm_add_epi64( notB, _mm_set1_epi64x( 1)); // add 1
@@ -222,7 +222,7 @@ namespace CHDR {
                     const auto* const output = reinterpret_cast<int64_t*>(&resultOut);
 
                     result = std::abs(output[0U]) + std::abs(output[1U]);
-#endif // __SSE4_1__
+#endif // __SSE4_2__
 
                     return result;
                 }
@@ -239,8 +239,8 @@ namespace CHDR {
 
                     float result;
 
-                    const auto sub = _mm_sub_ps(_regA, _regB);
-                    const auto sqr = _mm_mul_ps(sub, sub);
+                    const auto sub = _mm_sub_ps(_regA, _regB);                          // NOLINT(*-simd-intrinsics)
+                    const auto sqr = _mm_mul_ps(sub, sub);                              // NOLINT(*-simd-intrinsics)
 
                     // Horizontal add:
 #ifdef __SSSE3__
@@ -271,8 +271,8 @@ namespace CHDR {
 
                     double result;
 
-                    const auto sub = _mm_sub_pd(_regA, _regB);
-                    const auto sqr = _mm_mul_pd(sub, sub);
+                    const auto sub = _mm_sub_pd(_regA, _regB);                          // NOLINT(*-simd-intrinsics)
+                    const auto sqr = _mm_mul_pd(sub, sub);                              // NOLINT(*-simd-intrinsics)
 
                     // Horizontal add:
 #ifdef __SSSE3__
@@ -304,12 +304,12 @@ namespace CHDR {
          * @brief Computes the Euclidean distance between two nodes.
          *
          * @tparam Kd The number of dimensions of the nodes.
-         * @param _A The first node.
-         * @param _B The second node.
+         * @param _a The first node.
+         * @param _b The second node.
          * @return The Euclidean distance between _A and _B.
          */
-        [[nodiscard]] static constexpr auto EuclideanDistance(const coord_t& _A, const coord_t& _B) {
-            return static_cast<Ts>(std::sqrt(SqrEuclideanDistance(_A, _B)));
+        [[nodiscard]] static constexpr auto EuclideanDistance(const coord_t& _a, const coord_t& _b) {
+            return static_cast<Ts>(std::sqrt(SqrEuclideanDistance(_a, _b)));
         }
 
         /*
@@ -320,7 +320,7 @@ namespace CHDR {
          * @param _B The second node.
          * @return The squared Euclidean distance between _A and _B.
          */
-        [[nodiscard]] static constexpr auto SqrEuclideanDistance(const coord_t& _A, const coord_t& _B) {
+        [[nodiscard]] static constexpr auto SqrEuclideanDistance(const coord_t& _a, const coord_t& _b) {
 
             static_assert(Kd >= 0U, "Kd must be more than or equal to 0");
 
@@ -332,11 +332,11 @@ namespace CHDR {
                 if constexpr (Kd == 1U) {
 
 #if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
-                    _mm_prefetch(reinterpret_cast<const char* const>(&_A[0U]), _MM_HINT_T0);
-                    _mm_prefetch(reinterpret_cast<const char* const>(&_B[0U]), _MM_HINT_T0);
+                    _mm_prefetch(reinterpret_cast<const char* const>(&_a[0U]), _MM_HINT_T0);
+                    _mm_prefetch(reinterpret_cast<const char* const>(&_b[0U]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
 
-                    const auto val = _B[0U] - _A[0U];
+                    const auto val = _b[0U] - _a[0U];
                     result = static_cast<Ts>(val * val);
                 }
 
@@ -353,8 +353,8 @@ namespace CHDR {
 
                     float cr = 0.0F;
 
-                    const auto cA = Utils::ArrayCast<float>(_A);
-                    const auto cB = Utils::ArrayCast<float>(_B);
+                    const auto cA = Utils::ArrayCast<float>(_a);
+                    const auto cB = Utils::ArrayCast<float>(_b);
 
                     if constexpr (Kd == 3U) {
 
@@ -426,8 +426,8 @@ namespace CHDR {
                         for (; j < Kd; ++j) {
 
 #if defined(__GNUC__) || defined(__clang__)
-                            _mm_prefetch(reinterpret_cast<const char* const>(&_A[j]), _MM_HINT_T0);
-                            _mm_prefetch(reinterpret_cast<const char* const>(&_B[j]), _MM_HINT_T0);
+                            _mm_prefetch(reinterpret_cast<const char* const>(&_a[j]), _MM_HINT_T0);
+                            _mm_prefetch(reinterpret_cast<const char* const>(&_b[j]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
 
                             const auto val = cB[j] - cA[j];
@@ -441,8 +441,8 @@ namespace CHDR {
 
                     double cr = 0.0;
 
-                    const auto cA = Utils::ArrayCast<double>(_A);
-                    const auto cB = Utils::ArrayCast<double>(_B);
+                    const auto cA = Utils::ArrayCast<double>(_a);
+                    const auto cB = Utils::ArrayCast<double>(_b);
 
                     if constexpr (Kd == 2U) {
 
@@ -496,11 +496,11 @@ namespace CHDR {
                     for (size_t i = 0U; i < Kd; ++i) {
 
 #if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
-                        _mm_prefetch(reinterpret_cast<const char* const>(&_A[i]), _MM_HINT_T0);
-                        _mm_prefetch(reinterpret_cast<const char* const>(&_B[i]), _MM_HINT_T0);
+                        _mm_prefetch(reinterpret_cast<const char* const>(&_a[i]), _MM_HINT_T0);
+                        _mm_prefetch(reinterpret_cast<const char* const>(&_b[i]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
 
-                        const auto val = _B[i] - _A[i];
+                        const auto val = _b[i] - _a[i];
                         result += static_cast<Ts>(val * val);
                     }
                 }
@@ -513,11 +513,11 @@ namespace CHDR {
           * @brief Calculate the Manhattan distance between two nodes.
           *
           * @tparam Kd The number of dimensions of the nodes.
-          * @param _A The first node.
-          * @param _B The second node.
+          * @param _a The first node.
+          * @param _b The second node.
           * @return The Manhattan distance between _A and _B.
           */
-        [[nodiscard]] static constexpr auto ManhattanDistance(const coord_t& _A, const coord_t& _B) {
+        [[nodiscard]] static constexpr auto ManhattanDistance(const coord_t& _a, const coord_t& _b) {
 
             static_assert(Kd >= 0U, "Kd must be more than or equal to 0");
 
@@ -529,11 +529,11 @@ namespace CHDR {
                 if constexpr (Kd == 1U) {
 
 #if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
-                    _mm_prefetch(reinterpret_cast<const char* const>(&_A[0U]), _MM_HINT_T0);
-                    _mm_prefetch(reinterpret_cast<const char* const>(&_B[0U]), _MM_HINT_T0);
+                    _mm_prefetch(reinterpret_cast<const char* const>(&_a[0U]), _MM_HINT_T0);
+                    _mm_prefetch(reinterpret_cast<const char* const>(&_b[0U]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
 
-                    result = static_cast<Ts>(std::abs(static_cast<signed>(_B[0U]) - static_cast<signed>(_A[0U])));
+                    result = static_cast<Ts>(std::abs(static_cast<signed>(_b[0U]) - static_cast<signed>(_a[0U])));
                 }
 
                 /* TODO: Add SIMD for other instructions sets than SSE2:
@@ -547,8 +547,8 @@ namespace CHDR {
 
                 if constexpr (std::is_same_v<Ts, uint32_t> || std::is_same_v<Ts, int32_t> || std::is_same_v<Ts, float>) {
 
-                    const auto cA = Utils::ArrayCast<uint32_t>(_A);
-                    const auto cB = Utils::ArrayCast<uint32_t>(_B);
+                    const auto cA = Utils::ArrayCast<uint32_t>(_a);
+                    const auto cB = Utils::ArrayCast<uint32_t>(_b);
 
                     if constexpr (Kd == 3U) {
 
@@ -630,8 +630,8 @@ namespace CHDR {
                 }
                 else if constexpr (std::is_same_v<Ts, uint64_t> || std::is_same_v<Ts, int64_t> || std::is_same_v<Ts, double>) {
 
-                    const auto cA = Utils::ArrayCast<uint64_t>(_A);
-                    const auto cB = Utils::ArrayCast<uint64_t>(_B);
+                    const auto cA = Utils::ArrayCast<uint64_t>(_a);
+                    const auto cB = Utils::ArrayCast<uint64_t>(_b);
 
                     if constexpr (Kd == 2U) {
 
@@ -683,11 +683,11 @@ namespace CHDR {
                     for (size_t i = 0U; i < Kd; ++i) {
 
 #if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
-                        _mm_prefetch(reinterpret_cast<const char* const>(&_A[i]), _MM_HINT_T0);
-                        _mm_prefetch(reinterpret_cast<const char* const>(&_B[i]), _MM_HINT_T0);
+                        _mm_prefetch(reinterpret_cast<const char* const>(&_a[i]), _MM_HINT_T0);
+                        _mm_prefetch(reinterpret_cast<const char* const>(&_b[i]), _MM_HINT_T0);
 #endif // __GNUC__ || __clang__
 
-                        result += static_cast<Ts>(std::abs(static_cast<signed>(_B[i]) - static_cast<signed>(_A[i])));
+                        result += static_cast<Ts>(std::abs(static_cast<signed>(_b[i]) - static_cast<signed>(_a[i])));
                     }
                 }
             }

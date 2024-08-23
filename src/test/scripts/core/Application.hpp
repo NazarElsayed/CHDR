@@ -62,8 +62,7 @@ namespace Test {
 
 					std::string reason = "NULL";
 
-					auto critical_error = std::current_exception();
-					if (critical_error != nullptr) {
+					if (const auto critical_error = std::current_exception(); critical_error != nullptr) {
 
 						try {
 							std::rethrow_exception(critical_error);

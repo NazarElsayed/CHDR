@@ -208,15 +208,16 @@ namespace Test::Generator::Utils {
 
                             if (!edge) {
 
-                                const auto obstacle_chance = static_cast<float>(gen()) / static_cast<float>(std::mt19937::max());
-
-                                if (obstacle_chance < _obstacles) {
+                                if (const auto obstacle_chance = static_cast<float>(gen()) / static_cast<float>(std::mt19937::max());
+                                    obstacle_chance < _obstacles
+                                ) {
                                     result[CHDR::Utils::To1D<size_t>(c, _size)] = WALL;
                                 }
                                 else {
-                                    const auto loop_chance = static_cast<float>(gen()) / static_cast<float>(std::mt19937::max());
-
-                                    if (loop_chance < _loops) {
+                                    
+                                    if (const auto loop_chance = static_cast<float>(gen()) / static_cast<float>(std::mt19937::max());
+                                        loop_chance < _loops
+                                    ) {
                                         result[CHDR::Utils::To1D<size_t>(c, _size)] = PATH;
                                     }
                                 }

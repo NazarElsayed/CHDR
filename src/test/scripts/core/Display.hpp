@@ -64,8 +64,7 @@ namespace Test {
                     }
 
                     // Handle end of line:
-                    const bool end_of_line = (Kd == 1U && i == _size[0U] - 1U) || ((i + 1U) % _size[0U] == 0U);
-                    if (end_of_line) {
+                    if (const bool end_of_line = (Kd == 1U && i == _size[0U] - 1U) || (i + 1U) % _size[0U] == 0U) {
                         if (!even_width) {
                             std::cout << wall_str;
                         }
@@ -76,8 +75,9 @@ namespace Test {
 
             // Handle the addition of a lower boundary:
             {
-                const bool even_height = Kd > 1U && _size[1U] % 2U == 0U;
-                if (!even_height) {
+                if (const bool even_height = Kd > 1U && _size[1U] % 2U == 0U;
+                    !even_height
+                ) {
 
                     const auto columns = _size[0U] + (even_width ? 1U : 2U);
                     for (size_t i = 0U; i < columns; ++i) {
@@ -142,8 +142,7 @@ namespace Test {
                     }
 
                     // Handle end of line:
-                    const bool end_of_line = (Kd == 1U && i == _size[0U] - 1U) || ((i + 1U) % _size[0U] == 0U);
-                    if (end_of_line) {
+                    if (const bool end_of_line = (Kd == 1U && i == _size[0U] - 1U) || (i + 1U) % _size[0U] == 0U) {
                         if (!even_width) {
                             std::cout << wall_str;
                         }
@@ -154,8 +153,9 @@ namespace Test {
 
             // Handle the addition of a lower boundary:
             {
-                const bool even_height = Kd > 1U && _size[1U] % 2U == 0U;
-                if (!even_height) {
+                if (const bool even_height = Kd > 1U && _size[1U] % 2U == 0U;
+                    !even_height
+                ) {
 
                     const auto columns = _size[0U] + (even_width ? 1U : 2U);
                     for (size_t i = 0U; i < columns; ++i) {
