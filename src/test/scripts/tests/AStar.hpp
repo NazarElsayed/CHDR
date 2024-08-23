@@ -41,7 +41,7 @@ namespace Test::Tests {
     public:
 
         template <typename Tm, const size_t Kd, typename Ts = uint32_t>
-        static void Run() {
+        static void Run(const std::array<long unsigned, 2U> _dimensions) {
 
             // Define some aliases for types to simplify the syntax a little:
             using generator_t = Generator::Grid;
@@ -56,7 +56,7 @@ namespace Test::Tests {
             // Test parameters:
             constexpr size_t seed(0U);
 
-            constexpr coord_t size  { 40000U, 10000U };
+            const     coord_t size = _dimensions;
             constexpr coord_t start {};
                       coord_t end;
 
