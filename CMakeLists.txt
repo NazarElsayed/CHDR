@@ -4,7 +4,7 @@ project(CHDR VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-configure_file(CHDR_Version.h.in CHDR_Version.h)
+configure_file(CHDR_Version.hpp.in CHDR_Version.hpp)
 
 # DETECT ARCHITECTURE FOR SIMD OPTIMISATION:
 
@@ -171,7 +171,7 @@ target_precompile_headers(CHDR INTERFACE src/core/stdafx.hpp)
 
 # LINK OPTIONS:
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
-    target_link_options(Test PRIVATE  -flto=auto -Wl,--strip-all -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
+    target_link_options(Test PRIVATE -flto=auto -Wl,--strip-all -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
 else()
     target_link_options(Test PRIVATE -flto=auto -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
 endif()

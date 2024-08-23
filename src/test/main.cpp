@@ -6,9 +6,18 @@
  * @file main.cpp
  * @brief Global entry point.
  */
-int main([[maybe_unused]] int _argc, [[maybe_unused]] char* _argv[]) {
+int main([[maybe_unused]] const int _argc, [[maybe_unused]] const char* _argv[]) {
 
-    Debug::Log("main()", Info);
+    int exitCode = 0;
 
-    return Test::Application::Main();
+    Debug::Log("CHDR Version: v" CHDR_VERSION, Info);
+
+    if (_argc > 2) {
+        Debug::Log("main()", Info);
+
+        const std::array<long unsigned, 2U> dimensions = {std::stoul(_argv[1]), std::stoul(_argv[2])};
+        exitCode = Test::Application::Main(dimensions);
+    }
+
+    return exitCode;
 }

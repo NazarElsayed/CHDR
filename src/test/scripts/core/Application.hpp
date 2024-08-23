@@ -105,10 +105,10 @@ namespace Test {
 		 *
 		 * @return An integer error code (0 for successful execution)
 		 */
-		static int Main() {
+		static int Main(const std::array<long unsigned, 2U> _dimensions) {
 
 		    //Print Version
-		    std::cout << "CHDR Version: v" << CHDR_VERSION << std::endl;
+		    Debug::Log("CHDR Version: v" CHDR_VERSION, Info);
 
 			Debug::Log("Application::Main()", Info);
 
@@ -139,7 +139,7 @@ namespace Test {
 							/* Put tests here */
 
 							try {
-								Tests::AStar::Run<bool, 2U>();
+								Tests::AStar::Run<bool, 2U>(std::array<long unsigned, 2U>(_dimensions));
 							}
 							catch (const std::exception& e) {
 								Debug::Log(e);
