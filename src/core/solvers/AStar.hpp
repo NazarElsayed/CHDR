@@ -127,8 +127,17 @@ namespace CHDR::Solvers {
 
                     // Recurse from end node to start node, inserting into a result buffer:
                     result.reserve(current.m_GScore);
-                    for (const auto* temp = &current; temp->m_Parent != nullptr; temp = temp->m_Parent.get()) {
-                        result.emplace_back(Utils::ToND(temp->m_Coord, _maze.Size()));
+                    result.emplace_back(Utils::ToND(current.m_Coord, _maze.Size()));
+
+                    if (current.m_Parent != nullptr) {
+
+                        for (auto item = current.m_Parent; item->m_Parent != nullptr;) {
+                            result.emplace_back(Utils::ToND(item->m_Coord, _maze.Size()));
+                            
+                            auto oldItem = item;
+                            item = item->m_Parent;
+                            oldItem.reset();
+                        }
                     }
 
                     // Reverse the result:
@@ -140,7 +149,6 @@ namespace CHDR::Solvers {
 
             return result;
         }
-
     };
 
 } // CHDR::Solvers
