@@ -145,10 +145,20 @@ namespace CHDR::Solvers {
                     }
 
                     // Perform GC:
-                    for (auto* item : garbage) {
+                    for (auto it = garbage.begin(); it != garbage.end();) {
+
+                        auto* item = *it;
+#ifndef NDEBUG
+                        if (item == nullptr) { Debug::Break(); }
+#endif // !NDEBUG
                         delete item;
                         item = nullptr;
+
+                        it = garbage.erase(it);
                     }
+#ifndef NDEBUG
+                    if (!garbage.empty()) { Debug::Break(); }
+#endif // !NDEBUG
 
                     // Reverse the result:
                     std::reverse(result.begin(), result.end());
