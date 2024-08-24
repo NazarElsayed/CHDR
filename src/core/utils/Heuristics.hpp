@@ -41,10 +41,24 @@ namespace CHDR {
 
         struct SIMDExtensions {
 
-            static constexpr void Prefetch(const void* __P, const _mm_hint __I) {
+            static constexpr void Prefetch(const void* __P, const _mm_hint& __I) {
 
 #if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
-                    _mm_prefetch(__P, __I);
+
+                switch (__I) {
+                    case _MM_HINT_T0:  { _mm_prefetch(__P, _MM_HINT_T0 ); break; }
+                    case _MM_HINT_T1:  { _mm_prefetch(__P, _MM_HINT_T1 ); break; }
+                    case _MM_HINT_T2:  { _mm_prefetch(__P, _MM_HINT_T2 ); break; }
+                    case _MM_HINT_NTA: { _mm_prefetch(__P, _MM_HINT_NTA); break; }
+                    default: {
+#ifndef NDEBUG
+                        Debug::Log("Unknown Cache Hint!", Error);
+#endif
+                        Debug::Break();
+                        break;
+                    }
+                }
+
 #endif // __SSE__ && (__GNUC__ || __clang__ )
 
             }
@@ -339,8 +353,8 @@ namespace CHDR {
                 // No need for SIMD if there's only one element.
                 if constexpr (Kd == 1U) {
 
-                    SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&_a[0U]), _MM_HINT_T0);
-                    SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&_b[0U]), _MM_HINT_T0);
+                    SIMDExtensions::Prefetch(&_a[0U], _MM_HINT_T0);
+                    SIMDExtensions::Prefetch(&_b[0U], _MM_HINT_T0);
 
                     const auto val = _b[0U] - _a[0U];
                     result = static_cast<Ts>(val * val);
@@ -364,8 +378,8 @@ namespace CHDR {
 
                     if constexpr (Kd == 3U) {
 
-                        SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cA[2U]), _MM_HINT_T0);
-                        SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cB[2U]), _MM_HINT_T0);
+                        SIMDExtensions::Prefetch(&cA[2U], _MM_HINT_T0);
+                        SIMDExtensions::Prefetch(&cB[2U], _MM_HINT_T0);
 
                         cr = SIMDExtensions::Float32::SqrSub_128v(
                             _mm_set_ps(0, cA[0U], cA[1U], cA[2U]),
@@ -374,8 +388,8 @@ namespace CHDR {
                     }
                     if constexpr (Kd == 4U) {
 
-                        SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cA[3U]), _MM_HINT_T0);
-                        SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cB[3U]), _MM_HINT_T0);
+                        SIMDExtensions::Prefetch(&cA[3U], _MM_HINT_T0);
+                        SIMDExtensions::Prefetch(&cB[3U], _MM_HINT_T0);
 
                         cr = SIMDExtensions::Float32::Sub_128v(
                             _mm_load_ps(&cA),
@@ -389,8 +403,8 @@ namespace CHDR {
                         size_t j{};
                         for (j = 0U; j < (Kd - r); j += 4U) {
 
-                            SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cA[j + 3U]), _MM_HINT_T0);
-                            SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cB[j + 3U]), _MM_HINT_T0);
+                            SIMDExtensions::Prefetch(&cA[j + 3U], _MM_HINT_T0);
+                            SIMDExtensions::Prefetch(&cB[j + 3U], _MM_HINT_T0);
 
                             cr += SIMDExtensions::Float32::Sub_128v(
                                 _mm_set_ps(cA[j], cA[j + 1U], cA[j + 2U], cA[j + 3U]),
@@ -400,8 +414,8 @@ namespace CHDR {
 
                         if (j - r == 1U) {
 
-                            SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cA[j + 2U]), _MM_HINT_T0);
-                            SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cB[j + 2U]), _MM_HINT_T0);
+                            SIMDExtensions::Prefetch(&cA[j + 2U], _MM_HINT_T0);
+                            SIMDExtensions::Prefetch(&cB[j + 2U], _MM_HINT_T0);
 
                             result += static_cast<Ts>(SIMDExtensions::Float32::Sub_128v(
                                 _mm_set_epi32(0, cA[j], cA[j + 1U], cA[j + 2U]),
@@ -410,8 +424,8 @@ namespace CHDR {
                         }
                         else if (j - r == 2U) {
 
-                            SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cA[j + 1U]), _MM_HINT_T0);
-                            SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cB[j + 1U]), _MM_HINT_T0);
+                            SIMDExtensions::Prefetch(&cA[j + 1U], _MM_HINT_T0);
+                            SIMDExtensions::Prefetch(&cB[j + 1U], _MM_HINT_T0);
 
                             result += static_cast<Ts>(SIMDExtensions::Float32::Sub_128v(
                                 _mm_set_epi32(0, 0, cA[j], cA[j + 1U]),
@@ -421,8 +435,8 @@ namespace CHDR {
 
                         for (; j < Kd; ++j) {
 
-                            SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&_a[j]), _MM_HINT_T0);
-                            SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&_b[j]), _MM_HINT_T0);
+                            SIMDExtensions::Prefetch(&_a[j], _MM_HINT_T0);
+                            SIMDExtensions::Prefetch(&_b[j], _MM_HINT_T0);
 
                             const auto val = cB[j] - cA[j];
                             cr += static_cast<float>(val * val);
@@ -440,8 +454,8 @@ namespace CHDR {
 
                     if constexpr (Kd == 2U) {
 
-                        SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cA[1U]), _MM_HINT_T0);
-                        SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cB[1U]), _MM_HINT_T0);
+                        SIMDExtensions::Prefetch(&cA[1U], _MM_HINT_T0);
+                        SIMDExtensions::Prefetch(&cB[1U], _MM_HINT_T0);
 
                         cr = SIMDExtensions::Float64::Sub_128v(
                             _mm_load_pd(&cA[0]),
@@ -455,8 +469,8 @@ namespace CHDR {
                         size_t j{};
                         for (j = 0U; j < (Kd - r); j += 2U) {
 
-                            SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cA[j + 1U]), _MM_HINT_T0);
-                            SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cB[j + 1U]), _MM_HINT_T0);
+                            SIMDExtensions::Prefetch(&cA[j + 1U], _MM_HINT_T0);
+                            SIMDExtensions::Prefetch(&cB[j + 1U], _MM_HINT_T0);
 
                             cr += SIMDExtensions::Float64::SqrSub_128v(
                                 _mm_set_pd(cA[j], cA[j + 1U]),
@@ -466,8 +480,8 @@ namespace CHDR {
 
                         for (; j < Kd; ++j) {
 
-                            SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cA[j]), _MM_HINT_T0);
-                            SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cB[j]), _MM_HINT_T0);
+                            SIMDExtensions::Prefetch(&cA[j], _MM_HINT_T0);
+                            SIMDExtensions::Prefetch(&cB[j], _MM_HINT_T0);
 
                             const auto val = cB[j] - cA[j];
                             cr += static_cast<double>(val * val);
@@ -483,8 +497,8 @@ namespace CHDR {
                     // Non-SIMD fallback:
                     for (size_t i = 0U; i < Kd; ++i) {
 
-                        SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&_a[i]), _MM_HINT_T0);
-                        SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&_b[i]), _MM_HINT_T0);
+                        SIMDExtensions::Prefetch(&_a[i], _MM_HINT_T0);
+                        SIMDExtensions::Prefetch(&_b[i], _MM_HINT_T0);
 
                         const auto val = _b[i] - _a[i];
                         result += static_cast<Ts>(val * val);
@@ -514,8 +528,8 @@ namespace CHDR {
                 // No need for SIMD if there's only one element.
                 if constexpr (Kd == 1U) {
 
-                    SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&_a[0U]), _MM_HINT_T0);
-                    SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&_b[0U]), _MM_HINT_T0);
+                    SIMDExtensions::Prefetch(&_a[0U], _MM_HINT_T0);
+                    SIMDExtensions::Prefetch(&_b[0U], _MM_HINT_T0);
 
                     result = static_cast<Ts>(std::abs(static_cast<signed>(_b[0U]) - static_cast<signed>(_a[0U])));
                 }
@@ -536,8 +550,8 @@ namespace CHDR {
 
                     if constexpr (Kd == 3U) {
 
-                        SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cA[2U]), _MM_HINT_T0);
-                        SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cB[2U]), _MM_HINT_T0);
+                        SIMDExtensions::Prefetch(&cA[2U], _MM_HINT_T0);
+                        SIMDExtensions::Prefetch(&cB[2U], _MM_HINT_T0);
 
                         result = static_cast<Ts>(SIMDExtensions::Uint32::AbsSub_128v(
                             _mm_set_epi32(0, cA[0U], cA[1U], cA[2U]),
@@ -546,8 +560,8 @@ namespace CHDR {
                     }
                     if constexpr (Kd == 4U) {
 
-                        SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cA[3U]), _MM_HINT_T0);
-                        SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cB[3U]), _MM_HINT_T0);
+                        SIMDExtensions::Prefetch(&cA[3U], _MM_HINT_T0);
+                        SIMDExtensions::Prefetch(&cB[3U], _MM_HINT_T0);
 
                         result = static_cast<Ts>(SIMDExtensions::Uint32::AbsSub_128v(
                             _mm_load_si128(reinterpret_cast<__m128i const*>(&cA)),
@@ -561,8 +575,8 @@ namespace CHDR {
                         size_t j{};
                         for (j = 0U; j < (Kd - r); j += 4U) {
 
-                            SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cA[j + 3U]), _MM_HINT_T0);
-                            SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cB[j + 3U]), _MM_HINT_T0);
+                            SIMDExtensions::Prefetch(&cA[j + 3U], _MM_HINT_T0);
+                            SIMDExtensions::Prefetch(&cB[j + 3U], _MM_HINT_T0);
 
                             result += static_cast<Ts>(SIMDExtensions::Uint32::AbsSub_128v(
                                 _mm_set_epi32(cA[j], cA[j + 1U], cA[j + 2U], cA[j + 3U]),
@@ -572,8 +586,8 @@ namespace CHDR {
 
                         if (j - r == 1U) {
 
-                            SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cA[j + 2U]), _MM_HINT_T0);
-                            SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cB[j + 2U]), _MM_HINT_T0);
+                            SIMDExtensions::Prefetch(&cA[j + 2U], _MM_HINT_T0);
+                            SIMDExtensions::Prefetch(&cB[j + 2U], _MM_HINT_T0);
 
                             result += static_cast<Ts>(SIMDExtensions::Uint32::AbsSub_128v(
                                 _mm_set_epi32(0, cA[j], cA[j + 1U], cA[j + 2U]),
@@ -582,8 +596,8 @@ namespace CHDR {
                         }
                         else if (j - r == 2U) {
 
-                            SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cA[j + 1U]), _MM_HINT_T0);
-                            SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cB[j + 1U]), _MM_HINT_T0);
+                            SIMDExtensions::Prefetch(&cA[j + 1U], _MM_HINT_T0);
+                            SIMDExtensions::Prefetch(&cB[j + 1U], _MM_HINT_T0);
 
                             result += static_cast<Ts>(SIMDExtensions::Uint32::AbsSub_128v(
                                 _mm_set_epi32(0, 0, cA[j], cA[j + 1U]),
@@ -593,8 +607,8 @@ namespace CHDR {
 
                         for (; j < Kd; ++j) {
 
-                            SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cA[j]), _MM_HINT_T0);
-                            SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cB[j]), _MM_HINT_T0);
+                            SIMDExtensions::Prefetch(&cA[j], _MM_HINT_T0);
+                            SIMDExtensions::Prefetch(&cB[j], _MM_HINT_T0);
 
                             result += static_cast<Ts>(std::abs(static_cast<signed>(cB[j]) - static_cast<signed>(cA[j])));
                         }
@@ -607,8 +621,8 @@ namespace CHDR {
 
                     if constexpr (Kd == 2U) {
 
-                        SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cA[1U]), _MM_HINT_T0);
-                        SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cB[1U]), _MM_HINT_T0);
+                        SIMDExtensions::Prefetch(&cA[1U], _MM_HINT_T0);
+                        SIMDExtensions::Prefetch(&cB[1U], _MM_HINT_T0);
 
                         result = static_cast<Ts>(SIMDExtensions::Uint64::AbsSub_128v(
                             _mm_load_si128(reinterpret_cast<__m128i const*>(&cA)),
@@ -622,8 +636,8 @@ namespace CHDR {
                         size_t j{};
                         for (j = 0U; j < (Kd - r); j += 2U) {
 
-                            SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cA[j + 1U]), _MM_HINT_T0);
-                            SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cB[j + 1U]), _MM_HINT_T0);
+                            SIMDExtensions::Prefetch(&cA[j + 1U], _MM_HINT_T0);
+                            SIMDExtensions::Prefetch(&cB[j + 1U], _MM_HINT_T0);
 
                             result += static_cast<Ts>(SIMDExtensions::Uint64::AbsSub_128v(
                                 _mm_set_epi64x(cA[j], cA[j + 1U]),
@@ -633,8 +647,8 @@ namespace CHDR {
 
                         for (; j < Kd; ++j) {
 
-                            SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cA[j]), _MM_HINT_T0);
-                            SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&cB[j]), _MM_HINT_T0);
+                            SIMDExtensions::Prefetch(&cA[j], _MM_HINT_T0);
+                            SIMDExtensions::Prefetch(&cB[j], _MM_HINT_T0);
 
                             result += static_cast<Ts>(std::abs(static_cast<signed>(cB[j]) - static_cast<signed>(cA[j])));
                         }
@@ -648,8 +662,8 @@ namespace CHDR {
                     // Non-SIMD fallback:
                     for (size_t i = 0U; i < Kd; ++i) {
 
-                        SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&_a[i]), _MM_HINT_T0);
-                        SIMDExtensions::Prefetch(reinterpret_cast<const char* const>(&_b[i]), _MM_HINT_T0);
+                        SIMDExtensions::Prefetch(&_a[i], _MM_HINT_T0);
+                        SIMDExtensions::Prefetch(&_b[i], _MM_HINT_T0);
 
                         result += static_cast<Ts>(std::abs(static_cast<signed>(_b[i]) - static_cast<signed>(_a[i])));
                     }
