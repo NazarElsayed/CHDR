@@ -33,9 +33,9 @@ namespace CHDR::Solvers {
             Ts m_GScore;
             Ts m_FScore;
 
-            ASNode* m_Parent;
+            const ASNode* m_Parent;
 
-            [[nodiscard]] constexpr ASNode(const size_t& _coord, const Ts& _gScore, const Ts& _hScore, ASNode* _parent) : IHeapItem(),
+            [[nodiscard]] constexpr ASNode(const size_t& _coord, const Ts& _gScore, const Ts& _hScore, const ASNode* const _parent) : IHeapItem(),
                 m_Coord (_coord),
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
@@ -83,13 +83,25 @@ namespace CHDR::Solvers {
             Heap<ASNode, typename ASNode::Max> openSet;
             openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
+#ifndef NDEBUG
+            std::unordered_set<const ASNode*> debug_heap_allocations;
+#endif
+
             while (!openSet.Empty()) {
 
-                const ASNode current = openSet.Top();
+                ASNode current = openSet.Top();
                 openSet.RemoveFirst();
                 dupes.Remove(current.m_Coord);
 
                 if (current.m_Coord != e) { // SEARCH FOR SOLUTION...
+
+                    if (current.m_Parent != nullptr) {
+#ifndef NDEBUG
+                        debug_heap_allocations.erase(current.m_Parent);
+#endif
+                        delete current.m_Parent;
+                        current.m_Parent = nullptr;
+                    }
 
                     while (closedSet.Capacity() <= current.m_Coord) {
                         closedSet.Reserve(std::min(closedSet.Capacity() * 2U, Utils::Product<size_t>(_maze.Size())));
@@ -112,7 +124,15 @@ namespace CHDR::Solvers {
                                 dupes.Add(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), new ASNode(std::move(current)) });
+                                {
+                                    const auto* const moved = new ASNode(std::move(current));
+                                    openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), moved });
+#ifndef NDEBUG
+                                    if (debug_heap_allocations.find(moved) == debug_heap_allocations.end()) {
+                                        debug_heap_allocations.insert(moved);
+                                    }
+#endif
+                                }
                             }
                         }
                     }
@@ -124,7 +144,7 @@ namespace CHDR::Solvers {
                         dupes.Clear();
 
                     // Keep a record of data to be freed.
-                    std::unordered_set<ASNode*> garbage;
+                    std::unordered_set<const ASNode*> garbage;
 
                     // Move heap data into garbage:
                     while (!openSet.Empty()) {
@@ -132,7 +152,8 @@ namespace CHDR::Solvers {
                         auto item = openSet.Top();
                         openSet.RemoveFirst();
 
-                        if (item.m_Parent != nullptr && (garbage.find(item.m_Parent) != garbage.end())) {
+                        // Check for undisposed heap data:
+                        if (item.m_Parent != nullptr && (garbage.find(item.m_Parent) == garbage.end())) {
                             garbage.emplace(item.m_Parent);
                         }
                     }
@@ -142,23 +163,19 @@ namespace CHDR::Solvers {
                     result.reserve(current.m_GScore);
                     for (const auto* temp = &current; temp->m_Parent != nullptr; temp = temp->m_Parent) {
                         result.emplace_back(Utils::ToND(temp->m_Coord, _maze.Size()));
+
+                        // Check for undisposed heap data:
+                        if (temp->m_Parent != nullptr && (garbage.find(temp->m_Parent) == garbage.end())) {
+                            garbage.emplace(temp->m_Parent);
+                        }
                     }
 
                     // Perform GC:
-                    for (auto it = garbage.begin(); it != garbage.end();) {
-
-                        auto* item = *it;
 #ifndef NDEBUG
-                        if (item == nullptr) { Debug::Break(); }
-#endif // !NDEBUG
-                        delete item;
-                        item = nullptr;
-
-                        it = garbage.erase(it);
-                    }
-#ifndef NDEBUG
-                    if (!garbage.empty()) { Debug::Break(); }
-#endif // !NDEBUG
+                    GC(garbage, debug_heap_allocations);    // GC with safety checks.
+#else
+                    GC(garbage);                            // 'unsafe' GC.
+#endif
 
                     // Reverse the result:
                     std::reverse(result.begin(), result.end());
@@ -169,6 +186,69 @@ namespace CHDR::Solvers {
 
             return result;
         }
+
+#ifndef NDEBUG
+
+        static void GC(std::unordered_set<const ASNode*>& _garbage, std::unordered_set<const ASNode*> _allocations) {
+
+            const size_t allocs = _allocations.size();
+                  size_t  frees = 0U;
+
+            for (auto it = _garbage.begin(); it != _garbage.end(); it = _garbage.erase(it), ++frees) {
+
+                auto* item = *it;
+
+                if (item == nullptr) {
+                    Debug::Log(
+                        "\tUndefined Behaviour! REASON: nullptr access - possible double-free!"
+                        " Allocations: " + std::to_string(allocs) +
+                        " Frees: "       + std::to_string(frees),
+                        Critical
+                   );
+                }
+
+                if (_allocations.find(item) == _allocations.end()) {
+                    Debug::Log(
+                        "\tPossible Undefined Behaviour! REASON: Managed state of deletion candidate unknown!"
+                        " Allocations: " + std::to_string(allocs) +
+                        " Frees: "       + std::to_string(frees),
+                        Critical
+                   );
+                }
+
+                delete item;
+                item = nullptr;
+            }
+
+            if (!_garbage.empty()) {
+                Debug::Log(
+                    "\tPossible Memory Leak! REASON: Garbage not fully disposed!"
+                    " Allocations: " + std::to_string(allocs) +
+                    " Frees: "       + std::to_string(frees),
+                    Critical
+               );
+            }
+
+            if (frees != allocs) {
+                Debug::Log(
+                    "\tMemory Leak Detected! REASON: Alloc-Free Mismatch!"
+                    " Allocations: " + std::to_string(allocs) +
+                    " Frees: "       + std::to_string(frees),
+                    Critical
+               );
+            }
+        }
+
+#else // NDEBUG
+
+        static void GC(std::unordered_set<const ASNode*>& _garbage) {
+
+            for (auto it = _garbage.begin(); it != _garbage.end(); it = _garbage.erase(it)) {
+                delete *it;
+            }
+        }
+
+#endif // NDEBUG
 
     };
 
