@@ -14,6 +14,8 @@ namespace Test::Generator {
 
 			static_assert(std::is_integral_v<T>, "Type T must be an integral type.");
 
+            Debug::Log("(Maze):");
+
 			using Backtracking = Utils::Backtracking<Kd>;
 
 			std::array size { _size... };
@@ -26,6 +28,8 @@ namespace Test::Generator {
 			for (size_t i = 0U; i < maze.size(); ++i) {
 				result.emplace_back(maze[i] == Backtracking::WALL);
 			}
+
+            Debug::Log("\t[GENERATED] \t(~" + CHDR::Utils::Trim_Trailing_Zeros(std::to_string(CHDR::Utils::Product<size_t>(size) / static_cast<long double>(1000000000.0))) + "b total candidate nodes)");
 
 			return result;
 		}

@@ -338,6 +338,31 @@ namespace CHDR {
 
 			return result;
 		}
+
+        static std::string Trim_Trailing_Zeros(std::string _str) {
+
+            _str.erase(_str.find_last_not_of('0') + 1, std::string::npos);
+
+            if (_str.back() == '.') {
+                _str.pop_back();
+            }
+
+            return _str;
+        }
+
+        static std::string ToString(long double _duration) {
+
+            static std::array<std::string, 4> units = { "s", "ms", "µs", "ns" };
+
+            size_t i = 0U;
+            while (i < units.size() && _duration < 1.0) {
+                _duration *= 1000.0;
+                ++i;
+            }
+
+            return Trim_Trailing_Zeros(std::to_string(_duration)) + units[i];
+        }
+
 	};
 
 } // CHDR

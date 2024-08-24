@@ -14,30 +14,6 @@ namespace Test::Tests {
 
     private:
 
-        static std::string Trim_Trailing_Zeros(std::string _str) {
-
-            _str.erase(_str.find_last_not_of('0') + 1, std::string::npos);
-
-            if (_str.back() == '.') {
-                _str.pop_back();
-            }
-
-            return _str;
-        }
-
-        static std::string ToString(long double _duration) {
-
-            static std::array<std::string, 4> units = { "s", "ms", "µs", "ns" };
-
-            size_t i = 0U;
-            while (i < units.size() && _duration < 1.0) {
-                _duration *= 1000.0;
-                ++i;
-            }
-
-            return Trim_Trailing_Zeros(std::to_string(_duration)) + units[i];
-        }
-
     public:
 
         template <typename Tm, const size_t Kd, typename Ts = uint32_t>
@@ -56,24 +32,24 @@ namespace Test::Tests {
             // Test parameters:
             constexpr size_t seed(0U);
 
-            const     coord_t size = _dimensions;
-            constexpr coord_t start {};
+                      const coord_t size = _dimensions;
+            constexpr const coord_t start {};
                       coord_t end;
 
-            constexpr bool checkSolvable = true;
+            constexpr bool checkSolvable = false;
 
             /* GENERATE MAZE */
-            Debug::Log("(Maze):");
             const auto maze = CHDR::Mazes::Grid<Kd, Tm>(size, generator_t::Generate<Tm>(start, end, 0.0F, 0.0F, seed, size));
-            Debug::Log("\t[GENERATED] \t(~" + Trim_Trailing_Zeros(std::to_string(CHDR::Utils::Product<size_t>(size) / static_cast<long double>(1000000000.0))) + "b total candidate nodes)");
 
             /* GRID -> GRAPH */
             //auto graph = CHDR::Mazes::Graph<Tm>(maze);
 
             /* MAX DRAW SIZE */
             const bool drawable (
-                size[0U] <= 100U && size[1U] <= 100U &&
-                Kd > 0U && Kd < 3U
+                size[0U] <= 100U &&
+                size[1U] <= 100U &&
+                      Kd >    0U &&
+                      Kd <    3U
             );
 
             /* TEST FOR SOLVABILITY: */
@@ -88,7 +64,7 @@ namespace Test::Tests {
                 solvable = floodFill.Solve(maze, start, end, static_cast<size_t>(std::abs(ceil(CHDR::Heuristics<Kd, Ts>::ManhattanDistance(start, end)))));
 
                 solvable_log = "\t" + std::string(solvable != 0U ? "[SOLVABLE]" : "[IMPOSSIBLE]") + "\t(" +
-                    ToString(std::chrono::duration_cast<std::chrono::duration<long double>>(std::chrono::high_resolution_clock::now() - sw_start).count()) + ")";
+                    CHDR::Utils::ToString(std::chrono::duration_cast<std::chrono::duration<long double>>(std::chrono::high_resolution_clock::now() - sw_start).count()) + ")";
             }
 
             // Solve the maze:
@@ -101,13 +77,13 @@ namespace Test::Tests {
                 auto path = solver.Solve(maze, start, end, HEURISTIC);
 
                 pathfinding_log = "\t" + std::string(path.size() != 0U ? "[SOLVED]" : "[IMPOSSIBLE]") + "\t(" +
-                    ToString(std::chrono::duration_cast<std::chrono::duration<long double>>(std::chrono::high_resolution_clock::now() - sw_start).count()) + ")";
+                    CHDR::Utils::ToString(std::chrono::duration_cast<std::chrono::duration<long double>>(std::chrono::high_resolution_clock::now() - sw_start).count()) + ")";
 
-                if (drawable && (Kd > 0U && Kd < 3U)) {
+                if (drawable) {
                     display_t::DrawMaze(start, end, size, maze, path);
                 }
             }
-            else if (drawable && (Kd > 0U && Kd < 3U)) {
+            else if (drawable) {
                 display_t::DrawMaze(start, end, size, maze);
             }
 
