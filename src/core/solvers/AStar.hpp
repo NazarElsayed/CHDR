@@ -33,9 +33,9 @@ namespace CHDR::Solvers {
             Ts m_GScore;
             Ts m_FScore;
 
-            const ASNode* m_Parent;
+            ASNode* m_Parent;
 
-            [[nodiscard]] constexpr ASNode(const size_t& _coord, const Ts& _gScore, const Ts& _hScore, const ASNode* const _parent) : IHeapItem(),
+            [[nodiscard]] constexpr ASNode(const size_t& _coord, const Ts& _gScore, const Ts& _hScore, ASNode* _parent) : IHeapItem(),
                 m_Coord (_coord),
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
@@ -83,8 +83,6 @@ namespace CHDR::Solvers {
             Heap<ASNode, typename ASNode::Max> openSet;
             openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
-            std::vector<ASNode*> buffer;
-
             while (!openSet.Empty()) {
 
                 const ASNode current = openSet.Top();
@@ -114,8 +112,7 @@ namespace CHDR::Solvers {
                                 dupes.Add(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                buffer.emplace_back(new ASNode(std::move(current)));
-                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), buffer.back() });
+                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), new ASNode(std::move(current)) });
                             }
                         }
                     }
@@ -123,9 +120,23 @@ namespace CHDR::Solvers {
                 else { // SOLUTION REACHED ...
 
                     // Free data which is no longer relevant:
-                      openSet.Clear();
                     closedSet.Clear();
                         dupes.Clear();
+
+                    // Keep a record of data to be freed.
+                    std::unordered_set<ASNode*> garbage;
+
+                    // Move heap data into garbage:
+                    while (!openSet.Empty()) {
+
+                        auto item = openSet.Top();
+                        openSet.RemoveFirst();
+
+                        if (item.m_Parent != nullptr && (garbage.find(item.m_Parent) != garbage.end())) {
+                            garbage.emplace(item.m_Parent);
+                        }
+                    }
+                    openSet.Clear();
 
                     // Recurse from end node to start node, inserting into a result buffer:
                     result.reserve(current.m_GScore);
@@ -133,15 +144,11 @@ namespace CHDR::Solvers {
                         result.emplace_back(Utils::ToND(temp->m_Coord, _maze.Size()));
                     }
 
-                    // Clear the buffer:
-                    for (auto* item : buffer) {
-
-                        if (item != nullptr) {
-                            delete item;
-                            item = nullptr;
-                        }
+                    // Perform GC:
+                    for (auto* item : garbage) {
+                        delete item;
+                        item = nullptr;
                     }
-                    buffer.clear();
 
                     // Reverse the result:
                     std::reverse(result.begin(), result.end());
