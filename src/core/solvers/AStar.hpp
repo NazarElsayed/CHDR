@@ -141,17 +141,6 @@ namespace CHDR::Solvers {
             return result;
         }
 
-        static void GC(std::unordered_set<const ASNode*>& _garbage) {
-
-            for (auto it = _garbage.begin(); it != _garbage.end(); it = _garbage.erase(it)) {
-
-                auto* item = *it;
-
-                delete item;
-                item = nullptr;
-            }
-        }
-
     };
 
 } // CHDR::Solvers
