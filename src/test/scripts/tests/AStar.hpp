@@ -19,15 +19,9 @@ namespace Test::Tests {
         template <typename Tm, const size_t Kd, typename Ts = uint32_t>
         static void Run(const std::array<long unsigned, Kd> _dimensions) {
 
-            // Define some aliases for types to simplify the syntax a little:
-            using generator_t = Generator::Grid;
-            using     coord_t = CHDR::Coord<size_t, Kd>;
-            using    solver_t = CHDR::Solvers::AStar<Tm, Kd, Ts>;
-            using   display_t = Display<Tm, Kd>;
-
             #define HEURISTIC CHDR::Heuristics<Kd, Ts>::ManhattanDistance
 
-            /***************************************/
+            using coord_t = CHDR::Coord<size_t, Kd>;
 
             // Test parameters:
             constexpr size_t seed(0U);
@@ -39,7 +33,7 @@ namespace Test::Tests {
             constexpr bool checkSolvable = false;
 
             /* GENERATE MAZE */
-            const auto maze = CHDR::Mazes::Grid<Kd, Tm>(size, generator_t::Generate<Tm>(start, end, 0.0F, 0.0F, seed, size));
+            const auto maze = CHDR::Mazes::Grid<Kd, Tm>(size, Generator::Grid::Generate<Tm>(start, end, 0.0F, 0.0F, seed, size));
 
             /* GRID -> GRAPH */
             //auto graph = CHDR::Mazes::Graph<Tm>(maze);
@@ -73,18 +67,18 @@ namespace Test::Tests {
 
                 const auto sw_start = std::chrono::high_resolution_clock::now();
 
-                auto solver = solver_t();
+                auto solver = CHDR::Solvers::AStar<Tm, Kd, Ts>();
                 auto path = solver.Solve(maze, start, end, HEURISTIC);
 
                 pathfinding_log = "\t" + std::string(path.size() != 0U ? "[SOLVED]" : "[IMPOSSIBLE]") + "\t(" +
                     CHDR::Utils::ToString(std::chrono::duration_cast<std::chrono::duration<long double>>(std::chrono::high_resolution_clock::now() - sw_start).count()) + ")";
 
                 if (drawable) {
-                    display_t::DrawMaze(start, end, size, maze, path);
+                    Display<Tm, Kd>::DrawMaze(start, end, size, maze, path);
                 }
             }
             else if (drawable) {
-                display_t::DrawMaze(start, end, size, maze);
+                Display<Tm, Kd>::DrawMaze(start, end, size, maze);
             }
 
             Debug::Log("(Flood Fill):");
@@ -92,6 +86,8 @@ namespace Test::Tests {
 
             Debug::Log("(A*):");
             Debug::Log(pathfinding_log);
+
+            #undef HEURISTIC
         }
     };
 }
