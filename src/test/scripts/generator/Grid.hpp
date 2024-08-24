@@ -29,7 +29,7 @@ namespace Test::Generator {
 				result.emplace_back(maze[i] == Backtracking::WALL);
 			}
 
-            Debug::Log("\t[GENERATED] \t(~" + CHDR::Utils::Trim_Trailing_Zeros(std::to_string(CHDR::Utils::Product<size_t>(size) / static_cast<long double>(1000000000.0))) + "b total candidate nodes)");
+            Debug::Log("\t[FINISHED] \t(~" + CHDR::Utils::Trim_Trailing_Zeros(std::to_string(CHDR::Utils::Product<size_t>(size) / static_cast<long double>(1000000000.0))) + "b total candidate nodes)");
 
 			return result;
 		}

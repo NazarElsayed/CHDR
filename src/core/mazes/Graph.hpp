@@ -18,8 +18,6 @@ namespace CHDR::Mazes {
 
     public:
 
-
-
     };
 
 } // CHDR::Mazes

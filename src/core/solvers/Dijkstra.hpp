@@ -15,6 +15,9 @@ namespace CHDR::Solvers {
     public:
 
         void Solve(const Mazes::IMaze<T>& _maze) override {
+
+            (void)_maze; // Suppress unused variable warning.
+
             throw std::runtime_error("Djikstra::Solve(const Mazes::IMaze& _maze) Not implemented!");
         }
 
