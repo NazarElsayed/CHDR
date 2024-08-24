@@ -49,7 +49,11 @@ namespace Test::Generator::Utils {
             return result;
         }
 
-        static constexpr void CarveFrom(const coord_t& _coord, std::pair<coord_t, size_t>& _farthest, const coord_t& _size, std::vector<Cell>& _grid, std::mt19937 _random) {
+        static
+#if __cplusplus >= 202302L
+        constexpr
+#endif // __cplusplus >= 202302L
+        void CarveFrom(const coord_t& _coord, std::pair<coord_t, size_t>& _farthest, const coord_t& _size, std::vector<Cell>& _grid, std::mt19937 _random) {
 
             std::stack<std::pair<coord_t, size_t>> stack;
             stack.emplace(_coord, 0U);
@@ -134,7 +138,11 @@ namespace Test::Generator::Utils {
          *
          * @see Buck, J., 2010. Buckblog: Maze Generation: Recursive Backtracking. The Buckblog [online]. Available from: https://weblog.jamisbuck.org/2010/12/27/maze-generation-recursive-backtracking [Accessed 1 Jul 2024].
          */
-        static constexpr auto Generate(const coord_t& _start, coord_t& _end, const coord_t& _size, const float& _loops = 0.0F, const float& _obstacles = 0.0F, const size_t& _seed = -1U) {
+        static
+#if __cplusplus >= 202302L
+        constexpr
+#endif // __cplusplus >= 202302L
+        auto Generate(const coord_t& _start, coord_t& _end, const coord_t& _size, const float& _loops = 0.0F, const float& _obstacles = 0.0F, const size_t& _seed = -1U) {
 
             /*
              * 1. Choose a starting point in the field.
