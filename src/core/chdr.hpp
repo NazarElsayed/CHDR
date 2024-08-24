@@ -11,6 +11,8 @@
 #include "solvers/base/ISolver.hpp"
 #include "solvers/AStar.hpp"
 #include "solvers/Dijkstra.hpp"
+#include "solvers/ESMAStar.hpp"
+#include "solvers/FloodFill.hpp"
 #include "solvers/JPS.hpp"
 
 #include "types/Coord.hpp"

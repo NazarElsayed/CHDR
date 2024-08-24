@@ -168,7 +168,8 @@ namespace Test::Generator::Utils {
                 const auto seed = _seed == null_v ? std::random_device().operator()() : _seed;
                 std::mt19937 gen(seed);
 
-                Debug::Log("Maze: Seed (" + std::to_string(seed) + ")");
+                Debug::Log("\tBacktracking Algorithm");
+                Debug::Log("\tSeed: \t" + std::to_string(seed));
 
                 result.resize(product, WALL);
 

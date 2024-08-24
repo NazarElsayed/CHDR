@@ -13,7 +13,6 @@ namespace CHDR::Solvers {
         virtual ~ISolver() = default;
 
         virtual void Solve(const Mazes::IMaze<Tm>& _maze) = 0;
-
     };
 
 } // CHDR::Solvers
