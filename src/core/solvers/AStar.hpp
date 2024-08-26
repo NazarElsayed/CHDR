@@ -36,7 +36,7 @@ namespace CHDR::Solvers {
 
             std::shared_ptr<const ASNode> m_Parent;
 
-            [[nodiscard]] constexpr ASNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, std::shared_ptr<const ASNode> _parent) : IHeapItem(),
+            [[nodiscard]] constexpr ASNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, const std::shared_ptr<const ASNode>& _parent) : IHeapItem(),
                 m_Coord(_coord),
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
@@ -113,7 +113,12 @@ namespace CHDR::Solvers {
                                 dupes.Add(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), std::make_shared<ASNode>(current) });
+                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), {
+                                    new ASNode(current),
+                                    [](ASNode* p) {
+                                        delete_engine::queue_for_delete(std::unique_ptr<ASNode>(p));
+                                    }
+                                }});
                             }
                         }
                     }
@@ -149,6 +154,42 @@ namespace CHDR::Solvers {
 
             return result;
         }
+
+        /// https://stackoverflow.com/questions/36634394/nested-shared-ptr-destruction-causes-stack-overflow
+        struct delete_engine {
+
+            struct impl {
+
+                bool _deleting { false };
+
+                std::deque<std::unique_ptr<ASNode>> _delete_list;
+
+                void queue_for_delete(std::unique_ptr<ASNode> p) {
+
+                    _delete_list.push_front(std::move(p));
+
+                    if (!_deleting) {
+                         _deleting = true;
+
+                        while(!_delete_list.empty()) {
+                            _delete_list.pop_back();
+                        }
+
+                        _deleting = false;
+                    }
+                }
+            };
+
+            static auto get_impl() -> impl& {
+                static impl _{};
+                return _;
+            }
+
+            static void queue_for_delete(std::unique_ptr<ASNode> p) {
+                get_impl().queue_for_delete(std::move(p));
+            }
+        };
+
     };
 
 } // CHDR::Solvers
