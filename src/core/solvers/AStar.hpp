@@ -115,9 +115,7 @@ namespace CHDR::Solvers {
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
                                 openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), {
                                     new ASNode(current),
-                                    [](ASNode* p) {
-                                        delete_engine::queue_for_delete(std::unique_ptr<ASNode>(p));
-                                    }
+                                    [](ASNode* p) { delete_engine::queue_for_delete(std::unique_ptr<ASNode>(p)); }
                                 }});
                             }
                         }
@@ -164,9 +162,9 @@ namespace CHDR::Solvers {
 
                 std::deque<std::unique_ptr<ASNode>> _delete_list;
 
-                void queue_for_delete(std::unique_ptr<ASNode> p) {
+                void queue_for_delete(std::unique_ptr<ASNode> _p) {
 
-                    _delete_list.push_front(std::move(p));
+                    _delete_list.emplace_front(std::move(_p));
 
                     if (!_deleting) {
                          _deleting = true;
@@ -185,8 +183,8 @@ namespace CHDR::Solvers {
                 return _;
             }
 
-            static void queue_for_delete(std::unique_ptr<ASNode> p) {
-                get_impl().queue_for_delete(std::move(p));
+            static void queue_for_delete(std::unique_ptr<ASNode> _p) {
+                get_impl().queue_for_delete(std::move(_p));
             }
         };
 
