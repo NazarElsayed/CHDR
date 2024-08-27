@@ -173,8 +173,49 @@ add_executable(Test
 )
 
 target_include_directories(Test PRIVATE
-    src/core
+        src/core
 )
+
+# GRAPHICS:
+
+find_package(glfw3 CONFIG REQUIRED)
+find_package(OpenGL REQUIRED)
+
+set (IMGUI_SRC
+        contrib/ImGUI/backends/imgui_impl_glfw.cpp
+        contrib/ImGUI/backends/imgui_impl_glfw.h
+        contrib/ImGUI/backends/imgui_impl_opengl3.cpp
+        contrib/ImGUI/backends/imgui_impl_opengl3.h
+        contrib/ImGUI/backends/imgui_impl_opengl3_loader.h
+        contrib/ImGUI/imconfig.h
+        contrib/ImGUI/imgui.cpp
+        contrib/ImGUI/imgui.h
+        contrib/ImGUI/imgui_demo.cpp
+        contrib/ImGUI/imgui_draw.cpp
+        contrib/ImGUI/imgui_internal.h
+        contrib/ImGUI/imgui_tables.cpp
+        contrib/ImGUI/imgui_widgets.cpp
+        contrib/ImGUI/imstb_rectpack.h
+        contrib/ImGUI/imstb_textedit.h
+        contrib/ImGUI/imstb_truetype.h
+)
+
+# ADD EXECUTABLE:
+add_executable(Graphics
+        src/graphics/main.cpp
+        ${IMGUI_SRC}
+)
+
+target_include_directories(Graphics
+        PRIVATE contrib/ImGUI
+        PRIVATE contrib/ImGUI/backends
+)
+
+target_link_libraries(Graphics PRIVATE
+        glfw
+        ${OPENGL_LIBRARIES}) #link the two libraries into the application
+
+# CHDR
 
 target_precompile_headers(CHDR INTERFACE src/core/stdafx.hpp)
 
