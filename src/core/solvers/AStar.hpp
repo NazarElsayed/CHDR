@@ -9,6 +9,8 @@
 #include <memory>
 #include <queue>
 #include <unordered_set>
+#include <list>
+#include <future>
 
 #include "base/ISolver.hpp"
 #include "types/Heap.hpp"
@@ -71,15 +73,19 @@ namespace CHDR::Solvers {
             throw std::runtime_error("AStar::Solve(const Mazes::IMaze& _maze) Not implemented!");
         }
 
-        auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const size_t _capacity = 0U) const {
+        auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const size_t& _memory_limit = 2560000U, size_t _capacity = 0U) const {
 
             std::vector<coord_t> result;
 
             const auto s = Utils::To1D(_start, _maze.Size());
             const auto e = Utils::To1D(_end,   _maze.Size());
 
-            DenseExistenceSet closedSet({ s }, std::max(_capacity, std::max(s, e)));
-            DenseExistenceSet dupes(std::max(_capacity, std::max(s, e)));
+            _capacity = std::max(_capacity, std::max(s, e));
+
+            delete_engine::reserve(_capacity);
+
+            DenseExistenceSet closedSet ({ s }, _capacity);
+            DenseExistenceSet dupes     (       _capacity);
 
             Heap<ASNode, typename ASNode::Max> openSet;
             openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
@@ -115,7 +121,11 @@ namespace CHDR::Solvers {
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
                                 openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), {
                                     new ASNode(current),
-                                    [](ASNode* p) { delete_engine::queue_for_delete(std::unique_ptr<ASNode>(p)); }
+                                    [&_memory_limit](ASNode* p) {
+                                        delete_engine::queue_for_delete(std::unique_ptr<ASNode>(p));
+
+                                        delete_engine::delete_immediate(_memory_limit);
+                                    }
                                 }});
                             }
                         }
@@ -136,7 +146,7 @@ namespace CHDR::Solvers {
 
                         for (auto item = current.m_Parent; item->m_Parent != nullptr;) {
                             result.emplace_back(Utils::ToND(item->m_Coord, _maze.Size()));
-                            
+
                             auto oldItem = item;
                             item = item->m_Parent;
                             oldItem.reset();
@@ -145,6 +155,8 @@ namespace CHDR::Solvers {
 
                     // Reverse the result:
                     std::reverse(result.begin(), result.end());
+
+                    delete_engine::delete_immediate(0U);
 
                     break;
                 }
@@ -160,11 +172,16 @@ namespace CHDR::Solvers {
 
                 bool _deleting { false };
 
-                std::deque<std::unique_ptr<ASNode>> _delete_list;
+                std::vector<std::unique_ptr<ASNode>> _delete_list;
 
-                void queue_for_delete(std::unique_ptr<ASNode> _p) {
+                void delete_immediate(const size_t& _memory_limit) {
 
-                    _delete_list.emplace_front(std::move(_p));
+                    if (_delete_list.size() >= _memory_limit) {
+                        process_delete();
+                    }
+                }
+
+                void process_delete() {
 
                     if (!_deleting) {
                          _deleting = true;
@@ -176,6 +193,10 @@ namespace CHDR::Solvers {
                         _deleting = false;
                     }
                 }
+
+                void queue_for_delete(std::unique_ptr<ASNode> _p) {
+                    _delete_list.emplace_back(std::move(_p));
+                }
             };
 
             static auto get_impl() -> impl& {
@@ -183,8 +204,16 @@ namespace CHDR::Solvers {
                 return _;
             }
 
+            static void delete_immediate(const size_t& _memory_limit) {
+                get_impl().delete_immediate(_memory_limit);
+            }
+
             static void queue_for_delete(std::unique_ptr<ASNode> _p) {
                 get_impl().queue_for_delete(std::move(_p));
+            }
+
+            static void reserve(const size_t& _capacity) {
+                get_impl()._delete_list.reserve(_capacity);
             }
         };
 
