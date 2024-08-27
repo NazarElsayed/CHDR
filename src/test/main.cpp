@@ -16,6 +16,9 @@ int main([[maybe_unused]] const int _argc, [[maybe_unused]] const char* _argv[])
     try {
 
         switch (_argc) {
+            case 1U: {
+                break;
+            }
             case 2U: {
                 result = Test::Application::Main<1U>({
                     std::stoul(_argv[1U])
