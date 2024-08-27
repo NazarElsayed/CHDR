@@ -60,7 +60,7 @@ namespace Test::Generator::Utils {
 
             while (!stack.empty()) {
 
-                auto [currentCoord, depth] = stack.top();
+                auto& [currentCoord, depth] = stack.top();
                 _grid[CHDR::Utils::To1D(currentCoord, _size)] = PATH;
 
                 if (depth > _farthest.second) {
@@ -95,13 +95,13 @@ namespace Test::Generator::Utils {
 
                         if (validCellNeighbor) {
 
-                                  auto& ln = _grid[CHDR::Utils::To1D(lc, _size)];
                             const auto& cn = _grid[CHDR::Utils::To1D(cc, _size)];
 
                             if (cn == WALL) {
-                                ln = PATH;
 
-                                stack.emplace(cc, depth + 1);
+                                _grid[CHDR::Utils::To1D(lc, _size)] = PATH;
+
+                                stack.emplace(cc, depth + 1U);
 
                                 hasUnvisited = true;
 
