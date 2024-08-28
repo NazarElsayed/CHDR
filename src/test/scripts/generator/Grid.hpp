@@ -23,11 +23,18 @@ namespace Test::Generator {
 			auto maze = Backtracking::Generate(_start, _end, size, _loops, _obstacles, _seed);
 
 			std::vector<CHDR::Node<T>> result;
-			result.reserve(maze.size());
 
-			for (size_t i = 0U; i < maze.size(); ++i) {
-				result.emplace_back(maze[i] == Backtracking::WALL);
-			}
+            if constexpr (std::is_same_v<T, bool>) {
+                result = std::vector<CHDR::Node<T>>(maze.begin(), maze.end());
+            }
+            else {
+
+                result.reserve(maze.size());
+
+                for (size_t i = 0U; i < maze.size(); ++i) {
+                    result.emplace_back(maze[i] == Backtracking::WALL);
+                }
+            }
 
             Debug::Log("\t[FINISHED] \t(~" + CHDR::Utils::Trim_Trailing_Zeros(std::to_string(CHDR::Utils::Product<size_t>(size) / static_cast<long double>(1000000000.0))) + "b total candidate nodes)");
 
