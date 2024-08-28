@@ -101,7 +101,7 @@ namespace Test::Generator::Utils {
 
                                 _grid[CHDR::Utils::To1D(lc, _size)] = PATH;
 
-                                stack.emplace(cc, depth + 1);
+                                stack.emplace(cc, depth + 1U);
 
                                 hasUnvisited = true;
 
