@@ -25,10 +25,16 @@ namespace Test::Generator {
 			std::vector<CHDR::Node<T>> result;
 
             if constexpr (std::is_same_v<T, bool>) {
-                result = std::vector<CHDR::Node<T>>(maze.begin(), maze.end());
+
+                result.insert(
+                    result.begin(),
+                    std::make_move_iterator(maze.begin()),
+                    std::make_move_iterator(maze.end())
+                );
+
+                maze.clear();
             }
             else {
-
                 result.reserve(maze.size());
 
                 for (size_t i = 0U; i < maze.size(); ++i) {
