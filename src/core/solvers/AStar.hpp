@@ -44,6 +44,13 @@ namespace CHDR::Solvers {
                 m_FScore(_gScore + _hScore),
                 m_Parent(std::move(_parent)) {}
 
+            ~ASNode() {
+
+                while (m_Parent && m_Parent.use_count() < 2U) {
+                    m_Parent = std::move(m_Parent->m_Parent);
+                }
+            }
+
             [[nodiscard]] constexpr bool operator == (const ASNode& _node) const { return m_Coord == _node.m_Coord; }
 
             struct Max {
@@ -73,7 +80,7 @@ namespace CHDR::Solvers {
             throw std::runtime_error("AStar::Solve(const Mazes::IMaze& _maze) Not implemented!");
         }
 
-        auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const size_t& _memory_limit = 2560000U, size_t _capacity = 0U) const {
+        auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) const {
 
             std::vector<coord_t> result;
 
@@ -81,8 +88,6 @@ namespace CHDR::Solvers {
             const auto e = Utils::To1D(_end,   _maze.Size());
 
             _capacity = std::max(_capacity, std::max(s, e));
-
-            delete_engine::reserve(_capacity);
 
             DenseExistenceSet closedSet ({ s }, _capacity);
             DenseExistenceSet dupes     (       _capacity);
@@ -119,14 +124,7 @@ namespace CHDR::Solvers {
                                 dupes.Add(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), {
-                                    new ASNode(current),
-                                    [&_memory_limit](ASNode* p) {
-                                        delete_engine::queue_for_delete(std::unique_ptr<ASNode>(p));
-
-                                        delete_engine::delete_immediate(_memory_limit);
-                                    }
-                                }});
+                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), std::make_shared<ASNode>(current) });
                             }
                         }
                     }
@@ -156,67 +154,12 @@ namespace CHDR::Solvers {
                     // Reverse the result:
                     std::reverse(result.begin(), result.end());
 
-                    delete_engine::delete_immediate(0U);
-
                     break;
                 }
             }
 
             return result;
         }
-
-        /// https://stackoverflow.com/questions/36634394/nested-shared-ptr-destruction-causes-stack-overflow
-        struct delete_engine {
-
-            struct impl {
-
-                bool _deleting { false };
-
-                std::vector<std::unique_ptr<ASNode>> _delete_list;
-
-                void delete_immediate(const size_t& _memory_limit) {
-
-                    if (_delete_list.size() >= _memory_limit) {
-                        process_delete();
-                    }
-                }
-
-                void process_delete() {
-
-                    if (!_deleting) {
-                         _deleting = true;
-
-                        while(!_delete_list.empty()) {
-                            _delete_list.pop_back();
-                        }
-
-                        _deleting = false;
-                    }
-                }
-
-                void queue_for_delete(std::unique_ptr<ASNode> _p) {
-                    _delete_list.emplace_back(std::move(_p));
-                }
-            };
-
-            static auto get_impl() -> impl& {
-                static impl _{};
-                return _;
-            }
-
-            static void delete_immediate(const size_t& _memory_limit) {
-                get_impl().delete_immediate(_memory_limit);
-            }
-
-            static void queue_for_delete(std::unique_ptr<ASNode> _p) {
-                get_impl().queue_for_delete(std::move(_p));
-            }
-
-            static void reserve(const size_t& _capacity) {
-                get_impl()._delete_list.reserve(_capacity);
-            }
-        };
-
     };
 
 } // CHDR::Solvers
