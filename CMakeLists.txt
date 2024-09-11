@@ -203,6 +203,8 @@ set (IMGUI_SRC
 # ADD EXECUTABLE:
 add_executable(Graphics
         src/graphics/main.cpp
+        src/graphics/core/ImGUI.hpp
+        src/graphics/core/Application.hpp
         ${IMGUI_SRC}
 )
 
