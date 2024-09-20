@@ -46,7 +46,7 @@ namespace CHDR::Solvers {
 
             ~ASNode() {
 
-                while (m_Parent && m_Parent.use_count() < 2U) {
+                while (m_Parent && static_cast<unsigned>(m_Parent.use_count()) < 2U) {
                     m_Parent = std::move(m_Parent->m_Parent);
                 }
             }

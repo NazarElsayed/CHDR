@@ -19,9 +19,17 @@ namespace Test {
 
         static constexpr auto* empty_str = "  ";
         static constexpr auto*  wall_str = "██";
+
+#ifdef _WIN32
+        static constexpr auto* start_str = "00";
+        static constexpr auto*   end_str = "11";
+        static constexpr auto*  path_str = "--";
+#else
         static constexpr auto* start_str = "🏠";
         static constexpr auto*   end_str = "🧀";
         static constexpr auto*  path_str = "🐁";
+#endif
+
         static constexpr auto*  line_brk = "\n";
 
     public:
@@ -30,6 +38,10 @@ namespace Test {
                                        const CHDR::Coord<size_t, Kd>& _size , const CHDR::Mazes::Grid<Kd, T>& _maze) {
 
             static_assert(std::is_integral_v<T>, "Maze type must be an integral type.");
+
+#ifdef _WIN32
+            SetConsoleOutputCP(CP_UTF8);
+#endif
 
             const auto s = CHDR::Utils::To1D(_start, _size);
             const auto e = CHDR::Utils::To1D(_end,   _size);

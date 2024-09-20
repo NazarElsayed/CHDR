@@ -37,6 +37,8 @@
 
 	#include <windows.h>
 	#include <intrin.h>
+	#include <io.h>
+	#include <fcntl.h>
 
 #endif
 
@@ -162,43 +164,43 @@ namespace {
 			return result;
 		}
 		
-		static void Multiplatform(const std::string_view& _message, const LogType& _type, const bool& _inline) {
+		static void Multiplatform(const std::string_view& _message, const LogType& _type, const bool& _makeInline) {
 	
 #ifdef __linux__
 			try {
-	            Print::ANSI(_message, _type, _inline);
+	            Print::ANSI(_message, _type, _makeInline);
 			}
 			catch (const std::exception& e) {
-				Print::Fallback(_message, _type, _inline);
+				Print::Fallback(_message, _type, _makeInline);
 				throw e;
 			}
 #elif _WIN32
 			try {
-	            Print::WIN32(_message, _type, _inline);
+	            Print::Win32(_message, _type, _makeInline);
 			}
 			catch (const std::exception& e) {
-				Print::Fallback(_message, _type, _inline);
+				Print::Fallback(_message, _type, _makeInline);
 				throw e;
 			}
 #elif __APPLE__
 			try {
-	            Print::ANSI(_message, _type, _inline);
+	            Print::ANSI(_message, _type, _makeInline);
 			}
 			catch (const std::exception& e) {
-				Print::Fallback(_message, _type, _inline);
+				Print::Fallback(_message, _type, _makeInline);
 				throw e;
 			}
 #else
-			Print::Fallback(_message, _type, _inline);
+			Print::Fallback(_message, _type, _makeInline);
 #endif
 		
 		}
 		
-		static void Fallback(const std::string_view& _message, const LogType& _type, const bool& _inline) {
+		static void Fallback(const std::string_view& _message, const LogType& _type, const bool& _makeInline) {
 			
 			std::cout << Print::ToString(_type) << ": " << _message;
 			
-			if (_inline && _type != LogType::Info) {
+			if (_makeInline && _type != LogType::Info) {
 				std::cout << std::flush;
 			}
 			else {
@@ -208,7 +210,7 @@ namespace {
 		
 #if __linux__ | __APPLE__
 		
-		static void ANSI(const std::string_view& _message, const LogType& _type, const bool& _inline) {
+		static void ANSI(const std::string_view& _message, const LogType& _type, const bool& _makeInline) {
 			
 			/* ANSI TEXT COLORS */
 			#define ANSI_RESET   "\033[0m"
@@ -236,7 +238,7 @@ namespace {
 				case Critical: {
 					std::cout << ANSI_MAGENTA << _message << ANSI_RESET << '\a';
 					
-					if (_inline) {
+					if (_makeInline) {
 						std::cout << std::flush;
 					}
 					else {
@@ -248,7 +250,7 @@ namespace {
 				case Error: {
 					std::cout << ANSI_RED << _message << ANSI_RESET;
 					
-					if (_inline) {
+					if (_makeInline) {
 						std::cout << std::flush;
 					}
 					else {
@@ -260,7 +262,7 @@ namespace {
 				case Warning: {
 					std::cout << ANSI_YELLOW << _message << ANSI_RESET;
 					
-					if (_inline) {
+					if (_makeInline) {
 						std::cout << std::flush;
 					}
 					else {
@@ -272,7 +274,7 @@ namespace {
 				case Info: {
 					std::cout << ANSI_CYAN << _message << ANSI_RESET;
 					
-					if (!_inline) {
+					if (!_makeInline) {
 						std::cout << '\n';
 					}
 					
@@ -281,7 +283,7 @@ namespace {
 				case Debug: {
 					std::cout << ANSI_WHITE << _message << ANSI_RESET;
 					
-					if (_inline) {
+					if (_makeInline) {
 						std::cout << std::flush;
 					}
 					else {
@@ -293,7 +295,7 @@ namespace {
 				case Trace: {
 					std::cout << ANSI_BG_WHITE << ANSI_BLACK << _message << ANSI_RESET;
 					
-					if (_inline) {
+					if (_makeInline) {
 						std::cout << '\n';
 					}
 					else {
@@ -305,7 +307,7 @@ namespace {
 				default: {
 					std::cout << ANSI_BG_MAGENTA << ANSI_BLACK << _message << ANSI_RESET;
 					
-					if (_inline) {
+					if (_makeInline) {
 						std::cout << std::flush;
 					}
 					else {
@@ -338,18 +340,28 @@ namespace {
 
 #elif _WIN32
 
-		void SetCAttr(const HANDLE* const _h, const WORD& _attribute) {
+		void SetCAttr(void* _h, const WORD &_attribute) {
 			
 		    if (!SetConsoleTextAttribute(_h, _attribute)) {
 		        throw std::runtime_error("Failed to set the console text attribute.");
 		    }
 		}
 
-		static void WIN32(const std::string_view& _message, const LogType& _type, const bool& _inline) {
-		
+		static void Win32(const std::string_view& _message, const LogType& _type, const bool& _makeInline) {
+
+#define FOREGROUND_BLACK   0x0
+#define FOREGROUND_CYAN	   0x3
+#define FOREGROUND_MAGENTA 0x5
+#define FOREGROUND_YELLOW  0x6
+#define FOREGROUND_WHITE   0x7
+#define BACKGROUND_BLACK   0x00
+#define BACKGROUND_MAGENTA 0x50
+#define BACKGROUND_WHITE   0x70
+
+			SetConsoleOutputCP(CP_UTF8);
+
 			try {
-				
-				const auto* const h = GetStdHandle(STD_OUTPUT_HANDLE);
+				HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
 				
 				if (h != nullptr && h != INVALID_HANDLE_VALUE) {
 					
@@ -366,7 +378,7 @@ namespace {
 								
 								Beep(800, 200);
 								
-								if (_inline) {
+								if (_makeInline) {
 									std::cout << std::flush;
 								}
 								else {
@@ -380,7 +392,7 @@ namespace {
 								std::cout << _message;
 	                            SetConsoleTextAttribute(h, previous_attr);
 								
-								if (_inline) {
+								if (_makeInline) {
 									std::cout << std::flush;
 								}
 								else {
@@ -394,7 +406,7 @@ namespace {
 								std::cout << _message;
 	                            SetConsoleTextAttribute(h, previous_attr);
 								
-								if (_inline) {
+								if (_makeInline) {
 									std::cout << std::flush;
 								}
 								else {
@@ -408,7 +420,7 @@ namespace {
 								std::cout << _message;
 	                            SetConsoleTextAttribute(h, previous_attr);
 								
-								if (!_inline) {
+								if (!_makeInline) {
 									std::cout << '\n';
 								}
 								
@@ -419,7 +431,7 @@ namespace {
 								std::cout << _message;
 	                            SetConsoleTextAttribute(h, previous_attr);
 								
-								if (_inline) {
+								if (_makeInline) {
 									std::cout << std::flush;
 								}
 								else {
@@ -433,7 +445,7 @@ namespace {
 								std::cout << _message;
 	                            SetConsoleTextAttribute(h, previous_attr);
 								
-								if (_inline) {
+								if (_makeInline) {
 									std::cout << '\n';
 								}
 								else {
@@ -447,7 +459,7 @@ namespace {
 								std::cout << _message;
 	                            SetConsoleTextAttribute(h, previous_attr);
 								
-								if (_inline) {
+								if (_makeInline) {
 									std::cout << std::flush;
 								}
 								else {
@@ -470,8 +482,18 @@ namespace {
 				
 				throw e;
 			}
+
+#undef FOREGROUND_BLACK
+#undef FOREGROUND_CYAN
+#undef FOREGROUND_MAGENTA
+#undef FOREGROUND_YELLOW
+#undef FOREGROUND_WHITE
+#undef BACKGROUND_BLACK
+#undef BACKGROUND_MAGENTA
+#undef BACKGROUND_WHITE
+
 		}
-		
+
 #endif
 	
 	};
@@ -545,12 +567,12 @@ namespace {
 		 * @param[in] _condition The condition to assert.
 		 * @param[in] _message The message to log if the condition is false.
 		 * @param[in] _type (optional) The type of log message to log.
-		 * @param[in] _inline (optional) A flag indicating if the log message should be displayed inline.
+		 * @param[in] _makeInline (optional) A flag indicating if the log message should be displayed inline.
 		 */
-		static void Assert(const bool& _condition, const std::string_view& _message, const LogType& _type = LogType::Debug, const bool& _inline = false) noexcept {
+		static void Assert(const bool& _condition, const std::string_view& _message, const LogType& _type = LogType::Debug, const bool& _makeInline = false) noexcept {
 			
 			if (!_condition) {
-				Debug::Log(_message, _type, _inline);
+				Debug::Log(_message, _type, _makeInline);
 			}
 		}
 		
@@ -612,15 +634,15 @@ namespace {
 		 *
 		 * @param[in] e The exception to log.
 		 * @param[in] _type (optional) The log type of the message.
-		 * @param[in] _inline (optional) A flag indicating if the log message should be displayed inline.
+		 * @param[in] _makeInline (optional) A flag indicating if the log message should be displayed inline.
 		 *
 		 * @note This method is declared `noexcept`, indicating that it does not throw any exceptions.
 		 *
 		 * @par Related Functions
 		 * - Debug::Log(const std::string_view&, const LogType&, const bool&)
 		 */
-		static void Log(const std::exception& e, const LogType& _type = LogType::Error, const bool& _inline = false) noexcept  {
-			Debug::Log(e.what(), _type, _inline);
+		static void Log(const std::exception& e, const LogType& _type = LogType::Error, const bool& _makeInline = false) noexcept  {
+			Debug::Log(e.what(), _type, _makeInline);
 		}
 		
 		/**
@@ -631,9 +653,9 @@ namespace {
 		 *
 		 * @param[in] _message The message to be logged.
 		 * @param[in] _type (optional) The log type for the message (default is `LogType::Debug`).
-		 * @param[in] _inline (optional) Specifies whether the log message should be displayed inline (default is `false`).
+		 * @param[in] _makeInline (optional) Specifies whether the log message should be displayed inline (default is `false`).
 		 */
-		static void Log(const std::string_view& _message, const LogType& _type = LogType::Debug, const bool& _inline = false) noexcept {
+		static void Log(const std::string_view& _message, const LogType& _type = LogType::Debug, const bool& _makeInline = false) noexcept {
 			
 			const std::lock_guard<std::mutex> guard(s_Lock);
 			
@@ -650,7 +672,7 @@ namespace {
 					const Meta meta {
 						std::time(nullptr),
 						ThreadID::Get(),
-						_inline
+						_makeInline
 					};
 					
 					// Timestamp:
@@ -666,7 +688,7 @@ namespace {
 					message << _message.data();
 					
 					// Print log to console:
-					Print::Multiplatform(message.str(), _type, _inline);
+					Print::Multiplatform(message.str(), _type, _makeInline);
 					
 					// Add trace information:
 					if (_type == LogType::Trace || _type == LogType::Critical) {
@@ -729,7 +751,9 @@ namespace {
 	#else
 				Debug::Log("Stack trace support not been implemented for this platform!", LogType::Warning);
 	#endif
-			
+
+				(void)_frames; // Suppress unused variable warning.
+
 			}
 			catch (const std::exception& e) {
 				Log(e);

@@ -179,11 +179,13 @@ target_include_directories(Test PRIVATE
 target_precompile_headers(CHDR INTERFACE src/core/stdafx.hpp)
 
 # LINK OPTIONS:
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
-    target_link_options(Test PRIVATE -flto=auto -Wl,--strip-all -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
-else()
-    target_link_options(Test PRIVATE -flto=auto -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
-endif()
+if(UNIX)
+    if(CMAKE_BUILD_TYPE STREQUAL "Release")
+        target_link_options(Test PRIVATE -flto=auto -Wl,--strip-all -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
+    else()
+        target_link_options(Test PRIVATE -flto=auto -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
+    endif()
+endif(UNIX)
 
 target_link_libraries(Test INTERFACE
     LOUIERIKSSON_DEBUG_HPP
