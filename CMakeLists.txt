@@ -142,18 +142,19 @@ add_library(CHDR INTERFACE
     src/core/types/Node.hpp
     src/core/types/RelationalNode.hpp
 
-    src/core/solvers/AStar.hpp
     src/core/solvers/base/ISolver.hpp
+    src/core/solvers/AStar.hpp
+    src/core/solvers/BFS.hpp
     src/core/solvers/Dijkstra.hpp
+    src/core/solvers/ESMAStar.hpp
+    src/core/solvers/FloodFill.hpp
     src/core/solvers/JPS.hpp
 
     src/core/utils/Utils.hpp
-        src/core/solvers/FloodFill.hpp
-        src/core/solvers/ESMAStar.hpp
 )
 
 target_link_libraries(CHDR INTERFACE
-        LOUIERIKSSON_DEBUG_HPP
+    LOUIERIKSSON_DEBUG_HPP
 )
 
 target_precompile_headers(CHDR INTERFACE src/core/stdafx.hpp)

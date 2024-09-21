@@ -20,11 +20,13 @@
 #include <list>
 #include <future>
 
-#include "base/ISolver.hpp"
-#include "types/Heap.hpp"
-#include "types/DenseExistenceSet.hpp"
-
 #include "../utils/Heuristics.hpp"
+#include "base/ISolver.hpp"
+#include "mazes/base/IMaze.hpp"
+#include "types/DenseExistenceSet.hpp"
+#include "types/Heap.hpp"
+#include "utils/Utils.hpp"
+#include "mazes/Grid.hpp"
 
 namespace CHDR::Solvers {
 

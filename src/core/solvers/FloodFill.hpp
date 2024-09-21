@@ -64,16 +64,16 @@ namespace CHDR::Solvers {
 
                     for (size_t i = 0U; i < openSet.size(); ++i) {
 
-                        const auto curr = openSet.front();
+                        const auto current = openSet.front();
                         openSet.pop();
 
-                        if (curr == e) {
+                        if (current == e) {
                             result = true;
 
                             goto NestedBreak;
                         }
 
-                        for (const auto neighbour : _maze.GetNeighbours(curr)) {
+                        for (const auto neighbour : _maze.GetNeighbours(current)) {
 
                             if (const auto [nActive, nValue] = neighbour; nActive) {
 
