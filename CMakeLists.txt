@@ -1,3 +1,9 @@
+# Computational Helper for Direction and Routing (CHDR)
+# Copyright (c) 2024 by Nazar Elsayed & Louis Eriksson
+#
+# Licensed under CC BY-NC-ND 4.0
+# https://creativecommons.org/licenses/by-nc-nd/4.0/
+
 cmake_minimum_required(VERSION ${CMAKE_VERSION})
 
 project(CHDR VERSION 0.1.0 LANGUAGES CXX)

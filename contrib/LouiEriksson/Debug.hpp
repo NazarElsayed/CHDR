@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2024 Loui Eriksson
+ * All Rights Reserved.
+ */
+
 #ifndef LOUIERIKSSON_DEBUG_HPP
 #define LOUIERIKSSON_DEBUG_HPP
 
