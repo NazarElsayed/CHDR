@@ -164,7 +164,7 @@ namespace CHDR {
             std::cout << std::endl;
         }
 
-#ifndef HEAP_SUPPRESS_UNSAFE_WARNING
+#ifndef HEAP_SUPPRESS_EXCEPTION_WARNING
         [[deprecated("This function does not perform bounds checking in 'runtime' compiled builds.\nSuppress this warning by defining \"HEAP_SUPPRESS_UNSAFE_WARNING\".")]]
 #endif
         const T& operator[](const size_t& _index) const {

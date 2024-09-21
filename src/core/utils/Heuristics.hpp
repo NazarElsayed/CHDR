@@ -9,8 +9,6 @@
 #ifndef CHDR_HEURISTICS_HPP
 #define CHDR_HEURISTICS_HPP
 
-#include <Debug.hpp>
-
 #include <cmath>
 #include <cstring>
 
@@ -60,9 +58,8 @@ namespace CHDR {
                     case _MM_HINT_NTA: { _mm_prefetch(__P, _MM_HINT_NTA); break; }
                     default: {
 #ifndef NDEBUG
-                        Debug::Log("Unknown Cache Hint!", Error);
+                        throw std::runtime_error("Unknown Cache Hint!");
 #endif
-                        Debug::Break();
                         break;
                     }
                 }

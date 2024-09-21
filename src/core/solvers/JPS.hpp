@@ -11,8 +11,6 @@
 
 #include "base/ISolver.hpp"
 
-#include <Debug.hpp>
-
 namespace CHDR::Solvers {
 
     template<typename T>

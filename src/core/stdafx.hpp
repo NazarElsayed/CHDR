@@ -9,12 +9,20 @@
 #ifndef CHDR_STDAFX_HPP
 #define CHDR_STDAFX_HPP
 
-#include <Debug.hpp>
-
 #include <array>
+#include <cmath>
+#include <cstddef>
+#include <cstring>
+#include <functional>
+#include <future>
 #include <limits>
+#include <list>
+#include <memory>
+#include <queue>
+#include <stack>
 #include <stdexcept>
 #include <type_traits>
+#include <unordered_set>
 #include <vector>
 
 #endif //CHDR_STDAFX_HPP

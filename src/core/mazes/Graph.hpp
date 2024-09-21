@@ -13,8 +13,6 @@
 #include "types/RelationalNode.hpp"
 #include "types/Way.hpp"
 
-#include <Debug.hpp>
-
 namespace CHDR::Mazes {
 
     template <typename T>

@@ -9,8 +9,6 @@
 #ifndef CHDR_UTILS_HPP
 #define CHDR_UTILS_HPP
 
-#include <Debug.hpp>
-
 #include <array>
 #include <limits>
 #include <stdexcept>
@@ -64,10 +62,7 @@ namespace CHDR {
 		static constexpr std::array<_Tp, _Nm> ToArray(const std::vector<_Tp>&& _vector) {
 
 			if (_vector.size() != _Nm) {
-
-				Debug::Log("Vector -> Array size mismatch! (" + std::to_string(_vector.size()) + ", " + std::to_string(_Nm) + ")");
-
-				throw std::runtime_error("Vector -> Array size mismatch!");
+				throw std::runtime_error("Vector -> Array size mismatch! (" + std::to_string(_vector.size()) + ", " + std::to_string(_Nm) + ")");
 			}
 
 			std::array<_Tp, _Nm> result;

@@ -154,9 +154,7 @@ add_library(CHDR INTERFACE
     src/core/utils/Utils.hpp
 )
 
-target_link_libraries(CHDR INTERFACE
-    LOUIERIKSSON_DEBUG_HPP
-)
+target_link_libraries(CHDR INTERFACE)
 
 target_precompile_headers(CHDR INTERFACE src/core/stdafx.hpp)
 

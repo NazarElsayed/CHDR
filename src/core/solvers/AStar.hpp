@@ -10,9 +10,6 @@
 #define CHDR_ASTAR_HPP
 
 #include <cmath>
-
-#include <Debug.hpp>
-
 #include <functional>
 #include <memory>
 #include <queue>
