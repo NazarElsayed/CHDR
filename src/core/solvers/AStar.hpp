@@ -37,33 +37,68 @@ namespace CHDR::Solvers {
 
         using coord_t = Coord<size_t, Kd>;
 
-        struct ASNode final : IHeapItem {
+        struct ASNode_Managed final : IHeapItem {
 
             size_t m_Coord;
 
             Ts m_GScore;
             Ts m_FScore;
 
-            std::shared_ptr<const ASNode> m_Parent;
+            std::shared_ptr<const ASNode_Managed> m_Parent;
 
-            [[nodiscard]] constexpr ASNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, const std::shared_ptr<const ASNode>& _parent) : IHeapItem(),
+            [[nodiscard]] constexpr ASNode_Managed(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, const std::shared_ptr<const ASNode_Managed>& _parent) : IHeapItem(),
                 m_Coord(_coord),
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
                 m_Parent(std::move(_parent)) {}
 
-            ~ASNode() {
+            ~ASNode_Managed() {
 
                 while (m_Parent && static_cast<unsigned>(m_Parent.use_count()) < 2U) {
                     m_Parent = std::move(m_Parent->m_Parent);
                 }
             }
 
-            [[nodiscard]] constexpr bool operator == (const ASNode& _node) const { return m_Coord == _node.m_Coord; }
+            [[nodiscard]] constexpr bool operator == (const ASNode_Managed& _node) const { return m_Coord == _node.m_Coord; }
 
             struct Max {
 
-                [[nodiscard]] constexpr bool operator () (const ASNode& _a, const ASNode& _b) const {
+                [[nodiscard]] constexpr bool operator () (const ASNode_Managed& _a, const ASNode_Managed& _b) const {
+
+                    bool result{};
+
+                    if (_a.m_FScore == _b.m_FScore) {
+                        result = _a.m_GScore > _b.m_GScore;
+                    }
+                    else {
+                        result = _a.m_FScore > _b.m_FScore;
+                    }
+
+                    return result;
+                }
+            };
+        };
+
+        struct ASNode_Unmanaged final : IHeapItem {
+
+            size_t m_Coord;
+
+            Ts m_GScore;
+            Ts m_FScore;
+
+            const ASNode_Unmanaged* m_Parent;
+
+            [[nodiscard]] constexpr ASNode_Unmanaged(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, const ASNode_Unmanaged* const _parent) : IHeapItem(),
+                m_Coord(_coord),
+                m_GScore(_gScore),
+                m_FScore(_gScore + _hScore),
+                m_Parent(std::move(_parent)) {}
+
+            [[nodiscard]] constexpr bool operator == (const ASNode_Unmanaged& _node) const { return m_Coord == _node.m_Coord; }
+
+            struct Max {
+
+                [[nodiscard]] constexpr bool operator () (const ASNode_Unmanaged& _a, const ASNode_Unmanaged& _b) const {
 
                     bool result{};
 
@@ -100,12 +135,12 @@ namespace CHDR::Solvers {
             DenseExistenceSet closedSet ({ s }, _capacity);
             DenseExistenceSet dupes     (       _capacity);
 
-            Heap<ASNode, typename ASNode::Max> openSet;
+            Heap<ASNode_Managed, typename ASNode_Managed::Max> openSet;
             openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
             while (!openSet.Empty()) {
 
-                ASNode current(std::move(openSet.Top()));
+                ASNode_Managed current(std::move(openSet.Top()));
                 openSet.RemoveFirst();
                 dupes.Remove(current.m_Coord);
 
@@ -132,7 +167,7 @@ namespace CHDR::Solvers {
                                 dupes.Add(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), std::make_shared<ASNode>(std::move(current)) });
+                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), std::make_shared<ASNode_Managed>(std::move(current)) });
                             }
                         }
                     }
@@ -168,6 +203,92 @@ namespace CHDR::Solvers {
 
             return result;
         }
+
+        auto SolveFaster(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) const {
+
+            std::vector<coord_t> result;
+
+            const auto s = Utils::To1D(_start, _maze.Size());
+            const auto e = Utils::To1D(_end,   _maze.Size());
+
+            _capacity = std::max(_capacity, std::max(s, e));
+
+            DenseExistenceSet closedSet ({ s }, _capacity);
+            DenseExistenceSet dupes     (       _capacity);
+
+            Heap<ASNode_Unmanaged, typename ASNode_Unmanaged::Max> openSet;
+            openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
+
+            std::vector<ASNode_Unmanaged*> buffer;
+
+            while (!openSet.Empty()) {
+
+                ASNode_Unmanaged current(std::move(openSet.Top()));
+                openSet.RemoveFirst();
+                dupes.Remove(current.m_Coord);
+
+                if (current.m_Coord != e) { // SEARCH FOR SOLUTION...
+
+                    while (closedSet.Capacity() <= current.m_Coord) {
+                        closedSet.Reserve(std::min(closedSet.Capacity() * 2U, Utils::Product<size_t>(_maze.Size())));
+                    }
+                    closedSet.Add(current.m_Coord);
+
+                    for (const auto& neighbour : _maze.GetNeighbours(current.m_Coord)) {
+
+                        if (const auto [nActive, nValue] = neighbour; nActive) {
+
+                            const auto n = Utils::To1D(nValue, _maze.Size());
+
+                            // Check if node is not already visited:
+                            if (!closedSet.Contains(n) && !dupes.Contains(n)) {
+
+                                // Add to dupe list:
+                                while (dupes.Capacity() <= n) {
+                                    dupes.Reserve(std::min(dupes.Capacity() * 2U, Utils::Product<size_t>(_maze.Size())));
+                                }
+                                dupes.Add(n);
+
+                                // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
+                                buffer.emplace_back(new ASNode_Unmanaged(std::move(current)));
+                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), buffer.back() });
+                            }
+                        }
+                    }
+                }
+                else { // SOLUTION REACHED ...
+
+                    // Free data which is no longer relevant:
+                      openSet.Clear();
+                    closedSet.Clear();
+                        dupes.Clear();
+
+                    // Recurse from end node to start node, inserting into a result buffer:
+                    result.reserve(current.m_GScore);
+                    for (const auto* temp = &current; temp->m_Parent != nullptr; temp = temp->m_Parent) {
+                        result.emplace_back(Utils::ToND(temp->m_Coord, _maze.Size()));
+                    }
+
+                    // Clear the buffer:
+                    for (auto* item : buffer) {
+
+                        if (item != nullptr) {
+                            delete item;
+                            item = nullptr;
+                        }
+                    }
+                    buffer.clear();
+
+                    // Reverse the result:
+                    std::reverse(result.begin(), result.end());
+
+                    break;
+                }
+            }
+
+            return result;
+        }
+
     };
 
 } // CHDR::Solvers
