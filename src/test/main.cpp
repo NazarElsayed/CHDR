@@ -19,6 +19,8 @@ int main([[maybe_unused]] const int _argc, [[maybe_unused]] const char* _argv[])
     int result = -1;
 
     Debug::Log("CHDR " CHDR_VERSION);
+    Debug::Log("Copyright (c) 2024 by Nazar Elsayed & Louis Eriksson");
+    Debug::Log("Licensed under CC BY-NC-ND 4.0");
     Debug::Log("main()", Info);
 
     try {
