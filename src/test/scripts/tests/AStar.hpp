@@ -75,8 +75,8 @@ namespace Test::Tests {
 
                 const auto sw_start = std::chrono::high_resolution_clock::now();
 
-                auto solver = CHDR::Solvers::AStar<Tm, Kd, Ts>();
-                auto path = solver.Solve(maze, start, end, HEURISTIC);
+                auto solver = CHDR::Solvers::DFS<Tm, Kd>();
+                auto path = solver.Solve(maze, start, end);
 
                 pathfinding_log = "\t" + std::string(path.size() != 0U ? "[SOLVED]" : "[IMPOSSIBLE]") + "\t(" +
                     CHDR::Utils::ToString(std::chrono::duration_cast<std::chrono::duration<long double>>(std::chrono::high_resolution_clock::now() - sw_start).count()) + ")";
