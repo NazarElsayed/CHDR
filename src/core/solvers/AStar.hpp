@@ -213,18 +213,16 @@ namespace CHDR::Solvers {
             _capacity = std::max(_capacity, std::max(s, e));
 
             DenseExistenceSet closedSet ({ s }, _capacity);
-            DenseExistenceSet dupes     (       _capacity);
 
             Heap<ASNode_Unmanaged, typename ASNode_Unmanaged::Max> openSet;
             openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
-            std::vector<ASNode_Unmanaged*> buffer;
+            std::vector<ASNode_Unmanaged*> buffer(_capacity);
 
             while (!openSet.Empty()) {
 
                 ASNode_Unmanaged current(std::move(openSet.Top()));
                 openSet.RemoveFirst();
-                dupes.Remove(current.m_Coord);
 
                 if (current.m_Coord != e) { // SEARCH FOR SOLUTION...
 
@@ -240,17 +238,15 @@ namespace CHDR::Solvers {
                             const auto n = Utils::To1D(nValue, _maze.Size());
 
                             // Check if node is not already visited:
-                            if (!closedSet.Contains(n) && !dupes.Contains(n)) {
+                            if (!closedSet.Contains(n) && !(n < buffer.size() && (buffer[n] != nullptr))) {
 
                                 // Add to dupe list:
-                                if (dupes.Capacity() > n) {
-                                    dupes.Reserve(std::min(_capacity * ((n % _capacity) + 1U), Utils::Product<size_t>(_maze.Size())));
+                                if (buffer.size() > n) {
+                                    buffer.resize(std::min(_capacity * ((n % _capacity) + 1U), Utils::Product<size_t>(_maze.Size())));
                                 }
-                                dupes.Add(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                buffer.emplace_back(new ASNode_Unmanaged(std::move(current)));
-                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), buffer.back() });
+                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), buffer[n] = new ASNode_Unmanaged(std::move(current)) });
                             }
                         }
                     }
@@ -260,7 +256,6 @@ namespace CHDR::Solvers {
                     // Free data which is no longer relevant:
                       openSet.Clear();
                     closedSet.Clear();
-                        dupes.Clear();
 
                     // Recurse from end node to start node, inserting into a result buffer:
                     result.reserve(current.m_GScore);

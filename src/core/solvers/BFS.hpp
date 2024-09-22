@@ -188,9 +188,8 @@ namespace CHDR::Solvers {
                 openSet.emplace(s, nullptr);
 
                 DenseExistenceSet closedSet ({ s }, _capacity);
-                DenseExistenceSet dupes     (       _capacity);
 
-                std::vector<BFSNode_Unmanaged*> buffer;
+                std::vector<BFSNode_Unmanaged*> buffer(_capacity);
 
                 while (!openSet.empty()) { // SEARCH FOR SOLUTION...
 
@@ -213,17 +212,15 @@ namespace CHDR::Solvers {
                                     const auto n = Utils::To1D(nValue, _maze.Size());
 
                                     // Check if node is not already visited:
-                                    if (!closedSet.Contains(n) && !dupes.Contains(n)) {
+                                    if (!closedSet.Contains(n) && !(n < buffer.size() && (buffer[n] != nullptr))) {
 
                                         // Add to dupe list:
-                                        if (dupes.Capacity() > n) {
-                                            dupes.Reserve(std::min(_capacity * ((n % _capacity) + 1U), Utils::Product<size_t>(_maze.Size())));
+                                        if (buffer.size() > n) {
+                                            buffer.resize(std::min(_capacity * ((n % _capacity) + 1U), Utils::Product<size_t>(_maze.Size())));
                                         }
-                                        dupes.Add(n);
 
                                         // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                        buffer.emplace_back(new BFSNode_Unmanaged(std::move(current)));
-                                        openSet.emplace(n, buffer.back());
+                                        openSet.Emplace({ n, buffer[n] = new BFSNode_Unmanaged(std::move(current)) });
                                     }
                                 }
                             }
@@ -235,7 +232,6 @@ namespace CHDR::Solvers {
                             std::swap(openSet, empty);
 
                             closedSet.Clear();
-                                dupes.Clear();
 
                             // Recurse from end node to start node, inserting into a result buffer:
                             result.reserve(_capacity);
