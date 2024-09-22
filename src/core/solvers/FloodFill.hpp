@@ -78,8 +78,8 @@ namespace CHDR::Solvers {
 
                                 if (!closedSet.Contains(n)) {
 
-                                    if (closedSet.Capacity() <= n) {
-                                        closedSet.Reserve(std::min(closedSet.Capacity() * 2U, Utils::Product<size_t>(_maze.Size())));
+                                    if (closedSet.Capacity() > n) {
+                                        closedSet.Reserve(std::min(_capacity * ((n % _capacity) + 1U), Utils::Product<size_t>(_maze.Size())));
                                     }
                                     closedSet.Add(n);
 

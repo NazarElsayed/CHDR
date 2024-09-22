@@ -107,7 +107,7 @@ namespace CHDR::Solvers {
 
                         if (current.m_Coord != e) {
 
-                            while (closedSet.Capacity() <= current.m_Coord) {
+                            if (closedSet.Capacity() > current.m_Coord) {
                                 closedSet.Reserve(std::min(_capacity * ((current.m_Coord % _capacity) + 1U), Utils::Product<size_t>(_maze.Size())));
                             }
                             closedSet.Add(current.m_Coord);
@@ -122,7 +122,7 @@ namespace CHDR::Solvers {
                                     if (!closedSet.Contains(n) && !dupes.Contains(n)) {
 
                                         // Add to dupe list:
-                                        while (dupes.Capacity() <= n) {
+                                        if (dupes.Capacity() > n) {
                                             dupes.Reserve(std::min(_capacity * ((n % _capacity) + 1U), Utils::Product<size_t>(_maze.Size())));
                                         }
                                         dupes.Add(n);
@@ -201,7 +201,7 @@ namespace CHDR::Solvers {
 
                         if (current.m_Coord != e) {
 
-                            while (closedSet.Capacity() <= current.m_Coord) {
+                            if (closedSet.Capacity() > current.m_Coord) {
                                 closedSet.Reserve(std::min(_capacity * ((current.m_Coord % _capacity) + 1U), Utils::Product<size_t>(_maze.Size())));
                             }
                             closedSet.Add(current.m_Coord);
@@ -216,7 +216,7 @@ namespace CHDR::Solvers {
                                     if (!closedSet.Contains(n) && !dupes.Contains(n)) {
 
                                         // Add to dupe list:
-                                        while (dupes.Capacity() <= n) {
+                                        if (dupes.Capacity() > n) {
                                             dupes.Reserve(std::min(_capacity * ((n % _capacity) + 1U), Utils::Product<size_t>(_maze.Size())));
                                         }
                                         dupes.Add(n);
