@@ -17,7 +17,7 @@
 #include "../utils/Heuristics.hpp"
 #include "base/ISolver.hpp"
 #include "mazes/base/IMaze.hpp"
-#include "types/DenseExistenceSet.hpp"
+#include "types/ExistenceSet.hpp"
 #include "types/Heap.hpp"
 #include "utils/Utils.hpp"
 #include "mazes/Grid.hpp"
@@ -128,8 +128,8 @@ namespace CHDR::Solvers {
 
             _capacity = std::max(_capacity, std::max(s, e));
 
-            DenseExistenceSet closedSet ({ s }, _capacity);
-            DenseExistenceSet dupes     (       _capacity);
+            ExistenceSet closedSet ({s }, _capacity);
+            ExistenceSet dupes     (_capacity);
 
             Heap<ASNode_Managed, typename ASNode_Managed::Max> openSet;
             openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
@@ -209,7 +209,7 @@ namespace CHDR::Solvers {
 
             _capacity = std::max(_capacity, std::max(s, e));
 
-            DenseExistenceSet closedSet ({ s }, _capacity);
+            ExistenceSet closedSet ({s }, _capacity);
 
             Heap<ASNode_Unmanaged, typename ASNode_Unmanaged::Max> openSet;
             openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });

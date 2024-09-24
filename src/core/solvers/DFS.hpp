@@ -16,7 +16,7 @@
 #include "../utils/Heuristics.hpp"
 #include "base/ISolver.hpp"
 #include "mazes/base/IMaze.hpp"
-#include "types/DenseExistenceSet.hpp"
+#include "types/ExistenceSet.hpp"
 #include "types/Heap.hpp"
 #include "utils/Utils.hpp"
 #include "mazes/Grid.hpp"
@@ -95,8 +95,8 @@ namespace CHDR::Solvers {
                 std::stack<DFSNode_Managed, std::vector<DFSNode_Managed>> openSet(std::move(sequence));
                 openSet.emplace(s, nullptr);
 
-                DenseExistenceSet closedSet ({ s }, _capacity);
-                DenseExistenceSet dupes     (       _capacity);
+                ExistenceSet closedSet ({s }, _capacity);
+                ExistenceSet dupes     (_capacity);
 
                 std::vector<DFSNode_Unmanaged*> buffer;
 
@@ -190,7 +190,7 @@ namespace CHDR::Solvers {
                 std::stack<DFSNode_Unmanaged, std::vector<DFSNode_Unmanaged>> openSet(std::move(sequence));
                 openSet.emplace(s, nullptr);
 
-                DenseExistenceSet closedSet ({ s }, _capacity);
+                ExistenceSet closedSet ({s }, _capacity);
 
                 std::vector<DFSNode_Unmanaged*> buffer(_capacity);
 

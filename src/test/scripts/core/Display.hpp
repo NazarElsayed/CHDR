@@ -14,7 +14,7 @@
 
 #include <mazes/Grid.hpp>
 #include <types/Coord.hpp>
-#include <types/DenseExistenceSet.hpp>
+#include <types/ExistenceSet.hpp>
 
 namespace Test {
 
@@ -117,7 +117,7 @@ namespace Test {
             const auto s = CHDR::Utils::To1D(_start, _size);
             const auto e = CHDR::Utils::To1D(_end,   _size);
 
-            CHDR::DenseExistenceSet path_set(_path.size());
+            CHDR::ExistenceSet path_set(_path.size());
 
             for (const auto& item : _path) {
                 path_set.Add(CHDR::Utils::To1D<size_t>(item, _maze.Size()));

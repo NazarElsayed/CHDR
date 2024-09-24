@@ -37,7 +37,7 @@ namespace CHDR {
      * @see HighestPerformance
      */
     template <typename AlignmentType = LowestMemoryUsage>
-    class DenseExistenceSet {
+    class ExistenceSet {
 
         static_assert(
             std::is_same_v<AlignmentType, LowestMemoryUsage>  ||
@@ -60,7 +60,7 @@ namespace CHDR {
          * @brief Initialise set.
          * @param[in] _capacity Initial capacity of the set. Must be larger than 0.
          */
-        constexpr explicit DenseExistenceSet(const size_t& _capacity = 1U) {
+        constexpr explicit ExistenceSet(const size_t& _capacity = 1U) {
             Reserve(_capacity);
         }
 
@@ -71,7 +71,7 @@ namespace CHDR {
          * @param[in] _items Items to construct the set using.
          * @param[in] _capacity Initial capacity of the set. If a value less than 1 is assigned, it will use the size of the provided collection.
          */
-        constexpr DenseExistenceSet(const std::initializer_list<size_t>& _items, const size_t& _capacity = 0U) {
+        constexpr ExistenceSet(const std::initializer_list<size_t>& _items, const size_t& _capacity = 0U) {
 
             size_t auto_capacity = _capacity;
 

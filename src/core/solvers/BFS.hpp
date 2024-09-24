@@ -16,7 +16,7 @@
 #include "../utils/Heuristics.hpp"
 #include "base/ISolver.hpp"
 #include "mazes/base/IMaze.hpp"
-#include "types/DenseExistenceSet.hpp"
+#include "types/ExistenceSet.hpp"
 #include "types/Heap.hpp"
 #include "utils/Utils.hpp"
 #include "mazes/Grid.hpp"
@@ -94,8 +94,8 @@ namespace CHDR::Solvers {
                 std::queue<BFSNode_Managed, std::vector<BFSNode_Managed>> openSet;
                 openSet.emplace(s, nullptr);
 
-                DenseExistenceSet closedSet ({ s }, _capacity);
-                DenseExistenceSet dupes     (       _capacity);
+                ExistenceSet closedSet ({s }, _capacity);
+                ExistenceSet dupes     (_capacity);
 
                 while (!openSet.empty()) { // SEARCH FOR SOLUTION...
 
@@ -186,7 +186,7 @@ namespace CHDR::Solvers {
                 std::queue<BFSNode_Unmanaged> openSet;
                 openSet.emplace(s, nullptr);
 
-                DenseExistenceSet closedSet ({ s }, _capacity);
+                ExistenceSet closedSet ({s }, _capacity);
 
                 std::vector<BFSNode_Unmanaged*> buffer(_capacity);
 

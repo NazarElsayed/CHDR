@@ -17,7 +17,7 @@
 #include "base/ISolver.hpp"
 #include "mazes/base/IMaze.hpp"
 #include "mazes/Grid.hpp"
-#include "types/DenseExistenceSet.hpp"
+#include "types/ExistenceSet.hpp"
 #include "types/Heap.hpp"
 #include "utils/Utils.hpp"
 
@@ -54,7 +54,7 @@ namespace CHDR::Solvers {
                 std::queue<size_t> openSet;
                 openSet.emplace(s);
 
-                DenseExistenceSet closedSet({ s }, std::max(_capacity, std::max(s, e)));
+                ExistenceSet closedSet({s }, std::max(_capacity, std::max(s, e)));
 
                 while (!openSet.empty()) {
 
