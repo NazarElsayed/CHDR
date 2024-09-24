@@ -86,7 +86,6 @@ However, CHDR does require that your project is compatible with a C++17 environm
 #### &lt;functional&gt;
 #### &lt;future&gt;
 #### &lt;limits&gt;
-#### &lt;list&gt;
 #### &lt;memory&gt;
 #### &lt;queue&gt;
 #### &lt;stack&gt;
