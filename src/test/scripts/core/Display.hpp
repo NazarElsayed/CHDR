@@ -13,14 +13,15 @@
 #include <unordered_set>
 #include <vector>
 
-#include <types/Coord.hpp>
 #include <mazes/Grid.hpp>
+#include <types/Coord.hpp>
+#include <types/DenseExistenceSet.hpp>
 
 namespace Test {
 
     template<typename T, const size_t Kd>
-    class Display
-    {
+    class Display {
+
     private:
 
         using coord_t = CHDR::Coord<size_t, Kd>;
@@ -117,13 +118,10 @@ namespace Test {
             const auto s = CHDR::Utils::To1D(_start, _size);
             const auto e = CHDR::Utils::To1D(_end,   _size);
 
-            std::unordered_set<size_t, std::function<const size_t&(const size_t&)>> path_set(
-                _path.size(),
-                [](const size_t& _seed) constexpr -> const size_t& { return _seed; }
-            );
+            CHDR::DenseExistenceSet path_set(_path.size());
 
             for (const auto& item : _path) {
-                path_set.emplace(CHDR::Utils::To1D<size_t>(item, _maze.Size()));
+                path_set.Add(CHDR::Utils::To1D<size_t>(item, _maze.Size()));
             }
 
             const bool even_width = _size[0U] % 2U == 0U;
@@ -147,7 +145,7 @@ namespace Test {
                 else if (i == e) { std::cout <<   end_str; }
                 else {
 
-                    if (path_set.find(i) != path_set.end()) {
+                    if (path_set.Contains(i)) {
                         std::cout << path_str;
                     }
                     else {
