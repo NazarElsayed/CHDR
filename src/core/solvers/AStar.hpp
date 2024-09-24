@@ -129,7 +129,6 @@ namespace CHDR::Solvers {
             _capacity = std::max(_capacity, std::max(s, e));
 
             ExistenceSet closedSet ({ s }, _capacity);
-            ExistenceSet dupes     (_capacity);
 
             Heap<ASNode_Managed, typename ASNode_Managed::Max> openSet;
             openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
@@ -138,7 +137,6 @@ namespace CHDR::Solvers {
 
                 ASNode_Managed current(std::move(openSet.Top()));
                 openSet.RemoveFirst();
-                dupes.Remove(current.m_Coord);
 
                 if (current.m_Coord != e) { // SEARCH FOR SOLUTION...
 
@@ -154,13 +152,13 @@ namespace CHDR::Solvers {
                             const auto n = Utils::To1D(nValue, _maze.Size());
 
                             // Check if node is not already visited:
-                            if (!closedSet.Contains(n) && !dupes.Contains(n)) {
+                            if (!closedSet.Contains(n)) {
 
                                 // Add to dupe list:
-                                if (dupes.Capacity() > n) {
-                                    dupes.Reserve(std::min(_capacity * ((n % _capacity) + 1U), Utils::Product<size_t>(_maze.Size())));
+                                if (closedSet.Capacity() > n) {
+                                    closedSet.Reserve(std::min(_capacity * ((n % _capacity) + 1U), Utils::Product<size_t>(_maze.Size())));
                                 }
-                                dupes.Add(n);
+                                closedSet.Add(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
                                 openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), std::make_shared<ASNode_Managed>(std::move(current)) });
@@ -173,7 +171,6 @@ namespace CHDR::Solvers {
                     // Free data which is no longer relevant:
                       openSet.Clear();
                     closedSet.Clear();
-                        dupes.Clear();
 
                     // Recurse from end node to start node, inserting into a result buffer:
                     result.reserve(current.m_GScore);
@@ -181,7 +178,7 @@ namespace CHDR::Solvers {
 
                     if (current.m_Parent != nullptr) {
 
-                        for (auto* item = current.m_Parent; item->m_Parent != nullptr;) {
+                        for (auto& item = current.m_Parent; item->m_Parent != nullptr;) {
                             result.emplace_back(Utils::ToND(item->m_Coord, _maze.Size()));
 
                             auto oldItem = item;

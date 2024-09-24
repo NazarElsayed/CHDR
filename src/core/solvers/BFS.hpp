@@ -95,7 +95,6 @@ namespace CHDR::Solvers {
                 openSet.emplace(s, nullptr);
 
                 ExistenceSet closedSet ({ s }, _capacity);
-                ExistenceSet dupes     (_capacity);
 
                 while (!openSet.empty()) { // SEARCH FOR SOLUTION...
 
@@ -118,13 +117,13 @@ namespace CHDR::Solvers {
                                     const auto n = Utils::To1D(nValue, _maze.Size());
 
                                     // Check if node is not already visited:
-                                    if (!closedSet.Contains(n) && !dupes.Contains(n)) {
+                                    if (!closedSet.Contains(n)) {
 
                                         // Add to dupe list:
-                                        if (dupes.Capacity() > n) {
-                                            dupes.Reserve(std::min(_capacity * ((n % _capacity) + 1U), Utils::Product<size_t>(_maze.Size())));
+                                        if (closedSet.Capacity() > n) {
+                                            closedSet.Reserve(std::min(_capacity * ((n % _capacity) + 1U), Utils::Product<size_t>(_maze.Size())));
                                         }
-                                        dupes.Add(n);
+                                        closedSet.Add(n);
 
                                         // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
                                         openSet.emplace(n, std::make_shared<BFSNode_Managed>(std::move(current)));
@@ -139,7 +138,6 @@ namespace CHDR::Solvers {
                             std::swap(openSet, empty);
 
                             closedSet.Clear();
-                                dupes.Clear();
 
                             // Recurse from end node to start node, inserting into a result buffer:
                             result.reserve(_capacity);
@@ -147,7 +145,7 @@ namespace CHDR::Solvers {
 
                             if (current.m_Parent != nullptr) {
 
-                                for (auto* item = current.m_Parent; item->m_Parent != nullptr;) {
+                                for (auto& item = current.m_Parent; item->m_Parent != nullptr;) {
                                     result.emplace_back(Utils::ToND(item->m_Coord, _maze.Size()));
 
                                     auto oldItem = item;

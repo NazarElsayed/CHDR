@@ -38,7 +38,7 @@ namespace Test::Tests {
             constexpr const coord_t start {};
                       coord_t end;
 
-            constexpr bool checkSolvable = true;
+            constexpr bool checkSolvable = false;
 
             /* GENERATE MAZE */
             const auto maze = CHDR::Mazes::Grid<Kd, Tm>(size, Generator::Grid::Generate<Tm>(start, end, 0.0F, 0.0F, seed, size));
@@ -76,7 +76,7 @@ namespace Test::Tests {
                 const auto sw_start = std::chrono::high_resolution_clock::now();
 
                 auto solver = CHDR::Solvers::AStar<Tm, Kd, Ts>();
-                auto path = solver.SolveFaster(maze, start, end, HEURISTIC);
+                auto path = solver.Solve(maze, start, end, HEURISTIC);
 
                 pathfinding_log = "\t" + std::string(path.size() != 0U ? "[SOLVED]" : "[IMPOSSIBLE]") + "\t(" +
                     CHDR::Utils::ToString(std::chrono::duration_cast<std::chrono::duration<long double>>(std::chrono::high_resolution_clock::now() - sw_start).count()) + ")";
