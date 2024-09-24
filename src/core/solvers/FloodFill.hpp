@@ -70,9 +70,9 @@ namespace CHDR::Solvers {
                             goto NestedBreak;
                         }
 
-                        for (const auto neighbour : _maze.GetNeighbours(current)) {
+                        for (const auto& neighbour : _maze.GetNeighbours(current)) {
 
-                            if (const auto [nActive, nValue] = neighbour; nActive) {
+                            if (const auto& [nActive, nValue] = neighbour; nActive) {
 
                                 const auto n = Utils::To1D(nValue, _maze.Size());
 

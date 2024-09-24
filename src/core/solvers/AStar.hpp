@@ -152,7 +152,7 @@ namespace CHDR::Solvers {
 
                     for (const auto& neighbour : _maze.GetNeighbours(current.m_Coord)) {
 
-                        if (const auto [nActive, nValue] = neighbour; nActive) {
+                        if (const auto& [nActive, nValue] = neighbour; nActive) {
 
                             const auto n = Utils::To1D(nValue, _maze.Size());
 
@@ -184,7 +184,7 @@ namespace CHDR::Solvers {
 
                     if (current.m_Parent != nullptr) {
 
-                        for (auto item = current.m_Parent; item->m_Parent != nullptr;) {
+                        for (auto* item = current.m_Parent; item->m_Parent != nullptr;) {
                             result.emplace_back(Utils::ToND(item->m_Coord, _maze.Size()));
 
                             auto oldItem = item;
@@ -233,7 +233,7 @@ namespace CHDR::Solvers {
 
                     for (const auto& neighbour : _maze.GetNeighbours(current.m_Coord)) {
 
-                        if (const auto [nActive, nValue] = neighbour; nActive) {
+                        if (const auto& [nActive, nValue] = neighbour; nActive) {
 
                             const auto n = Utils::To1D(nValue, _maze.Size());
 
