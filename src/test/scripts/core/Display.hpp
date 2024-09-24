@@ -10,7 +10,6 @@
 #define TEST_DISPLAY_HPP
 
 #include <functional>
-#include <unordered_set>
 #include <vector>
 
 #include <mazes/Grid.hpp>

@@ -16,7 +16,6 @@
 #include <functional>
 #include <future>
 #include <limits>
-#include <list>
 #include <memory>
 #include <queue>
 #include <stack>

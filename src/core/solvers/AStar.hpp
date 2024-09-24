@@ -13,9 +13,6 @@
 #include <functional>
 #include <memory>
 #include <queue>
-#include <unordered_set>
-#include <list>
-#include <future>
 
 #include "../utils/Heuristics.hpp"
 #include "base/ISolver.hpp"

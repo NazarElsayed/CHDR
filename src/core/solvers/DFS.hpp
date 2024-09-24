@@ -12,7 +12,6 @@
 #include <cmath>
 #include <functional>
 #include <stack>
-#include <unordered_set>
 
 #include "../utils/Heuristics.hpp"
 #include "base/ISolver.hpp"
