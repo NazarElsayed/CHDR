@@ -38,7 +38,7 @@ namespace Test::Tests {
             constexpr const coord_t start {};
                       coord_t end;
 
-            constexpr bool checkSolvable = false;
+            constexpr bool checkSolvable = true;
 
             /* GENERATE MAZE */
             const auto maze = CHDR::Mazes::Grid<Kd, Tm>(size, Generator::Grid::Generate<Tm>(start, end, 0.0F, 0.0F, seed, size));

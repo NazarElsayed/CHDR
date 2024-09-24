@@ -54,7 +54,7 @@ namespace CHDR::Solvers {
                 std::queue<size_t> openSet;
                 openSet.emplace(s);
 
-                ExistenceSet closedSet({s }, std::max(_capacity, std::max(s, e)));
+                ExistenceSet closedSet({ s }, std::max(_capacity, std::max(s, e)));
 
                 while (!openSet.empty()) {
 

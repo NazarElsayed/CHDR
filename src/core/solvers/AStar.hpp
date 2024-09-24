@@ -128,7 +128,7 @@ namespace CHDR::Solvers {
 
             _capacity = std::max(_capacity, std::max(s, e));
 
-            ExistenceSet closedSet ({s }, _capacity);
+            ExistenceSet closedSet ({ s }, _capacity);
             ExistenceSet dupes     (_capacity);
 
             Heap<ASNode_Managed, typename ASNode_Managed::Max> openSet;
@@ -209,12 +209,12 @@ namespace CHDR::Solvers {
 
             _capacity = std::max(_capacity, std::max(s, e));
 
-            ExistenceSet closedSet ({s }, _capacity);
+            ExistenceSet closedSet ({ s }, _capacity);
 
             Heap<ASNode_Unmanaged, typename ASNode_Unmanaged::Max> openSet;
             openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
-            std::vector<ASNode_Unmanaged*> buffer(_capacity);
+            std::vector<ASNode_Unmanaged*> buffer;
 
             while (!openSet.Empty()) {
 
@@ -235,15 +235,16 @@ namespace CHDR::Solvers {
                             const auto n = Utils::To1D(nValue, _maze.Size());
 
                             // Check if node is not already visited:
-                            if (!closedSet.Contains(n) && !(n < buffer.size() && (buffer[n] != nullptr))) {
+                            if (!closedSet.Contains(n)) {
 
-                                // Add to dupe list:
-                                if (buffer.size() > n) {
-                                    buffer.resize(std::min(_capacity * ((n % _capacity) + 1U), Utils::Product<size_t>(_maze.Size())));
+                                if (closedSet.Capacity() > current.m_Coord) {
+                                    closedSet.Reserve(std::min(_capacity * ((current.m_Coord % _capacity) + 1U), Utils::Product<size_t>(_maze.Size())));
                                 }
+                                closedSet.Add(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), buffer[n] = new ASNode_Unmanaged(std::move(current)) });
+                                buffer.emplace_back(new ASNode_Unmanaged(std::move(current)));
+                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), buffer.back() });
                             }
                         }
                     }

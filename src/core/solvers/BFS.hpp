@@ -94,7 +94,7 @@ namespace CHDR::Solvers {
                 std::queue<BFSNode_Managed, std::vector<BFSNode_Managed>> openSet;
                 openSet.emplace(s, nullptr);
 
-                ExistenceSet closedSet ({s }, _capacity);
+                ExistenceSet closedSet ({ s }, _capacity);
                 ExistenceSet dupes     (_capacity);
 
                 while (!openSet.empty()) { // SEARCH FOR SOLUTION...
@@ -186,9 +186,9 @@ namespace CHDR::Solvers {
                 std::queue<BFSNode_Unmanaged> openSet;
                 openSet.emplace(s, nullptr);
 
-                ExistenceSet closedSet ({s }, _capacity);
+                ExistenceSet closedSet ({ s }, _capacity);
 
-                std::vector<BFSNode_Unmanaged*> buffer(_capacity);
+                std::vector<BFSNode_Unmanaged*> buffer;
 
                 while (!openSet.empty()) { // SEARCH FOR SOLUTION...
 
@@ -211,15 +211,16 @@ namespace CHDR::Solvers {
                                     const auto n = Utils::To1D(nValue, _maze.Size());
 
                                     // Check if node is not already visited:
-                                    if (!closedSet.Contains(n) && !(n < buffer.size() && (buffer[n] != nullptr))) {
+                                    if (!closedSet.Contains(n)) {
 
-                                        // Add to dupe list:
-                                        if (buffer.size() > n) {
-                                            buffer.resize(std::min(_capacity * ((n % _capacity) + 1U), Utils::Product<size_t>(_maze.Size())));
+                                        if (closedSet.Capacity() > current.m_Coord) {
+                                            closedSet.Reserve(std::min(_capacity * ((current.m_Coord % _capacity) + 1U), Utils::Product<size_t>(_maze.Size())));
                                         }
+                                        closedSet.Add(current.m_Coord);
 
                                         // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                        openSet.Emplace({ n, buffer[n] = new BFSNode_Unmanaged(std::move(current)) });
+                                        buffer.emplace_back(new BFSNode_Unmanaged(std::move(current)));
+                                        openSet.Emplace({ n, buffer.back() });
                                     }
                                 }
                             }
