@@ -188,51 +188,67 @@ namespace Test::Generator::Utils {
 
                 std::pair<coord_t, size_t> farthest { _start, 0U };
 
-                // Carve a maze using the recursive backtracking algorithm:
-                CarveFrom(_start, farthest, _size, result, gen);
+                /*
+                 * Check that the provided dimensionality of the maze is correct.
+                 * The elements of _size must be at least 1.
+                 */
+                bool validDimensionality = true;
 
-                if (_loops > 0.0F || _obstacles > 0.0F) {
+                for (auto& element : _size) {
+                    if (element == 0U) {
+                        validDimensionality = false;
+                        break;
+                    }
+                }
 
-                    // Randomly knock down walls if the maze is meant to contain loops:
-                    for (size_t i = 1U; i < result.size(); ++i) {
+                if (validDimensionality) {
 
-                        auto c = CHDR::Utils::ToND<size_t, Kd>(i, _size);
+                    // Carve a maze using the recursive backtracking algorithm:
+                    CarveFrom(_start, farthest, _size, result, gen);
 
-                        bool link = false;
-                        for (size_t j = 0U; j < Kd; ++j) {
+                    if (_loops > 0.0F || _obstacles > 0.0F) {
 
-                             if (c[j] % 2U == 0U) {
-                                 link = true;
+                        // Randomly knock down walls if the maze is meant to contain loops:
+                        for (size_t i = 1U; i < result.size(); ++i) {
 
-                                 break;
-                             }
-                        }
+                            auto c = CHDR::Utils::ToND<size_t, Kd>(i, _size);
 
-                        if (link) {
+                            bool link = false;
+                            for (size_t j = 0U; j < Kd; ++j) {
 
-                            bool edge = false;
+                                 if (c[j] % 2U == 0U) {
+                                     link = true;
 
-                            for (size_t k = 0U; k < Kd; ++k) {
-                                if (c[k] >= _size[k] - 1U) {
-                                    edge = true;
-
-                                    break;
-                                }
+                                     break;
+                                 }
                             }
 
-                            if (!edge) {
+                            if (link) {
 
-                                if (const auto obstacle_chance = static_cast<float>(gen()) / static_cast<float>(std::mt19937::max());
-                                    obstacle_chance < _obstacles
-                                ) {
-                                    result[CHDR::Utils::To1D<size_t>(c, _size)] = WALL;
+                                bool edge = false;
+
+                                for (size_t k = 0U; k < Kd; ++k) {
+                                    if (c[k] >= _size[k] - 1U) {
+                                        edge = true;
+
+                                        break;
+                                    }
                                 }
-                                else {
-                                    
-                                    if (const auto loop_chance = static_cast<float>(gen()) / static_cast<float>(std::mt19937::max());
-                                        loop_chance < _loops
+
+                                if (!edge) {
+
+                                    if (const auto obstacle_chance = static_cast<float>(gen()) / static_cast<float>(std::mt19937::max());
+                                        obstacle_chance < _obstacles
                                     ) {
-                                        result[CHDR::Utils::To1D<size_t>(c, _size)] = PATH;
+                                        result[CHDR::Utils::To1D<size_t>(c, _size)] = WALL;
+                                    }
+                                    else {
+
+                                        if (const auto loop_chance = static_cast<float>(gen()) / static_cast<float>(std::mt19937::max());
+                                            loop_chance < _loops
+                                        ) {
+                                            result[CHDR::Utils::To1D<size_t>(c, _size)] = PATH;
+                                        }
                                     }
                                 }
                             }
