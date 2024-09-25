@@ -65,7 +65,7 @@ namespace Test::Tests {
                 CHDR::Solvers::FloodFill<Tm, Kd> floodFill;
                 solvable = floodFill.Solve(maze, start, end, static_cast<size_t>(std::abs(ceil(CHDR::Heuristics<Kd, Ts>::ManhattanDistance(start, end)))));
 
-                solvable_log = "\t" + std::string(solvable != 0U ? "[SOLVABLE]" : "[IMPOSSIBLE]") + "\t(" +
+                solvable_log = "\t" + std::string(solvable != 0U ? "[SOLVABLE]" : "[IMPOSSIBLE]") + "\t(~" +
                     CHDR::Utils::ToString(std::chrono::duration_cast<std::chrono::duration<long double>>(std::chrono::high_resolution_clock::now() - sw_start).count()) + ")";
             }
 
@@ -76,9 +76,9 @@ namespace Test::Tests {
                 const auto sw_start = std::chrono::high_resolution_clock::now();
 
                 auto solver = CHDR::Solvers::AStar<Tm, Kd, Ts>();
-                auto path = solver.Solve(maze, start, end, HEURISTIC);
+                auto path = solver.SolveFaster(maze, start, end, HEURISTIC);
 
-                pathfinding_log = "\t" + std::string(path.size() != 0U ? "[SOLVED]" : "[IMPOSSIBLE]") + "\t(" +
+                pathfinding_log = "\t" + std::string(path.size() != 0U ? "[SOLVED]" : "[IMPOSSIBLE]") + "\t(~" +
                     CHDR::Utils::ToString(std::chrono::duration_cast<std::chrono::duration<long double>>(std::chrono::high_resolution_clock::now() - sw_start).count()) + ")";
 
                 if (drawable) {
