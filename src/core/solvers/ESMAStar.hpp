@@ -25,7 +25,7 @@
 namespace CHDR::Solvers {
 
     template<typename Tm, const size_t Kd, typename Ts>
-    class EMSAStar final : public ISolver<Tm> {
+    class ESMAStar final : public ISolver<Tm> {
 
         static_assert(std::is_integral_v<Ts> || std::is_floating_point_v<Ts>, "Ts must be either an integral or floating point type");
 
@@ -47,7 +47,7 @@ namespace CHDR::Solvers {
 
             std::vector<ESMASNode> m_Successors;
 
-            std::unordered_set<size_t, size_t> m_ForgottenFCosts;
+            std::unordered_map<size_t, Ts> m_ForgottenFCosts;
 
             [[nodiscard]] constexpr ESMASNode(const size_t& _depth, const size_t& _coord, const Ts& _gScore, const Ts& _hScore, ESMASNode* const _parent) : IHeapItem(),
                 m_Expanded(false),
@@ -158,8 +158,11 @@ namespace CHDR::Solvers {
 
                             auto search = b.m_ForgottenFCosts.find(n.m_Coord);
                             if (search != b.m_ForgottenFCosts.end()) {  /* condition to check if s(n) is in forgotten f-cost table of b*/
-                                n.m_FScore = *search;                           // f-value of s(n) in forgotten f-cost table of node b
-                                b.m_ForgottenFCosts.erase(n.m_Coord);           // Remove s(n) from forgotten f-cost table of node b.
+
+                                const auto [nCoord, nCost] = *search;
+
+                                n.m_FScore = nCost;                          // f-value of s(n) in forgotten f-cost table of node b
+                                b.m_ForgottenFCosts.erase(nCoord);           // Remove s(n) from forgotten f-cost table of node b.
                             }
                             else if (n.m_Coord != e && (n.m_Successors.empty() || n.m_Depth >= _memoryLimit - 1U)) {
                                 n.m_FScore = std::numeric_limits<Ts>::infinity();
@@ -224,7 +227,7 @@ namespace CHDR::Solvers {
             }
 
             // Add s(w) to forgotten f-cost table of p, with value of f (w)
-            p->m_ForgottenFCosts.insert_or_assign(p, w.m_FScore);
+            p->m_ForgottenFCosts.insert_or_assign(p->m_Coord, w.m_FScore);
 
             // f (p) ← min of forgotten f-costs of p
             for (auto& [state, cost] : p->m_ForgottenFCosts) {
@@ -232,14 +235,14 @@ namespace CHDR::Solvers {
             }
 
             // if p is not in _openSet then
-            if (!_openSet.Contains(p)) {
-                _openSet.push_back(p); // Add p to _openSet
+            if (!_openSet.Contains(*p)) {
+                _openSet.Add(*p); // Add p to _openSet
             }
 
             _memoryLimit--;
         }
 
-        auto safe_culling_heuristic(Heap<ESMASNode, typename ESMASNode::Max>& _openSet) {
+        auto safe_culling_heuristic(Heap<ESMASNode, typename ESMASNode::Max>& _openSet) const {
 
             ESMASNode w = _openSet.Back(); // Worst leaf according to c(n) in _openSet
 
@@ -254,7 +257,10 @@ namespace CHDR::Solvers {
 
                 for (size_t i = _openSet.Size() / 2U; i < _openSet.Size(); ++i) {
 
-                    if (typename ESMASNode::Max(_openSet[i], w)) {
+                    const auto& A = _openSet[i];
+                    const auto& B = w;
+
+                    if (typename ESMASNode::Max()(A, B)) {
                         w = _openSet[i];
                     }
                 }
@@ -262,7 +268,7 @@ namespace CHDR::Solvers {
                 _openSet.Remove(w);
             }
             else {
-                w.RemoveLast();
+                _openSet.RemoveLast();
             }
 
             return w;
