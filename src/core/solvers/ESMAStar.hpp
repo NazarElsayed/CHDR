@@ -94,119 +94,127 @@ namespace CHDR::Solvers {
 
         auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const size_t& _memoryLimit) const {
 
-            /** @see: https://easychair.org/publications/open/TL2M */
+            (void)_maze; // Suppress unused variable warnings.
+            (void)_start;
+            (void)_end;
+            (void)_h;
+            (void)_memoryLimit;
 
-            std::vector<coord_t> result;
+            throw std::runtime_error("Djikstra::Solve(const Mazes::IMaze& _maze) Not implemented!");
 
-            const auto s = Utils::To1D(_start, _maze.Size());
-            const auto e = Utils::To1D(_end,   _maze.Size());
-
-            Heap<ESMASNode, typename ESMASNode::Max> openSet;
-            openSet.Emplace({
-                0U,                 // Depth
-                s,                  // Coordinate
-                static_cast<Ts>(0), // G-Score
-                _h(_start, _end),   // F-Score
-                nullptr             // Parent
-            });
-
-            size_t u = 1U; // counter for nodes in memory
-
-            // Main loop
-            while (!openSet.Empty()) {
-
-                ESMASNode b = openSet.Top(); // Node with smallest f-cost in O
-                openSet.RemoveFirst();
-
-                // If node b is goal
-                if (b.m_Coord != e) {
-
-                    if (b.m_FScore != std::numeric_limits<Ts>::infinity()) {
-
-                        if (!b.m_Expanded) {
-                            b.m_Expanded = true;
-
-                            // Expand b and assign its successors to N
-                            auto neighbours = _maze.GetNeighbours(b.m_Coord);
-
-                            for (auto& neighbour : neighbours) {
-
-                                if (const auto [nActive, nValue] = neighbour; nActive) {
-
-                                    auto nCoord = Utils::To1D(nValue, _maze.Size());
-
-                                    if (nCoord != b.m_Coord) {
-
-                                        ESMASNode n(
-                                            b.m_Depth + 1U,     // Depth
-                                            nCoord,             // Coordinate
-                                            b.m_GScore + 1U,    // G-Score
-                                            _h(nValue, _end),   // F-Score
-                                            &b                  // Parent
-                                        );
-
-                                        b.m_Successors.emplace_back(std::move(n));
-                                    }
-                                }
-                            }
-
-                        }
-
-                        std::vector<ESMASNode> N = b.m_Successors; // Set N as successors of b
-
-                        for (ESMASNode& n : N) {
-
-                            auto search = b.m_ForgottenFCosts.find(n.m_Coord);
-                            if (search != b.m_ForgottenFCosts.end()) {  /* condition to check if s(n) is in forgotten f-cost table of b*/
-
-                                const auto [nCoord, nCost] = *search;
-
-                                n.m_FScore = nCost;                          // f-value of s(n) in forgotten f-cost table of node b
-                                b.m_ForgottenFCosts.erase(nCoord);           // Remove s(n) from forgotten f-cost table of node b.
-                            }
-                            else if (n.m_Coord != e && (n.m_Successors.empty() || n.m_Depth >= _memoryLimit - 1U)) {
-                                n.m_FScore = std::numeric_limits<Ts>::infinity();
-                            }
-                            else {
-                                // Update properties of n according to the pseudocode
-                                n.m_FScore = std::max(b.m_FScore, n.m_GScore + _h(Utils::ToND(n.m_Coord, _maze.Size()), _end));
-                            }
-
-                            // Add n to O
-                            openSet.Add(n);
-                            u++;
-                        }
-
-                        while (u > _memoryLimit) {
-                            cull_worst_leaf(openSet, u);
-                        }
-                    }
-                    else {
-                        break; // Return goal not found
-                    }
-                }
-                else {
-
-                    /* SOLUTION REACHED */
-
-                    // Free data which is no longer relevant:
-                    openSet.Clear();
-
-                    // Recurse from end node to start node, inserting into a result buffer:
-                    result.reserve(b.m_GScore);
-
-                    for (const auto* temp = &b; temp->m_Parent != nullptr; temp = temp->m_Parent) {
-                        result.emplace_back(Utils::ToND(temp->m_Coord, _maze.Size()));
-                    }
-
-                    // Reverse the result:
-                    std::reverse(result.begin(), result.end());
-
-                    break;
-                }
-            }
-
-            return result;
+//            /** @see: https://easychair.org/publications/open/TL2M */
+//
+//            std::vector<coord_t> result;
+//
+//            const auto s = Utils::To1D(_start, _maze.Size());
+//            const auto e = Utils::To1D(_end,   _maze.Size());
+//
+//            Heap<ESMASNode, typename ESMASNode::Max> openSet;
+//            openSet.Emplace({
+//                0U,                 // Depth
+//                s,                  // Coordinate
+//                static_cast<Ts>(0), // G-Score
+//                _h(_start, _end),   // F-Score
+//                nullptr             // Parent
+//            });
+//
+//            size_t u = 1U; // counter for nodes in memory
+//
+//            // Main loop
+//            while (!openSet.Empty()) {
+//
+//                ESMASNode b = openSet.Top(); // Node with smallest f-cost in O
+//                openSet.RemoveFirst();
+//
+//                // If node b is goal
+//                if (b.m_Coord != e) {
+//
+//                    if (b.m_FScore != std::numeric_limits<Ts>::infinity()) {
+//
+//                        if (!b.m_Expanded) {
+//                            b.m_Expanded = true;
+//
+//                            // Expand b and assign its successors to N
+//                            auto neighbours = _maze.GetNeighbours(b.m_Coord);
+//
+//                            for (auto& neighbour : neighbours) {
+//
+//                                if (const auto [nActive, nValue] = neighbour; nActive) {
+//
+//                                    auto nCoord = Utils::To1D(nValue, _maze.Size());
+//
+//                                    if (nCoord != b.m_Coord) {
+//
+//                                        ESMASNode n(
+//                                            b.m_Depth + 1U,     // Depth
+//                                            nCoord,             // Coordinate
+//                                            b.m_GScore + 1U,    // G-Score
+//                                            _h(nValue, _end),   // F-Score
+//                                            &b                  // Parent
+//                                        );
+//
+//                                        b.m_Successors.emplace_back(std::move(n));
+//                                    }
+//                                }
+//                            }
+//
+//                        }
+//
+//                        std::vector<ESMASNode> N = b.m_Successors; // Set N as successors of b
+//
+//                        for (ESMASNode& n : N) {
+//
+//                            auto search = b.m_ForgottenFCosts.find(n.m_Coord);
+//                            if (search != b.m_ForgottenFCosts.end()) {  /* condition to check if s(n) is in forgotten f-cost table of b*/
+//
+//                                const auto [nCoord, nCost] = *search;
+//
+//                                n.m_FScore = nCost;                          // f-value of s(n) in forgotten f-cost table of node b
+//                                b.m_ForgottenFCosts.erase(nCoord);           // Remove s(n) from forgotten f-cost table of node b.
+//                            }
+//                            else if (n.m_Coord != e && (n.m_Successors.empty() || n.m_Depth >= _memoryLimit - 1U)) {
+//                                n.m_FScore = std::numeric_limits<Ts>::infinity();
+//                            }
+//                            else {
+//                                // Update properties of n according to the pseudocode
+//                                n.m_FScore = std::max(b.m_FScore, n.m_GScore + _h(Utils::ToND(n.m_Coord, _maze.Size()), _end));
+//                            }
+//
+//                            // Add n to O
+//                            openSet.Add(n);
+//                            u++;
+//                        }
+//
+//                        while (u > _memoryLimit) {
+//                            cull_worst_leaf(openSet, u);
+//                        }
+//                    }
+//                    else {
+//                        break; // Return goal not found
+//                    }
+//                }
+//                else {
+//
+//                    /* SOLUTION REACHED */
+//
+//                    // Free data which is no longer relevant:
+//                    openSet.Clear();
+//
+//                    // Recurse from end node to start node, inserting into a result buffer:
+//                    result.reserve(b.m_GScore);
+//
+//                    for (const auto* temp = &b; temp->m_Parent != nullptr; temp = temp->m_Parent) {
+//                        result.emplace_back(Utils::ToND(temp->m_Coord, _maze.Size()));
+//                    }
+//
+//                    // Reverse the result:
+//                    std::reverse(result.begin(), result.end());
+//
+//                    break;
+//                }
+//            }
+//
+//            return result;
         }
 
         void cull_worst_leaf(Heap<ESMASNode, typename ESMASNode::Max>& _openSet, size_t& _memoryLimit) const {
