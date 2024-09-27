@@ -128,7 +128,7 @@ namespace CHDR::Solvers {
 
             _capacity = std::max(_capacity, std::max(s, e));
 
-            ExistenceSet closedSet ({ s }, _capacity);
+            ExistenceSet closedSet({ s }, _capacity);
 
             Heap<ASNode_Managed, typename ASNode_Managed::Max> openSet;
             openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
@@ -206,7 +206,7 @@ namespace CHDR::Solvers {
 
             _capacity = std::max(_capacity, std::max(s, e));
 
-            ExistenceSet closedSet ({ s }, _capacity);
+            ExistenceSet closedSet({ s }, _capacity);
 
             Heap<ASNode_Unmanaged, typename ASNode_Unmanaged::Max> openSet;
             openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });

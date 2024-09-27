@@ -94,7 +94,7 @@ namespace CHDR::Solvers {
                 std::queue<BFSNode_Managed, std::vector<BFSNode_Managed>> openSet;
                 openSet.emplace(s, nullptr);
 
-                ExistenceSet closedSet ({ s }, _capacity);
+                ExistenceSet closedSet({ s }, _capacity);
 
                 while (!openSet.empty()) { // SEARCH FOR SOLUTION...
 
@@ -184,7 +184,7 @@ namespace CHDR::Solvers {
                 std::queue<BFSNode_Unmanaged> openSet;
                 openSet.emplace(s, nullptr);
 
-                ExistenceSet closedSet ({ s }, _capacity);
+                ExistenceSet closedSet({ s }, _capacity);
 
                 std::vector<BFSNode_Unmanaged*> buffer;
 

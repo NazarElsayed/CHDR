@@ -95,7 +95,7 @@ namespace CHDR::Solvers {
                 std::stack<DFSNode_Managed, std::vector<DFSNode_Managed>> openSet(std::move(sequence));
                 openSet.emplace(s, nullptr);
 
-                ExistenceSet closedSet ({ s }, _capacity);
+                ExistenceSet closedSet({ s }, _capacity);
 
                 std::vector<DFSNode_Unmanaged*> buffer;
 
@@ -188,7 +188,7 @@ namespace CHDR::Solvers {
                 std::stack<DFSNode_Unmanaged, std::vector<DFSNode_Unmanaged>> openSet(std::move(sequence));
                 openSet.emplace(s, nullptr);
 
-                ExistenceSet closedSet ({ s }, _capacity);
+                ExistenceSet closedSet({ s }, _capacity);
 
                 std::vector<DFSNode_Unmanaged*> buffer;
 

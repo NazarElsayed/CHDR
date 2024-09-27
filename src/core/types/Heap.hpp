@@ -59,6 +59,37 @@ namespace CHDR {
             SortUp(m_Data.back());
         }
 
+        constexpr void Remove(const T& _item) {
+
+            const auto index = static_cast<unsigned>(_item.m_HeapIndex);
+
+            if (index < m_Data.size()) {
+
+                if (index == m_Data.size() - 1U) {
+
+                    // If the item to remove is the last item, just remove it.
+                    m_Data.pop_back();
+                }
+                else {
+
+                    // Swap with the last element and remove the last element.
+                    Swap(m_Data[index], m_Data.back());
+                    m_Data.pop_back();
+
+                    // Restore the heap property.
+                    if (index > 0U && compare(m_Data[index], m_Data[(index - 1U) / 2U])) {
+                        SortUp(m_Data[index]);
+                    }
+                    else {
+                        SortDown(m_Data[index]);
+                    }
+                }
+            }
+            else {
+                // TODO: Throw out of bounds exception.
+            }
+        }
+
         constexpr void RemoveFirst() {
 
             Swap(m_Data[0], m_Data.back());

@@ -33,7 +33,7 @@ namespace CHDR::Solvers {
 
         using coord_t = Coord<size_t, Kd>;
 
-        struct ESMASNode final : IHeapItem {
+        struct ESMASNode final : IHeapItem, std::enable_shared_from_this<ESMASNode> {
 
             bool m_Expanded;
 
@@ -43,9 +43,9 @@ namespace CHDR::Solvers {
             Ts m_GScore;
             Ts m_FScore;
 
-            ESMASNode* m_Parent;
+            std::shared_ptr<ESMASNode> m_Parent;
 
-            std::vector<ESMASNode> m_Successors;
+            std::vector<std::shared_ptr<ESMASNode>> m_Successors;
 
             std::unordered_map<size_t, Ts> m_ForgottenFCosts;
 
@@ -56,7 +56,8 @@ namespace CHDR::Solvers {
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
                 m_Parent(_parent),
-                m_Successors()
+                m_Successors(),
+                m_ForgottenFCosts()
             {
                 if (m_Parent != nullptr) {
                     m_Parent->m_Successors.emplace_back(*this);
@@ -89,18 +90,18 @@ namespace CHDR::Solvers {
 
             (void)_maze; // Suppress unused variable warning.
 
-            throw std::runtime_error("AStar::Solve(const Mazes::IMaze& _maze) Not implemented!");
+            throw std::runtime_error("ESMAStar::Solve(const Mazes::IMaze& _maze) Not implemented!");
         }
 
         auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const size_t& _memoryLimit) const {
 
-            (void)_maze; // Suppress unused variable warnings.
+            (void)_maze;
             (void)_start;
             (void)_end;
             (void)_h;
             (void)_memoryLimit;
 
-            throw std::runtime_error("Djikstra::Solve(const Mazes::IMaze& _maze) Not implemented!");
+            throw std::runtime_error("ESMAStar::Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const size_t& _memoryLimit) Not implemented!");
 
 //            /** @see: https://easychair.org/publications/open/TL2M */
 //
@@ -118,97 +119,142 @@ namespace CHDR::Solvers {
 //                nullptr             // Parent
 //            });
 //
-//            size_t u = 1U; // counter for nodes in memory
+//            enum State : char {
+//                NOMINAL,
+//                IMPOSSIBLE,
+//                OUTOFMEMORY
+//            };
+//
+//            State state(NOMINAL);
 //
 //            // Main loop
 //            while (!openSet.Empty()) {
 //
-//                ESMASNode b = openSet.Top(); // Node with smallest f-cost in O
+//                ESMASNode current(std::move(openSet.Top())); // Node with smallest f-cost in O
 //                openSet.RemoveFirst();
 //
-//                // If node b is goal
-//                if (b.m_Coord != e) {
+//                if (current.m_Coord != e) { // SEARCH FOR SOLUTION...
 //
-//                    if (b.m_FScore != std::numeric_limits<Ts>::infinity()) {
+//                    if (current.m_FScore != std::numeric_limits<Ts>::infinity()) {
 //
-//                        if (!b.m_Expanded) {
-//                            b.m_Expanded = true;
+//                        if (!current.m_Expanded) {
+//                             current.m_Expanded = true;
 //
 //                            // Expand b and assign its successors to N
-//                            auto neighbours = _maze.GetNeighbours(b.m_Coord);
+//                            for (auto& neighbour : _maze.GetNeighbours(current.m_Coord)) {
 //
-//                            for (auto& neighbour : neighbours) {
+//                                if (const auto& [nActive, nValue] = neighbour; nActive) {
 //
-//                                if (const auto [nActive, nValue] = neighbour; nActive) {
+//                                    const auto n = Utils::To1D(nValue, _maze.Size());
+//                                    if (n != current.m_Coord) {
 //
-//                                    auto nCoord = Utils::To1D(nValue, _maze.Size());
-//
-//                                    if (nCoord != b.m_Coord) {
-//
-//                                        ESMASNode n(
-//                                            b.m_Depth + 1U,     // Depth
-//                                            nCoord,             // Coordinate
-//                                            b.m_GScore + 1U,    // G-Score
-//                                            _h(nValue, _end),   // F-Score
-//                                            &b                  // Parent
+//                                        current.m_Successors.emplace_back(
+//                                            std::make_shared<ESMASNode>(
+//                                                current.m_Depth + 1U,       // Depth
+//                                                n,                          // Coordinate
+//                                                current.m_GScore + 1U,      // G-Score
+//                                                _h(nValue, _end),           // F-Score
+//                                                current.shared_from_this()  // Parent
+//                                            )
 //                                        );
-//
-//                                        b.m_Successors.emplace_back(std::move(n));
 //                                    }
 //                                }
 //                            }
-//
 //                        }
 //
-//                        std::vector<ESMASNode> N = b.m_Successors; // Set N as successors of b
+//                        // Get successors of current:
+//                        for (auto& successor : current.m_Successors) {
 //
-//                        for (ESMASNode& n : N) {
-//
-//                            auto search = b.m_ForgottenFCosts.find(n.m_Coord);
-//                            if (search != b.m_ForgottenFCosts.end()) {  /* condition to check if s(n) is in forgotten f-cost table of b*/
+//                            auto search = current.m_ForgottenFCosts.find(successor->m_Coord);
+//                            if (search != current.m_ForgottenFCosts.end()) {    /* condition to check if s(n) is in forgotten f-cost table of b*/
 //
 //                                const auto [nCoord, nCost] = *search;
 //
-//                                n.m_FScore = nCost;                          // f-value of s(n) in forgotten f-cost table of node b
-//                                b.m_ForgottenFCosts.erase(nCoord);           // Remove s(n) from forgotten f-cost table of node b.
-//                            }
-//                            else if (n.m_Coord != e && (n.m_Successors.empty() || n.m_Depth >= _memoryLimit - 1U)) {
-//                                n.m_FScore = std::numeric_limits<Ts>::infinity();
+//                                successor->m_FScore = nCost;                    // f-value of s(n) in forgotten f-cost table of node b
+//                                current.m_ForgottenFCosts.erase(nCoord);        // Remove s(n) from forgotten f-cost table of node b.
 //                            }
 //                            else {
-//                                // Update properties of n according to the pseudocode
-//                                n.m_FScore = std::max(b.m_FScore, n.m_GScore + _h(Utils::ToND(n.m_Coord, _maze.Size()), _end));
+//
+//                                // Expand and assign successors
+//                                for (auto& neighbour : _maze.GetNeighbours(current.m_Coord)) {
+//
+//                                    if (const auto& [nActive, nValue] = neighbour; nActive) {
+//
+//                                        const auto n = Utils::To1D(nValue, _maze.Size());
+//                                        if (n != current.m_Coord) {
+//
+//                                            successor->m_Successors.emplace_back(
+//                                                std::make_shared<ESMASNode>(
+//                                                    successor->m_Depth + 1U,        // Depth
+//                                                    n,                              // Coordinate
+//                                                    successor->m_GScore + 1U,       // G-Score
+//                                                    _h(nValue, _end),               // F-Score
+//                                                    successor->shared_from_this()   // Parent
+//                                                )
+//                                            );
+//                                        }
+//                                    }
+//                                }
+//
+//                                /*
+//                                 * Update the state accordingly:
+//                                 *         Has no successors:   IMPOSSIBLE
+//                                 *      Memory Limit Reached:   OUTOFMEMORY
+//                                 *                 Otherwise:   NOMINAL
+//                                 */
+//                                state = (
+//                                    successor->m_Successors.empty() ? IMPOSSIBLE : (
+//                                        successor->m_Depth >= _memoryLimit - 1U ?
+//                                            OUTOFMEMORY :
+//                                            NOMINAL
+//                                    )
+//                                );
+//
+//                                if (successor->m_Coord != e && state != NOMINAL) {
+//                                    successor->m_FScore = std::numeric_limits<Ts>::infinity();
+//                                }
+//                                else {
+//                                    successor->m_FScore = std::max(current.m_FScore, successor->m_GScore + _h(Utils::ToND(successor->m_Coord, _maze.Size()), _end));
+//                                }
 //                            }
 //
-//                            // Add n to O
-//                            openSet.Add(n);
-//                            u++;
+//                            // Add n to O.
+//                            openSet.Add(successor);
 //                        }
 //
-//                        while (u > _memoryLimit) {
-//                            cull_worst_leaf(openSet, u);
+//                        while (openSet.Size() > _memoryLimit) {
+//                            cull_worst_leaf(openSet);
 //                        }
 //                    }
 //                    else {
-//                        break; // Return goal not found
+//                        break; // FAILURE.
 //                    }
 //                }
-//                else {
-//
-//                    /* SOLUTION REACHED */
+//                else { // SOLUTION REACHED ...
 //
 //                    // Free data which is no longer relevant:
 //                    openSet.Clear();
 //
-//                    // Recurse from end node to start node, inserting into a result buffer:
-//                    result.reserve(b.m_GScore);
+//                    if (state == NOMINAL) {
 //
-//                    for (const auto* temp = &b; temp->m_Parent != nullptr; temp = temp->m_Parent) {
-//                        result.emplace_back(Utils::ToND(temp->m_Coord, _maze.Size()));
+//                        // Recurse from end node to start node, inserting into a result buffer:
+//                        result.reserve(current.m_GScore);
+//                        result.emplace_back(Utils::ToND(current.m_Coord, _maze.Size()));
+//
+//                        if (current.m_Parent != nullptr) {
+//
+//                            for (auto& item = current.m_Parent; item->m_Parent != nullptr;) {
+//                                result.emplace_back(Utils::ToND(item->m_Coord, _maze.Size()));
+//
+//                                auto oldItem = item;
+//                                item = item->m_Parent;
+//                                oldItem.reset();
+//                            }
+//                        }
+//
+//                        // Reverse the result:
+//                        std::reverse(result.begin(), result.end());
 //                    }
-//
-//                    // Reverse the result:
-//                    std::reverse(result.begin(), result.end());
 //
 //                    break;
 //                }
@@ -217,11 +263,11 @@ namespace CHDR::Solvers {
 //            return result;
         }
 
-        void cull_worst_leaf(Heap<ESMASNode, typename ESMASNode::Max>& _openSet, size_t& _memoryLimit) const {
+        void cull_worst_leaf(Heap<ESMASNode, typename ESMASNode::Max>& _openSet) const {
 
-            const ESMASNode w = safe_culling_heuristic(_openSet);
+            const auto w = safe_culling_heuristic(_openSet);
 
-            auto p = w.m_Parent; // parent node of w
+            auto& p = w.m_Parent; // parent node of w
 
             // Remove w from the successor list of p
             for (size_t i = 0U; i < p->m_Successors.size(); ++i) {
@@ -238,25 +284,21 @@ namespace CHDR::Solvers {
             p->m_ForgottenFCosts.insert_or_assign(p->m_Coord, w.m_FScore);
 
             // f (p) ← min of forgotten f-costs of p
-            for (auto& [state, cost] : p->m_ForgottenFCosts) {
-                p->m_FScore = std::min(p->m_FScore, cost);
+            for (const auto& [pState, pCost] : p->m_ForgottenFCosts) {
+                p->m_FScore = std::min(p->m_FScore, pCost);
             }
 
             // if p is not in _openSet then
-            if (!_openSet.Contains(*p)) {
-                _openSet.Add(*p); // Add p to _openSet
+            if (!_openSet.Contains(p)) {
+                _openSet.Add(p); // Add p to _openSet
             }
-
-            _memoryLimit--;
         }
 
         auto safe_culling_heuristic(Heap<ESMASNode, typename ESMASNode::Max>& _openSet) const {
 
-            ESMASNode w = _openSet.Back(); // Worst leaf according to c(n) in _openSet
+            auto w = _openSet.Back(); // Worst leaf according to c(n) in _openSet
 
-            const ESMASNode b = _openSet.Top(); // Best node according to f(n) in _openSet
-
-            if (w == b) {
+            if (w == _openSet.Top()) { // Top == Best node according to f(n) in _openSet
 
                 // Code to find second worst leaf according to c(n) goes here
                 // Assign the second worst leaf to w
