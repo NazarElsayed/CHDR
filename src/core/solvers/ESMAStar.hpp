@@ -90,7 +90,7 @@ namespace CHDR::Solvers {
 
             (void)_maze; // Suppress unused variable warning.
 
-            throw std::runtime_error("ESMAStar::Solve(const Mazes::IMaze& _maze) Not implemented!");
+            throw std::runtime_error("ESMAStar::Solve(const Mazes::IMaze& _maze): Not implemented!");
         }
 
         auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const size_t& _memoryLimit) const {
@@ -101,7 +101,7 @@ namespace CHDR::Solvers {
             (void)_h;
             (void)_memoryLimit;
 
-            throw std::runtime_error("ESMAStar::Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const size_t& _memoryLimit) Not implemented!");
+            throw std::runtime_error("ESMAStar::Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const size_t& _memoryLimit): Not implemented!");
 
 //            /** @see: https://easychair.org/publications/open/TL2M */
 //

@@ -79,7 +79,7 @@ namespace CHDR::Solvers {
 
             (void)_maze; // Suppress unused variable warning.
 
-            throw std::runtime_error("Djikstra::Solve(const Mazes::IMaze& _maze) Not implemented!");
+            throw std::runtime_error("Djikstra::Solve(const Mazes::IMaze& _maze): Not implemented!");
         }
 
         void Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) {
@@ -90,7 +90,7 @@ namespace CHDR::Solvers {
             (void)_h;
             (void)_capacity;
 
-            throw std::runtime_error("Djikstra::Solve(const Mazes::IMaze& _maze) Not implemented!");
+            throw std::runtime_error("Djikstra::Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U): Not implemented!");
 
 //
 //            std::vector<coord_t> result;

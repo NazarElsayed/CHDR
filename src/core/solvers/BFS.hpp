@@ -73,7 +73,7 @@ namespace CHDR::Solvers {
 
             (void)_maze; // Suppress unused variable warning.
 
-            throw std::runtime_error("AStar::Solve(const Mazes::IMaze& _maze) Not implemented!");
+            throw std::runtime_error("BFS::Solve(const Mazes::IMaze& _maze): Not implemented!");
         }
 
         auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, size_t _capacity = 0U) {
