@@ -33,7 +33,12 @@ namespace CHDR::Solvers {
 
         using coord_t = Coord<size_t, Kd>;
 
+        struct NodeFactory;
+
         struct ESMASNode final : IHeapItem, std::enable_shared_from_this<ESMASNode> {
+
+            friend NodeFactory;
+            friend std::shared_ptr<ESMASNode>;
 
             bool m_Expanded;
 
@@ -43,13 +48,15 @@ namespace CHDR::Solvers {
             Ts m_GScore;
             Ts m_FScore;
 
-            std::shared_ptr<ESMASNode> m_Parent;
+            std::weak_ptr<ESMASNode> m_Parent;
 
             std::vector<std::shared_ptr<ESMASNode>> m_Successors;
 
             std::unordered_map<size_t, Ts> m_ForgottenFCosts;
 
-            [[nodiscard]] constexpr ESMASNode(const size_t& _depth, const size_t& _coord, const Ts& _gScore, const Ts& _hScore, ESMASNode* const _parent) : IHeapItem(),
+        private:
+
+            [[nodiscard]] constexpr ESMASNode(const size_t& _depth, const size_t& _coord, const Ts& _gScore, const Ts& _hScore, const std::weak_ptr<ESMASNode>& _parent) : IHeapItem(),
                 m_Expanded(false),
                 m_Depth (_depth),
                 m_Coord (_coord),
@@ -57,26 +64,38 @@ namespace CHDR::Solvers {
                 m_FScore(_gScore + _hScore),
                 m_Parent(_parent),
                 m_Successors(),
-                m_ForgottenFCosts()
-            {
-                if (m_Parent != nullptr) {
-                    m_Parent->m_Successors.emplace_back(*this);
+                m_ForgottenFCosts() {}
+
+            void Init() {
+
+                if (auto parent_lock = m_Parent.lock()) {
+                    parent_lock->m_Successors.emplace_back(this->shared_from_this());
                 }
             }
 
-            [[nodiscard]] constexpr bool operator == (const ESMASNode& _node) const { return m_Coord == _node.m_Coord; }
+        public:
+
+            template<typename... Args>
+            static constexpr std::shared_ptr<ESMASNode> CreateShared(Args&&... args) {
+                auto result = std::shared_ptr<ESMASNode>(new ESMASNode(std::forward<Args>(args)...));
+                result->Init();
+
+                return result;
+            }
+
+            [[nodiscard]] constexpr bool operator == (const std::shared_ptr<ESMASNode>& _node) const { return m_Coord == _node->m_Coord; }
 
             struct Max {
 
-                [[nodiscard]] constexpr bool operator () (const ESMASNode& _a, const ESMASNode& _b) const {
+                [[nodiscard]] constexpr bool operator () (const std::shared_ptr<ESMASNode>& _a, const std::shared_ptr<ESMASNode>& _b) const {
 
                     bool result{};
 
-                    if (_a.m_FScore == _b.m_FScore) {
-                        result = _a.m_GScore > _b.m_GScore;
+                    if (_a->m_FScore == _b->m_FScore) {
+                        result = _a->m_GScore > _b->m_GScore;
                     }
                     else {
-                        result = _a.m_FScore > _b.m_FScore;
+                        result = _a->m_FScore > _b->m_FScore;
                     }
 
                     return result;
@@ -110,14 +129,14 @@ namespace CHDR::Solvers {
 //            const auto s = Utils::To1D(_start, _maze.Size());
 //            const auto e = Utils::To1D(_end,   _maze.Size());
 //
-//            Heap<ESMASNode, typename ESMASNode::Max> openSet;
-//            openSet.Emplace({
+//            Heap<std::shared_ptr<ESMASNode>, typename ESMASNode::Max> openSet;
+//            openSet.Emplace(ESMASNode::CreateShared(
 //                0U,                 // Depth
 //                s,                  // Coordinate
 //                static_cast<Ts>(0), // G-Score
 //                _h(_start, _end),   // F-Score
-//                nullptr             // Parent
-//            });
+//                std::shared_ptr<ESMASNode>(nullptr)
+//            ));
 //
 //            enum State : char {
 //                NOMINAL,
@@ -130,68 +149,68 @@ namespace CHDR::Solvers {
 //            // Main loop
 //            while (!openSet.Empty()) {
 //
-//                ESMASNode current(std::move(openSet.Top())); // Node with smallest f-cost in O
+//                auto current(std::move(openSet.Top())); // Node with smallest f-cost in O
 //                openSet.RemoveFirst();
 //
-//                if (current.m_Coord != e) { // SEARCH FOR SOLUTION...
+//                if (current->m_Coord != e) { // SEARCH FOR SOLUTION...
 //
-//                    if (current.m_FScore != std::numeric_limits<Ts>::infinity()) {
+//                    if (current->m_FScore != std::numeric_limits<Ts>::infinity()) {
 //
-//                        if (!current.m_Expanded) {
-//                             current.m_Expanded = true;
+//                        if (!current->m_Expanded) {
+//                             current->m_Expanded = true;
 //
 //                            // Expand b and assign its successors to N
-//                            for (auto& neighbour : _maze.GetNeighbours(current.m_Coord)) {
+//                            for (auto& neighbour : _maze.GetNeighbours(current->m_Coord)) {
 //
 //                                if (const auto& [nActive, nValue] = neighbour; nActive) {
 //
 //                                    const auto n = Utils::To1D(nValue, _maze.Size());
-//                                    if (n != current.m_Coord) {
+//                                    if (n != current->m_Coord) {
 //
-//                                        current.m_Successors.emplace_back(
-//                                            std::make_shared<ESMASNode>(
-//                                                current.m_Depth + 1U,       // Depth
-//                                                n,                          // Coordinate
-//                                                current.m_GScore + 1U,      // G-Score
-//                                                _h(nValue, _end),           // F-Score
-//                                                current.shared_from_this()  // Parent
-//                                            )
-//                                        );
+//                                        current->m_Successors.emplace_back(ESMASNode::CreateShared(
+//                                            current->m_Depth + 1U,      // Depth
+//                                            n,                          // Coordinate
+//                                            current->m_GScore + 1U,     // G-Score
+//                                            _h(nValue, _end),           // F-Score
+//                                            current->shared_from_this() // Parent
+//                                        ));
 //                                    }
 //                                }
 //                            }
 //                        }
 //
 //                        // Get successors of current:
-//                        for (auto& successor : current.m_Successors) {
+//                        for (auto& successor : current->m_Successors) {
 //
-//                            auto search = current.m_ForgottenFCosts.find(successor->m_Coord);
-//                            if (search != current.m_ForgottenFCosts.end()) {    /* condition to check if s(n) is in forgotten f-cost table of b*/
+//                            auto search = current->m_ForgottenFCosts.find(successor->m_Coord);
+//                            if (search != current->m_ForgottenFCosts.end()) {       /* condition to check if s(n) is in forgotten f-cost table of b*/
 //
 //                                const auto [nCoord, nCost] = *search;
 //
-//                                successor->m_FScore = nCost;                    // f-value of s(n) in forgotten f-cost table of node b
-//                                current.m_ForgottenFCosts.erase(nCoord);        // Remove s(n) from forgotten f-cost table of node b.
+//                                successor->m_FScore = nCost;                        // f-value of s(n) in forgotten f-cost table of node b
+//                                current->m_ForgottenFCosts.erase(nCoord);           // Remove s(n) from forgotten f-cost table of node b.
 //                            }
 //                            else {
 //
 //                                // Expand and assign successors
-//                                for (auto& neighbour : _maze.GetNeighbours(current.m_Coord)) {
+//                                if (!successor->m_Expanded) {
+//                                     successor->m_Expanded = true;
 //
-//                                    if (const auto& [nActive, nValue] = neighbour; nActive) {
+//                                    for (auto& neighbour : _maze.GetNeighbours(current->m_Coord)) {
 //
-//                                        const auto n = Utils::To1D(nValue, _maze.Size());
-//                                        if (n != current.m_Coord) {
+//                                        if (const auto& [nActive, nValue] = neighbour; nActive) {
 //
-//                                            successor->m_Successors.emplace_back(
-//                                                std::make_shared<ESMASNode>(
+//                                            const auto n = Utils::To1D(nValue, _maze.Size());
+//                                            if (n != current->m_Coord) {
+//
+//                                                successor->m_Successors.emplace_back(ESMASNode::CreateShared(
 //                                                    successor->m_Depth + 1U,        // Depth
 //                                                    n,                              // Coordinate
 //                                                    successor->m_GScore + 1U,       // G-Score
 //                                                    _h(nValue, _end),               // F-Score
 //                                                    successor->shared_from_this()   // Parent
-//                                                )
-//                                            );
+//                                                ));
+//                                            }
 //                                        }
 //                                    }
 //                                }
@@ -214,12 +233,14 @@ namespace CHDR::Solvers {
 //                                    successor->m_FScore = std::numeric_limits<Ts>::infinity();
 //                                }
 //                                else {
-//                                    successor->m_FScore = std::max(current.m_FScore, successor->m_GScore + _h(Utils::ToND(successor->m_Coord, _maze.Size()), _end));
+//                                    successor->m_FScore = std::max(current->m_FScore, successor->m_GScore + _h(Utils::ToND(successor->m_Coord, _maze.Size()), _end));
 //                                }
 //                            }
 //
 //                            // Add n to O.
-//                            openSet.Add(successor);
+//                            if (!openSet.Contains(successor)) {
+//                                openSet.Add(successor);
+//                            }
 //                        }
 //
 //                        while (openSet.Size() > _memoryLimit) {
@@ -233,21 +254,22 @@ namespace CHDR::Solvers {
 //                else { // SOLUTION REACHED ...
 //
 //                    // Free data which is no longer relevant:
-//                    openSet.Clear();
+//                    //openSet.Clear();
 //
 //                    if (state == NOMINAL) {
 //
 //                        // Recurse from end node to start node, inserting into a result buffer:
-//                        result.reserve(current.m_GScore);
-//                        result.emplace_back(Utils::ToND(current.m_Coord, _maze.Size()));
+//                        result.reserve(current->m_GScore);
+//                        result.emplace_back(Utils::ToND(current->m_Coord, _maze.Size()));
 //
-//                        if (current.m_Parent != nullptr) {
+//                        auto item = current->m_Parent.lock();
+//                        if (item) {
 //
-//                            for (auto& item = current.m_Parent; item->m_Parent != nullptr;) {
+//                            while (const auto item_parent = item->m_Parent.lock()) {
 //                                result.emplace_back(Utils::ToND(item->m_Coord, _maze.Size()));
 //
 //                                auto oldItem = item;
-//                                item = item->m_Parent;
+//                                item = item_parent;
 //                                oldItem.reset();
 //                            }
 //                        }
@@ -263,38 +285,39 @@ namespace CHDR::Solvers {
 //            return result;
         }
 
-        void cull_worst_leaf(Heap<ESMASNode, typename ESMASNode::Max>& _openSet) const {
+        void cull_worst_leaf(Heap<std::shared_ptr<ESMASNode>, typename ESMASNode::Max>& _openSet) const {
 
             const auto w = safe_culling_heuristic(_openSet);
 
-            auto& p = w.m_Parent; // parent node of w
+            if (auto p = w->m_Parent.lock()) { // parent node of w
 
-            // Remove w from the successor list of p
-            for (size_t i = 0U; i < p->m_Successors.size(); ++i) {
+                // Remove w from the successor list of p
+                for (size_t i = 0U; i < p->m_Successors.size(); ++i) {
 
-                // Code to remove w from the successor list of p goes here
-                if (p->m_Successors[i] == w) {
-                    p->m_Successors.erase(p->m_Successors.begin() + i);
+                    // Code to remove w from the successor list of p goes here
+                    if (p->m_Successors[i] == w) {
+                        p->m_Successors.erase(p->m_Successors.begin() + i);
 
-                    break;
+                        break;
+                    }
                 }
-            }
 
-            // Add s(w) to forgotten f-cost table of p, with value of f (w)
-            p->m_ForgottenFCosts.insert_or_assign(p->m_Coord, w.m_FScore);
+                // Add s(w) to forgotten f-cost table of p, with value of f (w)
+                p->m_ForgottenFCosts.insert_or_assign(p->m_Coord, w->m_FScore);
 
-            // f (p) ← min of forgotten f-costs of p
-            for (const auto& [pState, pCost] : p->m_ForgottenFCosts) {
-                p->m_FScore = std::min(p->m_FScore, pCost);
-            }
+                // f (p) ← min of forgotten f-costs of p
+                for (const auto& [pState, pCost] : p->m_ForgottenFCosts) {
+                    p->m_FScore = std::min(p->m_FScore, pCost);
+                }
 
-            // if p is not in _openSet then
-            if (!_openSet.Contains(p)) {
-                _openSet.Add(p); // Add p to _openSet
+                // if p is not in _openSet then
+                if (!_openSet.Contains(p)) {
+                    _openSet.Add(p); // Add p to _openSet
+                }
             }
         }
 
-        auto safe_culling_heuristic(Heap<ESMASNode, typename ESMASNode::Max>& _openSet) const {
+        auto safe_culling_heuristic(Heap<std::shared_ptr<ESMASNode>, typename ESMASNode::Max>& _openSet) const {
 
             auto w = _openSet.Back(); // Worst leaf according to c(n) in _openSet
 

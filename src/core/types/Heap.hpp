@@ -20,107 +20,119 @@ namespace CHDR {
     template<typename T, typename Comparator>
     class Heap {
 
-        static_assert(std::is_base_of_v<IHeapItem, T>, "T must derive from IHeapItem");
+        //static_assert(std::is_base_of_v<IHeapItem, T>, "T must derive from IHeapItem");
 
     private:
+
         std::vector<T> m_Data;
         Comparator compare;
 
+        template<typename U>
+        struct heap_index_accessor {
+            static size_t& get(U& item) {
+                return item.m_HeapIndex;
+            }
+        };
+
+        template<typename U>
+        struct heap_index_accessor<U*> {
+            static size_t& get(U* item) {
+                return item->m_HeapIndex;
+            }
+        };
+
+        template<typename U>
+        struct heap_index_accessor<std::shared_ptr<U>> {
+            static size_t& get(std::shared_ptr<U>& item) {
+                return item->m_HeapIndex;
+            }
+        };
+
+        size_t& get_heap_index(T& item) {
+            return heap_index_accessor<T>::get(item);
+        }
+
     public:
 
-        [[nodiscard]] constexpr     bool Empty() const { return m_Data.empty(); }
-        [[nodiscard]] constexpr   size_t  Size() const { return m_Data. size(); }
-        [[nodiscard]] constexpr const T&   Top() const { return m_Data.front(); }
-        [[nodiscard]] constexpr const T&  Back() const { return m_Data. back(); }
+        [[nodiscard]] constexpr bool    Empty() const { return m_Data.empty(); }
+        [[nodiscard]] constexpr size_t   Size() const { return m_Data.size();  }
+        [[nodiscard]] constexpr const T&  Top() const { return m_Data.front(); }
+        [[nodiscard]] constexpr const T& Back() const { return m_Data.back();  }
 
         constexpr void Add(const T& _item) {
-
             m_Data.push_back(_item);
-            m_Data.back().m_HeapIndex = m_Data.size() - 1U;
-
+            get_heap_index(m_Data.back()) = m_Data.size() - 1U;
             SortUp(m_Data.back());
         }
 
-        constexpr void Add(const T&& _item) {
-
-            m_Data.push_back(_item);
-            m_Data.back().m_HeapIndex = m_Data.size() - 1U;
-
+        constexpr void Add(T&& _item) {
+            m_Data.push_back(std::move(_item));
+            get_heap_index(m_Data.back()) = m_Data.size() - 1U;
             SortUp(m_Data.back());
         }
 
         constexpr void Emplace(T&& _item) {
-
             m_Data.emplace_back(std::move(_item));
-            m_Data.back().m_HeapIndex = m_Data.size() - 1U;
-
+            get_heap_index(m_Data.back()) = m_Data.size() - 1U;
             SortUp(m_Data.back());
         }
 
         constexpr void Remove(const T& _item) {
 
-            if (_item.m_HeapIndex < m_Data.size()) {
+            auto& heapIndex = get_heap_index(const_cast<T&>(_item));
+            if (heapIndex < m_Data.size()) {
 
-                if (_item.m_HeapIndex == m_Data.size() - 1U) {
+                if (heapIndex == m_Data.size() - 1U) {
                     m_Data.pop_back(); // If the item to remove is the last item, just remove it.
                 }
                 else {
-
-                    Swap(m_Data[_item.m_HeapIndex], m_Data.back());
+                    Swap(m_Data[heapIndex], m_Data.back());
                     m_Data.pop_back();
 
                     // Restore heap property:
-                    if (_item.m_HeapIndex > 0U && compare(m_Data[_item.m_HeapIndex], m_Data[(_item.m_HeapIndex - 1U) / 2U])) {
-                        SortUp(m_Data[_item.m_HeapIndex]);
+                    if (heapIndex > 0U && compare(m_Data[heapIndex], m_Data[(heapIndex - 1U) / 2U])) {
+                        SortUp(m_Data[heapIndex]);
                     }
                     else {
-                        SortDown(m_Data[_item.m_HeapIndex]);
+                        SortDown(m_Data[heapIndex]);
                     }
                 }
             }
             else {
 
-#ifndef NDEBUG
-                throw std::runtime_error("Heap::Remove(const T& _item): (OutOfBounds) Item does not exist in Heap.");
-#endif
+    #ifndef NDEBUG
+                throw std::runtime_error("Heap::Remove(const T& _item): (Out of Bounds) Item does not exist in Heap.");
+    #endif
             }
         }
 
         constexpr void RemoveFirst() {
-
             Swap(m_Data[0U], m_Data.back());
             m_Data.pop_back();
-
             SortDown(m_Data[0U]);
         }
 
         constexpr void RemoveLast() {
-
             if (!m_Data.empty()) {
-                m_Data.erase(m_Data.begin());
-
-                if (!m_Data.empty()) {
-                    SortUp(m_Data[0U]);
-                }
+                m_Data.pop_back();
             }
         }
 
         constexpr void Update(T& _item) {
-            SortUp(m_Data[_item.m_HeapIndex]);
+            SortUp(m_Data[get_heap_index(_item)]);
         }
 
         constexpr void SortUp(T& _item) {
 
-            auto itemIndex   = _item.m_HeapIndex;
+            auto itemIndex = get_heap_index(_item);
             auto parentIndex = itemIndex > 0U ? ((itemIndex - 1U) / 2U) : 0U;
 
-            while (!m_Data.empty()) {
+            while (itemIndex > 0U) {
 
                 if (compare(m_Data[parentIndex], m_Data[itemIndex])) {
 
                     Swap(m_Data[itemIndex], m_Data[parentIndex]);
-
-                      itemIndex = itemIndex > 0U ? ((itemIndex - 1U) / 2U) : 0U;
+                    itemIndex = parentIndex;
                     parentIndex = itemIndex > 0U ? ((itemIndex - 1U) / 2U) : 0U;
                 }
                 else {
@@ -131,33 +143,24 @@ namespace CHDR {
 
         constexpr void SortDown(T& _item) {
 
-            auto itemIndex = _item.m_HeapIndex;
+            auto itemIndex = get_heap_index(_item);
 
-            auto leftChildIndex  = (itemIndex * 2U) + 1U;
+            auto leftChildIndex = (itemIndex * 2U) + 1U;
             auto rightChildIndex = leftChildIndex + 1U;
 
-            while (!m_Data.empty()) {
+            while (leftChildIndex < m_Data.size()) {
 
-                if (leftChildIndex < m_Data.size()) {
+                auto swapIndex = leftChildIndex;
+                if (rightChildIndex < m_Data.size() && compare(m_Data[leftChildIndex], m_Data[rightChildIndex])) {
+                    swapIndex = rightChildIndex;
+                }
+                if (compare(m_Data[itemIndex], m_Data[swapIndex])) {
 
-                    auto swapIndex = leftChildIndex;
+                    Swap(m_Data[itemIndex], m_Data[swapIndex]);
+                    itemIndex = swapIndex;
 
-                    if (rightChildIndex < m_Data.size()) {
-                        if (compare(m_Data[leftChildIndex], m_Data[rightChildIndex])) {
-                            swapIndex = rightChildIndex;
-                        }
-                    }
-
-                    if (compare(m_Data[itemIndex], m_Data[swapIndex])) {
-                        Swap(m_Data[itemIndex], m_Data[swapIndex]);
-
-                        itemIndex = swapIndex;
-                        leftChildIndex  = (itemIndex * 2U) + 1U;
-                        rightChildIndex = leftChildIndex + 1U;
-                    }
-                    else {
-                        break;
-                    }
+                    leftChildIndex = (itemIndex * 2U) + 1U;
+                    rightChildIndex = leftChildIndex + 1U;
                 }
                 else {
                     break;
@@ -169,27 +172,19 @@ namespace CHDR {
 
             if (&_item1 != &_item2) {
                 std::swap(_item1, _item2);
-                std::swap(_item1.m_HeapIndex, _item2.m_HeapIndex);
+                std::swap(get_heap_index(_item1), get_heap_index(_item2));
             }
         }
 
         constexpr bool Contains(T& _item) {
-            return !m_Data.empty() && _item == m_Data[_item.m_HeapIndex];
+
+            const auto& heapIndex = get_heap_index(_item);
+
+            return !m_Data.empty() && heapIndex < m_Data.size() && _item == m_Data[heapIndex];
         }
 
         constexpr void Clear() {
             m_Data.clear();
-        }
-
-        constexpr void PrintHeap() {
-
-            std::cout << std::endl << "Current Heap:" << "\n";
-
-            for (const auto& item : m_Data) {
-                std::cout << item.m_FScore << "\n";
-            }
-
-            std::cout << std::endl;
         }
 
 #ifndef HEAP_SUPPRESS_EXCEPTION_WARNING
