@@ -16,6 +16,14 @@ CHDR is designed to be fast and lightweight. Alongside data and algorithmic opti
 
 ### Features
 
+#### Platform Support
+
+| Platform |   Status   |
+|:---------|:----------:|
+| Linux    | Tested ✔️  |
+| Windows  | Tested ✔️  |
+| MacOS    | Untested ❓ |
+
 #### Pathfinding Algorithms
 
 | Type                                          |     Status      |
@@ -95,3 +103,6 @@ However, CHDR does require that your project is compatible with a C++17 environm
 #### &lt;vector&gt;
 
 ### References
+
+Lovinger, J. and Zhang, X. (2017) ‘Enhanced simplified memory-bounded a star (SMA*+)’, 
+EPiC Series in Computing, Vol. 50, pp. 202–212. Available at: https://doi.org/10.29007/v7zc. [Accessed 10 Aug. 2024].
