@@ -112,9 +112,9 @@ namespace CHDR::Solvers {
 
                             for (const auto& neighbour: _maze.GetNeighbours(current.m_Coord)) {
 
-                                if (const auto& [nActive, nValue] = neighbour; nActive) {
+                                if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-                                    const auto n = Utils::To1D(nValue, _maze.Size());
+                                    const auto n = Utils::To1D(nCoord, _maze.Size());
 
                                     // Check if node is not already visited:
                                     if (!closedSet.Contains(n)) {
@@ -204,9 +204,9 @@ namespace CHDR::Solvers {
 
                             for (const auto& neighbour: _maze.GetNeighbours(current.m_Coord)) {
 
-                                if (const auto& [nActive, nValue] = neighbour; nActive) {
+                                if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-                                    const auto n = Utils::To1D(nValue, _maze.Size());
+                                    const auto n = Utils::To1D(nCoord, _maze.Size());
 
                                     // Check if node is not already visited:
                                     if (!closedSet.Contains(n)) {

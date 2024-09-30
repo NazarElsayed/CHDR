@@ -71,9 +71,9 @@ namespace CHDR::Solvers {
 
                         for (const auto& neighbour : _maze.GetNeighbours(current)) {
 
-                            if (const auto& [nActive, nValue] = neighbour; nActive) {
+                            if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-                                const auto n = Utils::To1D(nValue, _maze.Size());
+                                const auto n = Utils::To1D(nCoord, _maze.Size());
 
                                 if (!closedSet.Contains(n)) {
 

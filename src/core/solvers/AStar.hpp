@@ -147,9 +147,9 @@ namespace CHDR::Solvers {
 
                     for (const auto& neighbour : _maze.GetNeighbours(current.m_Coord)) {
 
-                        if (const auto& [nActive, nValue] = neighbour; nActive) {
+                        if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-                            const auto n = Utils::To1D(nValue, _maze.Size());
+                            const auto n = Utils::To1D(nCoord, _maze.Size());
 
                             // Check if node is not already visited:
                             if (!closedSet.Contains(n)) {
@@ -161,7 +161,7 @@ namespace CHDR::Solvers {
                                 closedSet.Add(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), std::make_shared<ASNode_Managed>(std::move(current)) });
+                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nCoord, _end), std::make_shared<ASNode_Managed>(std::move(current)) });
                             }
                         }
                     }
@@ -227,9 +227,9 @@ namespace CHDR::Solvers {
 
                     for (const auto& neighbour : _maze.GetNeighbours(current.m_Coord)) {
 
-                        if (const auto& [nActive, nValue] = neighbour; nActive) {
+                        if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-                            const auto n = Utils::To1D(nValue, _maze.Size());
+                            const auto n = Utils::To1D(nCoord, _maze.Size());
 
                             // Check if node is not already visited:
                             if (!closedSet.Contains(n)) {
@@ -241,7 +241,7 @@ namespace CHDR::Solvers {
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
                                 buffer.emplace_back(new ASNode_Unmanaged(std::move(current)));
-                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nValue, _end), buffer.back() });
+                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nCoord, _end), buffer.back() });
                             }
                         }
                     }
