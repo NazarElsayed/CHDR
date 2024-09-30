@@ -61,15 +61,22 @@ namespace CHDR::Solvers {
 
         public:
 
-            bool HasActiveNeighbors(const Mazes::Grid<Kd, Tm>& _maze) {
+            bool HasPotentialSuccessors(const Mazes::Grid<Kd, Tm>& _maze) {
 
                 bool result = false;
 
-                for (auto& neighbour : _maze.GetNeighbours(m_Coord)) {
+                if (!m_Successors.empty()) {
+                    result = true;
+                }
+                else {
 
-                    if (const auto& [nActive, nCoord] = neighbour; nActive) {
-                        result = true;
-                        break;
+                    for (auto& neighbour : _maze.GetNeighbours(m_Coord)) {
+
+                        if (const auto& [nActive, nCoord] = neighbour; nActive) {
+
+                            result = true;
+                            break;
+                        }
                     }
                 }
 
@@ -87,9 +94,6 @@ namespace CHDR::Solvers {
                     const auto neighbours = _maze.GetNeighbours(m_Coord);
                     m_Successors.reserve(neighbours.size());
 
-                    size_t index = 0U;
-
-                    // Expand b and assign its successors to N
                     for (auto& neighbour : neighbours) {
 
                         if (const auto& [nActive, nCoord] = neighbour; nActive) {
@@ -105,13 +109,9 @@ namespace CHDR::Solvers {
                                     _h(nCoord, _end),           // F-Score
                                     this->shared_from_this()    // Parent
                                 ));
-
-                                ++index;
                             }
                         }
                     }
-
-                    m_Successors.shrink_to_fit();
                 }
 
                 return m_Successors;
@@ -124,13 +124,29 @@ namespace CHDR::Solvers {
                     new ESMASNode(std::forward<Args>(args)...),
                     [](ESMASNode *_ptr) {
                         while (_ptr->m_Parent && static_cast<unsigned>(_ptr->m_Parent.use_count()) < 2U) {
+
+                            if (_ptr->m_Parent) {
+
+                                for (size_t i = 0U; i < _ptr->m_Parent->m_Successors.size(); ++i) {
+
+                                    if (_ptr->m_Parent->m_Successors[i].get() == _ptr) {
+                                        _ptr->m_Parent->m_Successors.erase(_ptr->m_Parent->m_Successors.begin() + i);
+
+                                        break;
+                                    }
+                                }
+                            }
+
                             _ptr->m_Parent = std::move(_ptr->m_Parent->m_Parent);
                         }
+
                         delete _ptr;
                     }
                 );
 
-//                result->m_Parent->m_Successors.emplace_back(result);
+                if (result->m_Parent) {
+                    result->m_Parent->m_Successors.emplace_back(result);
+                }
 
                 return result;
             }
@@ -179,7 +195,7 @@ namespace CHDR::Solvers {
                 s,                  // Coordinate
                 static_cast<Ts>(0), // G-Score
                 _h(_start, _end),   // F-Score
-                std::shared_ptr<ESMASNode>(nullptr)
+                nullptr
             ));
 
             enum State : char {
@@ -200,16 +216,16 @@ namespace CHDR::Solvers {
 
                     if (current->m_FScore != std::numeric_limits<Ts>::infinity()) {
 
+                        // Expand b and assign its successors to N
                         auto successors_current = current->Expand(_maze, _end, _h);
-
-                        // Get successors of current:
 
                         for (size_t i = 0U; i < successors_current.size(); ++i) {
 
                             auto& successor = successors_current[i];
 
+                            // Check if s(n) is in forgotten f-cost table of b.
                             auto search = current->m_ForgottenFCosts.find(successor->m_Coord);
-                            if (search != current->m_ForgottenFCosts.end()) {   /* condition to check if s(n) is in forgotten f-cost table of b*/
+                            if (search != current->m_ForgottenFCosts.end()) {
 
                                 const auto& [nCoord, nCost] = *search;
 
@@ -219,23 +235,24 @@ namespace CHDR::Solvers {
                             else {
 
                                 /*
-                                 * Update the state accordingly:
-                                 *         Has no successors:   IMPOSSIBLE
+                                 * Update program state accordingly:
                                  *      Memory Limit Reached:   OUTOFMEMORY
+                                 *         Has no successors:   IMPOSSIBLE
                                  *                 Otherwise:   NOMINAL
                                  */
-                                state = (
-                                    !successor->HasActiveNeighbors(_maze) ? IMPOSSIBLE : (
-                                        successor->m_Depth >= _memoryLimit - 1U ?
-                                            OUTOFMEMORY :
-                                            NOMINAL
-                                    )
-                                );
+                                if (successor->m_Depth >= _memoryLimit - 1U) {
+                                    state = OUTOFMEMORY;
+                                }
+                                else if (successor->HasPotentialSuccessors(_maze) == false) {
+                                    state = IMPOSSIBLE;
+                                }
+                                else {
+                                    state = NOMINAL;
+                                }
 
+                                // Update F-score accordingly:
                                 if (successor->m_Coord != e && state != NOMINAL) {
                                     successor->m_FScore = std::numeric_limits<Ts>::infinity();
-
-                                    successors_current.erase(successors_current.begin() + i);
                                 }
                                 else {
                                     successor->m_FScore = std::max(current->m_FScore, successor->m_GScore + _h(Utils::ToND(successor->m_Coord, _maze.Size()), _end));
@@ -243,8 +260,8 @@ namespace CHDR::Solvers {
                             }
 
                             // Add n to O.
-                            if (successor != nullptr && !openSet.Contains(successor)) {
-                                openSet.Add(successor);
+                            if (!openSet.Contains(successor)) {
+                                 openSet.Add(successor);
                             }
                         }
 
