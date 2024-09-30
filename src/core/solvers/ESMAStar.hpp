@@ -47,13 +47,6 @@ namespace CHDR::Solvers {
 
             std::unordered_map<size_t, Ts> m_ForgottenFCosts;
 
-            ~ESMASNode() {
-
-                while (m_Parent && static_cast<unsigned>(m_Parent.use_count()) < 2U) {
-                    m_Parent = std::move(m_Parent->m_Parent);
-                }
-            }
-
         private:
 
             [[nodiscard]] constexpr ESMASNode(const size_t& _depth, const size_t& _coord, const Ts& _gScore, const Ts& _hScore, const std::shared_ptr<ESMASNode>& _parent) : IHeapItem(),
@@ -63,13 +56,6 @@ namespace CHDR::Solvers {
                 m_FScore(_gScore + _hScore),
                 m_Parent(_parent),
                 m_ForgottenFCosts() {}
-
-//            void Init() {
-//
-//                if (m_Parent) {
-//                    m_Parent->m_Successors.emplace_back(this->shared_from_this());
-//                }
-//            }
 
         public:
 
@@ -128,8 +114,18 @@ namespace CHDR::Solvers {
 
             template<typename... Args>
             static constexpr std::shared_ptr<ESMASNode> CreateShared(Args&&... args) {
-                auto result = std::shared_ptr<ESMASNode>(new ESMASNode(std::forward<Args>(args)...));
-//                result->Init();
+
+                auto result = std::shared_ptr<ESMASNode>(
+                    new ESMASNode(std::forward<Args>(args)...),
+                    [](ESMASNode *_ptr) {
+                        while (_ptr->m_Parent && static_cast<unsigned>(_ptr->m_Parent.use_count()) < 2U) {
+                            _ptr->m_Parent = std::move(_ptr->m_Parent->m_Parent);
+                        }
+                        delete _ptr;
+                    }
+                );
+
+//                result->m_Parent->m_Successors.emplace_back(result);
 
                 return result;
             }
@@ -164,14 +160,6 @@ namespace CHDR::Solvers {
         }
 
         auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const size_t& _memoryLimit) const {
-//
-//            (void)_maze;
-//            (void)_start;
-//            (void)_end;
-//            (void)_h;
-//            (void)_memoryLimit;
-//
-//            throw std::runtime_error("ESMAStar::Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const size_t& _memoryLimit): Not implemented!");
 
             /** @see: https://easychair.org/publications/paper/TL2M/open */
 
@@ -297,17 +285,21 @@ namespace CHDR::Solvers {
 
             if (auto p = w->m_Parent) { // parent node of w
 
-                // Remove w from the successor list of p
-                auto p_successors = p->Expand(_maze, _end, _h);
 
-                for (size_t i = 0U; i < p_successors.size(); ++i) {
-
-                    // Code to remove w from the successor list of p goes here
-                    if (p_successors[i]->m_Coord == w->m_Coord) {
-                        p_successors.erase(p_successors.begin() + i);
-                        break;
-                    }
-                }
+                (void)_maze;
+                (void)_end;
+                (void)_h;
+//                // Remove w from the successor list of p
+//                auto p_successors = p->Expand(_maze, _end, _h);
+//
+//                for (size_t i = 0U; i < p_successors.size(); ++i) {
+//
+//                    // Code to remove w from the successor list of p goes here
+//                    if (p_successors[i]->m_Coord == w->m_Coord) {
+//                        p_successors.erase(p_successors.begin() + i);
+//                        break;
+//                    }
+//                }
 
                 // Add s(w) to forgotten f-cost table of p, with value of f (w)
                 p->m_ForgottenFCosts.insert_or_assign(p->m_Coord, w->m_FScore);
@@ -331,7 +323,6 @@ namespace CHDR::Solvers {
             if (w == _openSet.Top()) { // Top == Best node according to f(n) in _openSet
 
                 // Code to find second worst leaf according to c(n) goes here
-                // Assign the second worst leaf to w
 
                 w = _openSet.Back();
 
@@ -341,7 +332,7 @@ namespace CHDR::Solvers {
                     const auto& B = w;
 
                     if (typename ESMASNode::Max()(A, B)) {
-                        w = _openSet[i];
+                        w = _openSet[i]; // Assign the second worst leaf to w
                     }
                 }
 

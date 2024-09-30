@@ -76,7 +76,7 @@ namespace Test::Tests {
                 const auto sw_start = std::chrono::high_resolution_clock::now();
 
                 auto solver = CHDR::Solvers::ESMAStar<Tm, Kd, Ts>();
-                auto path = solver.Solve(maze, start, end, HEURISTIC, 1000000000);
+                auto path = solver.Solve(maze, start, end, HEURISTIC, 120000000); //59267202
 
                 Debug::Log(std::to_string(path.size()));
 
