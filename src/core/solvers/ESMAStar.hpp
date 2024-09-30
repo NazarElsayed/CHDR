@@ -45,6 +45,8 @@ namespace CHDR::Solvers {
 
             std::shared_ptr<ESMASNode> m_Parent;
 
+            std::vector<std::shared_ptr<ESMASNode>> m_Successors;
+
             std::unordered_map<size_t, Ts> m_ForgottenFCosts;
 
         private:
@@ -74,42 +76,45 @@ namespace CHDR::Solvers {
                 return result;
             }
 
-            auto Expand(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&)) {
+            void Shrink() {
+                m_Successors.clear();
+            }
 
-                auto neighbours = _maze.GetNeighbours(m_Coord);
+            auto& Expand(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&)) {
 
-                std::vector<std::shared_ptr<ESMASNode>> result;
-                result.reserve(neighbours.size());
+                if (m_Successors.empty()) {
 
-                size_t index = 0U;
+                    const auto neighbours = _maze.GetNeighbours(m_Coord);
+                    m_Successors.reserve(neighbours.size());
 
-                // Expand b and assign its successors to N
-                for (auto& neighbour : neighbours) {
+                    size_t index = 0U;
 
-                    if (const auto& [nActive, nCoord] = neighbour; nActive) {
+                    // Expand b and assign its successors to N
+                    for (auto& neighbour : neighbours) {
 
-                        const auto n = Utils::To1D(nCoord, _maze.Size());
+                        if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-                        if (m_Parent == nullptr || m_Parent->m_Coord != n) {
+                            const auto n = Utils::To1D(nCoord, _maze.Size());
 
-                            const auto s = ESMASNode::CreateShared(
-                                m_Depth  + 1U,              // Depth
-                                n,                          // Coordinate
-                                m_GScore + 1U,              // G-Score
-                                _h(nCoord, _end),           // F-Score
-                                this->shared_from_this()    // Parent
-                            );
+                            if (m_Parent == nullptr || m_Parent->m_Coord != n) {
 
-                            result.emplace_back(s);
+                                m_Successors.emplace_back(ESMASNode::CreateShared(
+                                    m_Depth  + 1U,              // Depth
+                                    n,                          // Coordinate
+                                    m_GScore + 1U,              // G-Score
+                                    _h(nCoord, _end),           // F-Score
+                                    this->shared_from_this()    // Parent
+                                ));
 
-                            ++index;
+                                ++index;
+                            }
                         }
                     }
+
+                    m_Successors.shrink_to_fit();
                 }
 
-                result.shrink_to_fit();
-
-                return result;
+                return m_Successors;
             }
 
             template<typename... Args>
@@ -198,7 +203,10 @@ namespace CHDR::Solvers {
                         auto successors_current = current->Expand(_maze, _end, _h);
 
                         // Get successors of current:
-                        for (auto& successor : successors_current) {
+
+                        for (size_t i = 0U; i < successors_current.size(); ++i) {
+
+                            auto& successor = successors_current[i];
 
                             auto search = current->m_ForgottenFCosts.find(successor->m_Coord);
                             if (search != current->m_ForgottenFCosts.end()) {   /* condition to check if s(n) is in forgotten f-cost table of b*/
@@ -226,6 +234,8 @@ namespace CHDR::Solvers {
 
                                 if (successor->m_Coord != e && state != NOMINAL) {
                                     successor->m_FScore = std::numeric_limits<Ts>::infinity();
+
+                                    successors_current.erase(successors_current.begin() + i);
                                 }
                                 else {
                                     successor->m_FScore = std::max(current->m_FScore, successor->m_GScore + _h(Utils::ToND(successor->m_Coord, _maze.Size()), _end));
@@ -233,7 +243,7 @@ namespace CHDR::Solvers {
                             }
 
                             // Add n to O.
-                            if (!openSet.Contains(successor)) {
+                            if (successor != nullptr && !openSet.Contains(successor)) {
                                 openSet.Add(successor);
                             }
                         }
@@ -241,6 +251,8 @@ namespace CHDR::Solvers {
                         while (openSet.Size() > _memoryLimit) {
                             cull_worst_leaf(_maze, _end, _h, openSet);
                         }
+
+                        current->Shrink();
                     }
                     else {
                         break; // FAILURE.
@@ -285,21 +297,17 @@ namespace CHDR::Solvers {
 
             if (auto p = w->m_Parent) { // parent node of w
 
+                // Remove w from the successor list of p
+                auto p_successors = p->Expand(_maze, _end, _h);
 
-                (void)_maze;
-                (void)_end;
-                (void)_h;
-//                // Remove w from the successor list of p
-//                auto p_successors = p->Expand(_maze, _end, _h);
-//
-//                for (size_t i = 0U; i < p_successors.size(); ++i) {
-//
-//                    // Code to remove w from the successor list of p goes here
-//                    if (p_successors[i]->m_Coord == w->m_Coord) {
-//                        p_successors.erase(p_successors.begin() + i);
-//                        break;
-//                    }
-//                }
+                for (size_t i = 0U; i < p_successors.size(); ++i) {
+
+                    // Code to remove w from the successor list of p goes here
+                    if (p_successors[i]->m_Coord == w->m_Coord) {
+                        p_successors.erase(p_successors.begin() + i);
+                        break;
+                    }
+                }
 
                 // Add s(w) to forgotten f-cost table of p, with value of f (w)
                 p->m_ForgottenFCosts.insert_or_assign(p->m_Coord, w->m_FScore);
