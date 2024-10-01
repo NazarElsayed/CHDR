@@ -61,27 +61,6 @@ namespace CHDR::Solvers {
 
         public:
 
-            bool HasPotentialSuccessors(const Mazes::Grid<Kd, Tm>& _maze) {
-
-                bool result{};
-
-                if (m_Successors.empty()) {
-
-                    for (auto &neighbour: _maze.GetNeighbours(m_Coord)) {
-
-                        if (const auto &[nActive, nCoord] = neighbour; nActive) {
-                            result = true;
-                            break;
-                        }
-                    }
-                }
-                else {
-                    result = true;
-                }
-
-                return result;
-            }
-
             void Shrink() {
                 if (!m_Successors.empty()) {
                     m_Successors.clear();
@@ -108,9 +87,9 @@ namespace CHDR::Solvers {
 
                                     bool hasPotentialSuccessors = false;
 
-                                    for (auto& neighbour2 : _maze.GetNeighbours(n)) {
+                                    for (auto& successor_neighbors : _maze.GetNeighbours(n)) {
 
-                                        if (const auto& [n2Active, n2Coord] = neighbour2; n2Active) {
+                                        if (const auto& [snActive, snCoord] = successor_neighbors; snActive) {
                                             hasPotentialSuccessors = true;
                                             break;
                                         }
@@ -143,6 +122,7 @@ namespace CHDR::Solvers {
                 auto result = std::shared_ptr<ESMASNode>(
                     new ESMASNode(std::forward<Args>(args)...),
                     [](ESMASNode *_ptr) {
+
                         while (_ptr->m_Parent && static_cast<unsigned>(_ptr->m_Parent.use_count()) < 2U) {
 
                             if (_ptr->m_Parent) {
