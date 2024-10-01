@@ -226,7 +226,6 @@ namespace CHDR::Solvers {
 
                 if (current->m_Coord != e) { // SEARCH FOR SOLUTION...
 
-
                     auto successors_current = current->Expand(_maze, _end, _h, _memoryLimit);
 
                     for (size_t i = 0U; i < successors_current.size(); ++i) {
