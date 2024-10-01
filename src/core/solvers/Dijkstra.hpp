@@ -6,20 +6,14 @@
  * https://creativecommons.org/licenses/by-nc-nd/4.0/
  */
 
-#ifndef CHDR_DJIKSTRA_HPP
-#define CHDR_DJIKSTRA_HPP
+#ifndef CHDR_DIJKSTRA_HPP
+#define CHDR_DIJKSTRA_HPP
 
-#include <cmath>
-#include <functional>
 #include <memory>
-#include <queue>
 
-#include "../utils/Heuristics.hpp"
 #include "base/ISolver.hpp"
 #include "mazes/base/IMaze.hpp"
-#include "types/ExistenceSet.hpp"
 #include "types/Heap.hpp"
-#include "utils/Utils.hpp"
 #include "mazes/Grid.hpp"
 
 namespace CHDR::Solvers {
