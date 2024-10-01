@@ -62,7 +62,13 @@ namespace CHDR::Solvers {
         public:
 
             void Shrink() {
+
                 if (!m_Successors.empty()) {
+
+                    for (auto successor : m_Successors) {
+                        m_ForgottenFCosts.insert_or_assign(successor->m_Coord, successor->m_FScore);
+                    }
+
                     m_Successors.clear();
                     m_Successors.shrink_to_fit();
                 }
@@ -81,21 +87,12 @@ namespace CHDR::Solvers {
 
                             const auto n = Utils::To1D(nCoord, _maze.Size());
 
-                            if (m_Parent == nullptr || m_Parent->m_Coord != n) {
+                            if ((m_Parent == nullptr || m_Parent->m_Coord != n) && m_Depth + 1U < _memoryLimit) {
 
-                                if (m_Depth + 1U < _memoryLimit) {
+                                // Check for any potential successor for the child before its creation.
+                                for (auto& successor_neighbors : _maze.GetNeighbours(n)) {
 
-                                    bool hasPotentialSuccessors = false;
-
-                                    for (auto& successor_neighbors : _maze.GetNeighbours(n)) {
-
-                                        if (const auto& [snActive, snCoord] = successor_neighbors; snActive) {
-                                            hasPotentialSuccessors = true;
-                                            break;
-                                        }
-                                    }
-
-                                    if (hasPotentialSuccessors) {
+                                    if (const auto& [snActive, snCoord] = successor_neighbors; snActive) {
 
                                         m_Successors.emplace_back(ESMASNode::CreateShared(
                                             m_Depth  + 1U,              // Depth
@@ -104,6 +101,8 @@ namespace CHDR::Solvers {
                                             _h(nCoord, _end),           // F-Score
                                             this->shared_from_this()    // Parent
                                         ));
+
+                                        break;
                                     }
                                 }
                             }
@@ -128,6 +127,8 @@ namespace CHDR::Solvers {
                             if (_ptr->m_Parent) {
 
                                 for (size_t i = 0U; i < _ptr->m_Parent->m_Successors.size(); ++i) {
+
+                                    _ptr->m_Parent->m_ForgottenFCosts.erase(_ptr->m_Coord);
 
                                     if (_ptr->m_Parent->m_Successors[i].get() == _ptr) {
                                         _ptr->m_Parent->m_Successors.erase(_ptr->m_Parent->m_Successors.begin() + i);
@@ -290,7 +291,7 @@ namespace CHDR::Solvers {
                 }
 
                 // Add s(w) to forgotten f-cost table of p, with value of f (w)
-                p->m_ForgottenFCosts.insert_or_assign(p->m_Coord, w->m_FScore);
+                p->m_ForgottenFCosts.insert_or_assign(w->m_Coord, w->m_FScore);
 
                 // f (p) ← min of forgotten f-costs of p
                 for (const auto& [pState, pCost] : p->m_ForgottenFCosts) {
