@@ -6,8 +6,8 @@
  * https://creativecommons.org/licenses/by-nc-nd/4.0/
  */
 
-#ifndef CHDR_DFS_HPP
-#define CHDR_DFS_HPP
+#ifndef CHDR_GDFS_HPP
+#define CHDR_GDFS_HPP
 
 #include <functional>
 #include <stack>
@@ -21,21 +21,28 @@
 namespace CHDR::Solvers {
 
     template<typename Tm, const size_t Kd>
-    class DFS final : public ISolver<Tm> {
+    class GDFS final : public ISolver<Tm> {
 
-        struct DFSNode final {
+        struct GDFSNode final {
 
             size_t m_Coord;
 
-            const DFSNode* m_Parent;
+            std::shared_ptr<const GDFSNode> m_Parent;
 
-            [[nodiscard]] constexpr DFSNode() :
+            [[nodiscard]] constexpr GDFSNode() :
                 m_Coord(-1U),
                 m_Parent(nullptr) {}
 
-            [[nodiscard]] constexpr DFSNode(const size_t &_coord, const DFSNode* const _parent) :
+            [[nodiscard]] constexpr GDFSNode(const size_t &_coord, const std::shared_ptr<const GDFSNode>& _parent) :
                 m_Coord(_coord),
                 m_Parent(std::move(_parent)) {}
+
+            ~GDFSNode() {
+
+                while (m_Parent && static_cast<unsigned>(m_Parent.use_count()) < 2U) {
+                    m_Parent = std::move(m_Parent->m_Parent);
+                }
+            }
         };
 
     private:
@@ -48,7 +55,7 @@ namespace CHDR::Solvers {
 
             (void)_maze; // Suppress unused variable warning.
 
-            throw std::runtime_error("DFS::Solve(const Mazes::IMaze& _maze): Not implemented!");
+            throw std::runtime_error("GDFS::Solve(const Mazes::IMaze& _maze): Not implemented!");
         }
 
         auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, size_t _capacity = 0U) {
@@ -66,19 +73,17 @@ namespace CHDR::Solvers {
 
                 _capacity = std::max(_capacity, std::max(s, e));
 
-                auto sequence = std::vector<DFSNode>(_capacity);
-                std::stack<DFSNode, std::vector<DFSNode>> openSet(std::move(sequence));
+                auto sequence = std::vector<GDFSNode>(_capacity);
+                std::stack<GDFSNode, std::vector<GDFSNode>> openSet(std::move(sequence));
                 openSet.emplace(s, nullptr);
 
                 ExistenceSet closedSet({ s }, _capacity);
-
-                std::vector<DFSNode*> buffer;
 
                 while (!openSet.empty()) { // SEARCH FOR SOLUTION...
 
                     for (size_t i = 0U; i < openSet.size(); ++i) {
 
-                        const DFSNode current(std::move(openSet.top()));
+                        const GDFSNode current(std::move(openSet.top()));
                         openSet.pop();
 
                         if (current.m_Coord != e) {
@@ -97,14 +102,14 @@ namespace CHDR::Solvers {
                                     // Check if node is not already visited:
                                     if (!closedSet.Contains(n)) {
 
-                                        if (closedSet.Capacity() > current.m_Coord) {
-                                            closedSet.Reserve(std::min(_capacity * ((current.m_Coord % _capacity) + 1U), Utils::Product<size_t>(_maze.Size())));
+                                        // Add to dupe list:
+                                        if (closedSet.Capacity() > n) {
+                                            closedSet.Reserve(std::min(_capacity * ((n % _capacity) + 1U), Utils::Product<size_t>(_maze.Size())));
                                         }
-                                        closedSet.Add(current.m_Coord);
+                                        closedSet.Add(n);
 
                                         // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                        buffer.emplace_back(new DFSNode(std::move(current)));
-                                        openSet.Emplace({ n, buffer.back() });
+                                        openSet.emplace(n, std::make_shared<GDFSNode>(std::move(current)));
                                     }
                                 }
                             }
@@ -112,26 +117,25 @@ namespace CHDR::Solvers {
                         else { // SOLUTION REACHED ...
 
                             // Free data which is no longer relevant:
-                            std::stack<DFSNode, std::vector<DFSNode>> empty;
+                            std::stack<GDFSNode, std::vector<GDFSNode>> empty;
                             std::swap(openSet, empty);
 
                             closedSet.Clear();
 
                             // Recurse from end node to start node, inserting into a result buffer:
                             result.reserve(_capacity);
-                            for (const auto* temp = &current; temp->m_Parent != nullptr; temp = temp->m_Parent) {
-                                result.emplace_back(Utils::ToND(temp->m_Coord, _maze.Size()));
-                            }
+                            result.emplace_back(Utils::ToND(current.m_Coord, _maze.Size()));
 
-                            // Clear the buffer:
-                            for (auto* item : buffer) {
+                            if (current.m_Parent != nullptr) {
 
-                                if (item != nullptr) {
-                                    delete item;
-                                    item = nullptr;
+                                for (auto& item = current.m_Parent; item->m_Parent != nullptr;) {
+                                    result.emplace_back(Utils::ToND(item->m_Coord, _maze.Size()));
+
+                                    auto oldItem = item;
+                                    item = item->m_Parent;
+                                    oldItem.reset();
                                 }
                             }
-                            buffer.clear();
 
                             // Reverse the result:
                             std::reverse(result.begin(), result.end());
@@ -149,4 +153,4 @@ namespace CHDR::Solvers {
 
 } // CHDR::Solvers
 
-#endif //CHDR_DFS_HPP
+#endif //CHDR_GDFS_HPP

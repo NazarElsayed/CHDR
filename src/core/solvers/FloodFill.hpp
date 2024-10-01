@@ -9,16 +9,13 @@
 #ifndef CHDR_FLOODFILL_HPP
 #define CHDR_FLOODFILL_HPP
 
-#include <cmath>
 #include <functional>
 #include <queue>
 
-#include "../utils/Heuristics.hpp"
 #include "base/ISolver.hpp"
 #include "mazes/base/IMaze.hpp"
 #include "mazes/Grid.hpp"
 #include "types/ExistenceSet.hpp"
-#include "types/Heap.hpp"
 #include "utils/Utils.hpp"
 
 namespace CHDR::Solvers {

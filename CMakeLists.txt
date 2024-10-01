@@ -149,6 +149,9 @@ add_library(CHDR INTERFACE
     src/core/solvers/Dijkstra.hpp
     src/core/solvers/ESMAStar.hpp
     src/core/solvers/FloodFill.hpp
+    src/core/solvers/GStar.hpp
+    src/core/solvers/GBFS.hpp
+    src/core/solvers/GDFS.hpp
     src/core/solvers/JPS.hpp
 
     src/core/utils/Utils.hpp

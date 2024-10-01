@@ -6,14 +6,13 @@
  * https://creativecommons.org/licenses/by-nc-nd/4.0/
  */
 
-#ifndef CHDR_ASTAR_HPP
-#define CHDR_ASTAR_HPP
+#ifndef CHDR_GSTAR_HPP
+#define CHDR_GSTAR_HPP
 
-#include <cmath>
 #include <functional>
+#include <memory>
 #include <queue>
 
-#include "../utils/Heuristics.hpp"
 #include "base/ISolver.hpp"
 #include "mazes/base/IMaze.hpp"
 #include "types/ExistenceSet.hpp"
@@ -24,7 +23,7 @@
 namespace CHDR::Solvers {
 
     template<typename Tm, const size_t Kd, typename Ts>
-    class AStar final : public ISolver<Tm> {
+    class GStar final : public ISolver<Tm> {
 
         static_assert(std::is_integral_v<Ts> || std::is_floating_point_v<Ts>, "Ts must be either an integral or floating point type");
 
@@ -32,26 +31,33 @@ namespace CHDR::Solvers {
 
         using coord_t = Coord<size_t, Kd>;
 
-        struct ASNode final : IHeapItem {
+        struct GSNode final : IHeapItem {
 
             size_t m_Coord;
 
             Ts m_GScore;
             Ts m_FScore;
 
-            const ASNode* m_Parent;
+            std::shared_ptr<const GSNode> m_Parent;
 
-            [[nodiscard]] constexpr ASNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, const ASNode* const _parent) : IHeapItem(),
+            [[nodiscard]] constexpr GSNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, const std::shared_ptr<const GSNode>& _parent) : IHeapItem(),
                 m_Coord(_coord),
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
                 m_Parent(std::move(_parent)) {}
 
-            [[nodiscard]] constexpr bool operator == (const ASNode& _node) const { return m_Coord == _node.m_Coord; }
+            ~GSNode() {
+
+                while (m_Parent && static_cast<unsigned>(m_Parent.use_count()) < 2U) {
+                    m_Parent = std::move(m_Parent->m_Parent);
+                }
+            }
+
+            [[nodiscard]] constexpr bool operator == (const GSNode& _node) const { return m_Coord == _node.m_Coord; }
 
             struct Max {
 
-                [[nodiscard]] constexpr bool operator () (const ASNode& _a, const ASNode& _b) const {
+                [[nodiscard]] constexpr bool operator () (const GSNode& _a, const GSNode& _b) const {
 
                     bool result{};
 
@@ -73,7 +79,7 @@ namespace CHDR::Solvers {
 
             (void)_maze; // Suppress unused variable warning.
 
-            throw std::runtime_error("AStar::Solve(const Mazes::IMaze& _maze): Not implemented!");
+            throw std::runtime_error("GStar::Solve(const Mazes::IMaze& _maze): Not implemented!");
         }
 
         auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) const {
@@ -87,14 +93,12 @@ namespace CHDR::Solvers {
 
             ExistenceSet closedSet({ s }, _capacity);
 
-            Heap<ASNode, typename ASNode::Max> openSet;
+            Heap<GSNode, typename GSNode::Max> openSet;
             openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
-
-            std::vector<ASNode*> buffer;
 
             while (!openSet.Empty()) {
 
-                ASNode current(std::move(openSet.Top()));
+                GSNode current(std::move(openSet.Top()));
                 openSet.RemoveFirst();
 
                 if (current.m_Coord != e) { // SEARCH FOR SOLUTION...
@@ -113,14 +117,14 @@ namespace CHDR::Solvers {
                             // Check if node is not already visited:
                             if (!closedSet.Contains(n)) {
 
-                                if (closedSet.Capacity() > current.m_Coord) {
-                                    closedSet.Reserve(std::min(_capacity * ((current.m_Coord % _capacity) + 1U), Utils::Product<size_t>(_maze.Size())));
+                                // Add to dupe list:
+                                if (closedSet.Capacity() > n) {
+                                    closedSet.Reserve(std::min(_capacity * ((n % _capacity) + 1U), Utils::Product<size_t>(_maze.Size())));
                                 }
                                 closedSet.Add(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                buffer.emplace_back(new ASNode(std::move(current)));
-                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nCoord, _end), buffer.back() });
+                                openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nCoord, _end), std::make_shared<GSNode>(std::move(current)) });
                             }
                         }
                     }
@@ -133,19 +137,18 @@ namespace CHDR::Solvers {
 
                     // Recurse from end node to start node, inserting into a result buffer:
                     result.reserve(current.m_GScore);
-                    for (const auto* temp = &current; temp->m_Parent != nullptr; temp = temp->m_Parent) {
-                        result.emplace_back(Utils::ToND(temp->m_Coord, _maze.Size()));
-                    }
+                    result.emplace_back(Utils::ToND(current.m_Coord, _maze.Size()));
 
-                    // Clear the buffer:
-                    for (auto* item : buffer) {
+                    if (current.m_Parent != nullptr) {
 
-                        if (item != nullptr) {
-                            delete item;
-                            item = nullptr;
+                        for (auto& item = current.m_Parent; item->m_Parent != nullptr;) {
+                            result.emplace_back(Utils::ToND(item->m_Coord, _maze.Size()));
+
+                            auto oldItem = item;
+                            item = item->m_Parent;
+                            oldItem.reset();
                         }
                     }
-                    buffer.clear();
 
                     // Reverse the result:
                     std::reverse(result.begin(), result.end());
@@ -161,4 +164,4 @@ namespace CHDR::Solvers {
 
 } // CHDR::Solvers
 
-#endif //CHDR_ASTAR_HPP
+#endif //CHDR_GSTAR_HPP
