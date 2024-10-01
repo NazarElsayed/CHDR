@@ -63,28 +63,30 @@ namespace CHDR::Solvers {
 
             bool HasPotentialSuccessors(const Mazes::Grid<Kd, Tm>& _maze) {
 
-                bool result = false;
+                bool result{};
 
-                if (!m_Successors.empty()) {
-                    result = true;
-                }
-                else {
+                if (m_Successors.empty()) {
 
-                    for (auto& neighbour : _maze.GetNeighbours(m_Coord)) {
+                    for (auto &neighbour: _maze.GetNeighbours(m_Coord)) {
 
-                        if (const auto& [nActive, nCoord] = neighbour; nActive) {
-
+                        if (const auto &[nActive, nCoord] = neighbour; nActive) {
                             result = true;
                             break;
                         }
                     }
+                }
+                else {
+                    result = true;
                 }
 
                 return result;
             }
 
             void Shrink() {
-                m_Successors.clear();
+                if (!m_Successors.empty()) {
+                    m_Successors.clear();
+                    m_Successors.shrink_to_fit();
+                }
             }
 
             auto& Expand(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&)) {
@@ -102,16 +104,31 @@ namespace CHDR::Solvers {
 
                             if (m_Parent == nullptr || m_Parent->m_Coord != n) {
 
-                                m_Successors.emplace_back(ESMASNode::CreateShared(
-                                    m_Depth  + 1U,              // Depth
-                                    n,                          // Coordinate
-                                    m_GScore + 1U,              // G-Score
-                                    _h(nCoord, _end),           // F-Score
-                                    this->shared_from_this()    // Parent
-                                ));
+                                bool hasPotentialSuccessors = false;
+
+                                for (auto& neighbour2 : _maze.GetNeighbours(n)) {
+
+                                    if (const auto& [n2Active, n2Coord] = neighbour2; n2Active) {
+                                        hasPotentialSuccessors = true;
+                                        break;
+                                    }
+                                }
+
+                                if (hasPotentialSuccessors) {
+
+                                    m_Successors.emplace_back(ESMASNode::CreateShared(
+                                        m_Depth  + 1U,              // Depth
+                                        n,                          // Coordinate
+                                        m_GScore + 1U,              // G-Score
+                                        _h(nCoord, _end),           // F-Score
+                                        this->shared_from_this()    // Parent
+                                    ));
+                                }
                             }
                         }
                     }
+
+                    m_Successors.shrink_to_fit();
                 }
 
                 return m_Successors;
@@ -198,14 +215,6 @@ namespace CHDR::Solvers {
                 nullptr
             ));
 
-            enum State : char {
-                NOMINAL,
-                IMPOSSIBLE,
-                OUTOFMEMORY
-            };
-
-            State state(NOMINAL);
-
             // Main loop
             while (!openSet.Empty()) {
 
@@ -216,7 +225,6 @@ namespace CHDR::Solvers {
 
                     if (current->m_FScore != std::numeric_limits<Ts>::infinity()) {
 
-                        // Expand b and assign its successors to N
                         auto successors_current = current->Expand(_maze, _end, _h);
 
                         for (size_t i = 0U; i < successors_current.size(); ++i) {
@@ -229,29 +237,13 @@ namespace CHDR::Solvers {
 
                                 const auto& [nCoord, nCost] = *search;
 
-                                successor->m_FScore = nCost;                // f-value of s(n) in forgotten f-cost table of node b
-                                current->m_ForgottenFCosts.erase(nCoord);   // Remove s(n) from forgotten f-cost table of node b.
+                                successor->m_FScore = nCost;
+                                current->m_ForgottenFCosts.erase(nCoord);
                             }
                             else {
 
-                                /*
-                                 * Update program state accordingly:
-                                 *      Memory Limit Reached:   OUTOFMEMORY
-                                 *         Has no successors:   IMPOSSIBLE
-                                 *                 Otherwise:   NOMINAL
-                                 */
-                                if (successor->m_Depth >= _memoryLimit - 1U) {
-                                    state = OUTOFMEMORY;
-                                }
-                                else if (successor->HasPotentialSuccessors(_maze) == false) {
-                                    state = IMPOSSIBLE;
-                                }
-                                else {
-                                    state = NOMINAL;
-                                }
-
                                 // Update F-score accordingly:
-                                if (successor->m_Coord != e && state != NOMINAL) {
+                                if (successor->m_Coord != e && (successor->m_Depth >= _memoryLimit - 1U)) { // || !successor->HasPotentialSuccessors(_maze))
                                     successor->m_FScore = std::numeric_limits<Ts>::infinity();
                                 }
                                 else {
@@ -259,7 +251,7 @@ namespace CHDR::Solvers {
                                 }
                             }
 
-                            // Add n to O.
+                            // Add successor to openSet.
                             if (!openSet.Contains(successor)) {
                                  openSet.Add(successor);
                             }
@@ -269,6 +261,7 @@ namespace CHDR::Solvers {
                             cull_worst_leaf(_maze, _end, _h, openSet);
                         }
 
+                        // Shrink the node to release ownership of children, allowing automatic GC of parents with no valid candidate children.
                         current->Shrink();
                     }
                     else {
@@ -280,7 +273,7 @@ namespace CHDR::Solvers {
                     // Free data which is no longer relevant:
                     openSet.Clear();
 
-                    if (state == NOMINAL) {
+                    if (current != nullptr) {
 
                         // Recurse from end node to start node, inserting into a result buffer:
                         result.reserve(current->m_GScore);
