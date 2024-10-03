@@ -154,6 +154,7 @@ add_library(CHDR INTERFACE
     src/core/solvers/JPS.hpp
 
     src/core/utils/Utils.hpp
+        src/core/utils/SIMDExtensions.hpp
 )
 
 target_link_libraries(CHDR INTERFACE)
