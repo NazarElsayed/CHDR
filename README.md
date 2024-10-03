@@ -26,14 +26,20 @@ CHDR is designed to be fast and lightweight. Alongside data and algorithmic opti
 
 #### Pathfinding Algorithms
 
-| Type                                          |     Status      |
-|:----------------------------------------------|:---------------:|
-| A-Star (A*)                                   |  Completed ✔️   |
-| Breadth-First Search (BFS)                    |  Completed ✔️   |
-| Depth-First Search (DFS)                      |  Completed ✔️   |
-| Dijkstra's Algorithm                          |   Planned 📝    |
-| Enhanced Simple Memory Bounded A-Star (SMA*+) | In Progress 🏗️ |
-| Jump-Point Search (JPS)                       | In Progress 🏗️ |
+| Type                                                    |     Status      |
+|:--------------------------------------------------------|:---------------:|
+| A-Star (A*)                                             |  Completed ✔️   |
+| Breadth-First Search (BFS)                              |  Completed ✔️   |
+| Depth-First Search (DFS)                                |  Completed ✔️   |
+| Dijkstra's Algorithm                                    |   Planned 📝    |
+| Enhanced Iterative Deepening Search (EIDA*)             |   Planned 📝    |
+| Enhanced Simple Memory Bounded A-Star (SMA*+)           |   Planned 📝    |
+| Enhanced Simple Memory Bounded Graveyard Search (SMG*+) |   Untested ❓    |
+| Graveyard Breadth-First Search (GBFS)                   |  Completed ✔️   |
+| Graveyard Depth-First Search (GDFS)                     |  Completed ✔️   |
+| Graveyard Jump-Point Search (GJPS)                      |   Planned 📝    |
+| Graveyard Search (G*)                                   |  Completed ✔️   |
+| Jump-Point Search (JPS)                                 | In Progress 🏗️ |
 
 #### Maze types
 
@@ -61,7 +67,6 @@ CHDR is designed to be fast and lightweight. Alongside data and algorithmic opti
 
 | Feature                                          |     Status      |
 |:-------------------------------------------------|:---------------:|
-| Deferred and Real-Time Solver Garbage Collection |  Completed ✔️   |
 | Compile-Time K-dimensionality                    |  Completed ✔️   |
 | Compile-Time Routing                             |   Planned 📝    |
 | Concurrent Capabilities                          |   Planned 📝    |

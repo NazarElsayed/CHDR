@@ -6,8 +6,8 @@
  * https://creativecommons.org/licenses/by-nc-nd/4.0/
  */
 
-#ifndef CHDR_ESMASTAR_HPP
-#define CHDR_ESMASTAR_HPP
+#ifndef CHDR_ESMGSTAR_HPP
+#define CHDR_ESMGSTAR_HPP
 
 #include <cmath>
 #include <functional>
@@ -25,7 +25,7 @@
 namespace CHDR::Solvers {
 
     template<typename Tm, const size_t Kd, typename Ts>
-    class ESMAStar final : public ISolver<Tm> {
+    class ESMGStar final : public ISolver<Tm> {
 
         static_assert(std::is_integral_v<Ts> || std::is_floating_point_v<Ts>, "Ts must be either an integral or floating point type");
 
@@ -300,7 +300,7 @@ namespace CHDR::Solvers {
 
                 // if p is not in _openSet then
                 if (!_openSet.Contains(p)) {
-                    _openSet.Add(p); // Add p to _openSet
+                     _openSet.Add(p); // Add p to _openSet
                 }
             }
         }
@@ -338,4 +338,4 @@ namespace CHDR::Solvers {
 
 } // CHDR::Solvers
 
-#endif //CHDR_ESMASTAR_HPP
+#endif //CHDR_ESMGSTAR_HPP

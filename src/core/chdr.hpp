@@ -21,11 +21,11 @@
 #include "solvers/BFS.hpp"
 #include "solvers/DFS.hpp"
 #include "solvers/Dijkstra.hpp"
-#include "solvers/ESMAStar.hpp"
+#include "solvers/ESMGStar.hpp"
 #include "solvers/FloodFill.hpp"
-#include "solvers/GStar.hpp"
 #include "solvers/GBFS.hpp"
 #include "solvers/GDFS.hpp"
+#include "solvers/GStar.hpp"
 #include "solvers/JPS.hpp"
 
 #include "types/Coord.hpp"
