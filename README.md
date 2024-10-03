@@ -91,11 +91,13 @@ CHDR is designed to be fast and lightweight. Alongside data and algorithmic opti
 
 As CHDR is a header-only library you can simply include the headers directly in your project or build and link using your preferred build system.
 
+As of the current point in time, the fastest way to use CHDR is 
+
 #### Other languages
 
 At present CHDR does not offer compatibility with languages other than C++. We prioritise consolidating and enhancing the set of features offered by our library before extending its support to other languages.
 
-Each programming language has its unique characteristics and paradigms. With this in mind our strategy for supporting a specific language would be determined by its compatibility with C++ and the performance efficiency it offers. The support may be facilitated through language wrappers (interfaces to the library's compiled code) or ports (rewriting parts or all of the library in the target language) whichever is more suited. 
+Each programming language has its unique characteristics and paradigms. With this in mind our strategy for supporting a specific language would be determined by its compatibility with C++ and the performance efficiency it offers. The support may be facilitated through language wrappers (interfaces to the library's compiled code) or ports (rewriting parts or all of the library in the target language), whichever is more suited. 
 
 ### Dependencies
 
@@ -120,5 +122,6 @@ However CHDR does require that your project is compatible with a C++17 environme
 
 ### References
 
-Lovinger J. and Zhang X. (2017) ‘Enhanced simplified memory-bounded a star (SMA*+)’ 
-EPiC Series in Computing Vol. 50 pp. 202–212. Available at: https://doi.org/10.29007/v7zc. [Accessed 10 Aug. 2024].
+Lovinger J. and Zhang X., 2017 Enhanced simplified memory-bounded a star (SMA*+). EPiC Series in Computing, 50, 202–212. Available at: https://doi.org/10.29007/v7zc. [Accessed 10 Aug. 2024].
+
+Reinefeld, A. and Marsland, T. A., 1994. Enhanced iterative-deepening search. IEEE Transactions on Pattern Analysis and Machine Intelligence, 16 (7), 701–710. Available at https://doi.org/10.1109/34.297950. [Accessed 3 Oct. 2024].

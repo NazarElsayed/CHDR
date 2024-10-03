@@ -138,7 +138,7 @@ add_library(CHDR INTERFACE
     src/core/types/Heap.hpp
     src/core/types/Node.hpp
 
-        src/core/solvers/base/ISolver.hpp
+    src/core/solvers/base/ISolver.hpp
     src/core/solvers/AStar.hpp
     src/core/solvers/BFS.hpp
     src/core/solvers/DFS.hpp
@@ -150,8 +150,8 @@ add_library(CHDR INTERFACE
     src/core/solvers/GStar.hpp
     src/core/solvers/JPS.hpp
 
+    src/core/utils/SIMDExtensions.hpp
     src/core/utils/Utils.hpp
-        src/core/utils/SIMDExtensions.hpp
 )
 
 target_link_libraries(CHDR INTERFACE)
