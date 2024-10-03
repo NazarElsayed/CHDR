@@ -60,12 +60,9 @@ elseif(${CMAKE_SYSTEM_PROCESSOR} MATCHES "^sparc") #SPARC Processors
         -mvis2
     )
 
-elseif(${CMAKE_SYSTEM_PROCESSOR} MATCHES "^mips") #MIPS Processors
+elseif (${CMAKE_SYSTEM_PROCESSOR} MATCHES "^mips") #MIPS Processors
     set(SIMD_FLAGS
-        -mdspr2 # <- MIPS DSPr2 Flag
-        -mmmx   # <- MMX Flags
-        -msse   # <- SSE Flags
-        -msse2  # <- SSE2 Flags
+            -mdspr2 # <- MIPS DSPr2 Flag
     )
 
 elseif(${CMAKE_SYSTEM_PROCESSOR} MATCHES "^ia64") #Itanium Processors
