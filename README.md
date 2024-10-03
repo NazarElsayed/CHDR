@@ -91,8 +91,6 @@ CHDR is designed to be fast and lightweight. Alongside data and algorithmic opti
 
 As CHDR is a header-only library you can simply include the headers directly in your project or build and link using your preferred build system.
 
-As of the current point in time, the fastest way to use CHDR is 
-
 #### Other languages
 
 At present CHDR does not offer compatibility with languages other than C++. We prioritise consolidating and enhancing the set of features offered by our library before extending its support to other languages.
