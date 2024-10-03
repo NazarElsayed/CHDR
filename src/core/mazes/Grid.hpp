@@ -10,7 +10,6 @@
 #define CHDR_GRID_HPP
 
 #include "../types/Coord.hpp"
-#include "../types/Node.hpp"
 #include "../utils/Utils.hpp"
 #include "base/IMaze.hpp"
 
@@ -88,41 +87,41 @@ namespace CHDR::Mazes {
         }
 
         template<typename... Args>
-        auto GetNeighbours(const Args&... _coord) const {
-            return GetNeighbours({ _coord... });
+        [[nodiscard]] std::array<std::pair<bool, coord_t>, Kd * 2U> GetNeighbours(const Args&... _id) const {
+            return GetNeighbours({ _id... });
         }
 
-        constexpr auto GetNeighbours(const coord_t& _coord) const {
+        [[nodiscard]] constexpr std::array<std::pair<bool, coord_t>, Kd * 2U> GetNeighbours(const coord_t& _id) const {
 
             std::array<std::pair<bool, coord_t>, Kd * 2U> result;
 
             for (size_t i = 0U; i < Kd; ++i) {
 
-                coord_t nCoord = _coord;
+                coord_t nCoord = _id;
                 --nCoord[i];
 
-                result[i].first  = _coord[i] > 0U && At(nCoord).IsActive();
+                result[i].first  = _id[i] > 0U && At(nCoord).IsActive();
                 result[i].second = nCoord;
             }
 
             for (size_t i = 0U; i < Kd; ++i) {
 
-                coord_t pCoord = _coord;
+                coord_t pCoord = _id;
                 ++pCoord[i];
 
 
-                result[Kd + i].first  = _coord[i] < m_Size[i] - 1U && At(pCoord).IsActive();
+                result[Kd + i].first  = _id[i] < m_Size[i] - 1U && At(pCoord).IsActive();
                 result[Kd + i].second = pCoord;
             }
 
             return result;
         }
 
-        constexpr auto GetNeighbours(const size_t& _coord) const {
+        [[nodiscard]] constexpr std::array<std::pair<bool, coord_t>, Kd * 2U> GetNeighbours(const size_t& _id) const {
 
             std::array<std::pair<bool, coord_t>, Kd * 2U> result;
 
-            const auto c = Utils::ToND<size_t, Kd>(_coord, Size());
+            const auto c = Utils::ToND<size_t, Kd>(_id, Size());
 
             for (size_t i = 0U; i < Kd; ++i) {
 
@@ -145,14 +144,43 @@ namespace CHDR::Mazes {
             return result;
         }
 
-        template<typename... Args>
-        [[nodiscard]] constexpr const Node<T>& At(const Args&... _coord) const {
-            return At({ _coord... });
+        [[nodiscard]] constexpr std::vector<size_t> GetActiveNeighbours(const size_t& _id) const {
+
+            std::vector<size_t> result;
+
+            const auto c = Utils::ToND<size_t, Kd>(_id, Size());
+
+            for (size_t i = 0U; i < Kd; ++i) {
+
+                coord_t nCoord = c;
+                --nCoord[i];
+
+                if (c[i] > 0U && At(nCoord).IsActive()) {
+                    result.emplace_back(Utils::To1D(nCoord, Size()));
+                }
+            }
+
+            for (size_t i = 0U; i < Kd; ++i) {
+
+                coord_t pCoord = c;
+                ++pCoord[i];
+
+                if (c[i] < m_Size[i] - 1U && At(pCoord).IsActive()) {
+                    result.emplace_back(Utils::To1D(pCoord, Size()));
+                }
+            }
+
+            return result;
         }
 
-        [[nodiscard]] constexpr const Node<T>& At(const coord_t& _coord) const {
+        template<typename... Args>
+        [[nodiscard]] constexpr const Node<T>& At(const Args&... _id) const {
+            return At({ _id... });
+        }
 
-            const size_t index = Utils::To1D(_coord, m_Size);
+        [[nodiscard]] constexpr const Node<T>& At(const coord_t& _id) const {
+
+            const size_t index = Utils::To1D(_id, m_Size);
 
 #ifndef NDEBUG
             return m_Nodes.at(index);
@@ -161,7 +189,6 @@ namespace CHDR::Mazes {
 #endif // NDEBUG
         }
 
-        template<typename... Args>
         [[nodiscard]] constexpr const Node<T>& At(const size_t& _index) const {
 
 #ifndef NDEBUG
@@ -172,17 +199,17 @@ namespace CHDR::Mazes {
         }
 
         template<typename... Args>
-        [[nodiscard]] constexpr bool Contains(const Args&... _coord) const {
-            return Contains({ _coord... });
+        [[nodiscard]] constexpr bool Contains(const Args&... _id) const {
+            return Contains({ _id... });
         }
 
-        [[nodiscard]] constexpr bool Contains(const coord_t _coord) const {
+        [[nodiscard]] constexpr bool Contains(const coord_t& _id) const {
 
             bool result = true;
 
             for (size_t i = 0U; i < Kd; ++i) {
 
-                if (_coord[i] >= m_Size[i]) {
+                if (_id[i] >= m_Size[i]) {
                     result = false;
 
                     break;
@@ -192,8 +219,8 @@ namespace CHDR::Mazes {
             return result;
         }
 
-        [[nodiscard]] constexpr bool Contains(const size_t _coord) const {
-            return _coord < Utils::Product<size_t>(m_Size);
+        [[nodiscard]] constexpr bool Contains(const size_t& _id) const {
+            return _id < Utils::Product<size_t>(m_Size);
         }
     };
 

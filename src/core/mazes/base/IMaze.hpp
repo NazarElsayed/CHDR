@@ -9,12 +9,20 @@
 #ifndef CHDR_IMAZE_HPP
 #define CHDR_IMAZE_HPP
 
+#include "../../types/Node.hpp"
+
 namespace CHDR::Mazes {
 
     template <typename T>
     class IMaze {
 
     public:
+
+        [[nodiscard]] virtual constexpr std::vector<size_t> GetActiveNeighbours(const size_t& _id) const = 0;
+
+        [[nodiscard]] virtual constexpr const Node<T>& At(const size_t& _index) const = 0;
+
+        [[nodiscard]] virtual constexpr bool Contains(const size_t& _id) const = 0;
 
     };
 
