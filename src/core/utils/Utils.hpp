@@ -17,6 +17,8 @@
 
 #include "types/Coord.hpp"
 
+#include "SIMDExtensions.hpp"
+
 namespace CHDR {
 
 	struct Utils {
@@ -41,8 +43,8 @@ namespace CHDR {
 	public:
 
 		template<typename T, typename U, size_t N>
-		static constexpr auto ArrayCast(const std::array<U, N> &a) { // tag dispatch to helper with array indices
-			return ArrayCast_Helper<T>(a, build_indices<N>());
+		static constexpr auto ArrayCast(const std::array<U, N> &_a) {
+			return ArrayCast_Helper<T>(_a, build_indices<N>());
 		}
 
 		/**
@@ -210,29 +212,7 @@ namespace CHDR {
 		 */
 		template<typename T, typename... Args>
 		static constexpr auto ToND(const T& _index, const Args&... _sizes) {
-
-			static_assert(std::is_integral_v<T>, "Only integer types are allowed.");
-
-			constexpr auto N = sizeof...(Args);
-
-			Coord<T, N> result{};
-
-			std::array<T, N> dims { _sizes... };
-			std::array<T, N> strides{};
-
-			strides[0] = 1;
-			for (size_t i = 1U; i < N; ++i) {
-				strides[i] = strides[i - 1U] * dims[i - 1U];
-			}
-
-			// Please note this loop uses integer underflow to bypass a quirk of reverse for-loops.
-			auto idx = _index;
-			for (size_t i = N - 1U; i != std::numeric_limits<size_t>::max(); --i) {
-				result[i] = idx / strides[i];
-				idx %= strides[i];
-			}
-
-			return result;
+			return ToND(_index, {_sizes...});
 		}
 
 		/**
@@ -249,10 +229,6 @@ namespace CHDR {
 		 * @throws std::runtime_error If the type of _index is not an integral type.
 		 *
 		 * @note The function assumes that the number of dimensions (_dimensions) is greater than 0.
-		 *
-		 * Example usage:
-		 * \code{cpp}
-		 * static const auto as3d = ToND(63, { 4, 4, 4 });
 		 * \endcode
 		 */
 		template<typename T, const size_t Kd>
@@ -260,21 +236,62 @@ namespace CHDR {
 
 			static_assert(std::is_integral_v<T>, "Only integer types are allowed.");
 
-			Coord<T, Kd> result{};
+			Coord<T, Kd> result;
 
-			std::array<T, Kd> strides{};
+            if constexpr (Kd > 4U) {
 
-			strides[0U] = 1;
-			for (size_t i = 1U; i < Kd; ++i) {
-				strides[i] = strides[i - 1U] * _sizes[i - 1U];
-			}
+                result = {};
 
-			// Please note this loop uses integer underflow to bypass a quirk of reverse for-loops.
-			auto idx = _index;
-			for (size_t i = Kd - 1U; i != std::numeric_limits<size_t>::max(); --i) {
-				result[i] = idx / strides[i];
-				idx %= strides[i];
-			}
+                std::array<T, Kd> strides{};
+
+                strides[0U] = 1;
+                for (size_t i = 1U; i < Kd; ++i) {
+                    strides[i] = strides[i - 1U] * _sizes[i - 1U];
+                }
+
+                // Please note this loop uses integer underflow to bypass a quirk of reverse for-loops.
+                auto idx = _index;
+                for (size_t i = Kd - 1U; i != std::numeric_limits<size_t>::max(); --i) {
+                    result[i] = idx / strides[i];
+                    idx %= strides[i];
+                }
+            }
+            else if constexpr (Kd > 3U) {
+
+                const auto w1 = _sizes[2U] * _sizes[1U],
+                           w2 = w1 * _sizes[0U],
+                           w3 = _index % w2;
+
+                result = {
+                        (w3 % w1) % _sizes[2U],
+                        (w3 % w1) / _sizes[2U],
+                         w3 / w1,
+                        _index / w2,
+                };
+            }
+            else if constexpr (Kd > 2U) {
+
+                const auto w1 = _sizes[0U] * _sizes[1U],
+                           w2 = _index % w1;
+
+                result = {
+                        w2 % _sizes[1U],
+                        w2 / _sizes[1U],
+                    _index / w1
+                };
+            }
+            else if constexpr (Kd > 1U) {
+                result = {
+                    _index % _sizes[0U],
+                    _index / _sizes[0U]
+                };
+            }
+            else if constexpr (Kd > 0U) {
+                result = { _index };
+            }
+            else {
+                static_assert([]{ return false; }(), "No specialisation exists for n-dimensional value to 0D");
+            }
 
 			return result;
 		}
@@ -289,21 +306,7 @@ namespace CHDR {
 		 */
 		template<typename T, typename... Args>
 		static constexpr auto To1D(const Coord<T, sizeof...(Args)>& _indices, const Args&... _sizes) {
-
-			static_assert(std::is_integral_v<T>, "Only integer types are allowed.");
-
-			constexpr size_t N = sizeof...(Args);
-
-			T result{0};
-
-			std::array sizes { _sizes... };
-
-			// Please note this loop uses integer underflow to bypass a quirk of reverse for-loops.
-			for (size_t i = N - 1; i != std::numeric_limits<size_t>::max(); --i) {
-				result = (result * sizes[i]) + _indices[i];
-			}
-
-			return result;
+			return To1D({_indices}, {_sizes...});
 		}
 
 		/**
@@ -319,32 +322,44 @@ namespace CHDR {
 
 			static_assert(std::is_integral_v<T>, "Only integer types are allowed.");
 
-			T result{0};
+			T result;
 
-			// Please note this loop uses integer underflow to bypass a quirk of reverse for-loops.
-			for (size_t i = Kd - 1; i != std::numeric_limits<size_t>::max(); --i) {
-				result = (result * _sizes[i]) + _indices[i];
-			}
+            if constexpr (Kd > 4U) {
 
-			return result;
-		}
+                result = 0;
 
-		template <typename T>
-		static constexpr std::enable_if_t<std::is_integral_v<T>, bool> CheckMulOverflow(const T& a, const T& b) {
-
-			bool result{};
-
-			     if (a == 0 || b == 0) { result = false;                                 }
-			else if (a >  0 && b >  0) { result = a > std::numeric_limits<T>::max() / b; }
-			else if (a <  0 && b <  0) { result = a < std::numeric_limits<T>::max() / b; }
-			else {                       result = a < std::numeric_limits<T>::min() / b; }
+                // Please note this loop uses integer underflow to bypass a quirk of reverse for-loops.
+                for (size_t i = Kd - 1U; i != std::numeric_limits<size_t>::max(); --i) {
+                    result = (result * _sizes[i]) + _indices[i];
+                }
+            }
+            else if constexpr (Kd > 3U) {
+                result = (_indices[3U] * (_sizes[2U] * _sizes[1U] * _sizes[0U])) +
+                         (_indices[2U] * (_sizes[1U] * _sizes[0U])) +
+                         (_indices[1U] *  _sizes[0U]) +
+                          _indices[0U];
+            }
+            else if constexpr (Kd > 2U) {
+                result = (_indices[2U] * (_sizes[1U] * _sizes[0U])) +
+                         (_indices[1U] *  _sizes[0U]) +
+                          _indices[0U];
+            }
+            else if constexpr (Kd > 1U) {
+                result = (_indices[1U] * _sizes[0U]) + _indices[0U];
+            }
+            else if constexpr (Kd > 0U) {
+                result = _indices[0U];
+            }
+            else {
+                static_assert([]{ return false; }(), "No specialisation exists for converting 0-dimensional value to 1D");
+            }
 
 			return result;
 		}
 
         static std::string Trim_Trailing_Zeros(std::string _str) {
 
-            _str.erase(_str.find_last_not_of('0') + 1, std::string::npos);
+            _str.erase(_str.find_last_not_of('0') + 1U, std::string::npos);
 
             if (_str.back() == '.') {
                 _str.pop_back();
@@ -358,8 +373,8 @@ namespace CHDR {
             static std::array<std::string, 4> units = { "s", "ms", "µs", "ns" };
 
             size_t i = 0U;
-            while (i < units.size() && _duration < 1.0) {
-                _duration *= 1000.0;
+            while (i < units.size() && _duration < static_cast<long double>(1.0)) {
+                _duration *= static_cast<long double>(1000.0);
                 ++i;
             }
 
