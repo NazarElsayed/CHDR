@@ -69,7 +69,7 @@ namespace CHDR {
                  */
 #ifdef __SSE2__
 
-                if constexpr (std::is_same_v<Ts, float> || std::is_same_v<Ts, uint32_t> || std::is_same_v<Ts, int32_t>) {
+                if constexpr (!__builtin_is_constant_evaluated() && std::is_same_v<Ts, float> || std::is_same_v<Ts, uint32_t> || std::is_same_v<Ts, int32_t>) {
 
                     float cr = 0.0F;
 
@@ -145,7 +145,7 @@ namespace CHDR {
 
                     result = static_cast<Ts>(cr);
                 }
-                else if constexpr (std::is_same_v<Ts, double> || std::is_same_v<Ts, uint64_t> || std::is_same_v<Ts, int64_t>) {
+                else if constexpr (!__builtin_is_constant_evaluated() && std::is_same_v<Ts, double> || std::is_same_v<Ts, uint64_t> || std::is_same_v<Ts, int64_t>) {
 
                     double cr = 0.0;
 
@@ -243,7 +243,7 @@ namespace CHDR {
                  */
 #ifdef __SSE2__
 
-                if constexpr (std::is_same_v<Ts, uint32_t> || std::is_same_v<Ts, int32_t> || std::is_same_v<Ts, float>) {
+                if constexpr (!__builtin_is_constant_evaluated() && std::is_same_v<Ts, uint32_t> || std::is_same_v<Ts, int32_t> || std::is_same_v<Ts, float>) {
 
                     const auto cA = Utils::ArrayCast<uint32_t>(_a);
                     const auto cB = Utils::ArrayCast<uint32_t>(_b);
@@ -314,7 +314,7 @@ namespace CHDR {
                         }
                     }
                 }
-                else if constexpr (std::is_same_v<Ts, uint64_t> || std::is_same_v<Ts, int64_t> || std::is_same_v<Ts, double>) {
+                else if constexpr (!__builtin_is_constant_evaluated() && std::is_same_v<Ts, uint64_t> || std::is_same_v<Ts, int64_t> || std::is_same_v<Ts, double>) {
 
                     const auto cA = Utils::ArrayCast<uint64_t>(_a);
                     const auto cB = Utils::ArrayCast<uint64_t>(_b);

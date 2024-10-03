@@ -235,11 +235,9 @@ namespace CHDR {
 
 			static_assert(std::is_integral_v<T>, "Only integer types are allowed.");
 
-			Coord<T, Kd> result;
+			Coord<T, Kd> result{};
 
             if constexpr (Kd > 4U) {
-
-                result = {};
 
                 std::array<T, Kd> strides{};
                 strides[0U] = 1;
@@ -321,7 +319,7 @@ namespace CHDR {
 
 			static_assert(std::is_integral_v<T>, "Only integer types are allowed.");
 
-			T result;
+			T result{};
 
             if constexpr (Kd > 4U) {
 
