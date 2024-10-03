@@ -173,7 +173,7 @@ namespace CHDR {
 
 			// TODO: Ensure that product does not overflow!
 
-			T result{};
+			T result;
 
 			if constexpr (Kd == 0U) {
 				result = 0;
@@ -181,7 +181,6 @@ namespace CHDR {
 			else {
 
 				result = _array[0U];
-
 				for (size_t i = 1U; i < _array.size(); ++i) {
 					result *= _array[i];
 				}
@@ -243,8 +242,8 @@ namespace CHDR {
                 result = {};
 
                 std::array<T, Kd> strides{};
-
                 strides[0U] = 1;
+
                 for (size_t i = 1U; i < Kd; ++i) {
                     strides[i] = strides[i - 1U] * _sizes[i - 1U];
                 }
@@ -370,7 +369,7 @@ namespace CHDR {
 
         static std::string ToString(long double _duration) {
 
-            static std::array<std::string, 4> units = { "s", "ms", "µs", "ns" };
+            static std::array<std::string, 4U> units = { "s", "ms", "µs", "ns" };
 
             size_t i = 0U;
             while (i < units.size() && _duration < static_cast<long double>(1.0)) {
