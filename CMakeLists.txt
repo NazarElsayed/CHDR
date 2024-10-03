@@ -140,9 +140,8 @@ add_library(CHDR INTERFACE
     src/core/types/ExistenceSet.hpp
     src/core/types/Heap.hpp
     src/core/types/Node.hpp
-    src/core/types/RelationalNode.hpp
 
-    src/core/solvers/base/ISolver.hpp
+        src/core/solvers/base/ISolver.hpp
     src/core/solvers/AStar.hpp
     src/core/solvers/BFS.hpp
     src/core/solvers/DFS.hpp

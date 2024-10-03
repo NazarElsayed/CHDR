@@ -87,7 +87,7 @@ namespace CHDR::Mazes {
         }
 
         template<typename... Args>
-        [[nodiscard]] std::array<std::pair<bool, coord_t>, Kd * 2U> GetNeighbours(const Args&... _id) const {
+        [[nodiscard]] constexpr std::array<std::pair<bool, coord_t>, Kd * 2U> GetNeighbours(const Args&... _id) const {
             return GetNeighbours({ _id... });
         }
 
@@ -139,35 +139,6 @@ namespace CHDR::Mazes {
 
                 result[Kd + i].first  = c[i] < m_Size[i] - 1U && At(pCoord).IsActive();
                 result[Kd + i].second = pCoord;
-            }
-
-            return result;
-        }
-
-        [[nodiscard]] constexpr std::vector<size_t> GetActiveNeighbours(const size_t& _id) const {
-
-            std::vector<size_t> result;
-
-            const auto c = Utils::ToND<size_t, Kd>(_id, Size());
-
-            for (size_t i = 0U; i < Kd; ++i) {
-
-                coord_t nCoord = c;
-                --nCoord[i];
-
-                if (c[i] > 0U && At(nCoord).IsActive()) {
-                    result.emplace_back(Utils::To1D(nCoord, Size()));
-                }
-            }
-
-            for (size_t i = 0U; i < Kd; ++i) {
-
-                coord_t pCoord = c;
-                ++pCoord[i];
-
-                if (c[i] < m_Size[i] - 1U && At(pCoord).IsActive()) {
-                    result.emplace_back(Utils::To1D(pCoord, Size()));
-                }
             }
 
             return result;

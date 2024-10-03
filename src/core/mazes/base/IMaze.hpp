@@ -18,8 +18,6 @@ namespace CHDR::Mazes {
 
     public:
 
-        [[nodiscard]] virtual constexpr std::vector<size_t> GetActiveNeighbours(const size_t& _id) const = 0;
-
         [[nodiscard]] virtual constexpr const Node<T>& At(const size_t& _index) const = 0;
 
         [[nodiscard]] virtual constexpr bool Contains(const size_t& _id) const = 0;
