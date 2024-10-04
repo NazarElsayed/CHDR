@@ -29,7 +29,7 @@
 #include "solvers/JPS.hpp"
 
 #include "types/Coord.hpp"
-#include "types/Node.hpp"
+#include "nodes/WeightedNode.hpp"
 
 #include "utils/Utils.hpp"
 #include "utils/Heuristics.hpp"

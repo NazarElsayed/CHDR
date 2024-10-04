@@ -24,7 +24,7 @@ namespace Test::Tests {
 
     public:
 
-        template <typename Tm, const size_t Kd, typename Ts = uint32_t>
+        template <typename Tm = uint32_t, const size_t Kd, typename Ts = uint32_t>
         static void Run(const std::array<size_t, Kd> _dimensions) {
 
             #define HEURISTIC CHDR::Heuristics<Kd, Ts>::ManhattanDistance

@@ -134,9 +134,9 @@ add_library(CHDR INTERFACE
     src/core/mazes/Grid.hpp
     src/core/mazes/Tree.hpp
 
-    src/core/types/ExistenceSet.hpp
-    src/core/types/Heap.hpp
-    src/core/types/Node.hpp
+    src/core/nodes/base/INode.hpp
+    src/core/nodes/IDNode.hpp
+    src/core/nodes/WeightedNode.hpp
 
     src/core/solvers/base/ISolver.hpp
     src/core/solvers/AStar.hpp
@@ -150,6 +150,11 @@ add_library(CHDR INTERFACE
     src/core/solvers/GStar.hpp
     src/core/solvers/JPS.hpp
 
+    src/core/types/Coord.hpp
+    src/core/types/ExistenceSet.hpp
+    src/core/types/Heap.hpp
+
+    src/core/utils/Heuristics.hpp
     src/core/utils/SIMDExtensions.hpp
     src/core/utils/Utils.hpp
 )

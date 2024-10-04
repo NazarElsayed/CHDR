@@ -16,15 +16,15 @@
 #include "../utils/Heuristics.hpp"
 #include "base/ISolver.hpp"
 #include "mazes/base/IMaze.hpp"
+#include "mazes/Grid.hpp"
 #include "types/ExistenceSet.hpp"
 #include "types/Heap.hpp"
 #include "utils/Utils.hpp"
-#include "mazes/Grid.hpp"
 
 namespace CHDR::Solvers {
 
     template<typename Tm, const size_t Kd, typename Ts>
-    class AStar final : public ISolver<Tm> {
+    class AStar final {
 
         static_assert(std::is_integral_v<Ts> || std::is_floating_point_v<Ts>, "Ts must be either an integral or floating point type");
 
@@ -68,13 +68,6 @@ namespace CHDR::Solvers {
         };
 
     public:
-
-        void Solve(const Mazes::IMaze<Tm>& _maze) override {
-
-            (void)_maze; // Suppress unused variable warning.
-
-            throw std::runtime_error("AStar::Solve(const Mazes::IMaze& _maze): Not implemented!");
-        }
 
         auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) const {
 

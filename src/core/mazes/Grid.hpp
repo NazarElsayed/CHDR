@@ -22,7 +22,7 @@ namespace CHDR::Mazes {
      * @tparam Kd Dimensionality of the grid.
      */
     template <const size_t Kd, typename T = uint32_t>
-    class Grid : public IMaze<T> {
+    class Grid : public IMaze<WeightedNode<T>> {
 
         using coord_t = Coord<size_t, Kd>;
 
@@ -37,7 +37,7 @@ namespace CHDR::Mazes {
 
         coord_t m_Size;
 
-        std::vector<Node<T>> m_Nodes;
+        std::vector<WeightedNode<T>> m_Nodes;
 
     public:
 
@@ -45,7 +45,7 @@ namespace CHDR::Mazes {
             m_Size(_size),
             m_Nodes(Utils::Product<size_t>(m_Size)) {}
 
-        constexpr Grid(const coord_t& _size, const std::vector<Node<T>>& _nodes) :
+        constexpr Grid(const coord_t& _size, const std::vector<WeightedNode<T>>& _nodes) :
             m_Size(_size),
             m_Nodes(_nodes) {}
 
@@ -58,18 +58,18 @@ namespace CHDR::Mazes {
         }
 
         template <typename... Args>
-        constexpr Grid(const Args&... _size, const std::vector<Node<T>>& _nodes) :
+        constexpr Grid(const Args&... _size, const std::vector<WeightedNode<T>>& _nodes) :
             m_Size { _size... },
             m_Nodes(_nodes)
         {
             static_assert(sizeof...(Args) == Rank, "Number of arguments must equal the Grid's rank.");
         }
 
-        [[nodiscard]] constexpr const std::vector<Node<T>>& Nodes() const {
+        [[nodiscard]] constexpr const std::vector<WeightedNode<T>>& Nodes() const {
             return m_Nodes;
         }
 
-        constexpr void Nodes(const std::vector<Node<T>>& _value) {
+        constexpr void Nodes(const std::vector<WeightedNode<T>>& _value) {
             m_Nodes = _value;
         }
 
@@ -145,11 +145,11 @@ namespace CHDR::Mazes {
         }
 
         template<typename... Args>
-        [[nodiscard]] constexpr const Node<T>& At(const Args&... _id) const {
+        [[nodiscard]] constexpr const WeightedNode<T>& At(const Args&... _id) const {
             return At({ _id... });
         }
 
-        [[nodiscard]] constexpr const Node<T>& At(const coord_t& _id) const {
+        [[nodiscard]] constexpr const WeightedNode<T>& At(const coord_t& _id) const {
 
             const size_t index = Utils::To1D(_id, m_Size);
 
@@ -160,12 +160,12 @@ namespace CHDR::Mazes {
 #endif // NDEBUG
         }
 
-        [[nodiscard]] constexpr const Node<T>& At(const size_t& _index) const {
+        [[nodiscard]] constexpr const WeightedNode<T>& At(const size_t& _id) const override {
 
 #ifndef NDEBUG
             return m_Nodes.at(_index);
 #else
-            return m_Nodes[_index];
+            return m_Nodes[_id];
 #endif // NDEBUG
         }
 
@@ -190,7 +190,7 @@ namespace CHDR::Mazes {
             return result;
         }
 
-        [[nodiscard]] constexpr bool Contains(const size_t& _id) const {
+        [[nodiscard]] constexpr bool Contains(const size_t& _id) const override {
             return _id < Utils::Product<size_t>(m_Size);
         }
     };

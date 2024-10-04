@@ -25,7 +25,7 @@
 namespace CHDR::Solvers {
 
     template<typename Tm, const size_t Kd, typename Ts>
-    class ESMGStar final : public ISolver<Tm> {
+    class ESMGStar final {
 
         static_assert(std::is_integral_v<Ts> || std::is_floating_point_v<Ts>, "Ts must be either an integral or floating point type");
 
@@ -173,13 +173,6 @@ namespace CHDR::Solvers {
         };
 
     public:
-
-        void Solve(const Mazes::IMaze<Tm>& _maze) override {
-
-            (void)_maze; // Suppress unused variable warning.
-
-            throw std::runtime_error("ESMAStar::Solve(const Mazes::IMaze& _maze): Not implemented!");
-        }
 
         auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const size_t& _memoryLimit) const {
 

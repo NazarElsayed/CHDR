@@ -19,7 +19,7 @@ namespace CHDR::Mazes {
      * @tparam Kd Dimensionality of the tree.
      */
     template <const size_t Kd, typename T = uint32_t>
-    class Tree : public IMaze<T> {
+    class Tree : public IMaze<IDNode<T>> {
 
     private:
 

@@ -13,19 +13,13 @@
 
 namespace CHDR::Solvers {
 
-    template<typename T>
-    class JPS final : public ISolver<T> {
+    template<typename Tm>
+    class JPS final {
 
     private:
 
     public:
 
-        void Solve(const Mazes::IMaze<T>& _maze) override {
-
-            (void)_maze; // Suppress unused variable warning.
-            
-            throw std::runtime_error("JPS::Solve(const Mazes::IMaze& _maze) Not implemented!");
-        }
     };
 
 } // CHDR::Solvers

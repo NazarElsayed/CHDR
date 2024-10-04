@@ -6,15 +6,17 @@
  * https://creativecommons.org/licenses/by-nc-nd/4.0/
  */
 
-#ifndef CHDR_NODE_HPP
-#define CHDR_NODE_HPP
+#ifndef CHDR_WEIGHTEDNODE_HPP
+#define CHDR_WEIGHTEDNODE_HPP
 
 #include <type_traits>
+
+#include "nodes/base/INode.hpp"
 
 namespace CHDR {
 
     template <typename W = bool>
-    class Node {
+    class WeightedNode : INode {
 
         static_assert(std::is_integral_v<W>, "Type W must be an integral type.");
 
@@ -24,14 +26,13 @@ namespace CHDR {
 
     public:
 
-        [[nodiscard]] constexpr bool IsActive() const {
+        constexpr WeightedNode(const W& _value = 0) : m_Value(_value) {}
+
+        [[nodiscard]] bool IsActive() const override {
             return m_Value != std::numeric_limits<W>::max();
         }
 
-        constexpr Node(const W& _value = 0) :
-            m_Value(_value) {}
-
-        [[nodiscard]] constexpr W Value() const {
+        [[nodiscard]] constexpr const W& Value() const {
             return m_Value;
         }
 
@@ -42,4 +43,4 @@ namespace CHDR {
 
 } // CHDR
 
-#endif //CHDR_NODE_HPP
+#endif //CHDR_WEIGHTEDNODE_HPP

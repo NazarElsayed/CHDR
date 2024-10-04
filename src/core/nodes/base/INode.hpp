@@ -6,17 +6,18 @@
  * https://creativecommons.org/licenses/by-nc-nd/4.0/
  */
 
-#ifndef CHDR_ISOLVER_HPP
-#define CHDR_ISOLVER_HPP
+#ifndef CHDR_INODE_HPP
+#define CHDR_INODE_HPP
 
-namespace CHDR::Solvers {
+namespace CHDR {
 
-    class ISolver {
+    class INode {
 
     public:
 
+        [[nodiscard]] virtual bool IsActive() const = 0;
     };
 
-} // CHDR::Solvers
+} // CHDR
 
-#endif //CHDR_ISOLVER_HPP
+#endif //CHDR_INODE_HPP

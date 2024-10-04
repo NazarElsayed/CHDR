@@ -135,10 +135,10 @@ namespace Test::Generator::Utils {
          * @param [in] _size The size of the 2D maze grid.
          * @param [in] _seed The seed value for the random number generator.
          *
-         * @param [in] _loops (optional) Value between 0.0 and 1.0 indicating the possibility of the maze containing loops.
+         * @param [in] _loops (optional) ID between 0.0 and 1.0 indicating the possibility of the maze containing loops.
          *                    The default value is 0.0, which yields no loops.
          *
-         * @param [in] _obstacles (optional) Value between 0.0 and 1.0 indicating the possibility of the maze containing obstacles.
+         * @param [in] _obstacles (optional) ID between 0.0 and 1.0 indicating the possibility of the maze containing obstacles.
          *                        The presence of obstacles may make some paths unsolvable.
          *                        The default value is 0.0, which yields no obstacles.
          *

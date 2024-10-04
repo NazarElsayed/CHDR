@@ -9,18 +9,20 @@
 #ifndef CHDR_IMAZE_HPP
 #define CHDR_IMAZE_HPP
 
-#include "../../types/Node.hpp"
+#include "nodes/WeightedNode.hpp"
 
 namespace CHDR::Mazes {
 
-    template <typename T>
+    template<typename TNode>
     class IMaze {
+
+        static_assert(std::is_base_of<INode, TNode>::value, "TNode must derive from INode");
 
     public:
 
-        [[nodiscard]] virtual constexpr const Node<T>& At(const size_t& _index) const = 0;
+        [[nodiscard]] virtual constexpr const TNode &At(const size_t &_id) const = 0;
 
-        [[nodiscard]] virtual constexpr bool Contains(const size_t& _id) const = 0;
+        [[nodiscard]] virtual constexpr bool Contains(const size_t &_id) const = 0;
 
     };
 

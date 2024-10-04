@@ -21,20 +21,13 @@
 namespace CHDR::Solvers {
 
     template<typename Tm, const size_t Kd>
-    class FloodFill final : public ISolver<Tm> {
+    class FloodFill final {
 
     private:
 
         using coord_t = Coord<size_t, Kd>;
 
     public:
-
-        void Solve(const Mazes::IMaze<Tm>& _maze) override {
-
-            (void)_maze; // Suppress unused variable warning.
-
-            throw std::runtime_error("AStar::Solve(const Mazes::IMaze& _maze) Not implemented!");
-        }
 
         auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, size_t _capacity = 0U) {
 
