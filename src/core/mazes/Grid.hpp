@@ -163,7 +163,7 @@ namespace CHDR::Mazes {
         [[nodiscard]] constexpr const WeightedNode<T>& At(const size_t& _id) const override {
 
 #ifndef NDEBUG
-            return m_Nodes.at(_index);
+            return m_Nodes.at(_id);
 #else
             return m_Nodes[_id];
 #endif // NDEBUG
