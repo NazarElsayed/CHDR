@@ -66,7 +66,7 @@ namespace CHDR::Solvers {
                 if (!m_Successors.empty()) {
 
                     for (auto successor : m_Successors) {
-                        m_ForgottenFCosts.insert_or_assign(successor->m_Coord, successor->m_FScore);
+                        m_ForgottenFCosts.insert_or_assign(successor->m_Index, successor->m_FScore);
                     }
 
                     m_Successors.clear();
@@ -198,7 +198,7 @@ namespace CHDR::Solvers {
                 auto current(std::move(openSet.Top())); // Node with smallest f-cost in O
                 openSet.RemoveFirst();
 
-                if (current->m_Coord != e) { // SEARCH FOR SOLUTION...
+                if (current->m_Index != e) { // SEARCH FOR SOLUTION...
 
                     auto successors_current = current->Expand(_maze, _end, _h, _memoryLimit);
 
@@ -207,7 +207,7 @@ namespace CHDR::Solvers {
                         auto& successor = successors_current[i];
 
                         // Check if s(n) is in forgotten f-cost table of b.
-                        auto search = current->m_ForgottenFCosts.find(successor->m_Coord);
+                        auto search = current->m_ForgottenFCosts.find(successor->m_Index);
                         if (search != current->m_ForgottenFCosts.end()) {
 
                             const auto& [nCoord, nCost] = *search;
@@ -216,7 +216,7 @@ namespace CHDR::Solvers {
                             current->m_ForgottenFCosts.erase(nCoord);
                         }
                         else {
-                            successor->m_FScore = std::max(current->m_FScore, successor->m_GScore + _h(Utils::ToND(successor->m_Coord, _maze.Size()), _end));
+                            successor->m_FScore = std::max(current->m_FScore, successor->m_GScore + _h(Utils::ToND(successor->m_Index, _maze.Size()), _end));
                         }
 
                         // Add successor to openSet.
@@ -241,12 +241,12 @@ namespace CHDR::Solvers {
 
                         // Recurse from end node to start node, inserting into a result buffer:
                         result.reserve(current->m_GScore);
-                        result.emplace_back(Utils::ToND(current->m_Coord, _maze.Size()));
+                        result.emplace_back(Utils::ToND(current->m_Index, _maze.Size()));
 
                         if (auto item = current->m_Parent) {
 
                             while (const auto item_parent = item->m_Parent) {
-                                result.emplace_back(Utils::ToND(item->m_Coord, _maze.Size()));
+                                result.emplace_back(Utils::ToND(item->m_Index, _maze.Size()));
 
                                 auto oldItem = item;
                                 item = item_parent;
@@ -277,7 +277,7 @@ namespace CHDR::Solvers {
                 for (size_t i = 0U; i < p_successors.size(); ++i) {
 
                     // Code to remove w from the successor list of p goes here
-                    if (p_successors[i]->m_Coord == w->m_Coord) {
+                    if (p_successors[i]->m_Index == w->m_Coord) {
                         p_successors.erase(p_successors.begin() + i);
                         break;
                     }

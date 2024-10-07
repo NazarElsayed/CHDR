@@ -9,6 +9,7 @@
 #ifndef CHDR_GRID_HPP
 #define CHDR_GRID_HPP
 
+#include "../nodes/WeightedNode.hpp"
 #include "../types/Coord.hpp"
 #include "../utils/Utils.hpp"
 #include "base/IMaze.hpp"
@@ -22,7 +23,7 @@ namespace CHDR::Mazes {
      * @tparam Kd Dimensionality of the grid.
      */
     template <const size_t Kd, typename T = uint32_t>
-    class Grid : public IMaze<WeightedNode<T>> {
+    class Grid : public IMaze<WeightedNode<T>, size_t> {
 
         using coord_t = Coord<size_t, Kd>;
 
@@ -85,6 +86,10 @@ namespace CHDR::Mazes {
         constexpr void Size(const coord_t& _value) {
             m_Size = _value;
         }
+
+        [[nodiscard]] constexpr size_t Count() const override {
+            return Utils::Product<size_t>(m_Size);
+        };
 
         template<typename... Args>
         [[nodiscard]] constexpr std::array<std::pair<bool, coord_t>, Kd * 2U> GetNeighbours(const Args&... _id) const {
@@ -160,7 +165,7 @@ namespace CHDR::Mazes {
 #endif // NDEBUG
         }
 
-        [[nodiscard]] constexpr const WeightedNode<T>& At(const size_t& _id) const override {
+        [[nodiscard]] constexpr const WeightedNode<T>& At(const size_t& _id) const {
 
 #ifndef NDEBUG
             return m_Nodes.at(_id);
@@ -193,6 +198,28 @@ namespace CHDR::Mazes {
         [[nodiscard]] constexpr bool Contains(const size_t& _id) const override {
             return _id < Utils::Product<size_t>(m_Size);
         }
+
+        using               iterator = typename std::vector<WeightedNode < T>>::iterator;
+        using         const_iterator = typename std::vector<WeightedNode < T>>::const_iterator;
+        using       reverse_iterator = typename std::vector<WeightedNode < T>>::reverse_iterator;
+        using const_reverse_iterator = typename std::vector<WeightedNode < T>>::const_reverse_iterator;
+
+              iterator  begin()       { return m_Nodes.begin();  }
+        const_iterator  begin() const { return m_Nodes.begin();  }
+        const_iterator cbegin() const { return m_Nodes.cbegin(); }
+
+              iterator  end()       { return m_Nodes.end();  }
+        const_iterator  end() const { return m_Nodes.end();  }
+        const_iterator cend() const { return m_Nodes.cend(); }
+
+              reverse_iterator  rbegin()       { return m_Nodes.rbegin();  }
+        const_reverse_iterator  rbegin() const { return m_Nodes.rbegin();  }
+        const_reverse_iterator crbegin() const { return m_Nodes.crbegin(); }
+
+              reverse_iterator  rend()       { return m_Nodes.rend();  }
+        const_reverse_iterator  rend() const { return m_Nodes.rend();  }
+        const_reverse_iterator crend() const { return m_Nodes.crend(); }
+
     };
 
 } // CHDR::Mazes

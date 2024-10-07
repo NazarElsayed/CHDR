@@ -132,9 +132,8 @@ add_library(CHDR INTERFACE
     src/core/mazes/base/IMaze.hpp
     src/core/mazes/Graph.hpp
     src/core/mazes/Grid.hpp
-    src/core/mazes/Tree.hpp
 
-    src/core/nodes/base/INode.hpp
+        src/core/nodes/base/INode.hpp
     src/core/nodes/IDNode.hpp
     src/core/nodes/WeightedNode.hpp
 
@@ -157,6 +156,7 @@ add_library(CHDR INTERFACE
     src/core/utils/Heuristics.hpp
     src/core/utils/SIMDExtensions.hpp
     src/core/utils/Utils.hpp
+        src/core/mazes/base/IGraph.hpp
 )
 
 target_link_libraries(CHDR INTERFACE)

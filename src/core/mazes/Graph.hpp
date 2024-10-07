@@ -9,43 +9,96 @@
 #ifndef CHDR_GRAPH_HPP
 #define CHDR_GRAPH_HPP
 
-#include "base/IMaze.hpp"
+#include "base/IGraph.hpp"
+#include "Grid.hpp"
 
-#include "../nodes/IDNode.hpp"
+#include <unordered_map>
+#include "base/IGraph.hpp"
+
+#include <vector>
 
 namespace CHDR::Mazes {
 
-    template <typename Ti, typename Ts = float>
-    class Graph : public IMaze<IDNode<Ti>> {
-
-        using edge_t = std::pair<Ti, Ts>;
+    template<typename Ti, size_t Kd, typename Ts = float>
+    class Graph : public IGraph<Ti, Ts> {
 
     private:
 
-        std::vector<IDNode<Ti>> m_Nodes;
-        std::vector<std::vector<edge_t>> m_Edges;
+        using edge_t = typename IGraph<Ti, Ts>::edge_t;
+
+        std::unordered_map<Ti, std::vector<edge_t>> m_Entries;
 
     public:
 
-        void AddNode(const std::initializer_list<IDNode<Ti>> &_initialiser) {
-            m_Nodes.emplace_back(_initialiser).ID(m_Nodes.size() - 1U);
+        constexpr Graph(std::initializer_list<std::initializer_list<edge_t>> _adjacency_list) : m_Entries{} {
+
+            size_t node_id = 0U;
+
+            for (auto& entry : _adjacency_list) {
+
+                for (const auto& edge_list: entry) {
+                    Add(node_id, edge_list);
+                }
+
+                ++node_id;
+            }
         }
 
-        void AddEdge(const IDNode<Ti>& _from, const IDNode<Ti>& _to, const Ts& _distance) {
-            m_Edges[_from].emplace_back(_to, _distance);
+        constexpr Graph(Grid<Kd, Ts> _grid) : m_Entries{} {
+
+            for (auto& element : _grid) {
+
+            }
         }
 
-        [[nodiscard]] constexpr edge_t GetNeighbours(const Ti _id) {
-            return m_Edges[_id];
+        void Add(const Ti& _from_id, const edge_t& _edge) {
+            m_Entries[_from_id].emplace_back(_edge);
         }
 
-        [[nodiscard]] constexpr const IDNode<Ti>& At(const Ti &_id) const override {
-            return m_Nodes[_id];
-        };
+        void Remove(const Ti& _from_id) {
 
-        [[nodiscard]] constexpr bool Contains(const Ti &_id) const override {
-            return _id < m_Nodes.size();
+            if (Contains(_from_id)) {
+                m_Entries.erase(_from_id);
+            }
         }
+
+        void Trim() {
+
+            for (auto it = m_Entries.begin(); it != m_Entries.end();) {
+                if (it->second.empty()) {
+                    it = m_Entries.erase(it);
+                }
+                else {
+                    it->second.shrink_to_fit();
+                    ++it;
+                }
+            }
+        }
+
+        [[nodiscard]] constexpr const std::vector<edge_t>& GetNeighbours(const Ti& _id) const override {
+
+            auto it = m_Entries.find(_id);
+            return it->second;
+        }
+
+        [[nodiscard]] constexpr bool Contains(const Ti& _id) const override {
+            return m_Entries.find(_id) != m_Entries.end();
+        }
+
+        [[nodiscard]] constexpr size_t Count() const override {
+            return m_Entries.size();
+        }
+
+        using       iterator = typename std::unordered_map<Ti, std::vector<edge_t>>::iterator;
+        using const_iterator = typename std::unordered_map<Ti, std::vector<edge_t>>::const_iterator;
+
+              iterator  begin()       { return m_Entries.begin();  }
+        const_iterator  begin() const { return m_Entries.begin();  }
+        const_iterator cbegin() const { return m_Entries.cbegin(); }
+
+              iterator  end()       { return m_Entries.end();  }
+        const_iterator  end() const { return m_Entries.end();  }
+        const_iterator cend() const { return m_Entries.cend(); }
 
     };
 

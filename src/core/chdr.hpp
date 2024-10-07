@@ -12,9 +12,9 @@
 #include "CHDR_Version.hpp"
 
 #include "mazes/base/IMaze.hpp"
+#include "mazes/base/IGraph.hpp"
 #include "mazes/Graph.hpp"
 #include "mazes/Grid.hpp"
-#include "mazes/Tree.hpp"
 
 #include "solvers/base/ISolver.hpp"
 #include "solvers/AStar.hpp"
@@ -31,7 +31,7 @@
 #include "types/Coord.hpp"
 #include "nodes/WeightedNode.hpp"
 
-#include "utils/Utils.hpp"
 #include "utils/Heuristics.hpp"
+#include "utils/Utils.hpp"
 
 #endif //CHDR_COMMON_HPP
