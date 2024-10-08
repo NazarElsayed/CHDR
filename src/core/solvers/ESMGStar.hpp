@@ -10,7 +10,6 @@
 #define CHDR_ESMGSTAR_HPP
 
 #include <cmath>
-#include <functional>
 #include <queue>
 #include <unordered_set>
 

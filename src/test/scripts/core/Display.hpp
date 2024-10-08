@@ -9,7 +9,6 @@
 #ifndef TEST_DISPLAY_HPP
 #define TEST_DISPLAY_HPP
 
-#include <functional>
 #include <vector>
 
 #include <mazes/Grid.hpp>

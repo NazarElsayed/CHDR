@@ -9,7 +9,6 @@
 #ifndef CHDR_GSTAR_HPP
 #define CHDR_GSTAR_HPP
 
-#include <functional>
 #include <memory>
 #include <queue>
 

@@ -10,7 +10,6 @@
 #define CHDR_ASTAR_HPP
 
 #include <cmath>
-#include <functional>
 #include <queue>
 
 #include "../utils/Heuristics.hpp"

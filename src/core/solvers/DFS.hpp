@@ -9,7 +9,6 @@
 #ifndef CHDR_DFS_HPP
 #define CHDR_DFS_HPP
 
-#include <functional>
 #include <stack>
 
 #include "base/ISolver.hpp"

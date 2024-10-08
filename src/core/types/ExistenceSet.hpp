@@ -10,6 +10,7 @@
 #define CHDR_DENSE_EXISTENCE_SET_HPP
 
 #include <vector>
+#include <algorithm>
 
 namespace CHDR {
 

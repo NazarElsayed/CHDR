@@ -9,7 +9,6 @@
 #ifndef CHDR_GBFS_HPP
 #define CHDR_GBFS_HPP
 
-#include <functional>
 #include <queue>
 
 #include "base/ISolver.hpp"

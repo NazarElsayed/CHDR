@@ -9,7 +9,6 @@
 #ifndef CHDR_FLOODFILL_HPP
 #define CHDR_FLOODFILL_HPP
 
-#include <functional>
 #include <queue>
 
 #include "base/ISolver.hpp"
