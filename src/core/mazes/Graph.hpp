@@ -47,7 +47,7 @@ namespace CHDR::Mazes {
         constexpr Graph(Grid<Kd, Ts> _grid) : m_Entries{} {
 
             for (auto& element : _grid) {
-
+                // TODO: Convert grid to (sparse) graph.
             }
         }
 

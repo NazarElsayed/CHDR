@@ -21,6 +21,8 @@ namespace Test::Generator::Utils {
 
         using coord_t = CHDR::Coord<size_t, Kd>;
 
+        using uniform_rng_t = std::mt19937_64;
+
     public:
 
         enum Cell : bool {
@@ -61,7 +63,7 @@ namespace Test::Generator::Utils {
 #if __cplusplus >= 202302L
         constexpr
 #endif // __cplusplus >= 202302L
-        void CarveFrom(const coord_t& _coord, std::pair<coord_t, size_t>& _farthest, const coord_t& _size, std::vector<Cell>& _grid, std::mt19937 _random) {
+        void CarveFrom(const coord_t& _coord, std::pair<coord_t, size_t>& _farthest, const coord_t& _size, std::vector<Cell>& _grid, uniform_rng_t _rng) {
 
             std::stack<std::pair<coord_t, size_t>> stack;
             stack.emplace(_coord, 0U);
@@ -77,7 +79,7 @@ namespace Test::Generator::Utils {
                 }
 
                 auto dirs = GetDirections(currentCoord, _size);
-                std::shuffle(dirs.begin(), dirs.end(), _random);
+                std::shuffle(dirs.begin(), dirs.end(), _rng);
 
                 bool hasUnvisited = false;
                 for (const auto& [inBounds, dir] : dirs) {
@@ -179,11 +181,6 @@ namespace Test::Generator::Utils {
             try {
 
                 // Maze algo:
-                const auto seed = _seed == null_v ? std::random_device().operator()() : _seed;
-                std::mt19937 gen(seed);
-
-                Debug::Log("\tBacktracking Algorithm \t(Seed " + std::to_string(seed) + ")");
-
                 result.resize(product, WALL);
 
                 std::pair<coord_t, size_t> farthest { _start, 0U };
@@ -203,8 +200,13 @@ namespace Test::Generator::Utils {
 
                 if (validDimensionality) {
 
+                    const auto seed = _seed == null_v ? std::random_device().operator()() : _seed;
+                    uniform_rng_t rng(seed);
+
+                    Debug::Log("\tBacktracking Algorithm \t(Seed " + std::to_string(seed) + ")");
+
                     // Carve a maze using the recursive backtracking algorithm:
-                    CarveFrom(_start, farthest, _size, result, gen);
+                    CarveFrom(_start, farthest, _size, result, rng);
 
                     if (_loops > 0.0F || _obstacles > 0.0F) {
 
@@ -237,14 +239,14 @@ namespace Test::Generator::Utils {
 
                                 if (!edge) {
 
-                                    if (const auto obstacle_chance = static_cast<float>(gen()) / static_cast<float>(std::mt19937::max());
+                                    if (const auto obstacle_chance = static_cast<float>(rng()) / static_cast<float>(std::mt19937::max());
                                         obstacle_chance < _obstacles
                                     ) {
                                         result[CHDR::Utils::To1D<size_t>(c, _size)] = WALL;
                                     }
                                     else {
 
-                                        if (const auto loop_chance = static_cast<float>(gen()) / static_cast<float>(std::mt19937::max());
+                                        if (const auto loop_chance = static_cast<float>(rng()) / static_cast<float>(std::mt19937::max());
                                             loop_chance < _loops
                                         ) {
                                             result[CHDR::Utils::To1D<size_t>(c, _size)] = PATH;
@@ -254,6 +256,9 @@ namespace Test::Generator::Utils {
                             }
                         }
                     }
+                }
+                else {
+                    Debug::Log("\tBacktracking Algorithm \tINVALID DIMENSIONALITY \"" + std::to_string(Kd) + "\"", Error);
                 }
 
                 _end = farthest.first;
