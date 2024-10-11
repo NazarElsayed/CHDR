@@ -16,7 +16,7 @@ namespace CHDR::Mazes {
     template<typename TNode, typename Ti>
     class IMaze {
 
-        static_assert(std::is_base_of<INode, TNode>::value, "TNode must derive from INode");
+        //static_assert(std::is_base_of<INode, TNode>::value, "TNode must derive from INode");
 
     public:
 

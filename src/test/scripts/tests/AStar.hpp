@@ -24,15 +24,7 @@ namespace Test::Tests {
 
     public:
 
-        static uint32_t DummyHeuristic(const size_t& _from, const size_t& _to) {
-
-            (void)_from;
-            (void)_to;
-
-            return 0U;
-        }
-
-        template <typename Tm = uint32_t, const size_t Kd, typename Ts = uint32_t>
+        template <typename Tm, const size_t Kd, typename Ts = uint32_t>
         static void Run(const std::array<size_t, Kd> _dimensions) {
 
             #define HEURISTIC CHDR::Heuristics<Kd, Ts>::ManhattanDistance
@@ -88,7 +80,7 @@ namespace Test::Tests {
 
                 const auto sw_start = std::chrono::high_resolution_clock::now();
 
-                auto solver = CHDR::Solvers::AStar<Tm, Kd, Ts>();
+                auto solver = CHDR::Solvers::GStar<Tm, Kd, Ts>();
                 auto path = solver.Solve(grid, start, end, HEURISTIC);
 
                 pathfinding_log = "\t" + std::string(path.size() != 0U ? "[SOLVED]" : "[IMPOSSIBLE]") + "\t(~" +

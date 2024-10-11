@@ -16,7 +16,7 @@
 namespace CHDR {
 
     template <typename W = bool>
-    class WeightedNode : INode {
+    class WeightedNode {
 
         static_assert(std::is_integral_v<W>, "Type W must be an integral type.");
 
@@ -28,7 +28,7 @@ namespace CHDR {
 
         constexpr WeightedNode(const W& _value = 0) : m_Value(_value) {}
 
-        [[nodiscard]] bool IsActive() const override {
+        [[nodiscard]] bool IsActive() const {
             return m_Value != std::numeric_limits<W>::max();
         }
 

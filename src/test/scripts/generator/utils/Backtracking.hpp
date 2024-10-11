@@ -63,7 +63,7 @@ namespace Test::Generator::Utils {
 #if __cplusplus >= 202302L
         constexpr
 #endif // __cplusplus >= 202302L
-        void CarveFrom(const coord_t& _coord, std::pair<coord_t, size_t>& _farthest, const coord_t& _size, std::vector<Cell>& _grid, uniform_rng_t _rng) {
+        void CarveFrom(const coord_t& _coord, std::pair<coord_t, size_t>& _farthest, const coord_t& _size, std::vector<Cell>& _grid, uniform_rng_t& _rng) {
 
             std::stack<std::pair<coord_t, size_t>> stack;
             stack.emplace(_coord, 0U);
