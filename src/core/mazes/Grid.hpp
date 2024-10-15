@@ -16,6 +16,7 @@
 
 #include <vector>
 #include <array>
+#include <cmath>
 
 namespace CHDR::Mazes {
 
@@ -103,17 +104,13 @@ namespace CHDR::Mazes {
             for (size_t i = 0U; i < Kd; ++i) {
 
                 coord_t nCoord = _id;
+                coord_t pCoord = _id;
+
                 --nCoord[i];
+                ++pCoord[i];
 
                 result[i].first  = _id[i] > 0U && At(nCoord).IsActive();
                 result[i].second = nCoord;
-            }
-
-            for (size_t i = 0U; i < Kd; ++i) {
-
-                coord_t pCoord = _id;
-                ++pCoord[i];
-
 
                 result[Kd + i].first  = _id[i] < m_Size[i] - 1U && At(pCoord).IsActive();
                 result[Kd + i].second = pCoord;
@@ -131,16 +128,13 @@ namespace CHDR::Mazes {
             for (size_t i = 0U; i < Kd; ++i) {
 
                 coord_t nCoord = c;
+                coord_t pCoord = c;
+
                 --nCoord[i];
+                ++pCoord[i];
 
                 result[i].first  = c[i] > 0U && At(nCoord).IsActive();
                 result[i].second = nCoord;
-            }
-
-            for (size_t i = 0U; i < Kd; ++i) {
-
-                coord_t pCoord = c;
-                ++pCoord[i];
 
                 result[Kd + i].first  = c[i] < m_Size[i] - 1U && At(pCoord).IsActive();
                 result[Kd + i].second = pCoord;
