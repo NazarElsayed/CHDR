@@ -25,7 +25,7 @@ namespace Test::Tests {
     public:
 
         template <typename Tm, const size_t Kd, typename Ts = uint32_t>
-        static void Run(const std::array<size_t, Kd> _dimensions) {
+        static void Run(const std::array<size_t, Kd>& _dimensions) {
 
             #define HEURISTIC CHDR::Heuristics<Kd, Ts>::ManhattanDistance
 
@@ -43,13 +43,12 @@ namespace Test::Tests {
             /* GENERATE MAZE */
             const auto grid = CHDR::Mazes::Grid<Kd, Tm>(size, Generator::Grid::Generate<Tm>(start, end, 0.0F, 0.0F, seed, size));
 
-            /* GRID -> GRAPH */
-//            const auto graph = CHDR::Mazes::Graph<size_t, Kd, Ts>({
-//                /* 0: */ { { 1, 5 }, { 2, 3 } },
-//                /* 1: */ { { 0, 5 }           },
-//                /* 2: */ { { 0, 3 }, { 3, 5 } },
-//                /* 3: */ { { 2, 5 }           }
-//            });
+            //  /* GRID -> GRAPH */
+            // auto graph = CHDR::Mazes::Graph<size_t, Kd, Ts>(grid);
+            // graph.Print();
+            // std::cout << "\n\n";
+            // graph.MakeSparse();
+            // graph.Print();
 
             /* MAX DRAW SIZE */
             const bool drawable (
@@ -80,7 +79,7 @@ namespace Test::Tests {
 
                 const auto sw_start = std::chrono::high_resolution_clock::now();
 
-                auto solver = CHDR::Solvers::GStar<Tm, Kd, Ts>();
+                auto solver = CHDR::Solvers::AStar<Tm, Kd, Ts>();
                 auto path = solver.Solve(grid, start, end, HEURISTIC);
 
                 pathfinding_log = "\t" + std::string(path.size() != 0U ? "[SOLVED]" : "[IMPOSSIBLE]") + "\t(~" +

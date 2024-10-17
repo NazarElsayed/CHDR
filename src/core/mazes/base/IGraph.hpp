@@ -13,6 +13,8 @@
 
 #include "IMaze.hpp"
 
+#include <unordered_set>
+
 namespace CHDR::Mazes {
 
     template <typename Ti, typename Ts = float>
@@ -21,8 +23,6 @@ namespace CHDR::Mazes {
     public:
 
         using edge_t = std::pair<Ti, Ts>;
-
-        [[nodiscard]] virtual constexpr const std::vector<edge_t>& GetNeighbours(const Ti& _id) const = 0;
 
         [[nodiscard]] virtual constexpr bool Contains(const Ti& _id) const = 0;
 

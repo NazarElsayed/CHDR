@@ -89,9 +89,9 @@ namespace CHDR::Solvers {
                             if ((m_Parent == nullptr || m_Parent->m_Coord != n) && m_Depth + 1U < _memoryLimit) {
 
                                 // Check for any potential successor for the child before its creation.
-                                for (auto& successor_neighbors : _maze.GetNeighbours(n)) {
+                                for (auto& successor_neighbours : _maze.GetNeighbours(n)) {
 
-                                    if (const auto& [snActive, snCoord] = successor_neighbors; snActive) {
+                                    if (const auto& [snActive, snCoord] = successor_neighbours; snActive) {
 
                                         m_Successors.emplace_back(ESMASNode::CreateShared(
                                             m_Depth  + 1U,              // Depth

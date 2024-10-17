@@ -12,9 +12,12 @@
 #include "base/IGraph.hpp"
 #include "Grid.hpp"
 
-#include <unordered_map>
 #include "base/IGraph.hpp"
+#include "types/ExistenceSet.hpp"
 
+#include <functional>
+#include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 namespace CHDR::Mazes {
@@ -26,56 +29,132 @@ namespace CHDR::Mazes {
 
         using edge_t = typename IGraph<Ti, Ts>::edge_t;
 
-        std::unordered_map<Ti, std::vector<edge_t>> m_Entries;
+        struct EdgeHash {
+
+            std::size_t operator()(const std::pair<Ti, Ts> &edge) const {
+
+                std::size_t h1 = std::hash<Ti>()(edge.first);
+                std::size_t h2 = std::hash<Ts>()(edge.second);
+
+                return h1 ^ (h2 << 1);
+            }
+        };
+
+        struct EdgeEqual {
+
+            bool operator()(const std::pair<Ti, Ts> &edge1, const std::pair<Ti, Ts> &edge2) const {
+                return edge1.first == edge2.first && edge1.second == edge2.second;
+            }
+        };
+
+        using AdjacencyList = std::unordered_map<Ti, std::unordered_set<edge_t, EdgeHash, EdgeEqual>>;
+
+        AdjacencyList m_Entries;
 
     public:
 
-        constexpr Graph(std::initializer_list<std::initializer_list<edge_t>> _adjacency_list) : m_Entries{} {
+        Graph(std::initializer_list<std::initializer_list<edge_t>> _adjacency_list) : m_Entries{} {
 
             size_t node_id = 0U;
 
-            for (auto& entry : _adjacency_list) {
-
-                for (const auto& edge_list: entry) {
-                    Add(node_id, edge_list);
+            for (const auto &entry: _adjacency_list) {
+                for (const auto &edge: entry) {
+                    Add(node_id, edge);
                 }
-
                 ++node_id;
             }
         }
 
-        constexpr Graph(Grid<Kd, Ts> _grid) : m_Entries{} {
+        template <typename Tm>
+#if __cplusplus >= 202302L
+        constexpr
+#endif // __cplusplus >= 202302L
+        Graph(const Grid<Kd, Tm>& _grid) : m_Entries{} {
 
+            /* Convert grid to (dense) graph. */
+
+            Ti index{0};
             for (auto& element : _grid) {
-                // TODO: Convert grid to (sparse) graph.
+
+                if (element.IsActive()) {
+
+                    for (auto& neighbour : _grid.GetNeighbours(index)) {
+
+                        if (const auto& [nActive, nCoord] = neighbour; nActive) {
+
+                            const auto n = Utils::To1D(nCoord, _grid.Size());
+
+                            Add(index, std::make_pair(n, static_cast<Ts>(1.0)));
+                        }
+                    }
+                }
+
+                ++index;
             }
         }
 
         void Add(const Ti& _from_id, const edge_t& _edge) {
-            m_Entries[_from_id].emplace_back(_edge);
+            m_Entries[_from_id].insert(_edge);
         }
 
-        void Remove(const Ti& _from_id) {
+        void Remove(const Ti& _from_id, const edge_t& _edge) {
 
             if (Contains(_from_id)) {
-                m_Entries.erase(_from_id);
-            }
-        }
+                m_Entries[_from_id].erase(_edge);
 
-        void Trim() {
-
-            for (auto it = m_Entries.begin(); it != m_Entries.end();) {
-                if (it->second.empty()) {
-                    it = m_Entries.erase(it);
-                }
-                else {
-                    it->second.shrink_to_fit();
-                    ++it;
+                if (m_Entries[_from_id].empty()) {
+                    m_Entries.erase(_from_id);
                 }
             }
         }
 
-        [[nodiscard]] constexpr const std::vector<edge_t>& GetNeighbours(const Ti& _id) const override {
+        void MakeSparse() {
+
+            for (size_t i = 0U; i < 1U; ++i) {
+
+                std::vector<std::pair<Ti, edge_t>> edges_to_remove;
+                std::vector<std::pair<Ti, edge_t>> edges_to_add;
+
+                for (const auto &[current, outgoing_edges]: m_Entries) { // FOR EACH NODE IN THE GRAPH ...
+                    for (const auto &outgoing_edge: outgoing_edges) {
+                        const auto &[other, dOut] = outgoing_edge;
+
+                        for (const auto &[neighbour, dIn]: m_Entries.at(other)) {
+                            if (neighbour == current) { // GET EVERY CONNECTION WHICH CONNECTS TO IT ...
+
+                                // Identify those connections which are transitory.
+                                const bool isTransitory = dIn == dOut;
+
+                                if (isTransitory) {
+                                    edges_to_remove.emplace_back(current, outgoing_edge);
+                                    edges_to_add.emplace_back(other, std::make_pair(current, dOut + dIn));
+                                }
+                            }
+                        }
+                    }
+                }
+
+                for (const auto &[node, edge]: edges_to_remove) {
+                    Remove(node, edge);
+                }
+
+                for (const auto &[node, edge]: edges_to_add) {
+                    Add(node, edge);
+                }
+            }
+
+        }
+
+        void Print() const {
+            for (const auto &[node, edges]: m_Entries) {
+                std::cout << "Node " << node << ":\n";
+                for (const auto &edge: edges) {
+                    std::cout << "  -> (" << edge.first << ", " << edge.second << ")\n";
+                }
+            }
+        }
+
+        [[nodiscard]] constexpr const std::unordered_set<edge_t, EdgeHash, EdgeEqual>& GetNeighbours(const Ti &_id) const {
 
             auto it = m_Entries.find(_id);
             return it->second;
