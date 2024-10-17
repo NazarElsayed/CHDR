@@ -119,24 +119,26 @@ namespace CHDR::Mazes {
                 }
 
                 for (size_t i = 0U; i < neighbours; i++) {
-                    coord_t direction = Utils::ToND<size_t, Kd>(neighbours, kernelSize);
+
+                    size_t sampleIndex = i < neighbours / 2U ?
+                        i     :
+                        i + 1U;
+
+                    coord_t direction = Utils::ToND<size_t, Kd>(sampleIndex, kernelSize);
 
                     coord_t nCoord;
+                    bool oob = false;
+
                     for (size_t j = 0U; j < Kd; j++) {
                         nCoord[j] = _id[j] + (direction[j] - 1U);
+
+                        if (nCoord[j] < 0U || nCoord[j] > m_Size[j]) {
+                            oob = true;
+                            break;
+                        }
                     }
 
                     if (nCoord != _id) {
-
-                        bool oob = false;
-                        for (size_t j = 0U; j < Kd; ++j) {
-                            if (nCoord[j] < 0 || nCoord[j] > m_Size[j]) {
-                                oob = true;
-
-                                break;
-                            }
-                        }
-
                         result[i].first = !oob && At(nCoord).IsActive();
                         result[i].second = nCoord;
                     }
@@ -166,65 +168,7 @@ namespace CHDR::Mazes {
         template<bool IncludeDiagonals = false>
         [[nodiscard]]
         constexpr auto GetNeighbours(const size_t& _id) const {
-
-            constexpr size_t neighbours = IncludeDiagonals ?
-                static_cast<size_t>(std::pow(3U, Kd)) - 1U :
-                Kd * 2U;
-
-            auto result = std::array<std::pair<bool, coord_t>, neighbours>();
-
-            const auto c = Utils::ToND<size_t, Kd>(_id, Size());
-
-            if constexpr (IncludeDiagonals) {
-
-                coord_t kernelSize;
-                for (size_t i = 0U; i < Kd; i++) {
-                    kernelSize[i] = 3U;
-                }
-
-                for (size_t i = 0U; i < neighbours; i++) {
-                    coord_t direction = Utils::ToND<size_t, Kd>(neighbours, kernelSize);
-
-                    coord_t nCoord;
-                    for (size_t j = 0U; j < Kd; j++) {
-                        nCoord[j] = c[j] + (direction[j] - 1U);
-                    }
-
-                    if (nCoord != c) {
-
-                        bool oob = false;
-                        for (size_t j = 0U; j < Kd; ++j) {
-                            if (nCoord[j] < 0 || nCoord[j] > m_Size[j]) {
-                                oob = true;
-
-                                break;
-                            }
-                        }
-
-                        result[i].first = !oob && At(nCoord).IsActive();
-                        result[i].second = nCoord;
-                    }
-                }
-            }
-            else {
-
-                for (size_t i = 0U; i < Kd; ++i) {
-
-                    coord_t nCoord = c;
-                    coord_t pCoord = c;
-
-                    --nCoord[i];
-                    ++pCoord[i];
-
-                    result[i].first  = c[i] > 0U && At(nCoord).IsActive();
-                    result[i].second = nCoord;
-
-                    result[Kd + i].first  = c[i] < m_Size[i] - 1U && At(pCoord).IsActive();
-                    result[Kd + i].second = pCoord;
-                }
-            }
-
-            return result;
+            return GetNeighbours<IncludeDiagonals>(Utils::ToND<size_t, Kd>(_id, Size()));
         }
 
         template<typename... Args>
