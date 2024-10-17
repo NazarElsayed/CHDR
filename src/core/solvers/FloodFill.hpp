@@ -40,6 +40,9 @@ namespace CHDR::Solvers {
                 _maze.At(s).IsActive() &&
                 _maze.At(e).IsActive()
             ) {
+
+                const auto maze_count = _maze.Count();
+
                 std::queue<size_t> openSet;
                 openSet.emplace(s);
 
@@ -67,7 +70,7 @@ namespace CHDR::Solvers {
                                 if (!closedSet.Contains(n)) {
 
                                     if (closedSet.Capacity() > n) {
-                                        closedSet.Reserve(std::min(_capacity * ((n % _capacity) + 1U), Utils::Product<size_t>(_maze.Size())));
+                                        closedSet.Reserve(std::min(_capacity * ((n % _capacity) + 1U), maze_count));
                                     }
                                     closedSet.Add(n);
 

@@ -100,7 +100,7 @@ namespace CHDR::Solvers {
 //                if (current.m_Coord != e) { // SEARCH FOR SOLUTION...
 //
 //                    if (closedSet.Capacity() > current.m_Coord) {
-//                        closedSet.Reserve(std::min(_capacity * ((current.m_Coord % _capacity) + 1U), Utils::Product<size_t>(_maze.Size())));
+//                        closedSet.Reserve(std::min(_capacity * ((current.m_Coord % _capacity) + 1U), maze_count));
 //                    }
 //                    closedSet.Add(current.m_Coord);
 //
@@ -115,7 +115,7 @@ namespace CHDR::Solvers {
 //
 //                                // Add to dupe list:
 //                                if (closedSet.Capacity() > n) {
-//                                    closedSet.Reserve(std::min(_capacity * ((n % _capacity) + 1U), Utils::Product<size_t>(_maze.Size())));
+//                                    closedSet.Reserve(std::min(_capacity * ((n % _capacity) + 1U), maze_count));
 //                                }
 //                                closedSet.Add(n);
 //

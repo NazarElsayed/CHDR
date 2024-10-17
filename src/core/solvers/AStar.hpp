@@ -65,6 +65,8 @@ namespace CHDR::Solvers {
 
             std::vector<size_t> result;
 
+            const auto maze_count = _maze.Count();
+
             _capacity = std::max(_capacity, std::max(_start, _end));
 
             ExistenceSet<LowMemoryUsage> closedSet({ _start }, _capacity);
@@ -82,7 +84,7 @@ namespace CHDR::Solvers {
                 if (current.m_Index != _end) { // SEARCH FOR SOLUTION...
 
                     if (closedSet.Capacity() > current.m_Index) {
-                        closedSet.Reserve(std::min(_capacity * ((current.m_Index % _capacity) + 1U), _maze.Count()));
+                        closedSet.Reserve(std::min(_capacity * ((current.m_Index % _capacity) + 1U), maze_count));
                     }
                     closedSet.Add(current.m_Index);
 
@@ -96,7 +98,7 @@ namespace CHDR::Solvers {
                         if (!closedSet.Contains(n)) {
 
                             if (closedSet.Capacity() > current.m_Index) {
-                                closedSet.Reserve(std::min(_capacity * ((current.m_Index % _capacity) + 1U), _maze.Count()));
+                                closedSet.Reserve(std::min(_capacity * ((current.m_Index % _capacity) + 1U), maze_count));
                             }
                             closedSet.Add(n);
 
@@ -142,6 +144,8 @@ namespace CHDR::Solvers {
 
             std::vector<coord_t> result;
 
+            const auto maze_count = _maze.Count();
+
             const auto s = Utils::To1D(_start, _maze.Size());
             const auto e = Utils::To1D(_end,   _maze.Size());
 
@@ -162,7 +166,7 @@ namespace CHDR::Solvers {
                 if (current.m_Index != e) { // SEARCH FOR SOLUTION...
 
                     if (closedSet.Capacity() > current.m_Index) {
-                        closedSet.Reserve(std::min(_capacity * ((current.m_Index % _capacity) + 1U), _maze.Count()));
+                        closedSet.Reserve(std::min(_capacity * ((current.m_Index % _capacity) + 1U), maze_count));
                     }
                     closedSet.Add(current.m_Index);
 
@@ -176,7 +180,7 @@ namespace CHDR::Solvers {
                             if (!closedSet.Contains(n)) {
 
                                 if (closedSet.Capacity() > current.m_Index) {
-                                    closedSet.Reserve(std::min(_capacity * ((current.m_Index % _capacity) + 1U), _maze.Count()));
+                                    closedSet.Reserve(std::min(_capacity * ((current.m_Index % _capacity) + 1U), maze_count));
                                 }
                                 closedSet.Add(n);
 
