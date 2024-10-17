@@ -117,13 +117,9 @@ namespace CHDR::Solvers {
                             }
 
                             // Clear the buffer:
-                            for (auto* item : buffer) {
-
-                                if (item != nullptr) {
-                                    delete item;
-                                    item = nullptr;
-                                }
-                            }
+                            std::for_each(buffer.begin(), buffer.end(), [](auto* item) {
+                                delete item;
+                            });
                             buffer.clear();
 
                             // Reverse the result:
