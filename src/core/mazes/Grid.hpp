@@ -120,16 +120,15 @@ namespace CHDR::Mazes {
 
                 for (size_t i = 0U; i < neighbours; i++) {
 
-                    size_t sampleIndex = i < neighbours / 2U ?
-                        i     :
-                        i + 1U;
+                    size_t sampleIndex = i < neighbours / 2U ? i : i + 1U;
 
                     coord_t direction = Utils::ToND<size_t, Kd>(sampleIndex, kernelSize);
 
-                    coord_t nCoord;
                     bool oob = false;
 
+                    coord_t nCoord;
                     for (size_t j = 0U; j < Kd; j++) {
+
                         nCoord[j] = _id[j] + (direction[j] - 1U);
 
                         if (nCoord[j] < 0U || nCoord[j] > m_Size[j]) {
@@ -138,7 +137,7 @@ namespace CHDR::Mazes {
                         }
                     }
 
-                    if (nCoord != _id) {
+                    if (i != (neighbours / 2U) + 1U) {
                         result[i].first = !oob && At(nCoord).IsActive();
                         result[i].second = nCoord;
                     }
