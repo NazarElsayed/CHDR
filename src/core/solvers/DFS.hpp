@@ -62,7 +62,7 @@ namespace CHDR::Solvers {
                 std::stack<DFSNode, std::vector<DFSNode>> openSet(std::move(sequence));
                 openSet.emplace(s, nullptr);
 
-                ExistenceSet closedSet({ s }, _capacity);
+                ExistenceSet<LowMemoryUsage> closedSet({ s }, _capacity);
 
                 std::vector<DFSNode*> buffer;
 

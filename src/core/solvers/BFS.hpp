@@ -61,7 +61,7 @@ namespace CHDR::Solvers {
                 std::queue<BFSNode> openSet;
                 openSet.emplace(s, nullptr);
 
-                ExistenceSet closedSet({ s }, _capacity);
+                ExistenceSet<LowMemoryUsage> closedSet({ s }, _capacity);
 
                 std::vector<BFSNode*> buffer;
 
