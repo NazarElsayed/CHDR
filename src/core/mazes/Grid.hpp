@@ -98,7 +98,7 @@ namespace CHDR::Mazes {
         template<bool IncludeDiagonals = false, typename... Args>
         [[nodiscard]]
         constexpr auto GetNeighbours(const Args&... _id) const {
-            return GetNeighbours({ _id... });
+            return GetNeighbours<IncludeDiagonals>({ _id... });
         }
 
         template<bool IncludeDiagonals = false>
