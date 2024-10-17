@@ -67,7 +67,8 @@ namespace CHDR::Mazes {
             static_assert(sizeof...(Args) == Rank, "Number of arguments must equal the Grid's rank.");
         }
 
-        [[nodiscard]] constexpr const std::vector<WeightedNode<T>>& Nodes() const {
+        [[nodiscard]]
+        constexpr const std::vector<WeightedNode<T>>& Nodes() const {
             return m_Nodes;
         }
 
@@ -75,7 +76,8 @@ namespace CHDR::Mazes {
             m_Nodes = _value;
         }
 
-        [[nodiscard]] constexpr const coord_t& Size() const {
+        [[nodiscard]]
+        constexpr const coord_t& Size() const {
             return m_Size;
         }
 
@@ -88,67 +90,131 @@ namespace CHDR::Mazes {
             m_Size = _value;
         }
 
-        [[nodiscard]] constexpr size_t Count() const override {
+        [[nodiscard]]
+        constexpr size_t Count() const override {
             return Utils::Product<size_t>(m_Size);
         };
 
         template<typename... Args>
-        [[nodiscard]] constexpr std::array<std::pair<bool, coord_t>, Kd * 2U> GetNeighbours(const Args&... _id) const {
+        [[nodiscard]]
+        constexpr std::array<std::pair<bool, coord_t>, Kd * 2U> GetNeighbours(const Args&... _id) const {
             return GetNeighbours({ _id... });
         }
 
-        [[nodiscard]] constexpr std::array<std::pair<bool, coord_t>, Kd * 2U> GetNeighbours(const coord_t& _id) const {
+        template<bool IncludeDiagonals = false>
+        [[nodiscard]]
+        constexpr auto GetNeighbours(const coord_t& _id) const {
 
-            std::array<std::pair<bool, coord_t>, Kd * 2U> result;
+            constexpr size_t neighbours = IncludeDiagonals ?
+                            static_cast<size_t>(std::pow(3U, Kd)) - 1U :
+                            Kd * 2U;
 
-            for (size_t i = 0U; i < Kd; ++i) {
+            auto result = std::array<std::pair<bool, coord_t>, neighbours>();
 
-                coord_t nCoord = _id;
-                coord_t pCoord = _id;
+            if constexpr (IncludeDiagonals) {
 
-                --nCoord[i];
-                ++pCoord[i];
+                coord_t kernelSize;
+                for (size_t i = 0U; i < Kd; i++) {
+                    kernelSize[i] = 3U;
+                }
 
-                result[i].first  = _id[i] > 0U && At(nCoord).IsActive();
-                result[i].second = nCoord;
+                for (size_t i = 0U; i < neighbours; i++) {
+                    coord_t direction = Utils::ToND<Kd>(neighbours, kernelSize);
 
-                result[Kd + i].first  = _id[i] < m_Size[i] - 1U && At(pCoord).IsActive();
-                result[Kd + i].second = pCoord;
+                    coord_t nCoord;
+                    for (size_t j = 0U; j < Kd; j++) {
+                        nCoord[j] = _id[j] + direction[j];
+                    }
+
+                    if (nCoord == _id) { continue; }
+
+                    result[i].first = _id[i] > 0U && _id[i] < m_Size[i] - 1U && At(nCoord).IsActive();
+                    result[i].second = nCoord;
+                }
+            }
+            else {
+
+                for (size_t i = 0U; i < Kd; ++i) {
+
+                    coord_t nCoord = _id;
+                    coord_t pCoord = _id;
+
+                    --nCoord[i];
+                    ++pCoord[i];
+
+                    result[i].first  = _id[i] > 0U && At(nCoord).IsActive();
+                    result[i].second = nCoord;
+
+                    result[Kd + i].first  = _id[i] < m_Size[i] - 1U && At(pCoord).IsActive();
+                    result[Kd + i].second = pCoord;
+                }
             }
 
             return result;
         }
 
-        [[nodiscard]] constexpr std::array<std::pair<bool, coord_t>, Kd * 2U> GetNeighbours(const size_t& _id) const {
+        template<bool IncludeDiagonals = false>
+        [[nodiscard]]
+        constexpr auto GetNeighbours(const size_t& _id) const {
 
-            std::array<std::pair<bool, coord_t>, Kd * 2U> result;
+            constexpr size_t neighbours = IncludeDiagonals ?
+                static_cast<size_t>(std::pow(3U, Kd)) - 1U :
+                Kd * 2U;
+
+            auto result = std::array<std::pair<bool, coord_t>, neighbours>();
 
             const auto c = Utils::ToND<size_t, Kd>(_id, Size());
 
-            for (size_t i = 0U; i < Kd; ++i) {
+            if constexpr (IncludeDiagonals) {
 
-                coord_t nCoord = c;
-                coord_t pCoord = c;
+                coord_t kernelSize;
+                for (size_t i = 0U; i < Kd; i++) {
+                    kernelSize[i] = 3U;
+                }
 
-                --nCoord[i];
-                ++pCoord[i];
+                for (size_t i = 0U; i < neighbours; i++) {
+                    coord_t direction = Utils::ToND<Kd>(neighbours, kernelSize);
 
-                result[i].first  = c[i] > 0U && At(nCoord).IsActive();
-                result[i].second = nCoord;
+                    coord_t nCoord;
+                    for (size_t j = 0U; j < Kd; j++) {
+                        nCoord[j] = c[j] + direction[j];
+                    }
 
-                result[Kd + i].first  = c[i] < m_Size[i] - 1U && At(pCoord).IsActive();
-                result[Kd + i].second = pCoord;
+                    if (nCoord == c) { continue; }
+
+                    result[i].first = c[i] > 0U && c[i] < m_Size[i] - 1U && At(nCoord).IsActive();
+                    result[i].second = nCoord;
+                }
+            }
+            else {
+
+                for (size_t i = 0U; i < Kd; ++i) {
+
+                    coord_t nCoord = c;
+                    coord_t pCoord = c;
+
+                    --nCoord[i];
+                    ++pCoord[i];
+
+                    result[i].first  = c[i] > 0U && At(nCoord).IsActive();
+                    result[i].second = nCoord;
+
+                    result[Kd + i].first  = c[i] < m_Size[i] - 1U && At(pCoord).IsActive();
+                    result[Kd + i].second = pCoord;
+                }
             }
 
             return result;
         }
 
         template<typename... Args>
-        [[nodiscard]] constexpr const WeightedNode<T>& At(const Args&... _id) const {
+        [[nodiscard]]
+        constexpr const WeightedNode<T>& At(const Args&... _id) const {
             return At({ _id... });
         }
 
-        [[nodiscard]] constexpr const WeightedNode<T>& At(const coord_t& _id) const {
+        [[nodiscard]]
+        constexpr const WeightedNode<T>& At(const coord_t& _id) const {
 
             const size_t index = Utils::To1D(_id, m_Size);
 
@@ -159,7 +225,8 @@ namespace CHDR::Mazes {
 #endif // NDEBUG
         }
 
-        [[nodiscard]] constexpr const WeightedNode<T>& At(const size_t& _id) const {
+        [[nodiscard]]
+        constexpr const WeightedNode<T>& At(const size_t& _id) const {
 
 #ifndef NDEBUG
             return m_Nodes.at(_id);
@@ -169,11 +236,13 @@ namespace CHDR::Mazes {
         }
 
         template<typename... Args>
-        [[nodiscard]] constexpr bool Contains(const Args&... _id) const {
+        [[nodiscard]]
+        constexpr bool Contains(const Args&... _id) const {
             return Contains({ _id... });
         }
 
-        [[nodiscard]] constexpr bool Contains(const coord_t& _id) const {
+        [[nodiscard]]
+        constexpr bool Contains(const coord_t& _id) const {
 
             bool result = true;
 
@@ -189,7 +258,8 @@ namespace CHDR::Mazes {
             return result;
         }
 
-        [[nodiscard]] constexpr bool Contains(const size_t& _id) const override {
+        [[nodiscard]]
+        constexpr bool Contains(const size_t& _id) const override {
             return _id < Utils::Product<size_t>(m_Size);
         }
 
