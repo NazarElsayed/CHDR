@@ -42,7 +42,7 @@ namespace CHDR::Mazes {
 
         struct EdgeEqual {
 
-            bool operator()(const std::pair<Ti, Ts> &edge1, const std::pair<Ti, Ts> &edge2) const {
+            bool operator()(const std::pair<Ti, Ts>& edge1, const std::pair<Ti, Ts>& edge2) const {
                 return edge1.first == edge2.first && edge1.second == edge2.second;
             }
         };
@@ -154,7 +154,7 @@ namespace CHDR::Mazes {
             }
         }
 
-        [[nodiscard]] constexpr const std::unordered_set<edge_t, EdgeHash, EdgeEqual>& GetNeighbours(const Ti &_id) const {
+        [[nodiscard]] constexpr const std::unordered_set<edge_t, EdgeHash, EdgeEqual>& GetNeighbours(const Ti& _id) const {
 
             auto it = m_Entries.find(_id);
             return it->second;

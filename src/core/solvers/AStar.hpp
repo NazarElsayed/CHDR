@@ -52,16 +52,9 @@ namespace CHDR::Solvers {
 
                 [[nodiscard]] constexpr bool operator () (const ASNode& _a, const ASNode& _b) const {
 
-                    bool result{};
-
-                    if (_a.m_FScore == _b.m_FScore) {
-                        result = _a.m_GScore > _b.m_GScore;
-                    }
-                    else {
-                        result = _a.m_FScore > _b.m_FScore;
-                    }
-
-                    return result;
+                    return _a.m_FScore == _b.m_FScore ?
+                        _a.m_GScore > _b.m_GScore :
+                        _a.m_FScore > _b.m_FScore;
                 }
             };
         };
