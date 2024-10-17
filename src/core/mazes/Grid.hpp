@@ -95,9 +95,9 @@ namespace CHDR::Mazes {
             return Utils::Product<size_t>(m_Size);
         };
 
-        template<typename... Args>
+        template<bool IncludeDiagonals = false, typename... Args>
         [[nodiscard]]
-        constexpr std::array<std::pair<bool, coord_t>, Kd * 2U> GetNeighbours(const Args&... _id) const {
+        constexpr auto GetNeighbours(const Args&... _id) const {
             return GetNeighbours({ _id... });
         }
 
@@ -119,17 +119,27 @@ namespace CHDR::Mazes {
                 }
 
                 for (size_t i = 0U; i < neighbours; i++) {
-                    coord_t direction = Utils::ToND<Kd>(neighbours, kernelSize);
+                    coord_t direction = Utils::ToND<size_t, Kd>(neighbours, kernelSize);
 
                     coord_t nCoord;
                     for (size_t j = 0U; j < Kd; j++) {
-                        nCoord[j] = _id[j] + direction[j];
+                        nCoord[j] = _id[j] + (direction[j] - 1U);
                     }
 
-                    if (nCoord == _id) { continue; }
+                    if (nCoord != _id) {
 
-                    result[i].first = _id[i] > 0U && _id[i] < m_Size[i] - 1U && At(nCoord).IsActive();
-                    result[i].second = nCoord;
+                        bool oob = false;
+                        for (size_t j = 0U; j < Kd; ++j) {
+                            if (nCoord[j] < 0 || nCoord[j] > m_Size[j]) {
+                                oob = true;
+
+                                break;
+                            }
+                        }
+
+                        result[i].first = !oob && At(nCoord).IsActive();
+                        result[i].second = nCoord;
+                    }
                 }
             }
             else {
@@ -173,17 +183,27 @@ namespace CHDR::Mazes {
                 }
 
                 for (size_t i = 0U; i < neighbours; i++) {
-                    coord_t direction = Utils::ToND<Kd>(neighbours, kernelSize);
+                    coord_t direction = Utils::ToND<size_t, Kd>(neighbours, kernelSize);
 
                     coord_t nCoord;
                     for (size_t j = 0U; j < Kd; j++) {
-                        nCoord[j] = c[j] + direction[j];
+                        nCoord[j] = c[j] + (direction[j] - 1U);
                     }
 
-                    if (nCoord == c) { continue; }
+                    if (nCoord != c) {
 
-                    result[i].first = c[i] > 0U && c[i] < m_Size[i] - 1U && At(nCoord).IsActive();
-                    result[i].second = nCoord;
+                        bool oob = false;
+                        for (size_t j = 0U; j < Kd; ++j) {
+                            if (nCoord[j] < 0 || nCoord[j] > m_Size[j]) {
+                                oob = true;
+
+                                break;
+                            }
+                        }
+
+                        result[i].first = !oob && At(nCoord).IsActive();
+                        result[i].second = nCoord;
+                    }
                 }
             }
             else {

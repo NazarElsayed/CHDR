@@ -166,7 +166,7 @@ namespace CHDR::Solvers {
                     }
                     closedSet.Add(current.m_Index);
 
-                    for (const auto& neighbour : _maze.GetNeighbours(current.m_Index)) {
+                    for (const auto& neighbour : _maze. template GetNeighbours<true>(current.m_Index)) {
 
                         if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
