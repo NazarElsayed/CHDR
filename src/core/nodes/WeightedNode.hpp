@@ -28,7 +28,7 @@ namespace CHDR {
 
         constexpr WeightedNode(const W& _value = 0) : m_Value(_value) {}
 
-        [[nodiscard]] bool IsActive() const {
+        [[nodiscard]] constexpr bool IsActive() const {
             return m_Value != std::numeric_limits<W>::max();
         }
 

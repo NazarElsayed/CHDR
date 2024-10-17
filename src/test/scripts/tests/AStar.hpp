@@ -43,12 +43,12 @@ namespace Test::Tests {
             /* GENERATE MAZE */
             const auto grid = CHDR::Mazes::Grid<Kd, Tm>(size, Generator::Grid::Generate<Tm>(start, end, 0.0F, 0.0F, seed, size));
 
-            //  /* GRID -> GRAPH */
-            // auto graph = CHDR::Mazes::Graph<size_t, Kd, Ts>(grid);
-            // graph.Print();
-            // std::cout << "\n\n";
-            // graph.MakeSparse();
-            // graph.Print();
+//            /* GRID -> GRAPH */
+//            auto graph = CHDR::Mazes::Graph<size_t, Kd, Ts>(grid);
+//            graph.Print();
+//            std::cout << "\n\n";
+//            graph.MakeSparse();
+//            graph.Print();
 
             /* MAX DRAW SIZE */
             const bool drawable (

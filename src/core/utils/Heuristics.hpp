@@ -95,8 +95,8 @@ namespace CHDR {
                             SIMDExtensions::Prefetch(&cB[2U], _MM_HINT_T0);
 
                             cr = SIMDExtensions::Float32::SqrSub_128v(
-                                _mm_set_ps(0, cA[0U], cA[1U], cA[2U]),
-                                _mm_set_ps(0, cB[0U], cB[1U], cB[2U])
+                                _mm_set_ps(0U, cA[0U], cA[1U], cA[2U]),
+                                _mm_set_ps(0U, cB[0U], cB[1U], cB[2U])
                             );
                         }
                         if constexpr (Kd == 4U) {
@@ -131,8 +131,8 @@ namespace CHDR {
                                 SIMDExtensions::Prefetch(&cB[j + 2U], _MM_HINT_T0);
 
                                 result += static_cast<Ts>(SIMDExtensions::Float32::Sub_128v(
-                                    _mm_set_epi32(0, cA[j], cA[j + 1U], cA[j + 2U]),
-                                    _mm_set_epi32(0, cB[j], cB[j + 1U], cB[j + 2U])
+                                    _mm_set_epi32(0U, cA[j], cA[j + 1U], cA[j + 2U]),
+                                    _mm_set_epi32(0U, cB[j], cB[j + 1U], cB[j + 2U])
                                 ));
                             }
                             else if (j - r == 2U) {
@@ -141,8 +141,8 @@ namespace CHDR {
                                 SIMDExtensions::Prefetch(&cB[j + 1U], _MM_HINT_T0);
 
                                 result += static_cast<Ts>(SIMDExtensions::Float32::Sub_128v(
-                                    _mm_set_epi32(0, 0, cA[j], cA[j + 1U]),
-                                    _mm_set_epi32(0, 0, cB[j], cB[j + 1U])
+                                    _mm_set_epi32(0U, 0U, cA[j], cA[j + 1U]),
+                                    _mm_set_epi32(0U, 0U, cB[j], cB[j + 1U])
                                 ));
                             }
 
@@ -282,8 +282,8 @@ namespace CHDR {
                             SIMDExtensions::Prefetch(&cB[2U], _MM_HINT_T0);
 
                             result = static_cast<Ts>(SIMDExtensions::Uint32::AbsSub_128v(
-                                _mm_set_epi32(0, cA[0U], cA[1U], cA[2U]),
-                                _mm_set_epi32(0, cB[0U], cB[1U], cB[2U])
+                                _mm_set_epi32(0U, cA[0U], cA[1U], cA[2U]),
+                                _mm_set_epi32(0U, cB[0U], cB[1U], cB[2U])
                             ));
                         }
                         if constexpr (Kd == 4U) {
@@ -318,8 +318,8 @@ namespace CHDR {
                                 SIMDExtensions::Prefetch(&cB[j + 2U], _MM_HINT_T0);
 
                                 result += static_cast<Ts>(SIMDExtensions::Uint32::AbsSub_128v(
-                                    _mm_set_epi32(0, cA[j], cA[j + 1U], cA[j + 2U]),
-                                    _mm_set_epi32(0, cB[j], cB[j + 1U], cB[j + 2U])
+                                    _mm_set_epi32(0U, cA[j], cA[j + 1U], cA[j + 2U]),
+                                    _mm_set_epi32(0U, cB[j], cB[j + 1U], cB[j + 2U])
                                 ));
                             }
                             else if (j - r == 2U) {
@@ -328,8 +328,8 @@ namespace CHDR {
                                 SIMDExtensions::Prefetch(&cB[j + 1U], _MM_HINT_T0);
 
                                 result += static_cast<Ts>(SIMDExtensions::Uint32::AbsSub_128v(
-                                    _mm_set_epi32(0, 0, cA[j], cA[j + 1U]),
-                                    _mm_set_epi32(0, 0, cB[j], cB[j + 1U])
+                                    _mm_set_epi32(0U, 0U, cA[j], cA[j + 1U]),
+                                    _mm_set_epi32(0U, 0U, cB[j], cB[j + 1U])
                                 ));
                             }
 

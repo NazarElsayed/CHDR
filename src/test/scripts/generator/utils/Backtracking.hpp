@@ -258,7 +258,7 @@ namespace Test::Generator::Utils {
                     }
                 }
                 else {
-                    Debug::Log("\tBacktracking Algorithm \tINVALID DIMENSIONALITY \"" + std::to_string(Kd) + "\"", Error);
+                    Debug::Log("\tBacktracking Algorithm \tINVALID DIMENSIONALITY", Error);
                 }
 
                 _end = farthest.first;

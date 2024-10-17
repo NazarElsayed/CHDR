@@ -86,7 +86,7 @@ namespace CHDR {
                     m_Data.pop_back(); // If the item to remove is the last item, just remove it.
                 }
                 else {
-                    Swap(m_Data[heapIndex], m_Data.back());
+                    m_Data[heapIndex] = std::move(m_Data.back());
                     m_Data.pop_back();
 
                     // Restore heap property:
@@ -107,7 +107,7 @@ namespace CHDR {
         }
 
         constexpr void RemoveFirst() {
-            Swap(m_Data[0U], m_Data.back());
+            m_Data[0U] = std::move(m_Data.back());
             m_Data.pop_back();
             SortDown(m_Data[0U]);
         }
