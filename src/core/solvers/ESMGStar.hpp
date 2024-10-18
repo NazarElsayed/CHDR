@@ -182,82 +182,95 @@ namespace CHDR::Solvers {
             const auto s = Utils::To1D(_start, _maze.Size());
             const auto e = Utils::To1D(_end,   _maze.Size());
 
-            Heap<std::shared_ptr<ESMASNode>, typename ESMASNode::Max> openSet;
-            openSet.Emplace(ESMASNode::CreateShared(
-                0U,                 // Depth
-                s,                  // Coordinate
-                static_cast<Ts>(0), // G-Score
-                _h(_start, _end),   // F-Score
-                nullptr
-            ));
+            if (_maze.Contains(s) &&
+                _maze.Contains(e) &&
+                _maze.At(s).IsActive() &&
+                _maze.At(e).IsActive()
+            ) {
 
-            // Main loop
-            while (!openSet.Empty()) {
+                if (s != e) {
 
-                auto current(std::move(openSet.Top())); // Node with smallest f-cost in O
-                openSet.RemoveFirst();
+                    Heap<std::shared_ptr<ESMASNode>, typename ESMASNode::Max> openSet;
+                    openSet.Emplace(ESMASNode::CreateShared(
+                        0U,                 // Depth
+                        s,                  // Coordinate
+                        static_cast<Ts>(0), // G-Score
+                        _h(_start, _end),   // F-Score
+                        nullptr
+                    ));
 
-                if (current->m_Index != e) { // SEARCH FOR SOLUTION...
+                    // Main loop
+                    while (!openSet.Empty()) {
 
-                    auto successors_current = current->Expand(_maze, _end, _h, _memoryLimit);
+                        auto current(std::move(openSet.Top())); // Node with smallest f-cost in O
+                        openSet.RemoveFirst();
 
-                    for (size_t i = 0U; i < successors_current.size(); ++i) {
+                        if (current->m_Index != e) { // SEARCH FOR SOLUTION...
 
-                        auto& successor = successors_current[i];
+                            auto successors_current = current->Expand(_maze, _end, _h, _memoryLimit);
 
-                        // Check if s(n) is in forgotten f-cost table of b.
-                        auto search = current->m_ForgottenFCosts.find(successor->m_Index);
-                        if (search != current->m_ForgottenFCosts.end()) {
+                            for (size_t i = 0U; i < successors_current.size(); ++i) {
 
-                            const auto& [nCoord, nCost] = *search;
+                                auto& successor = successors_current[i];
 
-                            successor->m_FScore = nCost;
-                            current->m_ForgottenFCosts.erase(nCoord);
-                        }
-                        else {
-                            successor->m_FScore = std::max(current->m_FScore, successor->m_GScore + _h(Utils::ToND(successor->m_Index, _maze.Size()), _end));
-                        }
+                                // Check if s(n) is in forgotten f-cost table of b.
+                                auto search = current->m_ForgottenFCosts.find(successor->m_Index);
+                                if (search != current->m_ForgottenFCosts.end()) {
 
-                        // Add successor to openSet.
-                        if (!openSet.Contains(successor)) {
-                             openSet.Add(successor);
-                        }
-                    }
+                                    const auto& [nCoord, nCost] = *search;
 
-                    while (openSet.Size() > _memoryLimit) {
-                        cull_worst_leaf(_maze, _end, _h, _memoryLimit, openSet);
-                    }
+                                    successor->m_FScore = nCost;
+                                    current->m_ForgottenFCosts.erase(nCoord);
+                                }
+                                else {
+                                    successor->m_FScore = std::max(current->m_FScore, successor->m_GScore + _h(Utils::ToND(successor->m_Index, _maze.Size()), _end));
+                                }
 
-                    // Shrink the node to release ownership of children, allowing automatic GC of parents with no valid candidate children.
-                    current->Shrink();
-                }
-                else { // SOLUTION REACHED ...
-
-                    // Free data which is no longer relevant:
-                    openSet.Clear();
-
-                    if (current != nullptr) {
-
-                        // Recurse from end node to start node, inserting into a result buffer:
-                        result.reserve(current->m_GScore);
-                        result.emplace_back(Utils::ToND(current->m_Index, _maze.Size()));
-
-                        if (auto item = current->m_Parent) {
-
-                            while (const auto item_parent = item->m_Parent) {
-                                result.emplace_back(Utils::ToND(item->m_Index, _maze.Size()));
-
-                                auto oldItem = item;
-                                item = item_parent;
-                                oldItem.reset();
+                                // Add successor to openSet.
+                                if (!openSet.Contains(successor)) {
+                                     openSet.Add(successor);
+                                }
                             }
+
+                            while (openSet.Size() > _memoryLimit) {
+                                cull_worst_leaf(_maze, _end, _h, _memoryLimit, openSet);
+                            }
+
+                            // Shrink the node to release ownership of children, allowing automatic GC of parents with no valid candidate children.
+                            current->Shrink();
                         }
+                        else { // SOLUTION REACHED ...
 
-                        // Reverse the result:
-                        std::reverse(result.begin(), result.end());
+                            // Free data which is no longer relevant:
+                            openSet.Clear();
+
+                            if (current != nullptr) {
+
+                                // Recurse from end node to start node, inserting into a result buffer:
+                                result.reserve(current->m_GScore);
+                                result.emplace_back(Utils::ToND(current->m_Index, _maze.Size()));
+
+                                if (auto item = current->m_Parent) {
+
+                                    while (const auto item_parent = item->m_Parent) {
+                                        result.emplace_back(Utils::ToND(item->m_Index, _maze.Size()));
+
+                                        auto oldItem = item;
+                                        item = item_parent;
+                                        oldItem.reset();
+                                    }
+                                }
+
+                                // Reverse the result:
+                                std::reverse(result.begin(), result.end());
+                            }
+
+                            break;
+                        }
                     }
-
-                    break;
+                }
+                else {
+                    result.emplace_back(_end);
                 }
             }
 

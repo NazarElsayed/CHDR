@@ -55,78 +55,85 @@ namespace CHDR::Solvers {
                 _maze.At(s).IsActive() &&
                 _maze.At(e).IsActive()
             ) {
-                const auto maze_count = _maze.Count();
 
-                _capacity = std::max(_capacity, std::max(s, e));
+                if (s != e) {
 
-                std::queue<BFSNode> openSet;
-                openSet.emplace(s, nullptr);
+                    const auto maze_count = _maze.Count();
 
-                ExistenceSet<LowMemoryUsage> closedSet({ s }, _capacity);
+                    _capacity = std::max(_capacity, std::max(s, e));
 
-                std::vector<BFSNode*> buffer;
+                    std::queue<BFSNode> openSet;
+                    openSet.emplace(s, nullptr);
 
-                while (!openSet.empty()) { // SEARCH FOR SOLUTION...
+                    ExistenceSet<LowMemoryUsage> closedSet({ s }, _capacity);
 
-                    for (size_t i = 0U; i < openSet.size(); ++i) {
+                    std::vector<BFSNode*> buffer;
 
-                        const BFSNode current(std::move(openSet.front()));
-                        openSet.pop();
+                    while (!openSet.empty()) { // SEARCH FOR SOLUTION...
 
-                        if (current.m_Coord != e) {
+                        for (size_t i = 0U; i < openSet.size(); ++i) {
 
-                            if (closedSet.Capacity() > current.m_Coord) {
-                                closedSet.Reserve(std::min(_capacity * ((current.m_Coord % _capacity) + 1U), maze_count));
-                            }
-                            closedSet.Add(current.m_Coord);
+                            const BFSNode current(std::move(openSet.front()));
+                            openSet.pop();
 
-                            for (const auto& neighbour: _maze.GetNeighbours(current.m_Coord)) {
+                            if (current.m_Coord != e) {
 
-                                if (const auto& [nActive, nCoord] = neighbour; nActive) {
+                                if (closedSet.Capacity() > current.m_Coord) {
+                                    closedSet.Reserve(std::min(_capacity * ((current.m_Coord % _capacity) + 1U), maze_count));
+                                }
+                                closedSet.Add(current.m_Coord);
 
-                                    const auto n = Utils::To1D(nCoord, _maze.Size());
+                                for (const auto& neighbour: _maze.GetNeighbours(current.m_Coord)) {
 
-                                    // Check if node is not already visited:
-                                    if (!closedSet.Contains(n)) {
+                                    if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-                                        if (closedSet.Capacity() > current.m_Coord) {
-                                            closedSet.Reserve(std::min(_capacity * ((current.m_Coord % _capacity) + 1U), maze_count));
+                                        const auto n = Utils::To1D(nCoord, _maze.Size());
+
+                                        // Check if node is not already visited:
+                                        if (!closedSet.Contains(n)) {
+
+                                            if (closedSet.Capacity() > current.m_Coord) {
+                                                closedSet.Reserve(std::min(_capacity * ((current.m_Coord % _capacity) + 1U), maze_count));
+                                            }
+                                            closedSet.Add(current.m_Coord);
+
+                                            // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
+                                            buffer.emplace_back(new BFSNode(std::move(current)));
+                                            openSet.Emplace({ n, buffer.back() });
                                         }
-                                        closedSet.Add(current.m_Coord);
-
-                                        // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                        buffer.emplace_back(new BFSNode(std::move(current)));
-                                        openSet.Emplace({ n, buffer.back() });
                                     }
                                 }
                             }
-                        }
-                        else { // SOLUTION REACHED ...
+                            else { // SOLUTION REACHED ...
 
-                            // Free data which is no longer relevant:
-                            std::queue<BFSNode> empty;
-                            std::swap(openSet, empty);
+                                // Free data which is no longer relevant:
+                                std::queue<BFSNode> empty;
+                                std::swap(openSet, empty);
 
-                            closedSet.Clear();
+                                closedSet.Clear();
 
-                            // Recurse from end node to start node, inserting into a result buffer:
-                            result.reserve(_capacity);
-                            for (const auto* temp = &current; temp->m_Parent != nullptr; temp = temp->m_Parent) {
-                                result.emplace_back(Utils::ToND(temp->m_Coord, _maze.Size()));
+                                // Recurse from end node to start node, inserting into a result buffer:
+                                result.reserve(_capacity);
+                                for (const auto* temp = &current; temp->m_Parent != nullptr; temp = temp->m_Parent) {
+                                    result.emplace_back(Utils::ToND(temp->m_Coord, _maze.Size()));
+                                }
+
+                                // Clear the buffer:
+                                std::for_each(buffer.begin(), buffer.end(), [](auto* item) {
+                                    delete item;
+                                });
+                                buffer.clear();
+
+                                // Reverse the result:
+                                std::reverse(result.begin(), result.end());
+
+                                break;
                             }
-
-                            // Clear the buffer:
-                            std::for_each(buffer.begin(), buffer.end(), [](auto* item) {
-                                delete item;
-                            });
-                            buffer.clear();
-
-                            // Reverse the result:
-                            std::reverse(result.begin(), result.end());
-
-                            break;
                         }
                     }
+                }
+                else {
+                    result.emplace_back(_end);
                 }
             }
 

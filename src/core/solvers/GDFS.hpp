@@ -63,80 +63,86 @@ namespace CHDR::Solvers {
                 _maze.At(e).IsActive()
             ) {
 
-                const auto maze_count = _maze.Count();
+                if (s != e) {
 
-                _capacity = std::max(_capacity, std::max(s, e));
+                    const auto maze_count = _maze.Count();
 
-                auto sequence = std::vector<GDFSNode>(_capacity);
-                std::stack<GDFSNode, std::vector<GDFSNode>> openSet(std::move(sequence));
-                openSet.emplace(s, nullptr);
+                    _capacity = std::max(_capacity, std::max(s, e));
 
-                ExistenceSet closedSet({ s }, _capacity);
+                    auto sequence = std::vector<GDFSNode>(_capacity);
+                    std::stack<GDFSNode, std::vector<GDFSNode>> openSet(std::move(sequence));
+                    openSet.emplace(s, nullptr);
 
-                while (!openSet.empty()) { // SEARCH FOR SOLUTION...
+                    ExistenceSet closedSet({ s }, _capacity);
 
-                    for (size_t i = 0U; i < openSet.size(); ++i) {
+                    while (!openSet.empty()) { // SEARCH FOR SOLUTION...
 
-                        const GDFSNode current(std::move(openSet.top()));
-                        openSet.pop();
+                        for (size_t i = 0U; i < openSet.size(); ++i) {
 
-                        if (current.m_Coord != e) {
+                            const GDFSNode current(std::move(openSet.top()));
+                            openSet.pop();
 
-                            if (closedSet.Capacity() > current.m_Coord) {
-                                closedSet.Reserve(std::min(_capacity * ((current.m_Coord % _capacity) + 1U), maze_count));
-                            }
-                            closedSet.Add(current.m_Coord);
+                            if (current.m_Coord != e) {
 
-                            for (const auto& neighbour: _maze.GetNeighbours(current.m_Coord)) {
+                                if (closedSet.Capacity() > current.m_Coord) {
+                                    closedSet.Reserve(std::min(_capacity * ((current.m_Coord % _capacity) + 1U), maze_count));
+                                }
+                                closedSet.Add(current.m_Coord);
 
-                                if (const auto& [nActive, nCoord] = neighbour; nActive) {
+                                for (const auto& neighbour: _maze.GetNeighbours(current.m_Coord)) {
 
-                                    const auto n = Utils::To1D(nCoord, _maze.Size());
+                                    if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-                                    // Check if node is not already visited:
-                                    if (!closedSet.Contains(n)) {
+                                        const auto n = Utils::To1D(nCoord, _maze.Size());
 
-                                        // Add to dupe list:
-                                        if (closedSet.Capacity() > n) {
-                                            closedSet.Reserve(std::min(_capacity * ((n % _capacity) + 1U), maze_count));
+                                        // Check if node is not already visited:
+                                        if (!closedSet.Contains(n)) {
+
+                                            // Add to dupe list:
+                                            if (closedSet.Capacity() > n) {
+                                                closedSet.Reserve(std::min(_capacity * ((n % _capacity) + 1U), maze_count));
+                                            }
+                                            closedSet.Add(n);
+
+                                            // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
+                                            openSet.emplace(n, std::make_shared<GDFSNode>(std::move(current)));
                                         }
-                                        closedSet.Add(n);
-
-                                        // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                        openSet.emplace(n, std::make_shared<GDFSNode>(std::move(current)));
                                     }
                                 }
                             }
-                        }
-                        else { // SOLUTION REACHED ...
+                            else { // SOLUTION REACHED ...
 
-                            // Free data which is no longer relevant:
-                            std::stack<GDFSNode, std::vector<GDFSNode>> empty;
-                            std::swap(openSet, empty);
+                                // Free data which is no longer relevant:
+                                std::stack<GDFSNode, std::vector<GDFSNode>> empty;
+                                std::swap(openSet, empty);
 
-                            closedSet.Clear();
+                                closedSet.Clear();
 
-                            // Recurse from end node to start node, inserting into a result buffer:
-                            result.reserve(_capacity);
-                            result.emplace_back(Utils::ToND(current.m_Coord, _maze.Size()));
+                                // Recurse from end node to start node, inserting into a result buffer:
+                                result.reserve(_capacity);
+                                result.emplace_back(Utils::ToND(current.m_Coord, _maze.Size()));
 
-                            if (current.m_Parent != nullptr) {
+                                if (current.m_Parent != nullptr) {
 
-                                for (auto& item = current.m_Parent; item->m_Parent != nullptr;) {
-                                    result.emplace_back(Utils::ToND(item->m_Coord, _maze.Size()));
+                                    for (auto& item = current.m_Parent; item->m_Parent != nullptr;) {
+                                        result.emplace_back(Utils::ToND(item->m_Coord, _maze.Size()));
 
-                                    auto oldItem = item;
-                                    item = item->m_Parent;
-                                    oldItem.reset();
+                                        auto oldItem = item;
+                                        item = item->m_Parent;
+                                        oldItem.reset();
+                                    }
                                 }
+
+                                // Reverse the result:
+                                std::reverse(result.begin(), result.end());
+
+                                break;
                             }
-
-                            // Reverse the result:
-                            std::reverse(result.begin(), result.end());
-
-                            break;
                         }
                     }
+                }
+                else {
+                    result.emplace_back(_end);
                 }
             }
 

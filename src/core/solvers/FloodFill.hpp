@@ -41,44 +41,50 @@ namespace CHDR::Solvers {
                 _maze.At(e).IsActive()
             ) {
 
-                const auto maze_count = _maze.Count();
+                if (s != e) {
 
-                std::queue<size_t> openSet;
-                openSet.emplace(s);
+                    const auto maze_count = _maze.Count();
 
-                ExistenceSet closedSet ({ s }, std::max(_capacity, std::max(s, e)));
+                    std::queue<size_t> openSet;
+                    openSet.emplace(s);
 
-                while (!openSet.empty()) {
+                    ExistenceSet closedSet ({ s }, std::max(_capacity, std::max(s, e)));
 
-                    for (size_t i = 0U; i < openSet.size(); ++i) {
+                    while (!openSet.empty()) {
 
-                        const auto current = openSet.front();
-                        openSet.pop();
+                        for (size_t i = 0U; i < openSet.size(); ++i) {
 
-                        if (current == e) {
-                            result = true;
+                            const auto current = openSet.front();
+                            openSet.pop();
 
-                            goto NestedBreak;
-                        }
+                            if (current == e) {
+                                result = true;
 
-                        for (const auto& neighbour : _maze.GetNeighbours(current)) {
+                                goto NestedBreak;
+                            }
 
-                            if (const auto& [nActive, nCoord] = neighbour; nActive) {
+                            for (const auto& neighbour : _maze.GetNeighbours(current)) {
 
-                                const auto n = Utils::To1D(nCoord, _maze.Size());
+                                if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-                                if (!closedSet.Contains(n)) {
+                                    const auto n = Utils::To1D(nCoord, _maze.Size());
 
-                                    if (closedSet.Capacity() > n) {
-                                        closedSet.Reserve(std::min(_capacity * ((n % _capacity) + 1U), maze_count));
+                                    if (!closedSet.Contains(n)) {
+
+                                        if (closedSet.Capacity() > n) {
+                                            closedSet.Reserve(std::min(_capacity * ((n % _capacity) + 1U), maze_count));
+                                        }
+                                        closedSet.Add(n);
+
+                                        openSet.emplace(n);
                                     }
-                                    closedSet.Add(n);
-
-                                    openSet.emplace(n);
                                 }
                             }
                         }
                     }
+                }
+                else {
+                    result = true;
                 }
             }
 
