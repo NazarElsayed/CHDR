@@ -73,7 +73,7 @@ namespace CHDR::Solvers {
                 }
             }
 
-            auto& Expand(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const size_t& _memoryLimit) {
+            auto& Expand(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight, const size_t& _memoryLimit) {
 
                 if (m_Successors.empty()) {
 
@@ -97,7 +97,7 @@ namespace CHDR::Solvers {
                                             m_Depth  + 1U,              // Depth
                                             n,                          // Coordinate
                                             m_GScore + 1U,              // G-Score
-                                            _h(nCoord, _end),           // F-Score
+                                            _h(nCoord, _end) * _weight, // F-Score
                                             this->shared_from_this()    // Parent
                                         ));
 
@@ -165,7 +165,7 @@ namespace CHDR::Solvers {
 
     public:
 
-        auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const size_t& _memoryLimit) const {
+        auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, const size_t& _memoryLimit) const {
 
             /** @see: https://easychair.org/publications/paper/TL2M/open */
 
@@ -184,10 +184,10 @@ namespace CHDR::Solvers {
 
                     Heap<std::shared_ptr<ESMASNode>, typename ESMASNode::Max> openSet;
                     openSet.Emplace(ESMASNode::CreateShared(
-                        0U,                 // Depth
-                        s,                  // Coordinate
-                        static_cast<Ts>(0), // G-Score
-                        _h(_start, _end),   // F-Score
+                        0U,                         // Depth
+                        s,                          // Coordinate
+                        static_cast<Ts>(0),         // G-Score
+                        _h(_start, _end) * _weight, // F-Score
                         nullptr
                     ));
 
@@ -199,7 +199,7 @@ namespace CHDR::Solvers {
 
                         if (current->m_Index != e) { // SEARCH FOR SOLUTION...
 
-                            auto successors_current = current->Expand(_maze, _end, _h, _memoryLimit);
+                            auto successors_current = current->Expand(_maze, _end, _h, _weight, _memoryLimit);
 
                             for (size_t i = 0U; i < successors_current.size(); ++i) {
 
@@ -215,7 +215,7 @@ namespace CHDR::Solvers {
                                     current->m_ForgottenFCosts.erase(nCoord);
                                 }
                                 else {
-                                    successor->m_FScore = std::max(current->m_FScore, successor->m_GScore + _h(Utils::ToND(successor->m_Index, _maze.Size()), _end));
+                                    successor->m_FScore = std::max(current->m_FScore, successor->m_GScore + _h(Utils::ToND(successor->m_Index, _maze.Size()), _end) * _weight);
                                 }
 
                                 // Add successor to openSet.
@@ -225,7 +225,7 @@ namespace CHDR::Solvers {
                             }
 
                             while (openSet.Size() > _memoryLimit) {
-                                cull_worst_leaf(_maze, _end, _h, _memoryLimit, openSet);
+                                cull_worst_leaf(_maze, _end, _h, _weight, _memoryLimit, openSet);
                             }
 
                             // Shrink the node to release ownership of children, allowing automatic GC of parents with no valid candidate children.
@@ -269,14 +269,14 @@ namespace CHDR::Solvers {
             return result;
         }
 
-        void cull_worst_leaf(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const size_t& _memoryLimit, Heap<std::shared_ptr<ESMASNode>, typename ESMASNode::Max>& _openSet) const {
+        void cull_worst_leaf(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight, const size_t& _memoryLimit, Heap<std::shared_ptr<ESMASNode>, typename ESMASNode::Max>& _openSet) const {
 
             const auto w = safe_culling_heuristic(_openSet);
 
             if (auto p = w->m_Parent) { // parent node of w
 
                 // Remove w from the successor list of p
-                auto p_successors = p->Expand(_maze, _end, _h, _memoryLimit);
+                auto p_successors = p->Expand(_maze, _end, _h, _weight, _memoryLimit);
 
                 for (size_t i = 0U; i < p_successors.size(); ++i) {
 

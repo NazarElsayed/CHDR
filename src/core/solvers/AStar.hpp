@@ -71,7 +71,7 @@ namespace CHDR::Solvers {
 
     public:
 
-        auto Solve(const Mazes::Graph<size_t, Kd, Ts>& _maze, const size_t& _start, const size_t& _end, Ts (*_h)(const size_t&, const size_t&), size_t _capacity = 0U) const {
+        auto Solve(const Mazes::Graph<size_t, Kd, Ts>& _maze, const size_t& _start, const size_t& _end, Ts (*_h)(const size_t&, const size_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
 
             std::vector<coord_t> result;
 
@@ -125,7 +125,7 @@ namespace CHDR::Solvers {
 
                                     // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
                                     buffer.emplace_back(new ASNode(std::move(current)));
-                                    openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(nDistance), _h(nID, _end), buffer.back() });
+                                    openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(nDistance), _h(nID, _end) * _weight, buffer.back() });
                                 }
                             }
                         }
@@ -159,21 +159,21 @@ namespace CHDR::Solvers {
             return result;
         }
 
-        auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) const {
+        auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
 
             /*
              * Determine whether to solve using a linear search or constant-time
              * method based on which is more efficient given the maze's size.
              */
 
-            constexpr size_t c_efficiency = 361U;
+            constexpr size_t h_efficiency = 361U;
 
-            return _maze.Count() >= c_efficiency ?
-                SolveConstant (_maze, _start, _end, _h, _capacity) :
-                SolveLinear   (_maze, _start, _end, _h, _capacity);
+            return _maze.Count() >= h_efficiency ?
+                SolveHeap   (_maze, _start, _end, _h, _weight, _capacity) :
+                SolveLinear (_maze, _start, _end, _h, _weight, _capacity);
         }
 
-        auto SolveConstant(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) const {
+        auto SolveHeap(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
 
             std::vector<coord_t> result;
 
@@ -227,7 +227,7 @@ namespace CHDR::Solvers {
 
                                         // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
                                         buffer.emplace_back(new ASNode(std::move(current)));
-                                        openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nCoord, _end), buffer.back() });
+                                        openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nCoord, _end) * _weight, buffer.back() });
                                     }
                                 }
                             }
@@ -265,7 +265,7 @@ namespace CHDR::Solvers {
             return result;
         }
 
-        auto SolveLinear(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) const {
+        auto SolveLinear(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
 
             std::vector<coord_t> result;
 
@@ -321,7 +321,7 @@ namespace CHDR::Solvers {
 
                                         // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
                                         buffer.emplace_back(new ASNode(std::move(current)));
-                                        openSet.push_back({ n, current.m_GScore + static_cast<Ts>(1), _h(nCoord, _end), buffer.back() });
+                                        openSet.push_back({ n, current.m_GScore + static_cast<Ts>(1), _h(nCoord, _end) * _weight, buffer.back() });
                                     }
                                 }
                             }
