@@ -165,7 +165,7 @@ namespace CHDR::Solvers {
 
     public:
 
-        auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, const size_t& _memoryLimit) const {
+        auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, const size_t& _memoryLimit = -1U) const {
 
             /** @see: https://easychair.org/publications/paper/TL2M/open */
 
