@@ -79,7 +79,7 @@ namespace CHDR::Solvers {
 
                         for (size_t i = 0U; i < openSet.size(); ++i) {
 
-                            const GDFSNode current(std::move(openSet.top()));
+                            GDFSNode current(std::move(openSet.top()));
                             openSet.pop();
 
                             if (current.m_Coord != e) {

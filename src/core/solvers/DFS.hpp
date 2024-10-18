@@ -100,7 +100,7 @@ namespace CHDR::Solvers {
 
                                             // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
                                             buffer.emplace_back(new DFSNode(std::move(current)));
-                                            openSet.Emplace({ n, buffer.back() });
+                                            openSet.push({ n, buffer.back() });
                                         }
                                     }
                                 }

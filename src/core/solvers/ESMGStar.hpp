@@ -37,7 +37,7 @@ namespace CHDR::Solvers {
             friend std::shared_ptr<ESMASNode>;
 
             size_t m_Depth;
-            size_t m_Coord;
+            size_t m_Index;
 
             Ts m_GScore;
             Ts m_FScore;
@@ -52,7 +52,7 @@ namespace CHDR::Solvers {
 
             [[nodiscard]] constexpr ESMASNode(const size_t& _depth, const size_t& _coord, const Ts& _gScore, const Ts& _hScore, const std::shared_ptr<ESMASNode>& _parent) : IHeapItem(),
                 m_Depth (_depth),
-                m_Coord (_coord),
+                m_Index (_coord),
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
                 m_Parent(_parent),
@@ -77,7 +77,7 @@ namespace CHDR::Solvers {
 
                 if (m_Successors.empty()) {
 
-                    const auto neighbours = _maze.GetNeighbours(m_Coord);
+                    const auto neighbours = _maze.GetNeighbours(m_Index);
                     m_Successors.reserve(neighbours.size());
 
                     for (auto& neighbour : neighbours) {
@@ -86,7 +86,7 @@ namespace CHDR::Solvers {
 
                             const auto n = Utils::To1D(nCoord, _maze.Size());
 
-                            if ((m_Parent == nullptr || m_Parent->m_Coord != n) && m_Depth + 1U < _memoryLimit) {
+                            if ((m_Parent == nullptr || m_Parent->m_Index != n) && m_Depth + 1U < _memoryLimit) {
 
                                 // Check for any potential successor for the child before its creation.
                                 for (auto& successor_neighbours : _maze.GetNeighbours(n)) {
@@ -127,7 +127,7 @@ namespace CHDR::Solvers {
 
                                 for (size_t i = 0U; i < _ptr->m_Parent->m_Successors.size(); ++i) {
 
-                                    _ptr->m_Parent->m_ForgottenFCosts.erase(_ptr->m_Coord);
+                                    _ptr->m_Parent->m_ForgottenFCosts.erase(_ptr->m_Index);
 
                                     if (_ptr->m_Parent->m_Successors[i].get() == _ptr) {
                                         _ptr->m_Parent->m_Successors.erase(_ptr->m_Parent->m_Successors.begin() + i);
@@ -151,22 +151,14 @@ namespace CHDR::Solvers {
                 return result;
             }
 
-            [[nodiscard]] constexpr bool operator == (const std::shared_ptr<ESMASNode>& _node) const { return m_Coord == _node->m_Coord; }
+            [[nodiscard]] constexpr bool operator == (const std::shared_ptr<ESMASNode>& _node) const { return m_Index == _node->m_Index; }
 
             struct Max {
 
                 [[nodiscard]] constexpr bool operator () (const std::shared_ptr<ESMASNode>& _a, const std::shared_ptr<ESMASNode>& _b) const {
-
-                    bool result{};
-
-                    if (_a->m_FScore == _b->m_FScore) {
-                        result = _a->m_GScore > _b->m_GScore;
-                    }
-                    else {
-                        result = _a->m_FScore > _b->m_FScore;
-                    }
-
-                    return result;
+                    return _a->m_FScore == _b->m_FScore ?
+                        _a->m_GScore > _b->m_GScore :
+                        _a->m_FScore > _b->m_FScore;
                 }
             };
         };
@@ -289,14 +281,14 @@ namespace CHDR::Solvers {
                 for (size_t i = 0U; i < p_successors.size(); ++i) {
 
                     // Code to remove w from the successor list of p goes here
-                    if (p_successors[i]->m_Index == w->m_Coord) {
+                    if (p_successors[i]->m_Index == w->m_Index) {
                         p_successors.erase(p_successors.begin() + i);
                         break;
                     }
                 }
 
                 // Add s(w) to forgotten f-cost table of p, with value of f (w)
-                p->m_ForgottenFCosts.insert_or_assign(w->m_Coord, w->m_FScore);
+                p->m_ForgottenFCosts.insert_or_assign(w->m_Index, w->m_FScore);
 
                 // f (p) ← min of forgotten f-costs of p
                 for (const auto& [pState, pCost] : p->m_ForgottenFCosts) {

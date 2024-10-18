@@ -69,7 +69,7 @@ namespace CHDR::Solvers {
 
                     _capacity = std::max(_capacity, std::max(s, e));
 
-                    std::queue<GBFSNode, std::vector<GBFSNode>> openSet;
+                    std::queue<GBFSNode> openSet;
                     openSet.emplace(s, nullptr);
 
                     ExistenceSet closedSet({ s }, _capacity);
@@ -78,7 +78,7 @@ namespace CHDR::Solvers {
 
                         for (size_t i = 0U; i < openSet.size(); ++i) {
 
-                            const GBFSNode current(std::move(openSet.front()));
+                            GBFSNode current(std::move(openSet.front()));
                             openSet.pop();
 
                             if (current.m_Coord != e) {
