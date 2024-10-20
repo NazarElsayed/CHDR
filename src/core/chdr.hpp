@@ -29,7 +29,6 @@
 #include "solvers/JPS.hpp"
 
 #include "types/Coord.hpp"
-#include "types/minmax_and_dary_heap.hpp"
 #include "nodes/WeightedNode.hpp"
 
 #include "utils/Heuristics.hpp"

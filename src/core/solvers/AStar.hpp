@@ -17,7 +17,6 @@
 #include "mazes/base/IMaze.hpp"
 #include "mazes/Grid.hpp"
 #include "types/ExistenceSet.hpp"
-#include "types/minmax_and_dary_heap.hpp"
 #include "types/Heap.hpp"
 #include "utils/Utils.hpp"
 
