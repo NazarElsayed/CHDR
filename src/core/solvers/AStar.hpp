@@ -17,6 +17,7 @@
 #include "mazes/base/IMaze.hpp"
 #include "mazes/Grid.hpp"
 #include "types/ExistenceSet.hpp"
+#include "types/minmax_and_dary_heap.hpp"
 #include "types/Heap.hpp"
 #include "utils/Utils.hpp"
 
@@ -31,7 +32,7 @@ namespace CHDR::Solvers {
 
         using coord_t = Coord<size_t, Kd>;
 
-        struct ASNode final : IHeapItem {
+        struct ASNode final {
 
             size_t m_Index;
 
@@ -40,7 +41,7 @@ namespace CHDR::Solvers {
 
             const ASNode* m_Parent;
 
-            [[nodiscard]] constexpr ASNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, const ASNode* const _parent) : IHeapItem(),
+            [[nodiscard]] constexpr ASNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, const ASNode* const _parent) :
                 m_Index(_coord),
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
@@ -194,15 +195,15 @@ namespace CHDR::Solvers {
 
                     ExistenceSet<LowMemoryUsage> closedSet({ s }, _capacity);
 
-                    Heap<ASNode, typename ASNode::Max> openSet;
-                    openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
+                    std::vector<ASNode> openSet;
+                    openSet.push_back({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
                     std::vector<ASNode*> buffer;
 
-                    while (!openSet.Empty()) {
+                    while (!openSet.empty()) {
 
-                        ASNode current(std::move(openSet.Top()));
-                        openSet.RemoveFirst();
+                        ASNode current(std::move(openSet.back()));
+                        openSet.pop_back();
 
                         if (current.m_Index != e) { // SEARCH FOR SOLUTION...
 
@@ -227,15 +228,16 @@ namespace CHDR::Solvers {
 
                                         // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
                                         buffer.emplace_back(new ASNode(std::move(current)));
-                                        openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nCoord, _end) * _weight, buffer.back() });
+                                        openSet.push_back({ n, current.m_GScore + static_cast<Ts>(1), _h(nCoord, _end) * _weight, buffer.back() });
                                     }
                                 }
                             }
+                            push_dary_heap<4>(openSet.begin(), openSet.end(), typename ASNode::Min());
                         }
                         else { // SOLUTION REACHED ...
 
                             // Free data which is no longer relevant:
-                              openSet.Clear();
+                              openSet.clear();
                             closedSet.Clear();
 
                             // Recurse from end node to start node, inserting into a result buffer:

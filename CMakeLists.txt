@@ -156,6 +156,7 @@ add_library(CHDR INTERFACE
     src/core/utils/Heuristics.hpp
     src/core/utils/SIMDExtensions.hpp
     src/core/utils/Utils.hpp src/core/mazes/base/IGraph.hpp
+        src/core/types/minmax_and_dary_heap.hpp
 )
 
 target_link_libraries(CHDR INTERFACE)
