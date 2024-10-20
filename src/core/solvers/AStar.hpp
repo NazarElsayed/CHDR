@@ -202,7 +202,6 @@ namespace CHDR::Solvers {
 
                     while (!openSet.empty()) {
 
-                        pop_minmax_heap_max(openSet.begin(), openSet.end(), typename ASNode::Min());
                         ASNode current(std::move(openSet.back()));
                         openSet.pop_back();
 
@@ -295,8 +294,7 @@ namespace CHDR::Solvers {
 
                     while (!openSet.empty()) {
 
-                        const auto top = std::min_element(openSet.begin(), openSet.end(), typename ASNode::Min()); // Linear search
-
+                        const auto top = std::min_element(openSet.begin(), openSet.end(), typename ASNode::Min());
                         ASNode current(std::move(*top));
                         openSet.erase(top);
 
