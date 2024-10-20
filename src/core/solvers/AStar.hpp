@@ -202,6 +202,7 @@ namespace CHDR::Solvers {
 
                     while (!openSet.empty()) {
 
+                        pop_minmax_heap_max(openSet.begin(), openSet.end(), typename ASNode::Min());
                         ASNode current(std::move(openSet.back()));
                         openSet.pop_back();
 
@@ -232,7 +233,6 @@ namespace CHDR::Solvers {
                                     }
                                 }
                             }
-                            push_dary_heap<4>(openSet.begin(), openSet.end(), typename ASNode::Min());
                         }
                         else { // SOLUTION REACHED ...
 

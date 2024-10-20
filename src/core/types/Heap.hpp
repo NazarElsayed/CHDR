@@ -56,25 +56,25 @@ namespace CHDR {
 
         [[nodiscard]] constexpr bool    Empty() const { return m_Data.empty(); }
         [[nodiscard]] constexpr size_t   Size() const { return m_Data.size();  }
-        [[nodiscard]] constexpr const T&  Top() const { return m_Data.front(); }
+        [[nodiscard]] constexpr const T&  Top() { SortUp(m_Data.back()); return m_Data.front(); }
         [[nodiscard]] constexpr const T& Back() const { return m_Data.back();  }
 
         constexpr void Add(const T& _item) {
             m_Data.push_back(_item);
             get_heap_index(m_Data.back()) = m_Data.size() - 1U;
-            SortUp(m_Data.back());
+            //SortUp(m_Data.back());
         }
 
         constexpr void Add(T&& _item) {
             m_Data.push_back(std::move(_item));
             get_heap_index(m_Data.back()) = m_Data.size() - 1U;
-            SortUp(m_Data.back());
+            //SortUp(m_Data.back());
         }
 
         constexpr void Emplace(T&& _item) {
             m_Data.emplace_back(std::move(_item));
             get_heap_index(m_Data.back()) = m_Data.size() - 1U;
-            SortUp(m_Data.back());
+            //SortUp(m_Data.back());
         }
 
         constexpr void Remove(const T& _item) {
@@ -109,7 +109,7 @@ namespace CHDR {
         constexpr void RemoveFirst() {
             m_Data[0U] = std::move(m_Data.back());
             m_Data.pop_back();
-            SortDown(m_Data[0U]);
+            //SortDown(m_Data[0U]);
         }
 
         constexpr void RemoveLast() {
