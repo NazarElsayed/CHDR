@@ -42,6 +42,13 @@ namespace Test::Tests {
 
             /* GENERATE MAZE */
             const auto grid = CHDR::Mazes::Grid<Kd, Tm>(size, Generator::Grid::Generate<Tm>(start, end, 0.0F, 0.0F, seed, size));
+//            const auto gdata = std::vector<CHDR::WeightedNode<bool>>(CHDR::Utils::Product<size_t>(size), { false });
+//            end = _dimensions;
+//            for (auto& item : end) {
+//                --item;
+//            }
+//
+//            const auto grid = CHDR::Mazes::Grid<Kd, Tm>(size, gdata);
 
 //            /* GRID -> GRAPH */
 //            auto graph = CHDR::Mazes::Graph<size_t, Kd, Ts>(grid);

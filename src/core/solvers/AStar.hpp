@@ -32,7 +32,7 @@ namespace CHDR::Solvers {
 
         using coord_t = Coord<size_t, Kd>;
 
-        struct ASNode final {
+        struct ASNode final : IHeapItem {
 
             size_t m_Index;
 
@@ -41,7 +41,7 @@ namespace CHDR::Solvers {
 
             const ASNode* m_Parent;
 
-            [[nodiscard]] constexpr ASNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, const ASNode* const _parent) :
+            [[nodiscard]] constexpr ASNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, const ASNode* const _parent) : IHeapItem(),
                 m_Index(_coord),
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
@@ -195,15 +195,15 @@ namespace CHDR::Solvers {
 
                     ExistenceSet<LowMemoryUsage> closedSet({ s }, _capacity);
 
-                    std::vector<ASNode> openSet;
-                    openSet.push_back({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
+                    Heap<ASNode, typename ASNode::Max> openSet;
+                    openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
                     std::vector<ASNode*> buffer;
 
-                    while (!openSet.empty()) {
+                    while (!openSet.Empty()) {
 
-                        ASNode current(std::move(openSet.back()));
-                        openSet.pop_back();
+                        ASNode current(std::move(openSet.Top()));
+                        openSet.RemoveFirst();
 
                         if (current.m_Index != e) { // SEARCH FOR SOLUTION...
 
@@ -228,7 +228,7 @@ namespace CHDR::Solvers {
 
                                         // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
                                         buffer.emplace_back(new ASNode(std::move(current)));
-                                        openSet.push_back({ n, current.m_GScore + static_cast<Ts>(1), _h(nCoord, _end) * _weight, buffer.back() });
+                                        openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nCoord, _end) * _weight, buffer.back() });
                                     }
                                 }
                             }
@@ -236,7 +236,7 @@ namespace CHDR::Solvers {
                         else { // SOLUTION REACHED ...
 
                             // Free data which is no longer relevant:
-                              openSet.clear();
+                              openSet.Clear();
                             closedSet.Clear();
 
                             // Recurse from end node to start node, inserting into a result buffer:
