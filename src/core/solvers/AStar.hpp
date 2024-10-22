@@ -92,7 +92,7 @@ namespace CHDR::Solvers {
 
                     ExistenceSet<LowMemoryUsage> closedSet({ _start }, _capacity);
 
-                    Heap<ASNode, typename ASNode::Max> openSet;
+                    Heap<ASNode, typename ASNode::Max> openSet(_capacity / 4U);
                     openSet.Emplace({ _start, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
                     std::vector<ASNode*> buffer;
@@ -194,7 +194,7 @@ namespace CHDR::Solvers {
 
                     ExistenceSet<LowMemoryUsage> closedSet({ s }, _capacity);
 
-                    Heap<ASNode, typename ASNode::Max> openSet;
+                    Heap<ASNode, typename ASNode::Max> openSet(_capacity / 4U);
                     openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
                     std::vector<ASNode*> buffer;
@@ -233,10 +233,6 @@ namespace CHDR::Solvers {
                             }
                         }
                         else { // SOLUTION REACHED ...
-
-                            // Free data which is no longer relevant:
-                              openSet.Clear();
-                            closedSet.Clear();
 
                             // Recurse from end node to start node, inserting into a result buffer:
                             result.reserve(current.m_GScore);
@@ -287,6 +283,7 @@ namespace CHDR::Solvers {
                     ExistenceSet<LowMemoryUsage> closedSet({ s }, _capacity);
 
                     std::vector<ASNode> openSet;
+                    openSet.reserve(_capacity / 4U);
                     openSet.push_back({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
                     std::vector<ASNode*> buffer;
@@ -326,10 +323,6 @@ namespace CHDR::Solvers {
                             }
                         }
                         else { // SOLUTION REACHED ...
-
-                            // Free data which is no longer relevant:
-                              openSet.clear();
-                            closedSet.Clear();
 
                             // Recurse from end node to start node, inserting into a result buffer:
                             result.reserve(current.m_GScore);

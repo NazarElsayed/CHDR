@@ -105,7 +105,7 @@ namespace CHDR {
          * @param[in] _hash The hash value to be removed.
          * @note Please note that this function does not resize the set.
          *
-         * @see set::Trim()
+         * @see set::Prune()
          * @see set::Clear()
          */
         void Remove(const size_t& _hash) {
@@ -125,11 +125,11 @@ namespace CHDR {
         }
 
         /**
-         * @brief Trim the set by removing trailing false values.
+         * @brief Prune the set by removing trailing false values.
          *
          * @see set::Clear()
          */
-        void Trim() {
+        void Prune() {
 
             const auto it = std::find_if(
                 m_Bits.rbegin(),
@@ -170,7 +170,7 @@ namespace CHDR {
          * If the new size is greater than the current size, the new elements will be filled with the specified value.
          *
          * @see DenseExistenceSet::Reserve(const size_t&)
-         * @see DenseExistenceSet::Trim()
+         * @see DenseExistenceSet::Prune()
          * @see DenseExistenceSet::Clear()
          */
         void Resize(const size_t& _new_size, const boolean_t& _new_value = static_cast<boolean_t>(false)) {
@@ -183,6 +183,10 @@ namespace CHDR {
          */
         void Clear() {
             m_Bits.clear();
+        }
+
+        void Trim() {
+            m_Bits.shrink_to_fit();
         }
 
         /**

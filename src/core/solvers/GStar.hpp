@@ -112,7 +112,7 @@ namespace CHDR::Solvers {
 
                     ExistenceSet closedSet({ s }, _capacity);
 
-                    Heap<GSNode, typename GSNode::Max> openSet;
+                    Heap<GSNode, typename GSNode::Max> openSet(_capacity / 4U);
                     openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
                     while (!openSet.Empty()) {
@@ -206,6 +206,7 @@ namespace CHDR::Solvers {
                     ExistenceSet closedSet({ s }, _capacity);
 
                     std::vector<GSNode> openSet;
+                    openSet.reserve(_capacity / 4U);
                     openSet.push_back({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
                     while (!openSet.empty()) {
@@ -246,8 +247,8 @@ namespace CHDR::Solvers {
                         else { // SOLUTION REACHED ...
 
                             // Free data which is no longer relevant:
-                              openSet.clear();
-                            closedSet.Clear();
+                              openSet.clear();   openSet.Trim();
+                            closedSet.Clear(); closedSet.Trim();
 
                             // Recurse from end node to start node, inserting into a result buffer:
                             result.reserve(current.m_GScore);

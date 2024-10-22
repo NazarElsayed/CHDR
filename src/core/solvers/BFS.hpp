@@ -106,12 +106,6 @@ namespace CHDR::Solvers {
                             }
                             else { // SOLUTION REACHED ...
 
-                                // Free data which is no longer relevant:
-                                std::queue<BFSNode> empty;
-                                std::swap(openSet, empty);
-
-                                closedSet.Clear();
-
                                 // Recurse from end node to start node, inserting into a result buffer:
                                 result.reserve(_capacity);
                                 for (const auto* temp = &current; temp->m_Parent != nullptr; temp = temp->m_Parent) {

@@ -89,7 +89,7 @@ namespace CHDR::Solvers {
 //
 //            ExistenceSet closedSet ({ s }, _capacity);
 //
-//            Heap<DijkstraNode, typename DijkstraNode::Max> openSet;
+//            Heap<DijkstraNode, typename DijkstraNode::Max> openSet(_capacity / 4U);
 //            openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
 //
 //            while (!openSet.Empty()) {
@@ -126,10 +126,6 @@ namespace CHDR::Solvers {
 //                    }
 //                }
 //                else { // SOLUTION REACHED ...
-//
-//                    // Free data which is no longer relevant:
-//                      openSet.Clear();
-//                    closedSet.Clear();
 //
 //                    // Recurse from end node to start node, inserting into a result buffer:
 //                    result.reserve(current.m_GScore);

@@ -234,7 +234,7 @@ namespace CHDR::Solvers {
                         else { // SOLUTION REACHED ...
 
                             // Free data which is no longer relevant:
-                            openSet.Clear();
+                            openSet.Clear(); openSet.Trim();
 
                             if (current != nullptr) {
 

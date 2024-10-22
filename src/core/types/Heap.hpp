@@ -25,7 +25,9 @@ namespace CHDR {
     private:
 
         std::vector<T> m_Data;
-        Comparator compare;
+        Comparator m_Comparator;
+
+        static constexpr size_t m_Root = 0U;
 
         template<typename U>
         struct heap_index_accessor {
@@ -54,27 +56,35 @@ namespace CHDR {
 
     public:
 
+        Heap(const size_t& _capacity = 0U) : m_Data() {
+            m_Data.reserve(_capacity);
+        }
+
         [[nodiscard]] constexpr bool    Empty() const { return m_Data.empty(); }
         [[nodiscard]] constexpr size_t   Size() const { return m_Data.size();  }
-        [[nodiscard]] constexpr const T&  Top() { SortUp(m_Data.back()); return m_Data.front(); }
+        [[nodiscard]] constexpr const T&  Top() const { return m_Data[m_Root]; }
         [[nodiscard]] constexpr const T& Back() const { return m_Data.back();  }
 
         constexpr void Add(const T& _item) {
             m_Data.push_back(_item);
             get_heap_index(m_Data.back()) = m_Data.size() - 1U;
-            //SortUp(m_Data.back());
+            SortUp(m_Data.back());
         }
 
         constexpr void Add(T&& _item) {
             m_Data.push_back(std::move(_item));
             get_heap_index(m_Data.back()) = m_Data.size() - 1U;
-            //SortUp(m_Data.back());
+            SortUp(m_Data.back());
         }
 
         constexpr void Emplace(T&& _item) {
             m_Data.emplace_back(std::move(_item));
             get_heap_index(m_Data.back()) = m_Data.size() - 1U;
-            //SortUp(m_Data.back());
+            SortUp(m_Data.back());
+        }
+
+        void Reserve(size_t capacity) {
+            m_Data.reserve(capacity);
         }
 
         constexpr void Remove(const T& _item) {
@@ -89,12 +99,15 @@ namespace CHDR {
                     m_Data[heapIndex] = std::move(m_Data.back());
                     m_Data.pop_back();
 
-                    // Restore heap property:
-                    if (heapIndex > 0U && compare(m_Data[heapIndex], m_Data[(heapIndex - 1U) / 2U])) {
-                        SortUp(m_Data[heapIndex]);
-                    }
-                    else {
-                        SortDown(m_Data[heapIndex]);
+                    if (m_Data.size() > 1U) {
+
+                        // Restore heap property:
+                        if (heapIndex > m_Root && m_Comparator(m_Data[heapIndex], m_Data[(heapIndex - 1U) / 2U])) {
+                            SortUp(m_Data[heapIndex]);
+                        }
+                        else {
+                            SortDown(m_Data[heapIndex]);
+                        }
                     }
                 }
             }
@@ -107,9 +120,9 @@ namespace CHDR {
         }
 
         constexpr void RemoveFirst() {
-            m_Data[0U] = std::move(m_Data.back());
+            m_Data[m_Root] = std::move(m_Data.back());
             m_Data.pop_back();
-            //SortDown(m_Data[0U]);
+            SortDown(m_Data[m_Root]);
         }
 
         constexpr void RemoveLast() {
@@ -124,55 +137,51 @@ namespace CHDR {
 
         constexpr void SortUp(T& _item) {
 
-            auto itemIndex = get_heap_index(_item);
-            auto parentIndex = itemIndex > 0U ? ((itemIndex - 1U) / 2U) : 0U;
+            if (m_Data.size() > 1U) {
 
-            while (itemIndex > 0U) {
+                auto itemIndex = get_heap_index(_item);
+                auto parentIndex = (itemIndex - 1U) / 2U;
 
-                if (compare(m_Data[parentIndex], m_Data[itemIndex])) {
+                while (itemIndex > m_Root) {
 
-                    Swap(m_Data[itemIndex], m_Data[parentIndex]);
-                    itemIndex = parentIndex;
-                    parentIndex = itemIndex > 0U ? ((itemIndex - 1U) / 2U) : 0U;
-                }
-                else {
-                    break;
+                    if (m_Comparator(m_Data[parentIndex], m_Data[itemIndex])) {
+                        std::swap(m_Data[itemIndex], m_Data[parentIndex]);
+                        itemIndex = parentIndex;
+                        parentIndex = (itemIndex - 1U) / 2U;
+                    }
+                    else {
+                        break;
+                    }
                 }
             }
         }
 
         constexpr void SortDown(T& _item) {
 
-            auto itemIndex = get_heap_index(_item);
+            if (m_Data.size() > 1U) {
 
-            auto leftChildIndex = (itemIndex * 2U) + 1U;
-            auto rightChildIndex = leftChildIndex + 1U;
+                auto itemIndex = get_heap_index(_item);
 
-            while (leftChildIndex < m_Data.size()) {
+                auto leftChildIndex = (itemIndex * 2U) + 1U;
+                auto rightChildIndex = leftChildIndex + 1U;
 
-                auto swapIndex = leftChildIndex;
-                if (rightChildIndex < m_Data.size() && compare(m_Data[leftChildIndex], m_Data[rightChildIndex])) {
-                    swapIndex = rightChildIndex;
+                while (leftChildIndex < m_Data.size()) {
+
+                    auto swapIndex = leftChildIndex;
+                    if (rightChildIndex < m_Data.size() && m_Comparator(m_Data[leftChildIndex], m_Data[rightChildIndex])) {
+                        swapIndex = rightChildIndex;
+                    }
+                    if (m_Comparator(m_Data[itemIndex], m_Data[swapIndex])) {
+                        std::swap(m_Data[itemIndex], m_Data[swapIndex]);
+                        itemIndex = swapIndex;
+
+                        leftChildIndex = (itemIndex * 2U) + 1U;
+                        rightChildIndex = leftChildIndex + 1U;
+                    }
+                    else {
+                        break;
+                    }
                 }
-                if (compare(m_Data[itemIndex], m_Data[swapIndex])) {
-
-                    Swap(m_Data[itemIndex], m_Data[swapIndex]);
-                    itemIndex = swapIndex;
-
-                    leftChildIndex = (itemIndex * 2U) + 1U;
-                    rightChildIndex = leftChildIndex + 1U;
-                }
-                else {
-                    break;
-                }
-            }
-        }
-
-        constexpr void Swap(T& _item1, T& _item2) {
-
-            if (&_item1 != &_item2) {
-                std::swap(_item1, _item2);
-                std::swap(get_heap_index(_item1), get_heap_index(_item2));
             }
         }
 
@@ -185,6 +194,10 @@ namespace CHDR {
 
         constexpr void Clear() {
             m_Data.clear();
+        }
+
+        constexpr void Trim() {
+            m_Data.shrink_to_fit();
         }
 
 #ifndef HEAP_SUPPRESS_EXCEPTION_WARNING

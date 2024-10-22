@@ -115,7 +115,7 @@ namespace CHDR::Solvers {
                                 std::queue<GBFSNode> empty;
                                 std::swap(openSet, empty);
 
-                                closedSet.Clear();
+                                closedSet.Clear(); closedSet.Trim();
 
                                 // Recurse from end node to start node, inserting into a result buffer:
                                 result.reserve(_capacity);
