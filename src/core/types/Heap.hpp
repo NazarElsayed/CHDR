@@ -27,8 +27,6 @@ namespace CHDR {
         std::vector<T> m_Data;
         Comparator m_Comparator;
 
-        static constexpr size_t m_Root = 0U;
-
         template<typename U>
         struct heap_index_accessor {
             static size_t& get(U& item) {
@@ -57,29 +55,30 @@ namespace CHDR {
     public:
 
         Heap(const size_t& _capacity = 0U) : m_Data() {
-            m_Data.reserve(_capacity);
+            m_Data.reserve(_capacity + 1U);
+            m_Data.push_back({});
         }
 
-        [[nodiscard]] constexpr bool    Empty() const { return m_Data.empty(); }
-        [[nodiscard]] constexpr size_t   Size() const { return m_Data.size();  }
-        [[nodiscard]] constexpr const T&  Top() const { return m_Data[m_Root]; }
-        [[nodiscard]] constexpr const T& Back() const { return m_Data.back();  }
+        [[nodiscard]] constexpr bool    Empty() const { return Size() == 0U;       }
+        [[nodiscard]] constexpr size_t   Size() const { return m_Data.size() - 1U; }
+        [[nodiscard]] constexpr const T&  Top() const { return m_Data[1U];         }
+        [[nodiscard]] constexpr const T& Back() const { return m_Data.back();      }
 
         constexpr void Add(const T& _item) {
             m_Data.push_back(_item);
-            get_heap_index(m_Data.back()) = m_Data.size() - 1U;
+            get_heap_index(m_Data.back()) = Size();
             SortUp(m_Data.back());
         }
 
         constexpr void Add(T&& _item) {
             m_Data.push_back(std::move(_item));
-            get_heap_index(m_Data.back()) = m_Data.size() - 1U;
+            get_heap_index(m_Data.back()) = Size();
             SortUp(m_Data.back());
         }
 
         constexpr void Emplace(T&& _item) {
             m_Data.emplace_back(std::move(_item));
-            get_heap_index(m_Data.back()) = m_Data.size() - 1U;
+            get_heap_index(m_Data.back()) = Size();
             SortUp(m_Data.back());
         }
 
@@ -90,19 +89,19 @@ namespace CHDR {
         constexpr void Remove(const T& _item) {
 
             auto& heapIndex = get_heap_index(const_cast<T&>(_item));
-            if (heapIndex < m_Data.size()) {
+            if (heapIndex < Size()) {
 
-                if (heapIndex == m_Data.size() - 1U) {
+                if (heapIndex == Size() - 1U) {
                     m_Data.pop_back(); // If the item to remove is the last item, just remove it.
                 }
                 else {
                     m_Data[heapIndex] = std::move(m_Data.back());
                     m_Data.pop_back();
 
-                    if (m_Data.size() > 1U) {
+                    if (Size() > 1U) {
 
                         // Restore heap property:
-                        if (heapIndex > m_Root && m_Comparator(m_Data[heapIndex], m_Data[(heapIndex - 1U) / D])) {
+                        if (heapIndex > 1U && m_Comparator(m_Data[heapIndex], m_Data[heapIndex / D])) {
                             SortUp(m_Data[heapIndex]);
                         }
                         else {
@@ -120,9 +119,9 @@ namespace CHDR {
         }
 
         constexpr void RemoveFirst() {
-            m_Data[m_Root] = std::move(m_Data.back());
+            m_Data[1U] = std::move(m_Data.back());
             m_Data.pop_back();
-            SortDown(m_Data[m_Root]);
+            SortDown(m_Data[1U]);
         }
 
         constexpr void RemoveLast() {
@@ -135,65 +134,15 @@ namespace CHDR {
             SortUp(m_Data[get_heap_index(_item)]);
         }
 
-        constexpr void SortUp(T& _item) {
-
-            if (m_Data.size() > 1U) {
-
-                auto itemIndex = get_heap_index(_item);
-                auto parentIndex = (itemIndex - 1U) / D;
-
-                while (itemIndex > m_Root) {
-
-                    if (m_Comparator(m_Data[parentIndex], m_Data[itemIndex])) {
-                        std::swap(m_Data[itemIndex], m_Data[parentIndex]);
-                        itemIndex = parentIndex;
-                        parentIndex = (itemIndex - 1U) / D;
-                    }
-                    else {
-                        break;
-                    }
-                }
-            }
-        }
-
-        constexpr void SortDown(T& _item) {
-
-            if (m_Data.size() > 1U) {
-
-                auto itemIndex = get_heap_index(_item);
-
-                auto leftChildIndex = (itemIndex * D) + 1U;
-                auto rightChildIndex = leftChildIndex + 1U;
-
-                while (leftChildIndex < m_Data.size()) {
-
-                    auto swapIndex = leftChildIndex;
-                    if (rightChildIndex < m_Data.size() && m_Comparator(m_Data[leftChildIndex], m_Data[rightChildIndex])) {
-                        swapIndex = rightChildIndex;
-                    }
-                    if (m_Comparator(m_Data[itemIndex], m_Data[swapIndex])) {
-                        std::swap(m_Data[itemIndex], m_Data[swapIndex]);
-                        itemIndex = swapIndex;
-
-                        leftChildIndex = (itemIndex * D) + 1U;
-                        rightChildIndex = leftChildIndex + 1U;
-                    }
-                    else {
-                        break;
-                    }
-                }
-            }
-        }
-
         constexpr bool Contains(T& _item) {
 
             const auto& heapIndex = get_heap_index(_item);
 
-            return !m_Data.empty() && heapIndex < m_Data.size() && _item == m_Data[heapIndex];
+            return !Empty() && heapIndex < m_Data.size() && _item == m_Data[heapIndex];
         }
 
         constexpr void Clear() {
-            m_Data.clear();
+            m_Data.erase(begin(), end());
         }
 
         constexpr void Trim() {
@@ -206,9 +155,9 @@ namespace CHDR {
         const T& operator[](const size_t& _index) const {
 
 #ifndef NDEBUG
-            return m_Data.at(_index);
+            return m_Data.at(_index + 1U);
 #else
-            return m_Data[_index];
+            return m_Data[_index + 1U];
 #endif // NDEBUG
         }
 
@@ -217,9 +166,9 @@ namespace CHDR {
         using       reverse_iterator = typename std::vector<T>::reverse_iterator;
         using const_reverse_iterator = typename std::vector<T>::const_reverse_iterator;
 
-        [[nodiscard]]       iterator  begin()       { return m_Data.begin();  }
-        [[nodiscard]] const_iterator  begin() const { return m_Data.begin();  }
-        [[nodiscard]] const_iterator cbegin() const { return m_Data.cbegin(); }
+        [[nodiscard]]       iterator  begin()       { return m_Data.begin()  + 1U; }
+        [[nodiscard]] const_iterator  begin() const { return m_Data.begin()  + 1U; }
+        [[nodiscard]] const_iterator cbegin() const { return m_Data.cbegin() + 1U; }
 
         [[nodiscard]]       iterator  end()       { return m_Data.end();  }
         [[nodiscard]] const_iterator  end() const { return m_Data.end();  }
@@ -232,6 +181,59 @@ namespace CHDR {
         [[nodiscard]]       reverse_iterator  rend()       { return m_Data.rend();  }
         [[nodiscard]] const_reverse_iterator  rend() const { return m_Data.rend();  }
         [[nodiscard]] const_reverse_iterator crend() const { return m_Data.crend(); }
+
+    private:
+
+        constexpr void SortUp(T& _item) {
+
+            if (Size() > 1U) {
+
+                auto itemIndex = get_heap_index(_item);
+                auto parentIndex = itemIndex / D;
+
+                while (itemIndex > 1U) {
+
+                    if (m_Comparator(m_Data[parentIndex], m_Data[itemIndex])) {
+                        std::swap(m_Data[itemIndex], m_Data[parentIndex]);
+                        itemIndex = parentIndex;
+                        parentIndex = itemIndex / D;
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
+        }
+
+        constexpr void SortDown(T& _item) {
+
+            if (Size() > 1U) {
+
+                auto itemIndex = get_heap_index(_item);
+
+                auto leftChildIndex = itemIndex * D;
+                auto rightChildIndex = leftChildIndex + 1U;
+
+                while (leftChildIndex < m_Data.size()) {
+
+                    auto swapIndex = leftChildIndex;
+                    if (rightChildIndex < m_Data.size() && m_Comparator(m_Data[leftChildIndex], m_Data[rightChildIndex])) {
+                        swapIndex = rightChildIndex;
+                    }
+                    if (m_Comparator(m_Data[itemIndex], m_Data[swapIndex])) {
+                        std::swap(m_Data[itemIndex], m_Data[swapIndex]);
+                        itemIndex = swapIndex;
+
+                        leftChildIndex = itemIndex * D;
+                        rightChildIndex = leftChildIndex + 1U;
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
+        }
+
     };
 }
 
