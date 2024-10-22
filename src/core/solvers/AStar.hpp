@@ -98,7 +98,7 @@ namespace CHDR::Solvers {
                     Heap<ASNode, 2U, typename ASNode::Max> open(_capacity / 4U);
                     open.Emplace({ _start, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
-                    StableForwardBuf<ASNode*> buf;
+                    StableForwardBuf<ASNode> buf;
 
                     while (!open.Empty()) {
 
@@ -126,7 +126,7 @@ namespace CHDR::Solvers {
                                     closed.Add(n);
 
                                     // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                    open.Emplace({n, curr.m_GScore + static_cast<Ts>(nDistance), _h(nID, _end) * _weight, buf.Emplace(new ASNode(std::move(curr))) });
+                                    open.Emplace({n, curr.m_GScore + static_cast<Ts>(nDistance), _h(nID, _end) * _weight, &buf.Emplace(std::move(curr)) });
                                 }
                             }
                         }
@@ -137,11 +137,6 @@ namespace CHDR::Solvers {
                             for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = temp->m_Parent) {
                                 result.emplace_back(temp->m_Index);
                             }
-
-                            // Clear the buffer:
-                            std::for_each(buf.begin(), buf.end(), [](auto* item) {
-                                delete item;
-                            });
 
                             // Reverse the result:
                             std::reverse(result.begin(), result.end());
@@ -193,7 +188,7 @@ namespace CHDR::Solvers {
                     Heap<ASNode, 2U, typename ASNode::Max> open(_capacity / 4U);
                     open.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
-                    StableForwardBuf<ASNode*> buf;
+                    StableForwardBuf<ASNode> buf;
 
                     while (!open.Empty()) {
 
@@ -221,7 +216,7 @@ namespace CHDR::Solvers {
                                         closed.Add(n);
 
                                         // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                        open.Emplace({n, curr.m_GScore + static_cast<Ts>(1), _h(nCoord, _end) * _weight, buf.Emplace(new ASNode(std::move(curr))) });
+                                        open.Emplace({n, curr.m_GScore + static_cast<Ts>(1), _h(nCoord, _end) * _weight, &buf.Emplace(std::move(curr)) });
                                     }
                                 }
                             }
@@ -233,11 +228,6 @@ namespace CHDR::Solvers {
                             for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = temp->m_Parent) {
                                 result.emplace_back(Utils::ToND(temp->m_Index, _maze.Size()));
                             }
-
-                            // Clear the buffer:
-                            std::for_each(buf.begin(), buf.end(), [](auto* item) {
-                                delete item;
-                            });
 
                             // Reverse the result:
                             std::reverse(result.begin(), result.end());
@@ -279,7 +269,7 @@ namespace CHDR::Solvers {
                     open.reserve(_capacity / 4U);
                     open.push_back({s, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
-                    StableForwardBuf<ASNode*, 64U> buf;
+                    StableForwardBuf<ASNode, 64U> buf;
 
                     while (!open.empty()) {
 
@@ -309,7 +299,7 @@ namespace CHDR::Solvers {
                                         closed.Add(n);
 
                                         // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                        open.push_back({n, curr.m_GScore + static_cast<Ts>(1), _h(nCoord, _end) * _weight, buf.Emplace(new ASNode(std::move(curr))) });
+                                        open.push_back({n, curr.m_GScore + static_cast<Ts>(1), _h(nCoord, _end) * _weight, &buf.Emplace(std::move(curr)) });
                                     }
                                 }
                             }
@@ -321,11 +311,6 @@ namespace CHDR::Solvers {
                             for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = temp->m_Parent) {
                                 result.emplace_back(Utils::ToND(temp->m_Index, _maze.Size()));
                             }
-
-                            // Clear the buffer:
-                            std::for_each(buf.begin(), buf.end(), [](auto* item) {
-                                delete item;
-                            });
 
                             // Reverse the result:
                             std::reverse(result.begin(), result.end());

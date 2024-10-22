@@ -67,7 +67,7 @@ namespace CHDR::Solvers {
 
                     ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
 
-                    StableForwardBuf<BFSNode*> buf;
+                    StableForwardBuf<BFSNode> buf;
 
                     while (!open.empty()) { // SEARCH FOR SOLUTION...
 
@@ -98,7 +98,7 @@ namespace CHDR::Solvers {
                                             closed.Add(curr.m_Coord);
 
                                             // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                            open.push({n, buf.Emplace(newBFSNode(std::move(curr))) });
+                                            open.push({n, &buf.Emplace(std::move(curr)) });
                                         }
                                     }
                                 }
@@ -110,11 +110,6 @@ namespace CHDR::Solvers {
                                 for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = temp->m_Parent) {
                                     result.emplace_back(Utils::ToND(temp->m_Coord, _maze.Size()));
                                 }
-
-                                // Clear the buffer:
-                                std::for_each(buf.begin(), buf.end(), [](auto* item) {
-                                    delete item;
-                                });
 
                                 // Reverse the result:
                                 std::reverse(result.begin(), result.end());

@@ -68,7 +68,7 @@ namespace CHDR::Solvers {
 
                     ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
 
-                    StableForwardBuf<DFSNode*> buf;
+                    StableForwardBuf<DFSNode> buf;
 
                     while (!open.empty()) { // SEARCH FOR SOLUTION...
 
@@ -99,7 +99,7 @@ namespace CHDR::Solvers {
                                             closed.Add(current.m_Coord);
 
                                             // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                            open.push({n, buf.Emplace(newDFSNode(std::move(current))) });
+                                            open.push({n, &buf.Emplace(std::move(current)) });
                                         }
                                     }
                                 }
