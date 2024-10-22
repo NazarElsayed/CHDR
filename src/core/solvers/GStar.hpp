@@ -108,14 +108,14 @@ namespace CHDR::Solvers {
 
                 if (s != e) {
 
-                    const auto maze_count = _maze.Count();
+                    const auto count = _maze.Count();
 
                     _capacity = std::max(_capacity, std::max(s, e));
 
                     ExistenceSet closed({ s }, _capacity);
 
                     Heap<GSNode, 2U, typename GSNode::Max> open(_capacity / 4U);
-                    open.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
+                    open.Emplace({  s, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
                     while (!open.Empty()) {
 
@@ -124,7 +124,7 @@ namespace CHDR::Solvers {
                         if (curr.m_Index != e) { // SEARCH FOR SOLUTION...
 
                             if (closed.Capacity() > curr.m_Index) {
-                                closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), maze_count));
+                                closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
                             }
                             closed.Add(curr.m_Index);
 
@@ -138,12 +138,12 @@ namespace CHDR::Solvers {
                                     if (!closed.Contains(n)) {
 
                                         if (closed.Capacity() > n) {
-                                            closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), maze_count));
+                                            closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                         }
                                         closed.Add(n);
 
                                         // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                        open.Emplace({n, curr.m_GScore + static_cast<Ts>(1), _h(nCoord, _end) * _weight, std::make_shared<GSNode>(std::move(curr)) });
+                                        open.Emplace({ n, curr.m_GScore + static_cast<Ts>(1), _h(nCoord, _end) * _weight, std::make_shared<GSNode>(std::move(curr)) });
                                     }
                                 }
                             }
@@ -199,7 +199,7 @@ namespace CHDR::Solvers {
 
                 if (s != e) {
 
-                    const auto maze_count = _maze.Count();
+                    const auto count = _maze.Count();
 
                     _capacity = std::max(_capacity, std::max(s, e));
 
@@ -219,7 +219,7 @@ namespace CHDR::Solvers {
                         if (current.m_Index != e) { // SEARCH FOR SOLUTION...
 
                             if (closed.Capacity() > current.m_Index) {
-                                closed.Reserve(std::min(_capacity * ((current.m_Index % _capacity) + 1U), maze_count));
+                                closed.Reserve(std::min(_capacity * ((current.m_Index % _capacity) + 1U), count));
                             }
                             closed.Add(current.m_Index);
 
@@ -234,7 +234,7 @@ namespace CHDR::Solvers {
 
                                         // Add to dupe list:
                                         if (closed.Capacity() > n) {
-                                            closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), maze_count));
+                                            closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                         }
                                         closed.Add(n);
 

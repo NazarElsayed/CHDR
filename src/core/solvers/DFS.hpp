@@ -58,7 +58,7 @@ namespace CHDR::Solvers {
 
                 if (s != e) {
 
-                    const auto maze_count = _maze.Count();
+                    const auto count = _maze.Count();
 
                     _capacity = std::max(_capacity, std::max(s, e));
 
@@ -80,7 +80,7 @@ namespace CHDR::Solvers {
                             if (current.m_Coord != e) {
 
                                 if (closed.Capacity() > current.m_Coord) {
-                                    closed.Reserve(std::min(_capacity * ((current.m_Coord % _capacity) + 1U), maze_count));
+                                    closed.Reserve(std::min(_capacity * ((current.m_Coord % _capacity) + 1U), count));
                                 }
                                 closed.Add(current.m_Coord);
 
@@ -94,7 +94,7 @@ namespace CHDR::Solvers {
                                         if (!closed.Contains(n)) {
 
                                             if (closed.Capacity() > current.m_Coord) {
-                                                closed.Reserve(std::min(_capacity * ((current.m_Coord % _capacity) + 1U), maze_count));
+                                                closed.Reserve(std::min(_capacity * ((current.m_Coord % _capacity) + 1U), count));
                                             }
                                             closed.Add(current.m_Coord);
 

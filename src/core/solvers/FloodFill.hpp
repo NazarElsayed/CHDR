@@ -43,7 +43,7 @@ namespace CHDR::Solvers {
 
                 if (s != e) {
 
-                    const auto maze_count = _maze.Count();
+                    const auto count = _maze.Count();
 
                     std::queue<size_t> open;
                     open.emplace(s);
@@ -72,7 +72,7 @@ namespace CHDR::Solvers {
                                     if (!closed.Contains(n)) {
 
                                         if (closed.Capacity() > n) {
-                                            closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), maze_count));
+                                            closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                         }
                                         closed.Add(n);
 
