@@ -83,7 +83,7 @@ namespace CHDR {
             SortUp(m_Data.back());
         }
 
-        void Reserve(size_t capacity) {
+        void Reserve(const size_t& capacity) {
             m_Data.reserve(capacity);
         }
 
@@ -217,21 +217,21 @@ namespace CHDR {
         using       reverse_iterator = typename std::vector<T>::reverse_iterator;
         using const_reverse_iterator = typename std::vector<T>::const_reverse_iterator;
 
-              iterator  begin()       { return m_Data.begin();  }
-        const_iterator  begin() const { return m_Data.begin();  }
-        const_iterator cbegin() const { return m_Data.cbegin(); }
+        [[nodiscard]]       iterator  begin()       { return m_Data.begin();  }
+        [[nodiscard]] const_iterator  begin() const { return m_Data.begin();  }
+        [[nodiscard]] const_iterator cbegin() const { return m_Data.cbegin(); }
 
-              iterator  end()       { return m_Data.end();  }
-        const_iterator  end() const { return m_Data.end();  }
-        const_iterator cend() const { return m_Data.cend(); }
+        [[nodiscard]]       iterator  end()       { return m_Data.end();  }
+        [[nodiscard]] const_iterator  end() const { return m_Data.end();  }
+        [[nodiscard]] const_iterator cend() const { return m_Data.cend(); }
 
-              reverse_iterator  rbegin()       { return m_Data.rbegin();  }
-        const_reverse_iterator  rbegin() const { return m_Data.rbegin();  }
-        const_reverse_iterator crbegin() const { return m_Data.crbegin(); }
+        [[nodiscard]]       reverse_iterator  rbegin()       { return m_Data.rbegin();  }
+        [[nodiscard]] const_reverse_iterator  rbegin() const { return m_Data.rbegin();  }
+        [[nodiscard]] const_reverse_iterator crbegin() const { return m_Data.crbegin(); }
 
-              reverse_iterator  rend()       { return m_Data.rend();  }
-        const_reverse_iterator  rend() const { return m_Data.rend();  }
-        const_reverse_iterator crend() const { return m_Data.crend(); }
+        [[nodiscard]]       reverse_iterator  rend()       { return m_Data.rend();  }
+        [[nodiscard]] const_reverse_iterator  rend() const { return m_Data.rend();  }
+        [[nodiscard]] const_reverse_iterator crend() const { return m_Data.crend(); }
     };
 }
 
