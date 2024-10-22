@@ -151,8 +151,8 @@ namespace CHDR::Solvers {
                         else { // SOLUTION REACHED ...
 
                             // Free data which is no longer relevant:
-                              open.Clear();
-                            closed.Clear();
+                              open.Clear();   open.Trim();
+                            closed.Clear(); closed.Trim();
 
                             // Recurse from end node to start node, inserting into a result buffer:
                             result.reserve(curr.m_GScore);
