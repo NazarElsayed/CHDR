@@ -182,7 +182,7 @@ namespace CHDR::Solvers {
 
                 if (s != e) {
 
-                    Heap<std::shared_ptr<ESMASNode>, typename ESMASNode::Max> openSet;
+                    Heap<std::shared_ptr<ESMASNode>, 2U, typename ESMASNode::Max> openSet;
                     openSet.Emplace(ESMASNode::CreateShared(
                         0U,                         // Depth
                         s,                          // Coordinate
@@ -269,7 +269,7 @@ namespace CHDR::Solvers {
             return result;
         }
 
-        void cull_worst_leaf(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight, const size_t& _memoryLimit, Heap<std::shared_ptr<ESMASNode>, typename ESMASNode::Max>& _openSet) const {
+        void cull_worst_leaf(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight, const size_t& _memoryLimit, Heap<std::shared_ptr<ESMASNode>, 2U, typename ESMASNode::Max>& _openSet) const {
 
             const auto w = safe_culling_heuristic(_openSet);
 
@@ -302,7 +302,7 @@ namespace CHDR::Solvers {
             }
         }
 
-        auto safe_culling_heuristic(Heap<std::shared_ptr<ESMASNode>, typename ESMASNode::Max>& _openSet) const {
+        auto safe_culling_heuristic(Heap<std::shared_ptr<ESMASNode>, 2U, typename ESMASNode::Max>& _openSet) const {
 
             auto w = _openSet.Back(); // Worst leaf according to c(n) in _openSet
 

@@ -17,7 +17,7 @@ namespace CHDR {
         size_t m_HeapIndex;
     };
 
-    template<typename T, typename Comparator>
+    template<typename T, size_t D = 2U, typename Comparator = std::less<T>>
     class Heap {
 
         //static_assert(std::is_base_of_v<IHeapItem, T>, "T must derive from IHeapItem");
@@ -102,7 +102,7 @@ namespace CHDR {
                     if (m_Data.size() > 1U) {
 
                         // Restore heap property:
-                        if (heapIndex > m_Root && m_Comparator(m_Data[heapIndex], m_Data[(heapIndex - 1U) / 2U])) {
+                        if (heapIndex > m_Root && m_Comparator(m_Data[heapIndex], m_Data[(heapIndex - 1U) / D])) {
                             SortUp(m_Data[heapIndex]);
                         }
                         else {
@@ -140,14 +140,14 @@ namespace CHDR {
             if (m_Data.size() > 1U) {
 
                 auto itemIndex = get_heap_index(_item);
-                auto parentIndex = (itemIndex - 1U) / 2U;
+                auto parentIndex = (itemIndex - 1U) / D;
 
                 while (itemIndex > m_Root) {
 
                     if (m_Comparator(m_Data[parentIndex], m_Data[itemIndex])) {
                         std::swap(m_Data[itemIndex], m_Data[parentIndex]);
                         itemIndex = parentIndex;
-                        parentIndex = (itemIndex - 1U) / 2U;
+                        parentIndex = (itemIndex - 1U) / D;
                     }
                     else {
                         break;
@@ -162,7 +162,7 @@ namespace CHDR {
 
                 auto itemIndex = get_heap_index(_item);
 
-                auto leftChildIndex = (itemIndex * 2U) + 1U;
+                auto leftChildIndex = (itemIndex * D) + 1U;
                 auto rightChildIndex = leftChildIndex + 1U;
 
                 while (leftChildIndex < m_Data.size()) {
@@ -175,7 +175,7 @@ namespace CHDR {
                         std::swap(m_Data[itemIndex], m_Data[swapIndex]);
                         itemIndex = swapIndex;
 
-                        leftChildIndex = (itemIndex * 2U) + 1U;
+                        leftChildIndex = (itemIndex * D) + 1U;
                         rightChildIndex = leftChildIndex + 1U;
                     }
                     else {

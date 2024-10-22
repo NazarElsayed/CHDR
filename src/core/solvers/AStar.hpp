@@ -92,7 +92,7 @@ namespace CHDR::Solvers {
 
                     ExistenceSet<LowMemoryUsage> closedSet({ _start }, _capacity);
 
-                    Heap<ASNode, typename ASNode::Max> openSet(_capacity / 4U);
+                    Heap<ASNode, 4U, typename ASNode::Max> openSet(_capacity / 4U);
                     openSet.Emplace({ _start, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
                     std::vector<ASNode*> buffer;
@@ -194,7 +194,7 @@ namespace CHDR::Solvers {
 
                     ExistenceSet<LowMemoryUsage> closedSet({ s }, _capacity);
 
-                    Heap<ASNode, typename ASNode::Max> openSet(_capacity / 4U);
+                    Heap<ASNode, 4U, typename ASNode::Max> openSet(_capacity / 4U);
                     openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
                     std::vector<ASNode*> buffer;
