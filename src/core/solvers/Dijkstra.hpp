@@ -25,7 +25,7 @@ namespace CHDR::Solvers {
 
         using coord_t = Coord<size_t, Kd>;
 
-        struct DijkstraNode final : IHeapItem {
+        struct DijkstraNode final {
 
             size_t m_Coord;
 
@@ -36,7 +36,7 @@ namespace CHDR::Solvers {
 
             constexpr DijkstraNode() = default;
 
-            [[nodiscard]] constexpr DijkstraNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, const std::shared_ptr<const DijkstraNode>& _parent) : IHeapItem(),
+            [[nodiscard]] constexpr DijkstraNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, const std::shared_ptr<const DijkstraNode>& _parent) :
                 m_Coord(_coord),
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),

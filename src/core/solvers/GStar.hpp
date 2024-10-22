@@ -30,7 +30,7 @@ namespace CHDR::Solvers {
 
         using coord_t = Coord<size_t, Kd>;
 
-        struct GSNode final : IHeapItem {
+        struct GSNode final {
 
             size_t m_Index;
 
@@ -41,7 +41,7 @@ namespace CHDR::Solvers {
 
             constexpr GSNode() = default;
 
-            [[nodiscard]] constexpr GSNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, const std::shared_ptr<const GSNode>& _parent) : IHeapItem(),
+            [[nodiscard]] constexpr GSNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, const std::shared_ptr<const GSNode>& _parent) :
                 m_Index(_coord),
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),

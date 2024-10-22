@@ -32,7 +32,7 @@ namespace CHDR::Solvers {
 
         using coord_t = Coord<size_t, Kd>;
 
-        struct ESMASNode final : IHeapItem, std::enable_shared_from_this<ESMASNode> {
+        struct ESMASNode final :  std::enable_shared_from_this<ESMASNode> {
 
             friend std::shared_ptr<ESMASNode>;
 
@@ -50,7 +50,7 @@ namespace CHDR::Solvers {
 
         private:
 
-            [[nodiscard]] constexpr ESMASNode(const size_t& _depth, const size_t& _coord, const Ts& _gScore, const Ts& _hScore, const std::shared_ptr<ESMASNode>& _parent) : IHeapItem(),
+            [[nodiscard]] constexpr ESMASNode(const size_t& _depth, const size_t& _coord, const Ts& _gScore, const Ts& _hScore, const std::shared_ptr<ESMASNode>& _parent) :
                 m_Depth (_depth),
                 m_Index (_coord),
                 m_GScore(_gScore),

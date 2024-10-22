@@ -31,7 +31,7 @@ namespace CHDR::Solvers {
 
         using coord_t = Coord<size_t, Kd>;
 
-        struct ASNode final : IHeapItem {
+        struct ASNode final {
 
             size_t m_Index;
 
@@ -42,7 +42,7 @@ namespace CHDR::Solvers {
 
             [[nodiscard]] constexpr ASNode() = default;
 
-            [[nodiscard]] constexpr ASNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, const ASNode* const _parent) : IHeapItem(),
+            [[nodiscard]] constexpr ASNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, const ASNode* const _parent) :
                 m_Index(_coord),
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
