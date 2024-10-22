@@ -62,44 +62,43 @@ namespace CHDR::Solvers {
 
                     _capacity = std::max(_capacity, std::max(s, e));
 
-                    std::queue<BFSNode> openSet;
-                    openSet.emplace(s, nullptr);
+                    std::queue<BFSNode> open;
+                    open.emplace(s, nullptr);
 
-                    ExistenceSet<LowMemoryUsage> closedSet({ s }, _capacity);
+                    ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
 
-                    std::vector<BFSNode*> buffer;
+                    StableForwardBuf<BFSNode*> buf;
 
-                    while (!openSet.empty()) { // SEARCH FOR SOLUTION...
+                    while (!open.empty()) { // SEARCH FOR SOLUTION...
 
-                        for (size_t i = 0U; i < openSet.size(); ++i) {
+                        for (size_t i = 0U; i < open.size(); ++i) {
 
-                            const BFSNode current(std::move(openSet.front()));
-                            openSet.pop();
+                            const auto curr(std::move(open.front()));
+                            open.pop();
 
-                            if (current.m_Coord != e) {
+                            if (curr.m_Coord != e) {
 
-                                if (closedSet.Capacity() > current.m_Coord) {
-                                    closedSet.Reserve(std::min(_capacity * ((current.m_Coord % _capacity) + 1U), maze_count));
+                                if (closed.Capacity() > curr.m_Coord) {
+                                    closed.Reserve(std::min(_capacity * ((curr.m_Coord % _capacity) + 1U), maze_count));
                                 }
-                                closedSet.Add(current.m_Coord);
+                                closed.Add(curr.m_Coord);
 
-                                for (const auto& neighbour: _maze.GetNeighbours(current.m_Coord)) {
+                                for (const auto& neighbour: _maze.GetNeighbours(curr.m_Coord)) {
 
                                     if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
                                         const auto n = Utils::To1D(nCoord, _maze.Size());
 
                                         // Check if node is not already visited:
-                                        if (!closedSet.Contains(n)) {
+                                        if (!closed.Contains(n)) {
 
-                                            if (closedSet.Capacity() > current.m_Coord) {
-                                                closedSet.Reserve(std::min(_capacity * ((current.m_Coord % _capacity) + 1U), maze_count));
+                                            if (closed.Capacity() > curr.m_Coord) {
+                                                closed.Reserve(std::min(_capacity * ((curr.m_Coord % _capacity) + 1U), maze_count));
                                             }
-                                            closedSet.Add(current.m_Coord);
+                                            closed.Add(curr.m_Coord);
 
                                             // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                            buffer.emplace_back(new BFSNode(std::move(current)));
-                                            openSet.push({ n, buffer.back() });
+                                            open.push({n, buf.Emplace(newBFSNode(std::move(curr))) });
                                         }
                                     }
                                 }
@@ -108,15 +107,14 @@ namespace CHDR::Solvers {
 
                                 // Recurse from end node to start node, inserting into a result buffer:
                                 result.reserve(_capacity);
-                                for (const auto* temp = &current; temp->m_Parent != nullptr; temp = temp->m_Parent) {
+                                for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = temp->m_Parent) {
                                     result.emplace_back(Utils::ToND(temp->m_Coord, _maze.Size()));
                                 }
 
                                 // Clear the buffer:
-                                std::for_each(buffer.begin(), buffer.end(), [](auto* item) {
+                                std::for_each(buf.begin(), buf.end(), [](auto* item) {
                                     delete item;
                                 });
-                                buffer.clear();
 
                                 // Reverse the result:
                                 std::reverse(result.begin(), result.end());

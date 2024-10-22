@@ -85,8 +85,8 @@ namespace CHDR {
 
         [[nodiscard]] constexpr bool    Empty() const { return Size() == 0U;       }
         [[nodiscard]] constexpr size_t   Size() const { return m_Data.size() - 1U; }
-        [[nodiscard]] constexpr const T&  Top() const { return m_Data[1U];         }
-        [[nodiscard]] constexpr const T& Back() const { return m_Data.back();      }
+        [[nodiscard]] constexpr const T&  Top() const { return *begin();           }
+        [[nodiscard]] constexpr const T& Back() const { return *end();             }
 
         constexpr void Add(const T& _item) {
             m_Data.push_back(_item);
@@ -135,16 +135,30 @@ namespace CHDR {
             }
         }
 
-        constexpr void RemoveFirst() {
-            m_Data[1U] = std::move(m_Data.back());
-            m_Data.pop_back();
-            SortDown(m_Data[1U]);
-        }
+        constexpr T PopTop() {
 
-        constexpr void RemoveLast() {
-            if (!m_Data.empty()) {
+            T result(std::move(Top()));
+
+            if (!Empty()) {
+                if (Size() > 1U) {
+                    m_Data[1U] = std::move(m_Data.back());
+                }
                 m_Data.pop_back();
             }
+            SortDown(m_Data[1U]);
+
+            return result;
+        }
+
+        constexpr T PopBack() {
+
+            T result(std::move(Back()));
+
+            if (!Empty()) {
+                m_Data.pop_back();
+            }
+
+            return result;
         }
 
         constexpr void Update(T& _item) {

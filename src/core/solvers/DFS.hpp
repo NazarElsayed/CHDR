@@ -63,26 +63,26 @@ namespace CHDR::Solvers {
                     _capacity = std::max(_capacity, std::max(s, e));
 
                     auto sequence = std::vector<DFSNode>(_capacity);
-                    std::stack<DFSNode, std::vector<DFSNode>> openSet(std::move(sequence));
-                    openSet.emplace(s, nullptr);
+                    std::stack<DFSNode, std::vector<DFSNode>> open(std::move(sequence));
+                    open.emplace(s, nullptr);
 
-                    ExistenceSet<LowMemoryUsage> closedSet({ s }, _capacity);
+                    ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
 
-                    std::vector<DFSNode*> buffer;
+                    StableForwardBuf<DFSNode*> buf;
 
-                    while (!openSet.empty()) { // SEARCH FOR SOLUTION...
+                    while (!open.empty()) { // SEARCH FOR SOLUTION...
 
-                        for (size_t i = 0U; i < openSet.size(); ++i) {
+                        for (size_t i = 0U; i < open.size(); ++i) {
 
-                            const DFSNode current(std::move(openSet.top()));
-                            openSet.pop();
+                            const auto current(std::move(open.top()));
+                            open.pop();
 
                             if (current.m_Coord != e) {
 
-                                if (closedSet.Capacity() > current.m_Coord) {
-                                    closedSet.Reserve(std::min(_capacity * ((current.m_Coord % _capacity) + 1U), maze_count));
+                                if (closed.Capacity() > current.m_Coord) {
+                                    closed.Reserve(std::min(_capacity * ((current.m_Coord % _capacity) + 1U), maze_count));
                                 }
-                                closedSet.Add(current.m_Coord);
+                                closed.Add(current.m_Coord);
 
                                 for (const auto& neighbour: _maze.GetNeighbours(current.m_Coord)) {
 
@@ -91,16 +91,15 @@ namespace CHDR::Solvers {
                                         const auto n = Utils::To1D(nCoord, _maze.Size());
 
                                         // Check if node is not already visited:
-                                        if (!closedSet.Contains(n)) {
+                                        if (!closed.Contains(n)) {
 
-                                            if (closedSet.Capacity() > current.m_Coord) {
-                                                closedSet.Reserve(std::min(_capacity * ((current.m_Coord % _capacity) + 1U), maze_count));
+                                            if (closed.Capacity() > current.m_Coord) {
+                                                closed.Reserve(std::min(_capacity * ((current.m_Coord % _capacity) + 1U), maze_count));
                                             }
-                                            closedSet.Add(current.m_Coord);
+                                            closed.Add(current.m_Coord);
 
                                             // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                            buffer.emplace_back(new DFSNode(std::move(current)));
-                                            openSet.push({ n, buffer.back() });
+                                            open.push({n, buf.Emplace(newDFSNode(std::move(current))) });
                                         }
                                     }
                                 }
@@ -114,10 +113,9 @@ namespace CHDR::Solvers {
                                 }
 
                                 // Clear the buffer:
-                                std::for_each(buffer.begin(), buffer.end(), [](auto* item) {
+                                std::for_each(buf.begin(), buf.end(), [](auto* item) {
                                     delete item;
                                 });
-                                buffer.clear();
 
                                 // Reverse the result:
                                 std::reverse(result.begin(), result.end());

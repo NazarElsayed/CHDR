@@ -45,17 +45,17 @@ namespace CHDR::Solvers {
 
                     const auto maze_count = _maze.Count();
 
-                    std::queue<size_t> openSet;
-                    openSet.emplace(s);
+                    std::queue<size_t> open;
+                    open.emplace(s);
 
-                    ExistenceSet closedSet ({ s }, std::max(_capacity, std::max(s, e)));
+                    ExistenceSet closed ({ s }, std::max(_capacity, std::max(s, e)));
 
-                    while (!openSet.empty()) {
+                    while (!open.empty()) {
 
-                        for (size_t i = 0U; i < openSet.size(); ++i) {
+                        for (size_t i = 0U; i < open.size(); ++i) {
 
-                            const auto current = openSet.front();
-                            openSet.pop();
+                            const auto current = open.front();
+                            open.pop();
 
                             if (current == e) {
                                 result = true;
@@ -69,14 +69,14 @@ namespace CHDR::Solvers {
 
                                     const auto n = Utils::To1D(nCoord, _maze.Size());
 
-                                    if (!closedSet.Contains(n)) {
+                                    if (!closed.Contains(n)) {
 
-                                        if (closedSet.Capacity() > n) {
-                                            closedSet.Reserve(std::min(_capacity * ((n % _capacity) + 1U), maze_count));
+                                        if (closed.Capacity() > n) {
+                                            closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), maze_count));
                                         }
-                                        closedSet.Add(n);
+                                        closed.Add(n);
 
-                                        openSet.emplace(n);
+                                        open.emplace(n);
                                     }
                                 }
                             }

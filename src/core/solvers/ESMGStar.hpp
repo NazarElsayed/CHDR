@@ -184,8 +184,8 @@ namespace CHDR::Solvers {
 
                 if (s != e) {
 
-                    Heap<std::shared_ptr<ESMASNode>, 2U, typename ESMASNode::Max> openSet;
-                    openSet.Emplace(ESMASNode::CreateShared(
+                    Heap<std::shared_ptr<ESMASNode>, 2U, typename ESMASNode::Max> open;
+                    open.Emplace(ESMASNode::CreateShared(
                         0U,                         // Depth
                         s,                          // Coordinate
                         static_cast<Ts>(0),         // G-Score
@@ -194,57 +194,56 @@ namespace CHDR::Solvers {
                     ));
 
                     // Main loop
-                    while (!openSet.Empty()) {
+                    while (!open.Empty()) {
 
-                        auto current(std::move(openSet.Top())); // Node with smallest f-cost in O
-                        openSet.RemoveFirst();
+                        auto curr = open.PopTop(); // Node with smallest f-cost in O
 
-                        if (current->m_Index != e) { // SEARCH FOR SOLUTION...
+                        if (curr->m_Index != e) { // SEARCH FOR SOLUTION...
 
-                            auto successors_current = current->Expand(_maze, _end, _h, _weight, _memoryLimit);
+                            auto successors_current = curr->Expand(_maze, _end, _h, _weight, _memoryLimit);
 
                             for (size_t i = 0U; i < successors_current.size(); ++i) {
 
                                 auto& successor = successors_current[i];
 
                                 // Check if s(n) is in forgotten f-cost table of b.
-                                auto search = current->m_ForgottenFCosts.find(successor->m_Index);
-                                if (search != current->m_ForgottenFCosts.end()) {
+                                auto search = curr->m_ForgottenFCosts.find(successor->m_Index);
+                                if (search != curr->m_ForgottenFCosts.end()) {
 
                                     const auto& [nCoord, nCost] = *search;
 
                                     successor->m_FScore = nCost;
-                                    current->m_ForgottenFCosts.erase(nCoord);
+                                    curr->m_ForgottenFCosts.erase(nCoord);
                                 }
                                 else {
-                                    successor->m_FScore = std::max(current->m_FScore, successor->m_GScore + _h(Utils::ToND(successor->m_Index, _maze.Size()), _end) * _weight);
+                                    successor->m_FScore = std::max(curr->m_FScore, successor->m_GScore + _h(Utils::ToND(successor->m_Index, _maze.Size()), _end) * _weight);
                                 }
 
-                                // Add successor to openSet.
-                                if (!openSet.Contains(successor)) {
-                                     openSet.Add(successor);
+                                // Add successor to open.
+                                if (!open.Contains(successor)) {
+                                     open.Add(successor);
                                 }
                             }
 
-                            while (openSet.Size() > _memoryLimit) {
-                                cull_worst_leaf(_maze, _end, _h, _weight, _memoryLimit, openSet);
+                            while (open.Size() > _memoryLimit) {
+                                cull_worst_leaf(_maze, _end, _h, _weight, _memoryLimit, open);
                             }
 
                             // Shrink the node to release ownership of children, allowing automatic GC of parents with no valid candidate children.
-                            current->Shrink();
+                            curr->Shrink();
                         }
                         else { // SOLUTION REACHED ...
 
                             // Free data which is no longer relevant:
-                            openSet.Clear(); openSet.Trim();
+                            open.Clear(); open.Trim();
 
-                            if (current != nullptr) {
+                            if (curr != nullptr) {
 
                                 // Recurse from end node to start node, inserting into a result buffer:
-                                result.reserve(current->m_GScore);
-                                result.emplace_back(Utils::ToND(current->m_Index, _maze.Size()));
+                                result.reserve(curr->m_GScore);
+                                result.emplace_back(Utils::ToND(curr->m_Index, _maze.Size()));
 
-                                if (auto item = current->m_Parent) {
+                                if (auto item = curr->m_Parent) {
 
                                     while (const auto item_parent = item->m_Parent) {
                                         result.emplace_back(Utils::ToND(item->m_Index, _maze.Size()));
@@ -271,9 +270,9 @@ namespace CHDR::Solvers {
             return result;
         }
 
-        void cull_worst_leaf(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight, const size_t& _memoryLimit, Heap<std::shared_ptr<ESMASNode>, 2U, typename ESMASNode::Max>& _openSet) const {
+        void cull_worst_leaf(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight, const size_t& _memoryLimit, Heap<std::shared_ptr<ESMASNode>, 2U, typename ESMASNode::Max>& _open) const {
 
-            const auto w = safe_culling_heuristic(_openSet);
+            const auto w = safe_culling_heuristic(_open);
 
             if (auto p = w->m_Parent) { // parent node of w
 
@@ -297,37 +296,37 @@ namespace CHDR::Solvers {
                     p->m_FScore = std::min(p->m_FScore, pCost);
                 }
 
-                // if p is not in _openSet then
-                if (!_openSet.Contains(p)) {
-                     _openSet.Add(p); // Add p to _openSet
+                // if p is not in _open then
+                if (!_open.Contains(p)) {
+                     _open.Add(p); // Add p to _open
                 }
             }
         }
 
-        auto safe_culling_heuristic(Heap<std::shared_ptr<ESMASNode>, 2U, typename ESMASNode::Max>& _openSet) const {
+        auto safe_culling_heuristic(Heap<std::shared_ptr<ESMASNode>, 2U, typename ESMASNode::Max>& _open) const {
 
-            auto w = _openSet.Back(); // Worst leaf according to c(n) in _openSet
+            auto w = _open.Back(); // Worst leaf according to c(n) in _open
 
-            if (w == _openSet.Top()) { // Top == Best node according to f(n) in _openSet
+            if (w == _open.Top()) { // Top == Best node according to f(n) in _open
 
                 // Code to find second worst leaf according to c(n) goes here
 
-                w = _openSet.Back();
+                w = _open.Back();
 
-                for (size_t i = _openSet.Size() / 2U; i < _openSet.Size(); ++i) {
+                for (size_t i = _open.Size() / 2U; i < _open.Size(); ++i) {
 
-                    const auto& A = _openSet[i];
+                    const auto& A = _open[i];
                     const auto& B = w;
 
                     if (typename ESMASNode::Max()(A, B)) {
-                        w = _openSet[i]; // Assign the second worst leaf to w
+                        w = _open[i]; // Assign the second worst leaf to w
                     }
                 }
 
-                _openSet.Remove(w);
+                _open.Remove(w);
             }
             else {
-                _openSet.RemoveLast();
+                _open.PopBack();
             }
 
             return w;

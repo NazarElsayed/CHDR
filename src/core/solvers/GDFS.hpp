@@ -70,42 +70,40 @@ namespace CHDR::Solvers {
                     _capacity = std::max(_capacity, std::max(s, e));
 
                     auto sequence = std::vector<GDFSNode>(_capacity);
-                    std::stack<GDFSNode, std::vector<GDFSNode>> openSet(std::move(sequence));
-                    openSet.emplace(s, nullptr);
+                    std::stack<GDFSNode, std::vector<GDFSNode>> open(std::move(sequence));
+                    open.emplace(s, nullptr);
 
-                    ExistenceSet closedSet({ s }, _capacity);
+                    ExistenceSet closed({ s }, _capacity);
 
-                    while (!openSet.empty()) { // SEARCH FOR SOLUTION...
+                    while (!open.empty()) { // SEARCH FOR SOLUTION...
 
-                        for (size_t i = 0U; i < openSet.size(); ++i) {
+                        for (size_t i = 0U; i < open.size(); ++i) {
 
-                            GDFSNode current(std::move(openSet.top()));
-                            openSet.pop();
+                            auto curr = open.PopTop();
 
-                            if (current.m_Coord != e) {
+                            if (curr.m_Coord != e) {
 
-                                if (closedSet.Capacity() > current.m_Coord) {
-                                    closedSet.Reserve(std::min(_capacity * ((current.m_Coord % _capacity) + 1U), maze_count));
+                                if (closed.Capacity() > curr.m_Coord) {
+                                    closed.Reserve(std::min(_capacity * ((curr.m_Coord % _capacity) + 1U), maze_count));
                                 }
-                                closedSet.Add(current.m_Coord);
+                                closed.Add(curr.m_Coord);
 
-                                for (const auto& neighbour: _maze.GetNeighbours(current.m_Coord)) {
+                                for (const auto& neighbour: _maze.GetNeighbours(curr.m_Coord)) {
 
                                     if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
                                         const auto n = Utils::To1D(nCoord, _maze.Size());
 
                                         // Check if node is not already visited:
-                                        if (!closedSet.Contains(n)) {
+                                        if (!closed.Contains(n)) {
 
-                                            // Add to dupe list:
-                                            if (closedSet.Capacity() > n) {
-                                                closedSet.Reserve(std::min(_capacity * ((n % _capacity) + 1U), maze_count));
+                                            if (closed.Capacity() > n) {
+                                                closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), maze_count));
                                             }
-                                            closedSet.Add(n);
+                                            closed.Add(n);
 
                                             // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                            openSet.emplace(n, std::make_shared<GDFSNode>(std::move(current)));
+                                            open.emplace(n, std::make_shared<GDFSNode>(std::move(curr)));
                                         }
                                     }
                                 }
@@ -114,17 +112,17 @@ namespace CHDR::Solvers {
 
                                 // Free data which is no longer relevant:
                                 std::stack<GDFSNode, std::vector<GDFSNode>> empty;
-                                std::swap(openSet, empty);
+                                std::swap(open, empty);
 
-                                closedSet.Clear(); closedSet.Trim();
+                                closed.Clear(); closed.Trim();
 
                                 // Recurse from end node to start node, inserting into a result buffer:
                                 result.reserve(_capacity);
-                                result.emplace_back(Utils::ToND(current.m_Coord, _maze.Size()));
+                                result.emplace_back(Utils::ToND(curr.m_Coord, _maze.Size()));
 
-                                if (current.m_Parent != nullptr) {
+                                if (curr.m_Parent != nullptr) {
 
-                                    for (auto& item = current.m_Parent; item->m_Parent != nullptr;) {
+                                    for (auto& item = curr.m_Parent; item->m_Parent != nullptr;) {
                                         result.emplace_back(Utils::ToND(item->m_Coord, _maze.Size()));
 
                                         auto oldItem = item;

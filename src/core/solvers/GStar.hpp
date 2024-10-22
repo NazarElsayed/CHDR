@@ -86,7 +86,7 @@ namespace CHDR::Solvers {
              * method based on which is more efficient given the maze's size.
              */
 
-            constexpr size_t h_efficiency = 361U;
+            constexpr size_t h_efficiency = 256U;
 
             return _maze.Count() >= h_efficiency ?
                 SolveHeap   (_maze, _start, _end, _h, _weight, _capacity) :
@@ -112,40 +112,38 @@ namespace CHDR::Solvers {
 
                     _capacity = std::max(_capacity, std::max(s, e));
 
-                    ExistenceSet closedSet({ s }, _capacity);
+                    ExistenceSet closed({ s }, _capacity);
 
-                    Heap<GSNode, 4U, typename GSNode::Max> openSet(_capacity / 4U);
-                    openSet.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
+                    Heap<GSNode, 4U, typename GSNode::Max> open(_capacity / 4U);
+                    open.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
-                    while (!openSet.Empty()) {
+                    while (!open.Empty()) {
 
-                        GSNode current(std::move(openSet.Top()));
-                        openSet.RemoveFirst();
+                        auto curr = open.PopTop();
 
-                        if (current.m_Index != e) { // SEARCH FOR SOLUTION...
+                        if (curr.m_Index != e) { // SEARCH FOR SOLUTION...
 
-                            if (closedSet.Capacity() > current.m_Index) {
-                                closedSet.Reserve(std::min(_capacity * ((current.m_Index % _capacity) + 1U), maze_count));
+                            if (closed.Capacity() > curr.m_Index) {
+                                closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), maze_count));
                             }
-                            closedSet.Add(current.m_Index);
+                            closed.Add(curr.m_Index);
 
-                            for (const auto& neighbour : _maze.GetNeighbours(current.m_Index)) {
+                            for (const auto& neighbour : _maze.GetNeighbours(curr.m_Index)) {
 
                                 if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
                                     const auto n = Utils::To1D(nCoord, _maze.Size());
 
                                     // Check if node is not already visited:
-                                    if (!closedSet.Contains(n)) {
+                                    if (!closed.Contains(n)) {
 
-                                        // Add to dupe list:
-                                        if (closedSet.Capacity() > n) {
-                                            closedSet.Reserve(std::min(_capacity * ((n % _capacity) + 1U), maze_count));
+                                        if (closed.Capacity() > n) {
+                                            closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), maze_count));
                                         }
-                                        closedSet.Add(n);
+                                        closed.Add(n);
 
                                         // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                        openSet.Emplace({ n, current.m_GScore + static_cast<Ts>(1), _h(nCoord, _end) * _weight, std::make_shared<GSNode>(std::move(current)) });
+                                        open.Emplace({n, curr.m_GScore + static_cast<Ts>(1), _h(nCoord, _end) * _weight, std::make_shared<GSNode>(std::move(curr)) });
                                     }
                                 }
                             }
@@ -153,16 +151,16 @@ namespace CHDR::Solvers {
                         else { // SOLUTION REACHED ...
 
                             // Free data which is no longer relevant:
-                              openSet.Clear();
-                            closedSet.Clear();
+                              open.Clear();
+                            closed.Clear();
 
                             // Recurse from end node to start node, inserting into a result buffer:
-                            result.reserve(current.m_GScore);
-                            result.emplace_back(Utils::ToND(current.m_Index, _maze.Size()));
+                            result.reserve(curr.m_GScore);
+                            result.emplace_back(Utils::ToND(curr.m_Index, _maze.Size()));
 
-                            if (current.m_Parent != nullptr) {
+                            if (curr.m_Parent != nullptr) {
 
-                                for (auto& item = current.m_Parent; item->m_Parent != nullptr;) {
+                                for (auto& item = curr.m_Parent; item->m_Parent != nullptr;) {
                                     result.emplace_back(Utils::ToND(item->m_Index, _maze.Size()));
 
                                     auto oldItem = item;
@@ -205,25 +203,25 @@ namespace CHDR::Solvers {
 
                     _capacity = std::max(_capacity, std::max(s, e));
 
-                    ExistenceSet closedSet({ s }, _capacity);
+                    ExistenceSet closed({ s }, _capacity);
 
-                    std::vector<GSNode> openSet;
-                    openSet.reserve(_capacity / 4U);
-                    openSet.push_back({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
+                    std::vector<GSNode> open;
+                    open.reserve(_capacity / 4U);
+                    open.push_back({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
-                    while (!openSet.empty()) {
+                    while (!open.empty()) {
 
-                        const auto top = std::min_element(openSet.begin(), openSet.end(), typename GSNode::Min()); // Linear search
+                        const auto top = std::min_element(open.begin(), open.end(), typename GSNode::Min()); // Linear search
 
                         GSNode current(std::move(*top));
-                        openSet.erase(top);
+                        open.erase(top);
 
                         if (current.m_Index != e) { // SEARCH FOR SOLUTION...
 
-                            if (closedSet.Capacity() > current.m_Index) {
-                                closedSet.Reserve(std::min(_capacity * ((current.m_Index % _capacity) + 1U), maze_count));
+                            if (closed.Capacity() > current.m_Index) {
+                                closed.Reserve(std::min(_capacity * ((current.m_Index % _capacity) + 1U), maze_count));
                             }
-                            closedSet.Add(current.m_Index);
+                            closed.Add(current.m_Index);
 
                             for (const auto& neighbour : _maze.GetNeighbours(current.m_Index)) {
 
@@ -232,16 +230,16 @@ namespace CHDR::Solvers {
                                     const auto n = Utils::To1D(nCoord, _maze.Size());
 
                                     // Check if node is not already visited:
-                                    if (!closedSet.Contains(n)) {
+                                    if (!closed.Contains(n)) {
 
                                         // Add to dupe list:
-                                        if (closedSet.Capacity() > n) {
-                                            closedSet.Reserve(std::min(_capacity * ((n % _capacity) + 1U), maze_count));
+                                        if (closed.Capacity() > n) {
+                                            closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), maze_count));
                                         }
-                                        closedSet.Add(n);
+                                        closed.Add(n);
 
                                         // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                        openSet.push_back({ n, current.m_GScore + static_cast<Ts>(1), _h(nCoord, _end) * _weight, std::make_shared<GSNode>(std::move(current)) });
+                                        open.push_back({ n, current.m_GScore + static_cast<Ts>(1), _h(nCoord, _end) * _weight, std::make_shared<GSNode>(std::move(current)) });
                                     }
                                 }
                             }
@@ -249,8 +247,8 @@ namespace CHDR::Solvers {
                         else { // SOLUTION REACHED ...
 
                             // Free data which is no longer relevant:
-                              openSet.clear();   openSet.shrink_to_fit();
-                            closedSet.Clear(); closedSet.Trim();
+                              open.clear();   open.shrink_to_fit();
+                            closed.Clear(); closed.Trim();
 
                             // Recurse from end node to start node, inserting into a result buffer:
                             result.reserve(current.m_GScore);
