@@ -16,6 +16,10 @@ namespace CHDR {
     template<typename T, size_t D = 2U, typename Compare = std::less<T>>
     class Heap {
 
+        static_assert(D >= 2, "Template parameter D must be greater than or equal to 2.");
+
+        // TODO: D-ary heap support.
+
     private:
 
         std::vector<T> m_Data;

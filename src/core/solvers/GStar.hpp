@@ -114,7 +114,7 @@ namespace CHDR::Solvers {
 
                     ExistenceSet closed({ s }, _capacity);
 
-                    Heap<GSNode, 4U, typename GSNode::Max> open(_capacity / 4U);
+                    Heap<GSNode, 2U, typename GSNode::Max> open(_capacity / 4U);
                     open.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
                     while (!open.Empty()) {
