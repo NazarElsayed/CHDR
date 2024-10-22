@@ -60,6 +60,8 @@ namespace CHDR::Solvers {
 
         public:
 
+            constexpr ESMASNode() = default;
+
             void Shrink() {
 
                 if (!m_Successors.empty()) {

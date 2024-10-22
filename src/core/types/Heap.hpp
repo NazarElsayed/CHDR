@@ -20,7 +20,7 @@ namespace CHDR {
     template<typename T, size_t D = 2U, typename Comparator = std::less<T>>
     class Heap {
 
-        //static_assert(std::is_base_of_v<IHeapItem, T>, "T must derive from IHeapItem");
+        static_assert(std::is_base_of_v<IHeapItem, std::remove_pointer_t<std::remove_cv_t<std::remove_reference_t<T>>>>, "T must derive from IHeapItem");
 
     private:
 

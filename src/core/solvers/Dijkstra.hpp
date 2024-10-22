@@ -34,6 +34,8 @@ namespace CHDR::Solvers {
 
             std::shared_ptr<const DijkstraNode> m_Parent;
 
+            constexpr DijkstraNode() = default;
+
             [[nodiscard]] constexpr DijkstraNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, const std::shared_ptr<const DijkstraNode>& _parent) : IHeapItem(),
                 m_Coord(_coord),
                 m_GScore(_gScore),

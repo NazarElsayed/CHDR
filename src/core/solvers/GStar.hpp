@@ -39,6 +39,8 @@ namespace CHDR::Solvers {
 
             std::shared_ptr<const GSNode> m_Parent;
 
+            constexpr GSNode() = default;
+
             [[nodiscard]] constexpr GSNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, const std::shared_ptr<const GSNode>& _parent) : IHeapItem(),
                 m_Index(_coord),
                 m_GScore(_gScore),
@@ -247,7 +249,7 @@ namespace CHDR::Solvers {
                         else { // SOLUTION REACHED ...
 
                             // Free data which is no longer relevant:
-                              openSet.clear();   openSet.Trim();
+                              openSet.clear();   openSet.shrink_to_fit();
                             closedSet.Clear(); closedSet.Trim();
 
                             // Recurse from end node to start node, inserting into a result buffer:

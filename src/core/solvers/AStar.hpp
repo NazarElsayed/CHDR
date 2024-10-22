@@ -40,11 +40,7 @@ namespace CHDR::Solvers {
 
             const ASNode* m_Parent;
 
-            [[nodiscard]] constexpr ASNode() : IHeapItem(),
-                m_Index {},
-                m_GScore{},
-                m_FScore{},
-                m_Parent{} {}
+            [[nodiscard]] constexpr ASNode() = default;
 
             [[nodiscard]] constexpr ASNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, const ASNode* const _parent) : IHeapItem(),
                 m_Index(_coord),
