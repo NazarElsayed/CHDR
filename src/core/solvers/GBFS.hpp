@@ -32,7 +32,7 @@ namespace CHDR::Solvers {
                 m_Coord(-1U),
                 m_Parent(nullptr) {}
 
-            [[nodiscard]] constexpr GBFSNode(const size_t &_coord, const std::shared_ptr<const GBFSNode>& _parent) :
+            [[nodiscard]] constexpr GBFSNode(const size_t& _coord, const std::shared_ptr<const GBFSNode>& _parent) :
                 m_Coord(_coord),
                 m_Parent(std::move(_parent)) {}
 
