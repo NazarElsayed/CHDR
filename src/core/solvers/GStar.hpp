@@ -64,8 +64,17 @@ namespace CHDR::Solvers {
 
             ~GSNode() {
 
-                while (m_Parent && static_cast<unsigned>(m_Parent.use_count()) < 2U) {
-                    m_Parent = std::move(m_Parent->m_Parent);
+//                while (m_Parent && m_Parent.unique()) {
+//                    m_Parent = std::move(m_Parent->m_Parent);
+//                }
+
+                Expunge_Recursive(m_Parent);
+            }
+
+            void Expunge_Recursive(std::shared_ptr<const GSNode>& _node) {
+                if (_node && _node.unique()) {
+                    _node = std::move(_node->m_Parent);
+                    Expunge_Recursive(_node);
                 }
             }
 
