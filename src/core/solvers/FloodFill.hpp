@@ -54,7 +54,7 @@ namespace CHDR::Solvers {
 
                         for (size_t i = 0U; i < open.size(); ++i) {
 
-                            const auto current = open.front();
+                            const auto current(open.front());
                             open.pop();
 
                             if (current == e) {
@@ -75,7 +75,7 @@ namespace CHDR::Solvers {
                                             closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                         }
                                         closed.Add(n);
-
+                                        
                                         open.emplace(n);
                                     }
                                 }

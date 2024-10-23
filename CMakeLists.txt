@@ -158,6 +158,7 @@ add_library(CHDR INTERFACE
     src/core/utils/SIMDExtensions.hpp
     src/core/utils/Utils.hpp
         src/core/types/StableForwardBuf.hpp
+        src/core/types/StackAllocator.hpp
 )
 
 target_link_libraries(CHDR INTERFACE)

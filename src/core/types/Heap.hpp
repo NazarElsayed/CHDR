@@ -56,7 +56,7 @@ namespace CHDR {
 
                 auto i = index_of(_item);
 
-                while (true) {
+                while (i > 1U) {
 
                     auto l = i * D;
                     auto r = l + 1U;

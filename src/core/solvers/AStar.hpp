@@ -17,8 +17,9 @@
 #include "mazes/base/IMaze.hpp"
 #include "mazes/Grid.hpp"
 #include "types/ExistenceSet.hpp"
-#include "types/StableForwardBuf.hpp"
 #include "types/Heap.hpp"
+#include "types/StableForwardBuf.hpp"
+#include "types/StackAllocator.hpp"
 #include "utils/Utils.hpp"
 
 namespace CHDR::Solvers {
@@ -41,7 +42,12 @@ namespace CHDR::Solvers {
 
             const ASNode* m_Parent;
 
-            [[nodiscard]] constexpr ASNode() = default;
+            /**
+             * @brief Constructs an uninitialized ASNode.
+             * 
+             * This constructor creates an ASNode with uninitialized members.
+             */
+            [[nodiscard]] constexpr ASNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default) 
 
             [[nodiscard]] constexpr ASNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, const ASNode* const _parent) :
                 m_Index(_coord),
@@ -157,11 +163,26 @@ namespace CHDR::Solvers {
              * method based on which is more efficient given the maze's size.
              */
 
-            constexpr size_t h_efficiency = 256U;
+            constexpr size_t LMAX = 256U;
 
-            return _maze.Count() >= h_efficiency ?
-                SolveHeap   (_maze, _start, _end, _h, _weight, _capacity) :
-                SolveLinear (_maze, _start, _end, _h, _weight, _capacity);
+            std::vector<coord_t> result;
+
+            const auto count = _maze.Count();
+
+            if (count <= 64U) {
+                result = SolveLinear<32U>(_maze, _start, _end, _h, _weight, _capacity);
+            }
+            else if (count <= 128U) {
+                result = SolveLinear<64U>(_maze, _start, _end, _h, _weight, _capacity);
+            }
+            else if (count <= LMAX) {
+                result = SolveLinear<LMAX / 2U>(_maze, _start, _end, _h, _weight, _capacity);
+            }
+            else {
+                result = SolveHeap(_maze, _start, _end, _h, _weight, _capacity);
+            }
+
+            return result;
         }
 
         auto SolveHeap(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
@@ -244,6 +265,7 @@ namespace CHDR::Solvers {
             return result;
         }
 
+        template <size_t StackSize>
         auto SolveLinear(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
 
             std::vector<coord_t> result;
@@ -265,11 +287,11 @@ namespace CHDR::Solvers {
 
                     ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
 
-                    std::vector<ASNode> open;
-                    open.reserve(_capacity / 4U);
-                    open.push_back({s, static_cast<Ts>(0), _h(_start, _end), nullptr });
+                    std::vector<ASNode, StackAllocator<ASNode, StackSize>> open;
+                    open.reserve(StackSize);
+                    open.push_back({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
-                    StableForwardBuf<ASNode, 64U> buf;
+                    StableForwardBuf<ASNode, StackSize / 2U> buf;
 
                     while (!open.empty()) {
 

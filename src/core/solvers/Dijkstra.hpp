@@ -34,7 +34,12 @@ namespace CHDR::Solvers {
 
             std::shared_ptr<const DijkstraNode> m_Parent;
 
-            constexpr DijkstraNode() = default;
+            /**
+             * @brief Constructs an uninitialized ASNode.
+             *
+             * This constructor creates an ASNode with uninitialized members.
+             */
+            [[nodiscard]] constexpr DijkstraNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
             [[nodiscard]] constexpr DijkstraNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, const std::shared_ptr<const DijkstraNode>& _parent) :
                 m_Coord(_coord),

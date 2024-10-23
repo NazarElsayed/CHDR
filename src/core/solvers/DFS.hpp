@@ -28,9 +28,12 @@ namespace CHDR::Solvers {
 
             const DFSNode* m_Parent;
 
-            [[nodiscard]] constexpr DFSNode() :
-                m_Coord(-1U),
-                m_Parent(nullptr) {}
+            /**
+             * @brief Constructs an uninitialized ASNode.
+             *
+             * This constructor creates an ASNode with uninitialized members.
+             */
+            [[nodiscard]] constexpr DFSNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
             [[nodiscard]] constexpr DFSNode(const size_t &_coord, const DFSNode* const _parent) :
                 m_Coord(_coord),

@@ -15,6 +15,7 @@
 #include "base/ISolver.hpp"
 #include "mazes/base/IMaze.hpp"
 #include "types/ExistenceSet.hpp"
+#include "types/StackAllocator.hpp"
 #include "types/Heap.hpp"
 #include "utils/Utils.hpp"
 #include "mazes/Grid.hpp"
@@ -39,7 +40,12 @@ namespace CHDR::Solvers {
 
             std::shared_ptr<const GSNode> m_Parent;
 
-            constexpr GSNode() = default;
+            /**
+             * @brief Constructs an uninitialized ASNode.
+             *
+             * This constructor creates an ASNode with uninitialized members.
+             */
+            [[nodiscard]] constexpr GSNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
             [[nodiscard]] constexpr GSNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, const std::shared_ptr<const GSNode>& _parent) :
                 m_Index(_coord),
@@ -80,20 +86,6 @@ namespace CHDR::Solvers {
     public:
 
         auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
-
-            /*
-             * Determine whether to solve using a linear search or constant-time
-             * method based on which is more efficient given the maze's size.
-             */
-
-            constexpr size_t h_efficiency = 256U;
-
-            return _maze.Count() >= h_efficiency ?
-                SolveHeap   (_maze, _start, _end, _h, _weight, _capacity) :
-                SolveLinear (_maze, _start, _end, _h, _weight, _capacity);
-        }
-
-        auto SolveHeap(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
 
             std::vector<coord_t> result;
 
@@ -161,102 +153,6 @@ namespace CHDR::Solvers {
                             if (curr.m_Parent != nullptr) {
 
                                 for (auto& item = curr.m_Parent; item->m_Parent != nullptr;) {
-                                    result.emplace_back(Utils::ToND(item->m_Index, _maze.Size()));
-
-                                    auto oldItem = item;
-                                    item = item->m_Parent;
-                                    oldItem.reset();
-                                }
-                            }
-
-                            // Reverse the result:
-                            std::reverse(result.begin(), result.end());
-
-                            break;
-                        }
-                    }
-                }
-                else {
-                    result.emplace_back(_end);
-                }
-            }
-
-            return result;
-        }
-
-        auto SolveLinear(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
-
-            std::vector<coord_t> result;
-
-            const auto s = Utils::To1D(_start, _maze.Size());
-            const auto e = Utils::To1D(_end,   _maze.Size());
-
-            if (_maze.Contains(s) &&
-                _maze.Contains(e) &&
-                _maze.At(s).IsActive() &&
-                _maze.At(e).IsActive()
-            ) {
-
-                if (s != e) {
-
-                    const auto count = _maze.Count();
-
-                    _capacity = std::max(_capacity, std::max(s, e));
-
-                    ExistenceSet closed({ s }, _capacity);
-
-                    std::vector<GSNode> open;
-                    open.reserve(_capacity / 4U);
-                    open.push_back({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
-
-                    while (!open.empty()) {
-
-                        const auto top = std::min_element(open.begin(), open.end(), typename GSNode::Min()); // Linear search
-
-                        GSNode current(std::move(*top));
-                        open.erase(top);
-
-                        if (current.m_Index != e) { // SEARCH FOR SOLUTION...
-
-                            if (closed.Capacity() > current.m_Index) {
-                                closed.Reserve(std::min(_capacity * ((current.m_Index % _capacity) + 1U), count));
-                            }
-                            closed.Add(current.m_Index);
-
-                            for (const auto& neighbour : _maze.GetNeighbours(current.m_Index)) {
-
-                                if (const auto& [nActive, nCoord] = neighbour; nActive) {
-
-                                    const auto n = Utils::To1D(nCoord, _maze.Size());
-
-                                    // Check if node is not already visited:
-                                    if (!closed.Contains(n)) {
-
-                                        // Add to dupe list:
-                                        if (closed.Capacity() > n) {
-                                            closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
-                                        }
-                                        closed.Add(n);
-
-                                        // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                        open.push_back({ n, current.m_GScore + static_cast<Ts>(1), _h(nCoord, _end) * _weight, std::make_shared<GSNode>(std::move(current)) });
-                                    }
-                                }
-                            }
-                        }
-                        else { // SOLUTION REACHED ...
-
-                            // Free data which is no longer relevant:
-                              open.clear();   open.shrink_to_fit();
-                            closed.Clear(); closed.Trim();
-
-                            // Recurse from end node to start node, inserting into a result buffer:
-                            result.reserve(current.m_GScore);
-                            result.emplace_back(Utils::ToND(current.m_Index, _maze.Size()));
-
-                            if (current.m_Parent != nullptr) {
-
-                                for (auto& item = current.m_Parent; item->m_Parent != nullptr;) {
                                     result.emplace_back(Utils::ToND(item->m_Index, _maze.Size()));
 
                                     auto oldItem = item;

@@ -60,7 +60,12 @@ namespace CHDR::Solvers {
 
         public:
 
-            constexpr ESMASNode() = default;
+            /**
+             * @brief Constructs an uninitialized ASNode.
+             *
+             * This constructor creates an ASNode with uninitialized members.
+             */
+            [[nodiscard]] constexpr ESMASNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
             void Shrink() {
 

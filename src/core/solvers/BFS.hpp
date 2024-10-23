@@ -28,9 +28,12 @@ namespace CHDR::Solvers {
 
             const BFSNode* m_Parent;
 
-            [[nodiscard]] constexpr BFSNode() :
-                m_Coord(-1U),
-                m_Parent(nullptr) {}
+            /**
+             * @brief Constructs an uninitialized ASNode.
+             *
+             * This constructor creates an ASNode with uninitialized members.
+             */
+            [[nodiscard]] constexpr BFSNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
             [[nodiscard]] constexpr BFSNode(const size_t& _coord, const BFSNode* const _parent) :
                 m_Coord(_coord),
@@ -98,7 +101,7 @@ namespace CHDR::Solvers {
                                             closed.Add(curr.m_Coord);
 
                                             // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                            open.push({n, &buf.Emplace(std::move(curr)) });
+                                            open.push({ n, &buf.Emplace(std::move(curr)) });
                                         }
                                     }
                                 }
