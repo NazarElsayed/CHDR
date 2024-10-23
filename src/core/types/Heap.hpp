@@ -18,8 +18,6 @@ namespace CHDR {
 
         static_assert(D >= 2, "Template parameter D must be greater than or equal to 2.");
 
-        // TODO: D-ary heap support.
-
     private:
 
         std::vector<T> m_Data;
@@ -39,7 +37,7 @@ namespace CHDR {
 
                     const auto p = i / D;
 
-                    if (m_Compare(m_Data[p], m_Data[i])) {
+                    if (p > 0U && m_Compare(m_Data[p], m_Data[i])) {
                         std::swap(m_Data[i], m_Data[p]);
                         i = p;
                     }
@@ -58,16 +56,29 @@ namespace CHDR {
 
                 while (i > 1U) {
 
-                    auto l = i * D;
-                    auto r = l + 1U;
+                    auto c0 = i * D;
+                    auto cn = c0 + (D - 1U);
 
-                    if (l < m_Data.size()) {
+                    if (cn < m_Data.size()) {
 
-                        auto s = (r < m_Data.size() && m_Compare(m_Data[l], m_Data[r])) ? r : l;
+                        size_t min{};
 
-                        if (m_Compare(m_Data[i], m_Data[s])) {
-                            std::swap(m_Data[i], m_Data[s]);
-                            i = s;
+                        if constexpr (D == 2U) {
+                            min = (cn < m_Data.size() && m_Compare(m_Data[c0], m_Data[cn])) ? cn : c0;
+                        }
+                        else {
+
+                            min = i;
+                            for (auto j = c0; j <= cn && j < m_Data.size(); ++j) {
+                                if (m_Compare(m_Data[min], m_Data[j])) {
+                                    min = j;
+                                }
+                            }
+                        }
+
+                        if (m_Compare(m_Data[i], m_Data[min])) {
+                            std::swap(m_Data[i], m_Data[min]);
+                            i = min;
                         }
                         else {
                             break;
