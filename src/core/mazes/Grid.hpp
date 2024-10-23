@@ -137,10 +137,8 @@ namespace CHDR::Mazes {
                         }
                     }
 
-                    if (i != (neighbours / 2U) + 1U) {
-                        result[i].first = !oob && At(nCoord).IsActive();
-                        result[i].second = nCoord;
-                    }
+                    result[i].first = !oob && At(nCoord).IsActive();
+                    result[i].second = nCoord;
                 }
             }
             else {
