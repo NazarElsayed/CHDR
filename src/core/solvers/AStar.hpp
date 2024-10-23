@@ -206,7 +206,7 @@ namespace CHDR::Solvers {
 
                     ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
 
-                    Heap<ASNode, 2U, typename ASNode::Max> open(_capacity / 4U);
+                    Heap<ASNode, 2U, typename ASNode::Max> open(_capacity / 8U);
                     open.Emplace({  s, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
                     StableForwardBuf<ASNode> buf;
