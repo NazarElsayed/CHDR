@@ -35,14 +35,25 @@ namespace CHDR::Solvers {
              */
             [[nodiscard]] constexpr GBFSNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] constexpr GBFSNode(const size_t& _coord, const std::shared_ptr<const GBFSNode>& _parent) :
-                m_Coord(_coord),
-                m_Parent(std::move(_parent)) {}
+            [[nodiscard]] constexpr GBFSNode(const size_t& _coord, GBFSNode&& _parent) :
+                m_Coord(_coord)
+            {
+                m_Parent = std::make_shared<const GBFSNode>(std::move(_parent));
+            }
 
             ~GBFSNode() {
 
-                while (m_Parent && static_cast<unsigned>(m_Parent.use_count()) < 2U) {
-                    m_Parent = std::move(m_Parent->m_Parent);
+//                while (m_Parent && m_Parent.unique()) {
+//                    m_Parent = std::move(m_Parent->m_Parent);
+//                }
+
+                Expunge_Recursive(m_Parent);
+            }
+
+            void Expunge_Recursive(std::shared_ptr<const GBFSNode>& _node) {
+                if (_node && _node.unique()) {
+                    _node = std::move(_node->m_Parent);
+                    Expunge_Recursive(_node);
                 }
             }
         };
@@ -105,7 +116,7 @@ namespace CHDR::Solvers {
                                             closed.Add(n);
 
                                             // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                            open.emplace(n, std::make_shared<GBFSNode>(std::move(curr)));
+                                            open.emplace(n, std::move(curr));
                                         }
                                     }
                                 }
