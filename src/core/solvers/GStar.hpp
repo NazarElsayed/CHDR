@@ -11,6 +11,7 @@
 
 #include <memory>
 #include <queue>
+#include <utility>
 
 #include "base/ISolver.hpp"
 #include "mazes/base/IMaze.hpp"
@@ -47,11 +48,19 @@ namespace CHDR::Solvers {
              */
             [[nodiscard]] constexpr GSNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] constexpr GSNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, const std::shared_ptr<const GSNode>& _parent) :
+            [[nodiscard]] constexpr GSNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore) :
                 m_Index(_coord),
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
-                m_Parent(std::move(_parent)) {}
+                m_Parent() {}
+
+            [[nodiscard]] constexpr GSNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, GSNode&& _parent) :
+                m_Index(_coord),
+                m_GScore(_gScore),
+                m_FScore(_gScore + _hScore)
+            {
+                m_Parent = std::make_shared<const GSNode>(std::move(_parent));
+            }
 
             ~GSNode() {
 
@@ -107,7 +116,7 @@ namespace CHDR::Solvers {
                     ExistenceSet closed({ s }, _capacity);
 
                     Heap<GSNode, 2U, typename GSNode::Max> open;
-                    open.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
+                    open.Emplace(GSNode { s, static_cast<Ts>(0), _h(_start, _end) });
 
                     while (!open.Empty()) {
 
@@ -135,7 +144,7 @@ namespace CHDR::Solvers {
                                         closed.Add(n);
 
                                         // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                        open.Emplace({ n, curr.m_GScore + static_cast<Ts>(1), _h(nCoord, _end) * _weight, std::make_shared<GSNode>(std::move(curr)) });
+                                        open.Emplace(GSNode { n, curr.m_GScore + static_cast<Ts>(1), _h(nCoord, _end) * _weight, std::move(curr) });
                                     }
                                 }
                             }
