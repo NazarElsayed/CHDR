@@ -11,52 +11,11 @@
 
 #include <cstring>
 
-#if defined(__AVX512__)
-    #include <immintrin.h>
-#elif defined(__AVX2__)
-    #include <immintrin.h>
-#elif defined(__AVX__)
-    #include <immintrin.h>
-#elif defined(__SSE4_2__)
-    #include <nmmintrin.h>
-#elif defined(__SSE4_1__)
-    #include <smmintrin.h>
-#elif defined(__SSSE3__)
-    #include <tmmintrin.h>
-#elif defined(__SSE3__)
-    #include <pmmintrin.h>
-#elif defined(__SSE2__)
-    #include <emmintrin.h>
-#elif defined(__SSE__)
-    #include <xmmintrin.h>
-#elif defined(__MMX__)
-    #include <mmintrin.h>
-#endif
+#include "Intrinsics.hpp"
 
 namespace CHDR {
 
     struct SIMDExtensions {
-
-        static constexpr void Prefetch(const void* __P, const _mm_hint& __I) {
-
-    #if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
-
-            switch (__I) {
-                case _MM_HINT_T0:  { _mm_prefetch(__P, _MM_HINT_T0 ); break; }
-                case _MM_HINT_T1:  { _mm_prefetch(__P, _MM_HINT_T1 ); break; }
-                case _MM_HINT_T2:  { _mm_prefetch(__P, _MM_HINT_T2 ); break; }
-                case _MM_HINT_NTA: { _mm_prefetch(__P, _MM_HINT_NTA); break; }
-                default: {
-    #ifndef NDEBUG
-                    throw std::runtime_error("Unknown Cache Hint!");
-    #endif
-                    break;
-                }
-            }
-
-    #endif // __SSE__ && (__GNUC__ || __clang__ )
-
-        }
 
         struct Uint8 {
 

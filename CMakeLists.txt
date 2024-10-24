@@ -111,7 +111,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "-fsanitize=address,leak,undefined -Wall -Wextra -fno-
 
 set(CMAKE_CXX_FLAGS_NOSANITIZERS "-Wall -Wextra -fno-omit-frame-pointer -g -O0")
 
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -march=native -mtune=native -funroll-loops -DNDEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -march=native -mtune=native -funroll-loops -ftree-vectorize -ffast-math -DNDEBUG")
 
 include_directories(
     ${CHDR_BINARY_DIR}
@@ -159,6 +159,7 @@ add_library(CHDR INTERFACE
     src/core/utils/Utils.hpp
         src/core/types/StableForwardBuf.hpp
         src/core/types/StackAllocator.hpp
+        src/core/utils/Intrinsics.hpp
 )
 
 target_link_libraries(CHDR INTERFACE)

@@ -50,7 +50,7 @@ namespace Test::Tests {
 //
 //            const auto grid = CHDR::Mazes::Grid<Kd, Tm>(size, gdata);
 
-//            /* GRID -> GRAPH */
+            /* GRID -> GRAPH */
 //            auto graph = CHDR::Mazes::Graph<size_t, Kd, Ts>(grid);
 //            graph.Print();
 //            std::cout << "\n\n";

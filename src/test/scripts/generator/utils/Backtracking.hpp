@@ -38,21 +38,16 @@ namespace Test::Generator::Utils {
 
             std::array<std::pair<bool, CHDR::Coord<size_t, Kd>>, Kd * 2U> result;
 
-            // Positive:
+            PRAGMA_IVDEP
+            PRAGMA_VECTOR_ALWAYS
             for (size_t i = 0U; i < Kd; ++i) {
 
                 coord_t dir{};
-                dir[i] += step;
 
+                dir[i] = step;
                 result[i] = { _coord[i] < _size[i] - step, dir };
-            }
 
-            // Negative:
-            for (size_t i = 0U; i < Kd; ++i) {
-
-                coord_t dir{};
-                dir[i] -= step;
-
+                dir[i] = -step;
                 result[Kd + i] = { _coord[i] >= step, dir };
             }
 
@@ -216,6 +211,7 @@ namespace Test::Generator::Utils {
                             auto c = CHDR::Utils::ToND<size_t, Kd>(i, _size);
 
                             bool link = false;
+
                             for (size_t j = 0U; j < Kd; ++j) {
 
                                  if (c[j] % 2U == 0U) {

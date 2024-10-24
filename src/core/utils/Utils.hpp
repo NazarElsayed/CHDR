@@ -180,6 +180,7 @@ namespace CHDR {
 			else {
 
 				result = _array[0U];
+
 				for (size_t i = 1U; i < _array.size(); ++i) {
 					result *= _array[i];
 				}

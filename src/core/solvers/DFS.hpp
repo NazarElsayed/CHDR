@@ -115,11 +115,6 @@ namespace CHDR::Solvers {
                                     result.emplace_back(Utils::ToND(temp->m_Coord, _maze.Size()));
                                 }
 
-                                // Clear the buffer:
-                                std::for_each(buf.begin(), buf.end(), [](auto* item) {
-                                    delete item;
-                                });
-
                                 // Reverse the result:
                                 std::reverse(result.begin(), result.end());
 
