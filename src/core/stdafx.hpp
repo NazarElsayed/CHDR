@@ -14,12 +14,16 @@
 #include <cmath>
 #include <cstddef>
 #include <cstring>
+#include <forward_list>
+#include <initializer_list>
+#include <iterator>
 #include <limits>
 #include <memory>
 #include <queue>
 #include <stack>
 #include <type_traits>
 #include <unordered_set>
+#include <utility>
 #include <vector>
 
 #endif //CHDR_STDAFX_HPP

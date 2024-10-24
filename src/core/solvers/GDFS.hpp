@@ -13,9 +13,9 @@
 
 #include "base/ISolver.hpp"
 #include "mazes/base/IMaze.hpp"
+#include "mazes/Grid.hpp"
 #include "types/ExistenceSet.hpp"
 #include "utils/Utils.hpp"
-#include "mazes/Grid.hpp"
 
 namespace CHDR::Solvers {
 

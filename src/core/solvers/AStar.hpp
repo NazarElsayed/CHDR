@@ -9,9 +9,6 @@
 #ifndef CHDR_ASTAR_HPP
 #define CHDR_ASTAR_HPP
 
-#include <cmath>
-#include <queue>
-
 #include "../utils/Heuristics.hpp"
 #include "base/ISolver.hpp"
 #include "mazes/base/IMaze.hpp"

@@ -10,16 +10,14 @@
 #define CHDR_GSTAR_HPP
 
 #include <memory>
-#include <queue>
-#include <utility>
 
 #include "base/ISolver.hpp"
 #include "mazes/base/IMaze.hpp"
-#include "types/ExistenceSet.hpp"
-#include "types/StackAllocator.hpp"
-#include "types/Heap.hpp"
-#include "utils/Utils.hpp"
 #include "mazes/Grid.hpp"
+#include "types/ExistenceSet.hpp"
+#include "types/Heap.hpp"
+#include "types/StackAllocator.hpp"
+#include "utils/Utils.hpp"
 
 namespace CHDR::Solvers {
 

@@ -2,10 +2,9 @@
 #define CHDR_STABLEFORWARDBUF_HPP
 
 #include <forward_list>
-#include <memory>
-#include <array>
 #include <initializer_list>
 #include <iterator>
+#include <memory>
 
 namespace CHDR {
 
