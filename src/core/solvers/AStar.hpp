@@ -37,7 +37,7 @@ namespace CHDR::Solvers {
             Ts m_GScore;
             Ts m_FScore;
 
-            const ASNode* m_Parent;
+            const ASNode* RESTRICT m_Parent;
 
             /**
              * @brief Constructs an uninitialized ASNode.
@@ -46,7 +46,7 @@ namespace CHDR::Solvers {
              */
             [[nodiscard]] constexpr ASNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default) 
 
-            [[nodiscard]] constexpr ASNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, const ASNode* const _parent) :
+            [[nodiscard]] constexpr ASNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, const ASNode* RESTRICT const _parent) :
                 m_Index(_coord),
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),

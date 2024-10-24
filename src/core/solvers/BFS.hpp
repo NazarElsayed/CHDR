@@ -26,7 +26,7 @@ namespace CHDR::Solvers {
 
             size_t m_Coord;
 
-            const BFSNode* m_Parent;
+            const BFSNode* RESTRICT m_Parent;
 
             /**
              * @brief Constructs an uninitialized ASNode.
@@ -35,7 +35,7 @@ namespace CHDR::Solvers {
              */
             [[nodiscard]] constexpr BFSNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] constexpr BFSNode(const size_t& _coord, const BFSNode* const _parent) :
+            [[nodiscard]] constexpr BFSNode(const size_t& _coord, const BFSNode* RESTRICT const _parent) :
                 m_Coord(_coord),
                 m_Parent(std::move(_parent)) {}
         };
