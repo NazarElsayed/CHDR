@@ -153,13 +153,13 @@ add_library(CHDR INTERFACE
     src/core/types/Coord.hpp
     src/core/types/ExistenceSet.hpp
     src/core/types/Heap.hpp
+    src/core/types/StableForwardBuf.hpp
+    src/core/types/StackAllocator.hpp
 
     src/core/utils/Heuristics.hpp
     src/core/utils/SIMDExtensions.hpp
     src/core/utils/Utils.hpp
-        src/core/types/StableForwardBuf.hpp
-        src/core/types/StackAllocator.hpp
-        src/core/utils/Intrinsics.hpp
+    src/core/utils/Intrinsics.hpp
 )
 
 target_link_libraries(CHDR INTERFACE)
