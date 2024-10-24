@@ -128,8 +128,8 @@ namespace CHDR::Mazes {
 
                     coord_t nCoord;
 
-                    PRAGMA_IVDEP
-                    PRAGMA_VECTOR_ALWAYS
+                    IVDEP
+                    VECTOR_ALWAYS
                     for (size_t j = 0U; j < Kd; j++) {
 
                         nCoord[j] = _id[j] + (direction[j] - 1U);
@@ -146,8 +146,8 @@ namespace CHDR::Mazes {
             }
             else {
 
-                PRAGMA_IVDEP
-                PRAGMA_VECTOR_ALWAYS
+                IVDEP
+                VECTOR_ALWAYS
                 for (size_t i = 0U; i < Kd; ++i) {
 
                     coord_t nCoord = _id;

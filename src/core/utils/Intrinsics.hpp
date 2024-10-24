@@ -24,41 +24,35 @@
 #endif
 
 #ifdef _MSC_VER
-    #define PRAGMA_IVDEP __pragma(loop(ivdep))
-    #define PRAGMA_VECTOR_ALWAYS
+    #define IVDEP __pragma(loop(ivdep))
+    #define VECTOR_ALWAYS
+    #define LIKELY(x)   (x)
+    #define UNLIKELY(x) (x)
+    #define PREFETCH(P, I) ((void)))
 #elif defined(__INTEL_COMPILER)
-    #define PRAGMA_IVDEP _Pragma("ivdep")
-    #define PRAGMA_VECTOR_ALWAYS _Pragma("vector always")
+    #define IVDEP _Pragma("ivdep")
+    #define VECTOR_ALWAYS _Pragma("vector always")
+    #define LIKELY(x)   __builtin_expect(!!(x), 1)
+    #define UNLIKELY(x) __builtin_expect(!!(x), 0)
+    #define PREFETCH(P, I) _mm_prefetch(reinterpret_cast<const char*>(P), I)
 #elif defined(__clang__)
-    #define PRAGMA_IVDEP _Pragma("clang loop vectorize(enable)")
-    #define PRAGMA_VECTOR_ALWAYS
+    #define IVDEP _Pragma("clang loop vectorize(enable)")
+    #define VECTOR_ALWAYS
+    #define LIKELY(x)   __builtin_expect(!!(x), 1)
+    #define UNLIKELY(x) __builtin_expect(!!(x), 0)
+    #define PREFETCH(P, I) _mm_prefetch(reinterpret_cast<const char*>(P), I)
 #elif defined(__GNUC__)
-    #define PRAGMA_IVDEP _Pragma("GCC ivdep")
-    #define PRAGMA_VECTOR_ALWAYS
+    #define IVDEP _Pragma("GCC ivdep")
+    #define VECTOR_ALWAYS
+    #define LIKELY(x)   __builtin_expect(!!(x), 1)
+    #define UNLIKELY(x) __builtin_expect(!!(x), 0)
+    #define PREFETCH(P, I) _mm_prefetch(reinterpret_cast<const char*>(P), I)
 #else
-    #define PRAGMA_IVDEP
-    #define PRAGMA_VECTOR_ALWAYS
+    #define IVDEP
+    #define VECTOR_ALWAYS
+    #define LIKELY(x)   (x)
+    #define UNLIKELY(x) (x)
+    #define PREFETCH(P, I) ((void)))
 #endif
-
-static constexpr void prefetch(const void* __P, const _mm_hint& __I) {
-
-#if defined(__SSE__) && (defined(__GNUC__) || defined(__clang__))
-
-    switch (__I) {
-        case _MM_HINT_T0:  { _mm_prefetch(__P, _MM_HINT_T0 ); break; }
-        case _MM_HINT_T1:  { _mm_prefetch(__P, _MM_HINT_T1 ); break; }
-        case _MM_HINT_T2:  { _mm_prefetch(__P, _MM_HINT_T2 ); break; }
-        case _MM_HINT_NTA: { _mm_prefetch(__P, _MM_HINT_NTA); break; }
-        default: {
-#ifndef NDEBUG
-            throw std::runtime_error("Unknown Cache Hint!");
-#endif //NDEBUG
-            break;
-        }
-    }
-
-#endif // __SSE__ && (__GNUC__ || __clang__ )
-
-}
 
 #endif //CHDR_INTRINSICS_HPP

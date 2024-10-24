@@ -38,8 +38,8 @@ namespace Test::Generator::Utils {
 
             std::array<std::pair<bool, CHDR::Coord<size_t, Kd>>, Kd * 2U> result;
 
-            PRAGMA_IVDEP
-            PRAGMA_VECTOR_ALWAYS
+            IVDEP
+            VECTOR_ALWAYS
             for (size_t i = 0U; i < Kd; ++i) {
 
                 coord_t dir{};

@@ -62,16 +62,19 @@ namespace CHDR {
 		template<typename _Tp, const size_t _Nm>
 		static constexpr std::array<_Tp, _Nm> ToArray(const std::vector<_Tp>&& _vector) {
 
-			if (_vector.size() != _Nm) {
-				throw std::runtime_error("Vector -> Array size mismatch! (" + std::to_string(_vector.size()) + ", " + std::to_string(_Nm) + ")");
-			}
+            std::array<_Tp, _Nm> result;
 
-			std::array<_Tp, _Nm> result;
-			std::move(
-				_vector.begin(),
-				_vector.begin() + std::min(_vector.size(), result.size()),
-				 result.begin()
-			);
+			if (LIKELY(_vector.size() == _Nm)) {
+
+                std::move(
+                    _vector.begin(),
+                    _vector.begin() + std::min(_vector.size(), result.size()),
+                     result.begin()
+                );
+            }
+            else {
+                throw std::runtime_error("Vector -> Array size mismatch! (" + std::to_string(_vector.size()) + ", " + std::to_string(_Nm) + ")");
+            }
 
 			return result;
 		}

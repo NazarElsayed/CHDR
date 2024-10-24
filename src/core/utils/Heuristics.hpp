@@ -81,8 +81,8 @@ namespace CHDR {
                         const auto cA = Utils::ArrayCast<float>(_a);
                         const auto cB = Utils::ArrayCast<float>(_b);
 
-                        prefetch(&cA[Kd], _MM_HINT_T0);
-                        prefetch(&cB[Kd], _MM_HINT_T0);
+                        PREFETCH(&cA[Kd], _MM_HINT_T0);
+                        PREFETCH(&cB[Kd], _MM_HINT_T0);
 
                         if constexpr (Kd == 3U) {
                             cr = SIMDExtensions::Float32::SqrSub_128v(
@@ -122,8 +122,8 @@ namespace CHDR {
                                 ));
                             }
 
-                            PRAGMA_IVDEP
-                            PRAGMA_VECTOR_ALWAYS
+                            IVDEP
+                            VECTOR_ALWAYS
                             for (; j < Kd; ++j) {
                                 const auto val = cB[j] - cA[j];
                                 cr += static_cast<float>(val * val);
@@ -139,8 +139,8 @@ namespace CHDR {
                         const auto cA = Utils::ArrayCast<double>(_a);
                         const auto cB = Utils::ArrayCast<double>(_b);
 
-                        prefetch(&cA[Kd], _MM_HINT_T0);
-                        prefetch(&cB[Kd], _MM_HINT_T0);
+                        PREFETCH(&cA[Kd], _MM_HINT_T0);
+                        PREFETCH(&cB[Kd], _MM_HINT_T0);
 
                         if constexpr (Kd == 2U) {
                             cr = SIMDExtensions::Float64::Sub_128v(
@@ -161,8 +161,8 @@ namespace CHDR {
                                 );
                             }
 
-                            PRAGMA_IVDEP
-                            PRAGMA_VECTOR_ALWAYS
+                            IVDEP
+                            VECTOR_ALWAYS
                             for (; j < Kd; ++j) {
                                 const auto val = cB[j] - cA[j];
                                 cr += static_cast<double>(val * val);
@@ -175,12 +175,12 @@ namespace CHDR {
 
                     else {
 
-                        prefetch(&_a[Kd], _MM_HINT_T0);
-                        prefetch(&_b[Kd], _MM_HINT_T0);
+                        PREFETCH(&_a[Kd], _MM_HINT_T0);
+                        PREFETCH(&_b[Kd], _MM_HINT_T0);
 
                         // Fallback:
-                        PRAGMA_IVDEP
-                        PRAGMA_VECTOR_ALWAYS
+                        IVDEP
+                        VECTOR_ALWAYS
                         for (size_t i = 0U; i < Kd; ++i) {
 
                             const auto val = _b[i] - _a[i];
@@ -238,8 +238,8 @@ namespace CHDR {
                         const auto cA = Utils::ArrayCast<uint32_t>(_a);
                         const auto cB = Utils::ArrayCast<uint32_t>(_b);
 
-                        prefetch(&cA[Kd], _MM_HINT_T0);
-                        prefetch(&cB[Kd], _MM_HINT_T0);
+                        PREFETCH(&cA[Kd], _MM_HINT_T0);
+                        PREFETCH(&cB[Kd], _MM_HINT_T0);
 
                         if constexpr (Kd == 3U) {
                             result = static_cast<Ts>(SIMDExtensions::Uint32::AbsSub_128v(
@@ -279,8 +279,8 @@ namespace CHDR {
                                 ));
                             }
 
-                            PRAGMA_IVDEP
-                            PRAGMA_VECTOR_ALWAYS
+                            IVDEP
+                            VECTOR_ALWAYS
                             for (; j < Kd; ++j) {
                                 result += static_cast<Ts>(std::abs(static_cast<signed>(cB[j]) - static_cast<signed>(cA[j])));
                             }
@@ -291,8 +291,8 @@ namespace CHDR {
                         const auto cA = Utils::ArrayCast<uint64_t>(_a);
                         const auto cB = Utils::ArrayCast<uint64_t>(_b);
 
-                        prefetch(&cA[Kd], _MM_HINT_T0);
-                        prefetch(&cB[Kd], _MM_HINT_T0);
+                        PREFETCH(&cA[Kd], _MM_HINT_T0);
+                        PREFETCH(&cB[Kd], _MM_HINT_T0);
 
                         if constexpr (Kd == 2U) {
                             result = static_cast<Ts>(SIMDExtensions::Uint64::AbsSub_128v(
@@ -313,8 +313,8 @@ namespace CHDR {
                                 ));
                             }
 
-                            PRAGMA_IVDEP
-                            PRAGMA_VECTOR_ALWAYS
+                            IVDEP
+                            VECTOR_ALWAYS
                             for (; j < Kd; ++j) {
                                 result += static_cast<Ts>(std::abs(static_cast<signed>(cB[j]) - static_cast<signed>(cA[j])));
                             }
@@ -325,12 +325,12 @@ namespace CHDR {
 
                     else {
 
-                        prefetch(&_a[Kd], _MM_HINT_T0);
-                        prefetch(&_b[Kd], _MM_HINT_T0);
+                        PREFETCH(&_a[Kd], _MM_HINT_T0);
+                        PREFETCH(&_b[Kd], _MM_HINT_T0);
 
                         // Fallback:
-                        PRAGMA_IVDEP
-                        PRAGMA_VECTOR_ALWAYS
+                        IVDEP
+                        VECTOR_ALWAYS
                         for (size_t i = 0U; i < Kd; ++i) {
                             result += static_cast<Ts>(std::abs(static_cast<signed>(_b[i]) - static_cast<signed>(_a[i])));
                         }
