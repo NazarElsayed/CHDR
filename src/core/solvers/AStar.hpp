@@ -99,7 +99,7 @@ namespace CHDR::Solvers {
                     Heap<ASNode, 2U, typename ASNode::Max> open(_capacity / 4U);
                     open.Emplace({_s, static_cast<Ts>(0), _h(start, end), nullptr });
 
-                    StableForwardBuf<ASNode> buf;
+                    StableForwardBuf<ASNode, 1024U * 1024U> buf;
 
                     while (!open.Empty()) {
 
