@@ -414,7 +414,10 @@ namespace CHDR::Solvers {
 
             const auto count = _maze.Count();
 
-            if (count <= 64U) {
+            if (count <= 32U) {
+                result = SolveLinear<16U>(_maze, _s, _e, _size, _h, _weight, _capacity);
+            }
+            else if (count <= 64U) {
                 result = SolveLinear<32U>(_maze, _s, _e, _size, _h, _weight, _capacity);
             }
             else if (count <= 128U) {
