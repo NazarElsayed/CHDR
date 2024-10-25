@@ -30,26 +30,38 @@ namespace CHDR::Mazes {
 
         using edge_t = typename IGraph<Ti, Ts>::edge_t;
 
+        struct IndexHash {
+
+            constexpr size_t operator () (const Ti& _index) const {
+                return static_cast<Ti>(_index);
+            }
+
+        };
+
+        struct IndexEqual {
+
+            constexpr bool operator () (const Ti& _a, const Ti& _b) const {
+                return _a == _b;
+            }
+
+        };
+
         struct EdgeHash {
 
-            std::size_t operator()(const std::pair<Ti, Ts> &edge) const {
-
-                size_t h1 = edge.first;
-                size_t h2 = std::hash<Ts>()(edge.second);
-
-                return h1 ^ (h2 << 1);
+            constexpr size_t operator () (const std::pair<Ti, Ts> &_edge) const {
+                return static_cast<size_t>(_edge.first) ^ (std::hash<Ts>()(_edge.second) << 1);
             }
         };
 
         struct EdgeEqual {
 
-            bool operator () (const std::pair<Ti, Ts>& edge1, const std::pair<Ti, Ts>& edge2) const {
-                return edge1.first == edge2.first && edge1.second == edge2.second;
+            constexpr bool operator () (const std::pair<Ti, Ts>& _a, const std::pair<Ti, Ts>& _b) const {
+                return _a.first == _b.first && _a.second == _b.second;
             }
         };
 
         using Neighbours = std::unordered_set<edge_t, EdgeHash, EdgeEqual>;
-        using AdjacencyList = std::unordered_map<Ti, Neighbours>;
+        using AdjacencyList = std::unordered_map<Ti, Neighbours, IndexHash, IndexEqual>;
 
         AdjacencyList m_Entries;
 

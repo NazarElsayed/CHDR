@@ -281,8 +281,7 @@ namespace CHDR::Solvers {
 
                             for (const auto& neighbour : _maze.GetNeighbours(curr.m_Index)) {
 
-                                const auto& [nID, nDistance] = neighbour;
-                                const auto& n = nID;
+                                const auto& [n, nDistance] = neighbour;
 
                                 // Check if node is not already visited:
                                 if (!closed.Contains(n)) {
