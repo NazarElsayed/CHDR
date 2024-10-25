@@ -27,7 +27,7 @@ namespace Test::Tests {
         template <typename Tm, const size_t Kd, typename Ts = uint32_t>
         static void Run(const std::array<size_t, Kd>& _dimensions) {
 
-            #define HEURISTIC CHDR::Heuristics<Kd, Ts>::EuclideanDistance
+            #define HEURISTIC CHDR::Heuristics<Kd, Ts>::ManhattanDistance
 
             using coord_t = CHDR::Coord<size_t, Kd>;
 
