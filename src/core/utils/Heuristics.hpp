@@ -92,8 +92,8 @@ namespace CHDR {
                         }
                         if constexpr (Kd == 4U) {
                             cr = SIMDExtensions::Float32::Sub_128v(
-                                _mm_load_ps(&cA),
-                                _mm_load_ps(&cB)
+                                _mm_load_ps(&cA[0U]),
+                                _mm_load_ps(&cB[0U])
                             );
                         }
                         else {
@@ -111,14 +111,14 @@ namespace CHDR {
 
                             if (j - r == 1U) {
                                 result += static_cast<Ts>(SIMDExtensions::Float32::Sub_128v(
-                                    _mm_set_epi32(0U, cA[j], cA[j + 1U], cA[j + 2U]),
-                                    _mm_set_epi32(0U, cB[j], cB[j + 1U], cB[j + 2U])
+                                    _mm_set_ps(0.0F, cA[j], cA[j + 1U], cA[j + 2U]),
+                                    _mm_set_ps(0.0F, cB[j], cB[j + 1U], cB[j + 2U])
                                 ));
                             }
                             else if (j - r == 2U) {
                                 result += static_cast<Ts>(SIMDExtensions::Float32::Sub_128v(
-                                    _mm_set_epi32(0U, 0U, cA[j], cA[j + 1U]),
-                                    _mm_set_epi32(0U, 0U, cB[j], cB[j + 1U])
+                                    _mm_set_ps(0.0F, 0.0F, cA[j], cA[j + 1U]),
+                                    _mm_set_ps(0.0F, 0.0F, cB[j], cB[j + 1U])
                                 ));
                             }
 
