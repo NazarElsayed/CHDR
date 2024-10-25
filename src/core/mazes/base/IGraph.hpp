@@ -24,6 +24,12 @@ namespace CHDR::Mazes {
 
         using edge_t = std::pair<Ti, Ts>;
 
+        template<typename... Args>
+        [[nodiscard]]
+        constexpr bool Contains(const Args&... _id) const {
+            return Contains({ _id... });
+        }
+
         [[nodiscard]] virtual constexpr bool Contains(const Ti& _id) const = 0;
 
     };

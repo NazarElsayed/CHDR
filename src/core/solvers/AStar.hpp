@@ -121,8 +121,8 @@ namespace CHDR::Solvers {
                                     // Check if node is not already visited:
                                     if (!closed.Contains(n)) {
 
-                                        if (closed.Capacity() > curr.m_Index) {
-                                            closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
+                                        if (closed.Capacity() > n) {
+                                            closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                         }
                                         closed.Add(n);
 
@@ -205,8 +205,8 @@ namespace CHDR::Solvers {
                                     // Check if node is not already visited:
                                     if (!closed.Contains(n)) {
 
-                                        if (closed.Capacity() > curr.m_Index) {
-                                            closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
+                                        if (closed.Capacity() > n) {
+                                            closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                         }
                                         closed.Add(n);
 
@@ -242,29 +242,29 @@ namespace CHDR::Solvers {
 
     public:
 
-        auto Solve(const Mazes::Graph<size_t, Kd, Ts>& _maze, const size_t& _start, const size_t& _end, Ts (*_h)(const size_t&, const size_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
+        auto Solve(const Mazes::Graph<size_t, Kd, Ts>& _maze, const size_t& _s, const size_t& _e, const coord_t& _size, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
 
             std::vector<coord_t> result;
 
-            const auto s = Utils::To1D(_start, _maze.Size());
-            const auto e = Utils::To1D(_end,   _maze.Size());
-
-            if (_maze.Contains(s) &&
-                _maze.Contains(e) &&
-                _maze.At(s).IsActive() &&
-                _maze.At(e).IsActive()
+            if (_maze.Contains(_s) &&
+                _maze.Contains(_e) &&
+                _maze.At(_s).IsActive() &&
+                _maze.At(_e).IsActive()
             ) {
 
-                if (s != e) {
+                if (_s != _e) {
 
                     const auto count = _maze.Count();
 
-                    _capacity = std::max(_capacity, std::max(_start, _end));
+                    _capacity = std::max(_capacity, std::max(_s, _e));
 
-                    ExistenceSet<LowMemoryUsage> closed({ _start }, _capacity);
+                    ExistenceSet<LowMemoryUsage> closed({ _s }, _capacity);
+
+                    const coord_t start = CHDR::Utils::ToND(_s, _size);
+                    const coord_t   end = CHDR::Utils::ToND(_e, _size);
 
                     Heap<ASNode, 2U, typename ASNode::Max> open(_capacity / 4U);
-                    open.Emplace({  _start, static_cast<Ts>(0), _h(_start, _end), nullptr });
+                    open.Emplace({_s, static_cast<Ts>(0), _h(start, end), nullptr });
 
                     StableForwardBuf<ASNode> buf;
 
@@ -272,7 +272,7 @@ namespace CHDR::Solvers {
 
                         auto curr = open.PopTop();
 
-                        if (curr.m_Index != _end) { // SEARCH FOR SOLUTION...
+                        if (curr.m_Index != _e) { // SEARCH FOR SOLUTION...
 
                             if (closed.Capacity() > curr.m_Index) {
                                 closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
@@ -282,19 +282,18 @@ namespace CHDR::Solvers {
                             for (const auto& neighbour : _maze.GetNeighbours(curr.m_Index)) {
 
                                 const auto& [nID, nDistance] = neighbour;
-
-                                const auto n = nID;
+                                const auto& n = nID;
 
                                 // Check if node is not already visited:
                                 if (!closed.Contains(n)) {
 
-                                    if (closed.Capacity() > curr.m_Index) {
-                                        closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
+                                    if (closed.Capacity() > n) {
+                                        closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                     }
                                     closed.Add(n);
 
                                     // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                    open.Emplace({ n, curr.m_GScore + static_cast<Ts>(nDistance), _h(nID, _end) * _weight, &buf.Emplace(std::move(curr)) });
+                                    open.Emplace({ n, curr.m_GScore + static_cast<Ts>(nDistance), _h(CHDR::Utils::ToND(n, _size), end) * _weight, &buf.Emplace(std::move(curr)) });
                                 }
                             }
                         }
@@ -303,7 +302,7 @@ namespace CHDR::Solvers {
                             // Recurse from end node to start node, inserting into a result buffer:
                             result.reserve(curr.m_GScore);
                             for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = temp->m_Parent) {
-                                result.emplace_back(temp->m_Index);
+                                result.emplace_back(Utils::ToND(temp->m_Index, _size));
                             }
 
                             // Reverse the result:

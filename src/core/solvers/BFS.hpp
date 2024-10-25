@@ -95,10 +95,10 @@ namespace CHDR::Solvers {
                                         // Check if node is not already visited:
                                         if (!closed.Contains(n)) {
 
-                                            if (closed.Capacity() > curr.m_Coord) {
-                                                closed.Reserve(std::min(_capacity * ((curr.m_Coord % _capacity) + 1U), count));
+                                            if (closed.Capacity() > n) {
+                                                closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                             }
-                                            closed.Add(curr.m_Coord);
+                                            closed.Add(n);
 
                                             // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
                                             open.push({ n, &buf.Emplace(std::move(curr)) });

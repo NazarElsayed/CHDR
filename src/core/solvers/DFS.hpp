@@ -24,7 +24,7 @@ namespace CHDR::Solvers {
 
         struct DFSNode final {
 
-            size_t m_Coord;
+            size_t m_Index;
 
             const DFSNode* RESTRICT m_Parent;
 
@@ -35,8 +35,8 @@ namespace CHDR::Solvers {
              */
             [[nodiscard]] constexpr DFSNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] constexpr DFSNode(const size_t &_coord, const DFSNode* RESTRICT const _parent) :
-                m_Coord(_coord),
+            [[nodiscard]] constexpr DFSNode(const size_t &_index, const DFSNode* RESTRICT const _parent) :
+                m_Index(_index),
                 m_Parent(std::move(_parent)) {}
         };
 
@@ -77,17 +77,17 @@ namespace CHDR::Solvers {
 
                         for (size_t i = 0U; i < open.size(); ++i) {
 
-                            const auto current(std::move(open.top()));
+                            const auto curr(std::move(open.top()));
                             open.pop();
 
-                            if (current.m_Coord != e) {
+                            if (curr.m_Index != e) {
 
-                                if (closed.Capacity() > current.m_Coord) {
-                                    closed.Reserve(std::min(_capacity * ((current.m_Coord % _capacity) + 1U), count));
+                                if (closed.Capacity() > curr.m_Index) {
+                                    closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
                                 }
-                                closed.Add(current.m_Coord);
+                                closed.Add(curr.m_Index);
 
-                                for (const auto& neighbour: _maze.GetNeighbours(current.m_Coord)) {
+                                for (const auto& neighbour: _maze.GetNeighbours(curr.m_Index)) {
 
                                     if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
@@ -96,13 +96,13 @@ namespace CHDR::Solvers {
                                         // Check if node is not already visited:
                                         if (!closed.Contains(n)) {
 
-                                            if (closed.Capacity() > current.m_Coord) {
-                                                closed.Reserve(std::min(_capacity * ((current.m_Coord % _capacity) + 1U), count));
+                                            if (closed.Capacity() > n) {
+                                                closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                             }
-                                            closed.Add(current.m_Coord);
+                                            closed.Add(n);
 
                                             // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                            open.push({n, &buf.Emplace(std::move(current)) });
+                                            open.push({n, &buf.Emplace(std::move(curr)) });
                                         }
                                     }
                                 }
@@ -111,8 +111,8 @@ namespace CHDR::Solvers {
 
                                 // Recurse from end node to start node, inserting into a result buffer:
                                 result.reserve(_capacity);
-                                for (const auto* temp = &current; temp->m_Parent != nullptr; temp = temp->m_Parent) {
-                                    result.emplace_back(Utils::ToND(temp->m_Coord, _maze.Size()));
+                                for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = temp->m_Parent) {
+                                    result.emplace_back(Utils::ToND(temp->m_Index, _maze.Size()));
                                 }
 
                                 // Reverse the result:

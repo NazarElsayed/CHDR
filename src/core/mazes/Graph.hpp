@@ -19,6 +19,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#include <stack>
 
 namespace CHDR::Mazes {
 
@@ -33,8 +34,8 @@ namespace CHDR::Mazes {
 
             std::size_t operator()(const std::pair<Ti, Ts> &edge) const {
 
-                std::size_t h1 = std::hash<Ti>()(edge.first);
-                std::size_t h2 = std::hash<Ts>()(edge.second);
+                size_t h1 = edge.first;
+                size_t h2 = std::hash<Ts>()(edge.second);
 
                 return h1 ^ (h2 << 1);
             }
@@ -42,12 +43,13 @@ namespace CHDR::Mazes {
 
         struct EdgeEqual {
 
-            bool operator()(const std::pair<Ti, Ts>& edge1, const std::pair<Ti, Ts>& edge2) const {
+            bool operator () (const std::pair<Ti, Ts>& edge1, const std::pair<Ti, Ts>& edge2) const {
                 return edge1.first == edge2.first && edge1.second == edge2.second;
             }
         };
 
-        using AdjacencyList = std::unordered_map<Ti, std::unordered_set<edge_t, EdgeHash, EdgeEqual>>;
+        using Neighbours = std::unordered_set<edge_t, EdgeHash, EdgeEqual>;
+        using AdjacencyList = std::unordered_map<Ti, Neighbours>;
 
         AdjacencyList m_Entries;
 
@@ -93,8 +95,28 @@ namespace CHDR::Mazes {
             }
         }
 
+        template<typename... Args>
+        [[nodiscard]]
+        constexpr const IDNode<Ti> At(const Args&... _id) const {
+            return At({ _id... });
+        }
+
+        [[nodiscard]]
+        constexpr const IDNode<Ti> At(const Ti& _id) const {
+
+            auto search = m_Entries.find(_id);
+
+#ifndef NDEBUG
+            if (search == m_Entries.end()) {
+                throw std::runtime_error("Error: The node with the specified ID does not exist in the graph.");
+            }
+#endif // NDEBUG
+
+            return { search->first };
+        }
+
         void Add(const Ti& _from_id, const edge_t& _edge) {
-            m_Entries[_from_id].insert(_edge);
+            m_Entries[_from_id].emplace(_edge);
         }
 
         void Remove(const Ti& _from_id, const edge_t& _edge) {
@@ -108,56 +130,83 @@ namespace CHDR::Mazes {
             }
         }
 
-        void MakeSparse() {
+        void Prune() {
 
-            for (size_t i = 0U; i < 1U; ++i) {
+            bool changed;
+            do {
+                changed = false;
 
-                std::vector<std::pair<Ti, edge_t>> edges_to_remove;
-                std::vector<std::pair<Ti, edge_t>> edges_to_add;
+                std::unordered_set<Ti> nodesToRemove{};
 
-                for (const auto &[current, outgoing_edges]: m_Entries) { // FOR EACH NODE IN THE GRAPH ...
-                    for (const auto &outgoing_edge: outgoing_edges) {
-                        const auto &[other, dOut] = outgoing_edge;
+                for (const auto& entry : m_Entries) {
 
-                        for (const auto &[neighbour, dIn]: m_Entries.at(other)) {
-                            if (neighbour == current) { // GET EVERY CONNECTION WHICH CONNECTS TO IT ...
+                    auto& [node, neighbours] = entry;
 
-                                // Identify those connections which are transitory.
-                                const bool isTransitory = dIn == dOut;
+                    if (m_Entries.size() <= 2U) {
+                        break;
+                    }
+                    else {
 
-                                if (isTransitory) {
-                                    edges_to_remove.emplace_back(current, outgoing_edge);
-                                    edges_to_add.emplace_back(other, std::make_pair(current, dOut + dIn));
+                        if (neighbours.size() == 2U) {
+                            auto& [n1_id, n1_cost] = *(  neighbours.begin());
+                            auto& [n2_id, n2_cost] = *(++neighbours.begin());
+
+                            auto s1 = m_Entries.find(n1_id);
+                            auto s2 = m_Entries.find(n2_id);
+
+//                            std::cout << node << '\n';
+//                            Print();
+
+                            // Snip the connections from the current node's neighbours to itself:
+                            if (s1 != m_Entries.end()) {
+
+                                auto& set = s1->second;
+                                auto sn = set.find(std::make_pair(node, n1_cost));
+
+                                if (sn != set.end()) {
+                                    set.emplace(n2_id, sn->second + n2_cost);
+                                    set.erase(sn);
                                 }
                             }
+                            if (s2 != m_Entries.end()) {
+
+                                auto& set = s2->second;
+                                auto sn = set.find(std::make_pair(node, n2_cost));
+
+                                if (sn != set.end()) {
+                                    set.emplace(n1_id, sn->second + n1_cost);
+                                    set.erase(sn);
+                                }
+                            }
+
+                            // Remove the current node from the graph.
+                            nodesToRemove.emplace(node);
+
+                            changed = true;
                         }
                     }
                 }
-
-                for (const auto &[node, edge]: edges_to_remove) {
-                    Remove(node, edge);
-                }
-
-                for (const auto &[node, edge]: edges_to_add) {
-                    Add(node, edge);
+                for (const auto& node : nodesToRemove) {
+                    m_Entries.erase(node);
                 }
             }
-
+            while (changed);
         }
 
         void Print() const {
-            for (const auto &[node, edges]: m_Entries) {
+
+            for (const auto& [node, edges]: m_Entries) {
+
                 std::cout << "Node " << node << ":\n";
-                for (const auto &edge: edges) {
+
+                for (const auto& edge: edges) {
                     std::cout << "  -> (" << edge.first << ", " << edge.second << ")\n";
                 }
             }
         }
 
         [[nodiscard]] constexpr const std::unordered_set<edge_t, EdgeHash, EdgeEqual>& GetNeighbours(const Ti& _id) const {
-
-            auto it = m_Entries.find(_id);
-            return it->second;
+            return m_Entries.find(_id)->second;
         }
 
         [[nodiscard]] constexpr bool Contains(const Ti& _id) const override {
