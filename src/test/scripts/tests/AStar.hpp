@@ -38,33 +38,15 @@ namespace Test::Tests {
             constexpr const coord_t start {};
                       coord_t end;
 
-            constexpr bool checkSolvable = false;
-
             /* GENERATE MAZE */
             const auto grid = CHDR::Mazes::Grid<Kd, Tm>(size, Generator::Grid::Generate<Tm>(start, end, 0.0F, 0.0F, seed, size));
-//            const auto gdata = std::vector<CHDR::WeightedNode<bool>>(CHDR::Utils::Product<size_t>(size), { false });
-//            end = _dimensions;
-//            for (auto& item : end) {
-//                --item;
-//            }
-//
-//            const auto grid = CHDR::Mazes::Grid<Kd, Tm>(size, gdata);
 
             /* GRID -> GRAPH */
             Debug::Log("(Graph):");
             auto graph = CHDR::Mazes::Graph<size_t, Kd, Ts>(grid);
             Debug::Log("\t[GENERATED] (" + std::to_string(graph.Count()) + " candidate nodes)");
-//
-//            std::cout << "Original Graph:\n";
-//            graph.Print();
-//            std::cout << "\n\n";
             graph.Prune();
             Debug::Log("\t[PRUNED] (" + std::to_string(graph.Count()) + " candidate nodes)");
-//
-//            std::cout << "Pruned Graph:\n";
-//            graph.Print();
-//            std::cout << "\n\n";
-
 
             /* MAX DRAW SIZE */
             const bool drawable (
@@ -74,43 +56,17 @@ namespace Test::Tests {
                       Kd <    3U
             );
 
-            /* TEST FOR SOLVABILITY: */
-            bool solvable(true);
+            const auto sw_start = std::chrono::high_resolution_clock::now();
 
-            std::string solvable_log("\t" + std::string("[SKIPPED] \t(~0ns)"));
-            if constexpr (checkSolvable) {
+            auto solver = CHDR::Solvers::AStar<Tm, Kd, Ts>();
+            auto path = solver.Solve(graph, CHDR::Utils::To1D(start, size), CHDR::Utils::To1D(end, size), size, HEURISTIC);
 
-                const auto sw_start = std::chrono::high_resolution_clock::now();
+            auto pathfinding_log = "\t" + std::string(path.size() != 0U ? "[SOLVED]" : "[IMPOSSIBLE]") + "\t(~" +
+                CHDR::Utils::ToString(std::chrono::duration_cast<std::chrono::duration<long double>>(std::chrono::high_resolution_clock::now() - sw_start).count()) + ")";
 
-                CHDR::Solvers::FloodFill<Tm, Kd> floodFill;
-                solvable = floodFill.Solve(grid, start, end, static_cast<size_t>(std::abs(ceil(CHDR::Heuristics<Kd, Ts>::ManhattanDistance(start, end)))));
-
-                solvable_log = "\t" + std::string(solvable != 0U ? "[SOLVABLE]" : "[IMPOSSIBLE]") + "\t(~" +
-                    CHDR::Utils::ToString(std::chrono::duration_cast<std::chrono::duration<long double>>(std::chrono::high_resolution_clock::now() - sw_start).count()) + ")";
+            if (drawable) {
+                Display<Tm, Kd>::DrawMaze(start, end, size, grid, path);
             }
-
-            // Solve the maze:
-            std::string pathfinding_log("\t" + std::string("[SKIPPED] \t(~0ns)"));
-            if (solvable) {
-
-                const auto sw_start = std::chrono::high_resolution_clock::now();
-
-                auto solver = CHDR::Solvers::AStar<Tm, Kd, Ts>();
-                auto path = solver.Solve(graph, CHDR::Utils::To1D(start, size), CHDR::Utils::To1D(end, size), size, HEURISTIC);
-
-                pathfinding_log = "\t" + std::string(path.size() != 0U ? "[SOLVED]" : "[IMPOSSIBLE]") + "\t(~" +
-                    CHDR::Utils::ToString(std::chrono::duration_cast<std::chrono::duration<long double>>(std::chrono::high_resolution_clock::now() - sw_start).count()) + ")";
-
-                if (drawable) {
-                    Display<Tm, Kd>::DrawMaze(start, end, size, grid, path);
-                }
-            }
-            else if (drawable) {
-                Display<Tm, Kd>::DrawMaze(start, end, size, grid);
-            }
-
-            Debug::Log("(Flood Fill):");
-            Debug::Log(solvable_log);
 
             Debug::Log("(A*):");
             Debug::Log(pathfinding_log);

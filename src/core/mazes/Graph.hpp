@@ -144,11 +144,10 @@ namespace CHDR::Mazes {
 
         void Prune() {
 
-            bool changed;
-            do {
-                changed = false;
+            std::vector<Ti> nodesToRemove;
 
-                std::unordered_set<Ti> nodesToRemove{};
+            do {
+                nodesToRemove.clear();
 
                 for (const auto& entry : m_Entries) {
 
@@ -160,6 +159,7 @@ namespace CHDR::Mazes {
                     else {
 
                         if (neighbours.size() == 2U) {
+
                             auto& [n1_id, n1_cost] = *(  neighbours.begin());
                             auto& [n2_id, n2_cost] = *(++neighbours.begin());
 
@@ -192,9 +192,7 @@ namespace CHDR::Mazes {
                             }
 
                             // Remove the current node from the graph.
-                            nodesToRemove.emplace(node);
-
-                            changed = true;
+                            nodesToRemove.emplace_back(node);
                         }
                     }
                 }
@@ -202,7 +200,9 @@ namespace CHDR::Mazes {
                     m_Entries.erase(node);
                 }
             }
-            while (changed);
+            while (!nodesToRemove.empty());
+
+            __malloc_consolidate();
         }
 
         void Print() const {
@@ -227,6 +227,10 @@ namespace CHDR::Mazes {
 
         [[nodiscard]] constexpr size_t Count() const override {
             return m_Entries.size();
+        }
+
+        void Clear() {
+            m_Entries.clear();
         }
 
         using       iterator = typename std::unordered_map<Ti, std::vector<edge_t>>::iterator;
