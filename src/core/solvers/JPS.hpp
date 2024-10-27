@@ -144,7 +144,7 @@ namespace CHDR::Solvers {
             const auto neighbours = _maze. template GetNeighbours<true>(_current);
             const auto map = rotationMap.at(_direction);
 
-            if (_direction[0] != 0 || _direction[1] != 0) { // Straight Direction
+            if (_direction[0] == 0 || _direction[1] == 0) { // Straight Direction
 
                 if (_current == _end) {
                     result.first  = true;
@@ -164,7 +164,9 @@ namespace CHDR::Solvers {
             }
             else { // Diagonal Direction
 
-                if (!neighbours[map[1]].first && !neighbours[map[3]].first) {
+                if (neighbours[map[1]].first ||
+                    neighbours[map[3]].first) {
+
                     if (_current == _end) {
                         result.first  = true;
                     }
@@ -175,21 +177,26 @@ namespace CHDR::Solvers {
                             result.first = true;
                         }
                         else {
-                            if (neighbours[map[7]].first) {
-                                result = Jump(_maze, neighbours[map[4]].second,
+                            if (neighbours[map[4]].first) {
+                                result.first = Jump(_maze, neighbours[map[4]].second,
                                     { neighbours[map[4]].second[0] - _current[0], neighbours[map[4]].second[1] - _current[1] },
-                                    _end);
+                                    _end).first;
+                            }
 
-                                if (!result.first) {
-                                    result = Jump(_maze, neighbours[map[6]].second,
+                            if (!result.first) {
+                                if (neighbours[map[6]].first) {
+                                    result.first = Jump(_maze, neighbours[map[6]].second,
                                         { neighbours[map[6]].second[0] - _current[0], neighbours[map[6]].second[1] - _current[1] },
-                                        _end);
+                                        _end).first;
                                 }
+                            }
 
-                                if (!result.first) {
+                            if (!result.first) {
+                                if (neighbours[map[7]].first) {
                                     result = Jump(_maze, neighbours[map[7]].second, _direction, _end);
                                 }
                             }
+
                         }
                     }
                 }
@@ -214,6 +221,7 @@ namespace CHDR::Solvers {
                 if (s != e) {
 
                     const auto count = _maze.Count();
+                    const auto size = _maze.Size();
 
                     _capacity = std::max(_capacity, std::max(s, e));
 
@@ -227,8 +235,6 @@ namespace CHDR::Solvers {
                     while (!open.Empty()) {
 
                         auto curr = open.PopTop();
-
-                        const auto size = _maze.Size();
 
                         if (curr.m_Index != e) { // SEARCH FOR SOLUTION...
 
