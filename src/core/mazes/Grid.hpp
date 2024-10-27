@@ -136,7 +136,7 @@ namespace CHDR::Mazes {
 
                         if (nCoord[j] < 0U || nCoord[j] > m_Size[j]) {
                             oob = true;
-                            break;
+                            //break;
                         }
                     }
 
