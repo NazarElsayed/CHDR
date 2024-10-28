@@ -81,7 +81,7 @@ namespace CHDR::Solvers {
 
                             if (curr.m_Coord != e) {
 
-                                if (closed.Capacity() > curr.m_Coord) {
+                                if (closed.Capacity() < curr.m_Coord) {
                                     closed.Reserve(std::min(_capacity * ((curr.m_Coord % _capacity) + 1U), count));
                                 }
                                 closed.Add(curr.m_Coord);
@@ -95,7 +95,7 @@ namespace CHDR::Solvers {
                                         // Check if node is not already visited:
                                         if (!closed.Contains(n)) {
 
-                                            if (closed.Capacity() > n) {
+                                            if (closed.Capacity() < n) {
                                                 closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                             }
                                             closed.Add(n);

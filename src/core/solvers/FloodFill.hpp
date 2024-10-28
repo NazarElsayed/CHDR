@@ -71,7 +71,7 @@ namespace CHDR::Solvers {
 
                                     if (!closed.Contains(n)) {
 
-                                        if (closed.Capacity() > n) {
+                                        if (closed.Capacity() < n) {
                                             closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                         }
                                         closed.Add(n);

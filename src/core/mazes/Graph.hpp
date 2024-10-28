@@ -94,8 +94,12 @@ namespace CHDR::Mazes {
             constexpr bool Sparse = true;
             if constexpr (Sparse) {
 
-                ExistenceSet<LowMemoryUsage> visited;
-                ExistenceSet<LowMemoryUsage> closed;
+            const auto count = _grid.Size();
+
+                const size_t _capacity = _grid.Count() / 4U;
+
+                ExistenceSet<LowMemoryUsage> visited(_capacity);
+                ExistenceSet<LowMemoryUsage> closed(_capacity);
 
                 std::vector<std::pair<Ti, Ts>> nodesToVisit;
 
@@ -106,6 +110,9 @@ namespace CHDR::Mazes {
                     if (element.IsActive()) {
 
                         closed.Clear();
+                        if (closed.Capacity() < index) {
+                            closed.Reserve(_capacity * ((index % _capacity) + 1U));
+                        }
                         closed.Add(index);
 
                         if (transitoryConnections.find(index) == transitoryConnections.end()) {
@@ -139,8 +146,15 @@ namespace CHDR::Mazes {
                                             nodesToVisit.pop_back();
 
                                             if (!visited.Contains(curr_idx)) {
+
+                                                if (visited.Capacity() < curr_idx) {
+                                                    visited.Reserve(_capacity * ((curr_idx % _capacity) + 1U));
+                                                }
                                                 visited.Add(curr_idx);
 
+                                                if (closed.Capacity() < curr_idx) {
+                                                    closed.Reserve(_capacity * ((curr_idx % _capacity) + 1U));
+                                                }
                                                 closed.Add(curr_idx);
 
                                                 for (const auto& n3 : _grid.GetNeighbours(curr_idx)) {

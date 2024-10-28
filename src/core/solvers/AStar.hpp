@@ -107,7 +107,7 @@ namespace CHDR::Solvers {
 
                         if (curr.m_Index != _e) { // SEARCH FOR SOLUTION...
 
-                            if (closed.Capacity() > curr.m_Index) {
+                            if (closed.Capacity() < curr.m_Index) {
                                 closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
                             }
                             closed.Add(curr.m_Index);
@@ -119,7 +119,7 @@ namespace CHDR::Solvers {
                                 // Check if node is not already visited:
                                 if (!closed.Contains(n)) {
 
-                                    if (closed.Capacity() > n) {
+                                    if (closed.Capacity() < n) {
                                         closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                     }
                                     closed.Add(n);
@@ -188,7 +188,7 @@ namespace CHDR::Solvers {
 
                         if (curr.m_Index != _e) { // SEARCH FOR SOLUTION...
 
-                            if (closed.Capacity() > curr.m_Index) {
+                            if (closed.Capacity() < curr.m_Index) {
                                 closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
                             }
                             closed.Add(curr.m_Index);
@@ -200,7 +200,7 @@ namespace CHDR::Solvers {
                                 // Check if node is not already visited:
                                 if (!closed.Contains(n)) {
 
-                                    if (closed.Capacity() > n) {
+                                    if (closed.Capacity() < n) {
                                         closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                     }
                                     closed.Add(n);
@@ -266,7 +266,7 @@ namespace CHDR::Solvers {
 
                         if (curr.m_Index != e) { // SEARCH FOR SOLUTION...
 
-                            if (closed.Capacity() > curr.m_Index) {
+                            if (closed.Capacity() < curr.m_Index) {
                                 closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
                             }
                             closed.Add(curr.m_Index);
@@ -280,7 +280,7 @@ namespace CHDR::Solvers {
                                     // Check if node is not already visited:
                                     if (!closed.Contains(n)) {
 
-                                        if (closed.Capacity() > n) {
+                                        if (closed.Capacity() < n) {
                                             closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                         }
                                         closed.Add(n);
@@ -350,7 +350,7 @@ namespace CHDR::Solvers {
 
                         if (curr.m_Index != e) { // SEARCH FOR SOLUTION...
 
-                            if (closed.Capacity() > curr.m_Index) {
+                            if (closed.Capacity() < curr.m_Index) {
                                 closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
                             }
                             closed.Add(curr.m_Index);
@@ -364,7 +364,7 @@ namespace CHDR::Solvers {
                                     // Check if node is not already visited:
                                     if (!closed.Contains(n)) {
 
-                                        if (closed.Capacity() > n) {
+                                        if (closed.Capacity() < n) {
                                             closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                         }
                                         closed.Add(n);
