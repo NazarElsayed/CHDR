@@ -82,11 +82,11 @@ namespace CHDR::Solvers {
             Ts m_GScore;
             Ts m_FScore;
 
-            const JPSNode* m_Parent;
+            const JPSNode* RESTRICT m_Parent;
 
             [[nodiscard]] constexpr JPSNode() = default;
 
-            [[nodiscard]] constexpr JPSNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, const JPSNode* const _parent) :
+            [[nodiscard]] constexpr JPSNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, const JPSNode* RESTRICT const _parent) :
                 m_Index(_coord),
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
@@ -137,6 +137,7 @@ namespace CHDR::Solvers {
          * 2 4 7
          */
 
+        [[nodiscard]]
         std::pair<bool, coord_t> Jump(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _current, const std::array<int, 2>& _direction, const coord_t& _end) const {
 
             std::pair<bool, coord_t> result { false, _current };
