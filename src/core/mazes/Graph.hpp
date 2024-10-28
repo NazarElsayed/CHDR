@@ -222,6 +222,8 @@ namespace CHDR::Mazes {
                     ++index;
                 }
             }
+
+            __malloc_consolidate();
         }
 
         template<typename... Args>
