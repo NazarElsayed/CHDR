@@ -106,8 +106,7 @@ namespace CHDR::Mazes {
         constexpr auto GetNeighbours(const coord_t& _id) const {
 
             constexpr size_t neighbours = IncludeDiagonals ?
-                            static_cast<size_t>(std::pow(3U, Kd)) - 1U :
-                            Kd * 2U;
+                static_cast<size_t>(std::pow(3U, Kd)) - 1U : Kd * 2U;
 
             auto result = std::array<std::pair<bool, coord_t>, neighbours>();
 
@@ -227,6 +226,21 @@ namespace CHDR::Mazes {
         [[nodiscard]]
         constexpr bool Contains(const size_t& _id) const override {
             return _id < Utils::Product<size_t>(m_Size);
+        }
+
+        [[nodiscard]]
+        constexpr bool IsTransitory(const size_t& _index) const {
+
+            size_t count = 0U;
+
+            for (const auto& n : GetNeighbours(_index)) {
+
+                if (const auto& [active, coord] = n; active) {
+                    ++count;
+                }
+            }
+
+            return count == 2U;
         }
 
         using               iterator = typename std::vector<WeightedNode < T>>::iterator;

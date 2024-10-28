@@ -64,7 +64,7 @@ namespace CHDR {
 
             std::array<_Tp, _Nm> result;
 
-			if (LIKELY(_vector.size() == _Nm)) {
+            if (LIKELY(_vector.size() == _Nm)) {
 
                 std::move(
                     _vector.begin(),

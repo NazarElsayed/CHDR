@@ -60,7 +60,7 @@ namespace CHDR::Mazes {
             }
         };
 
-        using Neighbours = std::unordered_set<edge_t, EdgeHash, EdgeEqual>;
+        using Neighbours    = std::unordered_set<edge_t, EdgeHash, EdgeEqual>;
         using AdjacencyList = std::unordered_map<Ti, Neighbours, IndexHash, IndexEqual>;
 
         AdjacencyList m_Entries;
@@ -71,8 +71,8 @@ namespace CHDR::Mazes {
 
             size_t node_id = 0U;
 
-            for (const auto &entry: _adjacency_list) {
-                for (const auto &edge: entry) {
+            for (const auto& entry: _adjacency_list) {
+                for (const auto& edge: entry) {
                     Add(node_id, edge);
                 }
                 ++node_id;
@@ -87,34 +87,127 @@ namespace CHDR::Mazes {
 
             /* Convert grid to (dense) graph. */
 
+            const auto size = _grid.Size();
+
             Ti index{0};
-            for (auto& element : _grid) {
 
-                if (element.IsActive()) {
+            constexpr bool Sparse = false;
+            if constexpr (Sparse) {
 
-                    for (auto& neighbour : _grid.GetNeighbours(index)) {
+                ExistenceSet<LowMemoryUsage> closed;
+                std::vector<std::pair<Ti, Ts>> nodesToVisit;
 
-                        if (const auto& [nActive, nCoord] = neighbour; nActive) {
+                std::unordered_map<Ti, std::vector<std::pair<Ti, Ts>>> transitoryConnections;
 
-                            const auto n = Utils::To1D(nCoord, _grid.Size());
+                for (auto& element : _grid) {
 
-                            Add(index, std::make_pair(n, static_cast<Ts>(1.0)));
+                    if (element.IsActive()) {
+
+                        closed.Clear();
+                        closed.Add(index);
+
+                        const bool isTransitory1 = transitoryConnections.find(index) != transitoryConnections.end() || _grid.IsTransitory(index);
+                        if (!isTransitory1) {
+
+                            for (const auto& n1 : _grid.GetNeighbours(index)) {
+
+                                if (const auto& [nActive, nCoord] = n1; nActive) {
+
+                                    const auto nIdx1 = Utils::To1D(nCoord, size);
+
+                                    auto t_search = transitoryConnections.find(nIdx1);
+
+                                    const bool isTransitory2 = t_search != transitoryConnections.end() || _grid.IsTransitory(nIdx1);
+                                    if (isTransitory2) {
+
+                                        if (t_search == transitoryConnections.end()) {
+
+                                            nodesToVisit.push_back(std::make_pair(nIdx1, static_cast<Ts>(1)));
+
+                                            while (!nodesToVisit.empty()) {
+
+                                                auto [curr_idx, curr_distance] = std::move(nodesToVisit.back());
+                                                nodesToVisit.pop_back();
+                                                closed.Add(curr_idx);
+
+                                                for (const auto& n3 : _grid.GetNeighbours(curr_idx)) {
+
+                                                    if (const auto& [sActive3, sCoord3] = n3; sActive3) {
+
+                                                        const auto s = Utils::To1D(sCoord3, size);
+
+                                                        if (!closed.Contains(s)) {
+
+                                                            auto next = std::make_pair(s, curr_distance + static_cast<Ts>(1));
+
+                                                            const bool isTransitory3 = transitoryConnections.find(s) != transitoryConnections.end() || _grid.IsTransitory(s);
+                                                            if (isTransitory3) {
+                                                                nodesToVisit.push_back(next);
+                                                            }
+                                                            else {
+
+                                                                auto search = transitoryConnections.find(nIdx1);
+                                                                if (search != transitoryConnections.end()) {
+                                                                    search->second.push_back(next);
+                                                                }
+                                                                else {
+                                                                    transitoryConnections.insert({ nIdx1, { next } });
+                                                                }
+
+                                                                nodesToVisit.clear();
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                        t_search = transitoryConnections.find(nIdx1);
+                                        if (t_search != transitoryConnections.end()) {
+                                            for (const auto& item : t_search->second) {
+                                                Add(index, item);
+                                            }
+                                        }
+                                    }
+                                    else if (!closed.Contains(nIdx1)) {
+                                        Add(index, std::make_pair(nIdx1, static_cast<Ts>(1)));
+                                    }
+                                }
+                            }
                         }
                     }
-                }
 
-                ++index;
+                    ++index;
+                }
+            }
+            else {
+                for (auto& element : _grid) {
+
+                    if (element.IsActive()) {
+
+                        for (auto& neighbour : _grid.GetNeighbours(index)) {
+
+                            if (const auto& [nActive, nCoord] = neighbour; nActive) {
+
+                                const auto n = Utils::To1D(nCoord, size);
+
+                                Add(index, std::make_pair(n, static_cast<Ts>(1)));
+                            }
+                        }
+                    }
+
+                    ++index;
+                }
             }
         }
 
         template<typename... Args>
-        [[nodiscard]]
-        constexpr const IDNode<Ti> At(const Args&... _id) const {
+        [[nodiscard]] constexpr IDNode<Ti> At(const Args&... _id) const {
             return At({ _id... });
         }
 
-        [[nodiscard]]
-        constexpr const IDNode<Ti> At(const Ti& _id) const {
+        [[nodiscard]] constexpr IDNode<Ti> At(const Ti& _id) const {
 
             auto search = m_Entries.find(_id);
 
@@ -166,10 +259,7 @@ namespace CHDR::Mazes {
                             auto s1 = m_Entries.find(n1_id);
                             auto s2 = m_Entries.find(n2_id);
 
-//                            std::cout << node << '\n';
-//                            Print();
-
-                            // Snip the connections from the current node's neighbours to itself:
+                            // Merge the connections from the current node with its neighbours:
                             if (s1 != m_Entries.end()) {
 
                                 auto& set = s1->second;
@@ -217,7 +307,7 @@ namespace CHDR::Mazes {
             }
         }
 
-        [[nodiscard]] constexpr const std::unordered_set<edge_t, EdgeHash, EdgeEqual>& GetNeighbours(const Ti& _id) const {
+        [[nodiscard]] constexpr const Neighbours& GetNeighbours(const Ti& _id) const {
             return m_Entries.find(_id)->second;
         }
 

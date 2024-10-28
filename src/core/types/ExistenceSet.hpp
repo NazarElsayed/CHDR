@@ -6,8 +6,8 @@
  * https://creativecommons.org/licenses/by-nc-nd/4.0/
  */
 
-#ifndef CHDR_DENSE_EXISTENCE_SET_HPP
-#define CHDR_DENSE_EXISTENCE_SET_HPP
+#ifndef CHDR_EXISTENCE_SET_HPP
+#define CHDR_EXISTENCE_SET_HPP
 
 #include <vector>
 #include <algorithm>
@@ -185,6 +185,10 @@ namespace CHDR {
             m_Bits.clear();
         }
 
+        /**
+         * @brief Trims unused elements from the end of the set.
+         * @details Shrinks the internal container of the set to reduce the structure's overall memory footprint.
+         */
         void Trim() {
             m_Bits.shrink_to_fit();
         }
@@ -233,4 +237,4 @@ namespace CHDR {
 
 } // CHDR
 
-#endif //CHDR_DENSE_EXISTENCE_SET_HPP
+#endif //CHDR_EXISTENCE_SET_HPP
