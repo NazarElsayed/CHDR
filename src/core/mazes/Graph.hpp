@@ -101,7 +101,7 @@ namespace CHDR::Mazes {
                 ExistenceSet<LowMemoryUsage> visited(_capacity);
                 ExistenceSet<LowMemoryUsage> closed(_capacity);
 
-                std::vector<std::pair<Ti, Ts>> nodesToVisit;
+                std::vector<std::pair<Ti, Ts>> nodesToVisit(64U);
 
                 std::unordered_map<Ti, std::vector<std::pair<Ti, Ts>>> transitoryConnections;
 
@@ -115,16 +115,16 @@ namespace CHDR::Mazes {
                         }
                         closed.Add(index);
 
+                        // Check not transitory (fast, partial).
                         if (transitoryConnections.find(index) == transitoryConnections.end()) {
 
                             auto index_neighbours = _grid.GetNeighbours(index);
 
-                            // Count active neighbors.
+                            // Check not transitory (slow, exact).
                             size_t nCount = 0U;
                             for (const auto& n1 : index_neighbours) {
-                                if (const auto& [nActive, nCoord] = n1; nActive) {
-
-                                    if (++nCount > 2U) { break; }
+                                if (const auto& [nActive, nCoord] = n1; nActive && ++nCount > 2U) {
+                                    break;
                                 }
                             }
 
@@ -137,62 +137,65 @@ namespace CHDR::Mazes {
 
                                         const auto nIdx1 = Utils::To1D(nCoord1, size);
 
-                                        visited.Clear();
-                                        nodesToVisit.push_back({ nIdx1, static_cast<Ts>(1) });
+                                        //auto t_search = transitoryConnections.find(nIdx1);
+                                        //if (t_search == transitoryConnections.end()) {
 
-                                        while (!nodesToVisit.empty()) {
+                                            visited.Clear();
+                                            nodesToVisit.push_back({ nIdx1, static_cast<Ts>(1) });
 
-                                            auto [curr_idx, curr_distance] = std::move(nodesToVisit.back());
-                                            nodesToVisit.pop_back();
+                                            while (!nodesToVisit.empty()) {
 
-                                            if (!visited.Contains(curr_idx)) {
+                                                auto [curr_idx, curr_distance] = std::move(nodesToVisit.back());
+                                                nodesToVisit.pop_back();
 
-                                                if (visited.Capacity() < curr_idx) {
-                                                    visited.Reserve(_capacity * ((curr_idx % _capacity) + 1U));
-                                                }
-                                                visited.Add(curr_idx);
+                                                if (!visited.Contains(curr_idx)) {
 
-                                                if (closed.Capacity() < curr_idx) {
-                                                    closed.Reserve(_capacity * ((curr_idx % _capacity) + 1U));
-                                                }
-                                                closed.Add(curr_idx);
+                                                    if (visited.Capacity() < curr_idx) {
+                                                        visited.Reserve(_capacity * ((curr_idx % _capacity) + 1U));
+                                                    }
+                                                    visited.Add(curr_idx);
 
-                                                for (const auto& n3 : _grid.GetNeighbours(curr_idx)) {
+                                                    if (closed.Capacity() < curr_idx) {
+                                                        closed.Reserve(_capacity * ((curr_idx % _capacity) + 1U));
+                                                    }
+                                                    closed.Add(curr_idx);
 
-                                                    if (const auto& [sActive3, sCoord3] = n3; sActive3) {
+                                                    for (const auto& n3 : _grid.GetNeighbours(curr_idx)) {
 
-                                                        const auto s = Utils::To1D(sCoord3, size);
+                                                        if (const auto& [sActive3, sCoord3] = n3; sActive3) {
 
-                                                        if (!closed.Contains(s)) {
+                                                            const auto s = Utils::To1D(sCoord3, size);
 
-                                                            auto next = std::make_pair(s, curr_distance + static_cast<Ts>(1));
+                                                            if (!closed.Contains(s)) {
 
-                                                            const bool isTransitory3 = transitoryConnections.find(s) != transitoryConnections.end() || _grid.IsTransitory(s);
+                                                                auto next = std::make_pair(s, curr_distance + static_cast<Ts>(1));
 
-                                                            if (isTransitory3) {
-                                                                nodesToVisit.push_back(next);
-                                                            }
-                                                            else {
+                                                                const bool isTransitory3 = transitoryConnections.find(s) != transitoryConnections.end() || _grid.IsTransitory(s);
 
-                                                                auto search = transitoryConnections.find(nIdx1);
-                                                                if (search != transitoryConnections.end()) {
-                                                                    search->second.push_back(next);
+                                                                if (isTransitory3) {
+                                                                    nodesToVisit.push_back(next);
                                                                 }
                                                                 else {
-                                                                    transitoryConnections.insert({ nIdx1, { next } });
-                                                                }
 
-                                                                nodesToVisit.clear();
-                                                                break;
+                                                                    auto search = transitoryConnections.find(nIdx1);
+                                                                    if (search != transitoryConnections.end()) {
+                                                                        search->second.push_back(next);
+                                                                    }
+                                                                    else {
+                                                                        transitoryConnections.insert({ nIdx1, { next } });
+                                                                    }
+
+                                                                    nodesToVisit.clear();
+                                                                    break;
+                                                                }
                                                             }
                                                         }
                                                     }
                                                 }
                                             }
-                                        }
+                                        //}
 
-                                        auto t_search = transitoryConnections.find(nIdx1);
-                                        if (t_search != transitoryConnections.end()) {
+                                        if (auto t_search = transitoryConnections.find(nIdx1); t_search != transitoryConnections.end()) {
                                             for (const auto& item : t_search->second) {
                                                 Add(index, item);
                                             }
