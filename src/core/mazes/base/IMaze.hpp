@@ -9,6 +9,8 @@
 #ifndef CHDR_IMAZE_HPP
 #define CHDR_IMAZE_HPP
 
+#include <cstddef>
+
 #include "../../nodes/base/INode.hpp"
 
 namespace CHDR::Mazes {

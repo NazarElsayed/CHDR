@@ -21,10 +21,10 @@ namespace CHDR {
 
     template<typename>
     struct Alignment {};
-    template<> struct Alignment<LowestMemoryUsage>  { using Type =      bool; };
-    template<> struct Alignment<LowMemoryUsage>     { using Type =      char; };
-    template<> struct Alignment<Balanced>           { using Type =  uint32_t; };
-    template<> struct Alignment<HighestPerformance> { using Type = uintptr_t; };
+    template<> struct Alignment<LowestMemoryUsage>  { using Type [[maybe_unused]] =      bool; };
+    template<> struct Alignment<LowMemoryUsage>     { using Type [[maybe_unused]] =      char; };
+    template<> struct Alignment<Balanced>           { using Type [[maybe_unused]] =  uint32_t; };
+    template<> struct Alignment<HighestPerformance> { using Type [[maybe_unused]] = uintptr_t; };
 
     /**
      * @class DenseExistenceSet
@@ -61,7 +61,7 @@ namespace CHDR {
          * @brief Initialise set.
          * @param[in] _capacity Initial capacity of the set. Must be larger than 0.
          */
-        constexpr explicit ExistenceSet(const size_t& _capacity = 1U) {
+        [[maybe_unused]] constexpr explicit ExistenceSet(const size_t& _capacity = 1U) {
             Reserve(_capacity);
         }
 
@@ -72,7 +72,7 @@ namespace CHDR {
          * @param[in] _items Items to construct the set using.
          * @param[in] _capacity Initial capacity of the set. If a value less than 1 is assigned, it will use the size of the provided collection.
          */
-        constexpr ExistenceSet(const std::initializer_list<size_t>& _items, const size_t& _capacity = 0U) {
+        [[maybe_unused]] constexpr ExistenceSet(const std::initializer_list<size_t>& _items, const size_t& _capacity = 0U) {
 
             size_t auto_capacity = _capacity;
 
@@ -108,7 +108,7 @@ namespace CHDR {
          * @see set::Prune()
          * @see set::Clear()
          */
-        void Remove(const size_t& _hash) {
+        [[maybe_unused]] void Remove(const size_t& _hash) {
 
             if (_hash < m_Bits.size()) {
                 m_Bits[_hash] = static_cast<boolean_t>(false);
@@ -129,7 +129,7 @@ namespace CHDR {
          *
          * @see set::Clear()
          */
-        void Prune() {
+        [[maybe_unused]] void Prune() {
 
             const auto it = std::find_if(
                 m_Bits.rbegin(),
@@ -155,7 +155,7 @@ namespace CHDR {
          *
          * @see DenseExistenceSet::Capacity()
          */
-        void Reserve(const size_t& _new_capacity) {
+        [[maybe_unused]] void Reserve(const size_t& _new_capacity) {
             m_Bits.reserve(_new_capacity);
         }
 
@@ -173,7 +173,7 @@ namespace CHDR {
          * @see DenseExistenceSet::Prune()
          * @see DenseExistenceSet::Clear()
          */
-        void Resize(const size_t& _new_size, const boolean_t& _new_value = static_cast<boolean_t>(false)) {
+        [[maybe_unused]] void Resize(const size_t& _new_size, const boolean_t& _new_value = static_cast<boolean_t>(false)) {
             m_Bits.resize(_new_size, _new_value);
         }
 
@@ -181,7 +181,7 @@ namespace CHDR {
          * @brief Clear the content of the set.
          * @details Remove all elements from the set.
          */
-        void Clear() {
+        [[maybe_unused]] void Clear() {
             m_Bits.clear();
         }
 
@@ -189,7 +189,7 @@ namespace CHDR {
          * @brief Trims unused elements from the end of the set.
          * @details Shrinks the internal container of the set to reduce the structure's overall memory footprint.
          */
-        void Trim() {
+        [[maybe_unused]] void Trim() {
             m_Bits.shrink_to_fit();
         }
 
@@ -199,7 +199,7 @@ namespace CHDR {
          *
          * @return The size of the set.
          */
-        constexpr auto Size() const {
+        [[maybe_unused]] [[nodiscard]] constexpr auto Size() const {
             return m_Bits.size();
         }
 
@@ -209,7 +209,7 @@ namespace CHDR {
          *
          * @return The capacity of the set.
          */
-        constexpr auto Capacity() const {
+        [[maybe_unused]] [[nodiscard]] constexpr auto Capacity() const {
             return m_Bits.capacity();
         }
 

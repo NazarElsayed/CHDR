@@ -67,7 +67,7 @@ namespace CHDR::Mazes {
 
     public:
 
-        Graph(std::initializer_list<std::initializer_list<edge_t>> _adjacency_list) : m_Entries{} {
+        [[maybe_unused]] Graph(std::initializer_list<std::initializer_list<edge_t>> _adjacency_list) : m_Entries{} {
 
             size_t node_id = 0U;
 
@@ -83,7 +83,7 @@ namespace CHDR::Mazes {
 #if __cplusplus >= 202302L
         constexpr
 #endif // __cplusplus >= 202302L
-        Graph(const Grid<Kd, Tm>& _grid) : m_Entries{} {
+        [[maybe_unused]] Graph(const Grid<Kd, Tm>& _grid) : m_Entries{} {
 
             /* Convert grid to (dense) graph. */
 
@@ -241,7 +241,7 @@ namespace CHDR::Mazes {
             m_Entries[_from_id].emplace(_edge);
         }
 
-        void Remove(const Ti& _from_id, const edge_t& _edge) {
+        [[maybe_unused]] void Remove(const Ti& _from_id, const edge_t& _edge) {
 
             if (Contains(_from_id)) {
                 m_Entries[_from_id].erase(_edge);
@@ -252,7 +252,7 @@ namespace CHDR::Mazes {
             }
         }
 
-        void Prune() {
+        [[maybe_unused]] void Prune() {
 
             std::vector<Ti> nodesToRemove;
 
@@ -312,7 +312,7 @@ namespace CHDR::Mazes {
             malloc_consolidate();
         }
 
-        void Print() const {
+        [[maybe_unused]] void Print() const {
 
             for (const auto& [node, edges]: m_Entries) {
 
@@ -324,19 +324,19 @@ namespace CHDR::Mazes {
             }
         }
 
-        [[nodiscard]] constexpr const Neighbours& GetNeighbours(const Ti& _id) const {
+        [[maybe_unused]] [[nodiscard]] constexpr const Neighbours& GetNeighbours(const Ti& _id) const {
             return m_Entries.find(_id)->second;
         }
 
-        [[nodiscard]] constexpr bool Contains(const Ti& _id) const override {
+        [[maybe_unused]] [[nodiscard]] constexpr bool Contains(const Ti& _id) const override {
             return m_Entries.find(_id) != m_Entries.end();
         }
 
-        [[nodiscard]] constexpr size_t Count() const override {
+        [[maybe_unused]] [[nodiscard]] constexpr size_t Count() const override {
             return m_Entries.size();
         }
 
-        void Clear() {
+        [[maybe_unused]] void Clear() {
             m_Entries.clear();
         }
 

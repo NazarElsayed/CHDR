@@ -54,17 +54,17 @@ namespace CHDR {
 		 * does not match the size of the array.
 		 *
 		 * @tparam _Tp The type of elements in the vector and array.
-		 * @tparam _Nm The size of the array.
+		 * @tparam Nm The size of the array.
 		 * @param[in,out] _vector The vector to be converted.
 		 * @return The resulting array.
 		 * @throws std::runtime_error if the size of the vector does not match the size of the array.
 		 */
-		template<typename _Tp, const size_t _Nm>
-		static constexpr std::array<_Tp, _Nm> ToArray(const std::vector<_Tp>&& _vector) {
+		template<typename Tp, const size_t Nm>
+		static constexpr std::array<Tp, Nm> ToArray(const std::vector<Tp>&& _vector) {
 
-            std::array<_Tp, _Nm> result;
+            std::array<Tp, Nm> result;
 
-            if (LIKELY(_vector.size() == _Nm)) {
+            if (LIKELY(_vector.size() == Nm)) {
 
                 std::move(
                     _vector.begin(),
@@ -73,7 +73,7 @@ namespace CHDR {
                 );
             }
             else {
-                throw std::runtime_error("Vector -> Array size mismatch! (" + std::to_string(_vector.size()) + ", " + std::to_string(_Nm) + ")");
+                throw std::runtime_error("Vector -> Array size mismatch! (" + std::to_string(_vector.size()) + ", " + std::to_string(Nm) + ")");
             }
 
 			return result;
@@ -88,7 +88,7 @@ namespace CHDR {
 		 * of the vector, only the available elements are moved into the vector.
 		 *
 		 * @tparam _Tp The type of elements in the array.
-		 * @tparam _Nm The size of the array.
+		 * @tparam Nm The size of the array.
 		 * @param[in,out] _array The std::array whose elements are to be moved to the std::vector.
 		 * @return std::vector<T> The resulting std::vector with moved elements.
 		 *
@@ -96,11 +96,11 @@ namespace CHDR {
 		 * or equal to the maximum value of size_t. If this condition is not met, a
 		 * static_assert will be triggered.
 		 */
-		template<typename _Tp, const size_t _Nm>
-		static constexpr std::vector<_Tp> ToVector(const std::array<_Tp, _Nm>&& _array) {
+		template<typename Tp, const size_t Nm>
+		static constexpr std::vector<Tp> ToVector(const std::array<Tp, Nm>&& _array) {
 
-			std::vector<_Tp> result;
-			result.reserve(_Nm);
+			std::vector<Tp> result;
+			result.reserve(Nm);
 
 			std::move(_array.begin(), _array.end(), std::back_inserter(result));
 
@@ -115,12 +115,12 @@ namespace CHDR {
 		 * be more efficient than copying elements individually.
 		 * After the move, the source vector will be empty.
 		 *
-		 * @tparam _Tp The type of elements in the vectors.
+		 * @tparam Tp The type of elements in the vectors.
 		 * @param[in] _from The source vector from which elements will be moved.
 		 * @param[in] _to The destination vector to which elements will be moved.
 		 */
-		template<typename _Tp>
-		static constexpr void MoveInto(std::vector<_Tp>&& _from, std::vector<_Tp>& _to) {
+		template<typename Tp>
+		static constexpr void MoveInto(std::vector<Tp>&& _from, std::vector<Tp>& _to) {
 
 			_to.reserve(_from.size());
 
@@ -148,8 +148,8 @@ namespace CHDR {
 		 *
 		 * @see std::vector
 		 */
-		template<typename _Tp>
-		static constexpr void CopyInto(const std::vector<_Tp>& _from, std::vector<_Tp>& _to) {
+		template<typename Tp>
+		static constexpr void CopyInto(const std::vector<Tp>& _from, std::vector<Tp>& _to) {
 
 			_to.reserve(_from.size());
 

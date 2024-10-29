@@ -103,22 +103,22 @@ namespace CHDR {
         [[nodiscard]] constexpr const T&  Top() const { return *begin();           }
         [[nodiscard]] constexpr const T& Back() const { return *end();             }
 
-        constexpr void Add(const T& _item) {
+        [[maybe_unused]] constexpr void Add(const T& _item) {
             m_Data.push_back(_item);
             SortUp(m_Data.back());
         }
 
-        constexpr void Add(T&& _item) {
+        [[maybe_unused]] constexpr void Add(T&& _item) {
             m_Data.push_back(std::move(_item));
             SortUp(m_Data.back());
         }
 
-        constexpr void Emplace(T&& _item) {
+        [[maybe_unused]] constexpr void Emplace(T&& _item) {
             m_Data.emplace_back(std::move(_item));
             SortUp(m_Data.back());
         }
 
-        constexpr void Remove(const T& _item) {
+        [[maybe_unused]] constexpr void Remove(const T& _item) {
 
             auto& i = index_of(const_cast<T &>(_item));
             if (i < Size()) {
@@ -150,7 +150,7 @@ namespace CHDR {
             }
         }
 
-        constexpr T PopTop() {
+        [[maybe_unused]] constexpr T PopTop() {
 
             T result(std::move(Top()));
 
@@ -165,7 +165,7 @@ namespace CHDR {
             return result;
         }
 
-        constexpr T PopBack() {
+        [[maybe_unused]] constexpr T PopBack() {
 
             T result(std::move(Back()));
 
@@ -176,32 +176,32 @@ namespace CHDR {
             return result;
         }
 
-        constexpr void Update(T& _item) {
+        [[maybe_unused]] constexpr void Update(T& _item) {
             SortUp(m_Data[index_of(_item)]);
         }
 
-        constexpr bool Contains(T& _item) {
+        [[maybe_unused]] constexpr bool Contains(T& _item) {
 
             const auto& i = index_of(_item);
             return !Empty() && i < m_Data.size() && _item == m_Data[i];
         }
 
-        constexpr void Reserve(const size_t& capacity) {
+        [[maybe_unused]] constexpr void Reserve(const size_t& capacity) {
             m_Data.reserve(capacity);
         }
 
-        constexpr void Clear() {
+        [[maybe_unused]] constexpr void Clear() {
             m_Data.erase(begin(), end());
         }
 
-        constexpr void Trim() {
+        [[maybe_unused]] constexpr void Trim() {
             m_Data.shrink_to_fit();
         }
 
 #ifndef HEAP_SUPPRESS_EXCEPTION_WARNING
         [[deprecated("This function does not perform bounds checking in 'runtime' compiled builds.\nSuppress this warning by defining \"HEAP_SUPPRESS_UNSAFE_WARNING\".")]]
 #endif
-        const T& operator[](const size_t& _index) const {
+        [[maybe_unused]] const T& operator[](const size_t& _index) const {
 
 #ifndef NDEBUG
             return m_Data.at(_index + 1U);

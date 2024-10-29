@@ -18,12 +18,18 @@ namespace CHDR {
         size_t m_Index;
         std::forward_list<Block> m_Blocks;
 
+        void Expand() {
+            m_Blocks.emplace_front(std::make_unique<T[]>(BlockWidth));
+            m_Index = 0U;
+        }
+
     public:
-        constexpr explicit StableForwardBuf() : m_Index(0U), m_Blocks() {
+
+        [[maybe_unused]] constexpr explicit StableForwardBuf() : m_Index(0U), m_Blocks() {
             m_Blocks.emplace_front(std::make_unique<T[]>(BlockWidth));
         }
 
-        constexpr StableForwardBuf(const std::initializer_list<size_t>& _items) : m_Index(0U), m_Blocks() {
+        [[maybe_unused]] constexpr StableForwardBuf(const std::initializer_list<size_t>& _items) : m_Index(0U), m_Blocks() {
 
             m_Blocks.emplace_front(std::make_unique<T[]>(BlockWidth));
 
@@ -32,12 +38,7 @@ namespace CHDR {
             }
         }
 
-        void Expand() {
-            m_Blocks.emplace_front(std::make_unique<T[]>(BlockWidth));
-            m_Index = 0U;
-        }
-
-        T& Push(const T& _item) {
+        [[maybe_unused]] [[nodiscard]] T& Push(const T& _item) {
 
             if (m_Index >= BlockWidth) {
                 Expand();
@@ -46,7 +47,7 @@ namespace CHDR {
             return m_Blocks.front()[m_Index++] = _item;
         }
 
-        T& Emplace(T&& _item) {
+        [[maybe_unused]] [[nodiscard]] T& Emplace(T&& _item) {
 
             if (m_Index >= BlockWidth) {
                 Expand();
@@ -55,12 +56,13 @@ namespace CHDR {
             return m_Blocks.front()[m_Index++] = std::move(_item);
         }
 
-        void Clear() {
+        [[maybe_unused]] void Clear() {
             m_Blocks.clear();
         }
 
         template<bool Const>
         class StableIterator {
+
         private:
 
             using BlockIterator = typename std::conditional<Const,
@@ -79,15 +81,15 @@ namespace CHDR {
 
         public:
 
-            using iterator_category = std::forward_iterator_tag;
+            using iterator_category [[maybe_unused]] = std::forward_iterator_tag;
 
-            using      value_type = T;
-            using difference_type = std::ptrdiff_t;
+            using      value_type [[maybe_unused]] = T;
+            using difference_type [[maybe_unused]] = std::ptrdiff_t;
 
             using   pointer = typename std::conditional<Const, const T*, T*>::type;
             using reference = typename std::conditional<Const, const T&, T&>::type;
 
-            StableIterator(BlockIterator b_iter, BlockIterator b_end, size_t remaining_elem) :
+            [[maybe_unused]] StableIterator(BlockIterator b_iter, BlockIterator b_end, size_t remaining_elem) :
                 block_iter(b_iter),
                 block_end(b_end),
                 remaining_elements(remaining_elem)

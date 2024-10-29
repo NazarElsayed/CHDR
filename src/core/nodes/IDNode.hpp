@@ -29,15 +29,15 @@ namespace CHDR {
 
         constexpr IDNode(const Ti& _id) : m_ID(_id) {}
 
-        [[nodiscard]] bool IsActive() const override  {
+        [[maybe_unused]] [[nodiscard]] bool IsActive() const override  {
             return true;
         }
 
-        [[nodiscard]] constexpr const Ti& ID() const {
+        [[maybe_unused]] [[nodiscard]] constexpr const Ti& ID() const {
             return m_ID;
         }
 
-        constexpr void ID(const Ti& _id) {
+        [[maybe_unused]] constexpr void ID(const Ti& _id) {
             m_ID = _id;
         }
     };

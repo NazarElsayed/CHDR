@@ -542,7 +542,7 @@ namespace {
 		
 		public:
 		
-			static size_t Get(std::thread::id _id) {
+            [[maybe_unused]] [[nodiscard]] static size_t Get(std::thread::id _id) {
 				
 				const std::lock_guard<std::mutex> guard(s_Lock);
 				
@@ -559,7 +559,7 @@ namespace {
 				return result;
 			}
 			
-			static size_t Get() {
+            [[maybe_unused]] [[nodiscard]] static size_t Get() {
 				return Get(std::this_thread::get_id());
 			}
 			
@@ -574,7 +574,7 @@ namespace {
 		 * @param[in] _type (optional) The type of log message to log.
 		 * @param[in] _makeInline (optional) A flag indicating if the log message should be displayed inline.
 		 */
-		static void Assert(const bool& _condition, const std::string_view& _message, const LogType& _type = LogType::Debug, const bool& _makeInline = false) noexcept {
+        [[maybe_unused]] static void Assert(const bool& _condition, const std::string_view& _message, const LogType& _type = LogType::Debug, const bool& _makeInline = false) noexcept {
 			
 			if (!_condition) {
 				Debug::Log(_message, _type, _makeInline);
@@ -588,7 +588,7 @@ namespace {
 		 *
 		 * @warning Please note that if the function cannot identify the correct signal for a breakpoint, no breakpoint will occur.
 		 */
-		static void Break() noexcept  {
+        [[maybe_unused]] static void Break() noexcept  {
 		
 #if !defined(NDEBUG) || _DEBUG
 			
@@ -616,7 +616,7 @@ namespace {
 		 * @par Related Function
 		 * - Debug::Flush()
 		 */
-		static void Flush() noexcept {
+        [[maybe_unused]] static void Flush() noexcept {
 			
 			const std::lock_guard<std::mutex> guard(s_Lock);
 			
@@ -646,7 +646,7 @@ namespace {
 		 * @par Related Functions
 		 * - Debug::Log(const std::string_view&, const LogType&, const bool&)
 		 */
-		static void Log(const std::exception& e, const LogType& _type = LogType::Error, const bool& _makeInline = false) noexcept  {
+        [[maybe_unused]] static void Log(const std::exception& e, const LogType& _type = LogType::Error, const bool& _makeInline = false) noexcept  {
 			Debug::Log(e.what(), _type, _makeInline);
 		}
 		
@@ -660,7 +660,7 @@ namespace {
 		 * @param[in] _type (optional) The log type for the message (default is `LogType::Debug`).
 		 * @param[in] _makeInline (optional) Specifies whether the log message should be displayed inline (default is `false`).
 		 */
-		static void Log(const std::string_view& _message, const LogType& _type = LogType::Debug, const bool& _makeInline = false) noexcept {
+        [[maybe_unused]] static void Log(const std::string_view& _message, const LogType& _type = LogType::Debug, const bool& _makeInline = false) noexcept {
 			
 			const std::lock_guard<std::mutex> guard(s_Lock);
 			
@@ -731,7 +731,7 @@ namespace {
 			catch (...) {}
 		}
 		
-		static std::vector<std::string> StackTrace(const size_t& _frames) {
+        [[maybe_unused]] [[nodiscard]] static std::vector<std::string> StackTrace(const size_t& _frames) {
 
 			std::vector<std::string> result;
 			
