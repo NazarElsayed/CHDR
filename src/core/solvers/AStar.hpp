@@ -21,18 +21,19 @@
 
 namespace CHDR::Solvers {
 
-    template<typename Tm, const size_t Kd, typename Ts>
+    template<typename Tm, const size_t Kd, typename Ts, typename Ti>
     class AStar final {
 
-        static_assert(std::is_integral_v<Ts> || std::is_floating_point_v<Ts>, "Ts must be either an integral or floating point type");
+        static_assert(std::is_integral_v<Ts> || std::is_floating_point_v<Ts>, "Ts must be either an integral or floating point type.");
+        static_assert(std::is_integral_v<Ti>, "Ti must be an integral type.");
 
     private:
 
-        using coord_t = Coord<size_t, Kd>;
+        using coord_t = Coord<Ti, Kd>;
 
         struct ASNode final {
 
-            size_t m_Index;
+            Ti m_Index;
 
             Ts m_GScore;
             Ts m_FScore;
@@ -46,8 +47,8 @@ namespace CHDR::Solvers {
              */
             [[nodiscard]] constexpr ASNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default) 
 
-            [[nodiscard]] constexpr ASNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, const ASNode* RESTRICT const _parent) :
-                m_Index(_coord),
+            [[nodiscard]] constexpr ASNode(const Ti &_index, const Ts &_gScore, const Ts &_hScore, const ASNode* RESTRICT const _parent) :
+                m_Index(_index),
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
                 m_Parent(std::move(_parent)) {}
@@ -75,7 +76,7 @@ namespace CHDR::Solvers {
             };
         };
 
-        auto SolveHeap(const Mazes::Graph<size_t, Kd, Ts>& _maze, const size_t& _s, const size_t& _e, const coord_t& _size, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
+        auto SolveHeap(const Mazes::Graph<Ti, Kd, Ts>& _maze, const Ti& _s, const Ti& _e, const coord_t& _size, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
 
             std::vector<coord_t> result;
 
@@ -153,7 +154,7 @@ namespace CHDR::Solvers {
         }
 
         template <size_t StackSize>
-        auto SolveLinear(const Mazes::Graph<size_t, Kd, Ts>& _maze, const size_t& _s, const size_t& _e, const coord_t& _size, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
+        auto SolveLinear(const Mazes::Graph<Ti, Kd, Ts>& _maze, const Ti& _s, const Ti& _e, const coord_t& _size, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
 
             std::vector<coord_t> result;
 
@@ -401,7 +402,7 @@ namespace CHDR::Solvers {
 
     public:
 
-        auto Solve(const Mazes::Graph<size_t, Kd, Ts>& _maze, const size_t& _s, const size_t& _e, const coord_t& _size, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
+        auto Solve(const Mazes::Graph<Ti, Kd, Ts>& _maze, const Ti& _s, const Ti& _e, const coord_t& _size, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
 
             /*
              * Determine whether to solve using a linear search or constant-time

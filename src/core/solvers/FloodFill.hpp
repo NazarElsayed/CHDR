@@ -19,12 +19,14 @@
 
 namespace CHDR::Solvers {
 
-    template<typename Tm, const size_t Kd>
+    template<typename Tm, const size_t Kd, typename Ti>
     class FloodFill final {
+
+        static_assert(std::is_integral_v<Ti>, "Ti must be an integral type.");
 
     private:
 
-        using coord_t = Coord<size_t, Kd>;
+        using coord_t = Coord<Ti, Kd>;
 
     public:
 
@@ -45,7 +47,7 @@ namespace CHDR::Solvers {
 
                     const auto count = _maze.Count();
 
-                    std::queue<size_t> open;
+                    std::queue<Ti> open;
                     open.emplace(s);
 
                     ExistenceSet closed ({ s }, std::max(_capacity, std::max(s, e)));

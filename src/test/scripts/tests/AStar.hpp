@@ -24,12 +24,12 @@ namespace Test::Tests {
 
     public:
 
-        template <typename Tm, const size_t Kd, typename Ts = uint32_t>
-        static void Run(const std::array<size_t, Kd>& _dimensions) {
+        template <typename Tm, const size_t Kd, typename Ts = uint32_t, typename Ti = uint32_t>
+        static void Run(const std::array<Ti, Kd>& _dimensions) {
 
             #define HEURISTIC CHDR::Heuristics<Kd, Ts>::ManhattanDistance
 
-            using coord_t = CHDR::Coord<size_t, Kd>;
+            using coord_t = CHDR::Coord<Ti, Kd>;
 
             // Test parameters:
             constexpr size_t seed(0U);
@@ -43,7 +43,7 @@ namespace Test::Tests {
 
             /* GRID -> GRAPH */
             Debug::Log("(Graph):");
-            auto graph = CHDR::Mazes::Graph<size_t, Kd, Ts>(grid);
+            auto graph = CHDR::Mazes::Graph<Ti, Kd, Ts>(grid);
             Debug::Log("\t[GENERATED] (" + std::to_string(graph.Count()) + " candidate nodes)");
 //            graph.Prune();
 //            Debug::Log("\t[PRUNED] (" + std::to_string(graph.Count()) + " candidate nodes)");
@@ -58,8 +58,8 @@ namespace Test::Tests {
 
             const auto sw_start = std::chrono::high_resolution_clock::now();
 
-            auto solver = CHDR::Solvers::AStar<Tm, Kd, Ts>();
-            auto path = solver.Solve(graph, CHDR::Utils::To1D(start, size), CHDR::Utils::To1D(end, size), size, HEURISTIC);
+            auto solver = CHDR::Solvers::AStar<Tm, Kd, Ts, Ti>();
+            auto path = solver.Solve(graph, CHDR::Utils::To1D<Ti>(start, size), CHDR::Utils::To1D<Ti>(end, size), size, HEURISTIC);
 
 //            auto solver = CHDR::Solvers::JPS<Tm, Kd, Ts>();
 //            auto path = solver.Solve(grid, start, end, HEURISTIC);

@@ -21,18 +21,19 @@
 
 namespace CHDR::Solvers {
 
-    template<typename Tm, const size_t Kd, typename Ts>
+    template<typename Tm, const size_t Kd, typename Ts, typename Ti>
     class GStar final {
 
         static_assert(std::is_integral_v<Ts> || std::is_floating_point_v<Ts>, "Ts must be either an integral or floating point type");
+        static_assert(std::is_integral_v<Ti>, "Ti must be an integral type.");
 
     private:
 
-        using coord_t = Coord<size_t, Kd>;
+        using coord_t = Coord<Ti, Kd>;
 
         struct GSNode final {
 
-            size_t m_Index;
+            Ti m_Index;
 
             Ts m_GScore;
             Ts m_FScore;
@@ -46,13 +47,13 @@ namespace CHDR::Solvers {
              */
             [[nodiscard]] constexpr GSNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] constexpr GSNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore) :
+            [[nodiscard]] constexpr GSNode(const Ti& _coord, const Ts& _gScore, const Ts& _hScore) :
                 m_Index(_coord),
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
                 m_Parent() {}
 
-            [[nodiscard]] constexpr GSNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, GSNode&& _parent) :
+            [[nodiscard]] constexpr GSNode(const Ti& _coord, const Ts& _gScore, const Ts& _hScore, GSNode&& _parent) :
                 m_Index(_coord),
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore)

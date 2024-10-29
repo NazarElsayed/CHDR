@@ -19,12 +19,18 @@
 
 namespace CHDR::Solvers {
 
-    template<typename Tm, const size_t Kd>
+    template<typename Tm, const size_t Kd, typename Ti>
     class GDFS final {
+
+        static_assert(std::is_integral_v<Ti>, "Ti must be an integral type.");
+
+    private:
+
+        using coord_t = Coord<Ti, Kd>;
 
         struct GDFSNode final {
 
-            size_t m_Coord;
+            Ti m_Index;
 
             std::shared_ptr<const GDFSNode> m_Parent;
 
@@ -35,8 +41,8 @@ namespace CHDR::Solvers {
              */
             [[nodiscard]] constexpr GDFSNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] constexpr GDFSNode(const size_t& _coord, GDFSNode&& _parent) :
-                m_Coord(_coord)
+            [[nodiscard]] constexpr GDFSNode(const Ti& _index, GDFSNode&& _parent) :
+                m_Index(_index)
             {
                 m_Parent = std::make_shared<const GDFSNode>(std::move(_parent));
             }
@@ -57,10 +63,6 @@ namespace CHDR::Solvers {
                 }
             }
         };
-
-    private:
-
-        using coord_t = Coord<size_t, Kd>;
 
     public:
 
@@ -95,14 +97,14 @@ namespace CHDR::Solvers {
 
                             auto curr = open.PopTop();
 
-                            if (curr.m_Coord != e) {
+                            if (curr.m_Index != e) {
 
-                                if (closed.Capacity() < curr.m_Coord) {
-                                    closed.Reserve(std::min(_capacity * ((curr.m_Coord % _capacity) + 1U), count));
+                                if (closed.Capacity() < curr.m_Index) {
+                                    closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
                                 }
-                                closed.Add(curr.m_Coord);
+                                closed.Add(curr.m_Index);
 
-                                for (const auto& neighbour: _maze.GetNeighbours(curr.m_Coord)) {
+                                for (const auto& neighbour: _maze.GetNeighbours(curr.m_Index)) {
 
                                     if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
@@ -132,12 +134,12 @@ namespace CHDR::Solvers {
 
                                 // Recurse from end node to start node, inserting into a result buffer:
                                 result.reserve(_capacity);
-                                result.emplace_back(Utils::ToND(curr.m_Coord, _maze.Size()));
+                                result.emplace_back(Utils::ToND(curr.m_Index, _maze.Size()));
 
                                 if (curr.m_Parent != nullptr) {
 
                                     for (auto& item = curr.m_Parent; item->m_Parent != nullptr;) {
-                                        result.emplace_back(Utils::ToND(item->m_Coord, _maze.Size()));
+                                        result.emplace_back(Utils::ToND(item->m_Index, _maze.Size()));
 
                                         auto oldItem = item;
                                         item = item->m_Parent;

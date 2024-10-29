@@ -18,16 +18,18 @@
 
 namespace CHDR::Solvers {
 
-    template<typename Tm, const size_t Kd, typename Ts>
+    template<typename Tm, const size_t Kd, typename Ts, typename Ti>
     class Dijkstra final {
+
+        static_assert(std::is_integral_v<Ti>, "Ti must be an integral type.");
 
     private:
 
-        using coord_t = Coord<size_t, Kd>;
+        using coord_t = Coord<Ti, Kd>;
 
         struct DijkstraNode final {
 
-            size_t m_Coord;
+            Ti m_Index;
 
             Ts m_GScore;
             Ts m_FScore;
@@ -41,8 +43,8 @@ namespace CHDR::Solvers {
              */
             [[nodiscard]] constexpr DijkstraNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] constexpr DijkstraNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, const std::shared_ptr<const DijkstraNode>& _parent) :
-                m_Coord(_coord),
+            [[nodiscard]] constexpr DijkstraNode(const Ti &_index, const Ts &_gScore, const Ts &_hScore, const std::shared_ptr<const DijkstraNode>& _parent) :
+                m_Index(_index),
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
                 m_Parent(std::move(_parent)) {}
@@ -54,7 +56,7 @@ namespace CHDR::Solvers {
                 }
             }
 
-            [[nodiscard]] constexpr bool operator == (const DijkstraNode& _node) const { return m_Coord == _node.m_Coord; }
+            [[nodiscard]] constexpr bool operator == (const DijkstraNode& _node) const { return m_Index == _node.m_Index; }
 
             struct Max {
 

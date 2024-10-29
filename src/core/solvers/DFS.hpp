@@ -19,12 +19,18 @@
 
 namespace CHDR::Solvers {
 
-    template<typename Tm, const size_t Kd>
+    template<typename Tm, const size_t Kd, typename Ti>
     class DFS final {
+
+        static_assert(std::is_integral_v<Ti>, "Ti must be an integral type.");
+
+    private:
+
+        using coord_t = Coord<Ti, Kd>;
 
         struct DFSNode final {
 
-            size_t m_Index;
+            Ti m_Index;
 
             const DFSNode* RESTRICT m_Parent;
 
@@ -35,14 +41,10 @@ namespace CHDR::Solvers {
              */
             [[nodiscard]] constexpr DFSNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] constexpr DFSNode(const size_t &_index, const DFSNode* RESTRICT const _parent) :
+            [[nodiscard]] constexpr DFSNode(const Ti &_index, const DFSNode* RESTRICT const _parent) :
                 m_Index(_index),
                 m_Parent(std::move(_parent)) {}
         };
-
-    private:
-
-        using coord_t = Coord<size_t, Kd>;
 
     public:
 
