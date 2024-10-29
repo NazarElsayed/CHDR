@@ -15,11 +15,15 @@
 #include "base/IGraph.hpp"
 #include "types/ExistenceSet.hpp"
 
+#include <atomic>
 #include <functional>
+#include <future>
+#include <mutex>
+#include <queue>
+#include <thread>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
-#include <stack>
 
 namespace CHDR::Mazes {
 
@@ -85,34 +89,29 @@ namespace CHDR::Mazes {
 #endif // __cplusplus >= 202302L
         [[maybe_unused]] explicit Graph(const Grid<Kd, Tm>& _grid) : m_Entries{} {
 
-            /* Convert grid to (dense) graph. */
-
             const auto size = _grid.Size();
-
-            Ti index{0};
 
             constexpr bool Prune = true;
             if constexpr (Prune) {
 
-                std::vector<edge_t> stack(128U);
+                std::mutex mtx;
+                std::atomic<Ti> global_index{0};
 
-                std::unordered_set<Ti, IndexHash, IndexEqual> global_closed;
-                std::unordered_set<Ti, IndexHash, IndexEqual> local_closed;
+                auto worker = [&](const Ti& _start, const Ti& _end) {
 
-                std::unordered_map<Ti, std::vector<edge_t>, IndexHash, IndexEqual> connections;
+                    std::unordered_map<Ti, std::vector<edge_t>, IndexHash, IndexEqual> thread_connections;
 
-                for (const auto& element : _grid) {
+                    for (Ti index = _start; index < _end; ++index) {
 
-                    if (element.IsActive()) {
+                        const auto& element = _grid.At(index);
 
-                        global_closed.clear();
-                        global_closed.insert(index);
+                        if (element.IsActive()) {
 
-                        if (connections.find(index) == connections.end()) {
+                            std::unordered_set<Ti, IndexHash, IndexEqual> global_closed;
+                            global_closed.insert(index);
 
-                            const auto index_neighbours = _grid.GetNeighbours(index);
+                            auto index_neighbours = _grid.GetNeighbours(index);
 
-                            // Check not transitory (slow, exact).
                             size_t nCount = 0U;
                             for (const auto& n1 : index_neighbours) {
                                 if (const auto& [nActive, nCoord] = n1; nActive && ++nCount > 2U) {
@@ -120,7 +119,6 @@ namespace CHDR::Mazes {
                                 }
                             }
 
-                            // If not transitory.
                             if (nCount != 2U) {
 
                                 for (const auto& n1 : index_neighbours) {
@@ -129,11 +127,9 @@ namespace CHDR::Mazes {
 
                                         const auto nIdx1 = Utils::To1D(nCoord1, size);
 
-                                        /*
-                                         * Perform a depth-first search for the next non-transitory node.
-                                         */
+                                        std::unordered_set<Ti, IndexHash, IndexEqual> local_closed;
 
-                                        local_closed.clear();
+                                        std::vector<edge_t> stack;
                                         stack.emplace_back(std::make_pair(nIdx1, static_cast<Ts>(1)));
 
                                         while (!stack.empty()) {
@@ -143,7 +139,7 @@ namespace CHDR::Mazes {
 
                                             if (local_closed.find(curr_idx) == local_closed.end()) {
 
-                                                 local_closed.insert(curr_idx);
+                                                local_closed.insert(curr_idx);
                                                 global_closed.insert(curr_idx);
 
                                                 for (const auto& n3 : _grid.GetNeighbours(curr_idx)) {
@@ -153,22 +149,16 @@ namespace CHDR::Mazes {
                                                         const auto s = Utils::To1D(sCoord3, size);
 
                                                         if (global_closed.find(s) == global_closed.end()) {
+
                                                             const auto next = std::make_pair(s, curr_distance + static_cast<Ts>(1));
 
                                                             if (_grid.IsTransitory(s)) {
                                                                 stack.emplace_back(std::move(next));
                                                             }
                                                             else {
-
-                                                                auto search = connections.find(nIdx1);
-                                                                if (search != connections.end()) {
-                                                                    search->second.emplace_back(std::move(next));
-                                                                }
-                                                                else {
-                                                                    connections[nIdx1].emplace_back(std::move(next));
-                                                                    stack.clear();
-                                                                    break;
-                                                                }
+                                                                thread_connections[nIdx1].emplace_back(std::move(next));
+                                                                stack.clear();
+                                                                break;
                                                             }
                                                         }
                                                     }
@@ -176,7 +166,8 @@ namespace CHDR::Mazes {
                                             }
                                         }
 
-                                        for (const auto& item : connections[nIdx1]) {
+                                        for (const auto& item : thread_connections[nIdx1]) {
+                                            std::lock_guard<std::mutex> lock(mtx);
                                             Add(index, item);
                                         }
                                     }
@@ -184,12 +175,30 @@ namespace CHDR::Mazes {
                             }
                         }
                     }
+                };
 
-                    ++index;
+                // Create a thread pool to execute the work in parallel:
+                const size_t count = _grid.Count();
+                const size_t num_threads = std::clamp(std::thread::hardware_concurrency(), 1U, 6U);
+
+                const auto chunk_size = static_cast<Ti>((count + num_threads - 1U) / num_threads);
+
+                std::vector<std::future<void>> futures;
+                for (size_t i = 0U; i < num_threads; ++i) {
+
+                    const Ti start = i * chunk_size;
+                    const Ti end   = std::min(start + chunk_size, static_cast<Ti>(count));
+
+                    futures.push_back(std::async(std::launch::async, worker, start, end));
+                }
+
+                for (auto& fut : futures) {
+                    fut.get();
                 }
             }
             else {
 
+                Ti index{0};
                 for (auto& element : _grid) {
 
                     if (element.IsActive()) {
