@@ -61,9 +61,9 @@ namespace CHDR::Mazes {
         };
 
         using Neighbours    = std::unordered_set<edge_t, EdgeHash, EdgeEqual>;
-        using AdjacencyList = std::unordered_map<Ti, Neighbours, IndexHash, IndexEqual>;
+        using AdjacencySet = std::unordered_map<Ti, Neighbours, IndexHash, IndexEqual>;
 
-        AdjacencyList m_Entries;
+        AdjacencySet m_Entries;
 
     public:
 

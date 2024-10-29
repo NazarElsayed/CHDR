@@ -61,7 +61,7 @@ namespace CHDR::Solvers {
                 m_Parent = std::make_shared<const GSNode>(std::move(_parent));
             }
 
-            ~GSNode() {
+            ~GSNode() { // NOLINT(*-use-equals-default)
 
 //                while (m_Parent && m_Parent.unique()) {
 //                    m_Parent = std::move(m_Parent->m_Parent);
