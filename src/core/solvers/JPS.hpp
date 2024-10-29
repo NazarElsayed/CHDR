@@ -80,6 +80,7 @@ namespace CHDR::Solvers {
 
             Ti m_Index{};
 
+            std::array<int, 2> m_Direction;
             Ts m_GScore;
             Ts m_FScore;
 
@@ -87,8 +88,9 @@ namespace CHDR::Solvers {
 
             [[nodiscard]] constexpr JPSNode() = default;
 
-            [[nodiscard]] constexpr JPSNode(const Ti& _index, const Ts& _gScore, const Ts& _hScore, const JPSNode* RESTRICT const _parent) :
+            [[nodiscard]] constexpr JPSNode(const Ti& _index, const std::array<int, 2> _direction, const Ts& _gScore, const Ts& _hScore, const JPSNode* RESTRICT const _parent) :
                 m_Index(_index),
+                m_Direction(_direction),
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
                 m_Parent(std::move(_parent)) {}
@@ -139,6 +141,14 @@ namespace CHDR::Solvers {
          */
 
         [[nodiscard]]
+        std::pair<bool, coord_t> Jump(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _current, const coord_t& _previous, const coord_t& _end) const {
+            const std::array<int, 2> direction { static_cast<int>(_current[0]) - static_cast<int>(_previous[0]) ,
+                                                 static_cast<int>(_current[1]) - static_cast<int>(_previous[1]) };
+
+            return Jump(_maze, _current, direction, _end);
+        }
+
+        [[nodiscard]]
         std::pair<bool, coord_t> Jump(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _current, const std::array<int, 2>& _direction, const coord_t& _end) const {
 
             std::pair<bool, coord_t> result { false, _current };
@@ -180,16 +190,12 @@ namespace CHDR::Solvers {
                         }
                         else {
                             if (neighbours[map[4]].first) {
-                                result.first = Jump(_maze, neighbours[map[4]].second,
-                                    { neighbours[map[4]].second[0] - _current[0], neighbours[map[4]].second[1] - _current[1] },
-                                    _end).first;
+                                result.first = Jump(_maze, neighbours[map[4]].second, _current, _end).first;
                             }
 
                             if (!result.first) {
                                 if (neighbours[map[6]].first) {
-                                    result.first = Jump(_maze, neighbours[map[6]].second,
-                                        { neighbours[map[6]].second[0] - _current[0], neighbours[map[6]].second[1] - _current[1] },
-                                        _end).first;
+                                    result.first = Jump(_maze, neighbours[map[6]].second, _current, _end).first;
                                 }
                             }
 
@@ -198,7 +204,6 @@ namespace CHDR::Solvers {
                                     result = Jump(_maze, neighbours[map[7]].second, _direction, _end);
                                 }
                             }
-
                         }
                     }
                 }
@@ -230,7 +235,7 @@ namespace CHDR::Solvers {
                     ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
 
                     Heap<JPSNode, 2U, typename JPSNode::Max> open(_capacity / 8U);
-                    open.Emplace({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
+                    open.Emplace({ s, {0, 0}, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
                     StableForwardBuf<JPSNode> buf;
 
@@ -248,7 +253,9 @@ namespace CHDR::Solvers {
                             coord_t current = Utils::ToND(curr.m_Index, size);
 
                             for (const auto& neighbour : _maze. template GetNeighbours<true>(curr.m_Index)) {
-                                const std::array<int, 2> direction { (int)neighbour.second[0] - (int)current[0] , (int)neighbour.second[1] - (int)current[1] };
+
+                                const std::array<int, 2> direction { static_cast<int>(neighbour.second[0]) - static_cast<int>(current[0]),
+                                                                     static_cast<int>(neighbour.second[1]) - static_cast<int>(current[1]) };
 
                                 if (neighbour.first) {
 
@@ -265,7 +272,7 @@ namespace CHDR::Solvers {
                                             closed.Add(n);
 
                                             // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                            open.Emplace({ n, curr.m_GScore + static_cast<Ts>(1), _h(nCoord, _end) * _weight, &buf.Emplace(std::move(curr)) });
+                                            open.Emplace({ n, {0, 0}, curr.m_GScore + static_cast<Ts>(1), _h(nCoord, _end) * _weight, &buf.Emplace(std::move(curr)) });
                                         }
                                     }
                                 }
@@ -299,6 +306,7 @@ namespace CHDR::Solvers {
 
             std::vector<coord_t> result;
 
+            /*
             const auto s = Utils::To1D(_start, _maze.Size());
             const auto e = Utils::To1D(_end,   _maze.Size());
 
@@ -375,6 +383,7 @@ namespace CHDR::Solvers {
                     result.emplace_back(_end);
                 }
             }
+            */
 
             return result;
         }
