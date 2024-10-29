@@ -15,11 +15,11 @@ private:
 
 public:
 
-    using value_type = T;
+    using value_type [[maybe_unused]] = T;
 
-    StackAllocator() : stackPointer(0) {}
+    StackAllocator() : stackPointer(0U) {}
 
-    T *allocate(const size_t& _n) {
+    [[maybe_unused]] T *allocate(const size_t& _n) {
 
         T* result;
 
@@ -34,7 +34,7 @@ public:
         return result;
     }
 
-    void deallocate(T* _p, const size_t& _n) {
+    [[maybe_unused]] void deallocate(T* _p, const size_t& _n) {
 
         if (_p >= reinterpret_cast<T*>(stack) && _p < reinterpret_cast<T*>(stack + sizeof(stack))) {
             stackPointer -= _n;
@@ -45,8 +45,8 @@ public:
     }
 
     template<typename U>
-    struct rebind {
-        using other = StackAllocator<U, StackSize>;
+    struct [[maybe_unused]] rebind {
+        using other [[maybe_unused]] = StackAllocator<U, StackSize>;
     };
 };
 

@@ -24,7 +24,7 @@
 namespace CHDR::Solvers {
 
     template<typename Tm, const size_t Kd, typename Ts, typename Ti>
-    class ESMGStar final {
+    class [[maybe_unused]] ESMGStar final {
 
         static_assert(std::is_integral_v<Ts> || std::is_floating_point_v<Ts>, "Ts must be either an integral or floating point type");
         static_assert(std::is_integral_v<Ti>, "Ti must be an integral type.");
@@ -171,8 +171,71 @@ namespace CHDR::Solvers {
             };
         };
 
+        void cull_worst_leaf(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight, const size_t& _memoryLimit, Heap<std::shared_ptr<ESMASNode>, 2U, typename ESMASNode::Max>& _open) const {
+
+            const auto w = safe_culling_heuristic(_open);
+
+            if (auto p = w->m_Parent) { // parent node of w
+
+                // Remove w from the successor list of p
+                auto p_successors = p->Expand(_maze, _end, _h, _weight, _memoryLimit);
+
+                for (size_t i = 0U; i < p_successors.size(); ++i) {
+
+                    // Code to remove w from the successor list of p goes here
+                    if (p_successors[i]->m_Index == w->m_Index) {
+                        p_successors.erase(p_successors.begin() + i);
+                        break;
+                    }
+                }
+
+                // Add s(w) to forgotten f-cost table of p, with value of f (w)
+                p->m_ForgottenFCosts.insert_or_assign(w->m_Index, w->m_FScore);
+
+                // f (p) ← min of forgotten f-costs of p
+                for (const auto& [pState, pCost] : p->m_ForgottenFCosts) {
+                    p->m_FScore = std::min(p->m_FScore, pCost);
+                }
+
+                // if p is not in _open then
+                if (!_open.Contains(p)) {
+                     _open.Add(p); // Add p to _open
+                }
+            }
+        }
+
+        [[nodiscard]] auto safe_culling_heuristic(Heap<std::shared_ptr<ESMASNode>, 2U, typename ESMASNode::Max>& _open) const {
+
+            auto w = _open.Back(); // Worst leaf according to c(n) in _open
+
+            if (w == _open.Top()) { // Top == Best node according to f(n) in _open
+
+                // Code to find second worst leaf according to c(n) goes here
+
+                w = _open.Back();
+
+                for (size_t i = _open.Size() / 2U; i < _open.Size(); ++i) {
+
+                    const auto& A = _open[i];
+                    const auto& B = w;
+
+                    if (typename ESMASNode::Max()(A, B)) {
+                        w = _open[i]; // Assign the second worst leaf to w
+                    }
+                }
+
+                _open.Remove(w);
+            }
+            else {
+                _open.PopBack();
+            }
+
+            return w;
+        }
+
     public:
 
+        [[maybe_unused]]
         auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, const size_t& _memoryLimit = -1U) const {
 
             /** @see: https://easychair.org/publications/paper/TL2M/open */
@@ -274,68 +337,6 @@ namespace CHDR::Solvers {
             }
 
             return result;
-        }
-
-        void cull_worst_leaf(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight, const size_t& _memoryLimit, Heap<std::shared_ptr<ESMASNode>, 2U, typename ESMASNode::Max>& _open) const {
-
-            const auto w = safe_culling_heuristic(_open);
-
-            if (auto p = w->m_Parent) { // parent node of w
-
-                // Remove w from the successor list of p
-                auto p_successors = p->Expand(_maze, _end, _h, _weight, _memoryLimit);
-
-                for (size_t i = 0U; i < p_successors.size(); ++i) {
-
-                    // Code to remove w from the successor list of p goes here
-                    if (p_successors[i]->m_Index == w->m_Index) {
-                        p_successors.erase(p_successors.begin() + i);
-                        break;
-                    }
-                }
-
-                // Add s(w) to forgotten f-cost table of p, with value of f (w)
-                p->m_ForgottenFCosts.insert_or_assign(w->m_Index, w->m_FScore);
-
-                // f (p) ← min of forgotten f-costs of p
-                for (const auto& [pState, pCost] : p->m_ForgottenFCosts) {
-                    p->m_FScore = std::min(p->m_FScore, pCost);
-                }
-
-                // if p is not in _open then
-                if (!_open.Contains(p)) {
-                     _open.Add(p); // Add p to _open
-                }
-            }
-        }
-
-        auto safe_culling_heuristic(Heap<std::shared_ptr<ESMASNode>, 2U, typename ESMASNode::Max>& _open) const {
-
-            auto w = _open.Back(); // Worst leaf according to c(n) in _open
-
-            if (w == _open.Top()) { // Top == Best node according to f(n) in _open
-
-                // Code to find second worst leaf according to c(n) goes here
-
-                w = _open.Back();
-
-                for (size_t i = _open.Size() / 2U; i < _open.Size(); ++i) {
-
-                    const auto& A = _open[i];
-                    const auto& B = w;
-
-                    if (typename ESMASNode::Max()(A, B)) {
-                        w = _open[i]; // Assign the second worst leaf to w
-                    }
-                }
-
-                _open.Remove(w);
-            }
-            else {
-                _open.PopBack();
-            }
-
-            return w;
         }
 
     };

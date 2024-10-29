@@ -215,21 +215,21 @@ namespace CHDR {
         using       reverse_iterator = typename std::vector<T>::reverse_iterator;
         using const_reverse_iterator = typename std::vector<T>::const_reverse_iterator;
 
-        [[nodiscard]]       iterator  begin()       { return m_Data.begin()  + 1U; }
-        [[nodiscard]] const_iterator  begin() const { return m_Data.begin()  + 1U; }
-        [[nodiscard]] const_iterator cbegin() const { return m_Data.cbegin() + 1U; }
+        [[maybe_unused]] [[nodiscard]]       iterator  begin()       { return m_Data.begin()  + 1U; }
+        [[maybe_unused]] [[nodiscard]] const_iterator  begin() const { return m_Data.begin()  + 1U; }
+        [[maybe_unused]] [[nodiscard]] const_iterator cbegin() const { return m_Data.cbegin() + 1U; }
 
-        [[nodiscard]]       iterator  end()       { return m_Data.end();  }
-        [[nodiscard]] const_iterator  end() const { return m_Data.end();  }
-        [[nodiscard]] const_iterator cend() const { return m_Data.cend(); }
+        [[maybe_unused]] [[nodiscard]]       iterator  end()       { return m_Data.end();  }
+        [[maybe_unused]] [[nodiscard]] const_iterator  end() const { return m_Data.end();  }
+        [[maybe_unused]] [[nodiscard]] const_iterator cend() const { return m_Data.cend(); }
 
-        [[nodiscard]]       reverse_iterator  rbegin()       { return m_Data.rbegin();  }
-        [[nodiscard]] const_reverse_iterator  rbegin() const { return m_Data.rbegin();  }
-        [[nodiscard]] const_reverse_iterator crbegin() const { return m_Data.crbegin(); }
+        [[maybe_unused]] [[nodiscard]]       reverse_iterator  rbegin()       { return m_Data.rbegin();  }
+        [[maybe_unused]] [[nodiscard]] const_reverse_iterator  rbegin() const { return m_Data.rbegin();  }
+        [[maybe_unused]] [[nodiscard]] const_reverse_iterator crbegin() const { return m_Data.crbegin(); }
 
-        [[nodiscard]]       reverse_iterator  rend()       { return m_Data.rend();  }
-        [[nodiscard]] const_reverse_iterator  rend() const { return m_Data.rend();  }
-        [[nodiscard]] const_reverse_iterator crend() const { return m_Data.crend(); }
+        [[maybe_unused]] [[nodiscard]]       reverse_iterator  rend()       { return m_Data.rend();  }
+        [[maybe_unused]] [[nodiscard]] const_reverse_iterator  rend() const { return m_Data.rend();  }
+        [[maybe_unused]] [[nodiscard]] const_reverse_iterator crend() const { return m_Data.crend(); }
 
     };
 }

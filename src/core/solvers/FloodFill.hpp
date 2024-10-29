@@ -20,7 +20,7 @@
 namespace CHDR::Solvers {
 
     template<typename Tm, const size_t Kd, typename Ti>
-    class FloodFill final {
+    class [[maybe_unused]] FloodFill final {
 
         static_assert(std::is_integral_v<Ti>, "Ti must be an integral type.");
 
@@ -30,6 +30,7 @@ namespace CHDR::Solvers {
 
     public:
 
+        [[maybe_unused]]
         auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, size_t _capacity = 0U) {
 
 	        bool result = false;

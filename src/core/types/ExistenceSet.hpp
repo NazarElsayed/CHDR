@@ -218,21 +218,21 @@ namespace CHDR {
         using       reverse_iterator = typename std::vector<AlignmentType>::reverse_iterator;
         using const_reverse_iterator = typename std::vector<AlignmentType>::const_reverse_iterator;
 
-              iterator  begin()       { return m_Bits.begin();  }
-        const_iterator  begin() const { return m_Bits.begin();  }
-        const_iterator cbegin() const { return m_Bits.cbegin(); }
+        [[maybe_unused]] [[nodiscard]]       iterator  begin()       { return m_Bits.begin();  }
+        [[maybe_unused]] [[nodiscard]] const_iterator  begin() const { return m_Bits.begin();  }
+        [[maybe_unused]] [[nodiscard]] const_iterator cbegin() const { return m_Bits.cbegin(); }
 
-              iterator  end()       { return m_Bits.end();  }
-        const_iterator  end() const { return m_Bits.end();  }
-        const_iterator cend() const { return m_Bits.cend(); }
+        [[maybe_unused]] [[nodiscard]]       iterator  end()       { return m_Bits.end();  }
+        [[maybe_unused]] [[nodiscard]] const_iterator  end() const { return m_Bits.end();  }
+        [[maybe_unused]] [[nodiscard]] const_iterator cend() const { return m_Bits.cend(); }
 
-              reverse_iterator  rbegin()       { return m_Bits.rbegin();  }
-        const_reverse_iterator  rbegin() const { return m_Bits.rbegin();  }
-        const_reverse_iterator crbegin() const { return m_Bits.crbegin(); }
+        [[maybe_unused]] [[nodiscard]]       reverse_iterator  rbegin()       { return m_Bits.rbegin();  }
+        [[maybe_unused]] [[nodiscard]] const_reverse_iterator  rbegin() const { return m_Bits.rbegin();  }
+        [[maybe_unused]] [[nodiscard]] const_reverse_iterator crbegin() const { return m_Bits.crbegin(); }
 
-              reverse_iterator  rend()       { return m_Bits.rend();  }
-        const_reverse_iterator  rend() const { return m_Bits.rend();  }
-        const_reverse_iterator crend() const { return m_Bits.crend(); }
+        [[maybe_unused]] [[nodiscard]]       reverse_iterator  rend()       { return m_Bits.rend();  }
+        [[maybe_unused]] [[nodiscard]] const_reverse_iterator  rend() const { return m_Bits.rend();  }
+        [[maybe_unused]] [[nodiscard]] const_reverse_iterator crend() const { return m_Bits.crend(); }
     };
 
 } // CHDR

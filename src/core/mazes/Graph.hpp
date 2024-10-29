@@ -216,7 +216,7 @@ namespace CHDR::Mazes {
                 }
             }
 
-            __malloc_consolidate();
+            malloc_consolidate();
         }
 
         template<typename... Args>
@@ -309,7 +309,7 @@ namespace CHDR::Mazes {
             }
             while (!nodesToRemove.empty());
 
-            __malloc_consolidate();
+            malloc_consolidate();
         }
 
         void Print() const {
@@ -343,13 +343,13 @@ namespace CHDR::Mazes {
         using       iterator = typename std::unordered_map<Ti, std::vector<edge_t>>::iterator;
         using const_iterator = typename std::unordered_map<Ti, std::vector<edge_t>>::const_iterator;
 
-              iterator  begin()       { return m_Entries.begin();  }
-        const_iterator  begin() const { return m_Entries.begin();  }
-        const_iterator cbegin() const { return m_Entries.cbegin(); }
+        [[maybe_unused]] [[nodiscard]]       iterator  begin()       { return m_Entries.begin();  }
+        [[maybe_unused]] [[nodiscard]] const_iterator  begin() const { return m_Entries.begin();  }
+        [[maybe_unused]] [[nodiscard]] const_iterator cbegin() const { return m_Entries.cbegin(); }
 
-              iterator  end()       { return m_Entries.end();  }
-        const_iterator  end() const { return m_Entries.end();  }
-        const_iterator cend() const { return m_Entries.cend(); }
+        [[maybe_unused]] [[nodiscard]]       iterator  end()       { return m_Entries.end();  }
+        [[maybe_unused]] [[nodiscard]] const_iterator  end() const { return m_Entries.end();  }
+        [[maybe_unused]] [[nodiscard]] const_iterator cend() const { return m_Entries.cend(); }
 
     };
 

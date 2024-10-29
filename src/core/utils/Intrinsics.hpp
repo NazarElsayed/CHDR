@@ -71,7 +71,8 @@
     #pragma GCC optimize ("O0")
 #endif
 
-        void __malloc_consolidate(const size_t& _malloc = 1024U * 2U) {
+        [[maybe_unused]]
+        void malloc_consolidate(const size_t& _malloc = 1024U * 2U) {
 
             /*
              * Code designed to purposefully trigger heap defragmentation by the internal memory allocator.

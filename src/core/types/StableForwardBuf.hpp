@@ -133,13 +133,13 @@ namespace CHDR {
         using       iterator = StableIterator<false>;
         using const_iterator = StableIterator<true>;
 
-              iterator  begin()       { return       iterator(m_Blocks.begin(), m_Blocks.end(), m_Index); }
-        const_iterator  begin() const { return const_iterator(m_Blocks.begin(), m_Blocks.end(), m_Index); }
-        const_iterator cbegin() const { return const_iterator(m_Blocks.begin(), m_Blocks.end(), m_Index); }
+        [[maybe_unused]] [[nodiscard]]       iterator  begin()       { return       iterator(m_Blocks.begin(), m_Blocks.end(), m_Index); }
+        [[maybe_unused]] [[nodiscard]] const_iterator  begin() const { return const_iterator(m_Blocks.begin(), m_Blocks.end(), m_Index); }
+        [[maybe_unused]] [[nodiscard]] const_iterator cbegin() const { return const_iterator(m_Blocks.begin(), m_Blocks.end(), m_Index); }
 
-              iterator  end()       { return       iterator(m_Blocks.end(), m_Blocks.end(), 0U); }
-        const_iterator  end() const { return const_iterator(m_Blocks.end(), m_Blocks.end(), 0U); }
-        const_iterator cend() const { return const_iterator(m_Blocks.end(), m_Blocks.end(), 0U); }
+        [[maybe_unused]] [[nodiscard]]       iterator  end()       { return       iterator(m_Blocks.end(), m_Blocks.end(), 0U); }
+        [[maybe_unused]] [[nodiscard]] const_iterator  end() const { return const_iterator(m_Blocks.end(), m_Blocks.end(), 0U); }
+        [[maybe_unused]] [[nodiscard]] const_iterator cend() const { return const_iterator(m_Blocks.end(), m_Blocks.end(), 0U); }
     };
 
 } // CHDR

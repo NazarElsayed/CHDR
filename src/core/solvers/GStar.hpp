@@ -22,7 +22,7 @@
 namespace CHDR::Solvers {
 
     template<typename Tm, const size_t Kd, typename Ts, typename Ti>
-    class GStar final {
+    class [[maybe_unused]] GStar final {
 
         static_assert(std::is_integral_v<Ts> || std::is_floating_point_v<Ts>, "Ts must be either an integral or floating point type");
         static_assert(std::is_integral_v<Ti>, "Ti must be an integral type.");
@@ -102,6 +102,7 @@ namespace CHDR::Solvers {
 
     public:
 
+        [[maybe_unused]]
         auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
 
             std::vector<coord_t> result;

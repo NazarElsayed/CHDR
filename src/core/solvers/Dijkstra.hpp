@@ -19,7 +19,7 @@
 namespace CHDR::Solvers {
 
     template<typename Tm, const size_t Kd, typename Ts, typename Ti>
-    class Dijkstra final {
+    class [[maybe_unused]] Dijkstra final {
 
         static_assert(std::is_integral_v<Ti>, "Ti must be an integral type.");
 
@@ -78,6 +78,7 @@ namespace CHDR::Solvers {
 
     public:
 
+        [[maybe_unused]]
         void Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) {
 
             (void)_maze; // Suppress unused variable warnings.
