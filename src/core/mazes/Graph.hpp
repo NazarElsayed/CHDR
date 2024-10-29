@@ -180,11 +180,6 @@ namespace CHDR::Mazes {
                             }
                         }
                     }
-                    else {
-                        for (const auto& item : connections[index]) {
-                            Add(index, item);
-                        }
-                    }
 
                     ++index;
                 }
