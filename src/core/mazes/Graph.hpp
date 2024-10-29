@@ -99,6 +99,11 @@ namespace CHDR::Mazes {
 
                 auto worker = [&](const Ti& _start, const Ti& _end) {
 
+                    std::vector<edge_t> stack(128U);
+
+                    std::unordered_set<Ti, IndexHash, IndexEqual> global_closed;
+                    std::unordered_set<Ti, IndexHash, IndexEqual> local_closed;
+
                     std::unordered_map<Ti, std::vector<edge_t>, IndexHash, IndexEqual> thread_connections;
 
                     for (Ti index = _start; index < _end; ++index) {
@@ -107,7 +112,7 @@ namespace CHDR::Mazes {
 
                         if (element.IsActive()) {
 
-                            std::unordered_set<Ti, IndexHash, IndexEqual> global_closed;
+                            global_closed.clear();
                             global_closed.insert(index);
 
                             auto index_neighbours = _grid.GetNeighbours(index);
@@ -127,9 +132,7 @@ namespace CHDR::Mazes {
 
                                         const auto nIdx1 = Utils::To1D(nCoord1, size);
 
-                                        std::unordered_set<Ti, IndexHash, IndexEqual> local_closed;
-
-                                        std::vector<edge_t> stack;
+                                        local_closed.clear();
                                         stack.emplace_back(std::make_pair(nIdx1, static_cast<Ts>(1)));
 
                                         while (!stack.empty()) {
