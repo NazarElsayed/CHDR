@@ -234,9 +234,8 @@ namespace CHDR::Mazes {
             size_t count = 0U;
 
             for (const auto& n : GetNeighbours(_index)) {
-
-                if (const auto& [active, coord] = n; active) {
-                    ++count;
+                if (const auto& [nActive, nCoord] = n; nActive && ++count > 2U) {
+                    break;
                 }
             }
 
