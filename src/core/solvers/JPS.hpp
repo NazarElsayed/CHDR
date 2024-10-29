@@ -12,14 +12,15 @@
 
 namespace CHDR::Solvers {
 
-    template<typename Tm, const size_t Kd, typename Ts>
+    template<typename Tm, const size_t Kd, typename Ts, typename Ti>
     class JPS final {
 
         static_assert(std::is_integral_v<Ts> || std::is_floating_point_v<Ts>, "Ts must be either an integral or floating point type");
+        static_assert(std::is_integral_v<Ti>, "Ti must be an integral type.");
 
     private:
 
-        using coord_t = Coord<size_t, Kd>;
+        using coord_t = Coord<Ti, Kd>;
 
         /*const std::array<int, 8> s_rotateL { 5, 6, 7,
                                              3,    4,
@@ -77,7 +78,7 @@ namespace CHDR::Solvers {
 
         struct JPSNode final {
 
-            size_t m_Index {};
+            Ti m_Index{};
 
             Ts m_GScore;
             Ts m_FScore;
@@ -86,8 +87,8 @@ namespace CHDR::Solvers {
 
             [[nodiscard]] constexpr JPSNode() = default;
 
-            [[nodiscard]] constexpr JPSNode(const size_t &_coord, const Ts &_gScore, const Ts &_hScore, const JPSNode* RESTRICT const _parent) :
-                m_Index(_coord),
+            [[nodiscard]] constexpr JPSNode(const Ti& _index, const Ts& _gScore, const Ts& _hScore, const JPSNode* RESTRICT const _parent) :
+                m_Index(_index),
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
                 m_Parent(std::move(_parent)) {}
