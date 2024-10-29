@@ -129,6 +129,10 @@ namespace CHDR::Mazes {
 
                                         const auto nIdx1 = Utils::To1D(nCoord1, size);
 
+                                        /*
+                                         * Perform a depth-first search for the next non-transitory node.
+                                         */
+
                                         local_closed.clear();
                                         stack.emplace_back(std::make_pair(nIdx1, static_cast<Ts>(1)));
 
