@@ -61,7 +61,7 @@ namespace Test::Tests {
             auto solver = CHDR::Solvers::AStar<Tm, Kd, Ts, Ti>();
             auto path = solver.Solve(graph, CHDR::Utils::To1D<Ti>(start, size), CHDR::Utils::To1D<Ti>(end, size), size, HEURISTIC);
 
-//            auto solver = CHDR::Solvers::JPS<Tm, Kd, Ts>();
+//            auto solver = CHDR::Solvers::JPS<Tm, Kd, Ts, Ti>();
 //            auto path = solver.Solve(grid, start, end, HEURISTIC);
 
             auto pathfinding_log = "\t" + std::string(path.size() != 0U ? "[SOLVED]" : "[IMPOSSIBLE]") + "\t(~" +
