@@ -17,7 +17,7 @@
 
 namespace CHDR::Mazes {
 
-    template <typename Ti, typename Ts = float>
+    template <typename Ti, typename Ts>
     class IGraph : IMaze<IDNode<Ti>, Ti> {
 
     public:

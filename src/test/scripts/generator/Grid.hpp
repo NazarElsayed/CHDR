@@ -6,10 +6,12 @@
  * https://creativecommons.org/licenses/by-nc-nd/4.0/
  */
 
-#ifndef TEST_MAZE_HPP
-#define TEST_MAZE_HPP
+#ifndef TEST_GRID_HPP
+#define TEST_GRID_HPP
 
 #include <chdr.hpp>
+
+#include "Debug.hpp"
 
 #include "utils/Backtracking.hpp"
 
@@ -18,7 +20,7 @@ namespace Test::Generator {
 	struct Grid final {
 
 		template <typename T, const size_t Kd, typename... Args>
-		static constexpr auto Generate(const CHDR::Coord<size_t, Kd>& _start, CHDR::Coord<size_t, Kd>& _end, const float& _loops = 0.0F, const float& _obstacles = 0.0f, const size_t& _seed = -1U, const Args&... _size) {
+		static constexpr auto Generate(const CHDR::Coord<size_t, Kd>& _start, CHDR::Coord<size_t, Kd>& _end, const double& _loops = 0.0, const double& _obstacles = 0.0, const size_t& _seed = -1U, const Args&... _size) {
 
 			static_assert(std::is_integral_v<T>, "Type T must be an integral type.");
 
@@ -30,15 +32,17 @@ namespace Test::Generator {
 
 			auto maze = Backtracking::Generate(_start, _end, size, _loops, _obstacles, _seed);
 
-			std::vector<CHDR::WeightedNode<T>> result;
-            result.reserve(maze.size());
+			std::vector<CHDR::WeightedNode<T>> nodes;
+            nodes.reserve(maze.size());
 
             while (!maze.empty()) {
-                result.emplace_back(maze.back() == Backtracking::WALL);
+                nodes.emplace_back(maze.back() == Backtracking::WALL);
                 maze.pop_back();
             }
 
-            std::reverse(result.begin(), result.end());
+            std::reverse(nodes.begin(), nodes.end());
+
+            const auto result = CHDR::Mazes::Grid<Kd, T>(size, nodes);
 
             Debug::Log("\t[FINISHED] \t(~" + CHDR::Utils::Trim_Trailing_Zeros(std::to_string(CHDR::Utils::Product<size_t>(size) / static_cast<long double>(1000000000.0))) + "b total candidate nodes)");
 
@@ -47,4 +51,4 @@ namespace Test::Generator {
 	};
 }
 
-#endif //TEST_MAZE_HPP
+#endif //TEST_GRID_HPP

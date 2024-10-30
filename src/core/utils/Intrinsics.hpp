@@ -90,7 +90,6 @@
             free(m_tmp);
         }
 
-
 #ifdef _MSC_VER
     #pragma optimize("", on)
 #elif defined(__INTEL_COMPILER) || defined(__ICC)

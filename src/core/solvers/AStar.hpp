@@ -76,29 +76,29 @@ namespace CHDR::Solvers {
             };
         };
 
-        auto SolveHeap(const Mazes::Graph<Ti, Kd, Ts>& _maze, const Ti& _s, const Ti& _e, const coord_t& _size, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
+        auto SolveHeap(const Mazes::Graph<Ti, Ts>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
 
             std::vector<coord_t> result;
 
-            if (_maze.Contains(_s) &&
-                _maze.Contains(_e) &&
-                _maze.At(_s).IsActive() &&
-                _maze.At(_e).IsActive()
+            const auto s = Utils::To1D(_start, _size);
+            const auto e = Utils::To1D(_end,   _size);
+
+            if (_maze.Contains(s) &&
+                _maze.Contains(e) &&
+                _maze.At(s).IsActive() &&
+                _maze.At(e).IsActive()
             ) {
 
-                const coord_t start = CHDR::Utils::ToND(_s, _size);
-                const coord_t   end = CHDR::Utils::ToND(_e, _size);
-
-                if (_s != _e) {
+                if (s != e) {
 
                     const auto count = _maze.Count();
 
                     _capacity = _capacity == 0U ? std::max(_maze.Count() / 10U, static_cast<size_t>(1U)) : _capacity;
 
-                    ExistenceSet<LowMemoryUsage> closed({ _s }, _capacity);
+                    ExistenceSet<LowMemoryUsage> closed({s }, _capacity);
 
                     Heap<ASNode, 2U, typename ASNode::Max> open(_capacity / 4U);
-                    open.Emplace({_s, static_cast<Ts>(0), _h(start, end), nullptr });
+                    open.Emplace({s, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
                     StableForwardBuf<ASNode, 1024U * 1024U> buf;
 
@@ -106,7 +106,7 @@ namespace CHDR::Solvers {
 
                         auto curr = open.PopTop();
 
-                        if (curr.m_Index != _e) { // SEARCH FOR SOLUTION...
+                        if (curr.m_Index != e) { // SEARCH FOR SOLUTION...
 
                             if (closed.Capacity() < curr.m_Index) {
                                 closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
@@ -126,7 +126,7 @@ namespace CHDR::Solvers {
                                     closed.Add(n);
 
                                     // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                    open.Emplace({ n, curr.m_GScore + static_cast<Ts>(nDistance), _h(CHDR::Utils::ToND(n, _size), end) * _weight, &buf.Emplace(std::move(curr)) });
+                                    open.Emplace({ n, curr.m_GScore + static_cast<Ts>(nDistance), _h(CHDR::Utils::ToND(n, _size), _end) * _weight, &buf.Emplace(std::move(curr)) });
                                 }
                             }
                         }
@@ -146,7 +146,7 @@ namespace CHDR::Solvers {
                     }
                 }
                 else {
-                    result.push_back(end);
+                    result.push_back(_end);
                 }
             }
 
@@ -154,30 +154,30 @@ namespace CHDR::Solvers {
         }
 
         template <size_t StackSize>
-        auto SolveLinear(const Mazes::Graph<Ti, Kd, Ts>& _maze, const Ti& _s, const Ti& _e, const coord_t& _size, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
+        auto SolveLinear(const Mazes::Graph<Ti, Ts>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
 
             std::vector<coord_t> result;
 
-            if (_maze.Contains(_s) &&
-                _maze.Contains(_e) &&
-                _maze.At(_s).IsActive() &&
-                _maze.At(_e).IsActive()
+            const auto s = Utils::To1D(_start, _size);
+            const auto e = Utils::To1D(_end,   _size);
+
+            if (_maze.Contains(s) &&
+                _maze.Contains(e) &&
+                _maze.At(s).IsActive() &&
+                _maze.At(e).IsActive()
             ) {
 
-                const coord_t start = CHDR::Utils::ToND(_s, _size);
-                const coord_t   end = CHDR::Utils::ToND(_e, _size);
-
-                if (_s != _e) {
+                if (s != e) {
 
                     const auto count = _maze.Count();
 
-                    _capacity = std::max(_capacity, std::max(_s, _e));
+                    _capacity = std::max(_capacity, std::max(s, e));
 
-                    ExistenceSet<LowMemoryUsage> closed({_s }, _capacity);
+                    ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
 
                     std::vector<ASNode, StackAllocator<ASNode, StackSize>> open;
                     open.reserve(StackSize);
-                    open.push_back({_s, static_cast<Ts>(0), _h(start, end), nullptr });
+                    open.push_back({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
 
                     StableForwardBuf<ASNode, StackSize / 2U> buf;
 
@@ -187,7 +187,7 @@ namespace CHDR::Solvers {
                         auto curr(std::move(*top));
                         open.erase(top);
 
-                        if (curr.m_Index != _e) { // SEARCH FOR SOLUTION...
+                        if (curr.m_Index != e) { // SEARCH FOR SOLUTION...
 
                             if (closed.Capacity() < curr.m_Index) {
                                 closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
@@ -207,7 +207,7 @@ namespace CHDR::Solvers {
                                     closed.Add(n);
 
                                     // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                    open.push_back({ n, curr.m_GScore + static_cast<Ts>(nDistance), _h(CHDR::Utils::ToND(n, _size), end) * _weight, &buf.Emplace(std::move(curr)) });
+                                    open.push_back({ n, curr.m_GScore + static_cast<Ts>(nDistance), _h(CHDR::Utils::ToND(n, _size), _end) * _weight, &buf.Emplace(std::move(curr)) });
                                 }
                             }
                         }
@@ -228,7 +228,7 @@ namespace CHDR::Solvers {
                     }
                 }
                 else {
-                    result.emplace_back(end);
+                    result.emplace_back(_end);
                 }
             }
 
@@ -403,7 +403,7 @@ namespace CHDR::Solvers {
     public:
 
         [[maybe_unused]]
-        auto Solve(const Mazes::Graph<Ti, Kd, Ts>& _maze, const Ti& _s, const Ti& _e, const coord_t& _size, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
+        auto Solve(const Mazes::Graph<Ti, Ts>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
 
             /*
              * Determine whether to solve using a linear search or constant-time
@@ -417,19 +417,19 @@ namespace CHDR::Solvers {
             const auto count = _maze.Count();
 
             if (count <= 32U) {
-                result = SolveLinear<16U>(_maze, _s, _e, _size, _h, _weight, _capacity);
+                result = SolveLinear<16U>(_maze, _start, _end, _size, _h, _weight, _capacity);
             }
             else if (count <= 64U) {
-                result = SolveLinear<32U>(_maze, _s, _e, _size, _h, _weight, _capacity);
+                result = SolveLinear<32U>(_maze, _start, _end, _size, _h, _weight, _capacity);
             }
             else if (count <= 128U) {
-                result = SolveLinear<64U>(_maze, _s, _e, _size, _h, _weight, _capacity);
+                result = SolveLinear<64U>(_maze, _start, _end, _size, _h, _weight, _capacity);
             }
             else if (count <= LMAX) {
-                result = SolveLinear<LMAX / 2U>(_maze, _s, _e, _size, _h, _weight, _capacity);
+                result = SolveLinear<LMAX / 2U>(_maze, _start, _end, _size, _h, _weight, _capacity);
             }
             else {
-                result = SolveHeap(_maze, _s, _e, _size, _h, _weight, _capacity);
+                result = SolveHeap(_maze, _start, _end, _size, _h, _weight, _capacity);
             }
 
             return result;

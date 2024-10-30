@@ -180,10 +180,11 @@ add_executable(Test
     src/test/main.cpp
 
     src/test/scripts/core/Application.hpp
+    src/test/scripts/core/Display.hpp
+    src/test/scripts/generator/Graph.hpp
     src/test/scripts/generator/Grid.hpp
     src/test/scripts/generator/utils/Backtracking.hpp
     src/test/scripts/tests/AStar.hpp
-    src/test/scripts/core/Display.hpp
 )
 
 target_include_directories(Test PRIVATE

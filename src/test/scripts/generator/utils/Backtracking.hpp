@@ -38,8 +38,6 @@ namespace Test::Generator::Utils {
 
             std::array<std::pair<bool, CHDR::Coord<size_t, Kd>>, Kd * 2U> result;
 
-            IVDEP
-            VECTOR_ALWAYS
             for (size_t i = 0U; i < Kd; ++i) {
 
                 coord_t dir{};
@@ -147,7 +145,7 @@ namespace Test::Generator::Utils {
 #if __cplusplus >= 202302L
         constexpr
 #endif // __cplusplus >= 202302L
-        auto Generate(const coord_t& _start, coord_t& _end, const coord_t& _size, const float& _loops = 0.0F, const float& _obstacles = 0.0F, const size_t& _seed = -1U) {
+        auto Generate(const coord_t& _start, coord_t& _end, const coord_t& _size, const double& _loops = 0.0, const double& _obstacles = 0.0, const size_t& _seed = -1U) {
 
             /*
              * 1. Choose a starting point in the field.
@@ -235,14 +233,14 @@ namespace Test::Generator::Utils {
 
                                 if (!edge) {
 
-                                    if (const auto obstacle_chance = static_cast<float>(rng()) / static_cast<float>(std::mt19937::max());
+                                    if (const auto obstacle_chance = static_cast<double>(rng()) / static_cast<double>(std::mt19937::max());
                                         obstacle_chance < _obstacles
                                     ) {
                                         result[CHDR::Utils::To1D<size_t>(c, _size)] = WALL;
                                     }
                                     else {
 
-                                        if (const auto loop_chance = static_cast<float>(rng()) / static_cast<float>(std::mt19937::max());
+                                        if (const auto loop_chance = static_cast<double>(rng()) / static_cast<double>(std::mt19937::max());
                                             loop_chance < _loops
                                         ) {
                                             result[CHDR::Utils::To1D<size_t>(c, _size)] = PATH;

@@ -27,7 +27,7 @@
 
 namespace CHDR::Mazes {
 
-    template<typename Ti, size_t Kd, typename Ts = float>
+    template<typename Ti, typename Ts>
     class Graph : public IGraph<Ti, Ts> {
 
     private:
@@ -64,26 +64,30 @@ namespace CHDR::Mazes {
             }
         };
 
-        using Neighbours    = std::unordered_set<edge_t, EdgeHash, EdgeEqual>;
+        using Neighbours   = std::unordered_set<edge_t, EdgeHash, EdgeEqual>;
         using AdjacencySet = std::unordered_map<Ti, Neighbours, IndexHash, IndexEqual>;
 
         AdjacencySet m_Entries;
 
     public:
 
-        [[maybe_unused]] Graph(std::initializer_list<std::initializer_list<edge_t>> _adjacency_list) : m_Entries{} {
+        [[maybe_unused]] constexpr Graph() : m_Entries() {}
 
-            size_t node_id = 0U;
+        [[maybe_unused]] constexpr Graph(std::initializer_list<std::initializer_list<edge_t>> _adjacency_list) : m_Entries() {
+
+            Ti index{0};
 
             for (const auto& entry: _adjacency_list) {
+
                 for (const auto& edge: entry) {
-                    Add(node_id, edge);
+                    Add(index, edge);
                 }
-                ++node_id;
+
+                ++index;
             }
         }
 
-        template <typename Tm>
+        template <size_t Kd, typename Tm>
 #if __cplusplus >= 202302L
         constexpr
 #endif // __cplusplus >= 202302L
@@ -95,7 +99,7 @@ namespace CHDR::Mazes {
             if constexpr (Prune) {
 
                 std::mutex mtx;
-                std::atomic<Ti> global_index{0};
+                std::atomic<Ti> index{0};
 
                 auto worker = [&](const Ti& _start, const Ti& _end) {
 
@@ -342,8 +346,8 @@ namespace CHDR::Mazes {
             m_Entries.clear();
         }
 
-        using       iterator = typename std::unordered_map<Ti, std::vector<edge_t>>::iterator;
-        using const_iterator = typename std::unordered_map<Ti, std::vector<edge_t>>::const_iterator;
+        using       iterator = typename AdjacencySet::iterator;
+        using const_iterator = typename AdjacencySet::const_iterator;
 
         [[maybe_unused]] [[nodiscard]]       iterator  begin()       { return m_Entries.begin();  }
         [[maybe_unused]] [[nodiscard]] const_iterator  begin() const { return m_Entries.begin();  }
