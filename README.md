@@ -103,22 +103,22 @@ CHDR is completely standalone and does not require the use of any third-party li
 
 However CHDR does require that your project is compatible with a C++17 environment and supports the following standard libraries:
 
-#### &ltalgorithmgt;
-#### &ltarraygt;
-#### &ltcmathgt;
-#### &ltcstddefgt;
-#### &ltcstringgt;
-#### &ltforward_listgt;
-#### &ltinitializer_listgt;
-#### &ltiteratorgt;
-#### &ltlimitsgt;
-#### &ltmemorygt;
-#### &ltqueuegt;
-#### &ltstackgt;
-#### &lttype_traitsgt;
-#### &ltunordered_setgt;
-#### &ltutilitygt;
-#### &ltvectorgt;
+#### &lt;algorithm&gt;
+#### &lt;array&gt;
+#### &lt;cmath&gt;
+#### &lt;cstddef&gt;
+#### &lt;cstring&gt;
+#### &lt;forward_list&gt;
+#### &lt;initializer_list&gt;
+#### &lt;iterator&gt;
+#### &lt;limits&gt;
+#### &lt;memory&gt;
+#### &lt;queue&gt;
+#### &lt;stack&gt;
+#### &lt;type_traits&gt;
+#### &lt;unordered_set&gt;
+#### &lt;utility&gt;
+#### &lt;vector&gt;
 
 ### References
 
