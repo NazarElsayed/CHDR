@@ -41,7 +41,7 @@ namespace Test::Tests {
 
             /* GENERATE MAZE */
             const auto grid = Generator::Grid::Generate<Tm>(start, end, 0.0, 0.0, seed, size);
-            //const auto graph = Generator::Graph::Generate<Tm, Ti, Ts>(start, end, 0.0, 0.0, seed, size);
+//            const auto graph = Generator::Graph::Generate<Tm, Ti, Ts>(start, end, 0.0, 0.0, seed, size);
 
             /* MAX DRAW SIZE */
             const bool drawable (

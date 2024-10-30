@@ -27,6 +27,7 @@ namespace Test::Generator {
             _end = _start;
 
             Debug::Log("(Graph):");
+            Debug::Log("\tRandom Spanning Tree\t (Seed " + std::to_string(_seed) + ")");
 
             std::array size { _size... };
 
@@ -103,7 +104,6 @@ namespace Test::Generator {
                             ++count;
                         }
                     }
-
                 }
             }
 
