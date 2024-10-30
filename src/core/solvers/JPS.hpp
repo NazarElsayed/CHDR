@@ -90,8 +90,8 @@ namespace CHDR::Solvers {
         };
 
         template <typename T>
-        static int Sign(const T val) {
-            return (static_cast<T>(0) < val) - (val < static_cast<T>(0));
+        static constexpr int Sign(const T _val) {
+            return (static_cast<T>(0) < _val) - (_val < static_cast<T>(0));
         }
 
         std::vector<coord_t> FindJumpPoints(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _current, const std::array<int8_t, 2> _direction, const coord_t& _end) const {
