@@ -22,17 +22,17 @@ namespace CHDR::Solvers {
 
         using coord_t = Coord<Ti, Kd>;
 
-        const std::array<uint8_t, 8> s_rotateL { 2, 4, 7,
-                                                 1,    6,
-                                                 0, 3, 5 };
+        const std::array<uint8_t, 8> s_rotateL { 2U, 4U, 7U,
+                                                 1U,     6U,
+                                                 0U, 3U, 5U };
 
-        const std::array<uint8_t, 8> s_rotate2 { 7, 6, 5,
-                                                 4,    3,
-                                                 2, 1, 0 };
+        const std::array<uint8_t, 8> s_rotate2 { 7U, 6U, 5U,
+                                                 4U,     3U,
+                                                 2U, 1U, 0U };
 
-        const std::array<uint8_t, 8> s_rotateR { 5, 3, 0,
-                                                 6,    1,
-                                                 7, 4, 2 };
+        const std::array<uint8_t, 8> s_rotateR { 5U, 3U, 0U,
+                                                 6U,     1U,
+                                                 7U, 4U, 2U };
 
 
         const std::map<std::array<int8_t, 2>, std::array<uint8_t, 8>> rotationMap {
@@ -179,8 +179,8 @@ namespace CHDR::Solvers {
         [[nodiscard]]
         std::pair<bool, coord_t> Jump(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _current, const coord_t& _previous, const coord_t& _end) const {
 
-            const std::array<int8_t, 2> direction { Sign(static_cast<int8_t>(_current[0]) - static_cast<int8_t>(_previous[0])) ,
-                                                    Sign(static_cast<int8_t>(_current[1]) - static_cast<int8_t>(_previous[1])) };
+            const std::array<int8_t, 2> direction { Sign(static_cast<int>(_current[0]) - static_cast<int>(_previous[0])) ,
+                                                    Sign(static_cast<int>(_current[1]) - static_cast<int>(_previous[1])) };
 
             return Jump(_maze, _current, direction, _end);
         }
@@ -263,7 +263,7 @@ namespace CHDR::Solvers {
             const auto size  = _maze.Size();
 
             const auto s = Utils::To1D(_start, size);
-            const auto e = Utils::To1D(_end,   size);
+            const auto e = Utils::To1D(_end  , size);
 
             if (_maze.Contains(s) &&
                 _maze.Contains(e) &&
