@@ -24,6 +24,8 @@ namespace Test::Generator {
 
 			static_assert(std::is_integral_v<T>, "Type T must be an integral type.");
 
+            constexpr bool Bidirectional = true;
+
             _end = _start;
 
             Debug::Log("(Graph):");
@@ -33,81 +35,89 @@ namespace Test::Generator {
 
             CHDR::Mazes::Graph<Ti, Ts> result;
 
+            constexpr size_t null_v = -1U;
+
+            const auto seed = _seed == null_v ? std::random_device().operator()() : _seed;
+            uniform_rng_t rng(seed);
+
+            const auto max_index = CHDR::Utils::Product<Ti>(size);
+
+            std::vector<Ti> keys;
+            std::unordered_map<Ti, size_t> depths;
+            size_t max_depth = 0U;
+
             {
-                constexpr size_t null_v = -1U;
+                const auto s = CHDR::Utils::To1D(_start, size);
+                result.Add(s, {});
+                keys.emplace_back(s);
+                depths[s] = max_depth;
+            }
 
-                const auto seed = _seed == null_v ? std::random_device().operator()() : _seed;
-                uniform_rng_t rng(seed);
+            size_t branch_factor = 0U;
 
-                const auto max_index = CHDR::Utils::Product<Ti>(size);
+            const auto [distance_min, distance_max] = std::make_pair(
+                static_cast<Ts>(1),
+                static_cast<Ts>(10)
+            );
 
-                std::vector<Ti> keys;
-                std::unordered_map<Ti, size_t> depths;
-                size_t max_depth = 0U;
+            Ti count{0};
 
-                {
-                    const auto s = CHDR::Utils::To1D(_start, size);
-                    result.Add(s, {});
-                    keys.emplace_back(s);
-                    depths[s] = max_depth;
+            while (count + branch_factor < max_index) {
+
+                // Get random node from graph:
+                auto curr = keys[rng() % keys.size()];
+
+                if (depths.find(curr) == depths.end()) {
+                    depths[curr] = 0U;
+                }
+                auto& depth = depths[curr];
+
+                if (depth > max_depth) {
+                    max_depth = depth;
+
+                    _end = CHDR::Utils::ToND(curr, size);
                 }
 
-                size_t next_branch_factor = 0U;
+                if (result.GetNeighbours(curr).size() <= 1U)  {
 
-                const auto [distance_min, distance_max] = std::make_pair(
-                    static_cast<Ts>(1),
-                    static_cast<Ts>(10)
-                );
+                    constexpr bool IncludeDiagonals = false;
 
-                Ti count{0};
+                    size_t rand = (rng() % (IncludeDiagonals ?
+                        static_cast<size_t>(std::pow(3U, Kd)) - 1U : Kd * 2U));
 
-                while (count + next_branch_factor < max_index) {
+                    branch_factor = std::max(rand, 2UL);
 
-                    // Get random node from graph:
-                    auto curr = keys[rng() % keys.size()];
+                    // Add the branches:
+                    for (size_t i = 1U, j = 0U; j < branch_factor; ++j, ++i) {
 
-                    auto depth = depths[curr];
-                    if (depth > max_depth) {
-                        max_depth = depth;
+                        const auto next = count + i;
 
-                        _end = CHDR::Utils::ToND(curr, size);
-                    }
-
-                    // Decide if the node will branch or become a leaf.
-                    const bool branch = rng() % 2U;
-                    if (branch) {
-
-                        constexpr bool IncludeDiagonals = false;
-
-                        next_branch_factor = rng() % (IncludeDiagonals ?
-                            static_cast<size_t>(std::pow(3U, Kd)) - 1U : Kd * 2U);
-
-                        // Add the branches:
-                        for (size_t i = 1U, j = 2U; j < next_branch_factor; ++j, ++i) {
-
-                            const auto next = count + i;
-
-                            Ts distance{};
-                            if constexpr (std::is_integral_v<Ts>) {
-                                distance = std::uniform_int_distribution(distance_min, distance_max)(rng);
-                            }
-                            else {
-                                distance = std::uniform_real_distribution(distance_min, distance_max)(rng);
-                            }
-
-                            result.Add(curr, { next, distance });
-                            result.Add(next, { curr, distance });
-
-                            keys.emplace_back(next);
-                            depths[next] = depths[curr] + 1U;
-
-                            ++count;
+                        Ts distance{};
+                        if constexpr (std::is_integral_v<Ts>) {
+                            distance = std::uniform_int_distribution(distance_min, distance_max)(rng);
                         }
+                        else {
+                            distance = std::uniform_real_distribution(distance_min, distance_max)(rng);
+                        }
+
+                        result.Add(curr, { next, distance });
+
+                        if constexpr (Bidirectional) {
+                            result.Add(next, { curr, distance });
+                        }
+                        else {
+                            result.Add(next);
+                        }
+
+                        keys.emplace_back(next);
+                        depths[next] = depths[curr] + 1U;
                     }
+
+                    count += branch_factor;
                 }
             }
 
-            Debug::Log("\t[FINISHED] \t(~" + CHDR::Utils::Trim_Trailing_Zeros(std::to_string(CHDR::Utils::Product<size_t>(size) / static_cast<long double>(1000000000.0))) + "b total candidate nodes)");
+            Debug::Log("\t[FINISHED] \t(~" + CHDR::Utils::Trim_Trailing_Zeros(std::to_string(count / static_cast<long double>(1000000000.0))) + "b total candidate nodes)");
 
             Debug::Log(std::to_string(CHDR::Utils::To1D(_start, size)) + " " + std::to_string(CHDR::Utils::To1D(_end, size)));
 

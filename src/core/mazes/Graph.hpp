@@ -243,6 +243,10 @@ namespace CHDR::Mazes {
             return { search->first };
         }
 
+        void Add(const Ti& _from_id) {
+            m_Entries.insert_or_assign(_from_id, Neighbours{});
+        }
+
         void Add(const Ti& _from_id, const edge_t& _edge) {
             m_Entries[_from_id].emplace(_edge);
         }
@@ -331,6 +335,14 @@ namespace CHDR::Mazes {
         }
 
         [[maybe_unused]] [[nodiscard]] constexpr const Neighbours& GetNeighbours(const Ti& _id) const {
+        
+#ifndef NDEBUG
+            if (!Contains(_id)) {
+              throw std::runtime_error("Node with the specified ID does not exist in the graph.");
+            }
+#endif
+        
+        
             return m_Entries.find(_id)->second;
         }
 
