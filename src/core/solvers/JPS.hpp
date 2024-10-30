@@ -22,7 +22,8 @@ namespace CHDR::Solvers {
 
         using coord_t = Coord<Ti, Kd>;
 
-        /*const std::array<int, 8> s_rotateL { 5, 6, 7,
+        /*
+        const std::array<int, 8> s_rotateL { 5, 6, 7,
                                              3,    4,
                                              0, 1, 2 };
 
@@ -66,6 +67,7 @@ namespace CHDR::Solvers {
 
 
         const std::map<std::array<int, 2>, std::array<int, 8>> rotationMap {
+                { { 0,  0}, { 0, 1, 2, 3, 4, 5, 6, 7 } },
                 { { 1,  0}, { 0, 1, 2, 3, 4, 5, 6, 7 } },
                 { { 1,  1}, { 0, 1, 2, 3, 4, 5, 6, 7 } },
                 { { 0,  1}, s_rotateL },
@@ -73,7 +75,7 @@ namespace CHDR::Solvers {
                 { {-1,  0}, s_rotate2 },
                 { {-1, -1}, s_rotate2 },
                 { { 0, -1}, s_rotateR },
-                { { 1, -1}, s_rotateR },
+                { { 1, -1}, s_rotateR }
             };
 
         struct JPSNode final {
@@ -140,10 +142,94 @@ namespace CHDR::Solvers {
          * 2 4 7
          */
 
+        template <typename T>
+        static int Sign(T val) {
+            return (static_cast<T>(0) < val) - (val < static_cast<T>(0));
+        }
+
+        std::vector<coord_t> FindJumpPoints(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _current, const std::array<int, 2> _direction, const coord_t& _end) const {
+
+            std::vector<coord_t> result;
+
+            const auto neighbours = _maze. template GetNeighbours<true>(_current);
+            const auto map = rotationMap.at(_direction);
+
+            if (_direction[0] == 0 && _direction[1] == 0) { // Start Node
+                for (auto& neighbour : neighbours) {
+                    if (neighbour.first) {
+                        if (const auto& [nActive, nCoord] = Jump(_maze, neighbour.second, _current, _end); nActive) {
+                            result.emplace_back(nCoord);
+                        }
+                    }
+                }
+            }
+            else if (_direction[0] == 0 || _direction[1] == 0) { // Straight Direction
+
+                // Check and expand forced neighbours:
+                if (neighbours[map[2]].first && !neighbours[map[1]].first) {
+                    if (const auto& [nActive, nCoord] = Jump(_maze, neighbours[map[2]].second, _current, _end); nActive) {
+                        result.emplace_back(nCoord);
+                    }
+                }
+                if (neighbours[map[7]].first && !neighbours[map[6]].first) {
+                    if (const auto& [nActive, nCoord] = Jump(_maze, neighbours[map[7]].second, _current, _end); nActive) {
+                        result.emplace_back(nCoord);
+                    }
+                }
+
+                // Expand natural neighbours
+                if (neighbours[map[4]].first) {
+                    if (const auto& [nActive, nCoord] = Jump(_maze, neighbours[map[4]].second, _direction, _end); nActive) {
+                        result.emplace_back(nCoord);
+                    }
+                }
+            }
+            else { // Diagonal Direction
+
+                // Check diagonal is not blocked:
+                if (neighbours[map[1]].first ||
+                    neighbours[map[3]].first) {
+
+                    // Check and expand forced neighbours:
+                    if (neighbours[map[2]].first && !neighbours[map[1]].first) {
+                        if (const auto& [nActive, nCoord] = Jump(_maze, neighbours[map[2]].second, _current, _end); nActive) {
+                            result.emplace_back(nCoord);
+                        }
+                    }
+                    if (neighbours[map[5]].first && !neighbours[map[3]].first) {
+                        if (const auto& [nActive, nCoord] = Jump(_maze, neighbours[map[5]].second, _current, _end); nActive) {
+                            result.emplace_back(nCoord);
+                        }
+                    }
+
+                    // Expand natural neighbours:
+                    if (neighbours[map[4]].first) {
+                        if (const auto& [nActive, nCoord] = Jump(_maze, neighbours[map[4]].second, _current, _end); nActive) {
+                            result.emplace_back(nCoord);
+                        }
+                    }
+
+                    if (neighbours[map[6]].first) {
+                        if (const auto& [nActive, nCoord] = Jump(_maze, neighbours[map[6]].second, _current, _end); nActive) {
+                            result.emplace_back(nCoord);
+                        }
+                    }
+
+                    if (neighbours[map[7]].first) {
+                        if (const auto& [nActive, nCoord] = Jump(_maze, neighbours[map[7]].second, _direction, _end); nActive) {
+                            result.emplace_back(nCoord);
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
         [[nodiscard]]
         std::pair<bool, coord_t> Jump(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _current, const coord_t& _previous, const coord_t& _end) const {
-            const std::array<int, 2> direction { static_cast<int>(_current[0]) - static_cast<int>(_previous[0]) ,
-                                                 static_cast<int>(_current[1]) - static_cast<int>(_previous[1]) };
+            const std::array<int, 2> direction { Sign(static_cast<int>(_current[0]) - static_cast<int>(_previous[0])) ,
+                                                 Sign(static_cast<int>(_current[1]) - static_cast<int>(_previous[1])) };
 
             return Jump(_maze, _current, direction, _end);
         }
@@ -159,14 +245,17 @@ namespace CHDR::Solvers {
             if (_direction[0] == 0 || _direction[1] == 0) { // Straight Direction
 
                 if (_current == _end) {
-                    result.first  = true;
+                    result.first = true;
                 }
                 else {
+
+                    // Check for forced neighbours:
                     if (neighbours[map[2]].first && !neighbours[map[1]].first ||
                         neighbours[map[7]].first && !neighbours[map[6]].first) {
 
-                        result.first  = true;
+                        result.first = true;
                     }
+                    // Expand natural neighbours:
                     else {
                         if (neighbours[map[4]].first) {
                             result = Jump(_maze, neighbours[map[4]].second, _direction, _end);
@@ -176,18 +265,22 @@ namespace CHDR::Solvers {
             }
             else { // Diagonal Direction
 
+                // Check diagonal is not blocked:
                 if (neighbours[map[1]].first ||
                     neighbours[map[3]].first) {
 
                     if (_current == _end) {
-                        result.first  = true;
+                        result.first = true;
                     }
                     else {
+
+                        // Check for forced neighbours:
                         if (neighbours[map[2]].first && !neighbours[map[1]].first ||
                             neighbours[map[5]].first && !neighbours[map[3]].first) {
 
                             result.first = true;
                         }
+                        // Expand natural neighbours:
                         else {
                             if (neighbours[map[4]].first) {
                                 result.first = Jump(_maze, neighbours[map[4]].second, _current, _end).first;
@@ -250,31 +343,25 @@ namespace CHDR::Solvers {
                             }
                             closed.Add(curr.m_Index);
 
-                            coord_t current = Utils::ToND(curr.m_Index, size);
+                            auto coord = Utils::ToND(curr.m_Index, size);
+                            auto successors = FindJumpPoints(_maze, coord, curr.m_Direction, _end);
 
-                            for (const auto& neighbour : _maze. template GetNeighbours<true>(curr.m_Index)) {
+                            for (const auto& successor : successors) {
 
-                                const std::array<int, 2> direction { static_cast<int>(neighbour.second[0]) - static_cast<int>(current[0]),
-                                                                     static_cast<int>(neighbour.second[1]) - static_cast<int>(current[1]) };
+                                const auto n = Utils::To1D(successor, size);
+                                if (!closed.Contains(n)) {
 
-                                if (neighbour.first) {
-
-                                    if (const auto& [nActive, nCoord] = Jump(_maze, neighbour.second, direction, _end); nActive) {
-
-                                        const auto n = Utils::To1D(nCoord, size);
-                                        if (!closed.Contains(n)) {
-
-                                            // Check if node is not already visited:
-                                            if (closed.Capacity() < n) {
-                                                closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
-                                            }
-
-                                            closed.Add(n);
-
-                                            // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                            open.Emplace({ n, {0, 0}, curr.m_GScore + static_cast<Ts>(1), _h(nCoord, _end) * _weight, &buf.Emplace(std::move(curr)) });
-                                        }
+                                    // Check if node is not already visited:
+                                    if (closed.Capacity() < n) {
+                                        closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                     }
+
+                                    closed.Add(n);
+
+                                    const std::array<int, 2> direction { Sign(static_cast<int>(successor[0]) - static_cast<int>(coord[0])) ,
+                                                                         Sign(static_cast<int>(successor[1]) - static_cast<int>(coord[1])) };
+                                    // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
+                                    open.Emplace({ n, direction, curr.m_GScore + static_cast<Ts>(1), _h(successor, _end) * _weight, &buf.Emplace(std::move(curr)) });
                                 }
                             }
                         }
