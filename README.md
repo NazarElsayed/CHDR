@@ -43,12 +43,12 @@ CHDR is designed to be fast and lightweight. Alongside data and algorithmic opti
 
 #### Maze types
 
-| Type      |     Status      |
-|:----------|:---------------:|
-| Fields    |  Completed ✔️   |
-| Graphs    | In Progress 🏗️ |
-| Grids     |  Completed ✔️   |
-| Recursive |   Planned 📝    |
+| Type      |    Status    |
+|:----------|:------------:|
+| Fields    | Completed ✔️ |
+| Graphs    | Completed ✔️ |
+| Grids     | Completed ✔️ |
+| Recursive |  Planned 📝  |
 
 #### Post-Processing
 

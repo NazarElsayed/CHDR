@@ -48,6 +48,93 @@ namespace CHDR::Solvers {
 
     public:
 
+        template <typename Ts>
+        [[maybe_unused]]
+        auto Solve(const Mazes::Graph<Ti, Ts>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, size_t _capacity = 0U) {
+
+            std::vector<coord_t> result;
+
+            const auto s = Utils::To1D(_start, _size);
+            const auto e = Utils::To1D(_end,   _size);
+
+            if (_maze.Contains(s) &&
+                _maze.Contains(e) &&
+                _maze.At(s).IsActive() &&
+                _maze.At(e).IsActive()
+            ) {
+
+                if (s != e) {
+
+                    const auto count = _maze.Count();
+
+                    _capacity = std::max(_capacity, std::max(s, e));
+
+                    auto sequence = std::vector<DFSNode>(_capacity);
+                    std::stack<DFSNode, std::vector<DFSNode>> open(std::move(sequence));
+                    open.emplace(s, nullptr);
+
+                    ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
+
+                    StableForwardBuf<DFSNode> buf;
+
+                    while (!open.empty()) { // SEARCH FOR SOLUTION...
+
+                        for (size_t i = 0U; i < open.size(); ++i) {
+
+                            auto curr(std::move(open.top()));
+                            open.pop();
+
+                            if (curr.m_Index != e) {
+
+                                if (closed.Capacity() < curr.m_Index) {
+                                    closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
+                                }
+                                closed.Add(curr.m_Index);
+
+                                for (const auto& neighbour: _maze.GetNeighbours(curr.m_Index)) {
+
+                                    if (const auto& [nActive, nCoord] = neighbour; nActive) {
+
+                                        const auto& [n, nDistance] = neighbour;
+
+                                        // Check if node is not already visited:
+                                        if (!closed.Contains(n)) {
+
+                                            if (closed.Capacity() < n) {
+                                                closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
+                                            }
+                                            closed.Add(n);
+
+                                            // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
+                                            open.push({n, &buf.Emplace(std::move(curr)) });
+                                        }
+                                    }
+                                }
+                            }
+                            else { // SOLUTION REACHED ...
+
+                                // Recurse from end node to start node, inserting into a result buffer:
+                                result.reserve(_capacity);
+                                for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = temp->m_Parent) {
+                                    result.emplace_back(Utils::ToND(temp->m_Index, _size));
+                                }
+
+                                // Reverse the result:
+                                std::reverse(result.begin(), result.end());
+
+                                break;
+                            }
+                        }
+                    }
+                }
+                else {
+                    result.emplace_back(_end);
+                }
+            }
+
+            return result;
+        }
+
         [[maybe_unused]]
         auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, size_t _capacity = 0U) {
 
@@ -80,7 +167,7 @@ namespace CHDR::Solvers {
 
                         for (size_t i = 0U; i < open.size(); ++i) {
 
-                            const auto curr(std::move(open.top()));
+                            auto curr(std::move(open.top()));
                             open.pop();
 
                             if (curr.m_Index != e) {

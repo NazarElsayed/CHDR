@@ -30,6 +30,72 @@ namespace CHDR::Solvers {
 
     public:
 
+        template <typename Ts>
+        [[maybe_unused]]
+        auto Solve(const Mazes::Graph<Ti, Ts>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, size_t _capacity = 0U) {
+
+	        bool result = false;
+
+            const auto s = Utils::To1D(_start, _size);
+            const auto e = Utils::To1D(_end,   _size);
+
+            if (_maze.Contains(s) &&
+                _maze.Contains(e) &&
+                _maze.At(s).IsActive() &&
+                _maze.At(e).IsActive()
+            ) {
+
+                if (s != e) {
+
+                    const auto count = _maze.Count();
+
+                    std::queue<Ti> open;
+                    open.emplace(s);
+
+                    ExistenceSet closed ({ s }, std::max(_capacity, std::max(s, e)));
+
+                    while (!open.empty()) {
+
+                        for (size_t i = 0U; i < open.size(); ++i) {
+
+                            const auto current(open.front());
+                            open.pop();
+
+                            if (current == e) {
+                                result = true;
+
+                                goto NestedBreak;
+                            }
+
+                            for (const auto& neighbour : _maze.GetNeighbours(current)) {
+
+                                if (const auto& [nActive, nCoord] = neighbour; nActive) {
+
+                                    const auto n = Utils::To1D(nCoord, _size);
+
+                                    if (!closed.Contains(n)) {
+
+                                        if (closed.Capacity() < n) {
+                                            closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
+                                        }
+                                        closed.Add(n);
+
+                                        open.emplace(n);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else {
+                    result = true;
+                }
+            }
+
+NestedBreak:
+            return result;
+        }
+
         [[maybe_unused]]
         auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, size_t _capacity = 0U) {
 

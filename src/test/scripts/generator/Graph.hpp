@@ -119,8 +119,6 @@ namespace Test::Generator {
 
             Debug::Log("\t[FINISHED] \t(~" + CHDR::Utils::Trim_Trailing_Zeros(std::to_string(count / static_cast<long double>(1000000000.0))) + "b total candidate nodes)");
 
-            Debug::Log(std::to_string(CHDR::Utils::To1D(_start, size)) + " " + std::to_string(CHDR::Utils::To1D(_end, size)));
-
 			return result;
 		}
 	};
