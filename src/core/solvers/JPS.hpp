@@ -22,36 +22,36 @@ namespace CHDR::Solvers {
 
         using coord_t = Coord<Ti, Kd>;
 
-        const std::array<int, 8> s_rotateL { 2, 4, 7,
-                                             1,    6,
-                                             0, 3, 5 };
+        const std::array<uint8_t, 8> s_rotateL { 2, 4, 7,
+                                                 1,    6,
+                                                 0, 3, 5 };
 
-        const std::array<int, 8> s_rotate2 { 7, 6, 5,
-                                             4,    3,
-                                             2, 1, 0 };
+        const std::array<uint8_t, 8> s_rotate2 { 7, 6, 5,
+                                                 4,    3,
+                                                 2, 1, 0 };
 
-        const std::array<int, 8> s_rotateR { 5, 3, 0,
-                                             6,    1,
-                                             7, 4, 2 };
+        const std::array<uint8_t, 8> s_rotateR { 5, 3, 0,
+                                                 6,    1,
+                                                 7, 4, 2 };
 
 
-        const std::map<std::array<int, 2>, std::array<int, 8>> rotationMap {
-                { { 0,  0}, { 0, 1, 2, 3, 4, 5, 6, 7 } },
-                { { 1,  0}, { 0, 1, 2, 3, 4, 5, 6, 7 } },
-                { { 1,  1}, { 0, 1, 2, 3, 4, 5, 6, 7 } },
+        const std::map<std::array<int8_t, 2>, std::array<uint8_t, 8>> rotationMap {
+                { { 0,  0}, { 0U, 1U, 2U, 3U, 4U, 5U, 6U, 7U } },
+                { { 1,  0}, { 0U, 1U, 2U, 3U, 4U, 5U, 6U, 7U } },
+                { { 1,  1}, { 0U, 1U, 2U, 3U, 4U, 5U, 6U, 7U } },
                 { { 0,  1}, s_rotateL },
                 { {-1,  1}, s_rotateL },
                 { {-1,  0}, s_rotate2 },
                 { {-1, -1}, s_rotate2 },
                 { { 0, -1}, s_rotateR },
                 { { 1, -1}, s_rotateR }
-            };
+        };
 
         struct JPSNode final {
 
             Ti m_Index{};
+            std::array<int8_t, 2> m_Direction{};
 
-            std::array<int, 2> m_Direction;
             Ts m_GScore;
             Ts m_FScore;
 
@@ -59,7 +59,7 @@ namespace CHDR::Solvers {
 
             [[nodiscard]] constexpr JPSNode() = default;
 
-            [[nodiscard]] constexpr JPSNode(const Ti& _index, const std::array<int, 2> _direction, const Ts& _gScore, const Ts& _hScore, const JPSNode* RESTRICT const _parent) :
+            [[nodiscard]] constexpr JPSNode(const Ti& _index, const std::array<int8_t, 2>& _direction, const Ts& _gScore, const Ts& _hScore, const JPSNode* RESTRICT const _parent) :
                 m_Index(_index),
                 m_Direction(_direction),
                 m_GScore(_gScore),
@@ -73,8 +73,8 @@ namespace CHDR::Solvers {
                 [[nodiscard]] constexpr bool operator () (const JPSNode& _a, const JPSNode& _b) const {
 
                     return _a.m_FScore == _b.m_FScore ?
-                        _a.m_GScore > _b.m_GScore :
-                        _a.m_FScore > _b.m_FScore;
+                                _a.m_GScore > _b.m_GScore :
+                                _a.m_FScore > _b.m_FScore;
                 }
             };
 
@@ -83,8 +83,8 @@ namespace CHDR::Solvers {
                 [[nodiscard]] constexpr bool operator () (const JPSNode& _a, const JPSNode& _b) const {
 
                     return _a.m_FScore == _b.m_FScore ?
-                        _a.m_GScore < _b.m_GScore :
-                        _a.m_FScore < _b.m_FScore;
+                                _a.m_GScore < _b.m_GScore :
+                                _a.m_FScore < _b.m_FScore;
                 }
             };
         };
@@ -94,14 +94,15 @@ namespace CHDR::Solvers {
             return (static_cast<T>(0) < val) - (val < static_cast<T>(0));
         }
 
-        std::vector<coord_t> FindJumpPoints(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _current, const std::array<int, 2> _direction, const coord_t& _end) const {
+        std::vector<coord_t> FindJumpPoints(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _current, const std::array<int8_t, 2> _direction, const coord_t& _end) const {
 
             std::vector<coord_t> result;
 
             const auto neighbours = _maze. template GetNeighbours<true>(_current);
             const auto map = rotationMap.at(_direction);
 
-            if (_direction[0] == 0 && _direction[1] == 0) { // Start Node
+            // Start Node:
+            if (_direction[0] == 0 && _direction[1] == 0) {
                 for (auto& neighbour : neighbours) {
                     if (neighbour.first) {
                         if (const auto& [nActive, nCoord] = Jump(_maze, neighbour.second, _current, _end); nActive) {
@@ -110,7 +111,8 @@ namespace CHDR::Solvers {
                     }
                 }
             }
-            else if (_direction[0] == 0 || _direction[1] == 0) { // Straight Direction
+            // Straight Direction:
+            else if (_direction[0] == 0 || _direction[1] == 0) {
 
                 // Check and expand forced neighbours:
                 if (neighbours[map[2]].first && !neighbours[map[1]].first) {
@@ -124,14 +126,15 @@ namespace CHDR::Solvers {
                     }
                 }
 
-                // Expand natural neighbours
+                // Expand natural neighbours:
                 if (neighbours[map[4]].first) {
                     if (const auto& [nActive, nCoord] = Jump(_maze, neighbours[map[4]].second, _direction, _end); nActive) {
                         result.emplace_back(nCoord);
                     }
                 }
             }
-            else { // Diagonal Direction
+            // Diagonal Direction:
+            else {
 
                 // Check diagonal is not blocked:
                 if (neighbours[map[1]].first ||
@@ -172,17 +175,18 @@ namespace CHDR::Solvers {
 
             return result;
         }
-//
+
         [[nodiscard]]
         std::pair<bool, coord_t> Jump(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _current, const coord_t& _previous, const coord_t& _end) const {
-            const std::array<int, 2> direction { Sign(static_cast<int>(_current[0]) - static_cast<int>(_previous[0])) ,
-                                                 Sign(static_cast<int>(_current[1]) - static_cast<int>(_previous[1])) };
+
+            const std::array<int8_t, 2> direction { Sign(static_cast<int8_t>(_current[0]) - static_cast<int8_t>(_previous[0])) ,
+                                                    Sign(static_cast<int8_t>(_current[1]) - static_cast<int8_t>(_previous[1])) };
 
             return Jump(_maze, _current, direction, _end);
         }
 
         [[nodiscard]]
-        std::pair<bool, coord_t> Jump(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _current, const std::array<int, 2>& _direction, const coord_t& _end) const {
+        std::pair<bool, coord_t> Jump(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _current, const std::array<int8_t, 2>& _direction, const coord_t& _end) const {
 
             std::pair<bool, coord_t> result { false, _current };
 
@@ -256,8 +260,10 @@ namespace CHDR::Solvers {
 
             std::vector<coord_t> result;
 
-            const auto s = Utils::To1D(_start, _maze.Size());
-            const auto e = Utils::To1D(_end,   _maze.Size());
+            const auto size  = _maze.Size();
+
+            const auto s = Utils::To1D(_start, size);
+            const auto e = Utils::To1D(_end,   size);
 
             if (_maze.Contains(s) &&
                 _maze.Contains(e) &&
@@ -268,7 +274,6 @@ namespace CHDR::Solvers {
                 if (s != e) {
 
                     const auto count = _maze.Count();
-                    const auto size = _maze.Size();
 
                     _capacity = std::max(_capacity, std::max(s, e));
 
@@ -305,8 +310,9 @@ namespace CHDR::Solvers {
 
                                     closed.Add(n);
 
-                                    const std::array<int, 2> direction { Sign(static_cast<int>(successor[0]) - static_cast<int>(coord[0])) ,
-                                                                         Sign(static_cast<int>(successor[1]) - static_cast<int>(coord[1])) };
+                                    const std::array<int8_t, 2> direction { Sign(static_cast<int>(successor[0]) - static_cast<int>(coord[0])) ,
+                                                                            Sign(static_cast<int>(successor[1]) - static_cast<int>(coord[1])) };
+
                                     // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
                                     open.Emplace({ n, direction, curr.m_GScore + static_cast<Ts>(1), _h(successor, _end) * _weight, &buf.Emplace(std::move(curr)) });
                                 }
