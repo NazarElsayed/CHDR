@@ -22,17 +22,17 @@ namespace CHDR::Solvers {
 
         using coord_t = Coord<Ti, Kd>;
 
-        const std::array<uint8_t, 8> s_rotateL { 2U, 4U, 7U,
-                                                 1U,     6U,
-                                                 0U, 3U, 5U };
+        static constexpr std::array<uint8_t, 8> s_rotateL { 2U, 4U, 7U,
+                                                            1U,     6U,
+                                                            0U, 3U, 5U };
 
-        const std::array<uint8_t, 8> s_rotate2 { 7U, 6U, 5U,
-                                                 4U,     3U,
-                                                 2U, 1U, 0U };
+        static constexpr std::array<uint8_t, 8> s_rotate2 { 7U, 6U, 5U,
+                                                            4U,     3U,
+                                                            2U, 1U, 0U };
 
-        const std::array<uint8_t, 8> s_rotateR { 5U, 3U, 0U,
-                                                 6U,     1U,
-                                                 7U, 4U, 2U };
+        static constexpr std::array<uint8_t, 8> s_rotateR { 5U, 3U, 0U,
+                                                            6U,     1U,
+                                                            7U, 4U, 2U };
 
 
         const std::map<std::array<int8_t, 2>, std::array<uint8_t, 8>> rotationMap {
