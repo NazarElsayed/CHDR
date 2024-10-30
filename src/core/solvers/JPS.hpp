@@ -22,37 +22,6 @@ namespace CHDR::Solvers {
 
         using coord_t = Coord<Ti, Kd>;
 
-        /*
-        const std::array<int, 8> s_rotateL { 5, 6, 7,
-                                             3,    4,
-                                             0, 1, 2 };
-
-        const std::array<int, 8> s_rotate2 { 7, 4, 2,
-                                             6,    1,
-                                             5, 3, 0 };
-
-        const std::array<int, 8> s_rotateR { 2, 1, 0,
-                                             4,    3,
-                                             7, 6, 5 };
-
-
-        const std::map<std::array<int, 2>, std::array<int, 8>> rotationMap {
-            { { 1,  0}, { 0, 1, 2, 3, 4, 5, 6, 7 } },
-            { { 1,  1}, { 0, 1, 2, 3, 4, 5, 6, 7 } },
-            { { 0,  1}, s_rotateL },
-            { {-1,  1}, s_rotateL },
-            { {-1,  0}, s_rotate2 },
-            { {-1, -1}, s_rotate2 },
-            { { 0, -1}, s_rotateR },
-            { { 1, -1}, s_rotateR },
-        };*/
-
-        /*
-         * 0 1 2
-         * 3   4
-         * 5 6 7
-         */
-
         const std::array<int, 8> s_rotateL { 2, 4, 7,
                                              1,    6,
                                              0, 3, 5 };
@@ -120,30 +89,8 @@ namespace CHDR::Solvers {
             };
         };
 
-        /*std::array<int, 2> current = { _current[0], _current[1] };
-        Debug::Log("Direction: {" + std::to_string(_direction[0]) + ", " + std::to_string(_direction[1]) + "}");
-
-        for (int i = 0; i < neighbours.size(); i++) {
-            std::array<int, 2> coord = { neighbours[i].second[0], neighbours[i].second[1] };
-            Debug::Log(std::to_string(coord[0] - current[0]) + ", " + std::to_string(coord[1] - current[1]));
-        }
-
-        Debug::Log("");*/
-
-        /*
-         * 0 1 2
-         * 3   4
-         * 5 6 7
-         */
-
-        /*
-         * 0 3 5
-         * 1   6
-         * 2 4 7
-         */
-
         template <typename T>
-        static int Sign(T val) {
+        static int Sign(const T val) {
             return (static_cast<T>(0) < val) - (val < static_cast<T>(0));
         }
 
@@ -225,7 +172,7 @@ namespace CHDR::Solvers {
 
             return result;
         }
-
+//
         [[nodiscard]]
         std::pair<bool, coord_t> Jump(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _current, const coord_t& _previous, const coord_t& _end) const {
             const std::array<int, 2> direction { Sign(static_cast<int>(_current[0]) - static_cast<int>(_previous[0])) ,
@@ -250,8 +197,8 @@ namespace CHDR::Solvers {
                 else {
 
                     // Check for forced neighbours:
-                    if (neighbours[map[2]].first && !neighbours[map[1]].first ||
-                        neighbours[map[7]].first && !neighbours[map[6]].first) {
+                    if ((neighbours[map[2]].first && !neighbours[map[1]].first) ||
+                        (neighbours[map[7]].first && !neighbours[map[6]].first)) {
 
                         result.first = true;
                     }
@@ -275,8 +222,8 @@ namespace CHDR::Solvers {
                     else {
 
                         // Check for forced neighbours:
-                        if (neighbours[map[2]].first && !neighbours[map[1]].first ||
-                            neighbours[map[5]].first && !neighbours[map[3]].first) {
+                        if ((neighbours[map[2]].first && !neighbours[map[1]].first) ||
+                            (neighbours[map[5]].first && !neighbours[map[3]].first)) {
 
                             result.first = true;
                         }
@@ -388,12 +335,11 @@ namespace CHDR::Solvers {
             return result;
         }
 
-        template <size_t StackSize>
+        /*template <size_t StackSize>
         auto SolveLinear(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
 
             std::vector<coord_t> result;
 
-            /*
             const auto s = Utils::To1D(_start, _maze.Size());
             const auto e = Utils::To1D(_end,   _maze.Size());
 
@@ -470,10 +416,9 @@ namespace CHDR::Solvers {
                     result.emplace_back(_end);
                 }
             }
-            */
 
             return result;
-        }
+        }*/
 
     public:
 
@@ -484,9 +429,10 @@ namespace CHDR::Solvers {
              * method based on which is more efficient given the maze's size.
              */
 
-            constexpr size_t LMAX = 256U;
-
             std::vector<coord_t> result;
+
+            /*
+            constexpr size_t LMAX = 256U;
 
             const auto count = _maze.Count();
 
@@ -502,6 +448,9 @@ namespace CHDR::Solvers {
             else {
                 result = SolveHeap(_maze, _start, _end, _h, _weight, _capacity);
             }
+            */
+
+            result = SolveHeap(_maze, _start, _end, _h, _weight, _capacity);
 
             return result;
         }
