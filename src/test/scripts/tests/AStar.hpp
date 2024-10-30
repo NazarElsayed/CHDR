@@ -40,8 +40,8 @@ namespace Test::Tests {
                       coord_t end;
 
             /* GENERATE MAZE */
-            //const auto grid = Generator::Grid::Generate<Tm>(start, end, 0.0, 0.0, seed, size);
-            const auto graph = Generator::Graph::Generate<Tm, Ti, Ts>(start, end, 0.0, 0.0, seed, size);
+            const auto grid = Generator::Grid::Generate<Tm>(start, end, 0.0, 0.0, seed, size);
+            //const auto graph = Generator::Graph::Generate<Tm, Ti, Ts>(start, end, 0.0, 0.0, seed, size);
 
             /* MAX DRAW SIZE */
             const bool drawable (
@@ -53,17 +53,16 @@ namespace Test::Tests {
 
             const auto sw_start = std::chrono::high_resolution_clock::now();
 
-            auto solver = CHDR::Solvers::AStar<Tm, Kd, Ts, Ti>();
-//            auto solver = CHDR::Solvers::JPS<Tm, Kd, Ts, Ti>();
-//            auto path = solver.Solve(grid, start, end, HEURISTIC);
-            auto path = solver.Solve(graph, start, end, size, HEURISTIC);
+            auto solver = CHDR::Solvers::JPS<Tm, Kd, Ts, Ti>();
+            auto path = solver.Solve(grid, start, end, HEURISTIC);
+//            auto path = solver.Solve(graph, start, end, size, HEURISTIC);
 
             auto pathfinding_log = "\t" + std::string(path.size() != 0U ? "[SOLVED]" : "[IMPOSSIBLE]") + "\t(~" +
                 CHDR::Utils::ToString(std::chrono::duration_cast<std::chrono::duration<long double>>(std::chrono::high_resolution_clock::now() - sw_start).count()) + ")";
 
-//            if (drawable) {
-//                Display<Tm, Kd>::DrawMaze(start, end, size, grid, path);
-//            }
+            if (drawable) {
+                Display<Tm, Kd>::DrawMaze(start, end, size, grid, path);
+            }
 
             Debug::Log("(A*):");
             Debug::Log(pathfinding_log);
