@@ -98,6 +98,8 @@ namespace CHDR::Mazes {
             constexpr bool Prune = true;
             if constexpr (Prune) {
 
+                // TODO: Add support for directed graphs.
+
                 std::mutex mtx;
                 std::atomic<Ti> index{0};
 
@@ -264,6 +266,8 @@ namespace CHDR::Mazes {
 
         [[maybe_unused]] void Prune() {
 
+            // TODO: Fix erroneous graph when pruned twice and add support for pruning directed graphs.
+
             std::vector<Ti> nodesToRemove;
 
             do {
@@ -341,8 +345,7 @@ namespace CHDR::Mazes {
               throw std::runtime_error("Node with the specified ID does not exist in the graph.");
             }
 #endif
-        
-        
+
             return m_Entries.find(_id)->second;
         }
 
