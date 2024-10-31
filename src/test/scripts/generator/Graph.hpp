@@ -85,7 +85,7 @@ namespace Test::Generator {
                     size_t rand = (rng() % (IncludeDiagonals ?
                         static_cast<size_t>(std::pow(3U, Kd)) - 1U : Kd * 2U));
 
-                    branch_factor = std::max(rand, 2UL);
+                    branch_factor = std::max(rand, static_cast<size_t>(2UL));
 
                     // Add the branches:
                     for (size_t i = 1U, j = 0U; j < branch_factor; ++j, ++i) {
