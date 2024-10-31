@@ -13,9 +13,11 @@
 
 #include "base/ISolver.hpp"
 #include "mazes/base/IMaze.hpp"
+#include "mazes/Graph.hpp"
 #include "mazes/Grid.hpp"
 #include "types/ExistenceSet.hpp"
 #include "types/Heap.hpp"
+#include "types/StableForwardBuf.hpp"
 #include "types/StackAllocator.hpp"
 #include "utils/Utils.hpp"
 

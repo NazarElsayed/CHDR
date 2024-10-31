@@ -29,6 +29,7 @@ CHDR is designed to be fast and lightweight. Alongside data and algorithmic opti
 | Type                                                    |    Status     |
 |:--------------------------------------------------------|:-------------:|
 | A-Star (A*)                                             | Completed ✔️  |
+| Best-First Search (B*)                                  | Completed ✔️  |
 | Breadth-First Search (BFS)                              | Completed ✔️  |
 | Depth-First Search (DFS)                                | Completed ✔️  |
 | Dijkstra's Algorithm                                    |  Planned 📝   |
@@ -65,14 +66,14 @@ CHDR is designed to be fast and lightweight. Alongside data and algorithmic opti
 
 #### Computational
 
-| Feature                                          |     Status      |
-|:-------------------------------------------------|:---------------:|
-| Compile-Time K-dimensionality                    |  Completed ✔️   |
-| Compile-Time Routing                             |   Planned 📝    |
-| Concurrent Capabilities                          |   Planned 📝    |
-| Dynamic Mazes and Obstacle-Avoidance             |   Planned 📝    |
-| Maze Optimisation (Baking)                       | In Progress 🏗️ |
-| Runtime K-dimensionality                         | In Progress 🏗️ |
+| Feature                              |     Status      |
+|:-------------------------------------|:---------------:|
+| Compile-Time K-dimensionality        |  Completed ✔️   |
+| Compile-Time Routing                 |   Planned 📝    |
+| Concurrent Capabilities              | In Progress 🏗️ |
+| Dynamic Mazes and Obstacle-Avoidance |   Planned 📝    |
+| Maze Optimisation (Baking)           | In Progress 🏗️ |
+| Runtime K-dimensionality             | In Progress 🏗️ |
 
 #### Explicit Vectorisation Optimisations
 

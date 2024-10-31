@@ -13,8 +13,10 @@
 
 #include "base/ISolver.hpp"
 #include "mazes/base/IMaze.hpp"
+#include "mazes/Graph.hpp"
 #include "mazes/Grid.hpp"
 #include "types/ExistenceSet.hpp"
+#include "types/StableForwardBuf.hpp"
 #include "utils/Utils.hpp"
 
 namespace CHDR::Solvers {

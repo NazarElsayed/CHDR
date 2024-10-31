@@ -6,8 +6,8 @@
  * https://creativecommons.org/licenses/by-nc-nd/4.0/
  */
 
-#ifndef CHDR_ASTAR_HPP
-#define CHDR_ASTAR_HPP
+#ifndef CHDR_BSTAR_HPP
+#define CHDR_BSTAR_HPP
 
 #include "../utils/Heuristics.hpp"
 #include "base/ISolver.hpp"
@@ -23,7 +23,7 @@
 namespace CHDR::Solvers {
 
     template<typename Tm, const size_t Kd, typename Ts, typename Ti>
-    class [[maybe_unused]] AStar final {
+    class [[maybe_unused]] BStar final {
 
         static_assert(std::is_integral_v<Ts> || std::is_floating_point_v<Ts>, "Ts must be either an integral or floating point type.");
         static_assert(std::is_integral_v<Ti>, "Ti must be an integral type.");
@@ -32,52 +32,44 @@ namespace CHDR::Solvers {
 
         using coord_t = Coord<Ti, Kd>;
 
-        struct ASNode final {
+        struct BSNode final {
 
             Ti m_Index;
 
-            Ts m_GScore;
-            Ts m_FScore;
+            Ts m_HScore;
 
-            const ASNode* RESTRICT m_Parent;
+            const BSNode* RESTRICT m_Parent;
 
             /**
-             * @brief Constructs an uninitialized ASNode.
+             * @brief Constructs an uninitialized BSNode.
              * 
-             * This constructor creates an ASNode with uninitialized members.
+             * This constructor creates an BSNode with uninitialized members.
              */
-            [[nodiscard]] constexpr ASNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default) 
+            [[nodiscard]] constexpr BSNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default) 
 
-            [[nodiscard]] constexpr ASNode(const Ti &_index, const Ts &_gScore, const Ts &_hScore, const ASNode* RESTRICT const _parent) :
+            [[nodiscard]] constexpr BSNode(const Ti &_index, const Ts &_hScore, const BSNode* RESTRICT const _parent) :
                 m_Index(_index),
-                m_GScore(_gScore),
-                m_FScore(_gScore + _hScore),
+                m_HScore(_hScore),
                 m_Parent(std::move(_parent)) {}
 
-            [[nodiscard]] constexpr bool operator == (const ASNode& _node) const { return m_Index == _node.m_Index; }
+            [[nodiscard]] constexpr bool operator == (const BSNode& _node) const { return m_Index == _node.m_Index; }
 
             struct Max {
 
-                [[nodiscard]] constexpr bool operator () (const ASNode& _a, const ASNode& _b) const {
-
-                    return _a.m_FScore == _b.m_FScore ?
-                        _a.m_GScore > _b.m_GScore :
-                        _a.m_FScore > _b.m_FScore;
+                [[nodiscard]] constexpr bool operator () (const BSNode& _a, const BSNode& _b) const {
+                    return _a.m_HScore > _b.m_HScore;
                 }
             };
 
             struct Min {
 
-                [[nodiscard]] constexpr bool operator () (const ASNode& _a, const ASNode& _b) const {
-
-                    return _a.m_FScore == _b.m_FScore ?
-                        _a.m_GScore < _b.m_GScore :
-                        _a.m_FScore < _b.m_FScore;
+                [[nodiscard]] constexpr bool operator () (const BSNode& _a, const BSNode& _b) const {
+                    return _a.m_HScore < _b.m_HScore;
                 }
             };
         };
 
-        auto SolveHeap(const Mazes::Graph<Ti, Ts>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
+        auto SolveHeap(const Mazes::Graph<Ti, Ts>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, Ts (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) const {
 
             std::vector<coord_t> result;
 
@@ -98,10 +90,10 @@ namespace CHDR::Solvers {
 
                     ExistenceSet<LowMemoryUsage> closed({s }, _capacity);
 
-                    Heap<ASNode, 2U, typename ASNode::Max> open(_capacity / 4U);
-                    open.Emplace({s, static_cast<Ts>(0), _h(_start, _end), nullptr });
+                    Heap<BSNode, 2U, typename BSNode::Max> open(_capacity / 4U);
+                    open.Emplace({ s, _h(_start, _end), nullptr });
 
-                    StableForwardBuf<ASNode, 1024U * 1024U> buf;
+                    StableForwardBuf<BSNode, 1024U * 1024U> buf;
 
                     while (!open.Empty()) {
 
@@ -127,14 +119,14 @@ namespace CHDR::Solvers {
                                     closed.Add(n);
 
                                     // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                    open.Emplace({ n, curr.m_GScore + static_cast<Ts>(nDistance), _h(CHDR::Utils::ToND(n, _size), _end) * _weight, &buf.Emplace(std::move(curr)) });
+                                    open.Emplace({ n, _h(CHDR::Utils::ToND(n, _size), _end), &buf.Emplace(std::move(curr)) });
                                 }
                             }
                         }
                         else { // SOLUTION REACHED ...
 
                             // Recurse from end node to start node, inserting into a result buffer:
-                            result.reserve(curr.m_GScore);
+                            result.reserve(static_cast<size_t>(_h(_start, _end)));
                             for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = temp->m_Parent) {
                                 result.emplace_back(Utils::ToND(temp->m_Index, _size));
                             }
@@ -155,7 +147,7 @@ namespace CHDR::Solvers {
         }
 
         template <size_t StackSize>
-        auto SolveLinear(const Mazes::Graph<Ti, Ts>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
+        auto SolveLinear(const Mazes::Graph<Ti, Ts>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, Ts (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) const {
 
             std::vector<coord_t> result;
 
@@ -176,15 +168,15 @@ namespace CHDR::Solvers {
 
                     ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
 
-                    std::vector<ASNode, StackAllocator<ASNode, StackSize>> open;
+                    std::vector<BSNode, StackAllocator<BSNode, StackSize>> open;
                     open.reserve(StackSize);
-                    open.push_back({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
+                    open.push_back({ s, _h(_start, _end), nullptr });
 
-                    StableForwardBuf<ASNode, StackSize / 2U> buf;
+                    StableForwardBuf<BSNode, StackSize / 2U> buf;
 
                     while (!open.empty()) {
 
-                        const auto top = std::min_element(open.begin(), open.end(), typename ASNode::Min());
+                        const auto top = std::min_element(open.begin(), open.end(), typename BSNode::Min());
                         auto curr(std::move(*top));
                         open.erase(top);
 
@@ -208,14 +200,14 @@ namespace CHDR::Solvers {
                                     closed.Add(n);
 
                                     // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                    open.push_back({ n, curr.m_GScore + static_cast<Ts>(nDistance), _h(CHDR::Utils::ToND(n, _size), _end) * _weight, &buf.Emplace(std::move(curr)) });
+                                    open.push_back({ n, _h(CHDR::Utils::ToND(n, _size), _end), &buf.Emplace(std::move(curr)) });
                                 }
                             }
                         }
                         else { // SOLUTION REACHED ...
 
                             // Recurse from end node to start node, inserting into a result buffer:
-                            result.reserve(curr.m_GScore);
+                            result.reserve(static_cast<size_t>(_h(_start, _end)));
 
                             for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = temp->m_Parent) {
                                 result.emplace_back(Utils::ToND(temp->m_Index, _size));
@@ -236,7 +228,7 @@ namespace CHDR::Solvers {
             return result;
         }
 
-        auto SolveHeap(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
+        auto SolveHeap(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) const {
 
             std::vector<coord_t> result;
 
@@ -257,10 +249,10 @@ namespace CHDR::Solvers {
 
                     ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
 
-                    Heap<ASNode, 2U, typename ASNode::Max> open(_capacity / 8U);
-                    open.Emplace({  s, static_cast<Ts>(0), _h(_start, _end), nullptr });
+                    Heap<BSNode, 2U, typename BSNode::Max> open(_capacity / 8U);
+                    open.Emplace({ s, _h(_start, _end), nullptr });
 
-                    StableForwardBuf<ASNode> buf;
+                    StableForwardBuf<BSNode> buf;
 
                     while (!open.Empty()) {
 
@@ -288,7 +280,7 @@ namespace CHDR::Solvers {
                                         closed.Add(n);
 
                                         // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                        open.Emplace({ n, curr.m_GScore + static_cast<Ts>(1), _h(nCoord, _end) * _weight, &buf.Emplace(std::move(curr)) });
+                                        open.Emplace({ n, _h(nCoord, _end), &buf.Emplace(std::move(curr)) });
                                     }
                                 }
                             }
@@ -296,7 +288,7 @@ namespace CHDR::Solvers {
                         else { // SOLUTION REACHED ...
 
                             // Recurse from end node to start node, inserting into a result buffer:
-                            result.reserve(curr.m_GScore);
+                            result.reserve(static_cast<size_t>(_h(_start, _end)));
                             for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = temp->m_Parent) {
                                 result.emplace_back(Utils::ToND(temp->m_Index, _maze.Size()));
                             }
@@ -317,7 +309,7 @@ namespace CHDR::Solvers {
         }
 
         template <size_t StackSize>
-        auto SolveLinear(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
+        auto SolveLinear(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) const {
 
             std::vector<coord_t> result;
 
@@ -338,15 +330,15 @@ namespace CHDR::Solvers {
 
                     ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
 
-                    std::vector<ASNode, StackAllocator<ASNode, StackSize>> open;
+                    std::vector<BSNode, StackAllocator<BSNode, StackSize>> open;
                     open.reserve(StackSize);
-                    open.push_back({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
+                    open.push_back({ s, _h(_start, _end), nullptr });
 
-                    StableForwardBuf<ASNode, StackSize / 2U> buf;
+                    StableForwardBuf<BSNode, StackSize / 2U> buf;
 
                     while (!open.empty()) {
 
-                        const auto top = std::min_element(open.begin(), open.end(), typename ASNode::Min());
+                        const auto top = std::min_element(open.begin(), open.end(), typename BSNode::Min());
                         auto curr(std::move(*top));
                         open.erase(top);
 
@@ -372,7 +364,7 @@ namespace CHDR::Solvers {
                                         closed.Add(n);
 
                                         // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                        open.push_back({n, curr.m_GScore + static_cast<Ts>(1), _h(nCoord, _end) * _weight, &buf.Emplace(std::move(curr)) });
+                                        open.push_back({ n, _h(nCoord, _end), &buf.Emplace(std::move(curr)) });
                                     }
                                 }
                             }
@@ -380,7 +372,7 @@ namespace CHDR::Solvers {
                         else { // SOLUTION REACHED ...
 
                             // Recurse from end node to start node, inserting into a result buffer:
-                            result.reserve(curr.m_GScore);
+                            result.reserve(static_cast<size_t>(_h(_start, _end)));
 
                             for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = temp->m_Parent) {
                                 result.emplace_back(Utils::ToND(temp->m_Index, _maze.Size()));
@@ -404,7 +396,7 @@ namespace CHDR::Solvers {
     public:
 
         [[maybe_unused]]
-        auto Solve(const Mazes::Graph<Ti, Ts>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
+        auto Solve(const Mazes::Graph<Ti, Ts>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, Ts (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) const {
 
             /*
              * Determine whether to solve using a linear search or constant-time
@@ -418,26 +410,26 @@ namespace CHDR::Solvers {
             const auto count = _maze.Count();
 
             if (count <= 32U) {
-                result = SolveLinear<16U>(_maze, _start, _end, _size, _h, _weight, _capacity);
+                result = SolveLinear<16U>(_maze, _start, _end, _size, _h, _capacity);
             }
             else if (count <= 64U) {
-                result = SolveLinear<32U>(_maze, _start, _end, _size, _h, _weight, _capacity);
+                result = SolveLinear<32U>(_maze, _start, _end, _size, _h, _capacity);
             }
             else if (count <= 128U) {
-                result = SolveLinear<64U>(_maze, _start, _end, _size, _h, _weight, _capacity);
+                result = SolveLinear<64U>(_maze, _start, _end, _size, _h, _capacity);
             }
             else if (count <= LMAX) {
-                result = SolveLinear<LMAX / 2U>(_maze, _start, _end, _size, _h, _weight, _capacity);
+                result = SolveLinear<LMAX / 2U>(_maze, _start, _end, _size, _h, _capacity);
             }
             else {
-                result = SolveHeap(_maze, _start, _end, _size, _h, _weight, _capacity);
+                result = SolveHeap(_maze, _start, _end, _size, _h, _capacity);
             }
 
             return result;
         }
 
         [[maybe_unused]]
-        auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
+        auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) const {
 
             /*
              * Determine whether to solve using a linear search or constant-time
@@ -451,16 +443,16 @@ namespace CHDR::Solvers {
             const auto count = _maze.Count();
 
             if (count <= 64U) {
-                result = SolveLinear<32U>(_maze, _start, _end, _h, _weight, _capacity);
+                result = SolveLinear<32U>(_maze, _start, _end, _h, _capacity);
             }
             else if (count <= 128U) {
-                result = SolveLinear<64U>(_maze, _start, _end, _h, _weight, _capacity);
+                result = SolveLinear<64U>(_maze, _start, _end, _h, _capacity);
             }
             else if (count <= LMAX) {
-                result = SolveLinear<LMAX / 2U>(_maze, _start, _end, _h, _weight, _capacity);
+                result = SolveLinear<LMAX / 2U>(_maze, _start, _end, _h, _capacity);
             }
             else {
-                result = SolveHeap(_maze, _start, _end, _h, _weight, _capacity);
+                result = SolveHeap(_maze, _start, _end, _h, _capacity);
             }
 
             return result;
@@ -469,4 +461,4 @@ namespace CHDR::Solvers {
 
 } // CHDR::Solvers
 
-#endif //CHDR_ASTAR_HPP
+#endif //CHDR_BSTAR_HPP

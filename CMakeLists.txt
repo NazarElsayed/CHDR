@@ -160,6 +160,7 @@ add_library(CHDR INTERFACE
     src/core/utils/SIMDExtensions.hpp
     src/core/utils/Utils.hpp
     src/core/utils/Intrinsics.hpp
+        src/core/solvers/BStar.hpp
 )
 
 target_link_libraries(CHDR INTERFACE)

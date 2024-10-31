@@ -18,6 +18,7 @@
 
 #include "solvers/base/ISolver.hpp"
 #include "solvers/AStar.hpp"
+#include "solvers/BStar.hpp"
 #include "solvers/BFS.hpp"
 #include "solvers/DFS.hpp"
 #include "solvers/Dijkstra.hpp"
