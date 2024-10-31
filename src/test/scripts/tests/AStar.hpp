@@ -53,7 +53,7 @@ namespace Test::Tests {
 
             const auto sw_start = std::chrono::high_resolution_clock::now();
 
-            auto solver = CHDR::Solvers::BStar<Tm, Kd, Ts, Ti>();
+            auto solver = CHDR::Solvers::JPS<Tm, Kd, Ts, Ti>();
             auto path = solver.Solve(grid, start, end, HEURISTIC);
 //            auto path = solver.Solve(graph, start, end, size, HEURISTIC);
 
