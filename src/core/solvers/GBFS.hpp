@@ -12,6 +12,7 @@
 #include <queue>
 
 #include "base/BSolver.hpp"
+#include "base/ManagedNode.hpp"
 #include "mazes/base/IMaze.hpp"
 #include "mazes/Graph.hpp"
 #include "mazes/Grid.hpp"
@@ -37,15 +38,11 @@ namespace CHDR::Solvers {
              *
              * This constructor creates an GBFSNode with uninitialized members.
              */
-            [[nodiscard]] constexpr GBFSNode() : UnmanagedNode<index_t>() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
+            [[nodiscard]] constexpr GBFSNode() : ManagedNode<index_t>() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] constexpr GBFSNode(const index_t& _index) {}
+            [[nodiscard]] constexpr GBFSNode(const index_t& _index) : ManagedNode<index_t>(_index) {}
 
-            [[nodiscard]] constexpr GBFSNode(const index_t& _index, GBFSNode&& _parent) :
-                m_Index(_index)
-            {
-                m_Parent = std::make_shared<const GBFSNode>(std::move(_parent));
-            }
+            [[nodiscard]] constexpr GBFSNode(const index_t& _index, GBFSNode&& _parent) : ManagedNode<index_t>(_index, std::move(_parent)) {}
         };
 
 
@@ -170,7 +167,7 @@ namespace CHDR::Solvers {
                     _capacity = std::max(_capacity, std::max(s, e));
 
                     std::queue<GBFSNode> open;
-                    open.emplace(s, nullptr);
+                    open.emplace(s);
 
                     ExistenceSet closed({ s }, _capacity);
 
