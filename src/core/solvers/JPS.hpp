@@ -55,34 +55,27 @@ namespace CHDR::Solvers {
                 { { 1, -1}, s_rotateR }
         };
 
-        struct JPSNode final {
+        struct JPSNode final : public UnmanagedNode<index_t> {
 
-            index_t m_Index{};
-            std::array<int8_t, 2U> m_Direction{};
+            std::array<int8_t, 2U> m_Direction;
 
             scalar_t m_GScore;
             scalar_t m_FScore;
 
-            const JPSNode* RESTRICT m_Parent;
+            [[nodiscard]] constexpr JPSNode() : UnmanagedNode<index_t>() {};
 
-            [[nodiscard]] constexpr JPSNode() = default;
-
-            [[nodiscard]] constexpr JPSNode(const index_t& _index, const std::array<int8_t, 2U>& _direction, const scalar_t& _gScore, const scalar_t& _hScore, const JPSNode* RESTRICT const _parent) :
-                m_Index(_index),
+            [[nodiscard]] constexpr JPSNode(const index_t& _index, const std::array<int8_t, 2U>& _direction, const scalar_t& _gScore, const scalar_t& _hScore, const JPSNode* RESTRICT const _parent) : UnmanagedNode<index_t>(_index, _parent),
                 m_Direction(_direction),
                 m_GScore(_gScore),
-                m_FScore(_gScore + _hScore),
-                m_Parent(std::move(_parent)) {}
-
-            [[nodiscard]] constexpr bool operator == (const JPSNode& _node) const { return m_Index == _node.m_Index; }
+                m_FScore(_gScore + _hScore) {}
 
             struct Max {
 
                 [[nodiscard]] constexpr bool operator () (const JPSNode& _a, const JPSNode& _b) const {
 
                     return _a.m_FScore == _b.m_FScore ?
-                                _a.m_GScore > _b.m_GScore :
-                                _a.m_FScore > _b.m_FScore;
+                        _a.m_GScore > _b.m_GScore :
+                        _a.m_FScore > _b.m_FScore;
                 }
             };
 
@@ -91,8 +84,8 @@ namespace CHDR::Solvers {
                 [[nodiscard]] constexpr bool operator () (const JPSNode& _a, const JPSNode& _b) const {
 
                     return _a.m_FScore == _b.m_FScore ?
-                                _a.m_GScore < _b.m_GScore :
-                                _a.m_FScore < _b.m_FScore;
+                        _a.m_GScore < _b.m_GScore :
+                        _a.m_FScore < _b.m_FScore;
                 }
             };
         };
@@ -330,7 +323,7 @@ namespace CHDR::Solvers {
 
                             // Recurse from end node to start node, inserting into a result buffer:
                             result.reserve(curr.m_GScore);
-                            for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = temp->m_Parent) {
+                            for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const JPSNode*>(temp->m_Parent)) {
                                 result.emplace_back(Utils::ToND(temp->m_Index, _maze.Size()));
                             }
 
