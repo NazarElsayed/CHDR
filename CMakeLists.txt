@@ -138,7 +138,7 @@ add_library(CHDR INTERFACE
     src/core/nodes/IDNode.hpp
     src/core/nodes/WeightedNode.hpp
 
-    src/core/solvers/base/ISolver.hpp
+        src/core/solvers/base/BSolver.hpp
     src/core/solvers/AStar.hpp
     src/core/solvers/BFS.hpp
     src/core/solvers/DFS.hpp

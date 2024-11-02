@@ -10,7 +10,7 @@
 #define CHDR_ASTAR_HPP
 
 #include "../utils/Heuristics.hpp"
-#include "base/ISolver.hpp"
+#include "base/BSolver.hpp"
 #include "mazes/base/IMaze.hpp"
 #include "mazes/Graph.hpp"
 #include "mazes/Grid.hpp"
@@ -24,7 +24,7 @@
 namespace CHDR::Solvers {
 
     template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t>
-    class [[maybe_unused]] AStar final {
+    class [[maybe_unused]] AStar final : BSolver<weight_t, Kd, scalar_t, index_t> {
 
         static_assert(std::is_integral_v<scalar_t> || std::is_floating_point_v<scalar_t>, "scalar_t must be either an integral or floating point type.");
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");

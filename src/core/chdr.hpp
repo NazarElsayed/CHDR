@@ -16,7 +16,7 @@
 #include "mazes/Graph.hpp"
 #include "mazes/Grid.hpp"
 
-#include "solvers/base/ISolver.hpp"
+#include "solvers/base/BSolver.hpp"
 #include "solvers/AStar.hpp"
 #include "solvers/BStar.hpp"
 #include "solvers/BFS.hpp"

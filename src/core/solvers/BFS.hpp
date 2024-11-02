@@ -11,7 +11,7 @@
 
 #include <queue>
 
-#include "base/ISolver.hpp"
+#include "base/BSolver.hpp"
 #include "mazes/base/IMaze.hpp"
 #include "mazes/Graph.hpp"
 #include "mazes/Grid.hpp"
@@ -22,8 +22,8 @@
 
 namespace CHDR::Solvers {
 
-    template<typename weight_t, const size_t Kd, typename index_t>
-    class [[maybe_unused]] BFS final {
+    template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t>
+    class [[maybe_unused]] BFS final : BSolver<weight_t, Kd, scalar_t, index_t> {
 
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
@@ -40,7 +40,6 @@ namespace CHDR::Solvers {
 
     public:
 
-        template <typename scalar_t>
         [[maybe_unused]]
         auto Solve(const Mazes::Graph<index_t, scalar_t>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, size_t _capacity = 0U) {
 

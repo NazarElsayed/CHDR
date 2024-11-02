@@ -11,7 +11,7 @@
 
 #include <memory>
 
-#include "base/ISolver.hpp"
+#include "base/BSolver.hpp"
 #include "mazes/base/IMaze.hpp"
 #include "mazes/Graph.hpp"
 #include "mazes/Grid.hpp"
@@ -22,7 +22,7 @@
 namespace CHDR::Solvers {
 
     template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t>
-    class [[maybe_unused]] Dijkstra final {
+    class [[maybe_unused]] Dijkstra final : BSolver<weight_t, Kd, scalar_t, index_t> {
 
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 

@@ -11,7 +11,7 @@
 
 #include <map>
 
-#include "base/ISolver.hpp"
+#include "base/BSolver.hpp"
 #include "mazes/base/IMaze.hpp"
 #include "mazes/Graph.hpp"
 #include "mazes/Grid.hpp"
@@ -22,7 +22,7 @@
 namespace CHDR::Solvers {
 
     template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t>
-    class [[maybe_unused]] JPS final {
+    class [[maybe_unused]] JPS final : BSolver<weight_t, Kd, scalar_t, index_t> {
 
         static_assert(std::is_integral_v<scalar_t> || std::is_floating_point_v<scalar_t>, "scalar_t must be either an integral or floating point type");
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
@@ -31,20 +31,19 @@ namespace CHDR::Solvers {
 
         using coord_t = Coord<index_t, Kd>;
 
-        static constexpr std::array<uint8_t, 8> s_rotateL { 2U, 4U, 7U,
-                                                            1U,     6U,
-                                                            0U, 3U, 5U };
+        static constexpr std::array<uint8_t, 8U> s_rotateL { 2U, 4U, 7U,
+                                                             1U,     6U,
+                                                             0U, 3U, 5U };
 
-        static constexpr std::array<uint8_t, 8> s_rotate2 { 7U, 6U, 5U,
-                                                            4U,     3U,
-                                                            2U, 1U, 0U };
+        static constexpr std::array<uint8_t, 8U> s_rotate2 { 7U, 6U, 5U,
+                                                             4U,     3U,
+                                                             2U, 1U, 0U };
 
-        static constexpr std::array<uint8_t, 8> s_rotateR { 5U, 3U, 0U,
-                                                            6U,     1U,
-                                                            7U, 4U, 2U };
+        static constexpr std::array<uint8_t, 8U> s_rotateR { 5U, 3U, 0U,
+                                                             6U,     1U,
+                                                             7U, 4U, 2U };
 
-
-        const std::map<std::array<int8_t, 2>, std::array<uint8_t, 8>> rotationMap {
+        const std::map<std::array<int8_t, 2U>, std::array<uint8_t, 8U>> rotationMap {
                 { { 0,  0}, { 0U, 1U, 2U, 3U, 4U, 5U, 6U, 7U } },
                 { { 1,  0}, { 0U, 1U, 2U, 3U, 4U, 5U, 6U, 7U } },
                 { { 1,  1}, { 0U, 1U, 2U, 3U, 4U, 5U, 6U, 7U } },
@@ -59,7 +58,7 @@ namespace CHDR::Solvers {
         struct JPSNode final {
 
             index_t m_Index{};
-            std::array<int8_t, 2> m_Direction{};
+            std::array<int8_t, 2U> m_Direction{};
 
             scalar_t m_GScore;
             scalar_t m_FScore;
@@ -68,7 +67,7 @@ namespace CHDR::Solvers {
 
             [[nodiscard]] constexpr JPSNode() = default;
 
-            [[nodiscard]] constexpr JPSNode(const index_t& _index, const std::array<int8_t, 2>& _direction, const scalar_t& _gScore, const scalar_t& _hScore, const JPSNode* RESTRICT const _parent) :
+            [[nodiscard]] constexpr JPSNode(const index_t& _index, const std::array<int8_t, 2U>& _direction, const scalar_t& _gScore, const scalar_t& _hScore, const JPSNode* RESTRICT const _parent) :
                 m_Index(_index),
                 m_Direction(_direction),
                 m_GScore(_gScore),
@@ -103,7 +102,7 @@ namespace CHDR::Solvers {
             return (static_cast<T>(0) < _val) - (_val < static_cast<T>(0));
         }
 
-        std::vector<coord_t> FindJumpPoints(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _current, const std::array<int8_t, 2> _direction, const coord_t& _end) const {
+        std::vector<coord_t> FindJumpPoints(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _current, const std::array<int8_t, 2U> _direction, const coord_t& _end) const {
 
             std::vector<coord_t> result;
 
@@ -195,7 +194,7 @@ namespace CHDR::Solvers {
         }
 
         [[nodiscard]]
-        std::pair<bool, coord_t> Jump(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _current, const std::array<int8_t, 2>& _direction, const coord_t& _end) const {
+        std::pair<bool, coord_t> Jump(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _current, const std::array<int8_t, 2U>& _direction, const coord_t& _end) const {
 
             std::pair<bool, coord_t> result { false, _current };
 
