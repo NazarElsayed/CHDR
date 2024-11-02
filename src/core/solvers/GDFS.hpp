@@ -30,44 +30,18 @@ namespace CHDR::Solvers {
 
         using coord_t = Coord<index_t, Kd>;
 
-        struct GDFSNode final {
-
-            index_t m_Index;
-
-            std::shared_ptr<const GDFSNode> m_Parent;
+        struct GDFSNode final : public ManagedNode<index_t> {
 
             /**
              * @brief Constructs an uninitialized GDFSNode.
              *
              * This constructor creates an GDFSNode with uninitialized members.
              */
-            [[nodiscard]] constexpr GDFSNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
+            [[nodiscard]] constexpr GDFSNode() : ManagedNode<index_t>() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] constexpr GDFSNode(const index_t& _index) :
-                m_Index(_index),
-                m_Parent() {}
+            [[nodiscard]] constexpr GDFSNode(const index_t& _index) : ManagedNode<index_t>(_index) {}
 
-            [[nodiscard]] constexpr GDFSNode(const index_t& _index, GDFSNode&& _parent) :
-                m_Index(_index)
-            {
-                m_Parent = std::make_shared<const GDFSNode>(std::move(_parent));
-            }
-
-            ~GDFSNode() { // NOLINT(*-use-equals-default)
-
-//                while (m_Parent && m_Parent.unique()) {
-//                    m_Parent = std::move(m_Parent->m_Parent);
-//                }
-
-                Expunge_Recursive(m_Parent);
-            }
-
-            void Expunge_Recursive(std::shared_ptr<const GDFSNode>& _node) {
-                if (_node && _node.unique()) {
-                    _node = std::move(_node->m_Parent);
-                    Expunge_Recursive(_node);
-                }
-            }
+            [[nodiscard]] constexpr GDFSNode(const index_t& _index, GDFSNode&& _parent) : ManagedNode<index_t>(_index, std::move(_parent)) {}
         };
 
     public:

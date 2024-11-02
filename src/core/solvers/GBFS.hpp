@@ -45,7 +45,6 @@ namespace CHDR::Solvers {
             [[nodiscard]] constexpr GBFSNode(const index_t& _index, GBFSNode&& _parent) : ManagedNode<index_t>(_index, std::move(_parent)) {}
         };
 
-
     public:
 
         [[maybe_unused]]
