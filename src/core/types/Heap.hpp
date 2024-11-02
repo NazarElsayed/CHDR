@@ -24,7 +24,7 @@ namespace CHDR {
         Compare m_Compare;
 
         size_t index_of(const T& _item) const {
-            return static_cast<size_t>(&_item - &Top());
+            return static_cast<size_t>(&(_item) - &(Top()));
         }
 
         constexpr void SortUp(T& _item) {
@@ -120,7 +120,7 @@ namespace CHDR {
 
         [[maybe_unused]] constexpr void Remove(const T& _item) {
 
-            auto& i = index_of(const_cast<T &>(_item));
+            auto i = index_of(_item);
             if (i < Size()) {
 
                 if (i == Size() - 1U) {
