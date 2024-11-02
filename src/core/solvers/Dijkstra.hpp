@@ -40,9 +40,9 @@ namespace CHDR::Solvers {
             std::shared_ptr<const DijkstraNode> m_Parent;
 
             /**
-             * @brief Constructs an uninitialized ASNode.
+             * @brief Constructs an uninitialized DijkstraNode.
              *
-             * This constructor creates an ASNode with uninitialized members.
+             * This constructor creates an DijkstraNode with uninitialized members.
              */
             [[nodiscard]] constexpr DijkstraNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 

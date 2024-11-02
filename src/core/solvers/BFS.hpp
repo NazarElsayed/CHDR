@@ -33,6 +33,11 @@ namespace CHDR::Solvers {
 
         struct BFSNode final : public UnmanagedNode<index_t> {
 
+            /**
+             * @brief Constructs an uninitialized BFSNode.
+             *
+             * This constructor creates an BFSNode with uninitialized members.
+             */
             BFSNode() : UnmanagedNode<index_t>() {}
 
             [[nodiscard]] constexpr BFSNode(const index_t& _index, const UnmanagedNode<index_t>* RESTRICT const _parent) : UnmanagedNode<index_t>(_index, _parent) {}

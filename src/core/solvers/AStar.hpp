@@ -39,9 +39,9 @@ namespace CHDR::Solvers {
             scalar_t m_FScore;
 
             /**
-             * @brief Constructs an uninitialized BSNode.
+             * @brief Constructs an uninitialized ASNode.
              *
-             * This constructor creates an BSNode with uninitialized members.
+             * This constructor creates an ASNode with uninitialized members.
              */
             [[nodiscard]] constexpr ASNode() : UnmanagedNode<index_t>() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 

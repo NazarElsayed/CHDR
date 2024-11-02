@@ -37,9 +37,9 @@ namespace CHDR::Solvers {
             std::shared_ptr<const GDFSNode> m_Parent;
 
             /**
-             * @brief Constructs an uninitialized ASNode.
+             * @brief Constructs an uninitialized GDFSNode.
              *
-             * This constructor creates an ASNode with uninitialized members.
+             * This constructor creates an GDFSNode with uninitialized members.
              */
             [[nodiscard]] constexpr GDFSNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 

@@ -33,6 +33,11 @@ namespace CHDR::Solvers {
 
         struct DFSNode final : public UnmanagedNode<index_t> {
 
+            /**
+             * @brief Constructs an uninitialized DFSNode.
+             *
+             * This constructor creates an DFSNode with uninitialized members.
+             */
             DFSNode() : UnmanagedNode<index_t>() {}
 
             [[nodiscard]] constexpr DFSNode(const index_t& _index, const UnmanagedNode<index_t>* RESTRICT const _parent) : UnmanagedNode<index_t>(_index, _parent) {}
