@@ -9,7 +9,6 @@
 #ifndef CHDR_GRID_HPP
 #define CHDR_GRID_HPP
 
-#include "../nodes/WeightedNode.hpp"
 #include "../types/Coord.hpp"
 #include "../utils/Utils.hpp"
 #include "base/IMaze.hpp"
@@ -17,6 +16,8 @@
 #include <vector>
 #include <array>
 #include <cmath>
+
+#include "nodes/WeightedNode.hpp"
 
 namespace CHDR::Mazes {
 

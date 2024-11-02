@@ -11,8 +11,6 @@
 
 #include <type_traits>
 
-#include "nodes/base/INode.hpp"
-
 namespace CHDR::Mazes {
 
     template <typename W = bool>

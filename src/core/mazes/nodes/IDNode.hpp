@@ -12,7 +12,7 @@
 #include <cstddef>
 #include <type_traits>
 
-#include "nodes/base/INode.hpp"
+#include "base/INode.hpp"
 
 namespace CHDR::Mazes {
 

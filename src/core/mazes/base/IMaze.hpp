@@ -11,8 +11,6 @@
 
 #include <cstddef>
 
-#include "../../nodes/base/INode.hpp"
-
 namespace CHDR::Mazes {
 
     template<typename TNode, typename index_t>

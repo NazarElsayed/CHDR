@@ -30,7 +30,7 @@
 #include "solvers/JPS.hpp"
 
 #include "types/Coord.hpp"
-#include "nodes/WeightedNode.hpp"
+#include "mazes/nodes/WeightedNode.hpp"
 
 #include "utils/Heuristics.hpp"
 #include "utils/Utils.hpp"
