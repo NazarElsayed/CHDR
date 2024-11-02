@@ -128,19 +128,19 @@ add_library(LOUIERIKSSON_DEBUG_HPP INTERFACE
 # ADD CHDR:
 add_library(CHDR INTERFACE
     src/core/chdr.hpp
-
-    src/core/mazes/base/IMaze.hpp
     src/core/mazes/base/IGraph.hpp
+    src/core/mazes/base/IMaze.hpp
     src/core/mazes/Graph.hpp
     src/core/mazes/Grid.hpp
-
-        src/core/mazes/nodes/base/INode.hpp
-        src/core/mazes/nodes/IDNode.hpp
-        src/core/mazes/nodes/WeightedNode.hpp
-
-        src/core/solvers/base/BSolver.hpp
+    src/core/mazes/nodes/base/INode.hpp
+    src/core/mazes/nodes/IDNode.hpp
+    src/core/mazes/nodes/WeightedNode.hpp
     src/core/solvers/AStar.hpp
+    src/core/solvers/base/BNode.hpp
+    src/core/solvers/base/BSolver.hpp
+    src/core/solvers/base/ManagedNode.hpp
     src/core/solvers/BFS.hpp
+    src/core/solvers/BStar.hpp
     src/core/solvers/DFS.hpp
     src/core/solvers/Dijkstra.hpp
     src/core/solvers/ESMGStar.hpp
@@ -149,20 +149,15 @@ add_library(CHDR INTERFACE
     src/core/solvers/GDFS.hpp
     src/core/solvers/GStar.hpp
     src/core/solvers/JPS.hpp
-
     src/core/types/Coord.hpp
     src/core/types/ExistenceSet.hpp
     src/core/types/Heap.hpp
     src/core/types/StableForwardBuf.hpp
     src/core/types/StackAllocator.hpp
-
     src/core/utils/Heuristics.hpp
+    src/core/utils/Intrinsics.hpp
     src/core/utils/SIMDExtensions.hpp
     src/core/utils/Utils.hpp
-    src/core/utils/Intrinsics.hpp
-        src/core/solvers/BStar.hpp
-        src/core/solvers/base/BNode.hpp
-        src/core/solvers/base/ManagedNode.hpp
 )
 
 target_link_libraries(CHDR INTERFACE)
