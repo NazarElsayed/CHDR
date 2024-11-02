@@ -15,7 +15,7 @@
 namespace CHDR::Mazes {
 
     template <typename index_t, typename scalar_t>
-    class IGraph : IMaze<IDNode<index_t>, index_t> {
+    class IGraph : public IMaze<IDNode<index_t>, index_t> {
 
     public:
 
@@ -26,9 +26,6 @@ namespace CHDR::Mazes {
         constexpr bool Contains(const Args&... _id) const {
             return Contains({ _id... });
         }
-
-        [[nodiscard]] virtual constexpr bool Contains(const index_t& _id) const = 0;
-
     };
 
 } // CHDR::Mazes

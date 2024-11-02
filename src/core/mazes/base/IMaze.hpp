@@ -20,9 +20,17 @@ namespace CHDR::Mazes {
 
     public:
 
-        [[nodiscard]] virtual constexpr bool Contains(const index_t& _id) const = 0;
+        [[nodiscard]] virtual
+#if __cplusplus >= 202002L
+        constexpr
+#endif // __cplusplus >= 202002L
+        bool Contains(const index_t& _id) const = 0;
 
-        [[nodiscard]] virtual constexpr size_t Count() const = 0;
+        [[nodiscard]] virtual
+#if __cplusplus >= 202002L
+        constexpr
+#endif // __cplusplus >= 202002L
+        size_t Count() const = 0;
 
     };
 
