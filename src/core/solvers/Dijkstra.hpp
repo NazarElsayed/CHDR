@@ -46,7 +46,7 @@ namespace CHDR::Solvers {
              */
             [[nodiscard]] constexpr DijkstraNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] constexpr DijkstraNode(const index_t &_index, const scalar_t &_gScore, const scalar_t &_hScore, const std::shared_ptr<const DijkstraNode>& _parent) :
+            [[nodiscard]] constexpr DijkstraNode(const index_t& _index, const scalar_t &_gScore, const scalar_t& _hScore, const std::shared_ptr<const DijkstraNode>& _parent) :
                 m_Index(_index),
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),

@@ -14,6 +14,7 @@
 #include "mazes/base/IMaze.hpp"
 #include "mazes/Graph.hpp"
 #include "mazes/Grid.hpp"
+#include "solvers/base/UnmanagedNode.hpp"
 #include "types/ExistenceSet.hpp"
 #include "types/Heap.hpp"
 #include "types/StableForwardBuf.hpp"
@@ -32,27 +33,21 @@ namespace CHDR::Solvers {
 
         using coord_t = Coord<index_t, Kd>;
 
-        struct ASNode final {
-
-            index_t m_Index;
+        struct ASNode final : public UnmanagedNode<index_t> {
 
             scalar_t m_GScore;
             scalar_t m_FScore;
 
-            const ASNode* RESTRICT m_Parent;
-
             /**
-             * @brief Constructs an uninitialized ASNode.
-             * 
-             * This constructor creates an ASNode with uninitialized members.
+             * @brief Constructs an uninitialized BSNode.
+             *
+             * This constructor creates an BSNode with uninitialized members.
              */
-            [[nodiscard]] constexpr ASNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default) 
+            [[nodiscard]] constexpr ASNode() : UnmanagedNode<index_t>() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] constexpr ASNode(const index_t &_index, const scalar_t &_gScore, const scalar_t &_hScore, const ASNode* RESTRICT const _parent) :
-                m_Index(_index),
+            [[nodiscard]] constexpr ASNode(const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore, const UnmanagedNode<index_t>* RESTRICT const _parent) : UnmanagedNode<index_t>(_index, _parent),
                 m_GScore(_gScore),
-                m_FScore(_gScore + _hScore),
-                m_Parent(std::move(_parent)) {}
+                m_FScore(_gScore + _hScore) {}
 
             struct Max {
 
@@ -133,7 +128,7 @@ namespace CHDR::Solvers {
 
                             // Recurse from end node to start node, inserting into a result buffer:
                             result.reserve(curr.m_GScore);
-                            for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = temp->m_Parent) {
+                            for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const ASNode*>(temp->m_Parent)) {
                                 result.emplace_back(Utils::ToND(temp->m_Index, _size));
                             }
 
@@ -215,7 +210,7 @@ namespace CHDR::Solvers {
                             // Recurse from end node to start node, inserting into a result buffer:
                             result.reserve(curr.m_GScore);
 
-                            for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = temp->m_Parent) {
+                            for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const ASNode*>(temp->m_Parent)) {
                                 result.emplace_back(Utils::ToND(temp->m_Index, _size));
                             }
 
@@ -295,7 +290,7 @@ namespace CHDR::Solvers {
 
                             // Recurse from end node to start node, inserting into a result buffer:
                             result.reserve(curr.m_GScore);
-                            for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = temp->m_Parent) {
+                            for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const ASNode*>(temp->m_Parent)) {
                                 result.emplace_back(Utils::ToND(temp->m_Index, _maze.Size()));
                             }
 
@@ -380,7 +375,7 @@ namespace CHDR::Solvers {
                             // Recurse from end node to start node, inserting into a result buffer:
                             result.reserve(curr.m_GScore);
 
-                            for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = temp->m_Parent) {
+                            for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const ASNode*>(temp->m_Parent)) {
                                 result.emplace_back(Utils::ToND(temp->m_Index, _maze.Size()));
                             }
 
