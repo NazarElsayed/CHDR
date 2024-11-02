@@ -26,21 +26,21 @@ CHDR is designed to be fast and lightweight. Alongside data and algorithmic opti
 
 #### Pathfinding Algorithms
 
-| Type                                                    |    Status     |
-|:--------------------------------------------------------|:-------------:|
-| A-Star (A*)                                             | Completed ✔️  |
-| Best-First Search (B*)                                  | Completed ✔️  |
-| Breadth-First Search (BFS)                              | Completed ✔️  |
-| Depth-First Search (DFS)                                | Completed ✔️  |
-| Dijkstra's Algorithm                                    |  Planned 📝   |
-| Enhanced Iterative Deepening Search (EIDA*)             |  Planned 📝   |
-| Enhanced Simple Memory Bounded A-Star (SMA*+)           |  Planned 📝   |
-| Enhanced Simple Memory Bounded Graveyard Search (SMG*+) |  Untested ❓   |
-| Graveyard Breadth-First Search (GBFS)                   | Completed ✔️  |
-| Graveyard Depth-First Search (GDFS)                     | Completed ✔️  |
-| Graveyard Jump-Point Search (GJPS)                      |  Planned 📝   |
-| Graveyard Search (G*)                                   | Completed ✔️  |
-| Jump-Point Search (JPS)                                 | Completed ✔️️ |
+| Type                                                    |     Status      |
+|:--------------------------------------------------------|:---------------:|
+| A-Star (A*)                                             |  Completed ✔️   |
+| Best-First Search (B*)                                  |  Completed ✔️   |
+| Breadth-First Search (BFS)                              |  Completed ✔️   |
+| Depth-First Search (DFS)                                |  Completed ✔️   |
+| Dijkstra's Algorithm                                    |   Planned 📝    |
+| Enhanced Iterative Deepening Search (EIDA*)             |   Planned 📝    |
+| Enhanced Simple Memory Bounded A-Star (SMA*+)           |   Planned 📝    |
+| Enhanced Simple Memory Bounded Graveyard Search (SMG*+) | In Progress 🏗️ |
+| Graveyard Breadth-First Search (GBFS)                   |  Completed ✔️   |
+| Graveyard Depth-First Search (GDFS)                     |  Completed ✔️   |
+| Graveyard Jump-Point Search (GJPS)                      |   Planned 📝    |
+| Graveyard Search (G*)                                   |  Completed ✔️   |
+| Jump-Point Search (JPS)                                 |  Completed ✔️️  |
 
 #### Maze types
 

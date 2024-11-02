@@ -35,9 +35,9 @@ namespace CHDR::Solvers {
 
         using coord_t = Coord<index_t, Kd>;
 
-        struct ESMASNode final :  std::enable_shared_from_this<ESMASNode> {
+        struct ESMGSNode final : std::enable_shared_from_this<ESMGSNode> {
 
-            friend std::shared_ptr<ESMASNode>;
+            friend std::shared_ptr<ESMGSNode>;
 
             size_t m_Depth;
             index_t m_Index;
@@ -45,30 +45,40 @@ namespace CHDR::Solvers {
             scalar_t m_GScore;
             scalar_t m_FScore;
 
-            std::shared_ptr<ESMASNode> m_Parent;
+            std::shared_ptr<ESMGSNode> m_Parent;
 
-            std::vector<std::shared_ptr<ESMASNode>> m_Successors;
+            std::vector<std::shared_ptr<ESMGSNode>> m_Successors;
 
             std::unordered_map<size_t, scalar_t> m_ForgottenFCosts;
 
         private:
 
-            [[nodiscard]] constexpr ESMASNode(const size_t& _depth, const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore, const std::shared_ptr<ESMASNode>& _parent) :
+
+
+            [[nodiscard]] constexpr ESMGSNode(const size_t& _depth, const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore) :
                 m_Depth (_depth),
                 m_Index (_index),
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
-                m_Parent(_parent),
+                m_Parent(),
+                m_ForgottenFCosts() {}
+
+            [[nodiscard]] constexpr ESMGSNode(const size_t& _depth, const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore, const std::shared_ptr<ESMGSNode>&& _parent) :
+                m_Depth (_depth),
+                m_Index (_index),
+                m_GScore(_gScore),
+                m_FScore(_gScore + _hScore),
+                m_Parent(std::move(_parent)),
                 m_ForgottenFCosts() {}
 
         public:
 
             /**
-             * @brief Constructs an uninitialized ESMASNode.
+             * @brief Constructs an uninitialized ESMGSNode.
              *
-             * This constructor creates an ESMASNode with uninitialized members.
+             * This constructor creates an ESMGSNode with uninitialized members.
              */
-            [[nodiscard]] constexpr ESMASNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
+            [[nodiscard]] constexpr ESMGSNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
             void Shrink() {
 
@@ -103,7 +113,7 @@ namespace CHDR::Solvers {
 
                                     if (const auto& [snActive, snCoord] = successor_neighbours; snActive) {
 
-                                        m_Successors.emplace_back(ESMASNode::CreateShared(
+                                        m_Successors.emplace_back(ESMGSNode::CreateShared(
                                             m_Depth  + 1U,              // Depth
                                             n,                          // Coordinate
                                             m_GScore + 1U,              // G-Score
@@ -125,11 +135,11 @@ namespace CHDR::Solvers {
             }
 
             template<typename... Args>
-            static constexpr std::shared_ptr<ESMASNode> CreateShared(Args&&... args) {
+            static constexpr std::shared_ptr<ESMGSNode> CreateShared(Args&&... args) {
 
-                auto result = std::shared_ptr<ESMASNode>(
-                    new ESMASNode(std::forward<Args>(args)...),
-                    [](ESMASNode *_ptr) {
+                auto result = std::shared_ptr<ESMGSNode>(
+                    new ESMGSNode(std::forward<Args>(args)...),
+                    [](ESMGSNode* _ptr) {
 
                         while (_ptr->m_Parent && static_cast<unsigned>(_ptr->m_Parent.use_count()) < 2U) {
 
@@ -161,11 +171,11 @@ namespace CHDR::Solvers {
                 return result;
             }
 
-            [[nodiscard]] constexpr bool operator == (const std::shared_ptr<ESMASNode>& _node) const { return m_Index == _node->m_Index; }
+            [[nodiscard]] constexpr bool operator == (const std::shared_ptr<ESMGSNode>& _node) const { return m_Index == _node->m_Index; }
 
             struct Max {
 
-                [[nodiscard]] constexpr bool operator () (const std::shared_ptr<ESMASNode>& _a, const std::shared_ptr<ESMASNode>& _b) const {
+                [[nodiscard]] constexpr bool operator () (const std::shared_ptr<ESMGSNode>& _a, const std::shared_ptr<ESMGSNode>& _b) const {
                     return _a->m_FScore == _b->m_FScore ?
                         _a->m_GScore > _b->m_GScore :
                         _a->m_FScore > _b->m_FScore;
@@ -173,7 +183,7 @@ namespace CHDR::Solvers {
             };
         };
 
-        void cull_worst_leaf(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, const size_t& _memoryLimit, Heap<std::shared_ptr<ESMASNode>, 2U, typename ESMASNode::Max>& _open) const {
+        void cull_worst_leaf(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, const size_t& _memoryLimit, Heap<std::shared_ptr<ESMGSNode>, 2U, typename ESMGSNode::Max>& _open) const {
 
             const auto w = safe_culling_heuristic(_open);
 
@@ -206,7 +216,7 @@ namespace CHDR::Solvers {
             }
         }
 
-        [[nodiscard]] auto safe_culling_heuristic(Heap<std::shared_ptr<ESMASNode>, 2U, typename ESMASNode::Max>& _open) const {
+        [[nodiscard]] auto safe_culling_heuristic(Heap<std::shared_ptr<ESMGSNode>, 2U, typename ESMGSNode::Max>& _open) const {
 
             auto w = _open.Back(); // Worst leaf according to c(n) in _open
 
@@ -221,7 +231,7 @@ namespace CHDR::Solvers {
                     const auto& A = _open[i];
                     const auto& B = w;
 
-                    if (typename ESMASNode::Max()(A, B)) {
+                    if (typename ESMGSNode::Max()(A, B)) {
                         w = _open[i]; // Assign the second worst leaf to w
                     }
                 }
@@ -255,13 +265,12 @@ namespace CHDR::Solvers {
 
                 if (s != e) {
 
-                    Heap<std::shared_ptr<ESMASNode>, 2U, typename ESMASNode::Max> open;
-                    open.Emplace(ESMASNode::CreateShared(
+                    Heap<std::shared_ptr<ESMGSNode>, 2U, typename ESMGSNode::Max> open;
+                    open.Emplace(ESMGSNode::CreateShared(
                         0U,                         // Depth
                         s,                          // Coordinate
-                        static_cast<scalar_t>(0),         // G-Score
-                        _h(_start, _end) * _weight, // F-Score
-                        nullptr
+                        static_cast<scalar_t>(0),   // G-Score
+                        _h(_start, _end) * _weight  // F-Score
                     ));
 
                     // Main loop
