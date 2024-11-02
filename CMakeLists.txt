@@ -134,9 +134,9 @@ add_library(CHDR INTERFACE
     src/core/mazes/Graph.hpp
     src/core/mazes/Grid.hpp
 
-    src/core/nodes/base/INode.hpp
-    src/core/nodes/IDNode.hpp
-    src/core/nodes/WeightedNode.hpp
+        src/core/mazes/nodes/base/INode.hpp
+        src/core/mazes/nodes/IDNode.hpp
+        src/core/mazes/nodes/WeightedNode.hpp
 
         src/core/solvers/base/BSolver.hpp
     src/core/solvers/AStar.hpp

@@ -93,7 +93,7 @@ namespace CHDR::Mazes {
         [[nodiscard]]
         constexpr size_t Count() const override {
             return Utils::Product<size_t>(m_Size);
-        };
+        }
 
         template<bool IncludeDiagonals = false, typename... Args>
         [[nodiscard]]

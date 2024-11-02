@@ -13,7 +13,7 @@
 
 #include "nodes/base/INode.hpp"
 
-namespace CHDR {
+namespace CHDR::Mazes {
 
     template <typename W = bool>
     class WeightedNode {

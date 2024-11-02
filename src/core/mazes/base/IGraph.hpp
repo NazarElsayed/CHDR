@@ -9,11 +9,8 @@
 #ifndef CHDR_IGRAPH_HPP
 #define CHDR_IGRAPH_HPP
 
-#include "../../nodes/IDNode.hpp"
-
 #include "IMaze.hpp"
-
-#include <unordered_set>
+#include "mazes/nodes/IDNode.hpp"
 
 namespace CHDR::Mazes {
 
