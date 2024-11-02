@@ -30,43 +30,21 @@ namespace CHDR::Solvers {
 
         using coord_t = Coord<index_t, Kd>;
 
-        struct GBFSNode final {
-
-            index_t m_Index;
-
-            std::shared_ptr<const GBFSNode> m_Parent;
+        struct GBFSNode final : public ManagedNode<index_t> {
 
             /**
-             * @brief Constructs an uninitialized ASNode.
+             * @brief Constructs an uninitialized GBFSNode.
              *
-             * This constructor creates an ASNode with uninitialized members.
+             * This constructor creates an GBFSNode with uninitialized members.
              */
-            [[nodiscard]] constexpr GBFSNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
+            [[nodiscard]] constexpr GBFSNode() : UnmanagedNode<index_t>() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] constexpr GBFSNode(const index_t& _index) :
-                m_Index(_index),
-                m_Parent() {}
+            [[nodiscard]] constexpr GBFSNode(const index_t& _index) {}
 
             [[nodiscard]] constexpr GBFSNode(const index_t& _index, GBFSNode&& _parent) :
                 m_Index(_index)
             {
                 m_Parent = std::make_shared<const GBFSNode>(std::move(_parent));
-            }
-
-            ~GBFSNode() { // NOLINT(*-use-equals-default)
-
-//                while (m_Parent && m_Parent.unique()) {
-//                    m_Parent = std::move(m_Parent->m_Parent);
-//                }
-
-                Expunge_Recursive(m_Parent);
-            }
-
-            void Expunge_Recursive(std::shared_ptr<const GBFSNode>& _node) {
-                if (_node && _node.unique()) {
-                    _node = std::move(_node->m_Parent);
-                    Expunge_Recursive(_node);
-                }
             }
         };
 
