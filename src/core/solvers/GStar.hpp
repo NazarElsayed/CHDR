@@ -33,53 +33,20 @@ namespace CHDR::Solvers {
 
         using coord_t = Coord<index_t, Kd>;
 
-        struct GSNode final {
-
-            index_t m_Index;
+        struct GSNode final : public ManagedNode<index_t> {
 
             scalar_t m_GScore;
             scalar_t m_FScore;
 
-            std::shared_ptr<const GSNode> m_Parent;
+            [[nodiscard]] constexpr GSNode() : ManagedNode<index_t>() {};
 
-            /**
-             * @brief Constructs an uninitialized GSNode.
-             *
-             * This constructor creates an GSNode with uninitialized members.
-             */
-            [[nodiscard]] constexpr GSNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
-
-            [[nodiscard]] constexpr GSNode(const index_t& _coord, const scalar_t& _gScore, const scalar_t& _hScore) :
-                m_Index(_coord),
+            [[nodiscard]] constexpr GSNode(const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore) : ManagedNode<index_t>(_index),
                 m_GScore(_gScore),
-                m_FScore(_gScore + _hScore),
-                m_Parent() {}
+                m_FScore(_gScore + _hScore) {}
 
-            [[nodiscard]] constexpr GSNode(const index_t& _coord, const scalar_t& _gScore, const scalar_t& _hScore, GSNode&& _parent) :
-                m_Index(_coord),
+            [[nodiscard]] constexpr GSNode(const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore, GSNode&& _parent) : ManagedNode<index_t>(_index, std::move(_parent)),
                 m_GScore(_gScore),
-                m_FScore(_gScore + _hScore)
-            {
-                m_Parent = std::make_shared<const GSNode>(std::move(_parent));
-            }
-
-            ~GSNode() { // NOLINT(*-use-equals-default)
-
-//                while (m_Parent && m_Parent.unique()) {
-//                    m_Parent = std::move(m_Parent->m_Parent);
-//                }
-
-                Expunge_Recursive(m_Parent);
-            }
-
-            void Expunge_Recursive(std::shared_ptr<const GSNode>& _node) {
-                if (_node && _node.unique()) {
-                    _node = std::move(_node->m_Parent);
-                    Expunge_Recursive(_node);
-                }
-            }
-
-            [[nodiscard]] constexpr bool operator == (const GSNode& _node) const { return m_Index == _node.m_Index; }
+                m_FScore(_gScore + _hScore) {}
 
             struct Max {
 
