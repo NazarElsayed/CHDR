@@ -16,28 +16,28 @@
 
 namespace CHDR {
 
-    template <typename Ti = size_t>
+    template <typename index_t = size_t>
     class IDNode : INode {
 
-        static_assert(std::is_integral_v<Ti>, "Type Ti must be an integral type.");
+        static_assert(std::is_integral_v<index_t>, "Type index_t must be an integral type.");
 
     private:
 
-        Ti m_ID;
+        index_t m_ID;
 
     public:
 
-        constexpr IDNode(const Ti& _id) : m_ID(_id) {}
+        constexpr IDNode(const index_t& _id) : m_ID(_id) {}
 
         [[maybe_unused]] [[nodiscard]] bool IsActive() const override  {
             return true;
         }
 
-        [[maybe_unused]] [[nodiscard]] constexpr const Ti& ID() const {
+        [[maybe_unused]] [[nodiscard]] constexpr const index_t& ID() const {
             return m_ID;
         }
 
-        [[maybe_unused]] constexpr void ID(const Ti& _id) {
+        [[maybe_unused]] constexpr void ID(const index_t& _id) {
             m_ID = _id;
         }
     };

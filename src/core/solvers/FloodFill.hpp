@@ -21,20 +21,20 @@
 
 namespace CHDR::Solvers {
 
-    template<typename Tm, const size_t Kd, typename Ti>
+    template<typename weight_t, const size_t Kd, typename index_t>
     class [[maybe_unused]] FloodFill final {
 
-        static_assert(std::is_integral_v<Ti>, "Ti must be an integral type.");
+        static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
     private:
 
-        using coord_t = Coord<Ti, Kd>;
+        using coord_t = Coord<index_t, Kd>;
 
     public:
 
-        template <typename Ts>
+        template <typename scalar_t>
         [[maybe_unused]]
-        auto Solve(const Mazes::Graph<Ti, Ts>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, size_t _capacity = 0U) {
+        auto Solve(const Mazes::Graph<index_t, scalar_t>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, size_t _capacity = 0U) {
 
 	        bool result = false;
 
@@ -51,7 +51,7 @@ namespace CHDR::Solvers {
 
                     const auto count = _maze.Count();
 
-                    std::queue<Ti> open;
+                    std::queue<index_t> open;
                     open.emplace(s);
 
                     ExistenceSet closed ({ s }, std::max(_capacity, std::max(s, e)));
@@ -99,7 +99,7 @@ NestedBreak:
         }
 
         [[maybe_unused]]
-        auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, size_t _capacity = 0U) {
+        auto Solve(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, size_t _capacity = 0U) {
 
 	        bool result = false;
 
@@ -116,7 +116,7 @@ NestedBreak:
 
                     const auto count = _maze.Count();
 
-                    std::queue<Ti> open;
+                    std::queue<index_t> open;
                     open.emplace(s);
 
                     ExistenceSet closed ({ s }, std::max(_capacity, std::max(s, e)));

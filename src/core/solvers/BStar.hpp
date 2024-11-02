@@ -14,6 +14,7 @@
 #include "mazes/base/IMaze.hpp"
 #include "mazes/Graph.hpp"
 #include "mazes/Grid.hpp"
+#include "solvers/base/UnmanagedNode.hpp"
 #include "types/ExistenceSet.hpp"
 #include "types/Heap.hpp"
 #include "types/StableForwardBuf.hpp"
@@ -22,37 +23,29 @@
 
 namespace CHDR::Solvers {
 
-    template<typename Tm, const size_t Kd, typename Ts, typename Ti>
+    template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t>
     class [[maybe_unused]] BStar final {
 
-        static_assert(std::is_integral_v<Ts> || std::is_floating_point_v<Ts>, "Ts must be either an integral or floating point type.");
-        static_assert(std::is_integral_v<Ti>, "Ti must be an integral type.");
+        static_assert(std::is_integral_v<scalar_t> || std::is_floating_point_v<scalar_t>, "scalar_t must be either an integral or floating point type.");
+        static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
     private:
 
-        using coord_t = Coord<Ti, Kd>;
+        using coord_t = Coord<index_t, Kd>;
 
-        struct BSNode final {
+        struct BSNode final : public UnmanagedNode<index_t> {
 
-            Ti m_Index;
-
-            Ts m_HScore;
-
-            const BSNode* RESTRICT m_Parent;
+            scalar_t m_HScore;
 
             /**
              * @brief Constructs an uninitialized BSNode.
-             * 
+             *
              * This constructor creates an BSNode with uninitialized members.
              */
-            [[nodiscard]] constexpr BSNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default) 
+            [[nodiscard]] constexpr BSNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] constexpr BSNode(const Ti &_index, const Ts &_hScore, const BSNode* RESTRICT const _parent) :
-                m_Index(_index),
-                m_HScore(_hScore),
-                m_Parent(std::move(_parent)) {}
-
-            [[nodiscard]] constexpr bool operator == (const BSNode& _node) const { return m_Index == _node.m_Index; }
+            [[nodiscard]] constexpr BSNode(const index_t& _index, const scalar_t& _hScore, const UnmanagedNode<index_t>* RESTRICT const _parent) : UnmanagedNode<index_t>(_index, _parent),
+                    m_HScore(_hScore) {}
 
             struct Max {
 
@@ -69,7 +62,7 @@ namespace CHDR::Solvers {
             };
         };
 
-        auto SolveHeap(const Mazes::Graph<Ti, Ts>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, Ts (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) const {
+        auto SolveHeap(const Mazes::Graph<index_t, scalar_t>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, scalar_t (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) const {
 
             std::vector<coord_t> result;
 
@@ -127,7 +120,7 @@ namespace CHDR::Solvers {
 
                             // Recurse from end node to start node, inserting into a result buffer:
                             result.reserve(static_cast<size_t>(_h(_start, _end)));
-                            for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = temp->m_Parent) {
+                            for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const BSNode*>(temp->m_Parent)) {
                                 result.emplace_back(Utils::ToND(temp->m_Index, _size));
                             }
 
@@ -147,7 +140,7 @@ namespace CHDR::Solvers {
         }
 
         template <size_t StackSize>
-        auto SolveLinear(const Mazes::Graph<Ti, Ts>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, Ts (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) const {
+        auto SolveLinear(const Mazes::Graph<index_t, scalar_t>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, scalar_t (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) const {
 
             std::vector<coord_t> result;
 
@@ -209,7 +202,7 @@ namespace CHDR::Solvers {
                             // Recurse from end node to start node, inserting into a result buffer:
                             result.reserve(static_cast<size_t>(_h(_start, _end)));
 
-                            for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = temp->m_Parent) {
+                            for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const BSNode*>(temp->m_Parent)) {
                                 result.emplace_back(Utils::ToND(temp->m_Index, _size));
                             }
 
@@ -228,7 +221,7 @@ namespace CHDR::Solvers {
             return result;
         }
 
-        auto SolveHeap(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) const {
+        auto SolveHeap(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) const {
 
             std::vector<coord_t> result;
 
@@ -289,7 +282,7 @@ namespace CHDR::Solvers {
 
                             // Recurse from end node to start node, inserting into a result buffer:
                             result.reserve(static_cast<size_t>(_h(_start, _end)));
-                            for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = temp->m_Parent) {
+                            for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const BSNode*>(temp->m_Parent)) {
                                 result.emplace_back(Utils::ToND(temp->m_Index, _maze.Size()));
                             }
 
@@ -309,7 +302,7 @@ namespace CHDR::Solvers {
         }
 
         template <size_t StackSize>
-        auto SolveLinear(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) const {
+        auto SolveLinear(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) const {
 
             std::vector<coord_t> result;
 
@@ -374,7 +367,7 @@ namespace CHDR::Solvers {
                             // Recurse from end node to start node, inserting into a result buffer:
                             result.reserve(static_cast<size_t>(_h(_start, _end)));
 
-                            for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = temp->m_Parent) {
+                            for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const BSNode*>(temp->m_Parent)) {
                                 result.emplace_back(Utils::ToND(temp->m_Index, _maze.Size()));
                             }
 
@@ -396,7 +389,7 @@ namespace CHDR::Solvers {
     public:
 
         [[maybe_unused]]
-        auto Solve(const Mazes::Graph<Ti, Ts>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, Ts (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) const {
+        auto Solve(const Mazes::Graph<index_t, scalar_t>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, scalar_t (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) const {
 
             /*
              * Determine whether to solve using a linear search or constant-time
@@ -429,7 +422,7 @@ namespace CHDR::Solvers {
         }
 
         [[maybe_unused]]
-        auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) const {
+        auto Solve(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) const {
 
             /*
              * Determine whether to solve using a linear search or constant-time

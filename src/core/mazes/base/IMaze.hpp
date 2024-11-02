@@ -15,14 +15,14 @@
 
 namespace CHDR::Mazes {
 
-    template<typename TNode, typename Ti>
+    template<typename TNode, typename index_t>
     class IMaze {
 
         //static_assert(std::is_base_of<INode, TNode>::value, "TNode must derive from INode");
 
     public:
 
-        [[nodiscard]] virtual constexpr bool Contains(const Ti& _id) const = 0;
+        [[nodiscard]] virtual constexpr bool Contains(const index_t& _id) const = 0;
 
         [[nodiscard]] virtual constexpr size_t Count() const = 0;
 

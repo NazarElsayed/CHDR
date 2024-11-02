@@ -21,15 +21,15 @@
 
 namespace CHDR::Solvers {
 
-    template<typename Tm, const size_t Kd, typename Ts, typename Ti>
+    template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t>
     class [[maybe_unused]] JPS final {
 
-        static_assert(std::is_integral_v<Ts> || std::is_floating_point_v<Ts>, "Ts must be either an integral or floating point type");
-        static_assert(std::is_integral_v<Ti>, "Ti must be an integral type.");
+        static_assert(std::is_integral_v<scalar_t> || std::is_floating_point_v<scalar_t>, "scalar_t must be either an integral or floating point type");
+        static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
     private:
 
-        using coord_t = Coord<Ti, Kd>;
+        using coord_t = Coord<index_t, Kd>;
 
         static constexpr std::array<uint8_t, 8> s_rotateL { 2U, 4U, 7U,
                                                             1U,     6U,
@@ -58,17 +58,17 @@ namespace CHDR::Solvers {
 
         struct JPSNode final {
 
-            Ti m_Index{};
+            index_t m_Index{};
             std::array<int8_t, 2> m_Direction{};
 
-            Ts m_GScore;
-            Ts m_FScore;
+            scalar_t m_GScore;
+            scalar_t m_FScore;
 
             const JPSNode* RESTRICT m_Parent;
 
             [[nodiscard]] constexpr JPSNode() = default;
 
-            [[nodiscard]] constexpr JPSNode(const Ti& _index, const std::array<int8_t, 2>& _direction, const Ts& _gScore, const Ts& _hScore, const JPSNode* RESTRICT const _parent) :
+            [[nodiscard]] constexpr JPSNode(const index_t& _index, const std::array<int8_t, 2>& _direction, const scalar_t& _gScore, const scalar_t& _hScore, const JPSNode* RESTRICT const _parent) :
                 m_Index(_index),
                 m_Direction(_direction),
                 m_GScore(_gScore),
@@ -103,7 +103,7 @@ namespace CHDR::Solvers {
             return (static_cast<T>(0) < _val) - (_val < static_cast<T>(0));
         }
 
-        std::vector<coord_t> FindJumpPoints(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _current, const std::array<int8_t, 2> _direction, const coord_t& _end) const {
+        std::vector<coord_t> FindJumpPoints(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _current, const std::array<int8_t, 2> _direction, const coord_t& _end) const {
 
             std::vector<coord_t> result;
 
@@ -186,7 +186,7 @@ namespace CHDR::Solvers {
         }
 
         [[nodiscard]]
-        std::pair<bool, coord_t> Jump(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _current, const coord_t& _previous, const coord_t& _end) const {
+        std::pair<bool, coord_t> Jump(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _current, const coord_t& _previous, const coord_t& _end) const {
 
             const std::array<int8_t, 2> direction { Sign(static_cast<int>(_current[0]) - static_cast<int>(_previous[0])) ,
                                                     Sign(static_cast<int>(_current[1]) - static_cast<int>(_previous[1])) };
@@ -195,7 +195,7 @@ namespace CHDR::Solvers {
         }
 
         [[nodiscard]]
-        std::pair<bool, coord_t> Jump(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _current, const std::array<int8_t, 2>& _direction, const coord_t& _end) const {
+        std::pair<bool, coord_t> Jump(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _current, const std::array<int8_t, 2>& _direction, const coord_t& _end) const {
 
             std::pair<bool, coord_t> result { false, _current };
 
@@ -265,7 +265,7 @@ namespace CHDR::Solvers {
             return result;
         }
 
-        auto SolveHeap(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
+        auto SolveHeap(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight = 1, size_t _capacity = 0U) const {
 
             std::vector<coord_t> result;
 
@@ -289,7 +289,7 @@ namespace CHDR::Solvers {
                     ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
 
                     Heap<JPSNode, 2U, typename JPSNode::Max> open(_capacity / 8U);
-                    open.Emplace({ s, {0, 0}, static_cast<Ts>(0), _h(_start, _end), nullptr });
+                    open.Emplace({ s, {0, 0}, static_cast<scalar_t>(0), _h(_start, _end), nullptr });
 
                     StableForwardBuf<JPSNode> buf;
 
@@ -323,7 +323,7 @@ namespace CHDR::Solvers {
                                                                             Sign(static_cast<int>(successor[1]) - static_cast<int>(coord[1])) };
 
                                     // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                    open.Emplace({ n, direction, curr.m_GScore + static_cast<Ts>(1), _h(successor, _end) * _weight, &buf.Emplace(std::move(curr)) });
+                                    open.Emplace({ n, direction, curr.m_GScore + static_cast<scalar_t>(1), _h(successor, _end) * _weight, &buf.Emplace(std::move(curr)) });
                                 }
                             }
                         }
@@ -351,7 +351,7 @@ namespace CHDR::Solvers {
         }
 
         /*template <size_t StackSize>
-        auto SolveLinear(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
+        auto SolveLinear(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight = 1, size_t _capacity = 0U) const {
 
             std::vector<coord_t> result;
 
@@ -374,7 +374,7 @@ namespace CHDR::Solvers {
 
                     std::vector<JPSNode, StackAllocator<JPSNode, StackSize>> open;
                     open.reserve(StackSize);
-                    open.push_back({ s, static_cast<Ts>(0), _h(_start, _end), nullptr });
+                    open.push_back({ s, static_cast<scalar_t>(0), _h(_start, _end), nullptr });
 
                     StableForwardBuf<JPSNode, StackSize / 2U> buf;
 
@@ -406,7 +406,7 @@ namespace CHDR::Solvers {
                                         closed.Add(n);
 
                                         // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                        open.push_back({n, curr.m_GScore + static_cast<Ts>(1), _h(nCoord, _end) * _weight, &buf.Emplace(std::move(curr)) });
+                                        open.push_back({n, curr.m_GScore + static_cast<scalar_t>(1), _h(nCoord, _end) * _weight, &buf.Emplace(std::move(curr)) });
                                     }
                                 }
                             }
@@ -438,7 +438,7 @@ namespace CHDR::Solvers {
     public:
 
         [[maybe_unused]]
-        auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
+        auto Solve(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight = 1, size_t _capacity = 0U) const {
             /*
              * Determine whether to solve using a linear search or constant-time
              * method based on which is more efficient given the maze's size.

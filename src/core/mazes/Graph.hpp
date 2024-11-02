@@ -27,24 +27,24 @@
 
 namespace CHDR::Mazes {
 
-    template<typename Ti, typename Ts>
-    class Graph : public IGraph<Ti, Ts> {
+    template<typename index_t, typename scalar_t>
+    class Graph : public IGraph<index_t, scalar_t> {
 
     private:
 
-        using edge_t = typename IGraph<Ti, Ts>::edge_t;
+        using edge_t = typename IGraph<index_t, scalar_t>::edge_t;
 
         struct IndexHash {
 
-            constexpr size_t operator () (const Ti& _index) const {
-                return static_cast<Ti>(_index);
+            constexpr size_t operator () (const index_t& _index) const {
+                return static_cast<index_t>(_index);
             }
 
         };
 
         struct IndexEqual {
 
-            constexpr bool operator () (const Ti& _a, const Ti& _b) const {
+            constexpr bool operator () (const index_t& _a, const index_t& _b) const {
                 return _a == _b;
             }
 
@@ -52,20 +52,20 @@ namespace CHDR::Mazes {
 
         struct EdgeHash {
 
-            constexpr size_t operator () (const std::pair<Ti, Ts> &_edge) const {
-                return static_cast<size_t>(_edge.first) ^ (std::hash<Ts>()(_edge.second) << 1);
+            constexpr size_t operator () (const std::pair<index_t, scalar_t> &_edge) const {
+                return static_cast<size_t>(_edge.first) ^ (std::hash<scalar_t>()(_edge.second) << 1);
             }
         };
 
         struct EdgeEqual {
 
-            constexpr bool operator () (const std::pair<Ti, Ts>& _a, const std::pair<Ti, Ts>& _b) const {
+            constexpr bool operator () (const std::pair<index_t, scalar_t>& _a, const std::pair<index_t, scalar_t>& _b) const {
                 return _a.first == _b.first && _a.second == _b.second;
             }
         };
 
         using Neighbours   = std::unordered_set<edge_t, EdgeHash, EdgeEqual>;
-        using AdjacencySet = std::unordered_map<Ti, Neighbours, IndexHash, IndexEqual>;
+        using AdjacencySet = std::unordered_map<index_t, Neighbours, IndexHash, IndexEqual>;
 
         AdjacencySet m_Entries;
 
@@ -75,7 +75,7 @@ namespace CHDR::Mazes {
 
         [[maybe_unused]] constexpr Graph(std::initializer_list<std::initializer_list<edge_t>> _adjacency_list) : m_Entries() {
 
-            Ti index{0};
+            index_t index{0};
 
             for (const auto& entry: _adjacency_list) {
 
@@ -87,11 +87,11 @@ namespace CHDR::Mazes {
             }
         }
 
-        template <size_t Kd, typename Tm>
+        template <size_t Kd, typename weight_t>
 #if __cplusplus >= 202302L
         constexpr
 #endif // __cplusplus >= 202302L
-        [[maybe_unused]] explicit Graph(const Grid<Kd, Tm>& _grid) : m_Entries{} {
+        [[maybe_unused]] explicit Graph(const Grid<Kd, weight_t>& _grid) : m_Entries{} {
 
             const auto size = _grid.Size();
 
@@ -101,18 +101,18 @@ namespace CHDR::Mazes {
                 // TODO: Add support for directed graphs.
 
                 std::mutex mtx;
-                std::atomic<Ti> index{0};
+                std::atomic<index_t> index{0};
 
-                auto worker = [&](const Ti& _start, const Ti& _end) {
+                auto worker = [&](const index_t& _start, const index_t& _end) {
 
                     std::vector<edge_t> stack(128U);
 
-                    std::unordered_set<Ti, IndexHash, IndexEqual> global_closed;
-                    std::unordered_set<Ti, IndexHash, IndexEqual> local_closed;
+                    std::unordered_set<index_t, IndexHash, IndexEqual> global_closed;
+                    std::unordered_set<index_t, IndexHash, IndexEqual> local_closed;
 
-                    std::unordered_map<Ti, std::vector<edge_t>, IndexHash, IndexEqual> thread_connections;
+                    std::unordered_map<index_t, std::vector<edge_t>, IndexHash, IndexEqual> thread_connections;
 
-                    for (Ti index = _start; index < _end; ++index) {
+                    for (index_t index = _start; index < _end; ++index) {
 
                         const auto& element = _grid.At(index);
 
@@ -139,7 +139,7 @@ namespace CHDR::Mazes {
                                         const auto nIdx1 = Utils::To1D(nCoord1, size);
 
                                         local_closed.clear();
-                                        stack.emplace_back(std::make_pair(nIdx1, static_cast<Ts>(1)));
+                                        stack.emplace_back(std::make_pair(nIdx1, static_cast<scalar_t>(1)));
 
                                         while (!stack.empty()) {
 
@@ -159,7 +159,7 @@ namespace CHDR::Mazes {
 
                                                         if (global_closed.find(s) == global_closed.end()) {
 
-                                                            const auto next = std::make_pair(s, curr_distance + static_cast<Ts>(1));
+                                                            const auto next = std::make_pair(s, curr_distance + static_cast<scalar_t>(1));
 
                                                             if (_grid.IsTransitory(s)) {
                                                                 stack.emplace_back(std::move(next));
@@ -190,13 +190,13 @@ namespace CHDR::Mazes {
                 const size_t count = _grid.Count();
                 const size_t num_threads = std::clamp(std::thread::hardware_concurrency(), 1U, 6U);
 
-                const auto chunk_size = static_cast<Ti>((count + num_threads - 1U) / num_threads);
+                const auto chunk_size = static_cast<index_t>((count + num_threads - 1U) / num_threads);
 
                 std::vector<std::future<void>> futures;
                 for (size_t i = 0U; i < num_threads; ++i) {
 
-                    const Ti start = i * chunk_size;
-                    const Ti end   = std::min(start + chunk_size, static_cast<Ti>(count));
+                    const index_t start = i * chunk_size;
+                    const index_t end   = std::min(start + chunk_size, static_cast<index_t>(count));
 
                     futures.push_back(std::async(std::launch::async, worker, start, end));
                 }
@@ -207,7 +207,7 @@ namespace CHDR::Mazes {
             }
             else {
 
-                Ti index{0};
+                index_t index{0};
                 for (auto& element : _grid) {
 
                     if (element.IsActive()) {
@@ -215,7 +215,7 @@ namespace CHDR::Mazes {
                         for (auto& neighbour : _grid.GetNeighbours(index)) {
 
                             if (const auto& [nActive, nCoord] = neighbour; nActive) {
-                                Add(index, std::make_pair(Utils::To1D(nCoord, size), static_cast<Ts>(1)));
+                                Add(index, std::make_pair(Utils::To1D(nCoord, size), static_cast<scalar_t>(1)));
                             }
                         }
                     }
@@ -228,11 +228,11 @@ namespace CHDR::Mazes {
         }
 
         template<typename... Args>
-        [[nodiscard]] constexpr IDNode<Ti> At(const Args&... _id) const {
+        [[nodiscard]] constexpr IDNode<index_t> At(const Args&... _id) const {
             return At({ _id... });
         }
 
-        [[nodiscard]] constexpr IDNode<Ti> At(const Ti& _id) const {
+        [[nodiscard]] constexpr IDNode<index_t> At(const index_t& _id) const {
 
             auto search = m_Entries.find(_id);
 
@@ -245,15 +245,15 @@ namespace CHDR::Mazes {
             return { search->first };
         }
 
-        void Add(const Ti& _from_id) {
+        void Add(const index_t& _from_id) {
             m_Entries.insert_or_assign(_from_id, Neighbours{});
         }
 
-        void Add(const Ti& _from_id, const edge_t& _edge) {
+        void Add(const index_t& _from_id, const edge_t& _edge) {
             m_Entries[_from_id].emplace(_edge);
         }
 
-        [[maybe_unused]] void Remove(const Ti& _from_id, const edge_t& _edge) {
+        [[maybe_unused]] void Remove(const index_t& _from_id, const edge_t& _edge) {
 
             if (Contains(_from_id)) {
                 m_Entries[_from_id].erase(_edge);
@@ -268,7 +268,7 @@ namespace CHDR::Mazes {
 
             // TODO: Fix erroneous graph when pruned twice and add support for pruning directed graphs.
 
-            std::vector<Ti> nodesToRemove;
+            std::vector<index_t> nodesToRemove;
 
             do {
                 nodesToRemove.clear();
@@ -338,7 +338,7 @@ namespace CHDR::Mazes {
             }
         }
 
-        [[maybe_unused]] [[nodiscard]] constexpr const Neighbours& GetNeighbours(const Ti& _id) const {
+        [[maybe_unused]] [[nodiscard]] constexpr const Neighbours& GetNeighbours(const index_t& _id) const {
         
 #ifndef NDEBUG
             if (!Contains(_id)) {
@@ -349,7 +349,7 @@ namespace CHDR::Mazes {
             return m_Entries.find(_id)->second;
         }
 
-        [[maybe_unused]] [[nodiscard]] constexpr bool Contains(const Ti& _id) const override {
+        [[maybe_unused]] [[nodiscard]] constexpr bool Contains(const index_t& _id) const override {
             return m_Entries.find(_id) != m_Entries.end();
         }
 

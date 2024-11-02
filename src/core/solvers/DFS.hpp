@@ -15,44 +15,34 @@
 #include "mazes/base/IMaze.hpp"
 #include "mazes/Graph.hpp"
 #include "mazes/Grid.hpp"
+#include "solvers/base/BNode.hpp"
 #include "types/ExistenceSet.hpp"
 #include "types/StableForwardBuf.hpp"
 #include "utils/Utils.hpp"
 
 namespace CHDR::Solvers {
 
-    template<typename Tm, const size_t Kd, typename Ti>
+    template<typename weight_t, const size_t Kd, typename index_t>
     class [[maybe_unused]] DFS final {
 
-        static_assert(std::is_integral_v<Ti>, "Ti must be an integral type.");
+        static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
     private:
 
-        using coord_t = Coord<Ti, Kd>;
+        using coord_t = Coord<index_t, Kd>;
 
-        struct DFSNode final {
+        struct DFSNode final : public UnmanagedNode<index_t> {
 
-            Ti m_Index;
+            DFSNode() : UnmanagedNode<index_t>() {}
 
-            const DFSNode* RESTRICT m_Parent;
-
-            /**
-             * @brief Constructs an uninitialized ASNode.
-             *
-             * This constructor creates an ASNode with uninitialized members.
-             */
-            [[nodiscard]] constexpr DFSNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
-
-            [[nodiscard]] constexpr DFSNode(const Ti &_index, const DFSNode* RESTRICT const _parent) :
-                m_Index(_index),
-                m_Parent(std::move(_parent)) {}
+            [[nodiscard]] constexpr DFSNode(const index_t& _index, const UnmanagedNode<index_t>* RESTRICT const _parent) : UnmanagedNode<index_t>(_index, _parent) {}
         };
 
     public:
 
-        template <typename Ts>
+        template <typename scalar_t>
         [[maybe_unused]]
-        auto Solve(const Mazes::Graph<Ti, Ts>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, size_t _capacity = 0U) {
+        auto Solve(const Mazes::Graph<index_t, scalar_t>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, size_t _capacity = 0U) {
 
             std::vector<coord_t> result;
 
@@ -117,7 +107,7 @@ namespace CHDR::Solvers {
 
                                 // Recurse from end node to start node, inserting into a result buffer:
                                 result.reserve(_capacity);
-                                for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = temp->m_Parent) {
+                                for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const DFSNode*>(temp->m_Parent)) {
                                     result.emplace_back(Utils::ToND(temp->m_Index, _size));
                                 }
 
@@ -138,7 +128,7 @@ namespace CHDR::Solvers {
         }
 
         [[maybe_unused]]
-        auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, size_t _capacity = 0U) {
+        auto Solve(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, size_t _capacity = 0U) {
 
             std::vector<coord_t> result;
 
@@ -203,7 +193,7 @@ namespace CHDR::Solvers {
 
                                 // Recurse from end node to start node, inserting into a result buffer:
                                 result.reserve(_capacity);
-                                for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = temp->m_Parent) {
+                                for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const DFSNode*>(temp->m_Parent)) {
                                     result.emplace_back(Utils::ToND(temp->m_Index, _maze.Size()));
                                 }
 

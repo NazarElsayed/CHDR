@@ -19,7 +19,7 @@ namespace Test::Generator {
 
         using uniform_rng_t = std::mt19937_64;
 
-        template <typename T, typename Ti, typename Ts, const size_t Kd, typename... Args>
+        template <typename T, typename index_t, typename scalar_t, const size_t Kd, typename... Args>
         static auto Generate(const CHDR::Coord<size_t, Kd>& _start, CHDR::Coord<size_t, Kd>& _end, const float& _loops = 0.0F, const float& _obstacles = 0.0f, const size_t& _seed = -1U, const Args&... _size) {
 
 			static_assert(std::is_integral_v<T>, "Type T must be an integral type.");
@@ -33,17 +33,17 @@ namespace Test::Generator {
 
             std::array size { _size... };
 
-            CHDR::Mazes::Graph<Ti, Ts> result;
+            CHDR::Mazes::Graph<index_t, scalar_t> result;
 
             constexpr size_t null_v = -1U;
 
             const auto seed = _seed == null_v ? std::random_device().operator()() : _seed;
             uniform_rng_t rng(seed);
 
-            const auto max_index = CHDR::Utils::Product<Ti>(size);
+            const auto max_index = CHDR::Utils::Product<index_t>(size);
 
-            std::vector<Ti> keys;
-            std::unordered_map<Ti, size_t> depths;
+            std::vector<index_t> keys;
+            std::unordered_map<index_t, size_t> depths;
             size_t max_depth = 0U;
 
             {
@@ -56,11 +56,11 @@ namespace Test::Generator {
             size_t branch_factor = 0U;
 
             const auto [distance_min, distance_max] = std::make_pair(
-                static_cast<Ts>(1),
-                static_cast<Ts>(10)
+                static_cast<scalar_t>(1),
+                static_cast<scalar_t>(10)
             );
 
-            Ti count{0};
+            index_t count{0};
 
             while (count + branch_factor < max_index) {
 
@@ -92,8 +92,8 @@ namespace Test::Generator {
 
                         const auto next = count + i;
 
-                        Ts distance{};
-                        if constexpr (std::is_integral_v<Ts>) {
+                        scalar_t distance{};
+                        if constexpr (std::is_integral_v<scalar_t>) {
                             distance = std::uniform_int_distribution(distance_min, distance_max)(rng);
                         }
                         else {

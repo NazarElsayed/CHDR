@@ -21,18 +21,18 @@
 
 namespace CHDR::Solvers {
 
-    template<typename Tm, const size_t Kd, typename Ti>
+    template<typename weight_t, const size_t Kd, typename index_t>
     class [[maybe_unused]] GDFS final {
 
-        static_assert(std::is_integral_v<Ti>, "Ti must be an integral type.");
+        static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
     private:
 
-        using coord_t = Coord<Ti, Kd>;
+        using coord_t = Coord<index_t, Kd>;
 
         struct GDFSNode final {
 
-            Ti m_Index;
+            index_t m_Index;
 
             std::shared_ptr<const GDFSNode> m_Parent;
 
@@ -43,11 +43,11 @@ namespace CHDR::Solvers {
              */
             [[nodiscard]] constexpr GDFSNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] constexpr GDFSNode(const Ti& _index) :
+            [[nodiscard]] constexpr GDFSNode(const index_t& _index) :
                 m_Index(_index),
                 m_Parent() {}
 
-            [[nodiscard]] constexpr GDFSNode(const Ti& _index, GDFSNode&& _parent) :
+            [[nodiscard]] constexpr GDFSNode(const index_t& _index, GDFSNode&& _parent) :
                 m_Index(_index)
             {
                 m_Parent = std::make_shared<const GDFSNode>(std::move(_parent));
@@ -72,9 +72,9 @@ namespace CHDR::Solvers {
 
     public:
 
-        template <typename Ts>
+        template <typename scalar_t>
         [[maybe_unused]]
-        auto Solve(const Mazes::Graph<Ti, Ts>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, size_t _capacity = 0U) {
+        auto Solve(const Mazes::Graph<index_t, scalar_t>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, size_t _capacity = 0U) {
 
             std::vector<coord_t> result;
 
@@ -173,7 +173,7 @@ namespace CHDR::Solvers {
         }
 
         [[maybe_unused]]
-        auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, size_t _capacity = 0U) {
+        auto Solve(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, size_t _capacity = 0U) {
 
             std::vector<coord_t> result;
 

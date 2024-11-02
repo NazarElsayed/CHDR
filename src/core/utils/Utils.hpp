@@ -381,6 +381,14 @@ namespace CHDR {
             return Trim_Trailing_Zeros(std::to_string(_duration)) + units[i];
         }
 
+        static void Backtrack() {
+
+        }
+
+        static void Backtrack_Memoryless() {
+
+        }
+
 	};
 
 } // CHDR

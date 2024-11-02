@@ -23,22 +23,22 @@
 
 namespace CHDR::Solvers {
 
-    template<typename Tm, const size_t Kd, typename Ts, typename Ti>
+    template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t>
     class [[maybe_unused]] GStar final {
 
-        static_assert(std::is_integral_v<Ts> || std::is_floating_point_v<Ts>, "Ts must be either an integral or floating point type");
-        static_assert(std::is_integral_v<Ti>, "Ti must be an integral type.");
+        static_assert(std::is_integral_v<scalar_t> || std::is_floating_point_v<scalar_t>, "scalar_t must be either an integral or floating point type");
+        static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
     private:
 
-        using coord_t = Coord<Ti, Kd>;
+        using coord_t = Coord<index_t, Kd>;
 
         struct GSNode final {
 
-            Ti m_Index;
+            index_t m_Index;
 
-            Ts m_GScore;
-            Ts m_FScore;
+            scalar_t m_GScore;
+            scalar_t m_FScore;
 
             std::shared_ptr<const GSNode> m_Parent;
 
@@ -49,13 +49,13 @@ namespace CHDR::Solvers {
              */
             [[nodiscard]] constexpr GSNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] constexpr GSNode(const Ti& _coord, const Ts& _gScore, const Ts& _hScore) :
+            [[nodiscard]] constexpr GSNode(const index_t& _coord, const scalar_t& _gScore, const scalar_t& _hScore) :
                 m_Index(_coord),
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
                 m_Parent() {}
 
-            [[nodiscard]] constexpr GSNode(const Ti& _coord, const Ts& _gScore, const Ts& _hScore, GSNode&& _parent) :
+            [[nodiscard]] constexpr GSNode(const index_t& _coord, const scalar_t& _gScore, const scalar_t& _hScore, GSNode&& _parent) :
                 m_Index(_coord),
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore)
@@ -105,7 +105,7 @@ namespace CHDR::Solvers {
     public:
 
         [[maybe_unused]]
-        auto Solve(const Mazes::Graph<Ti, Ts>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
+        auto Solve(const Mazes::Graph<index_t, scalar_t>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight = 1, size_t _capacity = 0U) const {
 
             std::vector<coord_t> result;
 
@@ -127,7 +127,7 @@ namespace CHDR::Solvers {
                     ExistenceSet closed({ s }, _capacity);
 
                     Heap<GSNode, 2U, typename GSNode::Max> open;
-                    open.Emplace(GSNode { s, static_cast<Ts>(0), _h(_start, _end) });
+                    open.Emplace(GSNode { s, static_cast<scalar_t>(0), _h(_start, _end) });
 
                     while (!open.Empty()) {
 
@@ -155,7 +155,7 @@ namespace CHDR::Solvers {
                                         closed.Add(n);
 
                                         // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                        open.Emplace(GSNode { n, curr.m_GScore + static_cast<Ts>(1), _h(Utils::ToND(n, _size), _end) * _weight, std::move(curr) });
+                                        open.Emplace(GSNode { n, curr.m_GScore + static_cast<scalar_t>(1), _h(Utils::ToND(n, _size), _end) * _weight, std::move(curr) });
                                     }
                                 }
                             }
@@ -197,7 +197,7 @@ namespace CHDR::Solvers {
         }
 
         [[maybe_unused]]
-        auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, size_t _capacity = 0U) const {
+        auto Solve(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight = 1, size_t _capacity = 0U) const {
 
             std::vector<coord_t> result;
 
@@ -219,7 +219,7 @@ namespace CHDR::Solvers {
                     ExistenceSet closed({ s }, _capacity);
 
                     Heap<GSNode, 2U, typename GSNode::Max> open;
-                    open.Emplace(GSNode { s, static_cast<Ts>(0), _h(_start, _end) });
+                    open.Emplace(GSNode { s, static_cast<scalar_t>(0), _h(_start, _end) });
 
                     while (!open.Empty()) {
 
@@ -247,7 +247,7 @@ namespace CHDR::Solvers {
                                         closed.Add(n);
 
                                         // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                        open.Emplace(GSNode { n, curr.m_GScore + static_cast<Ts>(1), _h(nCoord, _end) * _weight, std::move(curr) });
+                                        open.Emplace(GSNode { n, curr.m_GScore + static_cast<scalar_t>(1), _h(nCoord, _end) * _weight, std::move(curr) });
                                     }
                                 }
                             }

@@ -25,12 +25,12 @@ namespace Test::Tests {
 
     public:
 
-        template <typename Tm, const size_t Kd, typename Ts = uint32_t, typename Ti = uint32_t>
-        static void Run(const std::array<Ti, Kd>& _dimensions) {
+        template <typename weight_t, const size_t Kd, typename scalar_t = uint32_t, typename index_t = uint32_t>
+        static void Run(const std::array<index_t, Kd>& _dimensions) {
 
-            #define HEURISTIC CHDR::Heuristics<Kd, Ts>::ManhattanDistance
+            #define HEURISTIC CHDR::Heuristics<Kd, scalar_t>::ManhattanDistance
 
-            using coord_t = CHDR::Coord<Ti, Kd>;
+            using coord_t = CHDR::Coord<index_t, Kd>;
 
             // Test parameters:
             constexpr size_t seed(0U);
@@ -40,8 +40,8 @@ namespace Test::Tests {
                       coord_t end;
 
             /* GENERATE MAZE */
-            const auto grid = Generator::Grid::Generate<Tm>(start, end, 0.0, 0.0, seed, size);
-//            const auto graph = Generator::Graph::Generate<Tm, Ti, Ts>(start, end, 0.0, 0.0, seed, size);
+            const auto grid = Generator::Grid::Generate<weight_t>(start, end, 0.0, 0.0, seed, size);
+//            const auto graph = Generator::Graph::Generate<weight_t, index_t, scalar_t>(start, end, 0.0, 0.0, seed, size);
 
             /* MAX DRAW SIZE */
             const bool drawable (
@@ -53,7 +53,7 @@ namespace Test::Tests {
 
             const auto sw_start = std::chrono::high_resolution_clock::now();
 
-            auto solver = CHDR::Solvers::JPS<Tm, Kd, Ts, Ti>();
+            auto solver = CHDR::Solvers::BStar<weight_t, Kd, scalar_t, index_t>();
             auto path = solver.Solve(grid, start, end, HEURISTIC);
 //            auto path = solver.Solve(graph, start, end, size, HEURISTIC);
 
@@ -61,7 +61,7 @@ namespace Test::Tests {
                 CHDR::Utils::ToString(std::chrono::duration_cast<std::chrono::duration<long double>>(std::chrono::high_resolution_clock::now() - sw_start).count()) + ")";
 
             if (drawable) {
-                Display<Tm, Kd>::DrawMaze(start, end, size, grid, path);
+                Display<weight_t, Kd>::DrawMaze(start, end, size, grid, path);
             }
 
             Debug::Log("(A*):");

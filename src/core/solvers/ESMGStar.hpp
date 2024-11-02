@@ -25,35 +25,35 @@
 
 namespace CHDR::Solvers {
 
-    template<typename Tm, const size_t Kd, typename Ts, typename Ti>
+    template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t>
     class [[maybe_unused]] ESMGStar final {
 
-        static_assert(std::is_integral_v<Ts> || std::is_floating_point_v<Ts>, "Ts must be either an integral or floating point type");
-        static_assert(std::is_integral_v<Ti>, "Ti must be an integral type.");
+        static_assert(std::is_integral_v<scalar_t> || std::is_floating_point_v<scalar_t>, "scalar_t must be either an integral or floating point type");
+        static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
     private:
 
-        using coord_t = Coord<Ti, Kd>;
+        using coord_t = Coord<index_t, Kd>;
 
         struct ESMASNode final :  std::enable_shared_from_this<ESMASNode> {
 
             friend std::shared_ptr<ESMASNode>;
 
             size_t m_Depth;
-            Ti m_Index;
+            index_t m_Index;
 
-            Ts m_GScore;
-            Ts m_FScore;
+            scalar_t m_GScore;
+            scalar_t m_FScore;
 
             std::shared_ptr<ESMASNode> m_Parent;
 
             std::vector<std::shared_ptr<ESMASNode>> m_Successors;
 
-            std::unordered_map<size_t, Ts> m_ForgottenFCosts;
+            std::unordered_map<size_t, scalar_t> m_ForgottenFCosts;
 
         private:
 
-            [[nodiscard]] constexpr ESMASNode(const size_t& _depth, const Ti& _index, const Ts& _gScore, const Ts& _hScore, const std::shared_ptr<ESMASNode>& _parent) :
+            [[nodiscard]] constexpr ESMASNode(const size_t& _depth, const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore, const std::shared_ptr<ESMASNode>& _parent) :
                 m_Depth (_depth),
                 m_Index (_index),
                 m_GScore(_gScore),
@@ -83,7 +83,7 @@ namespace CHDR::Solvers {
                 }
             }
 
-            auto& Expand(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight, const size_t& _memoryLimit) {
+            auto& Expand(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, const size_t& _memoryLimit) {
 
                 if (m_Successors.empty()) {
 
@@ -173,7 +173,7 @@ namespace CHDR::Solvers {
             };
         };
 
-        void cull_worst_leaf(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight, const size_t& _memoryLimit, Heap<std::shared_ptr<ESMASNode>, 2U, typename ESMASNode::Max>& _open) const {
+        void cull_worst_leaf(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, const size_t& _memoryLimit, Heap<std::shared_ptr<ESMASNode>, 2U, typename ESMASNode::Max>& _open) const {
 
             const auto w = safe_culling_heuristic(_open);
 
@@ -238,7 +238,7 @@ namespace CHDR::Solvers {
     public:
 
         [[maybe_unused]]
-        auto Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), const Ts& _weight = 1, const size_t& _memoryLimit = -1U) const {
+        auto Solve(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight = 1, const size_t& _memoryLimit = -1U) const {
 
             /** @see: https://easychair.org/publications/paper/TL2M/open */
 
@@ -259,7 +259,7 @@ namespace CHDR::Solvers {
                     open.Emplace(ESMASNode::CreateShared(
                         0U,                         // Depth
                         s,                          // Coordinate
-                        static_cast<Ts>(0),         // G-Score
+                        static_cast<scalar_t>(0),         // G-Score
                         _h(_start, _end) * _weight, // F-Score
                         nullptr
                     ));

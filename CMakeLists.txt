@@ -161,6 +161,8 @@ add_library(CHDR INTERFACE
     src/core/utils/Utils.hpp
     src/core/utils/Intrinsics.hpp
         src/core/solvers/BStar.hpp
+        src/core/solvers/base/BNode.hpp
+        src/core/solvers/base/ManagedNode.hpp
 )
 
 target_link_libraries(CHDR INTERFACE)

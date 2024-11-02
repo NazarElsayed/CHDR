@@ -17,12 +17,12 @@
 
 namespace CHDR::Mazes {
 
-    template <typename Ti, typename Ts>
-    class IGraph : IMaze<IDNode<Ti>, Ti> {
+    template <typename index_t, typename scalar_t>
+    class IGraph : IMaze<IDNode<index_t>, index_t> {
 
     public:
 
-        using edge_t = std::pair<Ti, Ts>;
+        using edge_t = std::pair<index_t, scalar_t>;
 
         template<typename... Args>
         [[nodiscard]]
@@ -30,7 +30,7 @@ namespace CHDR::Mazes {
             return Contains({ _id... });
         }
 
-        [[nodiscard]] virtual constexpr bool Contains(const Ti& _id) const = 0;
+        [[nodiscard]] virtual constexpr bool Contains(const index_t& _id) const = 0;
 
     };
 

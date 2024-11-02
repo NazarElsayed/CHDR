@@ -21,21 +21,21 @@
 
 namespace CHDR::Solvers {
 
-    template<typename Tm, const size_t Kd, typename Ts, typename Ti>
+    template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t>
     class [[maybe_unused]] Dijkstra final {
 
-        static_assert(std::is_integral_v<Ti>, "Ti must be an integral type.");
+        static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
     private:
 
-        using coord_t = Coord<Ti, Kd>;
+        using coord_t = Coord<index_t, Kd>;
 
         struct DijkstraNode final {
 
-            Ti m_Index;
+            index_t m_Index;
 
-            Ts m_GScore;
-            Ts m_FScore;
+            scalar_t m_GScore;
+            scalar_t m_FScore;
 
             std::shared_ptr<const DijkstraNode> m_Parent;
 
@@ -46,7 +46,7 @@ namespace CHDR::Solvers {
              */
             [[nodiscard]] constexpr DijkstraNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] constexpr DijkstraNode(const Ti &_index, const Ts &_gScore, const Ts &_hScore, const std::shared_ptr<const DijkstraNode>& _parent) :
+            [[nodiscard]] constexpr DijkstraNode(const index_t &_index, const scalar_t &_gScore, const scalar_t &_hScore, const std::shared_ptr<const DijkstraNode>& _parent) :
                 m_Index(_index),
                 m_GScore(_gScore),
                 m_FScore(_gScore + _hScore),
@@ -91,7 +91,7 @@ namespace CHDR::Solvers {
     public:
 
         [[maybe_unused]]
-        void Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) {
+        void Solve(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) {
 
             (void)_maze; // Suppress unused variable warnings.
             (void)_start;
@@ -99,7 +99,7 @@ namespace CHDR::Solvers {
             (void)_h;
             (void)_capacity;
 
-            throw std::runtime_error("Djikstra::Solve(const Mazes::Grid<Kd, Tm>& _maze, const coord_t& _start, const coord_t& _end, Ts (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U): Not implemented!");
+            throw std::runtime_error("Djikstra::Solve(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U): Not implemented!");
         }
 
     };
