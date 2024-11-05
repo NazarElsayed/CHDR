@@ -318,8 +318,10 @@ namespace CHDR::Solvers {
 
                             if (curr != nullptr) {
 
-                                // Recurse from end node to start node, inserting into a result buffer:
+                                // Reserve space in result:
                                 result.reserve(curr->m_GScore);
+
+                                // Recurse from end node to start node, inserting into a result buffer:
                                 result.emplace_back(Utils::ToND(curr->m_Index, _maze.Size()));
 
                                 if (auto item = curr->m_Parent) {

@@ -116,8 +116,10 @@ namespace CHDR::Solvers {
 
                                 closed.Clear(); closed.Trim();
 
-                                // Recurse from end node to start node, inserting into a result buffer:
+                                // Reserve space in result:
                                 result.reserve(_capacity);
+
+                                // Recurse from end node to start node, inserting into a result buffer:
                                 result.emplace_back(Utils::ToND(curr.m_Index, _size));
 
                                 if (curr.m_Parent != nullptr) {
@@ -217,8 +219,10 @@ namespace CHDR::Solvers {
 
                                 closed.Clear(); closed.Trim();
 
-                                // Recurse from end node to start node, inserting into a result buffer:
+                                // Reserve space in result:
                                 result.reserve(_capacity);
+
+                                // Recurse from end node to start node, inserting into a result buffer:
                                 result.emplace_back(Utils::ToND(curr.m_Index, _maze.Size()));
 
                                 if (curr.m_Parent != nullptr) {

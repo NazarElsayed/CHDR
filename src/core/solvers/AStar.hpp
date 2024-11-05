@@ -129,8 +129,10 @@ namespace CHDR::Solvers {
                         }
                         else { // SOLUTION REACHED ...
 
-                            // Recurse from end node to start node, inserting into a result buffer:
+                            // Reserve space in result:
                             result.reserve(curr.m_GScore);
+
+                            // Recurse from end node to start node, inserting into a result buffer:
                             for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const ASNode*>(temp->m_Parent)) {
                                 result.emplace_back(Utils::ToND(temp->m_Index, _size));
                             }
@@ -168,11 +170,11 @@ namespace CHDR::Solvers {
 
                     const auto count = _maze.Count();
 
-                    // Create closed:
+                    // Create closed set:
                     _capacity = std::max(_capacity, std::max(s, e));
                     ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
 
-                    // Create open:
+                    // Create open set:
                     std::vector<ASNode, StackAllocator<ASNode, StackSize>> open;
                     open.reserve(StackSize);
                     open.push_back({ s, static_cast<scalar_t>(0), _h(_start, _end), nullptr });
@@ -213,9 +215,10 @@ namespace CHDR::Solvers {
                         }
                         else { // SOLUTION REACHED ...
 
-                            // Recurse from end node to start node, inserting into a result buffer:
+                            // Reserve space in result:
                             result.reserve(curr.m_GScore);
 
+                            // Recurse from end node to start node, inserting into a result buffer:
                             for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const ASNode*>(temp->m_Parent)) {
                                 result.emplace_back(Utils::ToND(temp->m_Index, _size));
                             }
@@ -297,8 +300,10 @@ namespace CHDR::Solvers {
                         }
                         else { // SOLUTION REACHED ...
 
-                            // Recurse from end node to start node, inserting into a result buffer:
+                            // Reserve space in result:
                             result.reserve(curr.m_GScore);
+
+                            // Recurse from end node to start node, inserting into a result buffer:
                             for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const ASNode*>(temp->m_Parent)) {
                                 result.emplace_back(Utils::ToND(temp->m_Index, _maze.Size()));
                             }
@@ -384,9 +389,10 @@ namespace CHDR::Solvers {
                         }
                         else { // SOLUTION REACHED ...
 
-                            // Recurse from end node to start node, inserting into a result buffer:
+                            // Reserve space in result:
                             result.reserve(curr.m_GScore);
 
+                            // Recurse from end node to start node, inserting into a result buffer:
                             for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const ASNode*>(temp->m_Parent)) {
                                 result.emplace_back(Utils::ToND(temp->m_Index, _maze.Size()));
                             }

@@ -81,7 +81,7 @@ namespace CHDR::Solvers {
 
                     // Create closed set:
                     _capacity = _capacity == 0U ? std::max(_maze.Count() / 10U, static_cast<size_t>(1U)) : _capacity;
-                    ExistenceSet<LowMemoryUsage> closed({s}, _capacity);
+                    ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
 
                     // Create open set:
                     Heap<BSNode, 2U, typename BSNode::Max> open(_capacity / 4U);
@@ -121,8 +121,10 @@ namespace CHDR::Solvers {
                         }
                         else { // SOLUTION REACHED ...
 
-                            // Recurse from end node to start node, inserting into a result buffer:
+                            // Reserve space in result:
                             result.reserve(static_cast<size_t>(_h(_start, _end)));
+
+                            // Recurse from end node to start node, inserting into a result buffer:
                             for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const BSNode*>(temp->m_Parent)) {
                                 result.emplace_back(Utils::ToND(temp->m_Index, _size));
                             }
@@ -205,9 +207,10 @@ namespace CHDR::Solvers {
                         }
                         else { // SOLUTION REACHED ...
 
-                            // Recurse from end node to start node, inserting into a result buffer:
+                            // Reserve space in result:
                             result.reserve(static_cast<size_t>(_h(_start, _end)));
 
+                            // Recurse from end node to start node, inserting into a result buffer:
                             for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const BSNode*>(temp->m_Parent)) {
                                 result.emplace_back(Utils::ToND(temp->m_Index, _size));
                             }
@@ -289,8 +292,10 @@ namespace CHDR::Solvers {
                         }
                         else { // SOLUTION REACHED ...
 
-                            // Recurse from end node to start node, inserting into a result buffer:
+                            // Reserve space in result:
                             result.reserve(static_cast<size_t>(_h(_start, _end)));
+
+                            // Recurse from end node to start node, inserting into a result buffer:
                             for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const BSNode*>(temp->m_Parent)) {
                                 result.emplace_back(Utils::ToND(temp->m_Index, _maze.Size()));
                             }
@@ -376,9 +381,10 @@ namespace CHDR::Solvers {
                         }
                         else { // SOLUTION REACHED ...
 
-                            // Recurse from end node to start node, inserting into a result buffer:
+                            // Reserve space in result:
                             result.reserve(static_cast<size_t>(_h(_start, _end)));
 
+                            // Recurse from end node to start node, inserting into a result buffer:
                             for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const BSNode*>(temp->m_Parent)) {
                                 result.emplace_back(Utils::ToND(temp->m_Index, _maze.Size()));
                             }
