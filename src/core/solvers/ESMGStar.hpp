@@ -10,17 +10,12 @@
 #define CHDR_ESMGSTAR_HPP
 
 #include <cmath>
-#include <queue>
-#include <unordered_set>
 
-#include "../utils/Heuristics.hpp"
 #include "base/BSolver.hpp"
 #include "mazes/base/IMaze.hpp"
-#include "mazes/Graph.hpp"
 #include "mazes/Grid.hpp"
 #include "types/ExistenceSet.hpp"
 #include "types/Heap.hpp"
-#include "types/StableForwardBuf.hpp"
 #include "utils/Utils.hpp"
 
 namespace CHDR::Solvers {
@@ -220,7 +215,7 @@ namespace CHDR::Solvers {
 
             if (w == _open.Top()) { // Top == Best node according to f(n) in _open
 
-                // Code to find second worst leaf according to c(n) goes here
+                // Code to find second-worst leaf according to c(n) goes here
 
                 w = _open.Back();
 
@@ -230,7 +225,7 @@ namespace CHDR::Solvers {
                     const auto& B = w;
 
                     if (typename ESMGSNode::Max()(A, B)) {
-                        w = _open[i]; // Assign the second worst leaf to w
+                        w = _open[i]; // Assign the second-worst leaf to w
                     }
                 }
 

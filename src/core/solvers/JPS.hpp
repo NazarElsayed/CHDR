@@ -53,7 +53,7 @@ namespace CHDR::Solvers {
                 { { 1, -1}, s_rotateR }
         };
 
-        struct JPSNode final : UnmanagedNode<index_t> {
+        struct JPSNode final : public UnmanagedNode<index_t> {
 
             std::array<int8_t, 2U> m_Direction;
 

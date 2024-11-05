@@ -12,7 +12,6 @@
 #include <queue>
 
 #include "base/BSolver.hpp"
-#include "mazes/base/IMaze.hpp"
 #include "mazes/Graph.hpp"
 #include "mazes/Grid.hpp"
 #include "solvers/base/UnmanagedNode.hpp"

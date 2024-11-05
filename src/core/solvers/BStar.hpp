@@ -9,9 +9,7 @@
 #ifndef CHDR_BSTAR_HPP
 #define CHDR_BSTAR_HPP
 
-#include "../utils/Heuristics.hpp"
 #include "base/BSolver.hpp"
-#include "mazes/base/IMaze.hpp"
 #include "mazes/Graph.hpp"
 #include "mazes/Grid.hpp"
 #include "solvers/base/UnmanagedNode.hpp"
