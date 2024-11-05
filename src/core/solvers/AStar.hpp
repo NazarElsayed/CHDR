@@ -87,15 +87,18 @@ namespace CHDR::Solvers {
 
                     const auto count = _maze.Count();
 
+                    // Create closed set:
                     _capacity = _capacity == 0U ? std::max(_maze.Count() / 10U, static_cast<size_t>(1U)) : _capacity;
+                    ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
 
-                    ExistenceSet<LowMemoryUsage> closed({s }, _capacity);
-
+                    // Create open set:
                     Heap<ASNode, 2U, typename ASNode::Max> open(_capacity / 4U);
                     open.Emplace({s, static_cast<scalar_t>(0), _h(_start, _end), nullptr });
 
+                    // Create buffer:
                     StableForwardBuf<ASNode, 1024U * 1024U> buf;
 
+                    // Main loop:
                     while (!open.Empty()) {
 
                         auto curr = open.PopTop();
@@ -165,16 +168,19 @@ namespace CHDR::Solvers {
 
                     const auto count = _maze.Count();
 
+                    // Create closed:
                     _capacity = std::max(_capacity, std::max(s, e));
-
                     ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
 
+                    // Create open:
                     std::vector<ASNode, StackAllocator<ASNode, StackSize>> open;
                     open.reserve(StackSize);
                     open.push_back({ s, static_cast<scalar_t>(0), _h(_start, _end), nullptr });
 
+                    // Create buffer:
                     StableForwardBuf<ASNode, StackSize / 2U> buf;
 
+                    // Main loop:
                     while (!open.empty()) {
 
                         const auto top = std::min_element(open.begin(), open.end(), typename ASNode::Min());
@@ -246,15 +252,18 @@ namespace CHDR::Solvers {
 
                     const auto count = _maze.Count();
 
+                    // Create closed set:
                     _capacity = std::max(_capacity, std::max(s, e));
-
                     ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
 
+                    // Create open set:
                     Heap<ASNode, 2U, typename ASNode::Max> open(_capacity / 8U);
                     open.Emplace({  s, static_cast<scalar_t>(0), _h(_start, _end), nullptr });
 
+                    // Create buffer:
                     StableForwardBuf<ASNode> buf;
 
+                    // Main loop:
                     while (!open.Empty()) {
 
                         auto curr = open.PopTop();
@@ -327,16 +336,19 @@ namespace CHDR::Solvers {
 
                     const auto count = _maze.Count();
 
+                    // Create closed set:
                     _capacity = std::max(_capacity, std::max(s, e));
-
                     ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
 
+                    // Create open set:
                     std::vector<ASNode, StackAllocator<ASNode, StackSize>> open;
                     open.reserve(StackSize);
                     open.push_back({ s, static_cast<scalar_t>(0), _h(_start, _end), nullptr });
 
+                    // Create buffer:
                     StableForwardBuf<ASNode, StackSize / 2U> buf;
 
+                    // Main loop:
                     while (!open.empty()) {
 
                         const auto top = std::min_element(open.begin(), open.end(), typename ASNode::Min());

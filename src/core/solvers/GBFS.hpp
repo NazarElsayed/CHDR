@@ -65,13 +65,15 @@ namespace CHDR::Solvers {
 
                     const auto count = _maze.Count();
 
+                    // Create closed set:
                     _capacity = std::max(_capacity, std::max(s, e));
+                    ExistenceSet closed({ s }, _capacity);
 
+                    // Create open set:
                     std::queue<GBFSNode> open;
                     open.emplace(s);
 
-                    ExistenceSet closed({ s }, _capacity);
-
+                    // Main loop:
                     while (!open.empty()) { // SEARCH FOR SOLUTION...
 
                         for (size_t i = 0U; i < open.size(); ++i) {
@@ -163,13 +165,15 @@ namespace CHDR::Solvers {
 
                     const auto count = _maze.Count();
 
+                    // Create closed set:
                     _capacity = std::max(_capacity, std::max(s, e));
+                    ExistenceSet closed({ s }, _capacity);
 
+                    // Create open set:
                     std::queue<GBFSNode> open;
                     open.emplace(s);
 
-                    ExistenceSet closed({ s }, _capacity);
-
+                    // Main loop:
                     while (!open.empty()) { // SEARCH FOR SOLUTION...
 
                         for (size_t i = 0U; i < open.size(); ++i) {

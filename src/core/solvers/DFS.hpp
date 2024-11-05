@@ -63,16 +63,19 @@ namespace CHDR::Solvers {
 
                     const auto count = _maze.Count();
 
+                    // Create closed Set:
                     _capacity = std::max(_capacity, std::max(s, e));
+                    ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
 
+                    // Create open Set:
                     auto sequence = std::vector<DFSNode>(_capacity);
                     std::stack<DFSNode, std::vector<DFSNode>> open(std::move(sequence));
                     open.emplace(s, nullptr);
 
-                    ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
-
+                    // Create buffer:
                     StableForwardBuf<DFSNode> buf;
 
+                    // Main loop:
                     while (!open.empty()) { // SEARCH FOR SOLUTION...
 
                         for (size_t i = 0U; i < open.size(); ++i) {
@@ -149,16 +152,19 @@ namespace CHDR::Solvers {
 
                     const auto count = _maze.Count();
 
+                    // Create closed set:
                     _capacity = std::max(_capacity, std::max(s, e));
+                    ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
 
+                    // Create open set:
                     auto sequence = std::vector<DFSNode>(_capacity);
                     std::stack<DFSNode, std::vector<DFSNode>> open(std::move(sequence));
                     open.emplace(s, nullptr);
 
-                    ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
-
+                    // Create buffer:
                     StableForwardBuf<DFSNode> buf;
 
+                    // Main loop:
                     while (!open.empty()) { // SEARCH FOR SOLUTION...
 
                         for (size_t i = 0U; i < open.size(); ++i) {

@@ -12,8 +12,6 @@
 #include <map>
 
 #include "base/BSolver.hpp"
-#include "mazes/base/IMaze.hpp"
-#include "mazes/Graph.hpp"
 #include "mazes/Grid.hpp"
 #include "types/ExistenceSet.hpp"
 #include "types/StableForwardBuf.hpp"
@@ -55,7 +53,7 @@ namespace CHDR::Solvers {
                 { { 1, -1}, s_rotateR }
         };
 
-        struct JPSNode final : public UnmanagedNode<index_t> {
+        struct JPSNode final : UnmanagedNode<index_t> {
 
             std::array<int8_t, 2U> m_Direction;
 
@@ -276,15 +274,18 @@ namespace CHDR::Solvers {
 
                     const auto count = _maze.Count();
 
+                    // Create closed set:
                     _capacity = std::max(_capacity, std::max(s, e));
-
                     ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
 
+                    // Create open set:
                     Heap<JPSNode, 2U, typename JPSNode::Max> open(_capacity / 8U);
                     open.Emplace({ s, {0, 0}, static_cast<scalar_t>(0), _h(_start, _end), nullptr });
 
+                    // Create buffer:
                     StableForwardBuf<JPSNode> buf;
 
+                    // Main loop:
                     while (!open.Empty()) {
 
                         auto curr = open.PopTop();

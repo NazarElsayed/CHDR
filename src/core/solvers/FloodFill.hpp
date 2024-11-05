@@ -50,11 +50,14 @@ namespace CHDR::Solvers {
 
                     const auto count = _maze.Count();
 
+                    // Create closed Set:
+                    ExistenceSet closed ({ s }, std::max(_capacity, std::max(s, e)));
+
+                    // Create open Set:
                     std::queue<index_t> open;
                     open.emplace(s);
 
-                    ExistenceSet closed ({ s }, std::max(_capacity, std::max(s, e)));
-
+                    // Main loop:
                     while (!open.empty()) {
 
                         for (size_t i = 0U; i < open.size(); ++i) {
@@ -115,11 +118,14 @@ NestedBreak:
 
                     const auto count = _maze.Count();
 
+                    // Create closed set:
+                    ExistenceSet closed ({ s }, std::max(_capacity, std::max(s, e)));
+
+                    // Create open set:
                     std::queue<index_t> open;
                     open.emplace(s);
 
-                    ExistenceSet closed ({ s }, std::max(_capacity, std::max(s, e)));
-
+                    // Main loop:
                     while (!open.empty()) {
 
                         for (size_t i = 0U; i < open.size(); ++i) {

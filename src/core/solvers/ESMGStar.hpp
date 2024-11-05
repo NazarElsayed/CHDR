@@ -53,8 +53,6 @@ namespace CHDR::Solvers {
 
         private:
 
-
-
             [[nodiscard]] constexpr ESMGSNode(const size_t& _depth, const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore) :
                 m_Depth (_depth),
                 m_Index (_index),
@@ -265,6 +263,7 @@ namespace CHDR::Solvers {
 
                 if (s != e) {
 
+                    // Create Open Set:
                     Heap<std::shared_ptr<ESMGSNode>, 2U, typename ESMGSNode::Max> open;
                     open.Emplace(ESMGSNode::CreateShared(
                         0U,                         // Depth
@@ -273,7 +272,7 @@ namespace CHDR::Solvers {
                         _h(_start, _end) * _weight  // F-Score
                     ));
 
-                    // Main loop
+                    // Main loop:
                     while (!open.Empty()) {
 
                         auto curr = open.PopTop(); // Node with smallest f-cost in O

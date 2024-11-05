@@ -89,13 +89,15 @@ namespace CHDR::Solvers {
 
                     const auto count = _maze.Count();
 
+                    // Create closed set:
                     _capacity = std::max(_capacity, std::max(s, e));
-
                     ExistenceSet closed({ s }, _capacity);
 
+                    // Create open set:
                     Heap<GSNode, 2U, typename GSNode::Max> open;
                     open.Emplace(GSNode { s, static_cast<scalar_t>(0), _h(_start, _end) });
 
+                    // Main loop:
                     while (!open.Empty()) {
 
                         auto curr = open.PopTop();
@@ -181,13 +183,15 @@ namespace CHDR::Solvers {
 
                     const auto count = _maze.Count();
 
+                    // Create closed set:
                     _capacity = std::max(_capacity, std::max(s, e));
-
                     ExistenceSet closed({ s }, _capacity);
 
+                    // Create open set:
                     Heap<GSNode, 2U, typename GSNode::Max> open;
                     open.Emplace(GSNode { s, static_cast<scalar_t>(0), _h(_start, _end) });
 
+                    // Main loop:
                     while (!open.Empty()) {
 
                         auto curr = open.PopTop();
