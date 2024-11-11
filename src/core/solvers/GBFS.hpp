@@ -116,25 +116,7 @@ namespace CHDR::Solvers {
 
                                 closed.Clear(); closed.Trim();
 
-                                // Reserve space in result:
-                                result.reserve(_capacity);
-
-                                // Recurse from end node to start node, inserting into a result buffer:
-                                result.emplace_back(Utils::ToND(curr.m_Index, _size));
-
-                                if (curr.m_Parent != nullptr) {
-
-                                    for (auto& item = curr.m_Parent; item->m_Parent != nullptr;) {
-                                        result.emplace_back(Utils::ToND(item->m_Index, _size));
-
-                                        auto oldItem = item;
-                                        item = item->m_Parent;
-                                        oldItem.reset();
-                                    }
-                                }
-
-                                // Reverse the result:
-                                std::reverse(result.begin(), result.end());
+                                curr.template Backtrack<GBFSNode>(result, _size, _capacity);
 
                                 break;
                             }
@@ -210,25 +192,7 @@ namespace CHDR::Solvers {
 
                         closed.Clear(); closed.Trim();
 
-                        // Reserve space in result:
-                        result.reserve(_capacity);
-
-                        // Recurse from end node to start node, inserting into a result buffer:
-                        result.emplace_back(Utils::ToND(curr.m_Index, _maze.Size()));
-
-                        if (curr.m_Parent != nullptr) {
-
-                            for (auto& item = curr.m_Parent; item->m_Parent != nullptr;) {
-                                result.emplace_back(Utils::ToND(item->m_Index, _maze.Size()));
-
-                                auto oldItem = item;
-                                item = item->m_Parent;
-                                oldItem.reset();
-                            }
-                        }
-
-                        // Reverse the result:
-                        std::reverse(result.begin(), result.end());
+                        curr.template Backtrack<GBFSNode>(result, _maze.Size(), _capacity);
 
                         break;
                     }

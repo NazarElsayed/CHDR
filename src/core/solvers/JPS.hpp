@@ -408,14 +408,14 @@ namespace CHDR::Solvers {
 
         /*[[maybe_unused]]
         auto Solve(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight = 1, size_t _capacity = 0U) const {
-            /*
+
              * Determine whether to solve using a linear search or constant-time
              * method based on which is more efficient given the maze's size.
              #1#
 
             std::vector<coord_t> result;
 
-            /*
+
             constexpr size_t LMAX = 256U;
 
             const auto count = _maze.Count();

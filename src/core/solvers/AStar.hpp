@@ -121,16 +121,7 @@ namespace CHDR::Solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    // Reserve space in result:
-                    result.reserve(curr.m_GScore);
-
-                    // Recurse from end node to start node, inserting into a result buffer:
-                    for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const ASNode*>(temp->m_Parent)) {
-                        result.emplace_back(Utils::ToND(temp->m_Index, _size));
-                    }
-
-                    // Reverse the result:
-                    std::reverse(result.begin(), result.end());
+                    curr.template Backtrack<ASNode>(result, _size, curr.m_GScore);
 
                     break;
                 }
@@ -194,16 +185,7 @@ namespace CHDR::Solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    // Reserve space in result:
-                    result.reserve(curr.m_GScore);
-
-                    // Recurse from end node to start node, inserting into a result buffer:
-                    for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const ASNode*>(temp->m_Parent)) {
-                        result.emplace_back(Utils::ToND(temp->m_Index, _size));
-                    }
-
-                    // Reverse the result:
-                    std::reverse(result.begin(), result.end());
+                    curr.template Backtrack<ASNode>(result, _size, curr.m_GScore);
 
                     break;
                 }
@@ -265,16 +247,7 @@ namespace CHDR::Solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    // Reserve space in result:
-                    result.reserve(curr.m_GScore);
-
-                    // Recurse from end node to start node, inserting into a result buffer:
-                    for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const ASNode*>(temp->m_Parent)) {
-                        result.emplace_back(Utils::ToND(temp->m_Index, _maze.Size()));
-                    }
-
-                    // Reverse the result:
-                    std::reverse(result.begin(), result.end());
+                    curr.template Backtrack<ASNode>(result, _maze.Size(), curr.m_GScore);
 
                     break;
                 }
@@ -340,16 +313,7 @@ namespace CHDR::Solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    // Reserve space in result:
-                    result.reserve(curr.m_GScore);
-
-                    // Recurse from end node to start node, inserting into a result buffer:
-                    for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const ASNode*>(temp->m_Parent)) {
-                        result.emplace_back(Utils::ToND(temp->m_Index, _maze.Size()));
-                    }
-
-                    // Reverse the result:
-                    std::reverse(result.begin(), result.end());
+                    curr.template Backtrack<ASNode>(result, _maze.Size(), curr.m_GScore);
 
                     break;
                 }

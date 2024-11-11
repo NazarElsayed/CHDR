@@ -54,20 +54,20 @@ namespace CHDR::Solvers {
             }
         }
 
-        template<typename TNode, typename coord_t>
+        template<typename node_t, typename coord_t>
         void Backtrack(std::vector<coord_t>& _path, const coord_t& _size, const size_t& _capacity = 0U) {
 
-            static_assert(std::is_base_of_v<ManagedNode<index_t>, TNode>, "TNode must derive from ManagedNode");
+            static_assert(std::is_base_of_v<ManagedNode<index_t>, node_t>, "node_t must derive from ManagedNode");
 
-            const auto& curr = *static_cast<const TNode*>(this);
+            const auto& curr = *static_cast<const node_t*>(this);
 
             // Recurse from end node to start node, inserting into a result buffer:
-            _path.reserve(curr.m_GScore);
+            _path.reserve(_capacity);
             _path.emplace_back(Utils::ToND(curr.m_Index, _size));
 
             if (curr.m_Parent != nullptr) {
 
-                for (auto& item = curr.m_Parent; item->m_Parent != nullptr;) {
+                for (auto item = curr.m_Parent; item->m_Parent != nullptr;) {
                     _path.emplace_back(Utils::ToND(item->m_Index, _size));
 
                     auto oldItem = item;
