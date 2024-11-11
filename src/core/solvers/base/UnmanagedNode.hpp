@@ -24,7 +24,7 @@ namespace CHDR::Solvers {
             BNode<index_t>(_index), m_Parent(std::move(_parent)) {}
 
         template<typename TNode, typename coord_t>
-        static auto Backtrack(const TNode& _node, std::vector<coord_t>& _path, const size_t& _capacity, const coord_t& _size) {
+        auto Backtrack(std::vector<coord_t>& _path, const coord_t& _size, const size_t& _capacity = 0U) {
 
             static_assert(std::is_base_of_v<UnmanagedNode<index_t>, TNode>, "TNode must derive from UnmanagedNode");
 
@@ -32,7 +32,7 @@ namespace CHDR::Solvers {
             _path.reserve(_capacity);
 
             // Recurse from end node to start node, inserting into a result buffer:
-            for (const auto* temp = &_node; temp->m_Parent != nullptr; temp = static_cast<const TNode*>(temp->m_Parent)) {
+            for (const auto* temp = &this; temp->m_Parent != nullptr; temp = static_cast<const TNode*>(temp->m_Parent)) {
                 _path.emplace_back(Utils::ToND(temp->m_Index, _size));
             }
 
