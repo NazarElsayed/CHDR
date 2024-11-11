@@ -92,16 +92,18 @@ namespace CHDR::Solvers {
 
                                     if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-                                        // Check if node is not already visited:
-                                        if (!closed.Contains(nActive)) {
+                                        const auto& n = Utils::To1D(nCoord, _size);
 
-                                            if (closed.Capacity() < nActive) {
-                                                closed.Reserve(std::min(_capacity * ((nActive % _capacity) + 1U), count));
+                                        // Check if node is not already visited:
+                                        if (!closed.Contains(n)) {
+
+                                            if (closed.Capacity() < n) {
+                                                closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                             }
-                                            closed.Add(nActive);
+                                            closed.Add(n);
 
                                             // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                            open.push({ nActive, &buf.Emplace(std::move(curr)) });
+                                            open.push({ n, &buf.Emplace(std::move(curr)) });
                                         }
                                     }
                                 }

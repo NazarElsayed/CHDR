@@ -92,11 +92,13 @@ namespace CHDR::Solvers {
 
                                     if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-                                        // Check if node is not already visited:
-                                        if (!closed.Contains(nActive)) {
+                                        const auto& n = Utils::To1D(nCoord, _size);
 
-                                            if (closed.Capacity() < nActive) {
-                                                closed.Reserve(std::min(_capacity * ((nActive % _capacity) + 1U), count));
+                                        // Check if node is not already visited:
+                                        if (!closed.Contains(n)) {
+
+                                            if (closed.Capacity() < n) {
+                                                closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                             }
                                             closed.Add(n);
 
@@ -165,53 +167,50 @@ namespace CHDR::Solvers {
                     // Main loop:
                     while (!open.empty()) { // SEARCH FOR SOLUTION...
 
-                        for (size_t i = 0U; i < open.size(); ++i) {
+                        auto curr(std::move(open.top()));
+                        open.pop();
 
-                            auto curr(std::move(open.top()));
-                            open.pop();
+                        if (curr.m_Index != e) {
 
-                            if (curr.m_Index != e) {
+                            if (closed.Capacity() < curr.m_Index) {
+                                closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
+                            }
+                            closed.Add(curr.m_Index);
 
-                                if (closed.Capacity() < curr.m_Index) {
-                                    closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
-                                }
-                                closed.Add(curr.m_Index);
+                            for (const auto& neighbour: _maze.GetNeighbours(curr.m_Index)) {
 
-                                for (const auto& neighbour: _maze.GetNeighbours(curr.m_Index)) {
+                                if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-                                    if (const auto& [nActive, nCoord] = neighbour; nActive) {
+                                    const auto n = Utils::To1D(nCoord, _maze.Size());
 
-                                        const auto n = Utils::To1D(nCoord, _maze.Size());
+                                    // Check if node is not already visited:
+                                    if (!closed.Contains(n)) {
 
-                                        // Check if node is not already visited:
-                                        if (!closed.Contains(n)) {
-
-                                            if (closed.Capacity() < n) {
-                                                closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
-                                            }
-                                            closed.Add(n);
-
-                                            // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                            open.push({n, &buf.Emplace(std::move(curr)) });
+                                        if (closed.Capacity() < n) {
+                                            closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                         }
+                                        closed.Add(n);
+
+                                        // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
+                                        open.push({n, &buf.Emplace(std::move(curr)) });
                                     }
                                 }
                             }
-                            else { // SOLUTION REACHED ...
+                        }
+                        else { // SOLUTION REACHED ...
 
-                                // Reserve space in result:
-                                result.reserve(_capacity);
+                            // Reserve space in result:
+                            result.reserve(_capacity);
 
-                                // Recurse from end node to start node, inserting into a result buffer:
-                                for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const DFSNode*>(temp->m_Parent)) {
-                                    result.emplace_back(Utils::ToND(temp->m_Index, _maze.Size()));
-                                }
-
-                                // Reverse the result:
-                                std::reverse(result.begin(), result.end());
-
-                                break;
+                            // Recurse from end node to start node, inserting into a result buffer:
+                            for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const DFSNode*>(temp->m_Parent)) {
+                                result.emplace_back(Utils::ToND(temp->m_Index, _maze.Size()));
                             }
+
+                            // Reverse the result:
+                            std::reverse(result.begin(), result.end());
+
+                            break;
                         }
                     }
                 }
