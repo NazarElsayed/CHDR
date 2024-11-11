@@ -22,7 +22,7 @@
 namespace CHDR::Solvers {
 
     template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t>
-    class [[maybe_unused]] BStar final : BSolver<weight_t, Kd, scalar_t, index_t> {
+    class [[maybe_unused]] BStar final : public BSolver<weight_t, Kd, scalar_t, index_t> {
 
         static_assert(std::is_integral_v<scalar_t> || std::is_floating_point_v<scalar_t>, "scalar_t must be either an integral or floating point type.");
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
@@ -150,78 +150,65 @@ namespace CHDR::Solvers {
             const auto s = Utils::To1D(_start, _size);
             const auto e = Utils::To1D(_end,   _size);
 
-            if (_maze.Contains(s) &&
-                _maze.Contains(e) &&
-                _maze.At(s).IsActive() &&
-                _maze.At(e).IsActive()
-            ) {
+            const auto count = _maze.Count();
 
-                if (s != e) {
+            // Create closed set:
+            _capacity = std::max(_capacity, std::max(s, e));
+            ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
 
-                    const auto count = _maze.Count();
+            // Create open set:
+            std::vector<BSNode, StackAllocator<BSNode, StackSize>> open;
+            open.reserve(StackSize);
+            open.push_back({ s, _h(_start, _end), nullptr });
 
-                    // Create closed set:
-                    _capacity = std::max(_capacity, std::max(s, e));
-                    ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
+            // Create buffer:
+            StableForwardBuf<BSNode, StackSize / 2U> buf;
 
-                    // Create open set:
-                    std::vector<BSNode, StackAllocator<BSNode, StackSize>> open;
-                    open.reserve(StackSize);
-                    open.push_back({ s, _h(_start, _end), nullptr });
+            // Main loop:
+            while (!open.empty()) {
 
-                    // Create buffer:
-                    StableForwardBuf<BSNode, StackSize / 2U> buf;
+                const auto top = std::min_element(open.begin(), open.end(), typename BSNode::Min());
+                auto curr(std::move(*top));
+                open.erase(top);
 
-                    // Main loop:
-                    while (!open.empty()) {
+                if (curr.m_Index != e) { // SEARCH FOR SOLUTION...
 
-                        const auto top = std::min_element(open.begin(), open.end(), typename BSNode::Min());
-                        auto curr(std::move(*top));
-                        open.erase(top);
+                    if (closed.Capacity() < curr.m_Index) {
+                        closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
+                    }
+                    closed.Add(curr.m_Index);
 
-                        if (curr.m_Index != e) { // SEARCH FOR SOLUTION...
+                    for (const auto& neighbour : _maze.GetNeighbours(curr.m_Index)) {
 
-                            if (closed.Capacity() < curr.m_Index) {
-                                closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
+                        const auto& [n, nDistance] = neighbour;
+
+                        // Check if node is not already visited:
+                        if (!closed.Contains(n)) {
+
+                            if (closed.Capacity() < n) {
+                                closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                             }
-                            closed.Add(curr.m_Index);
+                            closed.Add(n);
 
-                            for (const auto& neighbour : _maze.GetNeighbours(curr.m_Index)) {
-
-                                const auto& [n, nDistance] = neighbour;
-
-                                // Check if node is not already visited:
-                                if (!closed.Contains(n)) {
-
-                                    if (closed.Capacity() < n) {
-                                        closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
-                                    }
-                                    closed.Add(n);
-
-                                    // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                    open.push_back({ n, _h(CHDR::Utils::ToND(n, _size), _end), &buf.Emplace(std::move(curr)) });
-                                }
-                            }
-                        }
-                        else { // SOLUTION REACHED ...
-
-                            // Reserve space in result:
-                            result.reserve(static_cast<size_t>(_h(_start, _end)));
-
-                            // Recurse from end node to start node, inserting into a result buffer:
-                            for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const BSNode*>(temp->m_Parent)) {
-                                result.emplace_back(Utils::ToND(temp->m_Index, _size));
-                            }
-
-                            // Reverse the result:
-                            std::reverse(result.begin(), result.end());
-
-                            break;
+                            // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
+                            open.push_back({ n, _h(CHDR::Utils::ToND(n, _size), _end), &buf.Emplace(std::move(curr)) });
                         }
                     }
                 }
-                else {
-                    result.emplace_back(_end);
+                else { // SOLUTION REACHED ...
+
+                    // Reserve space in result:
+                    result.reserve(static_cast<size_t>(_h(_start, _end)));
+
+                    // Recurse from end node to start node, inserting into a result buffer:
+                    for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const BSNode*>(temp->m_Parent)) {
+                        result.emplace_back(Utils::ToND(temp->m_Index, _size));
+                    }
+
+                    // Reverse the result:
+                    std::reverse(result.begin(), result.end());
+
+                    break;
                 }
             }
 
@@ -235,78 +222,65 @@ namespace CHDR::Solvers {
             const auto s = Utils::To1D(_start, _maze.Size());
             const auto e = Utils::To1D(_end,   _maze.Size());
 
-            if (_maze.Contains(s) &&
-                _maze.Contains(e) &&
-                _maze.At(s).IsActive() &&
-                _maze.At(e).IsActive()
-            ) {
+            const auto count = _maze.Count();
 
-                if (s != e) {
+            // Create closed set:
+            _capacity = std::max(_capacity, std::max(s, e));
+            ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
 
-                    const auto count = _maze.Count();
+            // Create open set:
+            Heap<BSNode, 2U, typename BSNode::Max> open(_capacity / 8U);
+            open.Emplace({ s, _h(_start, _end), nullptr });
 
-                    // Create closed set:
-                    _capacity = std::max(_capacity, std::max(s, e));
-                    ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
+            // Create buffer:
+            StableForwardBuf<BSNode> buf;
 
-                    // Create open set:
-                    Heap<BSNode, 2U, typename BSNode::Max> open(_capacity / 8U);
-                    open.Emplace({ s, _h(_start, _end), nullptr });
+            // Main loop:
+            while (!open.Empty()) {
 
-                    // Create buffer:
-                    StableForwardBuf<BSNode> buf;
+                auto curr = open.PopTop();
 
-                    // Main loop:
-                    while (!open.Empty()) {
+                if (curr.m_Index != e) { // SEARCH FOR SOLUTION...
 
-                        auto curr = open.PopTop();
+                    if (closed.Capacity() < curr.m_Index) {
+                        closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
+                    }
+                    closed.Add(curr.m_Index);
 
-                        if (curr.m_Index != e) { // SEARCH FOR SOLUTION...
+                    for (const auto& neighbour : _maze.GetNeighbours(curr.m_Index)) {
 
-                            if (closed.Capacity() < curr.m_Index) {
-                                closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
-                            }
-                            closed.Add(curr.m_Index);
+                        if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-                            for (const auto& neighbour : _maze.GetNeighbours(curr.m_Index)) {
+                            const auto n = Utils::To1D(nCoord, _maze.Size());
 
-                                if (const auto& [nActive, nCoord] = neighbour; nActive) {
+                            // Check if node is not already visited:
+                            if (!closed.Contains(n)) {
 
-                                    const auto n = Utils::To1D(nCoord, _maze.Size());
-
-                                    // Check if node is not already visited:
-                                    if (!closed.Contains(n)) {
-
-                                        if (closed.Capacity() < n) {
-                                            closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
-                                        }
-                                        closed.Add(n);
-
-                                        // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                        open.Emplace({ n, _h(nCoord, _end), &buf.Emplace(std::move(curr)) });
-                                    }
+                                if (closed.Capacity() < n) {
+                                    closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                 }
+                                closed.Add(n);
+
+                                // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
+                                open.Emplace({ n, _h(nCoord, _end), &buf.Emplace(std::move(curr)) });
                             }
-                        }
-                        else { // SOLUTION REACHED ...
-
-                            // Reserve space in result:
-                            result.reserve(static_cast<size_t>(_h(_start, _end)));
-
-                            // Recurse from end node to start node, inserting into a result buffer:
-                            for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const BSNode*>(temp->m_Parent)) {
-                                result.emplace_back(Utils::ToND(temp->m_Index, _maze.Size()));
-                            }
-
-                            // Reverse the result:
-                            std::reverse(result.begin(), result.end());
-
-                            break;
                         }
                     }
                 }
-                else {
-                    result.emplace_back(_end);
+                else { // SOLUTION REACHED ...
+
+                    // Reserve space in result:
+                    result.reserve(static_cast<size_t>(_h(_start, _end)));
+
+                    // Recurse from end node to start node, inserting into a result buffer:
+                    for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const BSNode*>(temp->m_Parent)) {
+                        result.emplace_back(Utils::ToND(temp->m_Index, _maze.Size()));
+                    }
+
+                    // Reverse the result:
+                    std::reverse(result.begin(), result.end());
+
+                    break;
                 }
             }
 
@@ -321,81 +295,68 @@ namespace CHDR::Solvers {
             const auto s = Utils::To1D(_start, _maze.Size());
             const auto e = Utils::To1D(_end,   _maze.Size());
 
-            if (_maze.Contains(s) &&
-                _maze.Contains(e) &&
-                _maze.At(s).IsActive() &&
-                _maze.At(e).IsActive()
-            ) {
+            const auto count = _maze.Count();
 
-                if (s != e) {
+            // Create closed set:
+            _capacity = std::max(_capacity, std::max(s, e));
+            ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
 
-                    const auto count = _maze.Count();
+            // Create open set:
+            std::vector<BSNode, StackAllocator<BSNode, StackSize>> open;
+            open.reserve(StackSize);
+            open.push_back({ s, _h(_start, _end), nullptr });
 
-                    // Create closed set:
-                    _capacity = std::max(_capacity, std::max(s, e));
-                    ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
+            // Create buffer:
+            StableForwardBuf<BSNode, StackSize / 2U> buf;
 
-                    // Create open set:
-                    std::vector<BSNode, StackAllocator<BSNode, StackSize>> open;
-                    open.reserve(StackSize);
-                    open.push_back({ s, _h(_start, _end), nullptr });
+            // Main loop:
+            while (!open.empty()) {
 
-                    // Create buffer:
-                    StableForwardBuf<BSNode, StackSize / 2U> buf;
+                const auto top = std::min_element(open.begin(), open.end(), typename BSNode::Min());
+                auto curr(std::move(*top));
+                open.erase(top);
 
-                    // Main loop:
-                    while (!open.empty()) {
+                if (curr.m_Index != e) { // SEARCH FOR SOLUTION...
 
-                        const auto top = std::min_element(open.begin(), open.end(), typename BSNode::Min());
-                        auto curr(std::move(*top));
-                        open.erase(top);
+                    if (closed.Capacity() < curr.m_Index) {
+                        closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
+                    }
+                    closed.Add(curr.m_Index);
 
-                        if (curr.m_Index != e) { // SEARCH FOR SOLUTION...
+                    for (const auto& neighbour : _maze.GetNeighbours(curr.m_Index)) {
 
-                            if (closed.Capacity() < curr.m_Index) {
-                                closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
-                            }
-                            closed.Add(curr.m_Index);
+                        if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-                            for (const auto& neighbour : _maze.GetNeighbours(curr.m_Index)) {
+                            const auto n = Utils::To1D(nCoord, _maze.Size());
 
-                                if (const auto& [nActive, nCoord] = neighbour; nActive) {
+                            // Check if node is not already visited:
+                            if (!closed.Contains(n)) {
 
-                                    const auto n = Utils::To1D(nCoord, _maze.Size());
-
-                                    // Check if node is not already visited:
-                                    if (!closed.Contains(n)) {
-
-                                        if (closed.Capacity() < n) {
-                                            closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
-                                        }
-                                        closed.Add(n);
-
-                                        // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                        open.push_back({ n, _h(nCoord, _end), &buf.Emplace(std::move(curr)) });
-                                    }
+                                if (closed.Capacity() < n) {
+                                    closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                 }
+                                closed.Add(n);
+
+                                // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
+                                open.push_back({ n, _h(nCoord, _end), &buf.Emplace(std::move(curr)) });
                             }
-                        }
-                        else { // SOLUTION REACHED ...
-
-                            // Reserve space in result:
-                            result.reserve(static_cast<size_t>(_h(_start, _end)));
-
-                            // Recurse from end node to start node, inserting into a result buffer:
-                            for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const BSNode*>(temp->m_Parent)) {
-                                result.emplace_back(Utils::ToND(temp->m_Index, _maze.Size()));
-                            }
-
-                            // Reverse the result:
-                            std::reverse(result.begin(), result.end());
-
-                            break;
                         }
                     }
                 }
-                else {
-                    result.emplace_back(_end);
+                else { // SOLUTION REACHED ...
+
+                    // Reserve space in result:
+                    result.reserve(static_cast<size_t>(_h(_start, _end)));
+
+                    // Recurse from end node to start node, inserting into a result buffer:
+                    for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const BSNode*>(temp->m_Parent)) {
+                        result.emplace_back(Utils::ToND(temp->m_Index, _maze.Size()));
+                    }
+
+                    // Reverse the result:
+                    std::reverse(result.begin(), result.end());
+
+                    break;
                 }
             }
 
@@ -405,7 +366,7 @@ namespace CHDR::Solvers {
     public:
 
         [[maybe_unused]]
-        auto Solve(const Mazes::Graph<index_t, scalar_t>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, scalar_t (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) const {
+        std::vector<coord_t> Execute(const Mazes::Graph<index_t, scalar_t>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, size_t _capacity) const override {
 
             /*
              * Determine whether to solve using a linear search or constant-time
@@ -438,7 +399,7 @@ namespace CHDR::Solvers {
         }
 
         [[maybe_unused]]
-        auto Solve(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) const {
+        std::vector<coord_t> Execute(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, size_t _capacity) const override {
 
             /*
              * Determine whether to solve using a linear search or constant-time

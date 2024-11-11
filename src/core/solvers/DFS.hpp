@@ -21,7 +21,7 @@
 namespace CHDR::Solvers {
 
     template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t>
-    class [[maybe_unused]] DFS final : BSolver<weight_t, Kd, scalar_t, index_t> {
+    class [[maybe_unused]] DFS final : public BSolver<weight_t, Kd, scalar_t, index_t> {
 
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
@@ -44,7 +44,7 @@ namespace CHDR::Solvers {
     public:
 
         [[maybe_unused]]
-        auto Solve(const Mazes::Graph<index_t, scalar_t>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, size_t _capacity = 0U) {
+        std::vector<coord_t> Execute(const Mazes::Graph<index_t, scalar_t>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, size_t _capacity) const override {
 
             std::vector<coord_t> result;
 
@@ -135,87 +135,74 @@ namespace CHDR::Solvers {
         }
 
         [[maybe_unused]]
-        auto Solve(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, size_t _capacity = 0U) {
+        std::vector<coord_t> Execute(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, size_t _capacity) const override {
 
             std::vector<coord_t> result;
 
             const auto s = Utils::To1D(_start, _maze.Size());
             const auto e = Utils::To1D(_end,   _maze.Size());
 
-            if (_maze.Contains(s) &&
-                _maze.Contains(e) &&
-                _maze.At(s).IsActive() &&
-                _maze.At(e).IsActive()
-            ) {
+            const auto count = _maze.Count();
 
-                if (s != e) {
+            // Create closed set:
+            _capacity = std::max(_capacity, std::max(s, e));
+            ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
 
-                    const auto count = _maze.Count();
+            // Create open set:
+            auto sequence = std::vector<DFSNode>(_capacity);
+            std::stack<DFSNode, std::vector<DFSNode>> open(std::move(sequence));
+            open.emplace(s, nullptr);
 
-                    // Create closed set:
-                    _capacity = std::max(_capacity, std::max(s, e));
-                    ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
+            // Create buffer:
+            StableForwardBuf<DFSNode> buf;
 
-                    // Create open set:
-                    auto sequence = std::vector<DFSNode>(_capacity);
-                    std::stack<DFSNode, std::vector<DFSNode>> open(std::move(sequence));
-                    open.emplace(s, nullptr);
+            // Main loop:
+            while (!open.empty()) { // SEARCH FOR SOLUTION...
 
-                    // Create buffer:
-                    StableForwardBuf<DFSNode> buf;
+                auto curr(std::move(open.top()));
+                open.pop();
 
-                    // Main loop:
-                    while (!open.empty()) { // SEARCH FOR SOLUTION...
+                if (curr.m_Index != e) {
 
-                        auto curr(std::move(open.top()));
-                        open.pop();
+                    if (closed.Capacity() < curr.m_Index) {
+                        closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
+                    }
+                    closed.Add(curr.m_Index);
 
-                        if (curr.m_Index != e) {
+                    for (const auto& neighbour: _maze.GetNeighbours(curr.m_Index)) {
 
-                            if (closed.Capacity() < curr.m_Index) {
-                                closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
-                            }
-                            closed.Add(curr.m_Index);
+                        if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-                            for (const auto& neighbour: _maze.GetNeighbours(curr.m_Index)) {
+                            const auto n = Utils::To1D(nCoord, _maze.Size());
 
-                                if (const auto& [nActive, nCoord] = neighbour; nActive) {
+                            // Check if node is not already visited:
+                            if (!closed.Contains(n)) {
 
-                                    const auto n = Utils::To1D(nCoord, _maze.Size());
-
-                                    // Check if node is not already visited:
-                                    if (!closed.Contains(n)) {
-
-                                        if (closed.Capacity() < n) {
-                                            closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
-                                        }
-                                        closed.Add(n);
-
-                                        // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                        open.push({n, &buf.Emplace(std::move(curr)) });
-                                    }
+                                if (closed.Capacity() < n) {
+                                    closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                 }
+                                closed.Add(n);
+
+                                // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
+                                open.push({n, &buf.Emplace(std::move(curr)) });
                             }
-                        }
-                        else { // SOLUTION REACHED ...
-
-                            // Reserve space in result:
-                            result.reserve(_capacity);
-
-                            // Recurse from end node to start node, inserting into a result buffer:
-                            for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const DFSNode*>(temp->m_Parent)) {
-                                result.emplace_back(Utils::ToND(temp->m_Index, _maze.Size()));
-                            }
-
-                            // Reverse the result:
-                            std::reverse(result.begin(), result.end());
-
-                            break;
                         }
                     }
                 }
-                else {
-                    result.emplace_back(_end);
+                else { // SOLUTION REACHED ...
+
+                    // Reserve space in result:
+                    result.reserve(_capacity);
+
+                    // Recurse from end node to start node, inserting into a result buffer:
+                    for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const DFSNode*>(temp->m_Parent)) {
+                        result.emplace_back(Utils::ToND(temp->m_Index, _maze.Size()));
+                    }
+
+                    // Reverse the result:
+                    std::reverse(result.begin(), result.end());
+
+                    break;
                 }
             }
 

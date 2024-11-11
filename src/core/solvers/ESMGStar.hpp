@@ -21,7 +21,7 @@
 namespace CHDR::Solvers {
 
     template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t>
-    class [[maybe_unused]] ESMGStar final : BSolver<weight_t, Kd, scalar_t, index_t> {
+    class [[maybe_unused]] ESMGStar final : public BSolver<weight_t, Kd, scalar_t, index_t> {
 
         static_assert(std::is_integral_v<scalar_t> || std::is_floating_point_v<scalar_t>, "scalar_t must be either an integral or floating point type");
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
@@ -250,96 +250,83 @@ namespace CHDR::Solvers {
             const auto s = Utils::To1D(_start, _maze.Size());
             const auto e = Utils::To1D(_end,   _maze.Size());
 
-            if (_maze.Contains(s) &&
-                _maze.Contains(e) &&
-                _maze.At(s).IsActive() &&
-                _maze.At(e).IsActive()
-            ) {
+            // Create Open Set:
+            Heap<std::shared_ptr<ESMGSNode>, 2U, typename ESMGSNode::Max> open;
+            open.Emplace(ESMGSNode::CreateShared(
+                0U,                         // Depth
+                s,                          // Coordinate
+                static_cast<scalar_t>(0),   // G-Score
+                _h(_start, _end) * _weight  // F-Score
+            ));
 
-                if (s != e) {
+            // Main loop:
+            while (!open.Empty()) {
 
-                    // Create Open Set:
-                    Heap<std::shared_ptr<ESMGSNode>, 2U, typename ESMGSNode::Max> open;
-                    open.Emplace(ESMGSNode::CreateShared(
-                        0U,                         // Depth
-                        s,                          // Coordinate
-                        static_cast<scalar_t>(0),   // G-Score
-                        _h(_start, _end) * _weight  // F-Score
-                    ));
+                auto curr = open.PopTop(); // Node with smallest f-cost in O
 
-                    // Main loop:
-                    while (!open.Empty()) {
+                if (curr->m_Index != e) { // SEARCH FOR SOLUTION...
 
-                        auto curr = open.PopTop(); // Node with smallest f-cost in O
+                    auto successors_current = curr->Expand(_maze, _end, _h, _weight, _memoryLimit);
 
-                        if (curr->m_Index != e) { // SEARCH FOR SOLUTION...
+                    for (size_t i = 0U; i < successors_current.size(); ++i) {
 
-                            auto successors_current = curr->Expand(_maze, _end, _h, _weight, _memoryLimit);
+                        auto& successor = successors_current[i];
 
-                            for (size_t i = 0U; i < successors_current.size(); ++i) {
+                        // Check if s(n) is in forgotten f-cost table of b.
+                        auto search = curr->m_ForgottenFCosts.find(successor->m_Index);
+                        if (search != curr->m_ForgottenFCosts.end()) {
 
-                                auto& successor = successors_current[i];
+                            const auto& [nCoord, nCost] = *search;
 
-                                // Check if s(n) is in forgotten f-cost table of b.
-                                auto search = curr->m_ForgottenFCosts.find(successor->m_Index);
-                                if (search != curr->m_ForgottenFCosts.end()) {
-
-                                    const auto& [nCoord, nCost] = *search;
-
-                                    successor->m_FScore = nCost;
-                                    curr->m_ForgottenFCosts.erase(nCoord);
-                                }
-                                else {
-                                    successor->m_FScore = std::max(curr->m_FScore, successor->m_GScore + _h(Utils::ToND(successor->m_Index, _maze.Size()), _end) * _weight);
-                                }
-
-                                // Add successor to open.
-                                if (!open.Contains(successor)) {
-                                     open.Add(successor);
-                                }
-                            }
-
-                            while (open.Size() > _memoryLimit) {
-                                cull_worst_leaf(_maze, _end, _h, _weight, _memoryLimit, open);
-                            }
-
-                            // Shrink the node to release ownership of children, allowing automatic GC of parents with no valid candidate children.
-                            curr->Shrink();
+                            successor->m_FScore = nCost;
+                            curr->m_ForgottenFCosts.erase(nCoord);
                         }
-                        else { // SOLUTION REACHED ...
+                        else {
+                            successor->m_FScore = std::max(curr->m_FScore, successor->m_GScore + _h(Utils::ToND(successor->m_Index, _maze.Size()), _end) * _weight);
+                        }
 
-                            // Free data which is no longer relevant:
-                            open.Clear(); open.Trim();
-
-                            if (curr != nullptr) {
-
-                                // Reserve space in result:
-                                result.reserve(curr->m_GScore);
-
-                                // Recurse from end node to start node, inserting into a result buffer:
-                                result.emplace_back(Utils::ToND(curr->m_Index, _maze.Size()));
-
-                                if (auto item = curr->m_Parent) {
-
-                                    while (const auto item_parent = item->m_Parent) {
-                                        result.emplace_back(Utils::ToND(item->m_Index, _maze.Size()));
-
-                                        auto oldItem = item;
-                                        item = item_parent;
-                                        oldItem.reset();
-                                    }
-                                }
-
-                                // Reverse the result:
-                                std::reverse(result.begin(), result.end());
-                            }
-
-                            break;
+                        // Add successor to open.
+                        if (!open.Contains(successor)) {
+                             open.Add(successor);
                         }
                     }
+
+                    while (open.Size() > _memoryLimit) {
+                        cull_worst_leaf(_maze, _end, _h, _weight, _memoryLimit, open);
+                    }
+
+                    // Shrink the node to release ownership of children, allowing automatic GC of parents with no valid candidate children.
+                    curr->Shrink();
                 }
-                else {
-                    result.emplace_back(_end);
+                else { // SOLUTION REACHED ...
+
+                    // Free data which is no longer relevant:
+                    open.Clear(); open.Trim();
+
+                    if (curr != nullptr) {
+
+                        // Reserve space in result:
+                        result.reserve(curr->m_GScore);
+
+                        // Recurse from end node to start node, inserting into a result buffer:
+                        result.emplace_back(Utils::ToND(curr->m_Index, _maze.Size()));
+
+                        if (auto item = curr->m_Parent) {
+
+                            while (const auto item_parent = item->m_Parent) {
+                                result.emplace_back(Utils::ToND(item->m_Index, _maze.Size()));
+
+                                auto oldItem = item;
+                                item = item_parent;
+                                oldItem.reset();
+                            }
+                        }
+
+                        // Reverse the result:
+                        std::reverse(result.begin(), result.end());
+                    }
+
+                    break;
                 }
             }
 
