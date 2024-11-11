@@ -51,68 +51,55 @@ namespace CHDR::Solvers {
             const auto s = Utils::To1D(_start, _size);
             const auto e = Utils::To1D(_end,   _size);
 
-            if (_maze.Contains(s) &&
-                _maze.Contains(e) &&
-                _maze.At(s).IsActive() &&
-                _maze.At(e).IsActive()
-            ) {
+            const auto count = _maze.Count();
 
-                if (s != e) {
+            // Create closed Set:
+            _capacity = std::max(_capacity, std::max(s, e));
+            ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
 
-                    const auto count = _maze.Count();
+            // Create open Set:
+            auto sequence = std::vector<DFSNode>(_capacity);
+            std::stack<DFSNode, std::vector<DFSNode>> open(std::move(sequence));
+            open.emplace(s, nullptr);
 
-                    // Create closed Set:
-                    _capacity = std::max(_capacity, std::max(s, e));
-                    ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
+            // Create buffer:
+            StableForwardBuf<DFSNode> buf;
 
-                    // Create open Set:
-                    auto sequence = std::vector<DFSNode>(_capacity);
-                    std::stack<DFSNode, std::vector<DFSNode>> open(std::move(sequence));
-                    open.emplace(s, nullptr);
+            // Main loop:
+            while (!open.empty()) { // SEARCH FOR SOLUTION...
 
-                    // Create buffer:
-                    StableForwardBuf<DFSNode> buf;
+                auto curr(std::move(open.top()));
+                open.pop();
 
-                    // Main loop:
-                    while (!open.empty()) { // SEARCH FOR SOLUTION...
+                if (curr.m_Index != e) {
 
-                        auto curr(std::move(open.top()));
-                        open.pop();
+                    if (closed.Capacity() < curr.m_Index) {
+                        closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
+                    }
+                    closed.Add(curr.m_Index);
 
-                        if (curr.m_Index != e) {
+                    for (const auto& neighbour : _maze.GetNeighbours(curr.m_Index)) {
 
-                            if (closed.Capacity() < curr.m_Index) {
-                                closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
+                        const auto& [n, nDistance] = neighbour;
+
+                        // Check if node is not already visited:
+                        if (!closed.Contains(n)) {
+
+                            if (closed.Capacity() < n) {
+                                closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                             }
-                            closed.Add(curr.m_Index);
+                            closed.Add(n);
 
-                            for (const auto& neighbour : _maze.GetNeighbours(curr.m_Index)) {
-
-                                const auto& [n, nDistance] = neighbour;
-
-                                // Check if node is not already visited:
-                                if (!closed.Contains(n)) {
-
-                                    if (closed.Capacity() < n) {
-                                        closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
-                                    }
-                                    closed.Add(n);
-
-                                    // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                    open.push({n, &buf.Emplace(std::move(curr)) });
-                                }
-                            }
-                        }
-                        else { // SOLUTION REACHED ...
-
-                            curr.template Backtrack<DFSNode>(result, _size, _capacity);
-
-                            break;
+                            // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
+                            open.push({n, &buf.Emplace(std::move(curr)) });
                         }
                     }
                 }
-                else {
-                    result.emplace_back(_end);
+                else { // SOLUTION REACHED ...
+
+                    curr.template Backtrack<DFSNode>(result, _size, _capacity);
+
+                    break;
                 }
             }
 

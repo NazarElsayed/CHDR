@@ -67,66 +67,53 @@ namespace CHDR::Solvers {
             const auto s = Utils::To1D(_start, _size);
             const auto e = Utils::To1D(_end,   _size);
 
-            if (_maze.Contains(s) &&
-                _maze.Contains(e) &&
-                _maze.At(s).IsActive() &&
-                _maze.At(e).IsActive()
-            ) {
+            const auto count = _maze.Count();
 
-                if (s != e) {
+            // Create closed set:
+            _capacity = _capacity == 0U ? std::max(_maze.Count() / 10U, static_cast<size_t>(1U)) : _capacity;
+            ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
 
-                    const auto count = _maze.Count();
+            // Create open set:
+            Heap<BSNode, 2U, typename BSNode::Max> open(_capacity / 4U);
+            open.Emplace({ s, _h(_start, _end), nullptr });
 
-                    // Create closed set:
-                    _capacity = _capacity == 0U ? std::max(_maze.Count() / 10U, static_cast<size_t>(1U)) : _capacity;
-                    ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
+            // Create buffer:
+            StableForwardBuf<BSNode, 1024U * 1024U> buf;
 
-                    // Create open set:
-                    Heap<BSNode, 2U, typename BSNode::Max> open(_capacity / 4U);
-                    open.Emplace({ s, _h(_start, _end), nullptr });
+            // Main loop:
+            while (!open.Empty()) {
 
-                    // Create buffer:
-                    StableForwardBuf<BSNode, 1024U * 1024U> buf;
+                auto curr = open.PopTop();
 
-                    // Main loop:
-                    while (!open.Empty()) {
+                if (curr.m_Index != e) { // SEARCH FOR SOLUTION...
 
-                        auto curr = open.PopTop();
+                    if (closed.Capacity() < curr.m_Index) {
+                        closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
+                    }
+                    closed.Add(curr.m_Index);
 
-                        if (curr.m_Index != e) { // SEARCH FOR SOLUTION...
+                    for (const auto& neighbour : _maze.GetNeighbours(curr.m_Index)) {
 
-                            if (closed.Capacity() < curr.m_Index) {
-                                closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
+                        const auto& [n, nDistance] = neighbour;
+
+                        // Check if node is not already visited:
+                        if (!closed.Contains(n)) {
+
+                            if (closed.Capacity() < n) {
+                                closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                             }
-                            closed.Add(curr.m_Index);
+                            closed.Add(n);
 
-                            for (const auto& neighbour : _maze.GetNeighbours(curr.m_Index)) {
-
-                                const auto& [n, nDistance] = neighbour;
-
-                                // Check if node is not already visited:
-                                if (!closed.Contains(n)) {
-
-                                    if (closed.Capacity() < n) {
-                                        closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
-                                    }
-                                    closed.Add(n);
-
-                                    // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                    open.Emplace({ n, _h(CHDR::Utils::ToND(n, _size), _end), &buf.Emplace(std::move(curr)) });
-                                }
-                            }
-                        }
-                        else { // SOLUTION REACHED ...
-
-                            curr.template Backtrack<BSNode>(result, _size, static_cast<size_t>(_h(_start, _end)));
-
-                            break;
+                            // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
+                            open.Emplace({ n, _h(CHDR::Utils::ToND(n, _size), _end), &buf.Emplace(std::move(curr)) });
                         }
                     }
                 }
-                else {
-                    result.push_back(_end);
+                else { // SOLUTION REACHED ...
+
+                    curr.template Backtrack<BSNode>(result, _size, static_cast<size_t>(_h(_start, _end)));
+
+                    break;
                 }
             }
 
