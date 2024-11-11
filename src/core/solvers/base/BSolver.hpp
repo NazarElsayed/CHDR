@@ -27,6 +27,14 @@ namespace CHDR::Solvers {
             const scalar_t& _weight,
             size_t _capacity
         ) const {
+
+            (void) _maze;
+            (void) _start;
+            (void) _end;
+            (void) _h;
+            (void) _weight;
+            (void) _capacity;
+
             throw std::runtime_error("Not implemented");
         }
 
@@ -39,6 +47,15 @@ namespace CHDR::Solvers {
             const scalar_t& _weight,
             size_t _capacity
         ) const {
+
+            (void) _maze;
+            (void) _start;
+            (void) _end;
+            (void) _size;
+            (void) _h;
+            (void) _weight;
+            (void) _capacity;
+
             throw std::runtime_error("Not implemented");
         }
 
