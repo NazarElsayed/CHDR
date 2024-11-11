@@ -88,23 +88,20 @@ namespace CHDR::Solvers {
                                 }
                                 closed.Add(curr.m_Index);
 
-                                for (const auto& neighbour: _maze.GetNeighbours(curr.m_Index)) {
+                                for (const auto& neighbour : _maze.GetNeighbours(curr.m_Index)) {
 
-                                    if (const auto& [nActive, nCoord] = neighbour; nActive) {
+                                    const auto& [n, nDistance] = neighbour;
 
-                                        const auto& n = Utils::To1D(nCoord, _size);
+                                    // Check if node is not already visited:
+                                    if (!closed.Contains(n)) {
 
-                                        // Check if node is not already visited:
-                                        if (!closed.Contains(n)) {
-
-                                            if (closed.Capacity() < n) {
-                                                closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
-                                            }
-                                            closed.Add(n);
-
-                                            // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                            open.push({n, &buf.Emplace(std::move(curr)) });
+                                        if (closed.Capacity() < n) {
+                                            closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                         }
+                                        closed.Add(n);
+
+                                        // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
+                                        open.push({n, &buf.Emplace(std::move(curr)) });
                                     }
                                 }
                             }
