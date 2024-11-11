@@ -125,25 +125,7 @@ namespace CHDR::Solvers {
                       open.Clear();   open.Trim();
                     closed.Clear(); closed.Trim();
 
-                    // Reserve space in result:
-                    result.reserve(curr.m_GScore);
-
-                    // Recurse from end node to start node, inserting into a result buffer:
-                    result.emplace_back(Utils::ToND(curr.m_Index, _size));
-
-                    if (curr.m_Parent != nullptr) {
-
-                        for (auto& item = curr.m_Parent; item->m_Parent != nullptr;) {
-                            result.emplace_back(Utils::ToND(item->m_Index, _size));
-
-                            auto oldItem = item;
-                            item = item->m_Parent;
-                            oldItem.reset();
-                        }
-                    }
-
-                    // Reverse the result:
-                    std::reverse(result.begin(), result.end());
+                    curr.template Backtrack<GSNode>(result, _size, curr.m_GScore);
 
                     break;
                 }

@@ -310,16 +310,7 @@ namespace CHDR::Solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    // Reserve space in result:
-                    result.reserve(curr.m_GScore);
-
-                    // Recurse from end node to start node, inserting into a result buffer:
-                    for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const JPSNode*>(temp->m_Parent)) {
-                        result.emplace_back(Utils::ToND(temp->m_Index, _maze.Size()));
-                    }
-
-                    // Reverse the result:
-                    std::reverse(result.begin(), result.end());
+                    curr.template Backtrack<JPSNode>(result, _maze.Size(), curr.m_GScore);
 
                     break;
                 }

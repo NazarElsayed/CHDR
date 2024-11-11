@@ -32,7 +32,7 @@ namespace CHDR::Solvers {
             _path.reserve(_capacity);
 
             // Recurse from end node to start node, inserting into a result buffer:
-            for (const auto* temp = &this; temp->m_Parent != nullptr; temp = static_cast<const TNode*>(temp->m_Parent)) {
+            for (const auto* temp = this; temp->m_Parent != nullptr; temp = static_cast<const TNode*>(temp->m_Parent)) {
                 _path.emplace_back(Utils::ToND(temp->m_Index, _size));
             }
 
