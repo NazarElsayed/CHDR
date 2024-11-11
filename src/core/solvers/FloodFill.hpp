@@ -21,7 +21,7 @@
 namespace CHDR::Solvers {
 
     template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t>
-    class [[maybe_unused]] FloodFill final : BSolver<weight_t, Kd, scalar_t, index_t> {
+    class [[maybe_unused]] FloodFill final {
 
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 

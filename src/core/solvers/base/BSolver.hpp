@@ -6,8 +6,8 @@
  * https://creativecommons.org/licenses/by-nc-nd/4.0/
  */
 
-#ifndef CHDR_ISOLVER_HPP
-#define CHDR_ISOLVER_HPP
+#ifndef CHDR_BSOLVER_HPP
+#define CHDR_BSOLVER_HPP
 
 #include "types/Heap.hpp"
 
@@ -19,9 +19,18 @@ namespace CHDR::Solvers {
     private:
         using coord_t = Coord<index_t, Kd>;
 
+        virtual std::vector<coord_t> Execute(
+            const Mazes::Grid<Kd, weight_t>& _maze,
+            const coord_t& _start,
+            const coord_t& _end,
+            scalar_t (*_h)(const coord_t&, const coord_t&),
+            const scalar_t& _weight,
+            size_t _capacity
+        ) const = 0;
+
     public:
 
-        auto Solve(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight = 1, size_t _capacity = 0U) const {
+        auto Solve(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&) = nullptr, const scalar_t& _weight = 1, size_t _capacity = 0U) const {
 
             std::vector<coord_t> result;
 
@@ -35,7 +44,12 @@ namespace CHDR::Solvers {
                 _maze.At(s).IsActive() &&
                 _maze.At(e).IsActive()
             ) {
-
+                if (s != e) {
+                    result = Execute(_maze, _start, _end, _h, _weight, _capacity);
+                }
+                else {
+                    result.emplace_back(_end);
+                }
             }
 
             return result;
@@ -44,4 +58,4 @@ namespace CHDR::Solvers {
 
 } // CHDR::Solvers
 
-#endif //CHDR_ISOLVER_HPP
+#endif //CHDR_BSOLVER_HPP

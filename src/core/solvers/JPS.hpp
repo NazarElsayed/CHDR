@@ -20,7 +20,7 @@
 namespace CHDR::Solvers {
 
     template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t>
-    class [[maybe_unused]] JPS final : BSolver<weight_t, Kd, scalar_t, index_t> {
+    class [[maybe_unused]] JPS final : public BSolver<weight_t, Kd, scalar_t, index_t> {
 
         static_assert(std::is_integral_v<scalar_t> || std::is_floating_point_v<scalar_t>, "scalar_t must be either an integral or floating point type");
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
@@ -255,90 +255,73 @@ namespace CHDR::Solvers {
             return result;
         }
 
-        auto SolveHeap(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight = 1, size_t _capacity = 0U) const {
+        std::vector<coord_t> Execute(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, size_t _capacity) const override {
 
             std::vector<coord_t> result;
 
-            const auto size  = _maze.Size();
+            const auto s = Utils::To1D(_start, _maze.Size());
+            const auto e = Utils::To1D(_end  , _maze.Size());
 
-            const auto s = Utils::To1D(_start, size);
-            const auto e = Utils::To1D(_end  , size);
+            // Create closed set:
+            _capacity = std::max(_capacity, std::max(s, e));
+            ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
 
-            if (_maze.Contains(s) &&
-                _maze.Contains(e) &&
-                _maze.At(s).IsActive() &&
-                _maze.At(e).IsActive()
-            ) {
+            // Create open set:
+            Heap<JPSNode, 2U, typename JPSNode::Max> open(_capacity / 8U);
+            open.Emplace({ s, {0, 0}, static_cast<scalar_t>(0), _h(_start, _end), nullptr });
 
-                if (s != e) {
+            // Create buffer:
+            StableForwardBuf<JPSNode> buf;
 
-                    const auto count = _maze.Count();
+            // Main loop:
+            while (!open.Empty()) {
 
-                    // Create closed set:
-                    _capacity = std::max(_capacity, std::max(s, e));
-                    ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
+                auto curr = open.PopTop();
 
-                    // Create open set:
-                    Heap<JPSNode, 2U, typename JPSNode::Max> open(_capacity / 8U);
-                    open.Emplace({ s, {0, 0}, static_cast<scalar_t>(0), _h(_start, _end), nullptr });
+                if (curr.m_Index != e) { // SEARCH FOR SOLUTION...
 
-                    // Create buffer:
-                    StableForwardBuf<JPSNode> buf;
+                    if (closed.Capacity() < curr.m_Index) {
+                        closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), _maze.Count()));
+                    }
+                    closed.Add(curr.m_Index);
 
-                    // Main loop:
-                    while (!open.Empty()) {
+                    auto coord = Utils::ToND(curr.m_Index, _maze.Size());
+                    auto successors = FindJumpPoints(_maze, coord, curr.m_Direction, _end);
 
-                        auto curr = open.PopTop();
+                    for (const auto& successor : successors) {
 
-                        if (curr.m_Index != e) { // SEARCH FOR SOLUTION...
+                        const auto n = Utils::To1D(successor, _maze.Size());
+                        if (!closed.Contains(n)) {
 
-                            if (closed.Capacity() < curr.m_Index) {
-                                closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
-                            }
-                            closed.Add(curr.m_Index);
-
-                            auto coord = Utils::ToND(curr.m_Index, size);
-                            auto successors = FindJumpPoints(_maze, coord, curr.m_Direction, _end);
-
-                            for (const auto& successor : successors) {
-
-                                const auto n = Utils::To1D(successor, size);
-                                if (!closed.Contains(n)) {
-
-                                    // Check if node is not already visited:
-                                    if (closed.Capacity() < n) {
-                                        closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
-                                    }
-
-                                    closed.Add(n);
-
-                                    const std::array<int8_t, 2> direction { Sign(static_cast<int>(successor[0]) - static_cast<int>(coord[0])) ,
-                                                                            Sign(static_cast<int>(successor[1]) - static_cast<int>(coord[1])) };
-
-                                    // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                    open.Emplace({ n, direction, curr.m_GScore + static_cast<scalar_t>(1), _h(successor, _end) * _weight, &buf.Emplace(std::move(curr)) });
-                                }
-                            }
-                        }
-                        else { // SOLUTION REACHED ...
-
-                            // Reserve space in result:
-                            result.reserve(curr.m_GScore);
-
-                            // Recurse from end node to start node, inserting into a result buffer:
-                            for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const JPSNode*>(temp->m_Parent)) {
-                                result.emplace_back(Utils::ToND(temp->m_Index, _maze.Size()));
+                            // Check if node is not already visited:
+                            if (closed.Capacity() < n) {
+                                closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), _maze.Count()));
                             }
 
-                            // Reverse the result:
-                            std::reverse(result.begin(), result.end());
+                            closed.Add(n);
 
-                            break;
+                            const std::array<int8_t, 2> direction { Sign(static_cast<int>(successor[0]) - static_cast<int>(coord[0])) ,
+                                                                    Sign(static_cast<int>(successor[1]) - static_cast<int>(coord[1])) };
+
+                            // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
+                            open.Emplace({ n, direction, curr.m_GScore + static_cast<scalar_t>(1), _h(successor, _end) * _weight, &buf.Emplace(std::move(curr)) });
                         }
                     }
                 }
-                else {
-                    result.emplace_back(_end);
+                else { // SOLUTION REACHED ...
+
+                    // Reserve space in result:
+                    result.reserve(curr.m_GScore);
+
+                    // Recurse from end node to start node, inserting into a result buffer:
+                    for (const auto* temp = &curr; temp->m_Parent != nullptr; temp = static_cast<const JPSNode*>(temp->m_Parent)) {
+                        result.emplace_back(Utils::ToND(temp->m_Index, _maze.Size()));
+                    }
+
+                    // Reverse the result:
+                    std::reverse(result.begin(), result.end());
+
+                    break;
                 }
             }
 
@@ -432,12 +415,12 @@ namespace CHDR::Solvers {
 
     public:
 
-        [[maybe_unused]]
+        /*[[maybe_unused]]
         auto Solve(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight = 1, size_t _capacity = 0U) const {
             /*
              * Determine whether to solve using a linear search or constant-time
              * method based on which is more efficient given the maze's size.
-             */
+             #1#
 
             std::vector<coord_t> result;
 
@@ -458,12 +441,12 @@ namespace CHDR::Solvers {
             else {
                 result = SolveHeap(_maze, _start, _end, _h, _weight, _capacity);
             }
-            */
+            #1#
 
             result = SolveHeap(_maze, _start, _end, _h, _weight, _capacity);
 
             return result;
-        }
+        }*/
     };
 
 } // CHDR::Solvers
