@@ -19,7 +19,7 @@ namespace CHDR::Solvers {
     template<typename index_t>
     struct ManagedNode : public BNode<index_t> {
 
-        std::shared_ptr<ManagedNode<index_t>> m_Parent;
+        std::shared_ptr<const ManagedNode<index_t>> m_Parent;
 
         /**
          * @brief Constructs an uninitialized ManagedNode.
@@ -35,7 +35,7 @@ namespace CHDR::Solvers {
         [[nodiscard]] constexpr ManagedNode(const index_t& _index, ManagedNode<index_t>&& _parent) :
             BNode<index_t>(_index)
         {
-            m_Parent = std::make_shared<ManagedNode>(std::move(_parent));
+            m_Parent = std::make_shared<const ManagedNode>(std::move(_parent));
         }
 
         ~ManagedNode() { // NOLINT(*-use-equals-default)
@@ -47,7 +47,7 @@ namespace CHDR::Solvers {
             Expunge_Recursive(m_Parent);
         }
 
-        void Expunge_Recursive(std::shared_ptr<ManagedNode>& _node) {
+        void Expunge_Recursive(std::shared_ptr<const ManagedNode>& _node) {
             if (_node && _node.unique()) {
                 _node = std::move(_node->m_Parent);
                 Expunge_Recursive(_node);
