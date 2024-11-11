@@ -68,50 +68,47 @@ namespace CHDR::Solvers {
             // Main loop:
             while (!open.empty()) { // SEARCH FOR SOLUTION...
 
-                for (size_t i = 0U; i < open.size(); ++i) {
+                auto curr(std::move(open.top()));
+                open.pop();
 
-                    auto curr(std::move(open.top()));
-                    open.pop();
+                if (curr.m_Index != e) {
 
-                    if (curr.m_Index != e) {
+                    if (closed.Capacity() < curr.m_Index) {
+                        closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
+                    }
+                    closed.Add(curr.m_Index);
 
-                        if (closed.Capacity() < curr.m_Index) {
-                            closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
-                        }
-                        closed.Add(curr.m_Index);
+                    for (const auto& neighbour: _maze.GetNeighbours(curr.m_Index)) {
 
-                        for (const auto& neighbour: _maze.GetNeighbours(curr.m_Index)) {
+                        if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-                            if (const auto& [nActive, nCoord] = neighbour; nActive) {
+                            const auto& [n, nDistance] = neighbour;
 
-                                const auto& [n, nDistance] = neighbour;
+                            // Check if node is not already visited:
+                            if (!closed.Contains(n)) {
 
-                                // Check if node is not already visited:
-                                if (!closed.Contains(n)) {
-
-                                    if (closed.Capacity() < n) {
-                                        closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
-                                    }
-                                    closed.Add(n);
-
-                                    // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                    open.emplace(n, std::move(curr));
+                                if (closed.Capacity() < n) {
+                                    closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                 }
+                                closed.Add(n);
+
+                                // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
+                                open.emplace(n, std::move(curr));
                             }
                         }
                     }
-                    else { // SOLUTION REACHED ...
+                }
+                else { // SOLUTION REACHED ...
 
-                        // Free data which is no longer relevant:
-                        std::stack<GDFSNode, std::vector<GDFSNode>> empty;
-                        std::swap(open, empty);
+                    // Free data which is no longer relevant:
+                    std::stack<GDFSNode, std::vector<GDFSNode>> empty;
+                    std::swap(open, empty);
 
-                        closed.Clear(); closed.Trim();
+                    closed.Clear(); closed.Trim();
 
-                        curr.template Backtrack<GDFSNode>(result, _size, _capacity);
+                    curr.template Backtrack<GDFSNode>(result, _size, _capacity);
 
-                        break;
-                    }
+                    break;
                 }
             }
 
@@ -140,50 +137,47 @@ namespace CHDR::Solvers {
             // Main loop:
             while (!open.empty()) { // SEARCH FOR SOLUTION...
 
-                for (size_t i = 0U; i < open.size(); ++i) {
+                auto curr(std::move(open.top()));
+                open.pop();
 
-                    auto curr(std::move(open.top()));
-                    open.pop();
+                if (curr.m_Index != e) {
 
-                    if (curr.m_Index != e) {
+                    if (closed.Capacity() < curr.m_Index) {
+                        closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
+                    }
+                    closed.Add(curr.m_Index);
 
-                        if (closed.Capacity() < curr.m_Index) {
-                            closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
-                        }
-                        closed.Add(curr.m_Index);
+                    for (const auto& neighbour: _maze.GetNeighbours(curr.m_Index)) {
 
-                        for (const auto& neighbour: _maze.GetNeighbours(curr.m_Index)) {
+                        if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-                            if (const auto& [nActive, nCoord] = neighbour; nActive) {
+                            const auto n = Utils::To1D(nCoord, _maze.Size());
 
-                                const auto n = Utils::To1D(nCoord, _maze.Size());
+                            // Check if node is not already visited:
+                            if (!closed.Contains(n)) {
 
-                                // Check if node is not already visited:
-                                if (!closed.Contains(n)) {
-
-                                    if (closed.Capacity() < n) {
-                                        closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
-                                    }
-                                    closed.Add(n);
-
-                                    // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                    open.emplace(n, std::move(curr));
+                                if (closed.Capacity() < n) {
+                                    closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                 }
+                                closed.Add(n);
+
+                                // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
+                                open.emplace(n, std::move(curr));
                             }
                         }
                     }
-                    else { // SOLUTION REACHED ...
+                }
+                else { // SOLUTION REACHED ...
 
-                        // Free data which is no longer relevant:
-                        std::stack<GDFSNode, std::vector<GDFSNode>> empty;
-                        std::swap(open, empty);
+                    // Free data which is no longer relevant:
+                    std::stack<GDFSNode, std::vector<GDFSNode>> empty;
+                    std::swap(open, empty);
 
-                        closed.Clear(); closed.Trim();
+                    closed.Clear(); closed.Trim();
 
-                        curr.template Backtrack<GDFSNode>(result, _maze.Size(), _capacity);
+                    curr.template Backtrack<GDFSNode>(result, _maze.Size(), _capacity);
 
-                        break;
-                    }
+                    break;
                 }
             }
 
