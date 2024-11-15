@@ -28,7 +28,7 @@
 namespace CHDR::Mazes {
 
     template<typename index_t, typename scalar_t>
-    class Graph : public IGraph<index_t, scalar_t> {
+    class Graph final : public IGraph<index_t, scalar_t> {
 
     private:
 
@@ -39,7 +39,6 @@ namespace CHDR::Mazes {
             constexpr size_t operator () (const index_t& _index) const {
                 return static_cast<index_t>(_index);
             }
-
         };
 
         struct IndexEqual {
@@ -47,7 +46,6 @@ namespace CHDR::Mazes {
             constexpr bool operator () (const index_t& _a, const index_t& _b) const {
                 return _a == _b;
             }
-
         };
 
         struct EdgeHash {
@@ -277,10 +275,7 @@ namespace CHDR::Mazes {
 
                     auto& [node, neighbours] = entry;
 
-                    if (m_Entries.size() <= 2U) {
-                        break;
-                    }
-                    else {
+                    if (m_Entries.size() > 2U) {
 
                         if (neighbours.size() == 2U) {
 
@@ -315,6 +310,9 @@ namespace CHDR::Mazes {
                             // Remove the current node from the graph.
                             nodesToRemove.emplace_back(node);
                         }
+                    }
+                    else {
+                        break;
                     }
                 }
                 for (const auto& node : nodesToRemove) {

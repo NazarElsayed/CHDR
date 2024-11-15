@@ -9,14 +9,13 @@
 #ifndef CHDR_BSOLVER_HPP
 #define CHDR_BSOLVER_HPP
 
-#include "types/Heap.hpp"
-
 namespace CHDR::Solvers {
 
     template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t>
     class BSolver {
 
     private:
+
         using coord_t = Coord<index_t, Kd>;
 
         virtual std::vector<coord_t> Execute(
@@ -69,7 +68,7 @@ namespace CHDR::Solvers {
             const coord_t& _end,
             scalar_t (*_h)(const coord_t&, const coord_t&) = nullptr,
             const scalar_t& _weight = 1,
-            size_t _capacity = 0U
+            const size_t _capacity = 0U
         ) const {
 
             std::vector<coord_t> result;

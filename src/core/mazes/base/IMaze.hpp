@@ -20,6 +20,8 @@ namespace CHDR::Mazes {
 
     public:
 
+        virtual ~IMaze() = default;
+
         [[nodiscard]] virtual
 #if __cplusplus >= 202002L
         constexpr

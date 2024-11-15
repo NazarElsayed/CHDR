@@ -25,7 +25,7 @@ namespace CHDR::Mazes {
      * @tparam Kd Dimensionality of the grid.
      */
     template <const size_t Kd, typename T = uint32_t>
-    class Grid : public IMaze<WeightedNode<T>, size_t> {
+    class Grid final : public IMaze<WeightedNode<T>, size_t> {
 
         using coord_t = Coord<size_t, Kd>;
 
@@ -136,7 +136,7 @@ namespace CHDR::Mazes {
 
                         if (nCoord[j] < 0U || nCoord[j] > m_Size[j]) {
                             oob = true;
-                            //break;
+                            break;
                         }
                     }
 

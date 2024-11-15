@@ -9,10 +9,6 @@
 #ifndef CHDR_BNODE_HPP
 #define CHDR_BNODE_HPP
 
-#include "../../utils/Intrinsics.hpp"
-
-#include <memory>
-
 namespace CHDR::Solvers {
 
     template<typename index_t>

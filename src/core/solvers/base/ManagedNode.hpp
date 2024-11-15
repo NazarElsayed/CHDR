@@ -9,7 +9,6 @@
 #ifndef CHDR_MANAGEDNODE_HPP
 #define CHDR_MANAGEDNODE_HPP
 
-#include "../../utils/Intrinsics.hpp"
 #include "BNode.hpp"
 
 #include <memory>
