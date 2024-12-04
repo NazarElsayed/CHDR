@@ -98,10 +98,28 @@ namespace CHDR {
             m_Data.push_back({}); // Add super element.
         }
 
-        [[nodiscard]] constexpr bool    Empty() const { return Size() == 0U;       }
-        [[nodiscard]] constexpr size_t   Size() const { return m_Data.size() - 1U; }
-        [[nodiscard]] constexpr const T&  Top() const { return *begin();           }
-        [[nodiscard]] constexpr const T& Back() const { return *end();             }
+        [[nodiscard]] constexpr bool    Empty() const { return Size() == 0U;              }
+        [[nodiscard]] constexpr size_t   Size() const { return m_Data.size() - 1U;        }
+
+        [[nodiscard]] constexpr const T& Top() const {
+
+            if constexpr (std::is_pointer_v<T>) {
+                return static_cast<T>(begin().base());
+            }
+            else {
+                return *begin();
+            }
+        }
+
+        [[nodiscard]] constexpr const T& Back() const {
+
+            if constexpr (std::is_pointer_v<T>) {
+                return static_cast<T>(end().base());
+            }
+            else {
+                return *end();
+            }
+        }
 
         [[maybe_unused]] constexpr void Add(const T& _item) {
             m_Data.push_back(_item);
@@ -155,7 +173,7 @@ namespace CHDR {
             T result(std::move(Top()));
 
             if (!Empty()) {
-                if (Size() > 1U) {
+                if (Size() > 0U) {
                     m_Data[1U] = std::move(m_Data.back());
                 }
                 m_Data.pop_back();
@@ -201,6 +219,7 @@ namespace CHDR {
 #ifndef HEAP_SUPPRESS_EXCEPTION_WARNING
         [[deprecated("This function does not perform bounds checking in 'runtime' compiled builds.\nSuppress this warning by defining \"HEAP_SUPPRESS_UNSAFE_WARNING\".")]]
 #endif
+
         [[maybe_unused]] const T& operator[](const size_t& _index) const {
 
 #ifndef NDEBUG

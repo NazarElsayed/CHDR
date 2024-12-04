@@ -28,7 +28,10 @@ namespace CHDR::Solvers {
 
     private:
 
+        struct ESMGSNode;
+
         using coord_t = Coord<index_t, Kd>;
+        using  heap_t = Heap<std::shared_ptr<ESMGSNode>, 2U, typename ESMGSNode::Min>;
 
         struct ESMGSNode final : std::enable_shared_from_this<ESMGSNode> {
 
@@ -174,9 +177,18 @@ namespace CHDR::Solvers {
                         _a->m_FScore > _b->m_FScore;
                 }
             };
+
+            struct Min {
+
+                [[nodiscard]] constexpr bool operator () (const std::shared_ptr<ESMGSNode>& _a, const std::shared_ptr<ESMGSNode>& _b) const {
+                    return _a->m_FScore == _b->m_FScore ?
+                        _a->m_GScore < _b->m_GScore :
+                        _a->m_FScore < _b->m_FScore;
+                }
+            };
         };
 
-        void cull_worst_leaf(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, const size_t& _memoryLimit, Heap<std::shared_ptr<ESMGSNode>, 2U, typename ESMGSNode::Max>& _open) const {
+        void cull_worst_leaf(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, const size_t& _memoryLimit, heap_t& _open) const {
 
             const auto w = safe_culling_heuristic(_open);
 
@@ -209,7 +221,7 @@ namespace CHDR::Solvers {
             }
         }
 
-        [[nodiscard]] auto safe_culling_heuristic(Heap<std::shared_ptr<ESMGSNode>, 2U, typename ESMGSNode::Max>& _open) const {
+        [[nodiscard]] auto safe_culling_heuristic(heap_t& _open) const {
 
             auto w = _open.Back(); // Worst leaf according to c(n) in _open
 
@@ -251,7 +263,7 @@ namespace CHDR::Solvers {
             const auto e = Utils::To1D(_end,   _maze.Size());
 
             // Create Open Set:
-            Heap<std::shared_ptr<ESMGSNode>, 2U, typename ESMGSNode::Max> open;
+            heap_t open;
             open.Emplace(ESMGSNode::CreateShared(
                 0U,                         // Depth
                 s,                          // Coordinate
@@ -263,6 +275,9 @@ namespace CHDR::Solvers {
             while (!open.Empty()) {
 
                 auto curr = open.PopTop(); // Node with smallest f-cost in O
+
+//                Debug::Log(std::to_string(curr->m_Index ));
+//                Debug::Log(std::to_string(curr->m_FScore));
 
                 if (curr->m_Index != e) { // SEARCH FOR SOLUTION...
 
