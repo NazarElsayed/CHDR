@@ -40,7 +40,6 @@ namespace test::generator::utils {
 
             IVDEP
             VECTOR_ALWAYS
-            #pragma unroll
             for (size_t i = 0U; i < Kd; ++i) {
 
                 coord_t dir{};
