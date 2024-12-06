@@ -13,7 +13,7 @@
 
 namespace chdr {
 
-    template<typename T, size_t Kd = 2U, typename compare = std::less<T>>
+    template<typename T, typename compare = std::less<T>, size_t Kd = 2U>
     class heap {
 
         static_assert(Kd >= 2, "Template parameter D must be greater than or equal to 2.");
@@ -101,7 +101,15 @@ namespace chdr {
         [[nodiscard]] constexpr bool    empty() const { return size() == 0U;       }
         [[nodiscard]] constexpr size_t   size() const { return m_data.size() - 1U; }
 
+        [[nodiscard]] constexpr const T& front() { return top(); }
+
         [[nodiscard]] constexpr const T& top() const {
+
+#ifndef NDEBUG
+            if (empty()) {
+                throw std::underflow_error("Heap is empty");
+            }
+#endif
 
             if constexpr (std::is_pointer_v<T>) {
                 return static_cast<T>(begin().base());
@@ -113,6 +121,12 @@ namespace chdr {
 
         [[nodiscard]] constexpr const T& back() const {
 
+#ifndef NDEBUG
+            if (empty()) {
+                throw std::underflow_error("Heap is empty");
+            }
+#endif
+
             if constexpr (std::is_pointer_v<T>) {
                 return static_cast<T>(end().base());
             }
@@ -121,12 +135,12 @@ namespace chdr {
             }
         }
 
-        [[maybe_unused]] constexpr void add(const T& _item) {
+        [[maybe_unused]] constexpr void push(const T& _item) {
             m_data.push_back(_item);
             sort_up(m_data.back());
         }
 
-        [[maybe_unused]] constexpr void add(T&& _item) {
+        [[maybe_unused]] constexpr void push(T&& _item) {
             m_data.push_back(std::move(_item));
             sort_up(m_data.back());
         }
@@ -137,6 +151,12 @@ namespace chdr {
         }
 
         [[maybe_unused]] constexpr void remove(const T& _item) {
+
+#ifndef NDEBUG
+            if (empty()) {
+                throw std::underflow_error("Heap is empty");
+            }
+#endif
 
             auto i = index_of(_item);
             if (i < size()) {
@@ -168,9 +188,7 @@ namespace chdr {
             }
         }
 
-        [[maybe_unused]] constexpr T pop_top() {
-
-            T result(std::move(top()));
+        [[maybe_unused]] constexpr void pop() {
 
             if (!empty()) {
                 if (size() > 0U) {
@@ -178,23 +196,27 @@ namespace chdr {
                 }
                 m_data.pop_back();
             }
+#ifndef NDEBUG
+            else {
+                throw std::underflow_error("Heap is empty");
+            }
+#endif
             sort_down(m_data[1U]);
-
-            return result;
         }
 
-        [[maybe_unused]] constexpr T pop_back() {
-
-            T result(std::move(back()));
+        [[maybe_unused]] constexpr void pop_back() {
 
             if (!empty()) {
                 m_data.pop_back();
             }
-
-            return result;
+#ifndef NDEBUG
+            else {
+                throw std::underflow_error("Heap is empty");
+            }
+#endif
         }
 
-        [[maybe_unused]] constexpr void update(const T& _item) {
+        [[maybe_unused]] constexpr void reheapify(const T& _item) {
             sort_up(m_data[index_of(_item)]);
         }
 
@@ -212,7 +234,7 @@ namespace chdr {
             m_data.erase(begin(), end());
         }
 
-        [[maybe_unused]] constexpr void trim() {
+        [[maybe_unused]] constexpr void shrink_to_fit() {
             m_data.shrink_to_fit();
         }
 

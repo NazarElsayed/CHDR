@@ -84,13 +84,14 @@ namespace chdr::solvers {
             existence_set closed({s }, _capacity);
 
             // Create open set:
-            heap<gs_node, 2U, typename gs_node::Max> open;
+            heap<gs_node, typename gs_node::Max> open;
             open.emplace(gs_node { s, static_cast<scalar_t>(0), _h(_start, _end) });
 
             // Main loop:
             while (!open.empty()) {
 
-                auto curr = open.pop_top();
+                auto curr(std::move(open.top()));
+                open.pop();
 
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
@@ -123,9 +124,9 @@ namespace chdr::solvers {
 
                     // Free data which is no longer relevant:
                       open.clear();
-                      open.trim();
+                      open.shrink_to_fit();
                     closed.clear();
-                    closed.trim();
+                    closed.shrink_to_fit();
 
                     curr.template backtrack<gs_node>(result, _size, curr.m_gScore);
 
@@ -151,13 +152,14 @@ namespace chdr::solvers {
             existence_set closed({s }, _capacity);
 
             // Create open set:
-            heap<gs_node, 2U, typename gs_node::Max> open;
+            heap<gs_node, typename gs_node::Max> open;
             open.emplace(gs_node { s, static_cast<scalar_t>(0), _h(_start, _end) });
 
             // Main loop:
             while (!open.empty()) {
 
-                auto curr = open.pop_top();
+                auto curr(std::move(open.top()));
+                open.pop();
 
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
@@ -190,9 +192,9 @@ namespace chdr::solvers {
 
                     // Free data which is no longer relevant:
                       open.clear();
-                      open.trim();
+                      open.shrink_to_fit();
                     closed.clear();
-                    closed.trim();
+                    closed.shrink_to_fit();
 
                     curr.template backtrack<gs_node>(result, _maze.size(), curr.m_gScore);
 

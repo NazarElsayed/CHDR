@@ -185,7 +185,7 @@ namespace chdr::solvers {
             };
         };
 
-        using heap_t = heap<std::shared_ptr<esmg_node>, 2U, typename esmg_node::min>;
+        using heap_t = heap<std::shared_ptr<esmg_node>, typename esmg_node::min>;
 
         void cull_worst_leaf(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, const size_t& _memoryLimit, heap_t& _open) const {
 
@@ -273,7 +273,8 @@ namespace chdr::solvers {
             // Main loop:
             while (!open.empty()) {
 
-                auto curr = open.pop_top(); // Node with smallest f-cost in O
+                auto curr(std::move(open.top()));
+                open.pop(); // Node with smallest f-cost in O
 
                 debug::log(std::to_string(curr->m_index ));
                 debug::log(std::to_string(curr->m_fScore));
@@ -315,7 +316,7 @@ namespace chdr::solvers {
                 else { // SOLUTION REACHED ...
 
                     // Free data which is no longer relevant:
-                    open.clear(); open.trim();
+                    open.clear(); open.shrink_to_fit();
 
                     if (curr != nullptr) {
 

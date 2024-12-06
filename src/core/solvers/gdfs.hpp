@@ -105,7 +105,7 @@ namespace chdr::solvers {
                     std::swap(open, empty);
 
                     closed.clear();
-                    closed.trim();
+                    closed.shrink_to_fit();
 
                     curr.template backtrack<gdfs_node>(result, _size, _capacity);
 
@@ -175,7 +175,7 @@ namespace chdr::solvers {
                     std::swap(open, empty);
 
                     closed.clear();
-                    closed.trim();
+                    closed.shrink_to_fit();
 
                     curr.template backtrack<gdfs_node>(result, _maze.size(), _capacity);
 

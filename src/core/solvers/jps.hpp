@@ -264,10 +264,10 @@ namespace chdr::solvers {
 
             // Create closed set:
             _capacity = std::max(_capacity, std::max(s, e));
-            existence_set<low_memory_usage> closed({s }, _capacity);
+            existence_set<low_memory_usage> closed({ s }, _capacity);
 
             // Create open set:
-            heap<jps_node, 2U, typename jps_node::Max> open(_capacity / 8U);
+            heap<jps_node, typename jps_node::Max> open(_capacity / 8U);
             open.emplace({ s, {0, 0}, static_cast<scalar_t>(0), _h(_start, _end), nullptr });
 
             // Create buffer:
@@ -276,7 +276,8 @@ namespace chdr::solvers {
             // Main loop:
             while (!open.empty()) {
 
-                auto curr = open.pop_top();
+                auto curr(std::move(open.top()));
+                open.pop();
 
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 

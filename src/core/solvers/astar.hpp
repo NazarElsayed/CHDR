@@ -83,7 +83,7 @@ namespace chdr::solvers {
             existence_set<low_memory_usage> closed({s }, _capacity);
 
             // Create open set:
-            heap<as_node, 2U, typename as_node::max> open(_capacity / 4U);
+            heap<as_node, typename as_node::max> open(_capacity / 4U);
             open.emplace({s, static_cast<scalar_t>(0), _h(_start, _end), nullptr });
 
             // Create buffer:
@@ -92,7 +92,8 @@ namespace chdr::solvers {
             // Main loop:
             while (!open.empty()) {
 
-                auto curr = open.pop_top();
+                auto curr(std::move(open.top()));
+                open.pop();
 
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
@@ -207,7 +208,7 @@ namespace chdr::solvers {
             existence_set<low_memory_usage> closed({s }, _capacity);
 
             // Create open set:
-            heap<as_node, 2U, typename as_node::max> open(_capacity / 8U);
+            heap<as_node, typename as_node::max> open(_capacity / 8U);
             open.emplace({  s, static_cast<scalar_t>(0), _h(_start, _end), nullptr });
 
             // Create buffer:
@@ -215,7 +216,9 @@ namespace chdr::solvers {
 
             // Main loop:
             while (!open.empty()) {
-                auto curr = open.pop_top();
+
+                auto curr(std::move(open.top()));
+                open.pop();
 
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 

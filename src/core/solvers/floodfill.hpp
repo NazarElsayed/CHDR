@@ -60,16 +60,16 @@ namespace chdr::solvers {
 
                         for (size_t i = 0U; i < open.size(); ++i) {
 
-                            const auto current(open.front());
+                            const auto curr(std::move(open.front()));
                             open.pop();
 
-                            if (current == e) {
+                            if (curr == e) {
                                 result = true;
 
                                 goto NestedBreak;
                             }
 
-                            for (const auto& neighbour : _maze.get_neighbours(current)) {
+                            for (const auto& neighbour : _maze.get_neighbours(curr)) {
 
                                 if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
@@ -128,7 +128,7 @@ NestedBreak:
 
                         for (size_t i = 0U; i < open.size(); ++i) {
 
-                            const auto current(open.front());
+                            const auto current(std::move(open.front()));
                             open.pop();
 
                             if (current == e) {
