@@ -16,15 +16,15 @@ namespace chdr::solvers {
 
     private:
 
-        using coord_t = coord_t<index_t, Kd>;
+        using coord_t = coord<index_t, Kd>;
 
         virtual std::vector<coord_t> execute(
-            const mazes::Grid<Kd, weight_t>& _maze,
+            const mazes::grid<Kd, weight_t>& _maze,
             const coord_t& _start,
             const coord_t& _end,
             scalar_t (*_h)(const coord_t&, const coord_t&),
             const scalar_t& _weight,
-            size_t _capacity
+            const size_t _capacity
         ) const {
 
             (void)_maze;
@@ -44,7 +44,7 @@ namespace chdr::solvers {
             const coord_t& _size,
             scalar_t (*_h)(const coord_t&, const coord_t&),
             const scalar_t& _weight,
-            size_t _capacity
+            const size_t _capacity
         ) const {
 
             (void)_maze;
@@ -63,7 +63,7 @@ namespace chdr::solvers {
         virtual ~bsolver() = default;
 
         auto solve(
-            const mazes::Grid<Kd, weight_t>& _maze,
+            const mazes::grid<Kd, weight_t>& _maze,
             const coord_t& _start,
             const coord_t& _end,
             scalar_t (*_h)(const coord_t&, const coord_t&) = nullptr,
@@ -73,15 +73,15 @@ namespace chdr::solvers {
 
             std::vector<coord_t> result;
 
-            const auto size  = _maze.Size();
+            const auto size  = _maze.size();
 
-            const auto s = Utils::To1D(_start, size);
-            const auto e = Utils::To1D(_end  , size);
+            const auto s = utils::to_1d(_start, size);
+            const auto e = utils::to_1d(_end  , size);
 
-            if (_maze.Contains(s) &&
-                _maze.Contains(e) &&
-                _maze.At(s).IsActive() &&
-                _maze.At(e).IsActive()
+            if (_maze.contains(s) &&
+                _maze.contains(e) &&
+                _maze.at(s).is_active() &&
+                _maze.at(e).is_active()
             ) {
                 if (s != e) {
                     result = execute(_maze, _start, _end, _h, _weight, _capacity);
@@ -101,18 +101,18 @@ namespace chdr::solvers {
             const coord_t& _size,
             scalar_t (*_h)(const coord_t&, const coord_t&) = nullptr,
             const scalar_t& _weight = 1,
-            size_t _capacity = 0U
+            const size_t _capacity = 0U
         ) const {
 
             std::vector<coord_t> result;
 
-            const auto s = Utils::To1D(_start, _size);
-            const auto e = Utils::To1D(_end  , _size);
+            const auto s = utils::to_1d(_start, _size);
+            const auto e = utils::to_1d(_end  , _size);
 
             if (_maze.contains(s) &&
                 _maze.contains(e) &&
-                    _maze.at(s).IsActive() &&
-                _maze.at(e).IsActive()
+                    _maze.at(s).is_active() &&
+                _maze.at(e).is_active()
             ) {
                 if (s != e) {
                     result = execute(_maze, _start, _end, _size, _h, _weight, _capacity);
@@ -126,6 +126,6 @@ namespace chdr::solvers {
         }
     };
 
-} // CHDR::Solvers
+} // chdr::solvers
 
 #endif //CHDR_BSOLVER_HPP

@@ -13,11 +13,11 @@
 
 #include "base/bsolver.hpp"
 #include "mazes/graph.hpp"
-#include "mazes/Grid.hpp"
-#include "solvers/base/UnmanagedNode.hpp"
+#include "mazes/grid.hpp"
+#include "solvers/base/unmanaged_node.hpp"
 #include "types/existence_set.hpp"
-#include "types/StableForwardBuf.hpp"
-#include "utils/Utils.hpp"
+#include "types/stable_forward_buf.hpp"
+#include "utils/utils.hpp"
 
 namespace chdr::solvers {
 
@@ -28,18 +28,18 @@ namespace chdr::solvers {
 
     private:
 
-        using coord_t = coord_t<index_t, Kd>;
+        using coord_t = coord<index_t, Kd>;
 
-        struct bfs_node final : public UnmanagedNode<index_t> {
+        struct bfs_node final : unmanaged_node<index_t> {
 
             /**
              * @brief Constructs an uninitialized BFSNode.
              *
              * This constructor creates an BFSNode with uninitialized members.
              */
-            bfs_node() : UnmanagedNode<index_t>() {}
+            bfs_node() : unmanaged_node<index_t>() {}
 
-            [[nodiscard]] constexpr bfs_node(const index_t& _index, const UnmanagedNode<index_t>* RESTRICT const _parent) : UnmanagedNode<index_t>(_index, _parent) {}
+            [[nodiscard]] constexpr bfs_node(const index_t& _index, const unmanaged_node<index_t>* RESTRICT const _parent) : unmanaged_node<index_t>(_index, _parent) {}
         };
 
     public:
@@ -49,10 +49,10 @@ namespace chdr::solvers {
 
             std::vector<coord_t> result;
 
-            const auto s = Utils::To1D(_start, _size);
-            const auto e = Utils::To1D(_end,   _size);
+            const auto s = utils::to_1d(_start, _size);
+            const auto e = utils::to_1d(_end,   _size);
 
-            const auto count = _maze.Count();
+            const auto count = _maze.count();
 
             // Create closed set:
             _capacity = std::max(_capacity, std::max(s, e));
@@ -63,7 +63,7 @@ namespace chdr::solvers {
             open.emplace(s, nullptr);
 
             // Create buffer:
-            StableForwardBuf<bfs_node> buf;
+            stable_forward_buf<bfs_node> buf;
 
             // Main loop:
             while (!open.empty()) { // SEARCH FOR SOLUTION...
@@ -78,7 +78,7 @@ namespace chdr::solvers {
                     }
                     closed.add(curr.m_index);
 
-                    for (const auto& neighbour : _maze.GetNeighbours(curr.m_index)) {
+                    for (const auto& neighbour : _maze.get_neighbours(curr.m_index)) {
 
                         const auto& [n, nDistance] = neighbour;
 
@@ -91,13 +91,13 @@ namespace chdr::solvers {
                             closed.add(n);
 
                             // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                            open.push({ n, &buf.Emplace(std::move(curr)) });
+                            open.push({ n, &buf.emplace(std::move(curr)) });
                         }
                     }
                 }
                 else { // SOLUTION REACHED ...
 
-                    curr.template Backtrack<bfs_node>(result, _size, _capacity);
+                    curr.template backtrack<bfs_node>(result, _size, _capacity);
 
                     break;
                 }
@@ -107,14 +107,14 @@ namespace chdr::solvers {
         }
 
         [[maybe_unused]]
-        std::vector<coord_t> Execute(const mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, size_t _capacity) const override {
+        std::vector<coord_t> execute(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, size_t _capacity) const override {
 
             std::vector<coord_t> result;
 
-            const auto s = Utils::To1D(_start, _maze.Size());
-            const auto e = Utils::To1D(_end,   _maze.Size());
+            const auto s = utils::to_1d(_start, _maze.size());
+            const auto e = utils::to_1d(_end, _maze.size());
 
-            const auto count = _maze.Count();
+            const auto count = _maze.count();
 
             // Create closed:
             _capacity = std::max(_capacity, std::max(s, e));
@@ -125,7 +125,7 @@ namespace chdr::solvers {
             open.emplace(s, nullptr);
 
             // Create buffer:
-            StableForwardBuf<bfs_node> buf;
+            stable_forward_buf<bfs_node> buf;
 
             // Main loop:
             while (!open.empty()) { // SEARCH FOR SOLUTION...
@@ -142,11 +142,11 @@ namespace chdr::solvers {
                         }
                         closed.add(curr.m_index);
 
-                        for (const auto& neighbour: _maze.GetNeighbours(curr.m_index)) {
+                        for (const auto& neighbour: _maze.get_neighbours(curr.m_index)) {
 
                             if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-                                const auto n = Utils::To1D(nCoord, _maze.Size());
+                                const auto n = utils::to_1d(nCoord, _maze.size());
 
                                 // Check if node is not already visited:
                                 if (!closed.contains(n)) {
@@ -157,14 +157,14 @@ namespace chdr::solvers {
                                     closed.add(n);
 
                                     // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                    open.push({ n, &buf.Emplace(std::move(curr)) });
+                                    open.push({ n, &buf.emplace(std::move(curr)) });
                                 }
                             }
                         }
                     }
                     else { // SOLUTION REACHED ...
 
-                        curr.template Backtrack<bfs_node>(result, _maze.Size(), _capacity);
+                        curr.template backtrack<bfs_node>(result, _maze.size(), _capacity);
 
                         break;
                     }
@@ -175,6 +175,6 @@ namespace chdr::solvers {
         }
     };
 
-} // CHDR::Solvers
+} // chdr::solvers
 
 #endif //CHDR_BFS_HPP

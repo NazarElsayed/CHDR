@@ -12,43 +12,43 @@
 #include <memory>
 
 #include "base/bsolver.hpp"
-#include "mazes/base/IMaze.hpp"
 #include "mazes/graph.hpp"
-#include "mazes/Grid.hpp"
+#include "mazes/grid.hpp"
+#include "mazes/base/imaze.hpp"
 #include "types/existence_set.hpp"
 #include "types/heap.hpp"
-#include "utils/Utils.hpp"
+#include "utils/utils.hpp"
 
 namespace chdr::solvers {
 
     template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t>
-    class [[maybe_unused]] GStar final : public bsolver<weight_t, Kd, scalar_t, index_t> {
+    class [[maybe_unused]] gstar final : public bsolver<weight_t, Kd, scalar_t, index_t> {
 
         static_assert(std::is_integral_v<scalar_t> || std::is_floating_point_v<scalar_t>, "scalar_t must be either an integral or floating point type");
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
     private:
 
-        using coord_t = coord_t<index_t, Kd>;
+        using coord_t = coord<index_t, Kd>;
 
-        struct GSNode final : public ManagedNode<index_t> {
+        struct gs_node final : managed_node<index_t> {
 
             scalar_t m_gScore;
             scalar_t m_fScore;
 
-            [[nodiscard]] constexpr GSNode() : ManagedNode<index_t>() {};
+            [[nodiscard]] constexpr gs_node() : managed_node<index_t>() {}
 
-            [[nodiscard]] constexpr GSNode(const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore) : ManagedNode<index_t>(_index),
+            [[nodiscard]] constexpr gs_node(const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore) : managed_node<index_t>(_index),
                 m_gScore(_gScore),
                 m_fScore(_gScore + _hScore) {}
 
-            [[nodiscard]] constexpr GSNode(const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore, GSNode&& _parent) : ManagedNode<index_t>(_index, std::move(_parent)),
+            [[nodiscard]] constexpr gs_node(const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore, gs_node&& _parent) : managed_node<index_t>(_index, std::move(_parent)),
                 m_gScore(_gScore),
                 m_fScore(_gScore + _hScore) {}
 
-            struct Max {
+            struct max {
 
-                [[nodiscard]] constexpr bool operator () (const GSNode& _a, const GSNode& _b) const {
+                [[nodiscard]] constexpr bool operator () (const gs_node& _a, const gs_node& _b) const {
 
                     return _a.m_fScore == _b.m_fScore ?
                         _a.m_gScore > _b.m_gScore :
@@ -56,9 +56,9 @@ namespace chdr::solvers {
                 }
             };
 
-            struct Min {
+            struct min {
 
-                [[nodiscard]] constexpr bool operator () (const GSNode& _a, const GSNode& _b) const {
+                [[nodiscard]] constexpr bool operator () (const gs_node& _a, const gs_node& _b) const {
 
                     return _a.m_fScore == _b.m_fScore ?
                         _a.m_gScore < _b.m_gScore :
@@ -74,23 +74,23 @@ namespace chdr::solvers {
 
             std::vector<coord_t> result;
 
-            const auto s = Utils::To1D(_start, _size);
-            const auto e = Utils::To1D(_end,   _size);
+            const auto s = utils::to_1d(_start, _size);
+            const auto e = utils::to_1d(_end,   _size);
 
-            const auto count = _maze.Count();
+            const auto count = _maze.count();
 
             // Create closed set:
             _capacity = std::max(_capacity, std::max(s, e));
             existence_set closed({s }, _capacity);
 
             // Create open set:
-            heap<GSNode, 2U, typename GSNode::Max> open;
-            open.Emplace(GSNode { s, static_cast<scalar_t>(0), _h(_start, _end) });
+            heap<gs_node, 2U, typename gs_node::Max> open;
+            open.emplace(gs_node { s, static_cast<scalar_t>(0), _h(_start, _end) });
 
             // Main loop:
-            while (!open.Empty()) {
+            while (!open.empty()) {
 
-                auto curr = open.PopTop();
+                auto curr = open.pop_top();
 
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
@@ -99,7 +99,7 @@ namespace chdr::solvers {
                     }
                     closed.add(curr.m_index);
 
-                    for (const auto& neighbour : _maze.GetNeighbours(curr.m_index)) {
+                    for (const auto& neighbour : _maze.get_neighbours(curr.m_index)) {
 
                         if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
@@ -114,7 +114,7 @@ namespace chdr::solvers {
                                 closed.add(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                open.Emplace(GSNode { n, curr.m_gScore + static_cast<scalar_t>(1), _h(Utils::ToND(n, _size), _end) * _weight, std::move(curr) });
+                                open.emplace(gs_node { n, curr.m_gScore + static_cast<scalar_t>(1), _h(utils::to_nd(n, _size), _end) * _weight, std::move(curr) });
                             }
                         }
                     }
@@ -122,11 +122,12 @@ namespace chdr::solvers {
                 else { // SOLUTION REACHED ...
 
                     // Free data which is no longer relevant:
-                      open.Clear();   open.Trim();
+                      open.clear();
+                      open.trim();
                     closed.clear();
                     closed.trim();
 
-                    curr.template Backtrack<GSNode>(result, _size, curr.m_gScore);
+                    curr.template backtrack<gs_node>(result, _size, curr.m_gScore);
 
                     break;
                 }
@@ -136,27 +137,27 @@ namespace chdr::solvers {
         }
 
         [[maybe_unused]]
-        std::vector<coord_t> Execute(const mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, size_t _capacity) const override {
+        std::vector<coord_t> execute(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, size_t _capacity) const override {
 
             std::vector<coord_t> result;
 
-            const auto s = Utils::To1D(_start, _maze.Size());
-            const auto e = Utils::To1D(_end,   _maze.Size());
+            const auto s = utils::to_1d(_start, _maze.size());
+            const auto e = utils::to_1d(_end, _maze.size());
 
-            const auto count = _maze.Count();
+            const auto count = _maze.count();
 
             // Create closed set:
             _capacity = std::max(_capacity, std::max(s, e));
             existence_set closed({s }, _capacity);
 
             // Create open set:
-            heap<GSNode, 2U, typename GSNode::Max> open;
-            open.Emplace(GSNode { s, static_cast<scalar_t>(0), _h(_start, _end) });
+            heap<gs_node, 2U, typename gs_node::Max> open;
+            open.emplace(gs_node { s, static_cast<scalar_t>(0), _h(_start, _end) });
 
             // Main loop:
-            while (!open.Empty()) {
+            while (!open.empty()) {
 
-                auto curr = open.PopTop();
+                auto curr = open.pop_top();
 
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
@@ -165,11 +166,11 @@ namespace chdr::solvers {
                     }
                     closed.add(curr.m_index);
 
-                    for (const auto& neighbour : _maze.GetNeighbours(curr.m_index)) {
+                    for (const auto& neighbour : _maze.get_neighbours(curr.m_index)) {
 
                         if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-                            const auto n = Utils::To1D(nCoord, _maze.Size());
+                            const auto n = utils::to_1d(nCoord, _maze.size());
 
                             // Check if node is not already visited:
                             if (!closed.contains(n)) {
@@ -180,7 +181,7 @@ namespace chdr::solvers {
                                 closed.add(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                open.Emplace(GSNode { n, curr.m_gScore + static_cast<scalar_t>(1), _h(nCoord, _end) * _weight, std::move(curr) });
+                                open.emplace(gs_node { n, curr.m_gScore + static_cast<scalar_t>(1), _h(nCoord, _end) * _weight, std::move(curr) });
                             }
                         }
                     }
@@ -188,11 +189,12 @@ namespace chdr::solvers {
                 else { // SOLUTION REACHED ...
 
                     // Free data which is no longer relevant:
-                      open.Clear();   open.Trim();
+                      open.clear();
+                      open.trim();
                     closed.clear();
                     closed.trim();
 
-                    curr.template Backtrack<GSNode>(result, _maze.Size(), curr.m_gScore);
+                    curr.template backtrack<gs_node>(result, _maze.size(), curr.m_gScore);
 
                     break;
                 }
@@ -203,6 +205,6 @@ namespace chdr::solvers {
 
     };
 
-} // CHDR::Solvers
+} // chdr::solvers
 
 #endif //CHDR_GSTAR_HPP

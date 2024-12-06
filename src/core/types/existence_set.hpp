@@ -9,8 +9,8 @@
 #ifndef CHDR_EXISTENCE_SET_HPP
 #define CHDR_EXISTENCE_SET_HPP
 
-#include <vector>
 #include <algorithm>
+#include <vector>
 
 namespace chdr {
 
@@ -21,21 +21,21 @@ namespace chdr {
 
     template<typename>
     struct alignment {};
-    template<> struct alignment<lowest_memory_usage> { using type [[maybe_unused]] =      bool; };
-    template<> struct alignment<low_memory_usage>    { using type [[maybe_unused]] =      char; };
-    template<> struct alignment<balanced>            { using type [[maybe_unused]] =  uint32_t; };
-    template<> struct alignment<highest_performance> { using type [[maybe_unused]] = uintptr_t; };
+    template<> struct alignment<lowest_memory_usage> { using type_t [[maybe_unused]] =      bool; };
+    template<> struct alignment<low_memory_usage>    { using type_t [[maybe_unused]] =      char; };
+    template<> struct alignment<balanced>            { using type_t [[maybe_unused]] =  uint32_t; };
+    template<> struct alignment<highest_performance> { using type_t [[maybe_unused]] = uintptr_t; };
 
     /**
-     * @class DenseExistenceSet
+     * @class existence_set
      * @brief A set allowing for efficient existence checks without needing to store the original data in memory.
      *
      * @tparam alignment_type The alignment type used by the set.
      *
-     * @see LowestMemoryUsage
-     * @see LowMemoryUsage
-     * @see Balanced
-     * @see HighestPerformance
+     * @see lowest_memory_usage
+     * @see low_memory_usage
+     * @see balanced
+     * @see highest_performance
      */
     template <typename alignment_type = lowest_memory_usage>
     class existence_set {
@@ -51,7 +51,7 @@ namespace chdr {
 
     private:
 
-        using boolean_t = typename alignment<alignment_type>::Type;
+        using boolean_t = typename alignment<alignment_type>::type_t;
 
         std::vector<boolean_t> m_bits;
 
@@ -74,13 +74,13 @@ namespace chdr {
          */
         [[maybe_unused]] constexpr existence_set(const std::initializer_list<size_t>& _items, const size_t& _capacity = 0U) {
 
-            size_t auto_capacity = _capacity;
+            size_t autoCapacity = _capacity;
 
-            if (auto_capacity < 1U) {
-                auto_capacity = std::max<size_t>(_items.size(), 1U);
+            if (autoCapacity < 1U) {
+                autoCapacity = std::max<size_t>(_items.size(), 1U);
             }
 
-            reserve(auto_capacity);
+            reserve(autoCapacity);
 
             for (const auto& item : _items) {
                 add(item);
@@ -134,8 +134,8 @@ namespace chdr {
             const auto it = std::find_if(
                     m_bits.rbegin(),
                     m_bits.rend(),
-                    [](const auto& bit) constexpr {
-                    return static_cast<bool>(bit);
+                    [](const auto& _bit) constexpr {
+                    return static_cast<bool>(_bit);
                 }
             );
 
@@ -150,13 +150,13 @@ namespace chdr {
         /**
          * @brief Reserves memory for the DenseExistenceSet.
          *
-         * @param _new_capacity The new capacity to reserve.
+         * @param _newCapacity The new capacity to reserve.
          * @note This method does not resize the set, only reserves memory for future elements.
          *
          * @see DenseExistenceSet::capacity()
          */
-        [[maybe_unused]] void reserve(const size_t& _new_capacity) {
-            m_bits.reserve(_new_capacity);
+        [[maybe_unused]] void reserve(const size_t& _newCapacity) {
+            m_bits.reserve(_newCapacity);
         }
 
         /**
@@ -164,8 +164,8 @@ namespace chdr {
          *
          * This method resizes the DenseExistenceSet by calling the resize method on the internal vector.
          *
-         * @param _new_size The new size to resize the set to.
-         * @param _new_value The optional value to fill the new elements with. (default is false).
+         * @param _newSize The new size to resize the set to.
+         * @param _newValue The optional value to fill the new elements with. (default is false).
          * @note If the new size is smaller than the current size, the elements at the end will be removed.
          * If the new size is greater than the current size, the new elements will be filled with the specified value.
          *
@@ -173,8 +173,8 @@ namespace chdr {
          * @see DenseExistenceSet::prune()
          * @see DenseExistenceSet::clear()
          */
-        [[maybe_unused]] void resize(const size_t& _new_size, const boolean_t& _new_value = static_cast<boolean_t>(false)) {
-            m_bits.resize(_new_size, _new_value);
+        [[maybe_unused]] void resize(const size_t& _newSize, const boolean_t& _newValue = static_cast<boolean_t>(false)) {
+            m_bits.resize(_newSize, _newValue);
         }
 
         /**
@@ -235,6 +235,6 @@ namespace chdr {
         [[maybe_unused]] [[nodiscard]] const_reverse_iterator_t crend() const { return m_bits.crend(); }
     };
 
-} // CHDR
+} // chdr
 
 #endif //CHDR_EXISTENCE_SET_HPP

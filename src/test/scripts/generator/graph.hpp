@@ -11,7 +11,9 @@
 
 #include <chdr.hpp>
 
-#include "Debug.hpp"
+#include <debug.hpp>
+
+#include <random>
 
 namespace test::generator {
 
@@ -20,7 +22,7 @@ namespace test::generator {
         using uniform_rng_t = std::mt19937_64;
 
         template <typename T, typename index_t, typename scalar_t, const size_t Kd, typename... Args>
-        static auto generate(const chdr::coord_t<size_t, Kd>& _start, chdr::coord_t<size_t, Kd>& _end, const float& _loops = 0.0F, const float& _obstacles = 0.0f, const size_t& _seed = -1U, const Args&... _size) {
+        static auto generate(const chdr::coord<size_t, Kd>& _start, chdr::coord<size_t, Kd>& _end, const float& _loops = 0.0F, const float& _obstacles = 0.0f, const size_t& _seed = -1U, const Args&... _size) {
 
 			static_assert(std::is_integral_v<T>, "Type T must be an integral type.");
 
@@ -28,8 +30,8 @@ namespace test::generator {
 
             _end = _start;
 
-            Debug::Log("(Graph):");
-            Debug::Log("\tRandom Spanning Tree\t (Seed " + std::to_string(_seed) + ")");
+            debug::log("(Graph):");
+            debug::log("\tRandom Spanning Tree\t (Seed " + std::to_string(_seed) + ")");
 
             std::array size { _size... };
 
@@ -40,64 +42,64 @@ namespace test::generator {
             const auto seed = _seed == null_v ? std::random_device().operator()() : _seed;
             uniform_rng_t rng(seed);
 
-            const auto max_index = chdr::Utils::Product<index_t>(size);
+            const auto maxIndex = chdr::utils::product<index_t>(size);
 
             std::vector<index_t> keys;
             std::unordered_map<index_t, size_t> depths;
-            size_t max_depth = 0U;
+            size_t maxDepth = 0U;
 
             {
-                const auto s = chdr::Utils::To1D(_start, size);
+                const auto s = chdr::utils::to_1d(_start, size);
                 result.add(s, {});
                 keys.emplace_back(s);
-                depths[s] = max_depth;
+                depths[s] = maxDepth;
             }
 
-            size_t branch_factor = 0U;
+            size_t branchFactor = 0U;
 
-            const auto [distance_min, distance_max] = std::make_pair(
+            const auto [distanceMin, distanceMax] = std::make_pair(
                 static_cast<scalar_t>(1),
                 static_cast<scalar_t>(10)
             );
 
             index_t count{0};
 
-            while (count + branch_factor < max_index) {
+            while (count + branchFactor < maxIndex) {
 
                 // Get random node from graph:
                 auto curr = keys[rng() % keys.size()];
 
-                if (depths.find(curr) == depths.end()) {
+                if (!depths.contains(curr)) {
                     depths[curr] = 0U;
                 }
                 auto& depth = depths[curr];
 
-                if (depth > max_depth) {
-                    max_depth = depth;
+                if (depth > maxDepth) {
+                    maxDepth = depth;
 
-                    _end = chdr::Utils::ToND(curr, size);
+                    _end = chdr::utils::to_nd(curr, size);
                 }
 
-                if (result.GetNeighbours(curr).size() <= 1U)  {
+                if (result.get_neighbours(curr).size() <= 1U)  {
 
-                    constexpr bool IncludeDiagonals = false;
+                    constexpr bool includeDiagonals = false;
 
-                    size_t rand = (rng() % (IncludeDiagonals ?
+                    size_t rand = (rng() % (includeDiagonals ?
                         static_cast<size_t>(std::pow(3U, Kd)) - 1U : Kd * 2U));
 
-                    branch_factor = std::max(rand, static_cast<size_t>(2UL));
+                    branchFactor = std::max(rand, static_cast<size_t>(2UL));
 
                     // Add the branches:
-                    for (size_t i = 1U, j = 0U; j < branch_factor; ++j, ++i) {
+                    for (size_t i = 1U, j = 0U; j < branchFactor; ++j, ++i) {
 
                         const auto next = count + i;
 
                         scalar_t distance{};
                         if constexpr (std::is_integral_v<scalar_t>) {
-                            distance = std::uniform_int_distribution(distance_min, distance_max)(rng);
+                            distance = std::uniform_int_distribution(distanceMin, distanceMax)(rng);
                         }
                         else {
-                            distance = std::uniform_real_distribution(distance_min, distance_max)(rng);
+                            distance = std::uniform_real_distribution(distanceMin, distanceMax)(rng);
                         }
 
                         result.add(curr, {next, distance});
@@ -113,15 +115,16 @@ namespace test::generator {
                         depths[next] = depths[curr] + 1U;
                     }
 
-                    count += branch_factor;
+                    count += branchFactor;
                 }
             }
 
-            Debug::Log("\t[FINISHED] \t(~" + chdr::Utils::Trim_Trailing_Zeros(std::to_string(count / static_cast<long double>(1000000000.0))) + "b total candidate nodes)");
+            debug::log("\t[FINISHED] \t(~" + chdr::utils::trim_trailing_zeros(std::to_string(count / static_cast<long double>(1000000000.0))) + "b total candidate nodes)");
 
 			return result;
 		}
 	};
-}
+
+} // test::generator
 
 #endif //TEST_GRAPH_HPP

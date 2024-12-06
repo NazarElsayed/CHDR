@@ -6,8 +6,8 @@
  * https://creativecommons.org/licenses/by-nc-nd/4.0/
  */
 
-#ifndef TEST_GENMAZE_HPP
-#define TEST_GENMAZE_HPP
+#ifndef TEST_BACKTRACKING_HPP
+#define TEST_BACKTRACKING_HPP
 
 #include <algorithm>
 #include <random>
@@ -19,7 +19,7 @@ namespace test::generator::utils {
     template<const size_t Kd = 2U>
     class backtracking {
 
-        using coord_t = chdr::coord_t<size_t, Kd>;
+        using coord_t = chdr::coord<size_t, Kd>;
 
         using uniform_rng_t = std::mt19937_64;
 
@@ -32,12 +32,15 @@ namespace test::generator::utils {
 
     private:
 
-        static constexpr auto getDirections(const coord_t& _coord, const coord_t& _size) {
+        static constexpr auto get_directions(const coord_t& _coord, const coord_t& _size) {
 
             constexpr size_t step(1U);
 
-            std::array<std::pair<bool, chdr::coord_t<size_t, Kd>>, Kd * 2U> result;
+            std::array<std::pair<bool, chdr::coord<size_t, Kd>>, Kd * 2U> result;
 
+            IVDEP
+            VECTOR_ALWAYS
+            #pragma unroll
             for (size_t i = 0U; i < Kd; ++i) {
 
                 coord_t dir{};
@@ -56,7 +59,7 @@ namespace test::generator::utils {
 #if __cplusplus >= 202302L
         constexpr
 #endif // __cplusplus >= 202302L
-        void carveFrom(const coord_t& _coord, std::pair<coord_t, size_t>& _farthest, const coord_t& _size, std::vector<cell>& _grid, uniform_rng_t& _rng) {
+        void carve_from(const coord_t& _coord, std::pair<coord_t, size_t>& _farthest, const coord_t& _size, std::vector<cell>& _grid, uniform_rng_t& _rng) {
 
             std::stack<std::pair<coord_t, size_t>> stack;
             stack.emplace(_coord, 0U);
@@ -64,14 +67,14 @@ namespace test::generator::utils {
             while (!stack.empty()) {
 
                 auto& [currentCoord, depth] = stack.top();
-                _grid[chdr::Utils::To1D(currentCoord, _size)] = PATH;
+                _grid[chdr::utils::to_1d(currentCoord, _size)] = PATH;
 
                 if (depth > _farthest.second) {
                     _farthest.first = currentCoord;
                     _farthest.second = depth;
                 }
 
-                auto dirs = getDirections(currentCoord, _size);
+                auto dirs = get_directions(currentCoord, _size);
                 std::shuffle(dirs.begin(), dirs.end(), _rng);
 
                 bool hasUnvisited = false;
@@ -98,11 +101,11 @@ namespace test::generator::utils {
 
                         if (validCellNeighbor) {
 
-                            const auto& cn = _grid[chdr::Utils::To1D(cc, _size)];
+                            const auto& cn = _grid[chdr::utils::to_1d(cc, _size)];
 
                             if (cn == WALL) {
 
-                                _grid[chdr::Utils::To1D(lc, _size)] = PATH;
+                                _grid[chdr::utils::to_1d(lc, _size)] = PATH;
 
                                 stack.emplace(cc, depth + 1U);
 
@@ -165,7 +168,7 @@ namespace test::generator::utils {
             constexpr size_t null_v = -1U;
 
             // Attempt to allocate the desired amount of space in memory.
-            const auto product = chdr::Utils::Product<size_t>(_size);
+            const auto product = chdr::utils::product<size_t>(_size);
 
             // TODO: Ensure that product does not overflow!
 
@@ -196,17 +199,17 @@ namespace test::generator::utils {
                     const auto seed = _seed == null_v ? std::random_device().operator()() : _seed;
                     uniform_rng_t rng(seed);
 
-                    Debug::Log("\tBacktracking Algorithm \t(Seed " + std::to_string(seed) + ")");
+                    debug::log("\tBacktracking Algorithm \t(Seed " + std::to_string(seed) + ")");
 
                     // Carve a maze using the recursive backtracking algorithm:
-                    carveFrom(_start, farthest, _size, result, rng);
+                    carve_from(_start, farthest, _size, result, rng);
 
                     if (_loops > 0.0F || _obstacles > 0.0F) {
 
                         // Randomly knock down walls if the maze is meant to contain loops:
                         for (size_t i = 1U; i < result.size(); ++i) {
 
-                            auto c = chdr::Utils::ToND<size_t, Kd>(i, _size);
+                            auto c = chdr::utils::to_nd<size_t, Kd>(i, _size);
 
                             bool link = false;
 
@@ -236,14 +239,14 @@ namespace test::generator::utils {
                                     if (const auto obstacle_chance = static_cast<double>(rng()) / static_cast<double>(std::mt19937::max());
                                         obstacle_chance < _obstacles
                                     ) {
-                                        result[chdr::Utils::To1D<size_t>(c, _size)] = WALL;
+                                        result[chdr::utils::to_1d<size_t>(c, _size)] = WALL;
                                     }
                                     else {
 
                                         if (const auto loop_chance = static_cast<double>(rng()) / static_cast<double>(std::mt19937::max());
                                             loop_chance < _loops
                                         ) {
-                                            result[chdr::Utils::To1D<size_t>(c, _size)] = PATH;
+                                            result[chdr::utils::to_1d<size_t>(c, _size)] = PATH;
                                         }
                                     }
                                 }
@@ -252,13 +255,13 @@ namespace test::generator::utils {
                     }
                 }
                 else {
-                    Debug::Log("\tBacktracking Algorithm \tINVALID DIMENSIONALITY", Error);
+                    debug::log("\tBacktracking Algorithm \tINVALID DIMENSIONALITY", error);
                 }
 
                 _end = farthest.first;
             }
             catch (const std::exception& e) {
-                Debug::Log(e);
+                debug::log(e);
 
                 _end = _start;
             }
@@ -268,5 +271,6 @@ namespace test::generator::utils {
 
     };
 
-    #endif //TEST_GENMAZE_HPP
-}
+    #endif //TEST_BACKTRACKING_HPP
+
+} // test::generator::utils

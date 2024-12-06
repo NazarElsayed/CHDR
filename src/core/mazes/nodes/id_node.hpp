@@ -12,36 +12,36 @@
 #include <cstddef>
 #include <type_traits>
 
-#include "base/INode.hpp"
+#include "base/inode.hpp"
 
 namespace chdr::mazes {
 
     template <typename index_t = size_t>
-    class IDNode : INode {
+    class id_node : inode {
 
         static_assert(std::is_integral_v<index_t>, "Type index_t must be an integral type.");
 
     private:
 
-        index_t m_ID;
+        index_t m_id;
 
     public:
 
-        constexpr IDNode(const index_t& _id) : m_ID(_id) {}
+        constexpr id_node(const index_t& _id) : m_id(_id) {}
 
-        [[maybe_unused]] [[nodiscard]] bool IsActive() const override  {
+        [[maybe_unused]] [[nodiscard]] bool is_active() const override  {
             return true;
         }
 
-        [[maybe_unused]] [[nodiscard]] constexpr const index_t& ID() const {
-            return m_ID;
+        [[maybe_unused]] [[nodiscard]] constexpr const index_t& id() const {
+            return m_id;
         }
 
-        [[maybe_unused]] constexpr void ID(const index_t& _id) {
-            m_ID = _id;
+        [[maybe_unused]] constexpr void id(const index_t& _id) {
+            m_id = _id;
         }
     };
 
-} // CHDR
+} // chdr::mazes
 
 #endif //CHDR_IDNODE_HPP

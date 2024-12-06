@@ -115,12 +115,12 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -march=native -mtune
 
 include_directories(
     ${CHDR_BINARY_DIR}
-    contrib/LouiEriksson
+    contrib/louieriksson
 )
 
 ## LOUIERIKSSON::DEBUG:
 add_library(LOUIERIKSSON_DEBUG_HPP INTERFACE
-    contrib/LouiEriksson/Debug.hpp
+    contrib/louieriksson/debug.hpp
 )
 
 ## CORE:
@@ -128,36 +128,36 @@ add_library(LOUIERIKSSON_DEBUG_HPP INTERFACE
 # ADD CHDR:
 add_library(CHDR INTERFACE
     src/core/chdr.hpp
-        src/core/mazes/base/igraph.hpp
-    src/core/mazes/base/IMaze.hpp
-        src/core/mazes/graph.hpp
-    src/core/mazes/Grid.hpp
-    src/core/mazes/nodes/base/INode.hpp
-    src/core/mazes/nodes/IDNode.hpp
-    src/core/mazes/nodes/WeightedNode.hpp
-        src/core/solvers/astar.hpp
-        src/core/solvers/base/bNode.hpp
-        src/core/solvers/base/bsolver.hpp
-    src/core/solvers/base/ManagedNode.hpp
-        src/core/solvers/bfs.hpp
-        src/core/solvers/bstar.hpp
-        src/core/solvers/dfs.hpp
-        src/core/solvers/dijkstra.hpp
-        src/core/solvers/esmgstar.hpp
-        src/core/solvers/floodfill.hpp
-        src/core/solvers/gbfs.hpp
-        src/core/solvers/gdfs.hpp
-    src/core/solvers/GStar.hpp
-    src/core/solvers/JPS.hpp
-    src/core/types/Coord.hpp
-        src/core/types/existence_set.hpp
-        src/core/types/heap.hpp
-    src/core/types/StableForwardBuf.hpp
-    src/core/types/StackAllocator.hpp
-    src/core/utils/Heuristics.hpp
-    src/core/utils/Intrinsics.hpp
-    src/core/utils/SIMDExtensions.hpp
-    src/core/utils/Utils.hpp
+    src/core/mazes/base/igraph.hpp
+    src/core/mazes/base/imaze.hpp
+    src/core/mazes/graph.hpp
+    src/core/mazes/grid.hpp
+    src/core/mazes/nodes/base/inode.hpp
+    src/core/mazes/nodes/id_node.hpp
+    src/core/mazes/nodes/weighted_node.hpp
+    src/core/solvers/astar.hpp
+    src/core/solvers/base/bnode.hpp
+    src/core/solvers/base/bsolver.hpp
+    src/core/solvers/base/managed_node.hpp
+    src/core/solvers/bfs.hpp
+    src/core/solvers/bstar.hpp
+    src/core/solvers/dfs.hpp
+    src/core/solvers/dijkstra.hpp
+    src/core/solvers/esmgstar.hpp
+    src/core/solvers/floodfill.hpp
+    src/core/solvers/gbfs.hpp
+    src/core/solvers/gdfs.hpp
+    src/core/solvers/gstar.hpp
+    src/core/solvers/jps.hpp
+    src/core/types/coord.hpp
+    src/core/types/existence_set.hpp
+    src/core/types/heap.hpp
+    src/core/types/stable_forward_buf.hpp
+    src/core/types/stack_allocator.hpp
+    src/core/utils/heuristics.hpp
+    src/core/utils/intrinsics.hpp
+    src/core/utils/simd_extensions.hpp
+    src/core/utils/utils.hpp
 )
 
 target_link_libraries(CHDR INTERFACE)
@@ -177,12 +177,12 @@ endif()
 add_executable(Test
     src/test/main.cpp
 
-        src/test/scripts/core/application.hpp
-        src/test/scripts/core/display.hpp
-        src/test/scripts/generator/graph.hpp
-    src/test/scripts/generator/Grid.hpp
-        src/test/scripts/generator/utils/backtracking.hpp
-        src/test/scripts/tests/astar.hpp
+    src/test/scripts/core/application.hpp
+    src/test/scripts/core/display.hpp
+    src/test/scripts/generator/graph.hpp
+    src/test/scripts/generator/grid.hpp
+    src/test/scripts/generator/utils/backtracking.hpp
+    src/test/scripts/tests/astar.hpp
 )
 
 target_include_directories(Test PRIVATE

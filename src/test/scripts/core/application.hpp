@@ -11,17 +11,17 @@
 
 #include <atomic>
 
-#include <Debug.hpp>
+#include <debug.hpp>
 
 #include "../tests/astar.hpp"
 
 namespace test {
 
 	/**
-	 * @class Application
+	 * @class application
 	 * @brief Represents the application.
 	 *
-	 * The Application class is responsible for managing the main execution flow of the program and handling the termination of the application.
+	 * The application class is responsible for managing the main execution flow of the program and handling the termination of the application.
 	 */
 	class application final {
 
@@ -41,15 +41,15 @@ namespace test {
 
 			try {
 
-				Debug::Log("Application::finalise()", Info);
+				debug::log("Application::finalise()", info);
 
 				try {
 				}
 				catch (const std::exception& e) {
-					Debug::Log(e, Critical);
+					debug::log(e, critical);
 				}
 
-				Debug::Flush();
+				debug::flush();
 			}
 			catch (...) {}
 		}
@@ -59,11 +59,11 @@ namespace test {
 		 *
 		 * Perform finalisation and then exit the application.
 		 *
-		 * @see Debug::Log(const std::string_view&, const LogType&, const bool&)
+		 * @see debug::log(const std::string_view&, const LogType&, const bool&)
 		 * @see Application::finalise()
 		 * @see std::exit()
 		 */
-		static void onTerminate() noexcept {
+		static void on_terminate() noexcept {
 
 			try {
 				try {
@@ -83,13 +83,13 @@ namespace test {
 						}
 					}
 
-					Debug::Log("onTerminate()! [REASON]: \"" + reason + "\"", Critical);
+					debug::log("onTerminate()! [REASON]: \"" + reason + "\"", critical);
 				}
 				catch (...) {}
 
                 finalise();
 
-				Debug::Log("Finalised.", Trace);
+				debug::log("Finalised.", trace);
 			}
 			catch (...) {}
 
@@ -113,20 +113,20 @@ namespace test {
 		 * @return An integer error code (0 for successful execution)
 		 */
 		template<const size_t Kd>
-		static int main(const chdr::coord_t<size_t, Kd> _dimensions) {
+		static int main(const chdr::coord<size_t, Kd> _dimensions) {
 
-			Debug::Log("Application::main()", Info);
+			debug::log("Application::main()", info);
 
 			// Restrict main() to one instance.
 			if (s_initialised) {
-				Debug::Log("Attempted to call Application::main() while it is already running! Do you have multiple instances?", Warning);
+				debug::log("Attempted to call Application::main() while it is already running! Do you have multiple instances?", warning);
 			}
 			else {
                 s_quit        = false;
                 s_initialised =  true;
 
 				// Set custom termination behaviour:
-				std::set_terminate(&onTerminate);
+				std::set_terminate(&on_terminate);
 
 				try {
 
@@ -134,7 +134,7 @@ namespace test {
 
 					// ...
 
-					Debug::Log("Application Initialised.", Info);
+					debug::log("Application Initialised.", info);
 
 					/* LOOP */
 					while (!s_quit) {
@@ -147,25 +147,25 @@ namespace test {
                                 tests::astar::run<bool>(_dimensions);
 							}
 							catch (const std::exception& e) {
-								Debug::Log(e);
+								debug::log(e);
 							}
 
 						}
 						catch (const std::exception& e) {
-							Debug::Log(e, Critical);
+							debug::log(e, critical);
 						}
 
                         quit();
 					}
 				}
 				catch (const std::exception& e) {
-					Debug::Log(e, Critical);
+					debug::log(e, critical);
 				}
 
 				/* FINALISE */
                 finalise();
 
-				Debug::Log("Application Terminated Normally.", Info);
+				debug::log("Application Terminated Normally.", info);
 			}
 
 			return 0;
@@ -177,16 +177,16 @@ namespace test {
 		 * This function is responsible for quitting the application.
 		 *
 		 * @see Application::s_Quit
-		 * @see Debug::Log(const std::string_view&, const LogType&, const bool&)
+		 * @see debug::log(const std::string_view&, const LogType&, const bool&)
 		 */
 		static void quit() noexcept {
 
-			Debug::Log("Application::quit()", Info);
+			debug::log("Application::quit()", info);
 
             s_quit = true;
 		}
 	};
 
-} // LouiEriksson::Engine
+} // test
 
 #endif //TEST_APPLICATION_HPP

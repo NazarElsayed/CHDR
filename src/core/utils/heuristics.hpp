@@ -11,16 +11,16 @@
 
 #include <cmath>
 
-#include "types/Coord.hpp"
+#include "types/coord.hpp"
 
-#include "SIMDExtensions.hpp"
+#include "simd_extensions.hpp"
 
 namespace chdr {
 
     template <const size_t Kd, typename scalar_t>
-	struct Heuristics {
+	struct heuristics {
 
-        using coord_t = coord_t<size_t, Kd>;
+        using coord_t = coord<size_t, Kd>;
 
         /**
          * @brief Computes the Euclidean distance between two nodes.
@@ -30,8 +30,8 @@ namespace chdr {
          * @param _b The second node.
          * @return The Euclidean distance between _A and _B.
          */
-        [[maybe_unused]] [[nodiscard]] static constexpr auto EuclideanDistance(const coord_t& _a, const coord_t& _b) {
-            return static_cast<scalar_t>(std::sqrt(SqrEuclideanDistance(_a, _b)));
+        [[maybe_unused]] [[nodiscard]] static constexpr auto euclidean_distance(const coord_t& _a, const coord_t& _b) {
+            return static_cast<scalar_t>(std::sqrt(sqr_euclidean_distance(_a, _b)));
         }
 
         /*
@@ -42,7 +42,7 @@ namespace chdr {
          * @param _B The second node.
          * @return The squared Euclidean distance between _A and _B.
          */
-        [[maybe_unused]] [[nodiscard]] static constexpr auto SqrEuclideanDistance(const coord_t& _a, const coord_t& _b) {
+        [[maybe_unused]] [[nodiscard]] static constexpr auto sqr_euclidean_distance(const coord_t& _a, const coord_t& _b) {
 
             static_assert(Kd >= 0U, "Kd must be more than or equal to 0");
 
@@ -78,20 +78,20 @@ namespace chdr {
 
                         float cr = 0.0F;
 
-                        const auto cA = Utils::ArrayCast<float>(_a);
-                        const auto cB = Utils::ArrayCast<float>(_b);
+                        const auto cA = utils::array_cast<float>(_a);
+                        const auto cB = utils::array_cast<float>(_b);
 
                         PREFETCH(&cA[Kd], _MM_HINT_T0);
                         PREFETCH(&cB[Kd], _MM_HINT_T0);
 
                         if constexpr (Kd == 3U) {
-                            cr = SIMDExtensions::Float32::SqrSub_128v(
+                            cr = simd_extensions::float32::sqr_sub_128_v(
                                 _mm_set_ps(0U, cA[0U], cA[1U], cA[2U]),
                                 _mm_set_ps(0U, cB[0U], cB[1U], cB[2U])
                             );
                         }
                         if constexpr (Kd == 4U) {
-                            cr = SIMDExtensions::Float32::Sub_128v(
+                            cr = simd_extensions::float32::sub_128_v(
                                 _mm_load_ps(&cA[0U]),
                                 _mm_load_ps(&cB[0U])
                             );
@@ -103,20 +103,20 @@ namespace chdr {
                             size_t j{};
 
                             for (j = 0U; j < (Kd - r); j += 4U) {
-                                cr += SIMDExtensions::Float32::Sub_128v(
+                                cr += simd_extensions::float32::sub_128_v(
                                     _mm_set_ps(cA[j], cA[j + 1U], cA[j + 2U], cA[j + 3U]),
                                     _mm_set_ps(cB[j], cB[j + 1U], cB[j + 2U], cB[j + 3U])
                                 );
                             }
 
                             if (j - r == 1U) {
-                                result += static_cast<scalar_t>(SIMDExtensions::Float32::Sub_128v(
+                                cr += static_cast<scalar_t>(simd_extensions::float32::sub_128_v(
                                     _mm_set_ps(0.0F, cA[j], cA[j + 1U], cA[j + 2U]),
                                     _mm_set_ps(0.0F, cB[j], cB[j + 1U], cB[j + 2U])
                                 ));
                             }
                             else if (j - r == 2U) {
-                                result += static_cast<scalar_t>(SIMDExtensions::Float32::Sub_128v(
+                                cr += static_cast<scalar_t>(simd_extensions::float32::sub_128_v(
                                     _mm_set_ps(0.0F, 0.0F, cA[j], cA[j + 1U]),
                                     _mm_set_ps(0.0F, 0.0F, cB[j], cB[j + 1U])
                                 ));
@@ -136,14 +136,14 @@ namespace chdr {
 
                         double cr = 0.0;
 
-                        const auto cA = Utils::ArrayCast<double>(_a);
-                        const auto cB = Utils::ArrayCast<double>(_b);
+                        const auto cA = utils::array_cast<double>(_a);
+                        const auto cB = utils::array_cast<double>(_b);
 
                         PREFETCH(&cA[Kd], _MM_HINT_T0);
                         PREFETCH(&cB[Kd], _MM_HINT_T0);
 
                         if constexpr (Kd == 2U) {
-                            cr = SIMDExtensions::Float64::Sub_128v(
+                            cr = simd_extensions::float64::sub_128_v(
                                 _mm_load_pd(&cA[0]),
                                 _mm_load_pd(&cB[0])
                             );
@@ -155,7 +155,7 @@ namespace chdr {
                             size_t j{};
 
                             for (j = 0U; j < (Kd - r); j += 2U) {
-                                cr += SIMDExtensions::Float64::SqrSub_128v(
+                                cr += simd_extensions::float64::sqr_sub_128_v(
                                     _mm_set_pd(cA[j], cA[j + 1U]),
                                     _mm_set_pd(cB[j], cB[j + 1U])
                                 );
@@ -203,7 +203,7 @@ namespace chdr {
           * @param _b The second node.
           * @return The Manhattan distance between _A and _B.
           */
-        [[maybe_unused]] [[nodiscard]] static constexpr auto ManhattanDistance(const coord_t& _a, const coord_t& _b) {
+        [[maybe_unused]] [[nodiscard]] static constexpr auto manhattan_distance(const coord_t& _a, const coord_t& _b) {
 
             static_assert(Kd >= 0U, "Kd must be more than or equal to 0");
 
@@ -235,22 +235,22 @@ namespace chdr {
 
                     else if constexpr (std::is_same_v<scalar_t, uint32_t> || std::is_same_v<scalar_t, int32_t> || std::is_same_v<scalar_t,  float>) {
 
-                        const auto cA = Utils::ArrayCast<uint32_t>(_a);
-                        const auto cB = Utils::ArrayCast<uint32_t>(_b);
+                        const auto cA = utils::array_cast<uint32_t>(_a);
+                        const auto cB = utils::array_cast<uint32_t>(_b);
 
                         PREFETCH(&cA[Kd], _MM_HINT_T0);
                         PREFETCH(&cB[Kd], _MM_HINT_T0);
 
                         if constexpr (Kd == 3U) {
-                            result = static_cast<scalar_t>(SIMDExtensions::Uint32::AbsSub_128v(
+                            result = static_cast<scalar_t>(simd_extensions::uint32::abs_sub_128_v(
                                 _mm_set_epi32(0U, cA[0U], cA[1U], cA[2U]),
                                 _mm_set_epi32(0U, cB[0U], cB[1U], cB[2U])
                             ));
                         }
                         if constexpr (Kd == 4U) {
-                            result = static_cast<scalar_t>(SIMDExtensions::Uint32::AbsSub_128v(
-                                _mm_load_si128(reinterpret_cast<__m128i const*>(&cA)),
-                                _mm_load_si128(reinterpret_cast<__m128i const*>(&cB))
+                            result = static_cast<scalar_t>(simd_extensions::uint32::abs_sub_128_v(
+                                _mm_load_si128(reinterpret_cast<const __m128i*>(&cA)),
+                                _mm_load_si128(reinterpret_cast<const __m128i*>(&cB))
                             ));
                         }
                         else {
@@ -260,20 +260,20 @@ namespace chdr {
                             size_t j{};
 
                             for (j = 0U; j < (Kd - r); j += 4U) {
-                                result += static_cast<scalar_t>(SIMDExtensions::Uint32::AbsSub_128v(
+                                result += static_cast<scalar_t>(simd_extensions::uint32::abs_sub_128_v(
                                     _mm_set_epi32(cA[j], cA[j + 1U], cA[j + 2U], cA[j + 3U]),
                                     _mm_set_epi32(cB[j], cB[j + 1U], cB[j + 2U], cB[j + 3U])
                                 ));
                             }
 
                             if (j - r == 1U) {
-                                result += static_cast<scalar_t>(SIMDExtensions::Uint32::AbsSub_128v(
+                                result += static_cast<scalar_t>(simd_extensions::uint32::abs_sub_128_v(
                                     _mm_set_epi32(0U, cA[j], cA[j + 1U], cA[j + 2U]),
                                     _mm_set_epi32(0U, cB[j], cB[j + 1U], cB[j + 2U])
                                 ));
                             }
                             else if (j - r == 2U) {
-                                result += static_cast<scalar_t>(SIMDExtensions::Uint32::AbsSub_128v(
+                                result += static_cast<scalar_t>(simd_extensions::uint32::abs_sub_128_v(
                                     _mm_set_epi32(0U, 0U, cA[j], cA[j + 1U]),
                                     _mm_set_epi32(0U, 0U, cB[j], cB[j + 1U])
                                 ));
@@ -288,16 +288,16 @@ namespace chdr {
                     }
                     else if constexpr (std::is_same_v<scalar_t, uint64_t> || std::is_same_v<scalar_t, int64_t> || std::is_same_v<scalar_t, double>) {
 
-                        const auto cA = Utils::ArrayCast<uint64_t>(_a);
-                        const auto cB = Utils::ArrayCast<uint64_t>(_b);
+                        const auto cA = utils::array_cast<uint64_t>(_a);
+                        const auto cB = utils::array_cast<uint64_t>(_b);
 
                         PREFETCH(&cA[Kd], _MM_HINT_T0);
                         PREFETCH(&cB[Kd], _MM_HINT_T0);
 
                         if constexpr (Kd == 2U) {
-                            result = static_cast<scalar_t>(SIMDExtensions::Uint64::AbsSub_128v(
-                                _mm_load_si128(reinterpret_cast<__m128i const*>(&cA)),
-                                _mm_load_si128(reinterpret_cast<__m128i const*>(&cB))
+                            result = static_cast<scalar_t>(simd_extensions::uint64::abs_sub_128_v(
+                                _mm_load_si128(reinterpret_cast<const __m128i*>(&cA)),
+                                _mm_load_si128(reinterpret_cast<const __m128i*>(&cB))
                             ));
                         }
                         else {
@@ -307,7 +307,7 @@ namespace chdr {
                             size_t j{};
 
                             for (j = 0U; j < (Kd - r); j += 2U) {
-                                result += static_cast<scalar_t>(SIMDExtensions::Uint64::AbsSub_128v(
+                                result += static_cast<scalar_t>(simd_extensions::uint64::abs_sub_128_v(
                                     _mm_set_epi64x(cA[j], cA[j + 1U]),
                                     _mm_set_epi64x(cB[j], cB[j + 1U])
                                 ));
@@ -343,6 +343,6 @@ namespace chdr {
 
 	};
 
-} // CHDR
+} // chdr
 
 #endif //CHDR_UTILS_HPP

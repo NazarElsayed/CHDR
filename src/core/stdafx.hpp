@@ -26,6 +26,6 @@
 #include <utility>
 #include <vector>
 
-#include "utils/Intrinsics.hpp"
+#include "utils/intrinsics.hpp"
 
 #endif //CHDR_STDAFX_HPP

@@ -11,12 +11,11 @@
 
 #include <queue>
 
-#include "base/bsolver.hpp"
-#include "mazes/base/IMaze.hpp"
 #include "mazes/graph.hpp"
-#include "mazes/Grid.hpp"
+#include "mazes/grid.hpp"
+#include "mazes/base/imaze.hpp"
 #include "types/existence_set.hpp"
-#include "utils/Utils.hpp"
+#include "utils/utils.hpp"
 
 namespace chdr::solvers {
 
@@ -27,7 +26,7 @@ namespace chdr::solvers {
 
     private:
 
-        using coord_t = coord_t<index_t, Kd>;
+        using coord_t = coord<index_t, Kd>;
 
     public:
 
@@ -36,18 +35,18 @@ namespace chdr::solvers {
 
 	        bool result = false;
 
-            const auto s = Utils::To1D(_start, _size);
-            const auto e = Utils::To1D(_end,   _size);
+            const auto s = utils::to_1d(_start, _size);
+            const auto e = utils::to_1d(_end,   _size);
 
             if (_maze.contains(s) &&
                 _maze.contains(e) &&
-                    _maze.at(s).IsActive() &&
-                _maze.at(e).IsActive()
+                _maze.at(s).is_active() &&
+                _maze.at(e).is_active()
             ) {
 
                 if (s != e) {
 
-                    const auto count = _maze.Count();
+                    const auto count = _maze.count();
 
                     // Create closed Set:
                     existence_set closed ({s }, std::max(_capacity, std::max(s, e)));
@@ -70,11 +69,11 @@ namespace chdr::solvers {
                                 goto NestedBreak;
                             }
 
-                            for (const auto& neighbour : _maze.GetNeighbours(current)) {
+                            for (const auto& neighbour : _maze.get_neighbours(current)) {
 
                                 if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-                                    const auto n = Utils::To1D(nCoord, _size);
+                                    const auto n = utils::to_1d(nCoord, _size);
 
                                     if (!closed.contains(n)) {
 
@@ -100,22 +99,22 @@ NestedBreak:
         }
 
         [[maybe_unused]]
-        auto solve(const mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, size_t _capacity = 0U) {
+        auto solve(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, size_t _capacity = 0U) {
 
 	        bool result = false;
 
-            const auto s = Utils::To1D(_start, _maze.Size());
-            const auto e = Utils::To1D(_end,   _maze.Size());
+            const auto s = utils::to_1d(_start, _maze.size());
+            const auto e = utils::to_1d(_end, _maze.size());
 
-            if (_maze.Contains(s) &&
-                _maze.Contains(e) &&
-                _maze.At(s).IsActive() &&
-                _maze.At(e).IsActive()
+            if (_maze.contains(s) &&
+                _maze.contains(e) &&
+                _maze.at(s).is_active() &&
+                _maze.at(e).is_active()
             ) {
 
                 if (s != e) {
 
-                    const auto count = _maze.Count();
+                    const auto count = _maze.count();
 
                     // Create closed set:
                     existence_set closed ({s }, std::max(_capacity, std::max(s, e)));
@@ -138,11 +137,11 @@ NestedBreak:
                                 goto NestedBreak;
                             }
 
-                            for (const auto& neighbour : _maze.GetNeighbours(current)) {
+                            for (const auto& neighbour : _maze.get_neighbours(current)) {
 
                                 if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-                                    const auto n = Utils::To1D(nCoord, _maze.Size());
+                                    const auto n = utils::to_1d(nCoord, _maze.size());
 
                                     if (!closed.contains(n)) {
 
@@ -168,6 +167,6 @@ NestedBreak:
         }
     };
 
-} // CHDR::Solvers
+} // chdr::solvers
 
 #endif //CHDR_FLOODFILL_HPP

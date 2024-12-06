@@ -12,7 +12,7 @@
 namespace chdr::solvers {
 
     template<typename index_t>
-    struct bNode {
+    struct bnode {
 
         index_t m_index;
 
@@ -21,13 +21,14 @@ namespace chdr::solvers {
          *
          * This constructor creates an BNode with uninitialized members.
          */
-        constexpr bNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
+        constexpr bnode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-        bNode(const index_t& _index) : m_index(_index) {};
+        bnode(const index_t& _index) : m_index(_index) {}
 
-        [[nodiscard]] constexpr bool operator == (const bNode& _node) const { return m_index == _node.m_index; }
+        [[nodiscard]] constexpr bool operator == (const bnode& _node) const { return m_index == _node.m_index; }
 
     };
-}
+
+} // chdr::solvers
 
 #endif //CHDR_BNODE_HPP

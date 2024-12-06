@@ -11,13 +11,15 @@
 
 namespace chdr::mazes {
 
-    class INode {
+    class inode {
 
     public:
 
-        [[nodiscard]] virtual bool IsActive() const = 0;
+        virtual ~inode() = default;
+
+        [[nodiscard]] virtual bool is_active() const = 0;
     };
 
-} // CHDR
+} // chdr::mazes
 
 #endif //CHDR_INODE_HPP

@@ -9,18 +9,17 @@
 #ifndef CHDR_UTILS_HPP
 #define CHDR_UTILS_HPP
 
-#include <array>
 #include <limits>
 #include <type_traits>
 #include <vector>
 
-#include "types/Coord.hpp"
+#include "types/coord.hpp"
 
-#include "SIMDExtensions.hpp"
+#include "simd_extensions.hpp"
 
 namespace chdr {
 
-	struct Utils {
+	struct utils {
 
 	private:
 
@@ -29,21 +28,21 @@ namespace chdr {
 		struct indices {};
 
 		template <std::size_t N, std::size_t... Is>
-		struct build_indices: build_indices<N-1, N-1, Is...> {};
+		struct build_indices : build_indices<N-1, N-1, Is...> {};
 
 		template <std::size_t... Is>
-		struct build_indices<0, Is...>: indices<Is...> {};
+		struct build_indices<0, Is...> : indices<Is...> {};
 
 		template<typename T, typename U, size_t N, size_t... Is>
-		static constexpr auto ArrayCast_Helper(const std::array<U, N> &a, indices<Is...>) {
-			return std::array<T, N> { static_cast<T>(std::get<Is>(a))... };
+		static constexpr auto array_cast_helper(const std::array<U, N> &_a, indices<Is...>) {
+			return std::array<T, N> { static_cast<T>(std::get<Is>(_a))... };
 		}
 
 	public:
 
 		template<typename T, typename U, size_t N>
-		static constexpr auto ArrayCast(const std::array<U, N> &_a) {
-			return ArrayCast_Helper<T>(_a, build_indices<N>());
+		static constexpr auto array_cast(const std::array<U, N> &_a) {
+			return array_cast_helper<T>(_a, build_indices<N>());
 		}
 
 		/**
@@ -53,14 +52,14 @@ namespace chdr {
 		 * of a specified size. It throws an std::runtime_error if the size of the vector
 		 * does not match the size of the array.
 		 *
-		 * @tparam _Tp The type of elements in the vector and array.
+		 * @tparam Tp The type of elements in the vector and array.
 		 * @tparam Nm The size of the array.
 		 * @param[in,out] _vector The vector to be converted.
 		 * @return The resulting array.
 		 * @throws std::runtime_error if the size of the vector does not match the size of the array.
 		 */
 		template<typename Tp, const size_t Nm>
-		static constexpr std::array<Tp, Nm> ToArray(const std::vector<Tp>&& _vector) {
+		static constexpr std::array<Tp, Nm> to_array(const std::vector<Tp>&& _vector) {
 
             std::array<Tp, Nm> result;
 
@@ -87,7 +86,7 @@ namespace chdr {
 		 * of the original array. If the original array has fewer elements than the size
 		 * of the vector, only the available elements are moved into the vector.
 		 *
-		 * @tparam _Tp The type of elements in the array.
+		 * @tparam Tp The type of elements in the array.
 		 * @tparam Nm The size of the array.
 		 * @param[in,out] _array The std::array whose elements are to be moved to the std::vector.
 		 * @return std::vector<T> The resulting std::vector with moved elements.
@@ -97,7 +96,7 @@ namespace chdr {
 		 * static_assert will be triggered.
 		 */
 		template<typename Tp, const size_t Nm>
-		static constexpr std::vector<Tp> ToVector(const std::array<Tp, Nm>&& _array) {
+		static constexpr std::vector<Tp> to_vector(const std::array<Tp, Nm>&& _array) {
 
 			std::vector<Tp> result;
 			result.reserve(Nm);
@@ -120,7 +119,7 @@ namespace chdr {
 		 * @param[in] _to The destination vector to which elements will be moved.
 		 */
 		template<typename Tp>
-		static constexpr void MoveInto(std::vector<Tp>&& _from, std::vector<Tp>& _to) {
+		static constexpr void move_into(std::vector<Tp>&& _from, std::vector<Tp>& _to) {
 
 			_to.reserve(_from.size());
 
@@ -139,7 +138,7 @@ namespace chdr {
 		 * This function copies all the elements from the source vector `_from` to the destination vector `_to`.
 		 * The elements are added to the end of the destination vector in the same order as they appear in the source vector.
 		 *
-		 * @tparam _Tp The type of elements in the vector.
+		 * @tparam Tp The type of elements in the vector.
 		 * @param[in] _from The source vector containing elements to be copied.
 		 * @param[in,out] _to The destination vector to which the elements will be copied.
 		 *
@@ -149,7 +148,7 @@ namespace chdr {
 		 * @see std::vector
 		 */
 		template<typename Tp>
-		static constexpr void CopyInto(const std::vector<Tp>& _from, std::vector<Tp>& _to) {
+		static constexpr void copy_into(const std::vector<Tp>& _from, std::vector<Tp>& _to) {
 
 			_to.reserve(_from.size());
 
@@ -171,7 +170,7 @@ namespace chdr {
 		 * @note The input is not modified.
 		 */
 		template <typename T, typename Ta, const size_t Kd>
-		static constexpr T Product(const std::array<Ta, Kd>& _array) {
+		static constexpr T product(const std::array<Ta, Kd>& _array) {
 
 			// TODO: Ensure that product does not overflow!
 
@@ -209,12 +208,12 @@ namespace chdr {
 		 *
 		 * Example usage:
 		 * \code{cpp}
-		 * static const auto as3d = ToND(63, 4, 4, 4);
+		 * static const auto as3d = to_nd(63, 4, 4, 4);
 		 * \endcode
 		 */
 		template<typename T, typename... Args>
-		static constexpr auto ToND(const T& _index, const Args&... _sizes) {
-			return ToND(_index, {_sizes...});
+		static constexpr auto to_nd(const T& _index, const Args&... _sizes) {
+			return to_nd(_index, {_sizes...});
 		}
 
 		/**
@@ -231,14 +230,13 @@ namespace chdr {
 		 * @throws std::runtime_error If the type of _index is not an integral type.
 		 *
 		 * @note The function assumes that the number of dimensions (_dimensions) is greater than 0.
-		 * \endcode
 		 */
 		template<typename T, const size_t Kd>
-		static constexpr auto ToND(const T& _index, const coord_t<T, Kd>& _sizes) {
+		static constexpr auto to_nd(const T& _index, const coord<T, Kd>& _sizes) {
 
 			static_assert(std::is_integral_v<T>, "Only integer types are allowed.");
 
-			coord_t<T, Kd> result{};
+			coord<T, Kd> result{};
 
             if constexpr (Kd > 4U) {
 
@@ -305,8 +303,8 @@ namespace chdr {
 		 * Only integer types are allowed for the indices.
 		 */
 		template<typename T, typename... Args>
-		static constexpr auto To1D(const coord_t<T, sizeof...(Args)>& _indices, const Args&... _sizes) {
-			return To1D({_indices}, {_sizes...});
+		static constexpr auto to_1d(const coord<T, sizeof...(Args)>& _indices, const Args&... _sizes) {
+			return to_1d({_indices}, {_sizes...});
 		}
 
 		/**
@@ -318,7 +316,7 @@ namespace chdr {
 		 * Only integer types are allowed for the indices.
 		 */
 		template<typename T, const size_t Kd>
-		static constexpr auto To1D(const coord_t<T, Kd>& _indices, const coord_t<T, Kd>& _sizes) {
+		static constexpr auto to_1d(const coord<T, Kd>& _indices, const coord<T, Kd>& _sizes) {
 
 			static_assert(std::is_integral_v<T>, "Only integer types are allowed.");
 
@@ -357,7 +355,7 @@ namespace chdr {
 			return result;
 		}
 
-        static std::string Trim_Trailing_Zeros(std::string _str) {
+        static std::string trim_trailing_zeros(std::string _str) {
 
             _str.erase(_str.find_last_not_of('0') + 1U, std::string::npos);
 
@@ -368,7 +366,7 @@ namespace chdr {
             return _str;
         }
 
-        static std::string ToString(long double _duration) {
+        static std::string to_string(long double _duration) {
 
             static std::array<std::string, 4U> units = { "s", "ms", "µs", "ns" };
 
@@ -378,19 +376,19 @@ namespace chdr {
                 ++i;
             }
 
-            return Trim_Trailing_Zeros(std::to_string(_duration)) + units[i];
+            return trim_trailing_zeros(std::to_string(_duration)) + units[i];
         }
 
-        static void Backtrack() {
+        static void backtrack() {
 
         }
 
-        static void Backtrack_Memoryless() {
+        static void backtrack_memoryless() {
 
         }
 
 	};
 
-} // CHDR
+} // chdr
 
 #endif //CHDR_UTILS_HPP

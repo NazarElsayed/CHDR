@@ -12,11 +12,11 @@
 #include <cmath>
 
 #include "base/bsolver.hpp"
-#include "mazes/base/IMaze.hpp"
-#include "mazes/Grid.hpp"
+#include "mazes/grid.hpp"
+#include "mazes/base/imaze.hpp"
 #include "types/existence_set.hpp"
 #include "types/heap.hpp"
-#include "utils/Utils.hpp"
+#include "utils/utils.hpp"
 
 namespace chdr::solvers {
 
@@ -28,10 +28,7 @@ namespace chdr::solvers {
 
     private:
 
-        struct esmg_node;
-
-        using coord_t = coord_t<index_t, Kd>;
-        using  heap_t = heap<std::shared_ptr<esmg_node>, 2U, typename esmg_node::min>;
+        using coord_t = coord<index_t, Kd>;
 
         struct esmg_node final : std::enable_shared_from_this<esmg_node> {
 
@@ -89,27 +86,27 @@ namespace chdr::solvers {
                 }
             }
 
-            auto& expand(const mazes::Grid<Kd, weight_t>& _maze, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, const size_t& _memoryLimit) {
+            auto& expand(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, const size_t& _memoryLimit) {
 
                 if (m_successors.empty()) {
 
-                    const auto neighbours = _maze.GetNeighbours(m_index);
+                    const auto neighbours = _maze.get_neighbours(m_index);
                     m_successors.reserve(neighbours.size());
 
                     for (auto& neighbour : neighbours) {
 
                         if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-                            const auto n = Utils::To1D(nCoord, _maze.Size());
+                            const auto n = utils::to_1d(nCoord, _maze.size());
 
                             if ((m_parent == nullptr || m_parent->m_index != n) && m_depth + 1U < _memoryLimit) {
 
                                 // Check for any potential successor for the child before its creation.
-                                for (auto& successor_neighbours : _maze.GetNeighbours(n)) {
+                                for (auto& successor_neighbours : _maze.get_neighbours(n)) {
 
                                     if (const auto& [snActive, snCoord] = successor_neighbours; snActive) {
 
-                                        m_successors.emplace_back(esmg_node::createShared(
+                                        m_successors.emplace_back(esmg_node::create_shared(
                                                 m_depth + 1U,              // Depth
                                                 n,                          // Coordinate
                                                 m_gScore + 1U,              // G-Score
@@ -131,7 +128,7 @@ namespace chdr::solvers {
             }
 
             template<typename... Args>
-            static constexpr std::shared_ptr<esmg_node> createShared(Args&&... _args) {
+            static constexpr std::shared_ptr<esmg_node> create_shared(Args&&... _args) {
 
                 auto result = std::shared_ptr<esmg_node>(
                     new esmg_node(std::forward<Args>(_args)...),
@@ -188,14 +185,16 @@ namespace chdr::solvers {
             };
         };
 
-        void cull_worst_leaf(const mazes::Grid<Kd, weight_t>& _maze, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, const size_t& _memoryLimit, heap_t& _open) const {
+        using heap_t = heap<std::shared_ptr<esmg_node>, 2U, typename esmg_node::min>;
+
+        void cull_worst_leaf(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, const size_t& _memoryLimit, heap_t& _open) const {
 
             const auto w = safe_culling_heuristic(_open);
 
             if (auto p = w->m_parent) { // parent node of w
 
                 // Remove w from the successor list of p
-                auto p_successors = p->Expand(_maze, _end, _h, _weight, _memoryLimit);
+                auto p_successors = p->expand(_maze, _end, _h, _weight, _memoryLimit);
 
                 for (size_t i = 0U; i < p_successors.size(); ++i) {
 
@@ -215,23 +214,23 @@ namespace chdr::solvers {
                 }
 
                 // if p is not in _open then
-                if (!_open.Contains(p)) {
-                     _open.Add(p); // Add p to _open
+                if (!_open.contains(p)) {
+                     _open.add(p); // Add p to _open
                 }
             }
         }
 
         [[nodiscard]] auto safe_culling_heuristic(heap_t& _open) const {
 
-            auto w = _open.Back(); // Worst leaf according to c(n) in _open
+            auto w = _open.back(); // Worst leaf according to c(n) in _open
 
-            if (w == _open.Top()) { // Top == Best node according to f(n) in _open
+            if (w == _open.top()) { // Top == Best node according to f(n) in _open
 
                 // Code to find second-worst leaf according to c(n) goes here
 
-                w = _open.Back();
+                w = _open.back();
 
-                for (size_t i = _open.Size() / 2U; i < _open.Size(); ++i) {
+                for (size_t i = _open.size() / 2U; i < _open.size(); ++i) {
 
                     const auto& a = _open[i];
                     const auto& b = w;
@@ -241,10 +240,10 @@ namespace chdr::solvers {
                     }
                 }
 
-                _open.Remove(w);
+                _open.remove(w);
             }
             else {
-                _open.PopBack();
+                _open.pop_back();
             }
 
             return w;
@@ -253,35 +252,35 @@ namespace chdr::solvers {
     public:
 
         [[maybe_unused]]
-        auto solve(const mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight = 1, const size_t& _memoryLimit = -1U) const {
+        auto solve(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight = 1, const size_t& _memoryLimit = -1U) const {
 
             /** @see: https://easychair.org/publications/paper/TL2M/open */
 
             std::vector<coord_t> result;
 
-            const auto s = Utils::To1D(_start, _maze.Size());
-            const auto e = Utils::To1D(_end,   _maze.Size());
+            const auto s = utils::to_1d(_start, _maze.size());
+            const auto e = utils::to_1d(_end, _maze.size());
 
             // Create Open Set:
             heap_t open;
-            open.Emplace(esmg_node::createShared(
-                    0U,                         // Depth
-                    s,                          // Coordinate
-                    static_cast<scalar_t>(0),   // G-Score
-                    _h(_start, _end) * _weight  // F-Score
+            open.emplace(esmg_node::create_shared(
+                0U,                         // Depth
+                s,                          // Coordinate
+                static_cast<scalar_t>(0),   // G-Score
+                _h(_start, _end) * _weight  // F-Score
             ));
 
             // Main loop:
-            while (!open.Empty()) {
+            while (!open.empty()) {
 
-                auto curr = open.PopTop(); // Node with smallest f-cost in O
+                auto curr = open.pop_top(); // Node with smallest f-cost in O
 
-                Debug::Log(std::to_string(curr->m_index ));
-                Debug::Log(std::to_string(curr->m_fScore));
+                debug::log(std::to_string(curr->m_index ));
+                debug::log(std::to_string(curr->m_fScore));
 
                 if (curr->m_index != e) { // SEARCH FOR SOLUTION...
 
-                    auto successors_current = curr->Expand(_maze, _end, _h, _weight, _memoryLimit);
+                    auto successors_current = curr->expand(_maze, _end, _h, _weight, _memoryLimit);
 
                     for (size_t i = 0U; i < successors_current.size(); ++i) {
 
@@ -297,16 +296,16 @@ namespace chdr::solvers {
                             curr->m_forgottenFCosts.erase(nCoord);
                         }
                         else {
-                            successor->m_fScore = std::max(curr->m_fScore, successor->m_gScore + _h(Utils::ToND(successor->m_index, _maze.Size()), _end) * _weight);
+                            successor->m_fScore = std::max(curr->m_fScore, successor->m_gScore + (_h(utils::to_nd(successor->m_index, _maze.size()), _end) * _weight));
                         }
 
                         // Add successor to open.
-                        if (!open.Contains(successor)) {
-                             open.Add(successor);
+                        if (!open.contains(successor)) {
+                             open.add(successor);
                         }
                     }
 
-                    while (open.Size() > _memoryLimit) {
+                    while (open.size() > _memoryLimit) {
                         cull_worst_leaf(_maze, _end, _h, _weight, _memoryLimit, open);
                     }
 
@@ -316,20 +315,20 @@ namespace chdr::solvers {
                 else { // SOLUTION REACHED ...
 
                     // Free data which is no longer relevant:
-                    open.Clear(); open.Trim();
+                    open.clear(); open.trim();
 
                     if (curr != nullptr) {
 
-                        // Reserve space in result:
+                        // reserve space in result:
                         result.reserve(curr->m_gScore);
 
                         // Recurse from end node to start node, inserting into a result buffer:
-                        result.emplace_back(Utils::ToND(curr->m_index, _maze.Size()));
+                        result.emplace_back(utils::to_nd(curr->m_index, _maze.size()));
 
                         if (auto item = curr->m_parent) {
 
                             while (const auto item_parent = item->m_parent) {
-                                result.emplace_back(Utils::ToND(item->m_index, _maze.Size()));
+                                result.emplace_back(utils::to_nd(item->m_index, _maze.size()));
 
                                 auto oldItem = item;
                                 item = item_parent;
@@ -350,6 +349,6 @@ namespace chdr::solvers {
 
     };
 
-} // CHDR::Solvers
+} // chdr::solvers
 
 #endif //CHDR_ESMGSTAR_HPP

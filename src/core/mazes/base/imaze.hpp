@@ -13,29 +13,29 @@
 
 namespace chdr::mazes {
 
-    template<typename TNode, typename index_t>
-    class IMaze {
+    template<typename node_t, typename index_t>
+    class imaze {
 
-        //static_assert(std::is_base_of<INode, TNode>::value, "TNode must derive from INode");
+        //static_assert(std::is_base_of<inode, node_t>::value, "node_t must derive from inode");
 
     public:
 
-        virtual ~IMaze() = default;
+        virtual ~imaze() = default;
 
         [[nodiscard]] virtual
 #if __cplusplus >= 202002L
         constexpr
 #endif // __cplusplus >= 202002L
-        bool Contains(const index_t& _id) const = 0;
+        bool contains(const index_t& _id) const = 0;
 
         [[nodiscard]] virtual
 #if __cplusplus >= 202002L
         constexpr
 #endif // __cplusplus >= 202002L
-        size_t Count() const = 0;
+        size_t count() const = 0;
 
     };
 
-} // CHDR::Mazes
+} // chdr::mazes
 
 #endif //CHDR_IMAZE_HPP

@@ -12,8 +12,8 @@
 #include <memory>
 
 #include "base/bsolver.hpp"
-#include "mazes/base/IMaze.hpp"
-#include "mazes/Grid.hpp"
+#include "mazes/grid.hpp"
+#include "mazes/base/imaze.hpp"
 #include "types/existence_set.hpp"
 
 namespace chdr::solvers {
@@ -25,7 +25,7 @@ namespace chdr::solvers {
 
     private:
 
-        using coord_t = coord_t<index_t, Kd>;
+        using coord_t = coord<index_t, Kd>;
 
         struct d_node final {
 
@@ -58,7 +58,7 @@ namespace chdr::solvers {
                 expungeRecursive(m_parent);
             }
 
-            void expungeRecursive(std::shared_ptr<const d_node>& _node) {
+            void expunge_recursive(std::shared_ptr<const d_node>& _node) {
                 if (_node && _node.unique()) {
                     _node = std::move(_node->m_parent);
                     expungeRecursive(_node);
@@ -88,7 +88,7 @@ namespace chdr::solvers {
     public:
 
         [[maybe_unused]]
-        void solve(const mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) {
+        void solve(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const size_t _capacity = 0U) {
 
             (void)_maze; // Suppress unused variable warnings.
             (void)_start;
@@ -101,6 +101,6 @@ namespace chdr::solvers {
 
     };
 
-} // CHDR::Solvers
+} // chdr::solvers
 
 #endif //CHDR_DJIKSTRA_HPP

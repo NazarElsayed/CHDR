@@ -132,80 +132,80 @@
 namespace {
 	
 	/**
-	 * @enum LogType
+	 * @enum log_type
 	 * @brief Enumeration representing different types of log messages.
 	 *
 	 * The LogType enum represents different levels of log messages that can be used to categorize log entries.
 	 * Each log type is assigned a character value which is used to differentiate between log messages.
 	 */
-	 enum LogType : unsigned char {
-		   Trace = 1U,       /**< @brief In-depth tracking of system operations.     */
-		   Debug = 1U << 1U, /**< @brief General code debugging.                     */
-		    Info = 1U << 2U, /**< @brief General insights about application status.  */
-		 Warning = 1U << 3U, /**< @brief Potential issues that could cause problems. */
-		   Error = 1U << 4U, /**< @brief Major issues disrupting normal operations.  */
-		Critical = 1U << 5U, /**< @brief Severe problems causing system failure.     */
+	 enum log_type : unsigned char {
+		   trace = 1U,       /**< @brief In-depth tracking of system operations.     */
+		   debug = 1U << 1U, /**< @brief General code debugging.                     */
+		    info = 1U << 2U, /**< @brief General insights about application status.  */
+		 warning = 1U << 3U, /**< @brief Potential issues that could cause problems. */
+		   error = 1U << 4U, /**< @brief Major issues disrupting normal operations.  */
+		critical = 1U << 5U, /**< @brief Severe problems causing system failure.     */
 	};
 	
-	class Print final {
+	class print final {
 		
-		friend struct Debug;
+		friend struct debug;
 		
 	private:
 		
-		static constexpr const char* ToString(const LogType& _type) noexcept {
-			
-			const char* result = "UNKNOWN";
+		static constexpr const char* to_string(const log_type& _type) noexcept {
+
+			const auto* result = "UNKNOWN";
 			
 			switch (_type) {
-				case Critical: { result = "CRITICAL"; break; }
-				case Error:    { result = "ERROR";    break; }
-				case Warning:  { result = "WARNING";  break; }
-				case Info:     { result = "INFO";     break; }
-				case Debug:    { result = "DEBUG";    break; }
-				case Trace:    { result = "TRACE";    break; }
+				case critical: { result = "CRITICAL"; break; }
+				case error:    { result = "ERROR";    break; }
+				case warning:  { result = "WARNING";  break; }
+				case info:     { result = "INFO";     break; }
+				case debug:    { result = "DEBUG";    break; }
+				case trace:    { result = "TRACE";    break; }
 			}
 			
 			return result;
 		}
 		
-		static void Multiplatform(const std::string_view& _message, const LogType& _type, const bool& _makeInline) {
+		static void multiplatform(const std::string_view& _message, const log_type& _type, const bool& _makeInline) {
 	
 #ifdef __linux__
 			try {
-	            Print::ANSI(_message, _type, _makeInline);
+	            ansi(_message, _type, _makeInline);
 			}
-			catch (const std::exception& e) {
-				Print::Fallback(_message, _type, _makeInline);
-				throw e;
+			catch (const std::exception&) {
+				fallback(_message, _type, _makeInline);
+				throw;
 			}
 #elif _WIN32
 			try {
-	            Print::Win32(_message, _type, _makeInline);
+	            win32(_message, _type, _makeInline);
 			}
-			catch (const std::exception& e) {
-				Print::Fallback(_message, _type, _makeInline);
-				throw e;
+			catch (const std::exception&) {
+				fallback(_message, _type, _makeInline);
+				throw;
 			}
 #elif __APPLE__
 			try {
-	            Print::ANSI(_message, _type, _makeInline);
+	            ansi(_message, _type, _makeInline);
 			}
-			catch (const std::exception& e) {
-				Print::Fallback(_message, _type, _makeInline);
-				throw e;
+			catch (const std::exception&) {
+				fallback(_message, _type, _makeInline);
+				throw;
 			}
 #else
-			Print::Fallback(_message, _type, _makeInline);
+			fallback(_message, _type, _makeInline);
 #endif
 		
 		}
 		
-		static void Fallback(const std::string_view& _message, const LogType& _type, const bool& _makeInline) {
+		static void fallback(const std::string_view& _message, const log_type& _type, const bool& _makeInline) {
 			
-			std::cout << Print::ToString(_type) << ": " << _message;
+			std::cout << to_string(_type) << ": " << _message;
 			
-			if (_makeInline && _type != LogType::Info) {
+			if (_makeInline && _type != info) {
 				std::cout << std::flush;
 			}
 			else {
@@ -215,7 +215,7 @@ namespace {
 		
 #if __linux__ | __APPLE__
 		
-		static void ANSI(const std::string_view& _message, const LogType& _type, const bool& _makeInline) {
+		static void ansi(const std::string_view& _message, const log_type& _type, const bool& _makeInline) {
 			
 			/* ANSI TEXT COLORS */
 			#define ANSI_RESET   "\033[0m"
@@ -240,7 +240,7 @@ namespace {
 			
 			switch (_type) {
 				
-				case Critical: {
+				case critical: {
 					std::cout << ANSI_MAGENTA << _message << ANSI_RESET << '\a';
 					
 					if (_makeInline) {
@@ -252,7 +252,7 @@ namespace {
 					
 					break;
 				}
-				case Error: {
+				case error: {
 					std::cout << ANSI_RED << _message << ANSI_RESET;
 					
 					if (_makeInline) {
@@ -264,7 +264,7 @@ namespace {
 					
 					break;
 				}
-				case Warning: {
+				case warning: {
 					std::cout << ANSI_YELLOW << _message << ANSI_RESET;
 					
 					if (_makeInline) {
@@ -276,7 +276,7 @@ namespace {
 					
 					break;
 				}
-				case Info: {
+				case info: {
 					std::cout << ANSI_CYAN << _message << ANSI_RESET;
 					
 					if (!_makeInline) {
@@ -285,7 +285,7 @@ namespace {
 					
 					break;
 				}
-				case Debug: {
+				case debug: {
 					std::cout << ANSI_WHITE << _message << ANSI_RESET;
 					
 					if (_makeInline) {
@@ -297,7 +297,7 @@ namespace {
 					
 					break;
 				}
-				case Trace: {
+				case trace: {
 					std::cout << ANSI_BG_WHITE << ANSI_BLACK << _message << ANSI_RESET;
 					
 					if (_makeInline) {
@@ -352,10 +352,11 @@ namespace {
 		    }
 		}
 
-		static void Win32(const std::string_view& _message, const LogType& _type, const bool& _makeInline) {
+		static void win32(const std::string_view& _message, const log_type& _type, const bool& _makeInline) {
 
 #define FOREGROUND_BLACK   0x0
 #define FOREGROUND_CYAN	   0x3
+#define FOREGROUND_RED     0x4
 #define FOREGROUND_MAGENTA 0x5
 #define FOREGROUND_YELLOW  0x6
 #define FOREGROUND_WHITE   0x7
@@ -376,10 +377,10 @@ namespace {
 						const auto& previous_attr = cinfo.wAttributes;
 						
 						switch (_type) {
-							case Critical: {
-	                            SetConsoleTextAttribute(h, BACKGROUND_BLACK | FOREGROUND_MAGENTA);
+							case critical: {
+	                            SetCAttr(h, BACKGROUND_BLACK | FOREGROUND_MAGENTA);
 								std::cout << _message;
-	                            SetConsoleTextAttribute(h, previous_attr);
+	                            SetCAttr(h, previous_attr);
 								
 								Beep(800, 200);
 								
@@ -392,10 +393,10 @@ namespace {
 								
 								break;
 							}
-							case Error: {
-	                            SetConsoleTextAttribute(h, BACKGROUND_BLACK | FOREGROUND_RED);
+							case error: {
+	                            SetCAttr(h, BACKGROUND_BLACK | FOREGROUND_RED);
 								std::cout << _message;
-	                            SetConsoleTextAttribute(h, previous_attr);
+	                            SetCAttr(h, previous_attr);
 								
 								if (_makeInline) {
 									std::cout << std::flush;
@@ -406,10 +407,10 @@ namespace {
 								
 								break;
 							}
-							case Warning: {
-	                            SetConsoleTextAttribute(h, BACKGROUND_BLACK | FOREGROUND_YELLOW);
+							case warning: {
+	                            SetCAttr(h, BACKGROUND_BLACK | FOREGROUND_YELLOW);
 								std::cout << _message;
-	                            SetConsoleTextAttribute(h, previous_attr);
+	                            SetCAttr(h, previous_attr);
 								
 								if (_makeInline) {
 									std::cout << std::flush;
@@ -420,10 +421,10 @@ namespace {
 								
 								break;
 							}
-							case Info: {
-	                            SetConsoleTextAttribute(h, BACKGROUND_BLACK | FOREGROUND_CYAN);
+							case info: {
+	                            SetCAttr(h, BACKGROUND_BLACK | FOREGROUND_CYAN);
 								std::cout << _message;
-	                            SetConsoleTextAttribute(h, previous_attr);
+	                            SetCAttr(h, previous_attr);
 								
 								if (!_makeInline) {
 									std::cout << '\n';
@@ -431,10 +432,10 @@ namespace {
 								
 								break;
 							}
-							case Debug: {
-	                            SetConsoleTextAttribute(h, BACKGROUND_BLACK | FOREGROUND_WHITE);
+							case debug: {
+	                            SetCAttr(h, BACKGROUND_BLACK | FOREGROUND_WHITE);
 								std::cout << _message;
-	                            SetConsoleTextAttribute(h, previous_attr);
+	                            SetCAttr(h, previous_attr);
 								
 								if (_makeInline) {
 									std::cout << std::flush;
@@ -445,10 +446,10 @@ namespace {
 								
 								break;
 							}
-							case Trace: {
-	                            SetConsoleTextAttribute(h, BACKGROUND_WHITE | FOREGROUND_BLACK);
+							case trace: {
+	                            SetCAttr(h, BACKGROUND_WHITE | FOREGROUND_BLACK);
 								std::cout << _message;
-	                            SetConsoleTextAttribute(h, previous_attr);
+	                            SetCAttr(h, previous_attr);
 								
 								if (_makeInline) {
 									std::cout << '\n';
@@ -460,9 +461,9 @@ namespace {
 								break;
 							}
 							default: {
-	                            SetConsoleTextAttribute(h, BACKGROUND_MAGENTA | FOREGROUND_BLACK);
+	                            SetCAttr(h, BACKGROUND_MAGENTA | FOREGROUND_BLACK);
 								std::cout << _message;
-	                            SetConsoleTextAttribute(h, previous_attr);
+	                            SetCAttr(h, previous_attr);
 								
 								if (_makeInline) {
 									std::cout << std::flush;
@@ -490,6 +491,7 @@ namespace {
 
 #undef FOREGROUND_BLACK
 #undef FOREGROUND_CYAN
+#undef FOREGROUND_RED
 #undef FOREGROUND_MAGENTA
 #undef FOREGROUND_YELLOW
 #undef FOREGROUND_WHITE
@@ -504,98 +506,98 @@ namespace {
 	};
 	
 	/**
-	 * @brief The Debug class provides a set of static methods for debugging and logging.
+	 * @brief The debug class provides a set of static methods for debugging and logging.
 	 *
-	 * The Debug class is a utility class that provides various methods for debugging and logging purposes.
+	 * The debug class is a utility class that provides various methods for debugging and logging purposes.
 	 * It includes methods for performing assertions, triggering breakpoints, flushing the log output,
 	 * and logging messages with different log types.
 	 */
-	struct Debug final {
+	struct debug final {
 	
 	private:
 		
-		inline static std::mutex s_Lock;
+		inline static std::mutex s_lock;
 		
 		/**
 		 * @brief Metadata about a log.
 		 */
-		struct Meta final {
+		struct meta final {
 			
-			std::time_t m_Timestamp;
-			     size_t m_ThreadID;
-			     bool   m_Inline;
+			std::time_t m_timestamp;
+			     size_t m_thread_id;
+			     bool   m_inline;
 		};
 		
 		/** Metadata about the previous log. */
-		inline static Meta s_LastLog = { 0U, -1U, false };
+		inline static meta s_last_log = { 0U, -1U, false };
 		
 	public:
 		
-		struct ThreadID final {
+		struct thread_id final {
 		
 		private:
 			
-			inline static std::mutex s_Lock;
+			inline static std::mutex s_lock;
 			
-			inline static size_t s_Ctr;
-			inline static std::unordered_map<std::thread::id, size_t> s_ThreadIDs;
+			inline static size_t s_ctr;
+			inline static std::unordered_map<std::thread::id, size_t> s_thread_ids;
 		
 		public:
 		
-            [[maybe_unused]] [[nodiscard]] static size_t Get(std::thread::id _id) {
+            [[maybe_unused]] [[nodiscard]] static size_t get(const std::thread::id _id) {
 				
-				const std::lock_guard<std::mutex> guard(s_Lock);
+				const std::lock_guard guard(s_lock);
 				
 				size_t result;
 				
-				if (s_ThreadIDs.find(_id) != s_ThreadIDs.end()) {
-					result = s_ThreadIDs[_id];
+				if (s_thread_ids.find(_id) != s_thread_ids.end()) {
+					result = s_thread_ids[_id];
 				}
 				else {
-					s_ThreadIDs[_id] = s_Ctr;
-					result = s_Ctr++;
+					s_thread_ids[_id] = s_ctr;
+					result = s_ctr++;
 				}
 				
 				return result;
 			}
 			
-            [[maybe_unused]] [[nodiscard]] static size_t Get() {
-				return Get(std::this_thread::get_id());
+            [[maybe_unused]] [[nodiscard]] static size_t get() {
+				return get(std::this_thread::get_id());
 			}
 			
 		};
 		
 		/**
 		 * @brief Asserts a condition and logs a message if the condition is false.
-		 * By default, the log type is set to `Debug`.
+		 * By default, the log type is set to `debug`.
 		 *
 		 * @param[in] _condition The condition to assert.
 		 * @param[in] _message The message to log if the condition is false.
 		 * @param[in] _type (optional) The type of log message to log.
 		 * @param[in] _makeInline (optional) A flag indicating if the log message should be displayed inline.
 		 */
-        [[maybe_unused]] static void Assert(const bool& _condition, const std::string_view& _message, const LogType& _type = LogType::Debug, const bool& _makeInline = false) noexcept {
+        [[maybe_unused]] static void assert(const bool& _condition, const std::string_view& _message, const log_type& _type = log_type::debug, const bool& _makeInline = false) noexcept {
 			
 			if (!_condition) {
-				Debug::Log(_message, _type, _makeInline);
+				log(_message, _type, _makeInline);
 			}
 		}
 		
 		/**
 		 * @brief Triggers a breakpoint.
 		 *
-		 * @note This function only has an effect on Debug builds.
+		 * @note This function only has an effect on debug builds.
 		 *
 		 * @warning Please note that if the function cannot identify the correct signal for a breakpoint, no breakpoint will occur.
 		 */
-        [[maybe_unused]] static void Break() noexcept  {
+        [[maybe_unused]] static void brk() noexcept  {
 		
 #if !defined(NDEBUG) || _DEBUG
 			
-			Flush();
+			flush();
 			
 			try {
-				const std::lock_guard<std::mutex> guard(s_Lock);
+				const std::lock_guard guard(s_lock);
 				
 				psnip_trap();
 			}
@@ -614,11 +616,11 @@ namespace {
 		 * @note This method is declared `noexcept`, indicating that it does not throw any exceptions.
 		 *
 		 * @par Related Function
-		 * - Debug::Flush()
+		 * - debug::Flush()
 		 */
-        [[maybe_unused]] static void Flush() noexcept {
+        [[maybe_unused]] static void flush() noexcept {
 			
-			const std::lock_guard<std::mutex> guard(s_Lock);
+			const std::lock_guard guard(s_lock);
 			
 			try {
 				try {
@@ -635,7 +637,7 @@ namespace {
 		 * @brief Logs an exception with a specified log type.
 		 *
 		 * This static method is used to log an exception with a specified log type.
-		 * By default, the log type is set to `LogType::Error`.
+		 * By default, the log type is set to `LogType::error`.
 		 *
 		 * @param[in] e The exception to log.
 		 * @param[in] _type (optional) The log type of the message.
@@ -644,25 +646,25 @@ namespace {
 		 * @note This method is declared `noexcept`, indicating that it does not throw any exceptions.
 		 *
 		 * @par Related Functions
-		 * - Debug::Log(const std::string_view&, const LogType&, const bool&)
+		 * - debug::log(const std::string_view&, const LogType&, const bool&)
 		 */
-        [[maybe_unused]] static void Log(const std::exception& e, const LogType& _type = LogType::Error, const bool& _makeInline = false) noexcept  {
-			Debug::Log(e.what(), _type, _makeInline);
+        [[maybe_unused]] static void log(const std::exception& e, const log_type& _type = error, const bool& _makeInline = false) noexcept  {
+			log(e.what(), _type, _makeInline);
 		}
 		
 		/**
 		 * @brief Logs a message with a specified log type.
 		 *
 		 * This function logs a message with a specified log type.
-		 * By default, the log type is set to `Debug`.
+		 * By default, the log type is set to `debug`.
 		 *
 		 * @param[in] _message The message to be logged.
-		 * @param[in] _type (optional) The log type for the message (default is `LogType::Debug`).
+		 * @param[in] _type (optional) The log type for the message (default is `LogType::debug`).
 		 * @param[in] _makeInline (optional) Specifies whether the log message should be displayed inline (default is `false`).
 		 */
-        [[maybe_unused]] static void Log(const std::string_view& _message, const LogType& _type = LogType::Debug, const bool& _makeInline = false) noexcept {
+        [[maybe_unused]] static void log(const std::string_view& _message, const log_type& _type = log_type::debug, const bool& _makeInline = false) noexcept {
 			
-			const std::lock_guard<std::mutex> guard(s_Lock);
+			const std::lock_guard guard(s_lock);
 			
 			static constexpr size_t max_frames = 10;
 			
@@ -674,36 +676,36 @@ namespace {
 					 */
 					std::ostringstream message;
 					
-					const Meta meta {
+					const meta meta {
 						std::time(nullptr),
-						ThreadID::Get(),
+						thread_id::get(),
 						_makeInline
 					};
 					
 					// Timestamp:
-					if (!s_LastLog.m_Inline) {
-						message << std::put_time(std::localtime(&meta.m_Timestamp), "[%H:%M:%S %d/%m/%Y] ");
+					if (!s_last_log.m_inline) {
+						message << std::put_time(std::localtime(&meta.m_timestamp), "[%H:%M:%S %d/%m/%Y] ");
 					}
 					
-					// Thread ID:
-					if (!s_LastLog.m_Inline || s_LastLog.m_ThreadID != meta.m_ThreadID) {
-						message << "[" + std::to_string(meta.m_ThreadID) + "] ";
+					// Thread id:
+					if (!s_last_log.m_inline || s_last_log.m_thread_id != meta.m_thread_id) {
+						message << "[" + std::to_string(meta.m_thread_id) + "] ";
 					}
 					
 					message << _message.data();
 					
 					// Print log to console:
-					Print::Multiplatform(message.str(), _type, _makeInline);
+					print::multiplatform(message.str(), _type, _makeInline);
 					
 					// Add trace information:
-					if (_type == LogType::Trace || _type == LogType::Critical) {
+					if (_type == trace || _type == critical) {
 						
 						// Start trace on new line always.
-						if (s_LastLog.m_Inline) {
+						if (s_last_log.m_inline) {
 							std::cout << "\n";
 						}
 						
-						auto trace = StackTrace(max_frames);
+						const auto trace = stack_trace(max_frames);
 						for (size_t i = 0U; i < trace.size(); ++i) {
 							
 							// Indent each trace:
@@ -711,7 +713,7 @@ namespace {
 								std::cout << '\t';
 							}
 							
-							Print::Multiplatform(trace[i], LogType::Trace, false);
+							print::multiplatform(trace[i], log_type::trace, false);
 						}
 						
 						// Flush the console.
@@ -719,9 +721,9 @@ namespace {
 					}
 
 #if !defined(NDEBUG) || _DEBUG
-					if (_type == LogType::Critical) { Break(); }
+					if (_type == log_type::critical) { brk(); }
 #endif
-					s_LastLog = meta;
+					s_last_log = meta;
 					
 				}
 				catch (const std::exception& e) {
@@ -731,7 +733,7 @@ namespace {
 			catch (...) {}
 		}
 		
-        [[maybe_unused]] [[nodiscard]] static std::vector<std::string> StackTrace(const size_t& _frames) {
+        [[maybe_unused]] [[nodiscard]] static std::vector<std::string> stack_trace(const size_t& _frames) {
 
 			std::vector<std::string> result;
 			
@@ -741,7 +743,7 @@ namespace {
 				
 				// Capture stack frames:
 				void* array[_frames];
-				auto frames = backtrace(array, static_cast<int>(_frames));
+				const auto frames = backtrace(array, static_cast<int>(_frames));
 				
 				// Convert addresses into an array of human-readable strings
 				const std::unique_ptr<char*, void(*)(void*)> strings(backtrace_symbols(array, frames), std::free);
@@ -754,14 +756,14 @@ namespace {
 					result.emplace_back("...");
 				}
 	#else
-				Debug::Log("Stack trace support not been implemented for this platform!", LogType::Warning);
+				debug::log("Stack trace support not been implemented for this platform!", LogType::warning);
 	#endif
 
 				(void)_frames; // Suppress unused variable warning.
 
 			}
 			catch (const std::exception& e) {
-				Log(e);
+				log(e);
 			}
 			
 			return result;

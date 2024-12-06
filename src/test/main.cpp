@@ -6,7 +6,11 @@
  * https://creativecommons.org/licenses/by-nc-nd/4.0/
  */
 
-#include <../../contrib/LouiEriksson/Debug.hpp>
+#include <debug.hpp>
+
+#include <string>
+#include <stdexcept>
+#include <exception>
 
 #include "scripts/core/application.hpp"
 
@@ -18,10 +22,10 @@ int main([[maybe_unused]] const int _argc, [[maybe_unused]] const char* _argv[])
 
     int result = -1;
 
-    Debug::Log("CHDR " CHDR_VERSION);
-    Debug::Log("Copyright (c) 2024 by Nazar Elsayed & Louis Eriksson");
-    Debug::Log("Licensed under CC BY-NC-ND 4.0");
-    Debug::Log("main()", Info);
+    debug::log("CHDR " CHDR_VERSION);
+    debug::log("Copyright (c) 2024 by Nazar Elsayed & Louis Eriksson");
+    debug::log("Licensed under CC BY-NC-ND 4.0");
+    debug::log("main()", info);
 
     try {
 
@@ -155,7 +159,7 @@ int main([[maybe_unused]] const int _argc, [[maybe_unused]] const char* _argv[])
         }
     }
     catch (const std::exception& e) {
-        Debug::Log(e);
+        debug::log(e);
     }
 
     return result;
