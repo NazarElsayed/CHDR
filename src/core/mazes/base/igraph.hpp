@@ -12,10 +12,10 @@
 #include "IMaze.hpp"
 #include "mazes/nodes/IDNode.hpp"
 
-namespace CHDR::Mazes {
+namespace chdr::mazes {
 
     template <typename index_t, typename scalar_t>
-    class IGraph : public IMaze<IDNode<index_t>, index_t> {
+    class igraph : public IMaze<IDNode<index_t>, index_t> {
 
     public:
 

@@ -11,38 +11,38 @@
 
 #include <queue>
 
-#include "base/BSolver.hpp"
+#include "base/bsolver.hpp"
 #include "mazes/base/IMaze.hpp"
-#include "mazes/Graph.hpp"
+#include "mazes/graph.hpp"
 #include "mazes/Grid.hpp"
-#include "types/ExistenceSet.hpp"
+#include "types/existence_set.hpp"
 #include "utils/Utils.hpp"
 
-namespace CHDR::Solvers {
+namespace chdr::solvers {
 
     template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t>
-    class [[maybe_unused]] FloodFill final {
+    class [[maybe_unused]] floodfill final {
 
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
     private:
 
-        using coord_t = Coord<index_t, Kd>;
+        using coord_t = coord_t<index_t, Kd>;
 
     public:
 
         [[maybe_unused]]
-        auto Solve(const Mazes::Graph<index_t, scalar_t>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, size_t _capacity = 0U) {
+        auto solve(const mazes::graph<index_t, scalar_t>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, size_t _capacity = 0U) {
 
 	        bool result = false;
 
             const auto s = Utils::To1D(_start, _size);
             const auto e = Utils::To1D(_end,   _size);
 
-            if (_maze.Contains(s) &&
-                _maze.Contains(e) &&
-                _maze.At(s).IsActive() &&
-                _maze.At(e).IsActive()
+            if (_maze.contains(s) &&
+                _maze.contains(e) &&
+                    _maze.at(s).IsActive() &&
+                _maze.at(e).IsActive()
             ) {
 
                 if (s != e) {
@@ -50,7 +50,7 @@ namespace CHDR::Solvers {
                     const auto count = _maze.Count();
 
                     // Create closed Set:
-                    ExistenceSet closed ({ s }, std::max(_capacity, std::max(s, e)));
+                    existence_set closed ({s }, std::max(_capacity, std::max(s, e)));
 
                     // Create open Set:
                     std::queue<index_t> open;
@@ -76,12 +76,12 @@ namespace CHDR::Solvers {
 
                                     const auto n = Utils::To1D(nCoord, _size);
 
-                                    if (!closed.Contains(n)) {
+                                    if (!closed.contains(n)) {
 
-                                        if (closed.Capacity() < n) {
-                                            closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
+                                        if (closed.capacity() < n) {
+                                            closed.reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                         }
-                                        closed.Add(n);
+                                        closed.add(n);
 
                                         open.emplace(n);
                                     }
@@ -100,7 +100,7 @@ NestedBreak:
         }
 
         [[maybe_unused]]
-        auto Solve(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, size_t _capacity = 0U) {
+        auto solve(const mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, size_t _capacity = 0U) {
 
 	        bool result = false;
 
@@ -118,7 +118,7 @@ NestedBreak:
                     const auto count = _maze.Count();
 
                     // Create closed set:
-                    ExistenceSet closed ({ s }, std::max(_capacity, std::max(s, e)));
+                    existence_set closed ({s }, std::max(_capacity, std::max(s, e)));
 
                     // Create open set:
                     std::queue<index_t> open;
@@ -144,12 +144,12 @@ NestedBreak:
 
                                     const auto n = Utils::To1D(nCoord, _maze.Size());
 
-                                    if (!closed.Contains(n)) {
+                                    if (!closed.contains(n)) {
 
-                                        if (closed.Capacity() < n) {
-                                            closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
+                                        if (closed.capacity() < n) {
+                                            closed.reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                         }
-                                        closed.Add(n);
+                                        closed.add(n);
                                         
                                         open.emplace(n);
                                     }

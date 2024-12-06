@@ -9,16 +9,16 @@
 #ifndef CHDR_MANAGEDNODE_HPP
 #define CHDR_MANAGEDNODE_HPP
 
-#include "BNode.hpp"
+#include "bNode.hpp"
 
 #include <memory>
 
-namespace CHDR::Solvers {
+namespace chdr::solvers {
 
     template<typename index_t>
-    struct ManagedNode : public BNode<index_t> {
+    struct ManagedNode : public bNode<index_t> {
 
-        std::shared_ptr<const ManagedNode<index_t>> m_Parent;
+        std::shared_ptr<const ManagedNode<index_t>> m_parent;
 
         /**
          * @brief Constructs an uninitialized ManagedNode.
@@ -28,27 +28,27 @@ namespace CHDR::Solvers {
         constexpr ManagedNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
         [[nodiscard]] constexpr ManagedNode(const index_t& _index) :
-            BNode<index_t>(_index),
-            m_Parent() {}
+                bNode<index_t>(_index),
+                m_parent() {}
 
         [[nodiscard]] constexpr ManagedNode(const index_t& _index, ManagedNode<index_t>&& _parent) :
-            BNode<index_t>(_index)
+                bNode<index_t>(_index)
         {
-            m_Parent = std::make_shared<const ManagedNode>(std::move(_parent));
+            m_parent = std::make_shared<const ManagedNode>(std::move(_parent));
         }
 
         ~ManagedNode() { // NOLINT(*-use-equals-default)
 
-//                while (m_Parent && m_Parent.unique()) {
-//                    m_Parent = std::move(m_Parent->m_Parent);
+//                while (m_parent && m_parent.unique()) {
+//                    m_parent = std::move(m_parent->m_parent);
 //                }
 
-            Expunge_Recursive(m_Parent);
+            Expunge_Recursive(m_parent);
         }
 
         void Expunge_Recursive(std::shared_ptr<const ManagedNode>& _node) {
             if (_node && _node.unique()) {
-                _node = std::move(_node->m_Parent);
+                _node = std::move(_node->m_parent);
                 Expunge_Recursive(_node);
             }
         }
@@ -62,15 +62,15 @@ namespace CHDR::Solvers {
 
             // Recurse from end node to start node, inserting into a result buffer:
             _path.reserve(_capacity);
-            _path.emplace_back(Utils::ToND(curr.m_Index, _size));
+            _path.emplace_back(Utils::ToND(curr.m_index, _size));
 
-            if (curr.m_Parent != nullptr) {
+            if (curr.m_parent != nullptr) {
 
-                for (auto item = curr.m_Parent; item->m_Parent != nullptr;) {
-                    _path.emplace_back(Utils::ToND(item->m_Index, _size));
+                for (auto item = curr.m_parent; item->m_parent != nullptr;) {
+                    _path.emplace_back(Utils::ToND(item->m_index, _size));
 
                     auto oldItem = item;
-                    item = item->m_Parent;
+                    item = item->m_parent;
                     oldItem.reset();
                 }
             }

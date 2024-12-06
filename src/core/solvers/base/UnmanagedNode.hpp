@@ -2,16 +2,16 @@
 #define CHDR_UNMANAGEDNODE_HPP
 
 #include "../../utils/Intrinsics.hpp"
-#include "BNode.hpp"
+#include "bNode.hpp"
 
 #include <memory>
 
-namespace CHDR::Solvers {
+namespace chdr::solvers {
 
     template<typename index_t>
-    struct UnmanagedNode : public BNode<index_t> {
+    struct UnmanagedNode : public bNode<index_t> {
 
-        const UnmanagedNode<index_t>* RESTRICT m_Parent;
+        const UnmanagedNode<index_t>* RESTRICT m_parent;
 
         /**
         * @brief Constructs an uninitialized UnmanagedNode.
@@ -21,7 +21,7 @@ namespace CHDR::Solvers {
         constexpr UnmanagedNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
         [[nodiscard]] constexpr UnmanagedNode(const index_t& _index, const UnmanagedNode<index_t>* RESTRICT const _parent) :
-            BNode<index_t>(_index), m_Parent(std::move(_parent)) {}
+                bNode<index_t>(_index), m_parent(std::move(_parent)) {}
 
         template<typename node_t, typename coord_t>
         auto Backtrack(std::vector<coord_t>& _path, const coord_t& _size, const size_t& _capacity = 0U) {
@@ -32,8 +32,8 @@ namespace CHDR::Solvers {
             _path.reserve(_capacity);
 
             // Recurse from end node to start node, inserting into a result buffer:
-            for (const auto* temp = this; temp->m_Parent != nullptr; temp = static_cast<const node_t*>(temp->m_Parent)) {
-                _path.emplace_back(Utils::ToND(temp->m_Index, _size));
+            for (const auto* temp = this; temp->m_parent != nullptr; temp = static_cast<const node_t*>(temp->m_parent)) {
+                _path.emplace_back(Utils::ToND(temp->m_index, _size));
             }
 
             // Reverse the result:

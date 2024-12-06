@@ -8,7 +8,7 @@
 
 #include <../../contrib/LouiEriksson/Debug.hpp>
 
-#include "scripts/core/Application.hpp"
+#include "scripts/core/application.hpp"
 
 /**
  * @file main.cpp
@@ -30,13 +30,13 @@ int main([[maybe_unused]] const int _argc, [[maybe_unused]] const char* _argv[])
                 break;
             }
             case 2U: {
-                result = Test::Application::Main<1U>({
+                result = test::application::main<1U>({
                     std::stoul(_argv[1U])
                 });
                 break;
             }
             case 3U: {
-                result = Test::Application::Main<2U>({
+                result = test::application::main<2U>({
                     std::stoul(_argv[1U]), std::stoul(_argv[2U])
                 });
                 break;

@@ -128,30 +128,30 @@ add_library(LOUIERIKSSON_DEBUG_HPP INTERFACE
 # ADD CHDR:
 add_library(CHDR INTERFACE
     src/core/chdr.hpp
-    src/core/mazes/base/IGraph.hpp
+        src/core/mazes/base/igraph.hpp
     src/core/mazes/base/IMaze.hpp
-    src/core/mazes/Graph.hpp
+        src/core/mazes/graph.hpp
     src/core/mazes/Grid.hpp
     src/core/mazes/nodes/base/INode.hpp
     src/core/mazes/nodes/IDNode.hpp
     src/core/mazes/nodes/WeightedNode.hpp
-    src/core/solvers/AStar.hpp
-    src/core/solvers/base/BNode.hpp
-    src/core/solvers/base/BSolver.hpp
+        src/core/solvers/astar.hpp
+        src/core/solvers/base/bNode.hpp
+        src/core/solvers/base/bsolver.hpp
     src/core/solvers/base/ManagedNode.hpp
-    src/core/solvers/BFS.hpp
-    src/core/solvers/BStar.hpp
-    src/core/solvers/DFS.hpp
-    src/core/solvers/Dijkstra.hpp
-    src/core/solvers/ESMGStar.hpp
-    src/core/solvers/FloodFill.hpp
-    src/core/solvers/GBFS.hpp
-    src/core/solvers/GDFS.hpp
+        src/core/solvers/bfs.hpp
+        src/core/solvers/bstar.hpp
+        src/core/solvers/dfs.hpp
+        src/core/solvers/dijkstra.hpp
+        src/core/solvers/esmgstar.hpp
+        src/core/solvers/floodfill.hpp
+        src/core/solvers/gbfs.hpp
+        src/core/solvers/gdfs.hpp
     src/core/solvers/GStar.hpp
     src/core/solvers/JPS.hpp
     src/core/types/Coord.hpp
-    src/core/types/ExistenceSet.hpp
-    src/core/types/Heap.hpp
+        src/core/types/existence_set.hpp
+        src/core/types/heap.hpp
     src/core/types/StableForwardBuf.hpp
     src/core/types/StackAllocator.hpp
     src/core/utils/Heuristics.hpp
@@ -177,12 +177,12 @@ endif()
 add_executable(Test
     src/test/main.cpp
 
-    src/test/scripts/core/Application.hpp
-    src/test/scripts/core/Display.hpp
-    src/test/scripts/generator/Graph.hpp
+        src/test/scripts/core/application.hpp
+        src/test/scripts/core/display.hpp
+        src/test/scripts/generator/graph.hpp
     src/test/scripts/generator/Grid.hpp
-    src/test/scripts/generator/utils/Backtracking.hpp
-    src/test/scripts/tests/AStar.hpp
+        src/test/scripts/generator/utils/backtracking.hpp
+        src/test/scripts/tests/astar.hpp
 )
 
 target_include_directories(Test PRIVATE

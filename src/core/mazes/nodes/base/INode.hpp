@@ -9,7 +9,7 @@
 #ifndef CHDR_INODE_HPP
 #define CHDR_INODE_HPP
 
-namespace CHDR::Mazes {
+namespace chdr::mazes {
 
     class INode {
 

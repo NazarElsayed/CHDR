@@ -11,23 +11,23 @@
 
 #include <map>
 
-#include "base/BSolver.hpp"
+#include "base/bsolver.hpp"
 #include "mazes/Grid.hpp"
-#include "types/ExistenceSet.hpp"
+#include "types/existence_set.hpp"
 #include "types/StableForwardBuf.hpp"
 #include "utils/Utils.hpp"
 
-namespace CHDR::Solvers {
+namespace chdr::solvers {
 
     template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t>
-    class [[maybe_unused]] JPS final : public BSolver<weight_t, Kd, scalar_t, index_t> {
+    class [[maybe_unused]] JPS final : public bsolver<weight_t, Kd, scalar_t, index_t> {
 
         static_assert(std::is_integral_v<scalar_t> || std::is_floating_point_v<scalar_t>, "scalar_t must be either an integral or floating point type");
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
     private:
 
-        using coord_t = Coord<index_t, Kd>;
+        using coord_t = coord_t<index_t, Kd>;
 
         static constexpr std::array<uint8_t, 8U> s_rotateL { 2U, 4U, 7U,
                                                              1U,     6U,
@@ -57,23 +57,23 @@ namespace CHDR::Solvers {
 
             std::array<int8_t, 2U> m_Direction;
 
-            scalar_t m_GScore;
-            scalar_t m_FScore;
+            scalar_t m_gScore;
+            scalar_t m_fScore;
 
             [[nodiscard]] constexpr JPSNode() : UnmanagedNode<index_t>() {};
 
             [[nodiscard]] constexpr JPSNode(const index_t& _index, const std::array<int8_t, 2U>& _direction, const scalar_t& _gScore, const scalar_t& _hScore, const JPSNode* RESTRICT const _parent) : UnmanagedNode<index_t>(_index, _parent),
                 m_Direction(_direction),
-                m_GScore(_gScore),
-                m_FScore(_gScore + _hScore) {}
+                m_gScore(_gScore),
+                m_fScore(_gScore + _hScore) {}
 
             struct Max {
 
                 [[nodiscard]] constexpr bool operator () (const JPSNode& _a, const JPSNode& _b) const {
 
-                    return _a.m_FScore == _b.m_FScore ?
-                        _a.m_GScore > _b.m_GScore :
-                        _a.m_FScore > _b.m_FScore;
+                    return _a.m_fScore == _b.m_fScore ?
+                        _a.m_gScore > _b.m_gScore :
+                        _a.m_fScore > _b.m_fScore;
                 }
             };
 
@@ -81,9 +81,9 @@ namespace CHDR::Solvers {
 
                 [[nodiscard]] constexpr bool operator () (const JPSNode& _a, const JPSNode& _b) const {
 
-                    return _a.m_FScore == _b.m_FScore ?
-                        _a.m_GScore < _b.m_GScore :
-                        _a.m_FScore < _b.m_FScore;
+                    return _a.m_fScore == _b.m_fScore ?
+                        _a.m_gScore < _b.m_gScore :
+                        _a.m_fScore < _b.m_fScore;
                 }
             };
         };
@@ -93,7 +93,7 @@ namespace CHDR::Solvers {
             return (static_cast<T>(0) < _val) - (_val < static_cast<T>(0));
         }
 
-        std::vector<coord_t> FindJumpPoints(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _current, const std::array<int8_t, 2U> _direction, const coord_t& _end) const {
+        std::vector<coord_t> FindJumpPoints(const mazes::Grid<Kd, weight_t>& _maze, const coord_t& _current, const std::array<int8_t, 2U> _direction, const coord_t& _end) const {
 
             std::vector<coord_t> result;
 
@@ -176,7 +176,7 @@ namespace CHDR::Solvers {
         }
 
         [[nodiscard]]
-        std::pair<bool, coord_t> Jump(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _current, const coord_t& _previous, const coord_t& _end) const {
+        std::pair<bool, coord_t> Jump(const mazes::Grid<Kd, weight_t>& _maze, const coord_t& _current, const coord_t& _previous, const coord_t& _end) const {
 
             const std::array<int8_t, 2> direction { Sign(static_cast<int>(_current[0]) - static_cast<int>(_previous[0])) ,
                                                     Sign(static_cast<int>(_current[1]) - static_cast<int>(_previous[1])) };
@@ -185,7 +185,7 @@ namespace CHDR::Solvers {
         }
 
         [[nodiscard]]
-        std::pair<bool, coord_t> Jump(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _current, const std::array<int8_t, 2U>& _direction, const coord_t& _end) const {
+        std::pair<bool, coord_t> Jump(const mazes::Grid<Kd, weight_t>& _maze, const coord_t& _current, const std::array<int8_t, 2U>& _direction, const coord_t& _end) const {
 
             std::pair<bool, coord_t> result { false, _current };
 
@@ -255,7 +255,7 @@ namespace CHDR::Solvers {
             return result;
         }
 
-        std::vector<coord_t> Execute(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, size_t _capacity) const override {
+        std::vector<coord_t> Execute(const mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, size_t _capacity) const override {
 
             std::vector<coord_t> result;
 
@@ -264,10 +264,10 @@ namespace CHDR::Solvers {
 
             // Create closed set:
             _capacity = std::max(_capacity, std::max(s, e));
-            ExistenceSet<LowMemoryUsage> closed({ s }, _capacity);
+            existence_set<low_memory_usage> closed({s }, _capacity);
 
             // Create open set:
-            Heap<JPSNode, 2U, typename JPSNode::Max> open(_capacity / 8U);
+            heap<JPSNode, 2U, typename JPSNode::Max> open(_capacity / 8U);
             open.Emplace({ s, {0, 0}, static_cast<scalar_t>(0), _h(_start, _end), nullptr });
 
             // Create buffer:
@@ -278,39 +278,39 @@ namespace CHDR::Solvers {
 
                 auto curr = open.PopTop();
 
-                if (curr.m_Index != e) { // SEARCH FOR SOLUTION...
+                if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
-                    if (closed.Capacity() < curr.m_Index) {
-                        closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), _maze.Count()));
+                    if (closed.capacity() < curr.m_index) {
+                        closed.reserve(std::min(_capacity * ((curr.m_index % _capacity) + 1U), _maze.Count()));
                     }
-                    closed.Add(curr.m_Index);
+                    closed.add(curr.m_index);
 
-                    auto coord = Utils::ToND(curr.m_Index, _maze.Size());
+                    auto coord = Utils::ToND(curr.m_index, _maze.Size());
                     auto successors = FindJumpPoints(_maze, coord, curr.m_Direction, _end);
 
                     for (const auto& successor : successors) {
 
                         const auto n = Utils::To1D(successor, _maze.Size());
-                        if (!closed.Contains(n)) {
+                        if (!closed.contains(n)) {
 
                             // Check if node is not already visited:
-                            if (closed.Capacity() < n) {
-                                closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), _maze.Count()));
+                            if (closed.capacity() < n) {
+                                closed.reserve(std::min(_capacity * ((n % _capacity) + 1U), _maze.Count()));
                             }
 
-                            closed.Add(n);
+                            closed.add(n);
 
                             const std::array<int8_t, 2> direction { Sign(static_cast<int>(successor[0]) - static_cast<int>(coord[0])) ,
                                                                     Sign(static_cast<int>(successor[1]) - static_cast<int>(coord[1])) };
 
                             // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                            open.Emplace({ n, direction, curr.m_GScore + static_cast<scalar_t>(1), _h(successor, _end) * _weight, &buf.Emplace(std::move(curr)) });
+                            open.Emplace({ n, direction, curr.m_gScore + static_cast<scalar_t>(1), _h(successor, _end) * _weight, &buf.Emplace(std::move(curr)) });
                         }
                     }
                 }
                 else { // SOLUTION REACHED ...
 
-                    curr.template Backtrack<JPSNode>(result, _maze.Size(), curr.m_GScore);
+                    curr.template Backtrack<JPSNode>(result, _maze.Size(), curr.m_gScore);
 
                     break;
                 }

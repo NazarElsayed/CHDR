@@ -11,10 +11,10 @@
 
 #include <array>
 
-namespace CHDR {
+namespace chdr {
 
     template<typename T, const size_t Kd>
-    using Coord [[maybe_unused]] = std::array<T, Kd>;
+    using coord_t [[maybe_unused]] = std::array<T, Kd>;
 
 } // CHDR
 

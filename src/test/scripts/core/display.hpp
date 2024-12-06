@@ -13,16 +13,16 @@
 
 #include <mazes/Grid.hpp>
 #include <types/Coord.hpp>
-#include <types/ExistenceSet.hpp>
+#include <types/existence_set.hpp>
 
-namespace Test {
+namespace test {
 
     template<typename T, const size_t Kd>
-    class Display {
+    class display {
 
     private:
 
-        using coord_t = CHDR::Coord<size_t, Kd>;
+        using coord_t = chdr::coord_t<size_t, Kd>;
 
         static constexpr auto* empty_str = "  ";
         static constexpr auto*  wall_str = "██";
@@ -41,8 +41,8 @@ namespace Test {
 
     public:
 
-        static constexpr void DrawMaze(const CHDR::Coord<size_t, Kd>& _start, const CHDR::Coord<size_t,  Kd>& _end,
-                                       const CHDR::Coord<size_t, Kd>& _size , const CHDR::Mazes::Grid<Kd, T>& _maze) {
+        static constexpr void drawMaze(const chdr::coord_t<size_t, Kd>& _start, const chdr::coord_t<size_t,  Kd>& _end,
+                                       const chdr::coord_t<size_t, Kd>& _size , const chdr::mazes::Grid<Kd, T>& _maze) {
 
             static_assert(std::is_integral_v<T>, "Maze type must be an integral type.");
 
@@ -50,8 +50,8 @@ namespace Test {
             SetConsoleOutputCP(CP_UTF8);
 #endif
 
-            const auto s = CHDR::Utils::To1D(_start, _size);
-            const auto e = CHDR::Utils::To1D(_end,   _size);
+            const auto s = chdr::Utils::To1D(_start, _size);
+            const auto e = chdr::Utils::To1D(_end, _size);
 
             const bool even_width = _size[0U] % 2U == 0U;
 
@@ -107,19 +107,19 @@ namespace Test {
             }
         }
 
-        static constexpr void DrawMaze(const CHDR::Coord<size_t, Kd>& _start, const CHDR::Coord<size_t,  Kd>& _end,
-                                       const CHDR::Coord<size_t, Kd>& _size , const CHDR::Mazes::Grid<Kd, T>& _maze,
+        static constexpr void drawMaze(const chdr::coord_t<size_t, Kd>& _start, const chdr::coord_t<size_t,  Kd>& _end,
+                                       const chdr::coord_t<size_t, Kd>& _size , const chdr::mazes::Grid<Kd, T>& _maze,
                                        const std::vector<coord_t>& _path) {
 
             static_assert(std::is_integral_v<T>, "Maze type must be an integral type.");
 
-            const auto s = CHDR::Utils::To1D(_start, _size);
-            const auto e = CHDR::Utils::To1D(_end,   _size);
+            const auto s = chdr::Utils::To1D(_start, _size);
+            const auto e = chdr::Utils::To1D(_end, _size);
 
-            CHDR::ExistenceSet path_set(_path.size());
+            chdr::existence_set path_set(_path.size());
 
             for (const auto& item : _path) {
-                path_set.Add(CHDR::Utils::To1D<size_t>(item, _maze.Size()));
+                path_set.add(chdr::Utils::To1D<size_t>(item, _maze.Size()));
             }
 
             const bool even_width = _size[0U] % 2U == 0U;
@@ -143,7 +143,7 @@ namespace Test {
                 else if (i == e) { std::cout <<   end_str; }
                 else {
 
-                    if (path_set.Contains(i)) {
+                    if (path_set.contains(i)) {
                         std::cout << path_str;
                     }
                     else {

@@ -9,11 +9,11 @@
 #ifndef CHDR_GRAPH_HPP
 #define CHDR_GRAPH_HPP
 
-#include "base/IGraph.hpp"
+#include "base/igraph.hpp"
 #include "Grid.hpp"
 
-#include "base/IGraph.hpp"
-#include "types/ExistenceSet.hpp"
+#include "base/igraph.hpp"
+#include "types/existence_set.hpp"
 
 #include <atomic>
 #include <functional>
@@ -25,60 +25,60 @@
 #include <unordered_set>
 #include <vector>
 
-namespace CHDR::Mazes {
+namespace chdr::mazes {
 
     template<typename index_t, typename scalar_t>
-    class Graph final : public IGraph<index_t, scalar_t> {
+    class graph final : public igraph<index_t, scalar_t> {
 
     private:
 
-        using edge_t = typename IGraph<index_t, scalar_t>::edge_t;
+        using edge_t = typename igraph<index_t, scalar_t>::edge_t;
 
-        struct IndexHash {
+        struct indexHash {
 
             constexpr size_t operator () (const index_t& _index) const {
                 return static_cast<index_t>(_index);
             }
         };
 
-        struct IndexEqual {
+        struct indexEqual {
 
             constexpr bool operator () (const index_t& _a, const index_t& _b) const {
                 return _a == _b;
             }
         };
 
-        struct EdgeHash {
+        struct edgeHash {
 
             constexpr size_t operator () (const std::pair<index_t, scalar_t> &_edge) const {
                 return static_cast<size_t>(_edge.first) ^ (std::hash<scalar_t>()(_edge.second) << 1);
             }
         };
 
-        struct EdgeEqual {
+        struct edgeEqual {
 
             constexpr bool operator () (const std::pair<index_t, scalar_t>& _a, const std::pair<index_t, scalar_t>& _b) const {
                 return _a.first == _b.first && _a.second == _b.second;
             }
         };
 
-        using Neighbours   = std::unordered_set<edge_t, EdgeHash, EdgeEqual>;
-        using AdjacencySet = std::unordered_map<index_t, Neighbours, IndexHash, IndexEqual>;
+        using Neighbours   = std::unordered_set<edge_t, edgeHash, edgeEqual>;
+        using AdjacencySet = std::unordered_map<index_t, Neighbours, indexHash, indexEqual>;
 
-        AdjacencySet m_Entries;
+        AdjacencySet m_entries;
 
     public:
 
-        [[maybe_unused]] constexpr Graph() : m_Entries() {}
+        [[maybe_unused]] constexpr graph() : m_entries() {}
 
-        [[maybe_unused]] constexpr Graph(std::initializer_list<std::initializer_list<edge_t>> _adjacency_list) : m_Entries() {
+        [[maybe_unused]] constexpr graph(std::initializer_list<std::initializer_list<edge_t>> _adjacency_list) : m_entries() {
 
             index_t index{0};
 
             for (const auto& entry: _adjacency_list) {
 
                 for (const auto& edge: entry) {
-                    Add(index, edge);
+                    add(index, edge);
                 }
 
                 ++index;
@@ -89,7 +89,7 @@ namespace CHDR::Mazes {
 #if __cplusplus >= 202302L
         constexpr
 #endif // __cplusplus >= 202302L
-        [[maybe_unused]] explicit Graph(const Grid<Kd, weight_t>& _grid) : m_Entries{} {
+        [[maybe_unused]] explicit graph(const Grid<Kd, weight_t>& _grid) : m_entries{} {
 
             const auto size = _grid.Size();
 
@@ -105,10 +105,10 @@ namespace CHDR::Mazes {
 
                     std::vector<edge_t> stack(128U);
 
-                    std::unordered_set<index_t, IndexHash, IndexEqual> global_closed;
-                    std::unordered_set<index_t, IndexHash, IndexEqual> local_closed;
+                    std::unordered_set<index_t, indexHash, indexEqual> global_closed;
+                    std::unordered_set<index_t, indexHash, indexEqual> local_closed;
 
-                    std::unordered_map<index_t, std::vector<edge_t>, IndexHash, IndexEqual> thread_connections;
+                    std::unordered_map<index_t, std::vector<edge_t>, indexHash, indexEqual> thread_connections;
 
                     for (index_t index = _start; index < _end; ++index) {
 
@@ -175,7 +175,7 @@ namespace CHDR::Mazes {
 
                                         for (const auto& item : thread_connections[nIdx1]) {
                                             std::lock_guard<std::mutex> lock(mtx);
-                                            Add(index, item);
+                                            add(index, item);
                                         }
                                     }
                                 }
@@ -213,7 +213,7 @@ namespace CHDR::Mazes {
                         for (auto& neighbour : _grid.GetNeighbours(index)) {
 
                             if (const auto& [nActive, nCoord] = neighbour; nActive) {
-                                Add(index, std::make_pair(Utils::To1D(nCoord, size), static_cast<scalar_t>(1)));
+                                add(index, std::make_pair(Utils::To1D(nCoord, size), static_cast<scalar_t>(1)));
                             }
                         }
                     }
@@ -226,16 +226,16 @@ namespace CHDR::Mazes {
         }
 
         template<typename... Args>
-        [[nodiscard]] constexpr IDNode<index_t> At(const Args&... _id) const {
-            return At({ _id... });
+        [[nodiscard]] constexpr IDNode<index_t> at(const Args&... _id) const {
+            return at({_id...});
         }
 
-        [[nodiscard]] constexpr IDNode<index_t> At(const index_t& _id) const {
+        [[nodiscard]] constexpr IDNode<index_t> at(const index_t& _id) const {
 
-            auto search = m_Entries.find(_id);
+            auto search = m_entries.find(_id);
 
 #ifndef NDEBUG
-            if (search == m_Entries.end()) {
+            if (search == m_entries.end()) {
                 throw std::runtime_error("Error: The node with the specified ID does not exist in the graph.");
             }
 #endif // NDEBUG
@@ -243,26 +243,26 @@ namespace CHDR::Mazes {
             return { search->first };
         }
 
-        void Add(const index_t& _from_id) {
-            m_Entries.insert_or_assign(_from_id, Neighbours{});
+        void add(const index_t& _from_id) {
+            m_entries.insert_or_assign(_from_id, Neighbours{});
         }
 
-        void Add(const index_t& _from_id, const edge_t& _edge) {
-            m_Entries[_from_id].emplace(_edge);
+        void add(const index_t& _from_id, const edge_t& _edge) {
+            m_entries[_from_id].emplace(_edge);
         }
 
-        [[maybe_unused]] void Remove(const index_t& _from_id, const edge_t& _edge) {
+        [[maybe_unused]] void remove(const index_t& _from_id, const edge_t& _edge) {
 
             if (Contains(_from_id)) {
-                m_Entries[_from_id].erase(_edge);
+                m_entries[_from_id].erase(_edge);
 
-                if (m_Entries[_from_id].empty()) {
-                    m_Entries.erase(_from_id);
+                if (m_entries[_from_id].empty()) {
+                    m_entries.erase(_from_id);
                 }
             }
         }
 
-        [[maybe_unused]] void Prune() {
+        [[maybe_unused]] void prune() {
 
             // TODO: Fix erroneous graph when pruned twice and add support for pruning directed graphs.
 
@@ -271,22 +271,22 @@ namespace CHDR::Mazes {
             do {
                 nodesToRemove.clear();
 
-                for (const auto& entry : m_Entries) {
+                for (const auto& entry : m_entries) {
 
                     auto& [node, neighbours] = entry;
 
-                    if (m_Entries.size() > 2U) {
+                    if (m_entries.size() > 2U) {
 
                         if (neighbours.size() == 2U) {
 
                             auto& [n1_id, n1_cost] = *(  neighbours.begin());
                             auto& [n2_id, n2_cost] = *(++neighbours.begin());
 
-                            auto s1 = m_Entries.find(n1_id);
-                            auto s2 = m_Entries.find(n2_id);
+                            auto s1 = m_entries.find(n1_id);
+                            auto s2 = m_entries.find(n2_id);
 
                             // Merge the connections from the current node with its neighbours:
-                            if (s1 != m_Entries.end()) {
+                            if (s1 != m_entries.end()) {
 
                                 auto& set = s1->second;
                                 auto sn = set.find(std::make_pair(node, n1_cost));
@@ -296,7 +296,7 @@ namespace CHDR::Mazes {
                                     set.erase(sn);
                                 }
                             }
-                            if (s2 != m_Entries.end()) {
+                            if (s2 != m_entries.end()) {
 
                                 auto& set = s2->second;
                                 auto sn = set.find(std::make_pair(node, n2_cost));
@@ -316,7 +316,7 @@ namespace CHDR::Mazes {
                     }
                 }
                 for (const auto& node : nodesToRemove) {
-                    m_Entries.erase(node);
+                    m_entries.erase(node);
                 }
             }
             while (!nodesToRemove.empty());
@@ -324,9 +324,9 @@ namespace CHDR::Mazes {
             malloc_consolidate();
         }
 
-        [[maybe_unused]] void Print() const {
+        [[maybe_unused]] void print() const {
 
-            for (const auto& [node, edges]: m_Entries) {
+            for (const auto& [node, edges]: m_entries) {
 
                 std::cout << "Node " << node << ":\n";
 
@@ -344,31 +344,31 @@ namespace CHDR::Mazes {
             }
 #endif
 
-            return m_Entries.find(_id)->second;
+            return m_entries.find(_id)->second;
         }
 
         [[maybe_unused]] [[nodiscard]] constexpr bool Contains(const index_t& _id) const override {
-            return m_Entries.find(_id) != m_Entries.end();
+            return m_entries.find(_id) != m_entries.end();
         }
 
         [[maybe_unused]] [[nodiscard]] constexpr size_t Count() const override {
-            return m_Entries.size();
+            return m_entries.size();
         }
 
         [[maybe_unused]] void Clear() {
-            m_Entries.clear();
+            m_entries.clear();
         }
 
         using       iterator = typename AdjacencySet::iterator;
         using const_iterator = typename AdjacencySet::const_iterator;
 
-        [[maybe_unused]] [[nodiscard]]       iterator  begin()       { return m_Entries.begin();  }
-        [[maybe_unused]] [[nodiscard]] const_iterator  begin() const { return m_Entries.begin();  }
-        [[maybe_unused]] [[nodiscard]] const_iterator cbegin() const { return m_Entries.cbegin(); }
+        [[maybe_unused]] [[nodiscard]]       iterator  begin()       { return m_entries.begin();  }
+        [[maybe_unused]] [[nodiscard]] const_iterator  begin() const { return m_entries.begin();  }
+        [[maybe_unused]] [[nodiscard]] const_iterator cbegin() const { return m_entries.cbegin(); }
 
-        [[maybe_unused]] [[nodiscard]]       iterator  end()       { return m_Entries.end();  }
-        [[maybe_unused]] [[nodiscard]] const_iterator  end() const { return m_Entries.end();  }
-        [[maybe_unused]] [[nodiscard]] const_iterator cend() const { return m_Entries.cend(); }
+        [[maybe_unused]] [[nodiscard]]       iterator  end()       { return m_entries.end();  }
+        [[maybe_unused]] [[nodiscard]] const_iterator  end() const { return m_entries.end();  }
+        [[maybe_unused]] [[nodiscard]] const_iterator cend() const { return m_entries.cend(); }
 
     };
 

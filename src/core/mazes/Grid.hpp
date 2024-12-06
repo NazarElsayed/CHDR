@@ -19,7 +19,7 @@
 
 #include "nodes/WeightedNode.hpp"
 
-namespace CHDR::Mazes {
+namespace chdr::mazes {
 
     /**
      * @tparam Kd Dimensionality of the grid.
@@ -27,7 +27,7 @@ namespace CHDR::Mazes {
     template <const size_t Kd, typename T = uint32_t>
     class Grid final : public IMaze<WeightedNode<T>, size_t> {
 
-        using coord_t = Coord<size_t, Kd>;
+        using coord_t = coord_t<size_t, Kd>;
 
     public:
 

@@ -13,7 +13,7 @@
 
 #include "Intrinsics.hpp"
 
-namespace CHDR {
+namespace chdr {
 
     struct SIMDExtensions {
 

@@ -11,7 +11,7 @@
 
 #include <type_traits>
 
-namespace CHDR::Mazes {
+namespace chdr::mazes {
 
     template <typename W = bool>
     class WeightedNode {

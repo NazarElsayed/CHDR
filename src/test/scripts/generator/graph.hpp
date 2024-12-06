@@ -13,18 +13,18 @@
 
 #include "Debug.hpp"
 
-namespace Test::Generator {
+namespace test::generator {
 
-	struct Graph final {
+	struct graph final {
 
         using uniform_rng_t = std::mt19937_64;
 
         template <typename T, typename index_t, typename scalar_t, const size_t Kd, typename... Args>
-        static auto Generate(const CHDR::Coord<size_t, Kd>& _start, CHDR::Coord<size_t, Kd>& _end, const float& _loops = 0.0F, const float& _obstacles = 0.0f, const size_t& _seed = -1U, const Args&... _size) {
+        static auto generate(const chdr::coord_t<size_t, Kd>& _start, chdr::coord_t<size_t, Kd>& _end, const float& _loops = 0.0F, const float& _obstacles = 0.0f, const size_t& _seed = -1U, const Args&... _size) {
 
 			static_assert(std::is_integral_v<T>, "Type T must be an integral type.");
 
-            constexpr bool Bidirectional = true;
+            constexpr bool bidirectional = true;
 
             _end = _start;
 
@@ -33,22 +33,22 @@ namespace Test::Generator {
 
             std::array size { _size... };
 
-            CHDR::Mazes::Graph<index_t, scalar_t> result;
+            chdr::mazes::graph<index_t, scalar_t> result;
 
             constexpr size_t null_v = -1U;
 
             const auto seed = _seed == null_v ? std::random_device().operator()() : _seed;
             uniform_rng_t rng(seed);
 
-            const auto max_index = CHDR::Utils::Product<index_t>(size);
+            const auto max_index = chdr::Utils::Product<index_t>(size);
 
             std::vector<index_t> keys;
             std::unordered_map<index_t, size_t> depths;
             size_t max_depth = 0U;
 
             {
-                const auto s = CHDR::Utils::To1D(_start, size);
-                result.Add(s, {});
+                const auto s = chdr::Utils::To1D(_start, size);
+                result.add(s, {});
                 keys.emplace_back(s);
                 depths[s] = max_depth;
             }
@@ -75,7 +75,7 @@ namespace Test::Generator {
                 if (depth > max_depth) {
                     max_depth = depth;
 
-                    _end = CHDR::Utils::ToND(curr, size);
+                    _end = chdr::Utils::ToND(curr, size);
                 }
 
                 if (result.GetNeighbours(curr).size() <= 1U)  {
@@ -100,13 +100,13 @@ namespace Test::Generator {
                             distance = std::uniform_real_distribution(distance_min, distance_max)(rng);
                         }
 
-                        result.Add(curr, { next, distance });
+                        result.add(curr, {next, distance});
 
-                        if constexpr (Bidirectional) {
-                            result.Add(next, { curr, distance });
+                        if constexpr (bidirectional) {
+                            result.add(next, {curr, distance});
                         }
                         else {
-                            result.Add(next);
+                            result.add(next);
                         }
 
                         keys.emplace_back(next);
@@ -117,7 +117,7 @@ namespace Test::Generator {
                 }
             }
 
-            Debug::Log("\t[FINISHED] \t(~" + CHDR::Utils::Trim_Trailing_Zeros(std::to_string(count / static_cast<long double>(1000000000.0))) + "b total candidate nodes)");
+            Debug::Log("\t[FINISHED] \t(~" + chdr::Utils::Trim_Trailing_Zeros(std::to_string(count / static_cast<long double>(1000000000.0))) + "b total candidate nodes)");
 
 			return result;
 		}

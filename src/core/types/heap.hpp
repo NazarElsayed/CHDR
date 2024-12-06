@@ -11,23 +11,23 @@
 
 #define HEAP_SUPPRESS_EXCEPTION_WARNING // Uncomment if you wish to remove the warning about possible unhandled exceptions.
 
-namespace CHDR {
+namespace chdr {
 
-    template<typename T, size_t D = 2U, typename Compare = std::less<T>>
-    class Heap {
+    template<typename t, size_t Kd = 2U, typename compute = std::less<t>>
+    class heap {
 
-        static_assert(D >= 2, "Template parameter D must be greater than or equal to 2.");
+        static_assert(Kd >= 2, "Template parameter D must be greater than or equal to 2.");
 
     private:
 
-        std::vector<T> m_Data;
-        Compare m_Compare;
+        std::vector<t> m_Data;
+        compute m_Compare;
 
-        size_t index_of(const T& _item) const {
+        size_t index_of(const t& _item) const {
             return static_cast<size_t>(&(_item) - &(Top()));
         }
 
-        constexpr void SortUp(T& _item) {
+        constexpr void sortUp(t& _item) {
 
             if (Size() > 1U) {
 
@@ -35,7 +35,7 @@ namespace CHDR {
 
                 while (i > 1U) {
 
-                    const auto p = i / D;
+                    const auto p = i / Kd;
 
                     if (p > 0U && m_Compare(m_Data[p], m_Data[i])) {
                         std::swap(m_Data[i], m_Data[p]);
@@ -48,7 +48,7 @@ namespace CHDR {
             }
         }
 
-        constexpr void SortDown(T& _item) {
+        constexpr void sortDown(t& _item) {
 
             if (Size() > 1U) {
 
@@ -56,14 +56,14 @@ namespace CHDR {
 
                 while (i > 1U) {
 
-                    auto c0 = i * D;
-                    auto cn = c0 + (D - 1U);
+                    auto c0 = i * Kd;
+                    auto cn = c0 + (Kd - 1U);
 
                     if (cn < m_Data.size()) {
 
                         size_t min{};
 
-                        if constexpr (D == 2U) {
+                        if constexpr (Kd == 2U) {
                             min = (cn < m_Data.size() && m_Compare(m_Data[c0], m_Data[cn])) ? cn : c0;
                         }
                         else {
@@ -93,50 +93,50 @@ namespace CHDR {
 
     public:
 
-        Heap(const size_t& _capacity = 0U) : m_Data() {
+        heap(const size_t& _capacity = 0U) : m_Data() {
             m_Data.reserve(_capacity + 1U);
             m_Data.push_back({}); // Add super element.
         }
 
-        [[nodiscard]] constexpr bool    Empty() const { return Size() == 0U;              }
-        [[nodiscard]] constexpr size_t   Size() const { return m_Data.size() - 1U;        }
+        [[nodiscard]] constexpr bool    Empty() const { return Size() == 0U;       }
+        [[nodiscard]] constexpr size_t   Size() const { return m_Data.size() - 1U; }
 
-        [[nodiscard]] constexpr const T& Top() const {
+        [[nodiscard]] constexpr const t& Top() const {
 
-            if constexpr (std::is_pointer_v<T>) {
-                return static_cast<T>(begin().base());
+            if constexpr (std::is_pointer_v<t>) {
+                return static_cast<t>(begin().base());
             }
             else {
                 return *begin();
             }
         }
 
-        [[nodiscard]] constexpr const T& Back() const {
+        [[nodiscard]] constexpr const t& Back() const {
 
-            if constexpr (std::is_pointer_v<T>) {
-                return static_cast<T>(end().base());
+            if constexpr (std::is_pointer_v<t>) {
+                return static_cast<t>(end().base());
             }
             else {
                 return *end();
             }
         }
 
-        [[maybe_unused]] constexpr void Add(const T& _item) {
+        [[maybe_unused]] constexpr void Add(const t& _item) {
             m_Data.push_back(_item);
-            SortUp(m_Data.back());
+            sortUp(m_Data.back());
         }
 
-        [[maybe_unused]] constexpr void Add(T&& _item) {
+        [[maybe_unused]] constexpr void Add(t&& _item) {
             m_Data.push_back(std::move(_item));
-            SortUp(m_Data.back());
+            sortUp(m_Data.back());
         }
 
-        [[maybe_unused]] constexpr void Emplace(T&& _item) {
+        [[maybe_unused]] constexpr void Emplace(t&& _item) {
             m_Data.emplace_back(std::move(_item));
-            SortUp(m_Data.back());
+            sortUp(m_Data.back());
         }
 
-        [[maybe_unused]] constexpr void Remove(const T& _item) {
+        [[maybe_unused]] constexpr void Remove(const t& _item) {
 
             auto i = index_of(_item);
             if (i < Size()) {
@@ -151,11 +151,11 @@ namespace CHDR {
                     if (Size() > 1U) {
 
                         // Restore heap property:
-                        if (i > 1U && m_Compare(m_Data[i], m_Data[i / D])) {
-                            SortUp(m_Data[i]);
+                        if (i > 1U && m_Compare(m_Data[i], m_Data[i / Kd])) {
+                            sortUp(m_Data[i]);
                         }
                         else {
-                            SortDown(m_Data[i]);
+                            sortDown(m_Data[i]);
                         }
                     }
                 }
@@ -163,14 +163,14 @@ namespace CHDR {
             else {
 
     #ifndef NDEBUG
-                throw std::runtime_error("Heap::Remove(const T& _item): (Out of Bounds) Item does not exist in Heap.");
+                throw std::runtime_error("Heap::remove(const T& _item): (Out of Bounds) Item does not exist in Heap.");
     #endif
             }
         }
 
-        [[maybe_unused]] constexpr T PopTop() {
+        [[maybe_unused]] constexpr t PopTop() {
 
-            T result(std::move(Top()));
+            t result(std::move(Top()));
 
             if (!Empty()) {
                 if (Size() > 0U) {
@@ -178,14 +178,14 @@ namespace CHDR {
                 }
                 m_Data.pop_back();
             }
-            SortDown(m_Data[1U]);
+            sortDown(m_Data[1U]);
 
             return result;
         }
 
-        [[maybe_unused]] constexpr T PopBack() {
+        [[maybe_unused]] constexpr t PopBack() {
 
-            T result(std::move(Back()));
+            t result(std::move(Back()));
 
             if (!Empty()) {
                 m_Data.pop_back();
@@ -194,11 +194,11 @@ namespace CHDR {
             return result;
         }
 
-        [[maybe_unused]] constexpr void Update(T& _item) {
-            SortUp(m_Data[index_of(_item)]);
+        [[maybe_unused]] constexpr void Update(t& _item) {
+            sortUp(m_Data[index_of(_item)]);
         }
 
-        [[maybe_unused]] constexpr bool Contains(T& _item) {
+        [[maybe_unused]] constexpr bool Contains(t& _item) {
 
             const auto& i = index_of(_item);
             return !Empty() && i < m_Data.size() && _item == m_Data[i];
@@ -220,7 +220,7 @@ namespace CHDR {
         [[deprecated("This function does not perform bounds checking in 'runtime' compiled builds.\nSuppress this warning by defining \"HEAP_SUPPRESS_UNSAFE_WARNING\".")]]
 #endif
 
-        [[maybe_unused]] const T& operator[](const size_t& _index) const {
+        [[maybe_unused]] const t& operator[](const size_t& _index) const {
 
 #ifndef NDEBUG
             return m_Data.at(_index + 1U);
@@ -229,10 +229,10 @@ namespace CHDR {
 #endif // NDEBUG
         }
 
-        using               iterator = typename std::vector<T>::iterator;
-        using         const_iterator = typename std::vector<T>::const_iterator;
-        using       reverse_iterator = typename std::vector<T>::reverse_iterator;
-        using const_reverse_iterator = typename std::vector<T>::const_reverse_iterator;
+        using               iterator = typename std::vector<t>::iterator;
+        using         const_iterator = typename std::vector<t>::const_iterator;
+        using       reverse_iterator = typename std::vector<t>::reverse_iterator;
+        using const_reverse_iterator = typename std::vector<t>::const_reverse_iterator;
 
         [[maybe_unused]] [[nodiscard]]       iterator  begin()       { return m_Data.begin()  + 1U; }
         [[maybe_unused]] [[nodiscard]] const_iterator  begin() const { return m_Data.begin()  + 1U; }

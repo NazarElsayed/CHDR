@@ -9,23 +9,23 @@
 #ifndef CHDR_BNODE_HPP
 #define CHDR_BNODE_HPP
 
-namespace CHDR::Solvers {
+namespace chdr::solvers {
 
     template<typename index_t>
-    struct BNode {
+    struct bNode {
 
-        index_t m_Index;
+        index_t m_index;
 
         /**
          * @brief Constructs an uninitialized BNode.
          *
          * This constructor creates an BNode with uninitialized members.
          */
-        constexpr BNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
+        constexpr bNode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-        BNode(const index_t& _index) : m_Index(_index) {};
+        bNode(const index_t& _index) : m_index(_index) {};
 
-        [[nodiscard]] constexpr bool operator == (const BNode& _node) const { return m_Index == _node.m_Index; }
+        [[nodiscard]] constexpr bool operator == (const bNode& _node) const { return m_index == _node.m_index; }
 
     };
 }

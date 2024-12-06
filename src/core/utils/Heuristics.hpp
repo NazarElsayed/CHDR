@@ -15,12 +15,12 @@
 
 #include "SIMDExtensions.hpp"
 
-namespace CHDR {
+namespace chdr {
 
     template <const size_t Kd, typename scalar_t>
 	struct Heuristics {
 
-        using coord_t = Coord<size_t, Kd>;
+        using coord_t = coord_t<size_t, Kd>;
 
         /**
          * @brief Computes the Euclidean distance between two nodes.

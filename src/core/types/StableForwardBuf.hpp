@@ -14,7 +14,7 @@
 #include <iterator>
 #include <memory>
 
-namespace CHDR {
+namespace chdr {
 
     template <typename T, size_t BlockWidth = 1024U>
     class StableForwardBuf {
@@ -23,21 +23,21 @@ namespace CHDR {
 
         using Block = std::unique_ptr<T[]>;
 
-        size_t m_Index;
+        size_t m_index;
         std::forward_list<Block> m_Blocks;
 
         void Expand() {
             m_Blocks.emplace_front(std::make_unique<T[]>(BlockWidth));
-            m_Index = 0U;
+            m_index = 0U;
         }
 
     public:
 
-        [[maybe_unused]] constexpr explicit StableForwardBuf() : m_Index(0U), m_Blocks() {
+        [[maybe_unused]] constexpr explicit StableForwardBuf() : m_index(0U), m_Blocks() {
             m_Blocks.emplace_front(std::make_unique<T[]>(BlockWidth));
         }
 
-        [[maybe_unused]] constexpr StableForwardBuf(const std::initializer_list<size_t>& _items) : m_Index(0U), m_Blocks() {
+        [[maybe_unused]] constexpr StableForwardBuf(const std::initializer_list<size_t>& _items) : m_index(0U), m_Blocks() {
 
             m_Blocks.emplace_front(std::make_unique<T[]>(BlockWidth));
 
@@ -48,20 +48,20 @@ namespace CHDR {
 
         [[maybe_unused]] [[nodiscard]] T& Push(const T& _item) {
 
-            if (m_Index >= BlockWidth) {
+            if (m_index >= BlockWidth) {
                 Expand();
             }
 
-            return m_Blocks.front()[m_Index++] = _item;
+            return m_Blocks.front()[m_index++] = _item;
         }
 
         [[maybe_unused]] [[nodiscard]] T& Emplace(T&& _item) {
 
-            if (m_Index >= BlockWidth) {
+            if (m_index >= BlockWidth) {
                 Expand();
             }
 
-            return m_Blocks.front()[m_Index++] = std::move(_item);
+            return m_Blocks.front()[m_index++] = std::move(_item);
         }
 
         [[maybe_unused]] void Clear() {
@@ -143,9 +143,9 @@ namespace CHDR {
         using       iterator = StableIterator<false>;
         using const_iterator = StableIterator<true>;
 
-        [[maybe_unused]] [[nodiscard]]       iterator  begin()       { return       iterator(m_Blocks.begin(), m_Blocks.end(), m_Index); }
-        [[maybe_unused]] [[nodiscard]] const_iterator  begin() const { return const_iterator(m_Blocks.begin(), m_Blocks.end(), m_Index); }
-        [[maybe_unused]] [[nodiscard]] const_iterator cbegin() const { return const_iterator(m_Blocks.begin(), m_Blocks.end(), m_Index); }
+        [[maybe_unused]] [[nodiscard]]       iterator  begin()       { return       iterator(m_Blocks.begin(), m_Blocks.end(), m_index); }
+        [[maybe_unused]] [[nodiscard]] const_iterator  begin() const { return const_iterator(m_Blocks.begin(), m_Blocks.end(), m_index); }
+        [[maybe_unused]] [[nodiscard]] const_iterator cbegin() const { return const_iterator(m_Blocks.begin(), m_Blocks.end(), m_index); }
 
         [[maybe_unused]] [[nodiscard]]       iterator  end()       { return       iterator(m_Blocks.end(), m_Blocks.end(), 0U); }
         [[maybe_unused]] [[nodiscard]] const_iterator  end() const { return const_iterator(m_Blocks.end(), m_Blocks.end(), 0U); }

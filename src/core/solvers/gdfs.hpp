@@ -11,43 +11,43 @@
 
 #include <stack>
 
-#include "base/BSolver.hpp"
+#include "base/bsolver.hpp"
 #include "mazes/base/IMaze.hpp"
-#include "mazes/Graph.hpp"
+#include "mazes/graph.hpp"
 #include "mazes/Grid.hpp"
-#include "types/ExistenceSet.hpp"
+#include "types/existence_set.hpp"
 #include "types/StableForwardBuf.hpp"
 #include "utils/Utils.hpp"
 
-namespace CHDR::Solvers {
+namespace chdr::solvers {
 
     template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t>
-    class [[maybe_unused]] GDFS final : public BSolver<weight_t, Kd, scalar_t, index_t> {
+    class [[maybe_unused]] gdfs final : public bsolver<weight_t, Kd, scalar_t, index_t> {
 
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
     private:
 
-        using coord_t = Coord<index_t, Kd>;
+        using coord_t = coord_t<index_t, Kd>;
 
-        struct GDFSNode final : public ManagedNode<index_t> {
+        struct gdfs_node final : public ManagedNode<index_t> {
 
             /**
              * @brief Constructs an uninitialized GDFSNode.
              *
              * This constructor creates an GDFSNode with uninitialized members.
              */
-            [[nodiscard]] constexpr GDFSNode() : ManagedNode<index_t>() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
+            [[nodiscard]] constexpr gdfs_node() : ManagedNode<index_t>() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] constexpr GDFSNode(const index_t& _index) : ManagedNode<index_t>(_index) {}
+            [[nodiscard]] constexpr gdfs_node(const index_t& _index) : ManagedNode<index_t>(_index) {}
 
-            [[nodiscard]] constexpr GDFSNode(const index_t& _index, GDFSNode&& _parent) : ManagedNode<index_t>(_index, std::move(_parent)) {}
+            [[nodiscard]] constexpr gdfs_node(const index_t& _index, gdfs_node&& _parent) : ManagedNode<index_t>(_index, std::move(_parent)) {}
         };
 
     public:
 
         [[maybe_unused]]
-        std::vector<coord_t> Execute(const Mazes::Graph<index_t, scalar_t>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, size_t _capacity) const override {
+        std::vector<coord_t> execute(const mazes::graph<index_t, scalar_t>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, size_t _capacity) const override {
 
             std::vector<coord_t> result;
 
@@ -58,11 +58,11 @@ namespace CHDR::Solvers {
 
             // Create closed set:
             _capacity = std::max(_capacity, std::max(s, e));
-            ExistenceSet closed({ s }, _capacity);
+            existence_set closed({s }, _capacity);
 
             // Create open set:
-            auto sequence = std::vector<GDFSNode>(_capacity);
-            std::stack<GDFSNode, std::vector<GDFSNode>> open(std::move(sequence));
+            auto sequence = std::vector<gdfs_node>(_capacity);
+            std::stack<gdfs_node, std::vector<gdfs_node>> open(std::move(sequence));
             open.emplace(s);
 
             // Main loop:
@@ -71,26 +71,26 @@ namespace CHDR::Solvers {
                 auto curr(std::move(open.top()));
                 open.pop();
 
-                if (curr.m_Index != e) {
+                if (curr.m_index != e) {
 
-                    if (closed.Capacity() < curr.m_Index) {
-                        closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
+                    if (closed.capacity() < curr.m_index) {
+                        closed.reserve(std::min(_capacity * ((curr.m_index % _capacity) + 1U), count));
                     }
-                    closed.Add(curr.m_Index);
+                    closed.add(curr.m_index);
 
-                    for (const auto& neighbour: _maze.GetNeighbours(curr.m_Index)) {
+                    for (const auto& neighbour: _maze.GetNeighbours(curr.m_index)) {
 
                         if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
                             const auto& [n, nDistance] = neighbour;
 
                             // Check if node is not already visited:
-                            if (!closed.Contains(n)) {
+                            if (!closed.contains(n)) {
 
-                                if (closed.Capacity() < n) {
-                                    closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
+                                if (closed.capacity() < n) {
+                                    closed.reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                 }
-                                closed.Add(n);
+                                closed.add(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
                                 open.emplace(n, std::move(curr));
@@ -101,12 +101,13 @@ namespace CHDR::Solvers {
                 else { // SOLUTION REACHED ...
 
                     // Free data which is no longer relevant:
-                    std::stack<GDFSNode, std::vector<GDFSNode>> empty;
+                    std::stack<gdfs_node, std::vector<gdfs_node>> empty;
                     std::swap(open, empty);
 
-                    closed.Clear(); closed.Trim();
+                    closed.clear();
+                    closed.trim();
 
-                    curr.template Backtrack<GDFSNode>(result, _size, _capacity);
+                    curr.template Backtrack<gdfs_node>(result, _size, _capacity);
 
                     break;
                 }
@@ -116,7 +117,7 @@ namespace CHDR::Solvers {
         }
 
         [[maybe_unused]]
-        std::vector<coord_t> Execute(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, size_t _capacity) const override {
+        std::vector<coord_t> execute(const mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, size_t _capacity) const override {
 
             std::vector<coord_t> result;
 
@@ -127,11 +128,11 @@ namespace CHDR::Solvers {
 
             // Create closed set:
             _capacity = std::max(_capacity, std::max(s, e));
-            ExistenceSet closed({ s }, _capacity);
+            existence_set closed({s }, _capacity);
 
             // Create open set:
-            auto sequence = std::vector<GDFSNode>(_capacity);
-            std::stack<GDFSNode, std::vector<GDFSNode>> open(std::move(sequence));
+            auto sequence = std::vector<gdfs_node>(_capacity);
+            std::stack<gdfs_node, std::vector<gdfs_node>> open(std::move(sequence));
             open.emplace(s);
 
             // Main loop:
@@ -140,26 +141,26 @@ namespace CHDR::Solvers {
                 auto curr(std::move(open.top()));
                 open.pop();
 
-                if (curr.m_Index != e) {
+                if (curr.m_index != e) {
 
-                    if (closed.Capacity() < curr.m_Index) {
-                        closed.Reserve(std::min(_capacity * ((curr.m_Index % _capacity) + 1U), count));
+                    if (closed.capacity() < curr.m_index) {
+                        closed.reserve(std::min(_capacity * ((curr.m_index % _capacity) + 1U), count));
                     }
-                    closed.Add(curr.m_Index);
+                    closed.add(curr.m_index);
 
-                    for (const auto& neighbour: _maze.GetNeighbours(curr.m_Index)) {
+                    for (const auto& neighbour: _maze.GetNeighbours(curr.m_index)) {
 
                         if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
                             const auto n = Utils::To1D(nCoord, _maze.Size());
 
                             // Check if node is not already visited:
-                            if (!closed.Contains(n)) {
+                            if (!closed.contains(n)) {
 
-                                if (closed.Capacity() < n) {
-                                    closed.Reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
+                                if (closed.capacity() < n) {
+                                    closed.reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                 }
-                                closed.Add(n);
+                                closed.add(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
                                 open.emplace(n, std::move(curr));
@@ -170,12 +171,13 @@ namespace CHDR::Solvers {
                 else { // SOLUTION REACHED ...
 
                     // Free data which is no longer relevant:
-                    std::stack<GDFSNode, std::vector<GDFSNode>> empty;
+                    std::stack<gdfs_node, std::vector<gdfs_node>> empty;
                     std::swap(open, empty);
 
-                    closed.Clear(); closed.Trim();
+                    closed.clear();
+                    closed.trim();
 
-                    curr.template Backtrack<GDFSNode>(result, _maze.Size(), _capacity);
+                    curr.template Backtrack<gdfs_node>(result, _maze.Size(), _capacity);
 
                     break;
                 }

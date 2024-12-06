@@ -14,7 +14,7 @@
 
 #include "base/INode.hpp"
 
-namespace CHDR::Mazes {
+namespace chdr::mazes {
 
     template <typename index_t = size_t>
     class IDNode : INode {

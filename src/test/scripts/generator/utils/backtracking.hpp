@@ -14,29 +14,29 @@
 #include <stack>
 #include <vector>
 
-namespace Test::Generator::Utils {
+namespace test::generator::utils {
 
     template<const size_t Kd = 2U>
-    class Backtracking {
+    class backtracking {
 
-        using coord_t = CHDR::Coord<size_t, Kd>;
+        using coord_t = chdr::coord_t<size_t, Kd>;
 
         using uniform_rng_t = std::mt19937_64;
 
     public:
 
-        enum Cell : bool {
+        enum cell : bool {
             PATH = 0U,
             WALL = 1U,
         };
 
     private:
 
-        static constexpr auto GetDirections(const coord_t& _coord, const coord_t& _size) {
+        static constexpr auto getDirections(const coord_t& _coord, const coord_t& _size) {
 
             constexpr size_t step(1U);
 
-            std::array<std::pair<bool, CHDR::Coord<size_t, Kd>>, Kd * 2U> result;
+            std::array<std::pair<bool, chdr::coord_t<size_t, Kd>>, Kd * 2U> result;
 
             for (size_t i = 0U; i < Kd; ++i) {
 
@@ -56,7 +56,7 @@ namespace Test::Generator::Utils {
 #if __cplusplus >= 202302L
         constexpr
 #endif // __cplusplus >= 202302L
-        void CarveFrom(const coord_t& _coord, std::pair<coord_t, size_t>& _farthest, const coord_t& _size, std::vector<Cell>& _grid, uniform_rng_t& _rng) {
+        void carveFrom(const coord_t& _coord, std::pair<coord_t, size_t>& _farthest, const coord_t& _size, std::vector<cell>& _grid, uniform_rng_t& _rng) {
 
             std::stack<std::pair<coord_t, size_t>> stack;
             stack.emplace(_coord, 0U);
@@ -64,14 +64,14 @@ namespace Test::Generator::Utils {
             while (!stack.empty()) {
 
                 auto& [currentCoord, depth] = stack.top();
-                _grid[CHDR::Utils::To1D(currentCoord, _size)] = PATH;
+                _grid[chdr::Utils::To1D(currentCoord, _size)] = PATH;
 
                 if (depth > _farthest.second) {
                     _farthest.first = currentCoord;
                     _farthest.second = depth;
                 }
 
-                auto dirs = GetDirections(currentCoord, _size);
+                auto dirs = getDirections(currentCoord, _size);
                 std::shuffle(dirs.begin(), dirs.end(), _rng);
 
                 bool hasUnvisited = false;
@@ -98,11 +98,11 @@ namespace Test::Generator::Utils {
 
                         if (validCellNeighbor) {
 
-                            const auto& cn = _grid[CHDR::Utils::To1D(cc, _size)];
+                            const auto& cn = _grid[chdr::Utils::To1D(cc, _size)];
 
                             if (cn == WALL) {
 
-                                _grid[CHDR::Utils::To1D(lc, _size)] = PATH;
+                                _grid[chdr::Utils::To1D(lc, _size)] = PATH;
 
                                 stack.emplace(cc, depth + 1U);
 
@@ -145,7 +145,7 @@ namespace Test::Generator::Utils {
 #if __cplusplus >= 202302L
         constexpr
 #endif // __cplusplus >= 202302L
-        auto Generate(const coord_t& _start, coord_t& _end, const coord_t& _size, const double& _loops = 0.0, const double& _obstacles = 0.0, const size_t& _seed = -1U) {
+        auto generate(const coord_t& _start, coord_t& _end, const coord_t& _size, const double& _loops = 0.0, const double& _obstacles = 0.0, const size_t& _seed = -1U) {
 
             /*
              * 1. Choose a starting point in the field.
@@ -165,11 +165,11 @@ namespace Test::Generator::Utils {
             constexpr size_t null_v = -1U;
 
             // Attempt to allocate the desired amount of space in memory.
-            const auto product = CHDR::Utils::Product<size_t>(_size);
+            const auto product = chdr::Utils::Product<size_t>(_size);
 
             // TODO: Ensure that product does not overflow!
 
-            std::vector<Cell> result;
+            std::vector<cell> result;
 
             try {
 
@@ -199,14 +199,14 @@ namespace Test::Generator::Utils {
                     Debug::Log("\tBacktracking Algorithm \t(Seed " + std::to_string(seed) + ")");
 
                     // Carve a maze using the recursive backtracking algorithm:
-                    CarveFrom(_start, farthest, _size, result, rng);
+                    carveFrom(_start, farthest, _size, result, rng);
 
                     if (_loops > 0.0F || _obstacles > 0.0F) {
 
                         // Randomly knock down walls if the maze is meant to contain loops:
                         for (size_t i = 1U; i < result.size(); ++i) {
 
-                            auto c = CHDR::Utils::ToND<size_t, Kd>(i, _size);
+                            auto c = chdr::Utils::ToND<size_t, Kd>(i, _size);
 
                             bool link = false;
 
@@ -236,14 +236,14 @@ namespace Test::Generator::Utils {
                                     if (const auto obstacle_chance = static_cast<double>(rng()) / static_cast<double>(std::mt19937::max());
                                         obstacle_chance < _obstacles
                                     ) {
-                                        result[CHDR::Utils::To1D<size_t>(c, _size)] = WALL;
+                                        result[chdr::Utils::To1D<size_t>(c, _size)] = WALL;
                                     }
                                     else {
 
                                         if (const auto loop_chance = static_cast<double>(rng()) / static_cast<double>(std::mt19937::max());
                                             loop_chance < _loops
                                         ) {
-                                            result[CHDR::Utils::To1D<size_t>(c, _size)] = PATH;
+                                            result[chdr::Utils::To1D<size_t>(c, _size)] = PATH;
                                         }
                                     }
                                 }

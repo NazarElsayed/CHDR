@@ -11,7 +11,7 @@
 
 #include <cstddef>
 
-namespace CHDR::Mazes {
+namespace chdr::mazes {
 
     template<typename TNode, typename index_t>
     class IMaze {

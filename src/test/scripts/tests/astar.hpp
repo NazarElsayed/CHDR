@@ -13,24 +13,24 @@
 
 #include <chdr.hpp>
 
-#include "../core/Display.hpp"
+#include "../core/display.hpp"
 #include "../generator/Grid.hpp"
-#include "../generator/Graph.hpp"
+#include "../generator/graph.hpp"
 
-namespace Test::Tests {
+namespace test::tests {
 
-    class AStar final {
+    class astar final {
 
     private:
 
     public:
 
         template <typename weight_t, const size_t Kd, typename scalar_t = uint32_t, typename index_t = uint32_t>
-        static void Run(const std::array<index_t, Kd>& _dimensions) {
+        static void run(const std::array<index_t, Kd>& _dimensions) {
 
-            #define HEURISTIC CHDR::Heuristics<Kd, scalar_t>::ManhattanDistance
+            #define HEURISTIC chdr::Heuristics<Kd, scalar_t>::ManhattanDistance
 
-            using coord_t = CHDR::Coord<index_t, Kd>;
+            using coord_t = chdr::coord_t<index_t, Kd>;
 
             // Test parameters:
             constexpr size_t seed(0U);
@@ -40,7 +40,7 @@ namespace Test::Tests {
                       coord_t end;
 
             /* GENERATE MAZE */
-            const auto grid = Generator::Grid::Generate<weight_t>(start, end, 0.0, 0.0, seed, size);
+            const auto grid = generator::Grid::Generate<weight_t>(start, end, 0.0, 0.0, seed, size);
             //const auto graph = Generator::Graph::Generate<weight_t, index_t, scalar_t>(start, end, 0.0, 0.0, seed, size);
 
             /* MAX DRAW SIZE */
@@ -55,15 +55,15 @@ namespace Test::Tests {
 
             const auto sw_start = std::chrono::high_resolution_clock::now();
 
-            auto solver = CHDR::Solvers::ESMGStar<weight_t, Kd, scalar_t, index_t>();
-            auto path = solver.Solve(grid, start, end, HEURISTIC);
+            auto solver = chdr::solvers::esmgstar<weight_t, Kd, scalar_t, index_t>();
+            auto path = solver.solve(grid, start, end, HEURISTIC);
 //            auto path = solver.Solve(graph, start, end, size, HEURISTIC);
 
             auto pathfinding_log = "\t" + std::string(path.size() != 0U ? "[SOLVED]" : "[IMPOSSIBLE]") + "\t(~" +
-                CHDR::Utils::ToString(std::chrono::duration_cast<std::chrono::duration<long double>>(std::chrono::high_resolution_clock::now() - sw_start).count()) + ")";
+                                   chdr::Utils::ToString(std::chrono::duration_cast<std::chrono::duration<long double>>(std::chrono::high_resolution_clock::now() - sw_start).count()) + ")";
 
             if (drawable) {
-                Display<weight_t, Kd>::DrawMaze(start, end, size, grid, path);
+                display<weight_t, Kd>::drawMaze(start, end, size, grid, path);
             }
 
             Debug::Log("(A*):");

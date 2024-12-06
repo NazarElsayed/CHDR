@@ -18,7 +18,7 @@
 
 #include "SIMDExtensions.hpp"
 
-namespace CHDR {
+namespace chdr {
 
 	struct Utils {
 
@@ -234,11 +234,11 @@ namespace CHDR {
 		 * \endcode
 		 */
 		template<typename T, const size_t Kd>
-		static constexpr auto ToND(const T& _index, const Coord<T, Kd>& _sizes) {
+		static constexpr auto ToND(const T& _index, const coord_t<T, Kd>& _sizes) {
 
 			static_assert(std::is_integral_v<T>, "Only integer types are allowed.");
 
-			Coord<T, Kd> result{};
+			coord_t<T, Kd> result{};
 
             if constexpr (Kd > 4U) {
 
@@ -305,7 +305,7 @@ namespace CHDR {
 		 * Only integer types are allowed for the indices.
 		 */
 		template<typename T, typename... Args>
-		static constexpr auto To1D(const Coord<T, sizeof...(Args)>& _indices, const Args&... _sizes) {
+		static constexpr auto To1D(const coord_t<T, sizeof...(Args)>& _indices, const Args&... _sizes) {
 			return To1D({_indices}, {_sizes...});
 		}
 
@@ -318,7 +318,7 @@ namespace CHDR {
 		 * Only integer types are allowed for the indices.
 		 */
 		template<typename T, const size_t Kd>
-		static constexpr auto To1D(const Coord<T, Kd>& _indices, const Coord<T, Kd>& _sizes) {
+		static constexpr auto To1D(const coord_t<T, Kd>& _indices, const coord_t<T, Kd>& _sizes) {
 
 			static_assert(std::is_integral_v<T>, "Only integer types are allowed.");
 

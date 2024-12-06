@@ -13,26 +13,26 @@
 
 #include "Debug.hpp"
 
-#include "utils/Backtracking.hpp"
+#include "utils/backtracking.hpp"
 
-namespace Test::Generator {
+namespace test::generator {
 
 	struct Grid final {
 
 		template <typename T, const size_t Kd, typename... Args>
-		static constexpr auto Generate(const CHDR::Coord<size_t, Kd>& _start, CHDR::Coord<size_t, Kd>& _end, const double& _loops = 0.0, const double& _obstacles = 0.0, const size_t& _seed = -1U, const Args&... _size) {
+		static constexpr auto Generate(const chdr::coord_t<size_t, Kd>& _start, chdr::coord_t<size_t, Kd>& _end, const double& _loops = 0.0, const double& _obstacles = 0.0, const size_t& _seed = -1U, const Args&... _size) {
 
 			static_assert(std::is_integral_v<T>, "Type T must be an integral type.");
 
             Debug::Log("(Maze):");
 
-			using Backtracking = Utils::Backtracking<Kd>;
+			using Backtracking = utils::backtracking<Kd>;
 
 			std::array size { _size... };
 
-			auto maze = Backtracking::Generate(_start, _end, size, _loops, _obstacles, _seed);
+			auto maze = Backtracking::generate(_start, _end, size, _loops, _obstacles, _seed);
 
-			std::vector<CHDR::Mazes::WeightedNode<T>> nodes;
+			std::vector<chdr::mazes::WeightedNode<T>> nodes;
             nodes.reserve(maze.size());
 
             while (!maze.empty()) {
@@ -42,9 +42,9 @@ namespace Test::Generator {
 
             std::reverse(nodes.begin(), nodes.end());
 
-            const auto result = CHDR::Mazes::Grid<Kd, T>(size, nodes);
+            const auto result = chdr::mazes::Grid<Kd, T>(size, nodes);
 
-            Debug::Log("\t[FINISHED] \t(~" + CHDR::Utils::Trim_Trailing_Zeros(std::to_string(CHDR::Utils::Product<size_t>(size) / static_cast<long double>(1000000000.0))) + "b total candidate nodes)");
+            Debug::Log("\t[FINISHED] \t(~" + chdr::Utils::Trim_Trailing_Zeros(std::to_string(chdr::Utils::Product<size_t>(size) / static_cast<long double>(1000000000.0))) + "b total candidate nodes)");
 
 			return result;
 		}

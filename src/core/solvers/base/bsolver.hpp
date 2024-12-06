@@ -9,17 +9,17 @@
 #ifndef CHDR_BSOLVER_HPP
 #define CHDR_BSOLVER_HPP
 
-namespace CHDR::Solvers {
+namespace chdr::solvers {
 
     template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t>
-    class BSolver {
+    class bsolver {
 
     private:
 
-        using coord_t = Coord<index_t, Kd>;
+        using coord_t = coord_t<index_t, Kd>;
 
-        virtual std::vector<coord_t> Execute(
-            const Mazes::Grid<Kd, weight_t>& _maze,
+        virtual std::vector<coord_t> execute(
+            const mazes::Grid<Kd, weight_t>& _maze,
             const coord_t& _start,
             const coord_t& _end,
             scalar_t (*_h)(const coord_t&, const coord_t&),
@@ -37,8 +37,8 @@ namespace CHDR::Solvers {
             throw std::runtime_error("Not implemented");
         }
 
-        virtual std::vector<coord_t> Execute(
-            const Mazes::Graph<index_t, scalar_t>& _maze,
+        virtual std::vector<coord_t> execute(
+            const mazes::graph<index_t, scalar_t>& _maze,
             const coord_t& _start,
             const coord_t& _end,
             const coord_t& _size,
@@ -60,10 +60,10 @@ namespace CHDR::Solvers {
 
     public:
 
-        virtual ~BSolver() = default;
+        virtual ~bsolver() = default;
 
-        auto Solve(
-            const Mazes::Grid<Kd, weight_t>& _maze,
+        auto solve(
+            const mazes::Grid<Kd, weight_t>& _maze,
             const coord_t& _start,
             const coord_t& _end,
             scalar_t (*_h)(const coord_t&, const coord_t&) = nullptr,
@@ -84,7 +84,7 @@ namespace CHDR::Solvers {
                 _maze.At(e).IsActive()
             ) {
                 if (s != e) {
-                    result = Execute(_maze, _start, _end, _h, _weight, _capacity);
+                    result = execute(_maze, _start, _end, _h, _weight, _capacity);
                 }
                 else {
                     result.emplace_back(_end);
@@ -94,8 +94,8 @@ namespace CHDR::Solvers {
             return result;
         }
 
-        auto Solve(
-            const Mazes::Graph<index_t, scalar_t>& _maze,
+        auto solve(
+            const mazes::graph<index_t, scalar_t>& _maze,
             const coord_t& _start,
             const coord_t& _end,
             const coord_t& _size,
@@ -109,13 +109,13 @@ namespace CHDR::Solvers {
             const auto s = Utils::To1D(_start, _size);
             const auto e = Utils::To1D(_end  , _size);
 
-            if (_maze.Contains(s) &&
-                _maze.Contains(e) &&
-                _maze.At(s).IsActive() &&
-                _maze.At(e).IsActive()
+            if (_maze.contains(s) &&
+                _maze.contains(e) &&
+                    _maze.at(s).IsActive() &&
+                _maze.at(e).IsActive()
             ) {
                 if (s != e) {
-                    result = Execute(_maze, _start, _end, _size, _h, _weight, _capacity);
+                    result = execute(_maze, _start, _end, _size, _h, _weight, _capacity);
                 }
                 else {
                     result.emplace_back(_end);
