@@ -11,9 +11,14 @@
 
 #define HEAP_SUPPRESS_EXCEPTION_WARNING // Uncomment if you wish to remove the warning about possible unhandled exceptions.
 
+#include <cstddef>
+#include <functional>
+#include <stdexcept> // NOLINT(*-include-cleaner)
+#include <vector>
+
 namespace chdr {
 
-    template<typename T, typename compare = std::less<T>, size_t Kd = 2U>
+    template<typename T, typename compare = std::less<T>, const size_t Kd = 2U>
     class heap {
 
         static_assert(Kd >= 2, "Template parameter D must be greater than or equal to 2.");
@@ -32,7 +37,6 @@ namespace chdr {
             if (size() > 1U) {
 
                 auto i = index_of(_item);
-
                 while (i > 1U) {
 
                     const auto p = i / Kd;
@@ -53,11 +57,10 @@ namespace chdr {
             if (size() > 1U) {
 
                 auto i = index_of(_item);
-
                 while (i > 1U) {
 
-                    auto c0 = i * Kd;
-                    auto cn = c0 + (Kd - 1U);
+                    const auto c0 =  i * Kd;
+                    const auto cn = c0 + (Kd - 1U);
 
                     if (cn < m_data.size()) {
 
@@ -69,6 +72,9 @@ namespace chdr {
                         else {
 
                             min = i;
+
+                            IVDEP
+                            VECTOR_ALWAYS
                             for (auto j = c0; j <= cn && j < m_data.size(); ++j) {
                                 if (m_compare(m_data[min], m_data[j])) {
                                     min = j;
