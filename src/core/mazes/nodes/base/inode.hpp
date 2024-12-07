@@ -20,6 +20,6 @@ namespace chdr::mazes {
         [[nodiscard]] virtual bool is_active() const = 0;
     };
 
-} // chdr::mazes
+} //chdr::mazes
 
 #endif //CHDR_INODE_HPP

@@ -187,6 +187,6 @@ namespace test {
 		}
 	};
 
-} // test
+} //test
 
 #endif //TEST_APPLICATION_HPP

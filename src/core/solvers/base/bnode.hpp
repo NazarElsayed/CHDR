@@ -29,6 +29,6 @@ namespace chdr::solvers {
 
     };
 
-} // chdr::solvers
+} //chdr::solvers
 
 #endif //CHDR_BNODE_HPP

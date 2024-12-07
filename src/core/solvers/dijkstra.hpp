@@ -101,6 +101,6 @@ namespace chdr::solvers {
 
     };
 
-} // chdr::solvers
+} //chdr::solvers
 
 #endif //CHDR_DJIKSTRA_HPP

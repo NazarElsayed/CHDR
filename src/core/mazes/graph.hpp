@@ -366,6 +366,6 @@ namespace chdr::mazes {
 
     };
 
-} // chdr::mazes
+} //chdr::mazes
 
 #endif //CHDR_GRAPH_HPP

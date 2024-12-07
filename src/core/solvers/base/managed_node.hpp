@@ -78,6 +78,6 @@ namespace chdr::solvers {
         }
     };
 
-} // chdr::solvers
+} //chdr::solvers
 
 #endif //CHDR_MANAGEDNODE_HPP

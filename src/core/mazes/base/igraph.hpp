@@ -23,6 +23,6 @@ namespace chdr::mazes {
 
     };
 
-} // chdr::mazes
+} //chdr::mazes
 
 #endif //CHDR_IGRAPH_HPP

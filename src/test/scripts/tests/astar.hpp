@@ -71,6 +71,6 @@ namespace test::tests {
         }
     };
 
-} // test::tests
+} //test::tests
 
 #endif //TEST_ASTAR_HPP

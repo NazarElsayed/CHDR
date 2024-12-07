@@ -39,6 +39,6 @@ namespace chdr::mazes {
         }
     };
 
-} // chdr::mazes
+} //chdr::mazes
 
 #endif //CHDR_WEIGHTED_NODE_HPP

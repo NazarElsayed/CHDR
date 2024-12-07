@@ -167,6 +167,6 @@ NestedBreak:
         }
     };
 
-} // chdr::solvers
+} //chdr::solvers
 
 #endif //CHDR_FLOODFILL_HPP

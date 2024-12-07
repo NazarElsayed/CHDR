@@ -200,7 +200,7 @@ namespace chdr {
             else {
                 throw std::underflow_error("Heap is empty");
             }
-#endif
+#endif //!NDEBUG
             sort_down(m_data[1U]);
         }
 
@@ -213,7 +213,7 @@ namespace chdr {
             else {
                 throw std::underflow_error("Heap is empty");
             }
-#endif
+#endif //!NDEBUG
         }
 
         [[maybe_unused]] constexpr void reheapify(const T& _item) {

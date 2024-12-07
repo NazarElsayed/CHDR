@@ -126,6 +126,6 @@ namespace chdr::solvers {
         }
     };
 
-} // chdr::solvers
+} //chdr::solvers
 
 #endif //CHDR_BSOLVER_HPP

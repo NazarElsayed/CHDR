@@ -42,6 +42,6 @@ namespace chdr::mazes {
         }
     };
 
-} // chdr::mazes
+} //chdr::mazes
 
 #endif //CHDR_IDNODE_HPP

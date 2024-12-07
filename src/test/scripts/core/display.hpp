@@ -183,6 +183,6 @@ namespace test {
         }
     };
 
-} // test
+} //test
 
 #endif //TEST_DISPLAY_HPP

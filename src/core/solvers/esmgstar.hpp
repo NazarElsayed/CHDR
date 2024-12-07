@@ -350,6 +350,6 @@ namespace chdr::solvers {
 
     };
 
-} // chdr::solvers
+} //chdr::solvers
 
 #endif //CHDR_ESMGSTAR_HPP

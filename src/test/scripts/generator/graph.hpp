@@ -125,6 +125,6 @@ namespace test::generator {
 		}
 	};
 
-} // test::generator
+} //test::generator
 
 #endif //TEST_GRAPH_HPP
