@@ -329,7 +329,7 @@ namespace chdr::mazes {
             }
         }
 
-        [[maybe_unused]] [[nodiscard]] constexpr const neighbours_t& get_neighbours(const index_t& _id) const {
+        [[maybe_unused, nodiscard]] constexpr const neighbours_t& get_neighbours(const index_t& _id) const {
         
 #ifndef NDEBUG
             if (!contains(_id)) {
@@ -340,11 +340,11 @@ namespace chdr::mazes {
             return m_entries.find(_id)->second;
         }
 
-        [[maybe_unused]] [[nodiscard]] constexpr bool contains(const index_t& _id) const override {
+        [[maybe_unused, nodiscard]] constexpr bool contains(const index_t& _id) const override {
             return m_entries.find(_id) != m_entries.end();
         }
 
-        [[maybe_unused]] [[nodiscard]] constexpr size_t count() const override {
+        [[maybe_unused, nodiscard]] constexpr size_t count() const override {
             return m_entries.size();
         }
 
@@ -355,13 +355,13 @@ namespace chdr::mazes {
         using       iterator_t = typename adjacency_set_t::iterator;
         using const_iterator_t = typename adjacency_set_t::const_iterator;
 
-        [[maybe_unused]] [[nodiscard]]       iterator_t  begin()       { return m_entries.begin();  }
-        [[maybe_unused]] [[nodiscard]] const_iterator_t  begin() const { return m_entries.begin();  }
-        [[maybe_unused]] [[nodiscard]] const_iterator_t cbegin() const { return m_entries.cbegin(); }
+        [[maybe_unused, nodiscard]]       iterator_t  begin()       { return m_entries.begin();  }
+        [[maybe_unused, nodiscard]] const_iterator_t  begin() const { return m_entries.begin();  }
+        [[maybe_unused, nodiscard]] const_iterator_t cbegin() const { return m_entries.cbegin(); }
 
-        [[maybe_unused]] [[nodiscard]]       iterator_t  end()       { return m_entries.end();  }
-        [[maybe_unused]] [[nodiscard]] const_iterator_t  end() const { return m_entries.end();  }
-        [[maybe_unused]] [[nodiscard]] const_iterator_t cend() const { return m_entries.cend(); }
+        [[maybe_unused, nodiscard]]       iterator_t  end()       { return m_entries.end();  }
+        [[maybe_unused, nodiscard]] const_iterator_t  end() const { return m_entries.end();  }
+        [[maybe_unused, nodiscard]] const_iterator_t cend() const { return m_entries.cend(); }
 
     };
 

@@ -29,11 +29,11 @@ namespace chdr::mazes {
 
         constexpr id_node(const index_t& _id) : m_id(_id) {}
 
-        [[maybe_unused]] [[nodiscard]] bool is_active() const override  {
+        [[maybe_unused, nodiscard]] bool is_active() const override  {
             return true;
         }
 
-        [[maybe_unused]] [[nodiscard]] constexpr const index_t& id() const {
+        [[maybe_unused, nodiscard]] constexpr const index_t& id() const {
             return m_id;
         }
 

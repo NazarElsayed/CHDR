@@ -16,6 +16,7 @@
 #include "solvers/base/unmanaged_node.hpp"
 #include "types/existence_set.hpp"
 #include "types/heap.hpp"
+#include "types/linear_priority_queue.hpp"
 #include "types/stable_forward_buf.hpp"
 #include "types/stack_allocator.hpp"
 #include "utils/utils.hpp"
@@ -57,16 +58,6 @@ namespace chdr::solvers {
                            _a.m_fScore > _b.m_fScore;
                 }
             };
-
-            struct min {
-
-                [[nodiscard]] constexpr bool operator () (const as_node& _a, const as_node& _b) const {
-
-                    return _a.m_fScore == _b.m_fScore ?
-                           _a.m_gScore < _b.m_gScore :
-                           _a.m_fScore < _b.m_fScore;
-                }
-            };
         };
 
         auto solve_heap(const mazes::graph<index_t, scalar_t>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight = 1, size_t _capacity = 0U) const {
@@ -80,11 +71,11 @@ namespace chdr::solvers {
 
             // Create closed set:
             _capacity = _capacity == 0U ? std::max(_maze.count() / 10U, static_cast<size_t>(1U)) : _capacity;
-            existence_set<low_memory_usage> closed({s }, _capacity);
+            existence_set<low_memory_usage> closed({ s }, _capacity);
 
             // Create open set:
             heap<as_node, typename as_node::max> open(_capacity / 4U);
-            open.emplace({s, static_cast<scalar_t>(0), _h(_start, _end), nullptr });
+            open.emplace(s, static_cast<scalar_t>(0), _h(_start, _end), nullptr);
 
             // Create buffer:
             stable_forward_buf<as_node, 1024U * 1024U> buf;
@@ -100,7 +91,7 @@ namespace chdr::solvers {
                     if (closed.capacity() < curr.m_index) {
                         closed.reserve(std::min(_capacity * ((curr.m_index % _capacity) + 1U), count));
                     }
-                    closed.push(curr.m_index);
+                    closed.emplace(curr.m_index);
 
                     for (const auto& neighbour : _maze.get_neighbours(curr.m_index)) {
 
@@ -112,10 +103,10 @@ namespace chdr::solvers {
                             if (closed.capacity() < n) {
                                 closed.reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                             }
-                            closed.push(n);
+                            closed.emplace(n);
 
                             // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                            open.emplace({n, curr.m_gScore + static_cast<scalar_t>(nDistance), _h(utils::to_nd(n, _size), _end) * _weight, &buf.emplace(std::move(curr)) });
+                            open.emplace(n, curr.m_gScore + static_cast<scalar_t>(nDistance), _h(utils::to_nd(n, _size), _end) * _weight, &buf.emplace(std::move(curr)));
                         }
                     }
                 }
@@ -142,12 +133,12 @@ namespace chdr::solvers {
 
             // Create closed set:
             _capacity = std::max(_capacity, std::max(s, e));
-            existence_set<low_memory_usage> closed({s }, _capacity);
+            existence_set<low_memory_usage> closed({ s }, _capacity);
 
             // Create open set:
-            std::vector<as_node, stack_allocator<as_node, StackSize>> open;
+            linear_priority_queue<as_node, typename as_node::max, std::vector<as_node, stack_allocator<as_node, StackSize>>> open;
             open.reserve(StackSize);
-            open.push_back({ s, static_cast<scalar_t>(0), _h(_start, _end), nullptr });
+            open.emplace(s, static_cast<scalar_t>(0), _h(_start, _end), nullptr);
 
             // Create buffer:
             stable_forward_buf<as_node, StackSize / 2U> buf;
@@ -155,16 +146,15 @@ namespace chdr::solvers {
             // Main loop:
             while (!open.empty()) {
 
-                const auto top = std::min_element(open.begin(), open.end(), typename as_node::min());
-                auto curr(std::move(*top));
-                open.erase(top);
+                auto curr(std::move(open.top()));
+                open.pop();
 
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
                     if (closed.capacity() < curr.m_index) {
                         closed.reserve(std::min(_capacity * ((curr.m_index % _capacity) + 1U), count));
                     }
-                    closed.push(curr.m_index);
+                    closed.emplace(curr.m_index);
 
                     for (const auto& neighbour : _maze.get_neighbours(curr.m_index)) {
 
@@ -176,10 +166,10 @@ namespace chdr::solvers {
                             if (closed.capacity() < n) {
                                 closed.reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                             }
-                            closed.push(n);
+                            closed.emplace(n);
 
                             // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                            open.push_back({n, curr.m_gScore + static_cast<scalar_t>(nDistance), _h(utils::to_nd(n, _size), _end) * _weight, &buf.emplace(std::move(curr)) });
+                            open.emplace(n, curr.m_gScore + static_cast<scalar_t>(nDistance), _h(utils::to_nd(n, _size), _end) * _weight, &buf.emplace(std::move(curr)));
                         }
                     }
                 }
@@ -199,17 +189,17 @@ namespace chdr::solvers {
             std::vector<coord_t> result;
 
             const auto s = utils::to_1d(_start, _maze.size());
-            const auto e = utils::to_1d(_end, _maze.size());
+            const auto e = utils::to_1d(_end,   _maze.size());
 
             const auto count = _maze.count();
 
             // Create closed set:
             _capacity = std::max(_capacity, std::max(s, e));
-            existence_set<low_memory_usage> closed({s }, _capacity);
+            existence_set<low_memory_usage> closed({ s }, _capacity);
 
             // Create open set:
             heap<as_node, typename as_node::max> open(_capacity / 8U);
-            open.emplace({  s, static_cast<scalar_t>(0), _h(_start, _end), nullptr });
+            open.emplace(s, static_cast<scalar_t>(0), _h(_start, _end), nullptr);
 
             // Create buffer:
             stable_forward_buf<as_node> buf;
@@ -225,7 +215,7 @@ namespace chdr::solvers {
                     if (closed.capacity() < curr.m_index) {
                         closed.reserve(std::min(_capacity * ((curr.m_index % _capacity) + 1U), count));
                     }
-                    closed.push(curr.m_index);
+                    closed.emplace(curr.m_index);
 
                     for (const auto& neighbour : _maze.get_neighbours(curr.m_index)) {
 
@@ -239,10 +229,10 @@ namespace chdr::solvers {
                                 if (closed.capacity() < n) {
                                     closed.reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                 }
-                                closed.push(n);
+                                closed.emplace(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                open.emplace({n, curr.m_gScore + static_cast<scalar_t>(1), _h(nCoord, _end) * _weight, &buf.emplace(std::move(curr)) });
+                                open.emplace(n, curr.m_gScore + static_cast<scalar_t>(1), _h(nCoord, _end) * _weight, &buf.emplace(std::move(curr)));
                             }
                         }
                     }
@@ -264,34 +254,33 @@ namespace chdr::solvers {
             std::vector<coord_t> result;
 
             const auto s = utils::to_1d(_start, _maze.size());
-            const auto e = utils::to_1d(_end, _maze.size());
+            const auto e = utils::to_1d(_end,   _maze.size());
 
             const auto count = _maze.count();
 
             // Create closed set:
             _capacity = std::max(_capacity, std::max(s, e));
-            existence_set<low_memory_usage> closed({s }, _capacity);
+            existence_set<low_memory_usage> closed({ s }, _capacity);
 
             // Create open set:
-            std::vector<as_node, stack_allocator<as_node, StackSize>> open;
+            linear_priority_queue<as_node, typename as_node::max, std::vector<as_node, stack_allocator<as_node, StackSize>>> open;
             open.reserve(StackSize);
-            open.push_back({ s, static_cast<scalar_t>(0), _h(_start, _end), nullptr });
+            open.emplace(s, static_cast<scalar_t>(0), _h(_start, _end), nullptr);
 
             // Create buffer:
             stable_forward_buf<as_node, StackSize / 2U> buf;
 
             // Main loop:
             while (!open.empty()) {
-                const auto top = std::min_element(open.begin(), open.end(), typename as_node::min());
-                auto curr(std::move(*top));
-                open.erase(top);
+                auto curr(std::move(open.top()));
+                open.pop();
 
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
                     if (closed.capacity() < curr.m_index) {
                         closed.reserve(std::min(_capacity * ((curr.m_index % _capacity) + 1U), count));
                     }
-                    closed.push(curr.m_index);
+                    closed.emplace(curr.m_index);
 
                     for (const auto& neighbour : _maze.get_neighbours(curr.m_index)) {
 
@@ -305,10 +294,10 @@ namespace chdr::solvers {
                                 if (closed.capacity() < n) {
                                     closed.reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                 }
-                                closed.push(n);
+                                closed.emplace(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                open.push_back({n, curr.m_gScore + static_cast<scalar_t>(1), _h(nCoord, _end) * _weight, &buf.emplace(std::move(curr)) });
+                                open.emplace(n, curr.m_gScore + static_cast<scalar_t>(1), _h(nCoord, _end) * _weight, &buf.emplace(std::move(curr)));
                             }
                         }
                     }

@@ -59,11 +59,11 @@ namespace chdr::solvers {
 
             // Create closed set:
             _capacity = std::max(_capacity, std::max(s, e));
-            existence_set closed({s }, _capacity);
+            existence_set closed({ s }, _capacity);
 
             // Create open set:
             std::queue<gbfs_node> open;
-            open.emplace(s);
+            open.push(s);
 
             // Main loop:
             while (!open.empty()) { // SEARCH FOR SOLUTION...
@@ -76,7 +76,7 @@ namespace chdr::solvers {
                     if (closed.capacity() < curr.m_index) {
                         closed.reserve(std::min(_capacity * ((curr.m_index % _capacity) + 1U), count));
                     }
-                    closed.push(curr.m_index);
+                    closed.emplace(curr.m_index);
 
                     for (const auto& neighbour: _maze.get_neighbours(curr.m_index)) {
 
@@ -90,10 +90,10 @@ namespace chdr::solvers {
                                 if (closed.capacity() < n) {
                                     closed.reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                 }
-                                closed.push(n);
+                                closed.emplace(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                open.emplace(n, std::move(curr));
+                                open.push(n, std::move(curr));
                             }
                         }
                     }
@@ -128,11 +128,11 @@ namespace chdr::solvers {
 
             // Create closed set:
             _capacity = std::max(_capacity, std::max(s, e));
-            existence_set closed({s }, _capacity);
+            existence_set closed({ s }, _capacity);
 
             // Create open set:
             std::queue<gbfs_node> open;
-            open.emplace(s);
+            open.push(s);
 
             // Main loop:
             while (!open.empty()) { // SEARCH FOR SOLUTION...
@@ -145,7 +145,7 @@ namespace chdr::solvers {
                     if (closed.capacity() < curr.m_index) {
                         closed.reserve(std::min(_capacity * ((curr.m_index % _capacity) + 1U), count));
                     }
-                    closed.push(curr.m_index);
+                    closed.emplace(curr.m_index);
 
                     for (const auto& neighbour: _maze.get_neighbours(curr.m_index)) {
 
@@ -159,10 +159,10 @@ namespace chdr::solvers {
                                 if (closed.capacity() < n) {
                                     closed.reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                 }
-                                closed.push(n);
+                                closed.emplace(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                open.emplace(n, std::move(curr));
+                                open.push(n, std::move(curr));
                             }
                         }
                     }

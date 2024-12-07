@@ -30,7 +30,7 @@ namespace chdr {
          * @param _b The second node.
          * @return The Euclidean distance between _A and _B.
          */
-        [[maybe_unused]] [[nodiscard]] static constexpr auto euclidean_distance(const coord_t& _a, const coord_t& _b) {
+        [[maybe_unused, nodiscard]] static constexpr auto euclidean_distance(const coord_t& _a, const coord_t& _b) {
             return static_cast<scalar_t>(std::sqrt(sqr_euclidean_distance(_a, _b)));
         }
 
@@ -42,7 +42,7 @@ namespace chdr {
          * @param _B The second node.
          * @return The squared Euclidean distance between _A and _B.
          */
-        [[maybe_unused]] [[nodiscard]] static constexpr auto sqr_euclidean_distance(const coord_t& _a, const coord_t& _b) {
+        [[maybe_unused, nodiscard]] static constexpr auto sqr_euclidean_distance(const coord_t& _a, const coord_t& _b) {
 
             static_assert(Kd >= 0U, "Kd must be more than or equal to 0");
 
@@ -203,7 +203,7 @@ namespace chdr {
           * @param _b The second node.
           * @return The Manhattan distance between _A and _B.
           */
-        [[maybe_unused]] [[nodiscard]] static constexpr auto manhattan_distance(const coord_t& _a, const coord_t& _b) {
+        [[maybe_unused, nodiscard]] static constexpr auto manhattan_distance(const coord_t& _a, const coord_t& _b) {
 
             static_assert(Kd >= 0U, "Kd must be more than or equal to 0");
 

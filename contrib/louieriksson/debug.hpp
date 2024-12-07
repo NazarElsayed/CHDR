@@ -544,7 +544,7 @@ namespace {
 		
 		public:
 		
-            [[maybe_unused]] [[nodiscard]] static size_t get(const std::thread::id _id) {
+            [[maybe_unused, nodiscard]] static size_t get(const std::thread::id _id) {
 				
 				const std::lock_guard guard(s_lock);
 				
@@ -561,7 +561,7 @@ namespace {
 				return result;
 			}
 			
-            [[maybe_unused]] [[nodiscard]] static size_t get() {
+            [[maybe_unused, nodiscard]] static size_t get() {
 				return get(std::this_thread::get_id());
 			}
 			
@@ -733,7 +733,7 @@ namespace {
 			catch (...) {}
 		}
 		
-        [[maybe_unused]] [[nodiscard]] static std::vector<std::string> stack_trace(const size_t& _frames) {
+        [[maybe_unused, nodiscard]] static std::vector<std::string> stack_trace(const size_t& _frames) {
 
 			std::vector<std::string> result;
 			

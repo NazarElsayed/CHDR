@@ -158,6 +158,7 @@ add_library(CHDR INTERFACE
     src/core/utils/intrinsics.hpp
     src/core/utils/simd_extensions.hpp
     src/core/utils/utils.hpp
+        src/core/types/linear_priority_queue.hpp
 )
 
 target_link_libraries(CHDR INTERFACE)

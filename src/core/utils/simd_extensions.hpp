@@ -21,7 +21,7 @@ namespace chdr {
 
     #ifdef __SSE2__
 
-            [[maybe_unused]] [[nodiscard]] static auto abs_sub_128_v(const __m128i& _regA, const __m128i& _regB) {
+            [[maybe_unused, nodiscard]] static auto abs_sub_128_v(const __m128i& _regA, const __m128i& _regB) {
 
                 // Perform A - B:
                 const auto sub = _mm_sub_epi8(_regA, _regB);                        // NOLINT(*-simd-intrinsics)
@@ -45,7 +45,7 @@ namespace chdr {
 
     #ifdef __SSE2__
 
-            [[maybe_unused]] [[nodiscard]] static auto abs_sub_128_v(const __m128i& _regA, const __m128i& _regB) {
+            [[maybe_unused, nodiscard]] static auto abs_sub_128_v(const __m128i& _regA, const __m128i& _regB) {
 
                 // Perform A - B:
                 const auto sub = _mm_sub_epi16(_regA, _regB);                       // NOLINT(*-simd-intrinsics)
@@ -83,7 +83,7 @@ namespace chdr {
 
     #ifdef __SSE2__
 
-            [[maybe_unused]] [[nodiscard]] static auto abs_128_v(__m128i& _value) {
+            [[maybe_unused, nodiscard]] static auto abs_128_v(__m128i& _value) {
 
                 // Get absolute value to prevent underflow
 
@@ -103,7 +103,7 @@ namespace chdr {
                 return result;
             }
 
-            [[maybe_unused]] [[nodiscard]] static auto abs_sub_128_v(const __m128i& _regA, const __m128i& _regB) {
+            [[maybe_unused, nodiscard]] static auto abs_sub_128_v(const __m128i& _regA, const __m128i& _regB) {
 
                 // Perform A - B:
                 const auto sub = _mm_sub_epi32(_regA, _regB);                       // NOLINT(*-simd-intrinsics)
@@ -142,7 +142,7 @@ namespace chdr {
 
     #ifdef __SSE4_1__
 
-            [[maybe_unused]] [[nodiscard]] static auto abs_128_v(__m128i& _value) {
+            [[maybe_unused, nodiscard]] static auto abs_128_v(__m128i& _value) {
 
                 // Get absolute value to prevent underflow
 
@@ -167,7 +167,7 @@ namespace chdr {
 
     #endif // __SSE4_1__
 
-            [[maybe_unused]] [[nodiscard]] static auto abs_sub_128_v(const __m128i& _regA, const __m128i& _regB) {
+            [[maybe_unused, nodiscard]] static auto abs_sub_128_v(const __m128i& _regA, const __m128i& _regB) {
 
                 uint64_t result;
 
@@ -211,7 +211,7 @@ namespace chdr {
 
     #ifdef __SSE2__
 
-            [[maybe_unused]] [[nodiscard]] static auto sub_128_v(const __m128& _regA, const __m128& _regB) {
+            [[maybe_unused, nodiscard]] static auto sub_128_v(const __m128& _regA, const __m128& _regB) {
 
                 double result{};
 
@@ -234,7 +234,7 @@ namespace chdr {
                 return result;
             }
 
-            [[maybe_unused]] [[nodiscard]] static auto sqr_sub_128_v(const __m128& _regA, const __m128& _regB) {
+            [[maybe_unused, nodiscard]] static auto sqr_sub_128_v(const __m128& _regA, const __m128& _regB) {
 
                 float result;
 
@@ -266,7 +266,7 @@ namespace chdr {
 
     #ifdef __SSE2__
 
-            [[maybe_unused]] [[nodiscard]] static auto sub_128_v(const __m128d& _regA, const __m128d& _regB) {
+            [[maybe_unused, nodiscard]] static auto sub_128_v(const __m128d& _regA, const __m128d& _regB) {
 
                 double result{};
 
@@ -289,7 +289,7 @@ namespace chdr {
                 return result;
             }
 
-            [[maybe_unused]] [[nodiscard]] static auto sqr_sub_128_v(const __m128d& _regA, const __m128d& _regB) {
+            [[maybe_unused, nodiscard]] static auto sqr_sub_128_v(const __m128d& _regA, const __m128d& _regB) {
 
                 double result{};
 

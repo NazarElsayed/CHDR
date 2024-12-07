@@ -81,11 +81,11 @@ namespace chdr::solvers {
 
             // Create closed set:
             _capacity = std::max(_capacity, std::max(s, e));
-            existence_set closed({s }, _capacity);
+            existence_set closed({ s }, _capacity);
 
             // Create open set:
             heap<gs_node, typename gs_node::Max> open;
-            open.emplace(gs_node { s, static_cast<scalar_t>(0), _h(_start, _end) });
+            open.push(gs_node { s, static_cast<scalar_t>(0), _h(_start, _end) });
 
             // Main loop:
             while (!open.empty()) {
@@ -98,7 +98,7 @@ namespace chdr::solvers {
                     if (closed.capacity() < curr.m_index) {
                         closed.reserve(std::min(_capacity * ((curr.m_index % _capacity) + 1U), count));
                     }
-                    closed.push(curr.m_index);
+                    closed.emplace(curr.m_index);
 
                     for (const auto& neighbour : _maze.get_neighbours(curr.m_index)) {
 
@@ -112,10 +112,10 @@ namespace chdr::solvers {
                                 if (closed.capacity() < n) {
                                     closed.reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                 }
-                                closed.push(n);
+                                closed.emplace(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                open.emplace(gs_node { n, curr.m_gScore + static_cast<scalar_t>(1), _h(utils::to_nd(n, _size), _end) * _weight, std::move(curr) });
+                                open.push(gs_node { n, curr.m_gScore + static_cast<scalar_t>(1), _h(utils::to_nd(n, _size), _end) * _weight, std::move(curr) });
                             }
                         }
                     }
@@ -149,11 +149,11 @@ namespace chdr::solvers {
 
             // Create closed set:
             _capacity = std::max(_capacity, std::max(s, e));
-            existence_set closed({s }, _capacity);
+            existence_set closed({ s }, _capacity);
 
             // Create open set:
             heap<gs_node, typename gs_node::Max> open;
-            open.emplace(gs_node { s, static_cast<scalar_t>(0), _h(_start, _end) });
+            open.push(gs_node { s, static_cast<scalar_t>(0), _h(_start, _end) });
 
             // Main loop:
             while (!open.empty()) {
@@ -166,7 +166,7 @@ namespace chdr::solvers {
                     if (closed.capacity() < curr.m_index) {
                         closed.reserve(std::min(_capacity * ((curr.m_index % _capacity) + 1U), count));
                     }
-                    closed.push(curr.m_index);
+                    closed.emplace(curr.m_index);
 
                     for (const auto& neighbour : _maze.get_neighbours(curr.m_index)) {
 
@@ -180,10 +180,10 @@ namespace chdr::solvers {
                                 if (closed.capacity() < n) {
                                     closed.reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                 }
-                                closed.push(n);
+                                closed.emplace(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                open.emplace(gs_node { n, curr.m_gScore + static_cast<scalar_t>(1), _h(nCoord, _end) * _weight, std::move(curr) });
+                                open.push(gs_node { n, curr.m_gScore + static_cast<scalar_t>(1), _h(nCoord, _end) * _weight, std::move(curr) });
                             }
                         }
                     }

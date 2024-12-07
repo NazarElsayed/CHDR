@@ -103,6 +103,17 @@ namespace chdr {
             m_bits[_hash] = static_cast<boolean_t>(true);
         }
 
+        template <typename T>
+        void emplace(T&& _hash) {
+            static_assert(std::is_integral_v<std::decay_t<T>>, "Hash must be an integral type");
+
+            if (static_cast<size_t>(_hash) >= m_bits.size()) {
+                resize(static_cast<size_t>(_hash) + 1U);
+            }
+
+            m_bits[static_cast<size_t>(_hash)] = static_cast<boolean_t>(true);
+        }
+        
         /**
          * @brief remove a hash from the set.
          * @param[in] _hash The hash value to be removed.
@@ -202,7 +213,7 @@ namespace chdr {
          *
          * @return The size of the set.
          */
-        [[maybe_unused]] [[nodiscard]] constexpr auto size() const {
+        [[maybe_unused, nodiscard]] constexpr auto size() const {
             return m_bits.size();
         }
 
@@ -212,7 +223,7 @@ namespace chdr {
          *
          * @return The capacity of the set.
          */
-        [[maybe_unused]] [[nodiscard]] constexpr auto capacity() const {
+        [[maybe_unused, nodiscard]] constexpr auto capacity() const {
             return m_bits.capacity();
         }
 
@@ -221,21 +232,21 @@ namespace chdr {
         using       reverse_iterator_t = typename std::vector<alignment_type>::reverse_iterator;
         using const_reverse_iterator_t = typename std::vector<alignment_type>::const_reverse_iterator;
 
-        [[maybe_unused]] [[nodiscard]]       iterator_t  begin()       { return m_bits.begin();  }
-        [[maybe_unused]] [[nodiscard]] const_iterator_t  begin() const { return m_bits.begin();  }
-        [[maybe_unused]] [[nodiscard]] const_iterator_t cbegin() const { return m_bits.cbegin(); }
+        [[maybe_unused, nodiscard]] constexpr       iterator_t  begin()       { return m_bits.begin();  }
+        [[maybe_unused, nodiscard]] constexpr const_iterator_t  begin() const { return m_bits.begin();  }
+        [[maybe_unused, nodiscard]] constexpr const_iterator_t cbegin() const { return m_bits.cbegin(); }
 
-        [[maybe_unused]] [[nodiscard]]       iterator_t  end()       { return m_bits.end();  }
-        [[maybe_unused]] [[nodiscard]] const_iterator_t  end() const { return m_bits.end();  }
-        [[maybe_unused]] [[nodiscard]] const_iterator_t cend() const { return m_bits.cend(); }
+        [[maybe_unused, nodiscard]] constexpr       iterator_t  end()       { return m_bits.end();  }
+        [[maybe_unused, nodiscard]] constexpr const_iterator_t  end() const { return m_bits.end();  }
+        [[maybe_unused, nodiscard]] constexpr const_iterator_t cend() const { return m_bits.cend(); }
 
-        [[maybe_unused]] [[nodiscard]]       reverse_iterator_t  rbegin()       { return m_bits.rbegin();  }
-        [[maybe_unused]] [[nodiscard]] const_reverse_iterator_t  rbegin() const { return m_bits.rbegin();  }
-        [[maybe_unused]] [[nodiscard]] const_reverse_iterator_t crbegin() const { return m_bits.crbegin(); }
+        [[maybe_unused, nodiscard]] constexpr       reverse_iterator_t  rbegin()       { return m_bits.rbegin();  }
+        [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t  rbegin() const { return m_bits.rbegin();  }
+        [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t crbegin() const { return m_bits.crbegin(); }
 
-        [[maybe_unused]] [[nodiscard]]       reverse_iterator_t  rend()       { return m_bits.rend();  }
-        [[maybe_unused]] [[nodiscard]] const_reverse_iterator_t  rend() const { return m_bits.rend();  }
-        [[maybe_unused]] [[nodiscard]] const_reverse_iterator_t crend() const { return m_bits.crend(); }
+        [[maybe_unused, nodiscard]] constexpr       reverse_iterator_t  rend()       { return m_bits.rend();  }
+        [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t  rend() const { return m_bits.rend();  }
+        [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t crend() const { return m_bits.crend(); }
     };
 
 } // chdr

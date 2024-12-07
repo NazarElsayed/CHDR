@@ -26,48 +26,58 @@ namespace chdr {
         using block_t = std::unique_ptr<T[]>; // NOLINT(*-avoid-c-arrays)
 
         size_t m_index;
-        std::forward_list<block_t> m_blocks;
+        std::forward_list<block_t> c;
 
         void expand() {
-            m_blocks.emplace_front(std::make_unique<T[]>(BlockWidth)); // NOLINT(*-avoid-c-arrays)
+            c.emplace_front(std::make_unique<T[]>(BlockWidth)); // NOLINT(*-avoid-c-arrays)
             m_index = 0U;
         }
 
     public:
 
-        [[maybe_unused]] constexpr explicit stable_forward_buf() : m_index(0U), m_blocks() {
-            m_blocks.emplace_front(std::make_unique<T[]>(BlockWidth)); // NOLINT(*-avoid-c-arrays)
+        [[maybe_unused]] constexpr explicit stable_forward_buf() : m_index(0U), c() {
+            c.emplace_front(std::make_unique<T[]>(BlockWidth)); // NOLINT(*-avoid-c-arrays)
         }
 
-        [[maybe_unused]] constexpr stable_forward_buf(const std::initializer_list<size_t>& _items) : m_index(0U), m_blocks() {
+        [[maybe_unused]] constexpr stable_forward_buf(const std::initializer_list<size_t>& _items) : m_index(0U), c() {
 
-            m_blocks.emplace_front(std::make_unique<T[]>(BlockWidth)); // NOLINT(*-avoid-c-arrays)
+            c.emplace_front(std::make_unique<T[]>(BlockWidth)); // NOLINT(*-avoid-c-arrays)
 
             for (const auto& item : _items) {
                 push(item);
             }
         }
 
-        [[maybe_unused]] [[nodiscard]] T& push(const T& _item) {
+        [[maybe_unused, nodiscard]] T& push(const T& _item) {
 
             if (m_index >= BlockWidth) {
                 expand();
             }
 
-            return m_blocks.front()[m_index++] = _item;
+            return c.front()[m_index++] = _item;
         }
 
-        [[maybe_unused]] [[nodiscard]] T& emplace(T&& _item) {
+        [[maybe_unused, nodiscard]] T& push(T&& _item) {
 
             if (m_index >= BlockWidth) {
                 expand();
             }
 
-            return m_blocks.front()[m_index++] = std::move(_item);
+            return c.front()[m_index++] = std::move(_item);
+        }
+
+        template <class... Args>
+        [[maybe_unused]] constexpr T& emplace(Args&&... _args) {
+
+            if (m_index >= BlockWidth) {
+                expand();
+            }
+
+            return *(new(&c.front()[m_index++]) T(std::forward<Args>(_args)...));
         }
 
         [[maybe_unused]] void clear() {
-            m_blocks.clear();
+            c.clear();
         }
 
         template<bool Const>
@@ -145,13 +155,13 @@ namespace chdr {
         using       iterator_t = stable_iterator<false>;
         using const_iterator_t = stable_iterator<true>;
 
-        [[maybe_unused]] [[nodiscard]]       iterator_t  begin()       { return       iterator(m_blocks.begin(), m_blocks.end(), m_index); }
-        [[maybe_unused]] [[nodiscard]] const_iterator_t  begin() const { return const_iterator(m_blocks.begin(), m_blocks.end(), m_index); }
-        [[maybe_unused]] [[nodiscard]] const_iterator_t cbegin() const { return const_iterator(m_blocks.begin(), m_blocks.end(), m_index); }
+        [[maybe_unused, nodiscard]] constexpr       iterator_t  begin()       { return       iterator(c.begin(), c.end(), m_index); }
+        [[maybe_unused, nodiscard]] constexpr const_iterator_t  begin() const { return const_iterator(c.begin(), c.end(), m_index); }
+        [[maybe_unused, nodiscard]] constexpr const_iterator_t cbegin() const { return const_iterator(c.begin(), c.end(), m_index); }
 
-        [[maybe_unused]] [[nodiscard]]       iterator_t  end()       { return       iterator(m_blocks.end(), m_blocks.end(), 0U); }
-        [[maybe_unused]] [[nodiscard]] const_iterator_t  end() const { return const_iterator(m_blocks.end(), m_blocks.end(), 0U); }
-        [[maybe_unused]] [[nodiscard]] const_iterator_t cend() const { return const_iterator(m_blocks.end(), m_blocks.end(), 0U); }
+        [[maybe_unused, nodiscard]] constexpr       iterator_t  end()       { return       iterator(c.end(), c.end(), 0U); }
+        [[maybe_unused, nodiscard]] constexpr const_iterator_t  end() const { return const_iterator(c.end(), c.end(), 0U); }
+        [[maybe_unused, nodiscard]] constexpr const_iterator_t cend() const { return const_iterator(c.end(), c.end(), 0U); }
     };
 
 } // chdr

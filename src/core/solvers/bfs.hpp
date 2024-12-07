@@ -56,11 +56,11 @@ namespace chdr::solvers {
 
             // Create closed set:
             _capacity = std::max(_capacity, std::max(s, e));
-            existence_set<low_memory_usage> closed({s }, _capacity);
+            existence_set<low_memory_usage> closed({ s }, _capacity);
 
             // Create open:
             std::queue<bfs_node> open;
-            open.emplace(s, nullptr);
+            open.push(s, nullptr);
 
             // Create buffer:
             stable_forward_buf<bfs_node> buf;
@@ -76,7 +76,7 @@ namespace chdr::solvers {
                     if (closed.capacity() < curr.m_index) {
                         closed.reserve(std::min(_capacity * ((curr.m_index % _capacity) + 1U), count));
                     }
-                    closed.push(curr.m_index);
+                    closed.emplace(curr.m_index);
 
                     for (const auto& neighbour : _maze.get_neighbours(curr.m_index)) {
 
@@ -88,10 +88,10 @@ namespace chdr::solvers {
                             if (closed.capacity() < n) {
                                 closed.reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                             }
-                            closed.push(n);
+                            closed.emplace(n);
 
                             // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                            open.push({ n, &buf.emplace(std::move(curr)) });
+                            open.emplace(n, &buf.emplace(std::move(curr)));
                         }
                     }
                 }
@@ -118,11 +118,11 @@ namespace chdr::solvers {
 
             // Create closed:
             _capacity = std::max(_capacity, std::max(s, e));
-            existence_set<low_memory_usage> closed({s }, _capacity);
+            existence_set<low_memory_usage> closed({ s }, _capacity);
 
             // Create open set:
             std::queue<bfs_node> open;
-            open.emplace(s, nullptr);
+            open.push(s, nullptr);
 
             // Create buffer:
             stable_forward_buf<bfs_node> buf;
@@ -140,7 +140,7 @@ namespace chdr::solvers {
                         if (closed.capacity() < curr.m_index) {
                             closed.reserve(std::min(_capacity * ((curr.m_index % _capacity) + 1U), count));
                         }
-                        closed.push(curr.m_index);
+                        closed.emplace(curr.m_index);
 
                         for (const auto& neighbour: _maze.get_neighbours(curr.m_index)) {
 
@@ -154,10 +154,10 @@ namespace chdr::solvers {
                                     if (closed.capacity() < n) {
                                         closed.reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                     }
-                                    closed.push(n);
+                                    closed.emplace(n);
 
                                     // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                    open.push({ n, &buf.emplace(std::move(curr)) });
+                                    open.emplace(n, &buf.emplace(std::move(curr)));
                                 }
                             }
                         }

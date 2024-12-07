@@ -263,7 +263,7 @@ namespace chdr::solvers {
 
             // Create Open Set:
             heap_t open;
-            open.emplace(esmg_node::create_shared(
+            open.push(esmg_node::create_shared(
                 0U,                         // Depth
                 s,                          // Coordinate
                 static_cast<scalar_t>(0),   // G-Score

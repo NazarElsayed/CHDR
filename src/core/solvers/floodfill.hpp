@@ -49,11 +49,11 @@ namespace chdr::solvers {
                     const auto count = _maze.count();
 
                     // Create closed Set:
-                    existence_set closed ({s }, std::max(_capacity, std::max(s, e)));
+                    existence_set closed ({ s }, std::max(_capacity, std::max(s, e)));
 
                     // Create open Set:
                     std::queue<index_t> open;
-                    open.emplace(s);
+                    open.push(s);
 
                     // Main loop:
                     while (!open.empty()) {
@@ -80,9 +80,9 @@ namespace chdr::solvers {
                                         if (closed.capacity() < n) {
                                             closed.reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                         }
-                                        closed.push(n);
+                                        closed.emplace(n);
 
-                                        open.emplace(n);
+                                        open.push(n);
                                     }
                                 }
                             }
@@ -117,11 +117,11 @@ NestedBreak:
                     const auto count = _maze.count();
 
                     // Create closed set:
-                    existence_set closed ({s }, std::max(_capacity, std::max(s, e)));
+                    existence_set closed ({ s }, std::max(_capacity, std::max(s, e)));
 
                     // Create open set:
                     std::queue<index_t> open;
-                    open.emplace(s);
+                    open.push(s);
 
                     // Main loop:
                     while (!open.empty()) {
@@ -148,9 +148,9 @@ NestedBreak:
                                         if (closed.capacity() < n) {
                                             closed.reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                         }
-                                        closed.push(n);
+                                        closed.emplace(n);
                                         
-                                        open.emplace(n);
+                                        open.push(n);
                                     }
                                 }
                             }

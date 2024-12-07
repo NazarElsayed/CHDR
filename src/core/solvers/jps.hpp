@@ -268,7 +268,7 @@ namespace chdr::solvers {
 
             // Create open set:
             heap<jps_node, typename jps_node::Max> open(_capacity / 8U);
-            open.emplace({ s, { 0, 0 }, static_cast<scalar_t>(0), _h(_start, _end), nullptr });
+            open.emplace(s, { 0, 0 }, static_cast<scalar_t>(0), _h(_start, _end), nullptr);
 
             // Create buffer:
             stable_forward_buf<jps_node> buf;
@@ -284,7 +284,7 @@ namespace chdr::solvers {
                     if (closed.capacity() < curr.m_index) {
                         closed.reserve(std::min(_capacity * ((curr.m_index % _capacity) + 1U), _maze.count()));
                     }
-                    closed.push(curr.m_index);
+                    closed.emplace(curr.m_index);
 
                     auto coord = utils::to_nd(curr.m_index, _maze.size());
                     auto successors = FindJumpPoints(_maze, coord, curr.m_Direction, _end);
@@ -299,13 +299,13 @@ namespace chdr::solvers {
                                 closed.reserve(std::min(_capacity * ((n % _capacity) + 1U), _maze.count()));
                             }
 
-                            closed.push(n);
+                            closed.emplace(n);
 
                             const std::array<int8_t, 2> direction { sign(static_cast<int>(successor[0]) - static_cast<int>(coord[0])) ,
                                                                     sign(static_cast<int>(successor[1]) - static_cast<int>(coord[1])) };
 
                             // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                            open.emplace({ n, direction, curr.m_gScore + static_cast<scalar_t>(1), _h(successor, _end) * _weight, &buf.emplace(std::move(curr)) });
+                            open.emplace(n, direction, curr.m_gScore + static_cast<scalar_t>(1), _h(successor, _end) * _weight, &buf.emplace(std::move(curr)));
                         }
                     }
                 }

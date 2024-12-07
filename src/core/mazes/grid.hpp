@@ -250,21 +250,21 @@ namespace chdr::mazes {
         using       reverse_iterator_t = typename std::vector<weighted_node<T>>::reverse_iterator;
         using const_reverse_iterator_t = typename std::vector<weighted_node<T>>::const_reverse_iterator;
 
-        [[maybe_unused]] [[nodiscard]]       iterator_t  begin()       { return m_nodes.begin();  }
-        [[maybe_unused]] [[nodiscard]] const_iterator_t  begin() const { return m_nodes.begin();  }
-        [[maybe_unused]] [[nodiscard]] const_iterator_t cbegin() const { return m_nodes.cbegin(); }
+        [[maybe_unused, nodiscard]]       iterator_t  begin()       { return m_nodes.begin();  }
+        [[maybe_unused, nodiscard]] const_iterator_t  begin() const { return m_nodes.begin();  }
+        [[maybe_unused, nodiscard]] const_iterator_t cbegin() const { return m_nodes.cbegin(); }
 
-        [[maybe_unused]] [[nodiscard]]       iterator_t  end()       { return m_nodes.end();  }
-        [[maybe_unused]] [[nodiscard]] const_iterator_t  end() const { return m_nodes.end();  }
-        [[maybe_unused]] [[nodiscard]] const_iterator_t cend() const { return m_nodes.cend(); }
+        [[maybe_unused, nodiscard]]       iterator_t  end()       { return m_nodes.end();  }
+        [[maybe_unused, nodiscard]] const_iterator_t  end() const { return m_nodes.end();  }
+        [[maybe_unused, nodiscard]] const_iterator_t cend() const { return m_nodes.cend(); }
 
-        [[maybe_unused]] [[nodiscard]]       reverse_iterator_t  rbegin()       { return m_nodes.rbegin();  }
-        [[maybe_unused]] [[nodiscard]] const_reverse_iterator_t  rbegin() const { return m_nodes.rbegin();  }
-        [[maybe_unused]] [[nodiscard]] const_reverse_iterator_t crbegin() const { return m_nodes.crbegin(); }
+        [[maybe_unused, nodiscard]]       reverse_iterator_t  rbegin()       { return m_nodes.rbegin();  }
+        [[maybe_unused, nodiscard]] const_reverse_iterator_t  rbegin() const { return m_nodes.rbegin();  }
+        [[maybe_unused, nodiscard]] const_reverse_iterator_t crbegin() const { return m_nodes.crbegin(); }
 
-        [[maybe_unused]] [[nodiscard]]       reverse_iterator_t  rend()       { return m_nodes.rend();  }
-        [[maybe_unused]] [[nodiscard]] const_reverse_iterator_t  rend() const { return m_nodes.rend();  }
-        [[maybe_unused]] [[nodiscard]] const_reverse_iterator_t crend() const { return m_nodes.crend(); }
+        [[maybe_unused, nodiscard]]       reverse_iterator_t  rend()       { return m_nodes.rend();  }
+        [[maybe_unused, nodiscard]] const_reverse_iterator_t  rend() const { return m_nodes.rend();  }
+        [[maybe_unused, nodiscard]] const_reverse_iterator_t crend() const { return m_nodes.crend(); }
 
     };
 
