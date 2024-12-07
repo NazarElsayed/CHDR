@@ -9,6 +9,8 @@
 #ifndef CHDR_IGRAPH_HPP
 #define CHDR_IGRAPH_HPP
 
+#include <utility>
+
 #include "imaze.hpp"
 #include "mazes/nodes/id_node.hpp"
 

@@ -135,6 +135,10 @@ namespace chdr {
             }
         }
 
+        [[maybe_unused]] constexpr void enqueue(const T& _item) { push(_item); }
+
+        [[maybe_unused]] constexpr void enqueue(T&& _item) { emplace(_item); }
+        
         [[maybe_unused]] constexpr void push(const T& _item) {
             m_data.push_back(_item);
             sort_up(m_data.back());
@@ -188,6 +192,30 @@ namespace chdr {
             }
         }
 
+        [[maybe_unused]] constexpr T dequeue() {
+
+            T result;
+
+            if (!empty()) {
+
+                result(std::move(top()));
+
+                if (size() > 0U) {
+                    m_data[1U] = std::move(m_data.back());
+                }
+                m_data.pop_back();
+            }
+#ifndef NDEBUG
+            else {
+                throw std::underflow_error("Heap is empty");
+            }
+#endif //!NDEBUG
+
+            sort_down(m_data[1U]);
+
+            return result;
+        }
+
         [[maybe_unused]] constexpr void pop() {
 
             if (!empty()) {
@@ -201,6 +229,7 @@ namespace chdr {
                 throw std::underflow_error("Heap is empty");
             }
 #endif //!NDEBUG
+
             sort_down(m_data[1U]);
         }
 
@@ -222,8 +251,14 @@ namespace chdr {
 
         [[maybe_unused]] constexpr bool contains(T& _item) {
 
-            const auto& i = index_of(_item);
-            return !empty() && i < m_data.size() && _item == m_data[i];
+            constexpr bool result = !empty();
+
+            if (result) {
+                constexpr const auto& i = index_of(_item);
+                result = i < m_data.size() && _item == m_data[i];
+            }
+
+            return result;
         }
 
         [[maybe_unused]] constexpr void reserve(const size_t& _capacity) {

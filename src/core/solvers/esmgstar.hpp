@@ -9,6 +9,8 @@
 #ifndef CHDR_ESMGSTAR_HPP
 #define CHDR_ESMGSTAR_HPP
 
+#include <debug.hpp>
+
 #include <cmath>
 #include <cstddef>
 

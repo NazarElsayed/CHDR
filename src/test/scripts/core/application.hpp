@@ -17,6 +17,8 @@
 #include <cstdlib>
 #include <string>
 
+#include "../tests/astar.hpp"
+
 namespace test {
 
 	/**

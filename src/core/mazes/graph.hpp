@@ -11,6 +11,7 @@
 
 #include <functional>
 #include <future>
+#include <iostream>
 #include <mutex>
 #include <thread>
 #include <unordered_map>
@@ -81,15 +82,15 @@ namespace chdr::mazes {
             }
         }
 
-        template <size_t Kd, typename weight_t>
+        template <size_t Kd, typename weight_t, const bool prune = true>
 #if __cplusplus >= 202302L
         constexpr
 #endif // __cplusplus >= 202302L
-        [[maybe_unused]] explicit graph(const grid<Kd, weight_t>& _grid, const constexpr bool& _prune = true) : m_entries{} {
+        [[maybe_unused]] explicit graph(const grid<Kd, weight_t>& _grid) : m_entries{} {
 
             const auto size = _grid.size();
 
-            if constexpr (_prune) {
+            if constexpr (prune) {
 
                 // TODO: Add support for directed graphs.
 

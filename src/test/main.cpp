@@ -6,6 +6,8 @@
  * https://creativecommons.org/licenses/by-nc-nd/4.0/
  */
 
+#include <chdr.hpp>
+
 #include <debug.hpp>
 
 #include <exception>
