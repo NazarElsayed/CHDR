@@ -45,7 +45,7 @@ namespace test::tests {
 
             /* GENERATE MAZE */
             const auto grid = generator::grid::generate<weight_t>(start, end, 0.0, 0.0, seed, size);
-            const auto graph = chdr::mazes::graph<index_t, scalar_t>(grid);
+            //const auto graph = chdr::mazes::graph<index_t, scalar_t>(grid);
             //const auto graph = generator::graph::generate<weight_t, index_t, scalar_t>(start, end, 0.0, 0.0, seed, size);
 
             /* MAX DRAW SIZE */
@@ -59,8 +59,8 @@ namespace test::tests {
             const auto sw_start = std::chrono::high_resolution_clock::now();
 
             auto solver = chdr::solvers::astar<weight_t, Kd, scalar_t, index_t>();
-            // auto path = solver.solve(grid, start, end, HEURISTIC);
-            auto path = solver.solve(graph, start, end, size, HEURISTIC);
+            auto path   = solver.solve(grid, start, end, HEURISTIC);
+            //auto path   = solver.solve(graph, start, end, size, HEURISTIC);
 
             const auto pathfinding_log = "\t" + std::string(path.size() != 0U ? "[SOLVED]" : "[IMPOSSIBLE]") + "\t(~" +
                 chdr::utils::to_string(std::chrono::duration_cast<std::chrono::duration<long double>>(std::chrono::high_resolution_clock::now() - sw_start).count()) + ")";
