@@ -576,7 +576,7 @@ namespace {
 		 * @param[in] _type (optional) The type of log message to log.
 		 * @param[in] _makeInline (optional) A flag indicating if the log message should be displayed inline.
 		 */
-        [[maybe_unused]] static void assert(const bool& _condition, const std::string_view& _message, const log_type& _type = log_type::debug, const bool& _makeInline = false) noexcept {
+        [[maybe_unused]] static void asrt(const bool& _condition, const std::string_view& _message, const log_type& _type = log_type::debug, const bool& _makeInline = false) noexcept {
 			
 			if (!_condition) {
 				log(_message, _type, _makeInline);
