@@ -10,6 +10,9 @@
 #define CHDR_EXISTENCE_SET_HPP
 
 #include <algorithm>
+#include <cstddef>
+#include <cstdint>
+#include <initializer_list>
 #include <vector>
 
 namespace chdr {
@@ -83,7 +86,7 @@ namespace chdr {
             reserve(autoCapacity);
 
             for (const auto& item : _items) {
-                add(item);
+                push(item);
             }
         }
 
@@ -91,7 +94,7 @@ namespace chdr {
          * @brief add a hash to the set.
          * @param[in] _hash The hash value to be added.
          */
-        void add(const size_t& _hash) {
+        void push(const size_t& _hash) {
 
             if (_hash >= m_bits.size()) {
                 resize(_hash + 1U);
@@ -108,7 +111,7 @@ namespace chdr {
          * @see set::prune()
          * @see set::clear()
          */
-        [[maybe_unused]] void remove(const size_t& _hash) {
+        [[maybe_unused]] void erase(const size_t& _hash) {
 
             if (_hash < m_bits.size()) {
                 m_bits[_hash] = static_cast<boolean_t>(false);
@@ -125,11 +128,11 @@ namespace chdr {
         }
 
         /**
-         * @brief prune the set by removing trailing false values.
+         * @brief trim the set by removing trailing false values.
          *
          * @see set::clear()
          */
-        [[maybe_unused]] void prune() {
+        [[maybe_unused]] void trim() {
 
             const auto it = std::find_if(
                     m_bits.rbegin(),
@@ -189,7 +192,7 @@ namespace chdr {
          * @brief Trims unused elements from the end of the set.
          * @details Shrinks the internal container of the set to reduce the structure's overall memory footprint.
          */
-        [[maybe_unused]] void trim() {
+        [[maybe_unused]] void shrink_to_fit() {
             m_bits.shrink_to_fit();
         }
 

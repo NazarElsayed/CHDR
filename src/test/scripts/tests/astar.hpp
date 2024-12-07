@@ -11,6 +11,8 @@
 
 #include <chdr.hpp>
 
+#include <debug.hpp>
+
 #include <array>
 #include <chrono>
 #include <cstddef>
@@ -18,7 +20,7 @@
 #include <string>
 
 #include "../core/display.hpp"
-#include "../generator/graph.hpp"
+#include "../generator/graph.hpp" // NOLINT(*-include-cleaner)
 #include "../generator/grid.hpp"
 
 namespace test::tests {

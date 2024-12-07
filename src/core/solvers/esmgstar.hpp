@@ -215,7 +215,7 @@ namespace chdr::solvers {
 
                 // if p is not in _open then
                 if (!_open.contains(p)) {
-                     _open.add(p); // Add p to _open
+                     _open.push(p); // Add p to _open
                 }
             }
         }
@@ -240,7 +240,7 @@ namespace chdr::solvers {
                     }
                 }
 
-                _open.remove(w);
+                _open.erase(w);
             }
             else {
                 _open.pop_back();
@@ -302,7 +302,7 @@ namespace chdr::solvers {
 
                         // Add successor to open.
                         if (!open.contains(successor)) {
-                             open.add(successor);
+                             open.push(successor);
                         }
                     }
 

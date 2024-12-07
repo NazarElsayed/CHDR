@@ -80,7 +80,7 @@ namespace chdr::solvers {
                                         if (closed.capacity() < n) {
                                             closed.reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                         }
-                                        closed.add(n);
+                                        closed.push(n);
 
                                         open.emplace(n);
                                     }
@@ -148,7 +148,7 @@ NestedBreak:
                                         if (closed.capacity() < n) {
                                             closed.reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
                                         }
-                                        closed.add(n);
+                                        closed.push(n);
                                         
                                         open.emplace(n);
                                     }

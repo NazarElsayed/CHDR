@@ -108,7 +108,7 @@ namespace test::generator {
                             result.add(next, {curr, distance});
                         }
                         else {
-                            result.add(next);
+                            result.push(next);
                         }
 
                         keys.emplace_back(next);

@@ -284,7 +284,7 @@ namespace chdr::solvers {
                     if (closed.capacity() < curr.m_index) {
                         closed.reserve(std::min(_capacity * ((curr.m_index % _capacity) + 1U), _maze.count()));
                     }
-                    closed.add(curr.m_index);
+                    closed.push(curr.m_index);
 
                     auto coord = utils::to_nd(curr.m_index, _maze.size());
                     auto successors = FindJumpPoints(_maze, coord, curr.m_Direction, _end);
@@ -299,7 +299,7 @@ namespace chdr::solvers {
                                 closed.reserve(std::min(_capacity * ((n % _capacity) + 1U), _maze.count()));
                             }
 
-                            closed.add(n);
+                            closed.push(n);
 
                             const std::array<int8_t, 2> direction { sign(static_cast<int>(successor[0]) - static_cast<int>(coord[0])) ,
                                                                     sign(static_cast<int>(successor[1]) - static_cast<int>(coord[1])) };

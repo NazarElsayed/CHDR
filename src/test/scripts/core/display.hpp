@@ -118,7 +118,7 @@ namespace test {
             chdr::existence_set path_set(_path.size());
 
             for (const auto& item : _path) {
-                path_set.add(chdr::utils::to_1d<size_t>(item, _maze.size()));
+                path_set.push(chdr::utils::to_1d<size_t>(item, _maze.size()));
             }
 
             const bool even_width = _size[0U] % 2U == 0U;
