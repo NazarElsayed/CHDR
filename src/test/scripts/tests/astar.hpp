@@ -11,6 +11,12 @@
 
 #include <chdr.hpp>
 
+#include <array>
+#include <chrono>
+#include <cstddef>
+#include <cstdint>
+#include <string>
+
 #include "../core/display.hpp"
 #include "../generator/graph.hpp"
 #include "../generator/grid.hpp"
