@@ -182,7 +182,7 @@ namespace chdr {
             sort_up(c.back());
         }
 
-        [[maybe_unused]] constexpr void remove(const T& _item) {
+        [[maybe_unused]] constexpr void erase(const T& _item) {
 
 #ifndef NDEBUG
             if (empty()) {

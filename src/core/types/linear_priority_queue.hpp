@@ -43,6 +43,12 @@ public:
 
     [[maybe_unused, nodiscard]] constexpr const T& top() const {
 
+#ifndef NDEBUG
+        if (empty()) {
+            throw std::underflow_error("Container is empty");
+        }
+#endif //!NDEBUG
+
         if constexpr (std::is_pointer_v<T>) {
             return static_cast<T>(min_element().base());
         }
@@ -52,6 +58,12 @@ public:
     }
 
     [[maybe_unused, nodiscard]] constexpr const T& back() const {
+
+#ifndef NDEBUG
+        if (empty()) {
+            throw std::underflow_error("Container is empty");
+        }
+#endif //!NDEBUG
 
         if constexpr (std::is_pointer_v<T>) {
             return static_cast<T>(max_element().base());
@@ -75,24 +87,21 @@ public:
 
     [[maybe_unused]] constexpr T dequeue() {
 
-        T result;
-
-        if (!empty()) {
-
-            const auto itr = min_element();
-
-            if constexpr (std::is_pointer_v<T>) {
-                result(std::move(static_cast<T>(itr.base())));
-            }
-            else {
-                result(std::move(*itr));
-            }
-
-            c.erase(itr);
-        }
-        else {
+        if (empty()) {
             throw std::underflow_error("Container is empty");
         }
+
+        const auto itr = min_element();
+
+        T result;
+        if constexpr (std::is_pointer_v<T>) {
+            result(std::move(static_cast<T>(itr.base())));
+        }
+        else {
+            result(std::move(*itr));
+        }
+
+        c.erase(itr);
 
         return result;
     }

@@ -40,7 +40,7 @@ public:
 
     [[maybe_unused, nodiscard]] constexpr const size_t& size() const { return m_count; }
 
-    constexpr void push(const T& _value) {
+    [[maybe_unused]] constexpr void push(const T& _value) {
 
         if (full()) {
             m_head = (m_head + 1U) % m_capacity;
@@ -53,7 +53,7 @@ public:
         m_tail    = (m_tail + 1U) % m_capacity;
     }
 
-    constexpr void push(T&& _value) {
+    [[maybe_unused]] constexpr void push(T&& _value) {
 
         if (full()) {
             m_head = (m_head + 1U) % m_capacity;
@@ -66,7 +66,7 @@ public:
         m_tail    = (m_tail + 1U) % m_capacity;
     }
 
-    constexpr void emplace(T&& _value) {
+    [[maybe_unused]] constexpr void emplace(T&& _value) {
         if (full()) {
             m_head = (m_head + 1U) % m_capacity;
         }
@@ -79,7 +79,7 @@ public:
     }
 
     template <typename... Args>
-    constexpr void emplace(Args&&... args) {
+    [[maybe_unused]] constexpr void emplace(Args&&... args) {
         if (full()) {
             m_head = (m_head + 1U) % m_capacity;
         }
@@ -91,11 +91,11 @@ public:
         m_tail    = (m_tail + 1U) % m_capacity;
     }
     
-    constexpr void enqueue(const T& _value) { push(_value); }
+    [[maybe_unused]] constexpr void enqueue(const T& _value) { push(_value); }
 
-    constexpr void enqueue(T&& _value) { push(_value); }
+    [[maybe_unused]] constexpr void enqueue(T&& _value) { push(_value); }
 
-    constexpr T dequeue() {
+    [[maybe_unused]] constexpr T dequeue() {
 
         if (empty()) {
             throw std::underflow_error("Container is empty");
@@ -107,13 +107,27 @@ public:
         return value;
     }
 
-    constexpr void pop() {
+    [[maybe_unused]] constexpr void pop() {
 
+#ifndef NDEBUG
         if (empty()) {
             throw std::underflow_error("Container is empty");
         }
+#endif //!NDEBUG
 
         m_head = (m_head + 1U) % m_capacity;
+        --m_count;
+    }
+
+    [[maybe_unused]] constexpr void pop_back() {
+
+#ifndef NDEBUG
+        if (empty()) {
+            throw std::underflow_error("Container is empty");
+        }
+#endif //!NDEBUG
+
+        m_tail = (m_tail + m_capacity - 1U) % m_capacity;
         --m_count;
     }
 
@@ -137,13 +151,25 @@ public:
         return c[(m_tail + m_capacity - 1U) % m_capacity];
     }
 
-    constexpr void clear() {
+    [[maybe_unused]] constexpr void swap(circular_queue& _other) noexcept {
+
+        if (this != &_other) {
+
+            std::swap(c,          _other.c         );
+            std::swap(m_head,     _other.m_head    );
+            std::swap(m_tail,     _other.m_tail    );
+            std::swap(m_count,    _other.m_count   );
+            std::swap(m_capacity, _other.m_capacity);
+        }
+    }
+    
+    [[maybe_unused]] constexpr void clear() {
         m_head  = 0U;
         m_tail  = 0U;
         m_count = 0U;
     }
 
-    constexpr void reserve(const size_t& _new_capacity) {
+    [[maybe_unused]] constexpr void reserve(const size_t& _new_capacity) {
         
         if (_new_capacity > m_capacity) {
 
@@ -159,14 +185,26 @@ public:
         }
     }
 
-    using       iterator_t = typename Container::iterator;
-    using const_iterator_t = typename Container::const_iterator;
+    using               iterator_t = typename Container::iterator;
+    using         const_iterator_t = typename Container::const_iterator;
+    using       reverse_iterator_t = typename Container::reverse_iterator;
+    using const_reverse_iterator_t = typename Container::const_reverse_iterator;
 
-    constexpr iterator_t begin() { return c.begin() + m_head; }
-    constexpr iterator_t   end() { return c.begin() + m_tail; }
+    [[maybe_unused]] constexpr       iterator_t  begin()       { return c.begin() + m_head; }
+    [[maybe_unused]] constexpr const_iterator_t  begin() const { return c.begin() + m_head; }
+    [[maybe_unused]] constexpr const_iterator_t cbegin() const { return c.begin() + m_head; }
 
-    constexpr const_iterator_t begin() const { return c.begin() + m_head; }
-    constexpr const_iterator_t   end() const { return c.begin() + m_tail; }
+    [[maybe_unused]] constexpr       iterator_t  end()       { return c.begin() + m_tail; }
+    [[maybe_unused]] constexpr const_iterator_t  end() const { return c.begin() + m_tail; }
+    [[maybe_unused]] constexpr const_iterator_t cend() const { return c.begin() + m_tail; }
+
+    [[maybe_unused]] constexpr       reverse_iterator_t  rbegin()       { return       reverse_iterator_t(end()); }
+    [[maybe_unused]] constexpr const_reverse_iterator_t  rbegin() const { return const_reverse_iterator_t(end()); }
+    [[maybe_unused]] constexpr const_reverse_iterator_t crbegin() const { return const_reverse_iterator_t(end()); }
+
+    [[maybe_unused]] constexpr       reverse_iterator_t  rend()       { return       reverse_iterator_t(begin()); }
+    [[maybe_unused]] constexpr const_reverse_iterator_t  rend() const { return const_reverse_iterator_t(begin()); }
+    [[maybe_unused]] constexpr const_reverse_iterator_t crend() const { return const_reverse_iterator_t(begin()); }
 };
 
 #endif //CIRCULAR_QUEUE_HPP
