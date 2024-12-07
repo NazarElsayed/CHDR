@@ -11,8 +11,8 @@
 template <typename T, typename Compare = std::less<T>, typename Container = std::vector<T>>
 class linear_priority_queue {
 
-
 protected:
+
     Container c;
     Compare   comp;
 
@@ -39,7 +39,7 @@ public:
     [[maybe_unused]] linear_priority_queue& operator =(const linear_priority_queue& ) = default;
     [[maybe_unused]] linear_priority_queue& operator =(      linear_priority_queue&&) = default;
 
-    [[nodiscard]] constexpr const T& front() { return top(); }
+    [[nodiscard]] constexpr const T& front() const { return top(); }
 
     [[maybe_unused, nodiscard]] constexpr const T& top() const {
 
@@ -90,18 +90,15 @@ public:
 
             c.erase(itr);
         }
-#ifndef NDEBUG
         else {
             throw std::underflow_error("Container is empty");
         }
-#endif //!NDEBUG
 
         return result;
     }
 
     [[maybe_unused]] constexpr void pop() {
 
-        // Check if the container is not empty, then remove the last element
         if (!empty()) {
             c.erase(min_element());
         }
@@ -115,7 +112,6 @@ public:
 
     [[maybe_unused]] constexpr void pop_back() {
 
-        // Check if the container is not empty, then remove the last element
         if (!empty()) {
             c.erase(max_element());
         }
@@ -156,9 +152,9 @@ public:
     using       reverse_iterator_t = typename std::vector<T>::reverse_iterator;
     using const_reverse_iterator_t = typename std::vector<T>::const_reverse_iterator;
 
-    [[maybe_unused, nodiscard]] constexpr       iterator_t  begin()       { return c.begin()  + 1U; }
-    [[maybe_unused, nodiscard]] constexpr const_iterator_t  begin() const { return c.begin()  + 1U; }
-    [[maybe_unused, nodiscard]] constexpr const_iterator_t cbegin() const { return c.cbegin() + 1U; }
+    [[maybe_unused, nodiscard]] constexpr       iterator_t  begin()       { return c.begin();  }
+    [[maybe_unused, nodiscard]] constexpr const_iterator_t  begin() const { return c.begin();  }
+    [[maybe_unused, nodiscard]] constexpr const_iterator_t cbegin() const { return c.cbegin(); }
 
     [[maybe_unused, nodiscard]] constexpr       iterator_t  end()       { return c.end();  }
     [[maybe_unused, nodiscard]] constexpr const_iterator_t  end() const { return c.end();  }

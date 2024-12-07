@@ -124,9 +124,10 @@ namespace chdr {
         }
 
         [[nodiscard]] constexpr bool empty() const { return size() == 0U;  }
+
         [[nodiscard]] constexpr size_t size() const { return c.size() - 1U; }
 
-        [[nodiscard]] constexpr const T& front() { return top(); }
+        [[nodiscard]] constexpr const T& front() const { return top(); }
 
         [[nodiscard]] constexpr const T& top() const {
 
@@ -232,11 +233,9 @@ namespace chdr {
                 }
                 c.pop_back();
             }
-#ifndef NDEBUG
             else {
                 throw std::underflow_error("Heap is empty");
             }
-#endif //!NDEBUG
 
             sort_down(c[1U]);
 
