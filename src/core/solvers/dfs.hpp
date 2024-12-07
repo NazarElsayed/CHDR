@@ -60,7 +60,7 @@ namespace chdr::solvers {
             // Create open Set:
             auto sequence = std::vector<dfs_node>(_capacity);
             std::stack<dfs_node, std::vector<dfs_node>> open(std::move(sequence));
-            open.push(s, nullptr);
+            open.emplace(s, nullptr);
 
             // Create buffer:
             stable_forward_buf<dfs_node> buf;
@@ -123,7 +123,7 @@ namespace chdr::solvers {
             // Create open set:
             auto sequence = std::vector<dfs_node>(_capacity);
             std::stack<dfs_node, std::vector<dfs_node>> open(std::move(sequence));
-            open.push(s, nullptr);
+            open.emplace(s, nullptr);
 
             // Create buffer:
             stable_forward_buf<dfs_node> buf;

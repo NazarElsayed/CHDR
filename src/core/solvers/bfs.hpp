@@ -60,7 +60,7 @@ namespace chdr::solvers {
 
             // Create open:
             std::queue<bfs_node> open;
-            open.push(s, nullptr);
+            open.emplace(s, nullptr);
 
             // Create buffer:
             stable_forward_buf<bfs_node> buf;
@@ -122,7 +122,7 @@ namespace chdr::solvers {
 
             // Create open set:
             std::queue<bfs_node> open;
-            open.push(s, nullptr);
+            open.emplace(s, nullptr);
 
             // Create buffer:
             stable_forward_buf<bfs_node> buf;

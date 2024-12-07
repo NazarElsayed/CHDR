@@ -136,7 +136,7 @@ namespace chdr::solvers {
             existence_set<low_memory_usage> closed({ s }, _capacity);
 
             // Create open set:
-            std::vector<bs_node, stack_allocator<bs_node, StackSize>> open;
+            linear_priority_queue<bs_node, typename bs_node::max, std::vector<bs_node, stack_allocator<bs_node, StackSize>>> open;
             open.reserve(StackSize);
             open.emplace(s, _h(_start, _end), nullptr);
 
@@ -146,9 +146,8 @@ namespace chdr::solvers {
             // Main loop:
             while (!open.empty()) {
 
-                const auto top = std::min_element(open.begin(), open.end(), typename bs_node::min());
-                auto curr(std::move(*top));
-                open.erase(top);
+                auto curr(std::move(open.top()));
+                open.pop();
 
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
@@ -264,7 +263,7 @@ namespace chdr::solvers {
             existence_set<low_memory_usage> closed({ s }, _capacity);
 
             // Create open set:
-            std::vector<bs_node, stack_allocator<bs_node, StackSize>> open;
+            linear_priority_queue<bs_node, typename bs_node::max, std::vector<bs_node, stack_allocator<bs_node, StackSize>>> open;
             open.reserve(StackSize);
             open.emplace(s, _h(_start, _end), nullptr);
 
@@ -274,9 +273,8 @@ namespace chdr::solvers {
             // Main loop:
             while (!open.empty()) {
 
-                const auto top = std::min_element(open.begin(), open.end(), typename bs_node::min());
-                auto curr(std::move(*top));
-                open.erase(top);
+                auto curr(std::move(open.top()));
+                open.pop();
 
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 

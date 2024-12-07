@@ -53,7 +53,7 @@ namespace chdr::solvers {
 
                     // Create open Set:
                     std::queue<index_t> open;
-                    open.push(s);
+                    open.emplace(s);
 
                     // Main loop:
                     while (!open.empty()) {
@@ -121,7 +121,7 @@ NestedBreak:
 
                     // Create open set:
                     std::queue<index_t> open;
-                    open.push(s);
+                    open.emplace(s);
 
                     // Main loop:
                     while (!open.empty()) {

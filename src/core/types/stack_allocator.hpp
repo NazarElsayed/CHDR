@@ -17,7 +17,7 @@
 #include <stdexcept> // NOLINT(*-include-cleaner)
 #include <type_traits>
 
-template <typename T, size_t StackSize>
+template <typename T, const size_t StackSize>
 class stack_allocator {
 
 private:

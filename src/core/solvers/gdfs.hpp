@@ -63,7 +63,7 @@ namespace chdr::solvers {
             // Create open set:
             auto sequence = std::vector<gdfs_node>(_capacity);
             std::stack<gdfs_node, std::vector<gdfs_node>> open(std::move(sequence));
-            open.push(s);
+            open.emplace(s);
 
             // Main loop:
             while (!open.empty()) { // SEARCH FOR SOLUTION...
@@ -133,7 +133,7 @@ namespace chdr::solvers {
             // Create open set:
             auto sequence = std::vector<gdfs_node>(_capacity);
             std::stack<gdfs_node, std::vector<gdfs_node>> open(std::move(sequence));
-            open.push(s);
+            open.emplace(s);
 
             // Main loop:
             while (!open.empty()) { // SEARCH FOR SOLUTION...

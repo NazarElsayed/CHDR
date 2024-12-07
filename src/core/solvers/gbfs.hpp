@@ -63,7 +63,7 @@ namespace chdr::solvers {
 
             // Create open set:
             std::queue<gbfs_node> open;
-            open.push(s);
+            open.emplace(s);
 
             // Main loop:
             while (!open.empty()) { // SEARCH FOR SOLUTION...
@@ -132,7 +132,7 @@ namespace chdr::solvers {
 
             // Create open set:
             std::queue<gbfs_node> open;
-            open.push(s);
+            open.emplace(s);
 
             // Main loop:
             while (!open.empty()) { // SEARCH FOR SOLUTION...
