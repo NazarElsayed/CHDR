@@ -9,7 +9,6 @@
 #ifndef TEST_ASTAR_HPP
 #define TEST_ASTAR_HPP
 
-
 #include <chdr.hpp>
 
 #include "../core/display.hpp"

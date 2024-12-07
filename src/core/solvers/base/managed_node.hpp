@@ -9,9 +9,10 @@
 #ifndef CHDR_MANAGEDNODE_HPP
 #define CHDR_MANAGEDNODE_HPP
 
-#include "bnode.hpp"
-
+#include <cstddef>
 #include <memory>
+
+#include "bnode.hpp"
 
 namespace chdr::solvers {
 

@@ -11,12 +11,16 @@
 
 #include "CHDR_Version.hpp"
 
-#include "mazes/graph.hpp"
-#include "mazes/grid.hpp"
 #include "mazes/base/igraph.hpp"
 #include "mazes/base/imaze.hpp"
+#include "mazes/graph.hpp"
+#include "mazes/grid.hpp"
+#include "mazes/nodes/base/inode.hpp"
+#include "mazes/nodes/id_node.hpp"
 #include "mazes/nodes/weighted_node.hpp"
 
+#include "solvers/base/bnode.hpp"
+#include "solvers/base/bsolver.hpp"
 #include "solvers/astar.hpp"
 #include "solvers/bfs.hpp"
 #include "solvers/bstar.hpp"
@@ -28,11 +32,16 @@
 #include "solvers/gdfs.hpp"
 #include "solvers/gstar.hpp"
 #include "solvers/jps.hpp"
-#include "solvers/base/bsolver.hpp"
 
 #include "types/coord.hpp"
+#include "types/existence_set.hpp"
+#include "types/heap.hpp"
+#include "types/stable_forward_buf.hpp"
+#include "types/stack_allocator.hpp"
 
 #include "utils/heuristics.hpp"
+#include "utils/intrinsics.hpp"
+#include "utils/simd_extensions.hpp"
 #include "utils/utils.hpp"
 
 #endif //CHDR_COMMON_HPP

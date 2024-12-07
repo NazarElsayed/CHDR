@@ -9,6 +9,7 @@
 #ifndef CHDR_STABLEFORWARDBUF_HPP
 #define CHDR_STABLEFORWARDBUF_HPP
 
+#include <cstddef>
 #include <forward_list>
 #include <initializer_list>
 #include <iterator>
@@ -17,30 +18,30 @@
 
 namespace chdr {
 
-    template <typename T, size_t BlockWidth = 1024U>
+    template <typename T, const size_t BlockWidth = 1024U>
     class stable_forward_buf {
 
     private:
 
-        using block_t = std::unique_ptr<T[]>;
+        using block_t = std::unique_ptr<T[]>; // NOLINT(*-avoid-c-arrays)
 
         size_t m_index;
         std::forward_list<block_t> m_blocks;
 
         void expand() {
-            m_blocks.emplace_front(std::make_unique<T[]>(BlockWidth));
+            m_blocks.emplace_front(std::make_unique<T[]>(BlockWidth)); // NOLINT(*-avoid-c-arrays)
             m_index = 0U;
         }
 
     public:
 
         [[maybe_unused]] constexpr explicit stable_forward_buf() : m_index(0U), m_blocks() {
-            m_blocks.emplace_front(std::make_unique<T[]>(BlockWidth));
+            m_blocks.emplace_front(std::make_unique<T[]>(BlockWidth)); // NOLINT(*-avoid-c-arrays)
         }
 
         [[maybe_unused]] constexpr stable_forward_buf(const std::initializer_list<size_t>& _items) : m_index(0U), m_blocks() {
 
-            m_blocks.emplace_front(std::make_unique<T[]>(BlockWidth));
+            m_blocks.emplace_front(std::make_unique<T[]>(BlockWidth)); // NOLINT(*-avoid-c-arrays)
 
             for (const auto& item : _items) {
                 push(item);
@@ -113,7 +114,7 @@ namespace chdr {
                 ++m_element_iter;
                 --m_remaining_elements;
 
-                if ((m_element_iter - m_block_iter->get()) == BlockWidth || !m_remaining_elements) {
+                if ((m_element_iter - m_block_iter->get()) == BlockWidth || (m_remaining_elements == 0U)) {
 
                     ++m_block_iter;
                     if (m_block_iter != m_block_end) {
@@ -138,7 +139,7 @@ namespace chdr {
                     (m_block_iter == m_block_end || (m_element_iter == _other.m_element_iter && m_remaining_elements == _other.m_remaining_elements));
             }
 
-            bool operator != (const stable_iterator &_other) const { return !(*this == _other); }
+            bool operator != (const stable_iterator &_other) const { return !(*this == _other); } // NOLINT(*-simplify)
         };
 
         using       iterator_t = stable_iterator<false>;

@@ -1,15 +1,16 @@
 #ifndef CHDR_UNMANAGEDNODE_HPP
 #define CHDR_UNMANAGEDNODE_HPP
 
+#include <cstddef>
+#include <memory>
+
 #include "../../utils/intrinsics.hpp"
 #include "bnode.hpp"
-
-#include <memory>
 
 namespace chdr::solvers {
 
     template<typename index_t>
-    struct unmanaged_node : public bnode<index_t> {
+    struct unmanaged_node : bnode<index_t> {
 
         const unmanaged_node* RESTRICT m_parent;
 

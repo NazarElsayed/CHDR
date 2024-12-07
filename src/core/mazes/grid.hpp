@@ -9,15 +9,17 @@
 #ifndef CHDR_GRID_HPP
 #define CHDR_GRID_HPP
 
+#include <array>
+#include <cmath>
+#include <cstddef>
+#include <utility>
+#include <vector>
+
 #include "../types/coord.hpp"
 #include "../utils/utils.hpp"
 #include "base/imaze.hpp"
-
-#include <array>
-#include <cmath>
-#include <vector>
-
 #include "nodes/weighted_node.hpp"
+#include "utils/intrinsics.hpp"
 
 namespace chdr::mazes {
 

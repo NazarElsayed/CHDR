@@ -13,13 +13,14 @@
 
 #include <cstddef>
 #include <memory>
+#include <type_traits>
 
 template <typename T, size_t StackSize>
 class stack_allocator {
 
 private:
 
-    alignas(T) char m_stack[StackSize * sizeof(T)];
+    alignas(T) char m_stack[StackSize * sizeof(T)]; // NOLINT(*-avoid-c-arrays)
 
     size_t m_stack_ptr;
 

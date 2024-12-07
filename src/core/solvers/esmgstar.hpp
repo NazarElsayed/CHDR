@@ -10,10 +10,10 @@
 #define CHDR_ESMGSTAR_HPP
 
 #include <cmath>
+#include <cstddef>
 
 #include "base/bsolver.hpp"
 #include "mazes/grid.hpp"
-#include "types/heap.hpp"
 #include "utils/utils.hpp"
 
 namespace chdr::solvers {

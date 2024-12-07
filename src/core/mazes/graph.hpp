@@ -12,7 +12,6 @@
 #include <functional>
 #include <future>
 #include <mutex>
-#include <queue>
 #include <thread>
 #include <unordered_map>
 #include <unordered_set>
@@ -20,7 +19,7 @@
 
 #include "grid.hpp"
 #include "base/igraph.hpp"
-#include "types/existence_set.hpp"
+#include "utils/intrinsics.hpp"
 
 namespace chdr::mazes {
 
@@ -86,12 +85,11 @@ namespace chdr::mazes {
 #if __cplusplus >= 202302L
         constexpr
 #endif // __cplusplus >= 202302L
-        [[maybe_unused]] explicit graph(const grid<Kd, weight_t>& _grid) : m_entries{} {
+        [[maybe_unused]] explicit graph(const grid<Kd, weight_t>& _grid, const constexpr bool& _prune = true) : m_entries{} {
 
             const auto size = _grid.size();
 
-            constexpr bool prune = true;
-            if constexpr (prune) {
+            if constexpr (_prune) {
 
                 // TODO: Add support for directed graphs.
 

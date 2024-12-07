@@ -268,7 +268,7 @@ namespace chdr::solvers {
 
             // Create open set:
             heap<jps_node, typename jps_node::Max> open(_capacity / 8U);
-            open.emplace({ s, {0, 0}, static_cast<scalar_t>(0), _h(_start, _end), nullptr });
+            open.emplace({ s, { 0, 0 }, static_cast<scalar_t>(0), _h(_start, _end), nullptr });
 
             // Create buffer:
             stable_forward_buf<jps_node> buf;

@@ -9,12 +9,13 @@
 #ifndef TEST_APPLICATION_HPP
 #define TEST_APPLICATION_HPP
 
-#include <atomic>
+#include <chdr.hpp>
 
-#include <cstdlib>
 #include <debug.hpp>
 
-#include "../tests/astar.hpp"
+#include <atomic>
+#include <cstdlib>
+#include <string>
 
 namespace test {
 

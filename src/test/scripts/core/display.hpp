@@ -9,11 +9,10 @@
 #ifndef TEST_DISPLAY_HPP
 #define TEST_DISPLAY_HPP
 
-#include <vector>
+#include <chdr.hpp>
 
-#include <mazes/grid.hpp>
-#include <types/coord.hpp>
-#include <types/existence_set.hpp>
+#include <vector>
+#include <cstddef>
 
 namespace test {
 
@@ -42,7 +41,7 @@ namespace test {
     public:
 
         static constexpr void draw_maze(const chdr::coord<size_t, Kd>& _start, const chdr::coord<size_t,  Kd>& _end,
-                                       const chdr::coord<size_t, Kd>& _size , const chdr::mazes::grid<Kd, T>& _maze) {
+                                        const chdr::coord<size_t, Kd>& _size,  const chdr::mazes::grid<Kd, T>& _maze) {
 
             static_assert(std::is_integral_v<T>, "Maze type must be an integral type.");
 
@@ -108,8 +107,8 @@ namespace test {
         }
 
         static constexpr void draw_maze(const chdr::coord<size_t, Kd>& _start, const chdr::coord<size_t,  Kd>& _end,
-                                       const chdr::coord<size_t, Kd>& _size , const chdr::mazes::grid<Kd, T>& _maze,
-                                       const std::vector<coord_t>& _path) {
+                                        const chdr::coord<size_t, Kd>& _size,  const chdr::mazes::grid<Kd, T>& _maze,
+                                        const std::vector<coord_t>& _path) {
 
             static_assert(std::is_integral_v<T>, "Maze type must be an integral type.");
 
