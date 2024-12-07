@@ -9,13 +9,12 @@
 #ifndef CHDR_DFS_HPP
 #define CHDR_DFS_HPP
 
-#include <stack>
-
 #include "base/bsolver.hpp"
 #include "mazes/graph.hpp"
 #include "mazes/grid.hpp"
 #include "types/existence_set.hpp"
 #include "types/stable_forward_buf.hpp"
+#include "types/stack.hpp"
 #include "utils/utils.hpp"
 
 namespace chdr::solvers {
@@ -58,8 +57,7 @@ namespace chdr::solvers {
             existence_set<low_memory_usage> closed({ s }, _capacity);
 
             // Create open Set:
-            auto sequence = std::vector<dfs_node>(_capacity);
-            std::stack<dfs_node, std::vector<dfs_node>> open(std::move(sequence));
+            stack<dfs_node> open(_capacity);
             open.emplace(s, nullptr);
 
             // Create buffer:
@@ -121,8 +119,7 @@ namespace chdr::solvers {
             existence_set<low_memory_usage> closed({ s }, _capacity);
 
             // Create open set:
-            auto sequence = std::vector<dfs_node>(_capacity);
-            std::stack<dfs_node, std::vector<dfs_node>> open(std::move(sequence));
+            stack<dfs_node> open(_capacity);
             open.emplace(s, nullptr);
 
             // Create buffer:

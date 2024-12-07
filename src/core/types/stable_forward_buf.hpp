@@ -28,7 +28,7 @@ namespace chdr {
         size_t m_index;
         std::forward_list<block_t> c;
 
-        void expand() {
+        constexpr void expand() {
             c.emplace_front(std::make_unique<T[]>(BlockWidth)); // NOLINT(*-avoid-c-arrays)
             m_index = 0U;
         }
@@ -48,7 +48,7 @@ namespace chdr {
             }
         }
 
-        [[maybe_unused, nodiscard]] T& push(const T& _item) {
+        [[maybe_unused]] constexpr T& push(const T& _item) {
 
             if (m_index >= BlockWidth) {
                 expand();
@@ -57,7 +57,7 @@ namespace chdr {
             return c.front()[m_index++] = _item;
         }
 
-        [[maybe_unused, nodiscard]] T& push(T&& _item) {
+        [[maybe_unused]] constexpr T& push(T&& _item) {
 
             if (m_index >= BlockWidth) {
                 expand();
@@ -76,7 +76,7 @@ namespace chdr {
             return *(new(&c.front()[m_index++]) T(std::forward<Args>(_args)...));
         }
 
-        [[maybe_unused]] void clear() {
+        [[maybe_unused]] constexpr void clear() {
             c.clear();
         }
 
@@ -164,6 +164,6 @@ namespace chdr {
         [[maybe_unused, nodiscard]] constexpr const_iterator_t cend() const { return const_iterator(c.end(), c.end(), 0U); }
     };
 
-} // chdr
+} //chdr
 
 #endif // CHDR_STABLEFORWARDBUF_HPP

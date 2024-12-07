@@ -13,6 +13,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <initializer_list>
+#include <type_traits>
 #include <vector>
 
 namespace chdr {
@@ -100,20 +101,33 @@ namespace chdr {
                 resize(_hash + 1U);
             }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-overflow"
+
             m_bits[_hash] = static_cast<boolean_t>(true);
+
+#pragma GCC diagnostic pop
         }
 
         template <typename T>
         void emplace(T&& _hash) {
+
             static_assert(std::is_integral_v<std::decay_t<T>>, "Hash must be an integral type");
 
-            if (static_cast<size_t>(_hash) >= m_bits.size()) {
-                resize(static_cast<size_t>(_hash) + 1U);
+            auto hash_ = static_cast<size_t>(std::forward<T>(_hash));
+
+            if (hash_ >= m_bits.size()) {
+                resize(hash_ + 1U);
             }
 
-            m_bits[static_cast<size_t>(_hash)] = static_cast<boolean_t>(true);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-overflow"
+
+            m_bits[hash_] = static_cast<boolean_t>(true);
+
+#pragma GCC diagnostic pop
         }
-        
+
         /**
          * @brief remove a hash from the set.
          * @param[in] _hash The hash value to be removed.
@@ -134,7 +148,7 @@ namespace chdr {
          * @param[in] _hash The hash value to check.
          * @return True if the hash exists in the set, false otherwise.
          */
-        [[nodiscard]] bool contains(const size_t& _hash) const {
+        [[maybe_unused, nodiscard]] bool contains(const size_t& _hash) const {
             return _hash < m_bits.size() && static_cast<bool>(m_bits[_hash]);
         }
 
@@ -249,6 +263,6 @@ namespace chdr {
         [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t crend() const { return m_bits.crend(); }
     };
 
-} // chdr
+}//chdr
 
 #endif //CHDR_EXISTENCE_SET_HPP

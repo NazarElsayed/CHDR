@@ -38,7 +38,9 @@
 #include "types/existence_set.hpp"
 #include "types/heap.hpp"
 #include "types/linear_priority_queue.hpp"
+#include "types/queue.hpp"
 #include "types/stable_forward_buf.hpp"
+#include "types/stack.hpp"
 #include "types/stack_allocator.hpp"
 
 #include "utils/heuristics.hpp"

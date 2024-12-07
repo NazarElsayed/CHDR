@@ -9,13 +9,12 @@
 #ifndef CHDR_BFS_HPP
 #define CHDR_BFS_HPP
 
-#include <queue>
-
 #include "base/bsolver.hpp"
 #include "mazes/graph.hpp"
 #include "mazes/grid.hpp"
 #include "solvers/base/unmanaged_node.hpp"
 #include "types/existence_set.hpp"
+#include "types/queue.hpp"
 #include "types/stable_forward_buf.hpp"
 #include "utils/utils.hpp"
 
@@ -59,7 +58,7 @@ namespace chdr::solvers {
             existence_set<low_memory_usage> closed({ s }, _capacity);
 
             // Create open:
-            std::queue<bfs_node> open;
+            queue<bfs_node> open;
             open.emplace(s, nullptr);
 
             // Create buffer:
@@ -68,7 +67,7 @@ namespace chdr::solvers {
             // Main loop:
             while (!open.empty()) { // SEARCH FOR SOLUTION...
 
-                auto curr(std::move(open.front()));
+                auto curr(std::move(open.top()));
                 open.pop();
 
                 if (curr.m_index != e) {
@@ -121,7 +120,7 @@ namespace chdr::solvers {
             existence_set<low_memory_usage> closed({ s }, _capacity);
 
             // Create open set:
-            std::queue<bfs_node> open;
+            queue<bfs_node> open;
             open.emplace(s, nullptr);
 
             // Create buffer:
@@ -132,7 +131,7 @@ namespace chdr::solvers {
 
                 for (size_t i = 0U; i < open.size(); ++i) {
 
-                    auto curr(std::move(open.front()));
+                    auto curr(std::move(open.top()));
                     open.pop();
 
                     if (curr.m_index != e) {

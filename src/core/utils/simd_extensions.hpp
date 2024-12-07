@@ -318,6 +318,6 @@ namespace chdr {
         };
     };
 
-} // chdr
+}//chdr
 
 #endif //CHDR_SIMDEXTENSIONS_HPP

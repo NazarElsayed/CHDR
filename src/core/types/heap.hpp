@@ -47,7 +47,7 @@ namespace chdr {
 
     private:
 
-        size_t index_of(const T& _item) const {
+        [[nodiscard]] size_t index_of(const T& _item) const {
             return static_cast<size_t>(&(_item) - &(top()));
         }
 
@@ -123,13 +123,15 @@ namespace chdr {
             c.push_back({}); // Add super element.
         }
 
-        [[nodiscard]] constexpr bool empty() const { return size() == 0U;  }
+        [[maybe_unused, nodiscard]] constexpr bool empty() const { return size() == 0U;  }
 
-        [[nodiscard]] constexpr size_t size() const { return c.size() - 1U; }
+        [[maybe_unused, nodiscard]] constexpr size_t size() const { return c.size() - 1U; }
 
-        [[nodiscard]] constexpr const T& front() const { return top(); }
+        [[maybe_unused, nodiscard]] constexpr T& front() { return top(); }
 
-        [[nodiscard]] constexpr const T& top() const {
+        [[maybe_unused, nodiscard]] constexpr const T& front() const { return top(); }
+
+        [[maybe_unused, nodiscard]] constexpr T& top() {
 
 #ifndef NDEBUG
             if (empty()) {
@@ -145,7 +147,39 @@ namespace chdr {
             }
         }
 
-        [[nodiscard]] constexpr const T& back() const {
+        [[maybe_unused, nodiscard]] constexpr const T& top() const {
+
+#ifndef NDEBUG
+            if (empty()) {
+                throw std::underflow_error("Heap is empty");
+            }
+#endif
+
+            if constexpr (std::is_pointer_v<T>) {
+                return static_cast<T>(begin().base());
+            }
+            else {
+                return *begin();
+            }
+        }
+
+        [[maybe_unused, nodiscard]] constexpr const T& back() const {
+
+#ifndef NDEBUG
+            if (empty()) {
+                throw std::underflow_error("Heap is empty");
+            }
+#endif
+
+            if constexpr (std::is_pointer_v<T>) {
+                return static_cast<T>(end().base());
+            }
+            else {
+                return *end();
+            }
+        }
+
+        [[maybe_unused, nodiscard]] constexpr T& back() {
 
 #ifndef NDEBUG
             if (empty()) {
@@ -220,7 +254,7 @@ namespace chdr {
             }
         }
 
-        [[maybe_unused]] constexpr T dequeue() {
+        [[maybe_unused, nodiscard]] constexpr T dequeue() {
 
             T result;
 
@@ -275,7 +309,7 @@ namespace chdr {
             sort_up(c[index_of(_item)]);
         }
 
-        [[maybe_unused]] constexpr bool contains(T& _item) {
+        [[maybe_unused, nodiscard]] constexpr bool contains(T& _item) {
 
             constexpr bool result = !empty();
 
@@ -340,6 +374,6 @@ namespace chdr {
 
     };
 
-} // chdr
+} //chdr
 
 #endif

@@ -17,60 +17,63 @@
 #include <stdexcept> // NOLINT(*-include-cleaner)
 #include <type_traits>
 
-template <typename T, const size_t StackSize>
-class stack_allocator {
+namespace chdr {
+    template <typename T, const size_t StackSize>
+    class stack_allocator {
 
-private:
+    private:
 
-    alignas(T) std::array<std::byte, StackSize * sizeof(T)> m_stack;
-    size_t m_stack_ptr;
+        alignas(T) std::array<std::byte, StackSize * sizeof(T)> m_stack;
+        size_t m_stack_ptr;
 
-public:
+    public:
 
-    using value_type [[maybe_unused]] = T;
+        using value_type [[maybe_unused]] = T;
 
-    // ReSharper disable once CppPossiblyUninitializedMember
-    stack_allocator() : m_stack_ptr(0U) {}
+        // ReSharper disable once CppPossiblyUninitializedMember
+        stack_allocator() : m_stack_ptr(0U) {}
 
-    [[maybe_unused, nodiscard]] T* allocate(const size_t& _n) {
+        [[maybe_unused, nodiscard]] T* allocate(const size_t& _n) {
 
-        T* result;
+            T* result;
 
-        if (m_stack_ptr + _n <= StackSize) {
-            result = reinterpret_cast<T*>(m_stack.data() + (m_stack_ptr * sizeof(T)));
-            m_stack_ptr += _n;
+            if (m_stack_ptr + _n <= StackSize) {
+                result = reinterpret_cast<T*>(m_stack.data() + (m_stack_ptr * sizeof(T)));
+                m_stack_ptr += _n;
+            }
+            else {
+                result = std::allocator<T>().allocate(_n);
+            }
+
+            return result;
         }
-        else {
-            result = std::allocator<T>().allocate(_n);
-        }
 
-        return result;
-    }
+        void deallocate(T* _p, const size_t& _n) {
 
-    void deallocate(T* _p, const size_t& _n) {
-
-        if (_p >= reinterpret_cast<T*>(m_stack.data()) && _p < reinterpret_cast<T*>(m_stack.data() + m_stack.size())) {
+            if (_p >= reinterpret_cast<T*>(m_stack.data()) && _p < reinterpret_cast<T*>(m_stack.data() + m_stack.size())) {
 
 #ifndef NDEBUG
-            if (m_stack_ptr < n) {
-                throw std::runtime_error("Deallocate called with too large n");
-            }
+                if (m_stack_ptr < n) {
+                    throw std::runtime_error("Deallocate called with too large n");
+                }
 #endif //NDEBUG
 
-            m_stack_ptr -= _n;
+                m_stack_ptr -= _n;
+            }
+            else {
+                std::allocator<T>().deallocate(_p, _n);
+            }
         }
-        else {
-            std::allocator<T>().deallocate(_p, _n);
-        }
-    }
 
-    template <typename U>
-    struct [[maybe_unused]] rebind {
-        using other [[maybe_unused]] = stack_allocator<U, StackSize>;
+        template <typename U>
+        struct [[maybe_unused]] rebind {
+            using other [[maybe_unused]] = stack_allocator<U, StackSize>;
+        };
+
+        using propagate_on_container_move_assignment = std::true_type;
+        using is_always_equal                        = std::true_type;
     };
 
-    using propagate_on_container_move_assignment = std::true_type;
-    using is_always_equal                        = std::true_type;
-};
+} //chdr
 
 #endif //CHDR_STACKALLOCATOR_HPP
