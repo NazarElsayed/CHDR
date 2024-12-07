@@ -13,8 +13,6 @@
 
 #include "base/bsolver.hpp"
 #include "mazes/grid.hpp"
-#include "mazes/base/imaze.hpp"
-#include "types/existence_set.hpp"
 #include "types/heap.hpp"
 #include "utils/utils.hpp"
 

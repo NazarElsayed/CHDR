@@ -13,6 +13,7 @@
 
 #include <debug.hpp>
 
+#include <algorithm>
 #include <random>
 
 namespace test::generator {
@@ -22,7 +23,7 @@ namespace test::generator {
         using uniform_rng_t = std::mt19937_64;
 
         template <typename T, typename index_t, typename scalar_t, const size_t Kd, typename... Args>
-        static auto generate(const chdr::coord<size_t, Kd>& _start, chdr::coord<size_t, Kd>& _end, const float& _loops = 0.0F, const float& _obstacles = 0.0f, const size_t& _seed = -1U, const Args&... _size) {
+        static auto generate(const chdr::coord<size_t, Kd>& _start, chdr::coord<size_t, Kd>& _end, const size_t& _seed = -1U, const Args&... _size) {
 
 			static_assert(std::is_integral_v<T>, "Type T must be an integral type.");
 
@@ -84,10 +85,9 @@ namespace test::generator {
 
                     constexpr bool includeDiagonals = false;
 
-                    size_t rand = (rng() % (includeDiagonals ?
-                        static_cast<size_t>(std::pow(3U, Kd)) - 1U : Kd * 2U));
+                    size_t rand = (rng() % (includeDiagonals ? static_cast<size_t>(std::pow(3U, Kd)) - 1U : Kd * 2U));
 
-                    branchFactor = std::max(rand, static_cast<size_t>(2UL));
+                    branchFactor = std::max(rand, static_cast<size_t>(2U));
 
                     // Add the branches:
                     for (size_t i = 1U, j = 0U; j < branchFactor; ++j, ++i) {

@@ -639,7 +639,7 @@ namespace {
 		 * This static method is used to log an exception with a specified log type.
 		 * By default, the log type is set to `LogType::error`.
 		 *
-		 * @param[in] e The exception to log.
+		 * @param[in] _e The exception to log.
 		 * @param[in] _type (optional) The log type of the message.
 		 * @param[in] _makeInline (optional) A flag indicating if the log message should be displayed inline.
 		 *
@@ -648,8 +648,8 @@ namespace {
 		 * @par Related Functions
 		 * - debug::log(const std::string_view&, const LogType&, const bool&)
 		 */
-        [[maybe_unused]] static void log(const std::exception& e, const log_type& _type = error, const bool& _makeInline = false) noexcept  {
-			log(e.what(), _type, _makeInline);
+        [[maybe_unused]] static void log(const std::exception& _e, const log_type& _type = error, const bool& _makeInline = false) noexcept  {
+			log(_e.what(), _type, _makeInline);
 		}
 		
 		/**

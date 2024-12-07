@@ -10,6 +10,7 @@
 #define CHDR_COORD_HPP
 
 #include <array>
+#include <cstddef>
 
 namespace chdr {
 

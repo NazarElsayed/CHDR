@@ -8,9 +8,9 @@
 
 #include <debug.hpp>
 
-#include <string>
-#include <stdexcept>
 #include <exception>
+#include <stdexcept>
+#include <string>
 
 #include "scripts/core/application.hpp"
 

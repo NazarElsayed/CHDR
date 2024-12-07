@@ -11,6 +11,7 @@
 
 #include <atomic>
 
+#include <cstdlib>
 #include <debug.hpp>
 
 #include "../tests/astar.hpp"
@@ -98,9 +99,10 @@ namespace test {
 
 	public:
 
-		 application()                          = delete;
-		 application(const application& _other) = delete;
-		~application()                          = delete;
+		 application()                           = delete;
+		 application(const application&  _other) = delete;
+		 application(      application&& _other) = delete;
+		~application()                           = delete;
 
 		application& operator = (const application&  _other) = delete;
 		application& operator =       (application&& _other) = delete;
