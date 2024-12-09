@@ -116,10 +116,7 @@ namespace chdr::mazes {
 
             if constexpr (IncludeDiagonals) {
 
-                coord_t kernelSize;
-                for (size_t i = 0U; i < Kd; i++) {
-                    kernelSize[i] = 3U;
-                }
+                constexpr coord_t kernelSize = utils::build_array<size_t, Kd, 3U>();
 
                 for (size_t i = 0U; i < neighbours; i++) {
 

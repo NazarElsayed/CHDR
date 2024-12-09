@@ -13,6 +13,7 @@
 #include <cstddef>
 #include <limits>
 #include <type_traits>
+#include <utility>
 #include <vector>
 
 #include "types/coord.hpp"
@@ -35,7 +36,7 @@ namespace chdr {
 
 		template <typename T, typename U, size_t N, size_t... Is>
 		static constexpr auto array_cast_helper(const std::array<U, N>& _a, indices<Is...> /*unused*/) {
-			return std::array<T, N>{static_cast<T>(std::get<Is>(_a))...};
+			return std::array<T, N>{ static_cast<T>(std::get<Is>(_a))... };
 		}
 
 		template <typename T, typename Ta, size_t Kd>
@@ -44,6 +45,12 @@ namespace chdr {
 		}
 
 	public:
+
+		template <typename T, size_t N, T Value, size_t... Indices>
+		static constexpr std::array<T, N> build_array(std::index_sequence<Indices...> /*unused*/) { return {{((void)Indices, Value)...}}; }
+
+		template <typename T, size_t N, T Value>
+		static constexpr std::array<T, N> build_array() { return build_array<T, N, Value>(std::make_index_sequence<N>()); }
 
 		template<typename T, typename U, size_t N>
 		static constexpr auto array_cast(const std::array<U, N> &_a) {
