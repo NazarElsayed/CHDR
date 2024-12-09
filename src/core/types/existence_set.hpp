@@ -95,7 +95,7 @@ namespace chdr {
          * @brief add a hash to the set.
          * @param[in] _hash The hash value to be added.
          */
-        void push(const size_t& _hash) {
+        constexpr void push(const size_t& _hash) {
 
             if (_hash >= m_bits.size()) {
                 resize(_hash + 1U);
@@ -110,7 +110,7 @@ namespace chdr {
         }
 
         template <typename T>
-        void emplace(T&& _hash) {
+        constexpr void emplace(T&& _hash) {
 
             static_assert(std::is_integral_v<std::decay_t<T>>, "Hash must be an integral type");
 
@@ -136,7 +136,7 @@ namespace chdr {
          * @see set::prune()
          * @see set::clear()
          */
-        [[maybe_unused]] void erase(const size_t& _hash) {
+        [[maybe_unused]] constexpr void erase(const size_t& _hash) {
 
             if (_hash < m_bits.size()) {
                 m_bits[_hash] = static_cast<boolean_t>(false);
@@ -148,7 +148,7 @@ namespace chdr {
          * @param[in] _hash The hash value to check.
          * @return True if the hash exists in the set, false otherwise.
          */
-        [[maybe_unused, nodiscard]] bool contains(const size_t& _hash) const {
+        [[maybe_unused, nodiscard]] constexpr bool contains(const size_t& _hash) const {
             return _hash < m_bits.size() && static_cast<bool>(m_bits[_hash]);
         }
 
@@ -157,7 +157,7 @@ namespace chdr {
          *
          * @see set::clear()
          */
-        [[maybe_unused]] void trim() {
+        [[maybe_unused]] constexpr void trim() {
 
             const auto it = std::find_if(
                     m_bits.rbegin(),
@@ -183,7 +183,7 @@ namespace chdr {
          *
          * @see DenseExistenceSet::capacity()
          */
-        [[maybe_unused]] void reserve(const size_t& _newCapacity) {
+        [[maybe_unused]] constexpr void reserve(const size_t& _newCapacity) {
             m_bits.reserve(_newCapacity);
         }
 
@@ -201,7 +201,7 @@ namespace chdr {
          * @see DenseExistenceSet::prune()
          * @see DenseExistenceSet::clear()
          */
-        [[maybe_unused]] void resize(const size_t& _newSize, const boolean_t& _newValue = static_cast<boolean_t>(false)) {
+        [[maybe_unused]] constexpr void resize(const size_t& _newSize, const boolean_t& _newValue = static_cast<boolean_t>(false)) {
             m_bits.resize(_newSize, _newValue);
         }
 
@@ -209,7 +209,7 @@ namespace chdr {
          * @brief clear the content of the set.
          * @details remove all elements from the set.
          */
-        [[maybe_unused]] void clear() {
+        [[maybe_unused]] constexpr void clear() {
             m_bits.clear();
         }
 
@@ -217,7 +217,7 @@ namespace chdr {
          * @brief Trims unused elements from the end of the set.
          * @details Shrinks the internal container of the set to reduce the structure's overall memory footprint.
          */
-        [[maybe_unused]] void shrink_to_fit() {
+        [[maybe_unused]] constexpr void shrink_to_fit() {
             m_bits.shrink_to_fit();
         }
 

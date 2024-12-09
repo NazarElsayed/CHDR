@@ -275,6 +275,7 @@ namespace chdr::solvers {
 
             // Main loop:
             while (!open.empty()) {
+
                 auto curr(std::move(open.top()));
                 open.pop();
 
