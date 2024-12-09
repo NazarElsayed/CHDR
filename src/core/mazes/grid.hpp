@@ -123,7 +123,7 @@ namespace chdr::mazes {
 
                 for (size_t i = 0U; i < neighbours; i++) {
 
-                    size_t sampleIndex = i < neighbours / 2U ? i : i + 1U;
+                    const size_t sampleIndex = i < neighbours / 2U ? i : i + 1U;
 
                     coord_t direction = utils::to_nd<size_t, Kd>(sampleIndex, kernelSize);
 

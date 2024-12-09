@@ -9,6 +9,8 @@
 #ifndef CHDR_ASTAR_HPP
 #define CHDR_ASTAR_HPP
 
+#include <cstddef>
+
 #include "../utils/heuristics.hpp"
 #include "base/bsolver.hpp"
 #include "mazes/graph.hpp"

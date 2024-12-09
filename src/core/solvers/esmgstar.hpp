@@ -175,15 +175,6 @@ namespace chdr::solvers {
                         _a->m_fScore > _b->m_fScore;
                 }
             };
-
-            struct min {
-
-                [[nodiscard]] constexpr bool operator () (const std::shared_ptr<esmg_node>& _a, const std::shared_ptr<esmg_node>& _b) const {
-                    return _a->m_fScore == _b->m_fScore ?
-                        _a->m_gScore < _b->m_gScore :
-                        _a->m_fScore < _b->m_fScore;
-                }
-            };
         };
 
         using heap_t = heap<std::shared_ptr<esmg_node>, typename esmg_node::min>;

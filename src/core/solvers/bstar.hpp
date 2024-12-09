@@ -51,13 +51,6 @@ namespace chdr::solvers {
                     return _a.m_hScore > _b.m_hScore;
                 }
             };
-
-            struct min {
-
-                [[nodiscard]] constexpr bool operator () (const bs_node& _a, const bs_node& _b) const {
-                    return _a.m_hScore < _b.m_hScore;
-                }
-            };
         };
 
         auto solve_heap(const mazes::graph<index_t, scalar_t>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, scalar_t (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U) const {

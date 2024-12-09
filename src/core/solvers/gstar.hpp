@@ -55,16 +55,6 @@ namespace chdr::solvers {
                         _a.m_fScore > _b.m_fScore;
                 }
             };
-
-            struct min {
-
-                [[nodiscard]] constexpr bool operator () (const gs_node& _a, const gs_node& _b) const {
-
-                    return _a.m_fScore == _b.m_fScore ?
-                        _a.m_gScore < _b.m_gScore :
-                        _a.m_fScore < _b.m_fScore;
-                }
-            };
         };
 
     public:
