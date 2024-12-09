@@ -14,6 +14,8 @@
 
 #include "bnode.hpp"
 
+#pragma inline_recursion(on)
+
 namespace chdr::solvers {
 
     template<typename index_t>
@@ -48,16 +50,12 @@ namespace chdr::solvers {
 
         }
 
-#pragma inline_recursion(on)
-
         void expunge_recursive(std::shared_ptr<const managed_node>& _node) {
             if (_node && _node.unique()) {
                 _node = std::move(_node->m_parent);
                 Expunge_Recursive(_node);
             }
         }
-
-#pragma inline_recursion(off)
 
         template<typename node_t, typename coord_t>
         void backtrack(std::vector<coord_t>& _path, const coord_t& _size, const size_t& _capacity = 0U) {
