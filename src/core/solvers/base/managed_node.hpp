@@ -38,11 +38,14 @@ namespace chdr::solvers {
 
         ~managed_node() { // NOLINT(*-use-equals-default)
 
-//                while (m_parent && m_parent.unique()) {
-//                    m_parent = std::move(m_parent->m_parent);
-//                }
+#ifdef __OPTIMIZE__
+            Expunge_Recursive(m_parent);    // Only attempt TRO if compiled with optimisation flags.
+#else //!__OPTIMIZE__
+            while (m_parent && m_parent.unique()) {
+                m_parent = std::move(m_parent->m_parent);
+            }
+#endif//!__OPTIMIZE__
 
-            Expunge_Recursive(m_parent);
         }
 
 #pragma inline_recursion(on)
