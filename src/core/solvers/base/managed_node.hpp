@@ -45,12 +45,16 @@ namespace chdr::solvers {
             Expunge_Recursive(m_parent);
         }
 
+#pragma inline_recursion(on)
+
         void expunge_recursive(std::shared_ptr<const managed_node>& _node) {
             if (_node && _node.unique()) {
                 _node = std::move(_node->m_parent);
                 Expunge_Recursive(_node);
             }
         }
+
+#pragma inline_recursion(off)
 
         template<typename node_t, typename coord_t>
         void backtrack(std::vector<coord_t>& _path, const coord_t& _size, const size_t& _capacity = 0U) {
@@ -65,6 +69,7 @@ namespace chdr::solvers {
 
             if (curr.m_parent != nullptr) {
 
+                #pragma unroll
                 for (auto item = curr.m_parent; item->m_parent != nullptr;) {
                     _path.emplace_back(utils::to_nd(item->m_index, _size));
 
