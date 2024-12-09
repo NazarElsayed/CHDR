@@ -22,6 +22,7 @@ namespace chdr {
 	struct utils {
 
 	private:
+
 		// http://loungecpp.wikidot.com/tips-and-tricks%3aindices
 		template <size_t... Is>
 		struct indices {};
@@ -35,6 +36,11 @@ namespace chdr {
 		template <typename T, typename U, size_t N, size_t... Is>
 		static constexpr auto array_cast_helper(const std::array<U, N>& _a, indices<Is...> /*unused*/) {
 			return std::array<T, N>{static_cast<T>(std::get<Is>(_a))...};
+		}
+
+		template <typename T, typename Ta, size_t Kd>
+		static constexpr T product_helper(const std::array<Ta, Kd>& _array, const size_t& _index = 0U) {
+			return (_index < Kd) ? _array[_index] * product_helper<T, Ta, Kd>(_array, _index + 1U) : T{1};
 		}
 
 	public:
@@ -168,26 +174,28 @@ namespace chdr {
 		 *
 		 * @note The input is not modified.
 		 */
-		template <typename T, typename Ta, const size_t Kd>
+		template <typename T, typename Ta, size_t Kd>
 		static constexpr T product(const std::array<Ta, Kd>& _array) {
 
-			// TODO: Ensure that product does not overflow!
-
-			T result;
-
 			if constexpr (Kd == 0U) {
-				result = 0;
+				return T{0};
 			}
 			else {
 
-				result = _array[0U];
+				if (__builtin_is_constant_evaluated()) {
+					return product_helper<T, Ta, Kd>(_array);
+				}
+				else {
 
-				for (size_t i = 1U; i < _array.size(); ++i) {
-					result *= _array[i];
+					T result = _array[0U];
+					for (size_t i = 1U; i < _array.size(); ++i) {
+						result *= _array[i];
+					}
+
+					// TODO: Ensure that product does not overflow!
+					return result;
 				}
 			}
-
-			return result;
 		}
 
 		/**
@@ -376,14 +384,6 @@ namespace chdr {
             }
 
             return trim_trailing_zeros(std::to_string(_duration)) + units[i];
-        }
-
-        static void backtrack() {
-
-        }
-
-        static void backtrack_memoryless() {
-
         }
 
 	};

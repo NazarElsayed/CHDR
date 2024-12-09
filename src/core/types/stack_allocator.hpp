@@ -55,7 +55,7 @@ namespace chdr {
             if (_p >= reinterpret_cast<T*>(m_stack.data()) && _p < reinterpret_cast<T*>(m_stack.data() + m_stack.size())) {
 
 #ifndef NDEBUG
-                if (m_stack_ptr < n) {
+                if (m_stack_ptr < _n) {
                     throw std::runtime_error("Deallocate called with too large n");
                 }
 #endif //NDEBUG
