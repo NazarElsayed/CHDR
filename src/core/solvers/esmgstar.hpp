@@ -71,6 +71,7 @@ namespace chdr::solvers {
              *
              * This constructor creates an ESMGSNode with uninitialized members.
              */
+            // ReSharper disable once CppPossiblyUninitializedMember
             [[nodiscard]] constexpr esmg_node() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
             void shrink() {

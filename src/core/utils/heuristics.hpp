@@ -44,6 +44,7 @@ namespace chdr {
          */
         [[maybe_unused, nodiscard]] static constexpr auto sqr_euclidean_distance(const coord_t& _a, const coord_t& _b) {
 
+            // ReSharper disable once CppUnsignedZeroComparison
             static_assert(Kd >= 0U, "Kd must be more than or equal to 0");
 
             scalar_t result(0);
@@ -205,6 +206,7 @@ namespace chdr {
           */
         [[maybe_unused, nodiscard]] static constexpr auto manhattan_distance(const coord_t& _a, const coord_t& _b) {
 
+            // ReSharper disable once CppUnsignedZeroComparison
             static_assert(Kd >= 0U, "Kd must be more than or equal to 0");
 
             scalar_t result(0);

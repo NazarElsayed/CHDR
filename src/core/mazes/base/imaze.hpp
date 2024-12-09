@@ -13,7 +13,7 @@
 
 namespace chdr::mazes {
 
-    template<typename node_t, typename index_t>
+    template <typename node_t, typename index_t>
     class imaze {
 
         //static_assert(std::is_base_of<inode, node_t>::value, "node_t must derive from inode");
@@ -33,7 +33,6 @@ namespace chdr::mazes {
         constexpr
 #endif // __cplusplus >= 202002L
         size_t count() const = 0;
-
     };
 
 } //chdr::mazes

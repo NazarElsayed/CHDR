@@ -60,6 +60,7 @@ namespace chdr::solvers {
             scalar_t m_gScore;
             scalar_t m_fScore;
 
+            // ReSharper disable once CppPossiblyUninitializedMember
             [[nodiscard]] constexpr jps_node() : unmanaged_node<index_t>() {}
 
             [[nodiscard]] constexpr jps_node(const index_t& _index, const std::array<int8_t, 2U>& _direction, const scalar_t& _gScore, const scalar_t& _hScore, const jps_node* RESTRICT const _parent) : unmanaged_node<index_t>(_index, _parent),

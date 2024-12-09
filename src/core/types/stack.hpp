@@ -26,7 +26,7 @@ namespace chdr {
             sequence.reserve(_capacity);
 
             c = stack_t(std::move(sequence));
-        };
+        }
 
         constexpr stack(const Container& _sequence) : c(_sequence) {}
 

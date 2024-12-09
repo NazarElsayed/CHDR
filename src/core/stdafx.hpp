@@ -9,6 +9,8 @@
 #ifndef CHDR_STDAFX_HPP
 #define CHDR_STDAFX_HPP
 
+// NOLINTBEGIN(*-include-cleaner)
+
 #include <algorithm>
 #include <array>
 #include <cmath>
@@ -27,5 +29,7 @@
 #include <vector>
 
 #include "utils/intrinsics.hpp"
+
+// NOLINTEND(*-include-cleaner)
 
 #endif //CHDR_STDAFX_HPP

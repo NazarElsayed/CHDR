@@ -9,6 +9,8 @@
 #ifndef CHDR_COMMON_HPP
 #define CHDR_COMMON_HPP
 
+// NOLINTBEGIN(*-include-cleaner)
+
 #include "CHDR_Version.hpp"
 
 #include "mazes/base/igraph.hpp"
@@ -19,9 +21,9 @@
 #include "mazes/nodes/id_node.hpp"
 #include "mazes/nodes/weighted_node.hpp"
 
+#include "solvers/astar.hpp"
 #include "solvers/base/bnode.hpp"
 #include "solvers/base/bsolver.hpp"
-#include "solvers/astar.hpp"
 #include "solvers/bfs.hpp"
 #include "solvers/bstar.hpp"
 #include "solvers/dfs.hpp"
@@ -46,6 +48,9 @@
 #include "utils/heuristics.hpp"
 #include "utils/intrinsics.hpp"
 #include "utils/simd_extensions.hpp"
+
 #include "utils/utils.hpp"
+
+// NOLINTEND(*-include-cleaner)
 
 #endif //CHDR_COMMON_HPP

@@ -9,6 +9,9 @@
 #ifndef CHDR_INTRINSICS_HPP
 #define CHDR_INTRINSICS_HPP
 
+#include <cstddef>
+#include <cstdlib>
+
 #if defined(__AVX512__)
     #include <immintrin.h>
 #elif defined(__AVX2__)
@@ -83,7 +86,7 @@ namespace {
 #endif
 
     [[maybe_unused]]
-    void malloc_consolidate(const size_t& _malloc = 1024U * 2U) {
+    void malloc_consolidate(const size_t& _malloc = static_cast<size_t>(1024U) * static_cast<size_t>(2U)) {
 
         /*
          * Code designed to purposefully trigger heap defragmentation by the internal memory allocator.

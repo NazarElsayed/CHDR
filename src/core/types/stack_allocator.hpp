@@ -14,8 +14,10 @@
 #include <array>
 #include <cstddef>
 #include <memory>
-#include <stdexcept> // NOLINT(*-include-cleaner)
 #include <type_traits>
+
+// ReSharper disable once CppUnusedIncludeDirective
+#include <stdexcept> // NOLINT(*-include-cleaner)
 
 namespace chdr {
     template <typename T, const size_t StackSize>

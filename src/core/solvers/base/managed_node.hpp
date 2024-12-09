@@ -26,6 +26,7 @@ namespace chdr::solvers {
          *
          * This constructor creates an managed_node with uninitialized members.
          */
+        // ReSharper disable once CppPossiblyUninitializedMember
         constexpr managed_node() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
         [[nodiscard]] constexpr managed_node(const index_t& _index) :

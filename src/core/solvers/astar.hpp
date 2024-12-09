@@ -14,6 +14,7 @@
 #include "mazes/graph.hpp"
 #include "mazes/grid.hpp"
 #include "solvers/base/unmanaged_node.hpp"
+#include "types/coord.hpp"
 #include "types/existence_set.hpp"
 #include "types/heap.hpp"
 #include "types/linear_priority_queue.hpp"

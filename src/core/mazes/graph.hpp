@@ -9,13 +9,16 @@
 #ifndef CHDR_GRAPH_HPP
 #define CHDR_GRAPH_HPP
 
+#include <cstddef>
 #include <functional>
 #include <future>
+#include <initializer_list>
 #include <iostream>
 #include <mutex>
 #include <thread>
 #include <unordered_map>
 #include <unordered_set>
+#include <utility>
 #include <vector>
 
 #include "grid.hpp"

@@ -98,6 +98,7 @@ namespace test {
 			catch (...) {}
 
 			std::exit(343);
+			// ReSharper disable once CppDFAUnreachableCode
 		}
 
 	public:
