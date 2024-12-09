@@ -10,8 +10,9 @@
 #define TEST_BACKTRACKING_HPP
 
 #include <algorithm>
+#include <cstddef>
+#include <exception>
 #include <random>
-#include <stack>
 #include <vector>
 
 namespace test::generator::utils {
@@ -32,15 +33,57 @@ namespace test::generator::utils {
 
     private:
 
+        static constexpr bool valid_dimensionality(const chdr::coord<size_t, Kd>& _size) {
+
+            bool result = true;
+
+            for (auto& element : _size) {
+                if (element == 0U) {
+                    result = false;
+                    break;
+                }
+            }
+
+            return result;
+        }
+
+        static constexpr bool is_link(const chdr::coord<size_t, Kd>& _coord) {
+
+            bool result = false;
+
+            for (size_t j = 0U; j < Kd; ++j) {
+                if (_coord[j] % 2U == 0U) {
+                    result = true;
+                    break;
+                }
+            }
+
+            return result;
+        }
+
+        static constexpr bool is_edge(const chdr::coord<size_t, Kd>& _coord, const chdr::coord<size_t, Kd>& _size) {
+
+            bool result = false;
+
+            for (size_t k = 0U; k < Kd; ++k) {
+                if (_coord[k] >= _size[k] - 1U) {
+                    result = true;
+                    break;
+                }
+            }
+
+            return result;
+        }
+
         static constexpr auto get_directions(const coord_t& _coord, const coord_t& _size) {
 
-            constexpr size_t step(1U);
-
-            std::array<std::pair<bool, chdr::coord<size_t, Kd>>, Kd * 2U> result;
+            std::array<std::pair<bool, chdr::coord<size_t, Kd>>, Kd * 2U> result{};
 
             IVDEP
             VECTOR_ALWAYS
             for (size_t i = 0U; i < Kd; ++i) {
+
+                constexpr size_t step(1U);
 
                 coord_t dir{};
 
@@ -60,7 +103,7 @@ namespace test::generator::utils {
 #endif // __cplusplus >= 202302L
         void carve_from(const coord_t& _coord, std::pair<coord_t, size_t>& _farthest, const coord_t& _size, std::vector<cell>& _grid, uniform_rng_t& _rng) {
 
-            std::stack<std::pair<coord_t, size_t>> stack;
+            chdr::stack<std::pair<coord_t, size_t>> stack;
             stack.emplace(_coord, 0U);
 
             while (!stack.empty()) {
@@ -81,8 +124,8 @@ namespace test::generator::utils {
 
                     if (inBounds) {
 
-                        auto lc = currentCoord;
-                        auto cc = currentCoord;
+                        auto lc = currentCoord; // last
+                        auto cc = currentCoord; // current
 
                         bool validCellNeighbor = true;
 
@@ -184,16 +227,7 @@ namespace test::generator::utils {
                  * Check that the provided dimensionality of the maze is correct.
                  * The elements of _size must be at least 1.
                  */
-                bool validDimensionality = true;
-
-                for (auto& element : _size) {
-                    if (element == 0U) {
-                        validDimensionality = false;
-                        break;
-                    }
-                }
-
-                if (validDimensionality) {
+                if (valid_dimensionality(_size)) {
 
                     const auto seed = _seed == null_v ? std::random_device().operator()() : _seed;
                     uniform_rng_t rng(seed);
@@ -210,30 +244,9 @@ namespace test::generator::utils {
 
                             auto c = chdr::utils::to_nd<size_t, Kd>(i, _size);
 
-                            bool link = false;
+                            if (is_link(c)) {
 
-                            for (size_t j = 0U; j < Kd; ++j) {
-
-                                 if (c[j] % 2U == 0U) {
-                                     link = true;
-
-                                     break;
-                                 }
-                            }
-
-                            if (link) {
-
-                                bool edge = false;
-
-                                for (size_t k = 0U; k < Kd; ++k) {
-                                    if (c[k] >= _size[k] - 1U) {
-                                        edge = true;
-
-                                        break;
-                                    }
-                                }
-
-                                if (!edge) {
+                                if (!is_edge(c, _size)) {
 
                                     if (const auto obstacle_chance = static_cast<double>(rng()) / static_cast<double>(std::mt19937::max());
                                         obstacle_chance < _obstacles

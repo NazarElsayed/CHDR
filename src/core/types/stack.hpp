@@ -22,7 +22,7 @@ namespace chdr {
 
         constexpr stack(const size_t& _capacity) {
 
-            Container sequence;
+            constexpr Container sequence;
             sequence.reserve(_capacity);
 
             c = stack_t(std::move(sequence));
