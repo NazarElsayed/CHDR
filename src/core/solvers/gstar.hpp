@@ -67,15 +67,13 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_start, _size);
             const auto e = utils::to_1d(_end,   _size);
 
-
-
             // Create closed set:
             _capacity = std::max(_capacity, std::max(s, e));
             existence_set closed({ s }, _capacity);
 
             // Create open set:
-            heap<gs_node, typename gs_node::Max> open;
-            open.push(gs_node { s, static_cast<scalar_t>(0), _h(_start, _end) });
+            heap<gs_node, typename gs_node::max> open;
+            open.emplace(s, static_cast<scalar_t>(0), _h(_start, _end));
 
             // Main loop:
             while (!open.empty()) {
@@ -101,7 +99,7 @@ namespace chdr::solvers {
                                 closed.emplace(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                open.push(gs_node { n, curr.m_gScore + static_cast<scalar_t>(1), _h(utils::to_nd(n, _size), _end) * _weight, std::move(curr) });
+                                open.emplace(n, curr.m_gScore + static_cast<scalar_t>(1), _h(utils::to_nd(n, _size), _end) * _weight, std::move(curr));
                             }
                         }
                     }
@@ -131,15 +129,13 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_start, _maze.size());
             const auto e = utils::to_1d(_end, _maze.size());
 
-
-
             // Create closed set:
             _capacity = std::max(_capacity, std::max(s, e));
             existence_set closed({ s }, _capacity);
 
             // Create open set:
-            heap<gs_node, typename gs_node::Max> open;
-            open.push(gs_node { s, static_cast<scalar_t>(0), _h(_start, _end) });
+            heap<gs_node, typename gs_node::max> open;
+            open.emplace(s, static_cast<scalar_t>(0), _h(_start, _end));
 
             // Main loop:
             while (!open.empty()) {
@@ -165,7 +161,7 @@ namespace chdr::solvers {
                                 closed.emplace(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                open.push(gs_node { n, curr.m_gScore + static_cast<scalar_t>(1), _h(nCoord, _end) * _weight, std::move(curr) });
+                                open.emplace(n, curr.m_gScore + static_cast<scalar_t>(1), _h(nCoord, _end) * _weight, std::move(curr));
                             }
                         }
                     }

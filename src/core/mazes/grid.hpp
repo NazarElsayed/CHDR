@@ -86,13 +86,8 @@ namespace chdr::mazes {
         }
 
         [[nodiscard]]
-#if __cplusplus >= 202002L
-        constexpr
-#endif // __cplusplus >= 202002L
-        size_t count() const override {
-
-            static const auto result = utils::product<size_t>(m_size);
-            return result;
+        constexpr size_t count() const override {
+            return utils::product<size_t>(m_size);
         }
 
         template<bool IncludeDiagonals = false, typename... Args>

@@ -22,7 +22,7 @@ namespace chdr {
 
         constexpr stack(const size_t& _capacity) {
 
-            constexpr Container sequence;
+            Container sequence;
             sequence.reserve(_capacity);
 
             c = stack_t(std::move(sequence));
@@ -55,12 +55,8 @@ namespace chdr {
 
         [[maybe_unused]] constexpr void pop() { c.pop(); }
 
-        [[maybe_unused]]
-#if __cplusplus >= 202002L
-        constexpr
-#endif // __cplusplus >= 202002L
-        void clear() {
-            static stack_t empty;
+        [[maybe_unused]] constexpr void clear() {
+            stack_t empty;
             std::swap(c, empty);
         }
 

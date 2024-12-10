@@ -85,7 +85,7 @@ namespace chdr::solvers {
                                 closed.emplace(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                open.push(n, std::move(curr));
+                                open.emplace(n, std::move(curr));
                             }
                         }
                     }
@@ -147,7 +147,7 @@ namespace chdr::solvers {
                                 closed.emplace(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                open.push(n, std::move(curr));
+                                open.emplace(n, std::move(curr));
                             }
                         }
                     }

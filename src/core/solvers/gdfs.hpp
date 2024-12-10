@@ -9,8 +9,6 @@
 #ifndef CHDR_GDFS_HPP
 #define CHDR_GDFS_HPP
 
-#include <stack>
-
 #include "base/bsolver.hpp"
 #include "mazes/graph.hpp"
 #include "mazes/grid.hpp"
@@ -59,8 +57,7 @@ namespace chdr::solvers {
             existence_set closed({ s }, _capacity);
 
             // Create open set:
-            auto sequence = std::vector<gdfs_node>(_capacity);
-            std::stack<gdfs_node, std::vector<gdfs_node>> open(std::move(sequence));
+            stack<gdfs_node> open(_capacity);
             open.emplace(s);
 
             // Main loop:
@@ -87,7 +84,7 @@ namespace chdr::solvers {
                                 closed.emplace(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                open.push(n, std::move(curr));
+                                open.emplace(n, std::move(curr));
                             }
                         }
                     }
@@ -114,17 +111,14 @@ namespace chdr::solvers {
             std::vector<coord_t> result;
 
             const auto s = utils::to_1d(_start, _maze.size());
-            const auto e = utils::to_1d(_end, _maze.size());
-
-
+            const auto e = utils::to_1d(_end,   _maze.size());
 
             // Create closed set:
             _capacity = std::max(_capacity, std::max(s, e));
             existence_set closed({ s }, _capacity);
 
             // Create open set:
-            auto sequence = std::vector<gdfs_node>(_capacity);
-            std::stack<gdfs_node, std::vector<gdfs_node>> open(std::move(sequence));
+            stack<gdfs_node> open(_capacity);
             open.emplace(s);
 
             // Main loop:
@@ -151,7 +145,7 @@ namespace chdr::solvers {
                                 closed.emplace(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                open.push(n, std::move(curr));
+                                open.emplace(n, std::move(curr));
                             }
                         }
                     }

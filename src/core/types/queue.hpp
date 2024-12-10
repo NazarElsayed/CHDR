@@ -43,12 +43,8 @@ namespace chdr {
         
         [[maybe_unused]] constexpr void pop() { c.pop(); }
 
-        [[maybe_unused]]
-#if __cplusplus >= 202002L
-        constexpr
-#endif // __cplusplus >= 202002L
-        void clear() {
-            static queue_t empty;
+        [[maybe_unused]] constexpr void clear() {
+            queue_t empty;
             std::swap(c, empty);
         }
 

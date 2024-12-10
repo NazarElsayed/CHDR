@@ -34,7 +34,6 @@ namespace chdr::solvers {
             _path.reserve(_capacity);
 
             // Recurse from end node to start node, inserting into a result buffer:
-            #pragma unroll
             for (const auto* temp = this; temp->m_parent != nullptr; temp = static_cast<const node_t*>(temp->m_parent)) {
                 _path.emplace_back(utils::to_nd(temp->m_index, _size));
             }

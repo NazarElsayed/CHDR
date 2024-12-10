@@ -75,7 +75,7 @@ namespace chdr::solvers {
             while (!open.empty()) {
 
                 auto curr(std::move(open.top()));
-                curr.pop();
+                open.pop();
 
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 

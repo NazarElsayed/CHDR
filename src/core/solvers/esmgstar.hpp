@@ -255,7 +255,7 @@ namespace chdr::solvers {
 
             // Create Open Set:
             heap_t open;
-            open.push(esmg_node::create_shared(
+            open.emplace(esmg_node::create_shared(
                 0U,                         // Depth
                 s,                          // Coordinate
                 static_cast<scalar_t>(0),   // G-Score
@@ -294,7 +294,7 @@ namespace chdr::solvers {
 
                         // Add successor to open.
                         if (!open.contains(successor)) {
-                             open.push(successor);
+                             open.emplace(successor);
                         }
                     }
 

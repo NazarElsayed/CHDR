@@ -14,8 +14,6 @@
 
 #include "bnode.hpp"
 
-#pragma inline_recursion(on)
-
 namespace chdr::solvers {
 
     template<typename index_t>
@@ -70,7 +68,6 @@ namespace chdr::solvers {
 
             if (curr.m_parent != nullptr) {
 
-                #pragma unroll
                 for (auto item = curr.m_parent; item->m_parent != nullptr;) {
                     _path.emplace_back(utils::to_nd(item->m_index, _size));
 

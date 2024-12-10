@@ -75,7 +75,7 @@ namespace chdr::solvers {
                                             closed.allocate(n, _capacity, _maze.count());
                                             closed.emplace(n);
 
-                                            open.push(n);
+                                            open.emplace(n);
                                         }
                                     }
                                 }
@@ -143,7 +143,7 @@ namespace chdr::solvers {
                                             closed.allocate(n, _capacity, _maze.count());
                                             closed.emplace(n);
 
-                                            open.push(n);
+                                            open.emplace(n);
                                         }
                                     }
                                 }
