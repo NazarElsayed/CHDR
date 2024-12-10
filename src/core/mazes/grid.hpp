@@ -49,7 +49,7 @@ namespace chdr::mazes {
 
         constexpr grid(const coord_t& _size) :
             m_size(_size),
-            m_nodes(utils::product<size_t>(m_size)) {}
+            m_nodes(count()) {}
 
         constexpr grid(const coord_t& _size, const std::vector<weighted_node<T>>& _nodes) :
             m_size(_size),
@@ -58,7 +58,7 @@ namespace chdr::mazes {
         template <typename... Args>
         constexpr grid(const Args&... _size) :
             m_size {_size... },
-            m_nodes(utils::product<size_t>(m_size))
+            m_nodes(count())
         {
             static_assert(sizeof...(Args) == s_rank, "Number of arguments must equal the Grid's rank.");
         }
@@ -85,18 +85,14 @@ namespace chdr::mazes {
             return m_size;
         }
 
-        template<typename... Args>
-        constexpr void size(const Args&... _value) {
-            Size({ _value... });
-        }
-
-        constexpr void size(const coord_t& _value) {
-            m_size = _value;
-        }
-
         [[nodiscard]]
-        constexpr size_t count() const override {
-            return utils::product<size_t>(m_size);
+#if __cplusplus >= 202002L
+        constexpr
+#endif // __cplusplus >= 202002L
+        size_t count() const override {
+
+            static const auto result = utils::product<size_t>(m_size);
+            return result;
         }
 
         template<bool IncludeDiagonals = false, typename... Args>
@@ -226,7 +222,7 @@ namespace chdr::mazes {
 
         [[nodiscard]]
         constexpr bool contains(const size_t& _id) const override {
-            return _id < utils::product<size_t>(m_size);
+            return _id < count();
         }
 
         [[nodiscard]]

@@ -70,8 +70,6 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_start, _size);
             const auto e = utils::to_1d(_end,   _size);
 
-            const auto count = _maze.count();
-
             // Create closed set:
             _capacity = _capacity == 0U ? std::max(_maze.count() / 10U, static_cast<size_t>(1U)) : _capacity;
             existence_set<low_memory_usage> closed({ s }, _capacity);
@@ -91,9 +89,7 @@ namespace chdr::solvers {
 
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
-                    if (closed.capacity() < curr.m_index) {
-                        closed.reserve(std::min(_capacity * ((curr.m_index % _capacity) + 1U), count));
-                    }
+                    closed.allocate(curr.m_index, _capacity, _maze.count());
                     closed.emplace(curr.m_index);
 
                     for (const auto& neighbour : _maze.get_neighbours(curr.m_index)) {
@@ -103,9 +99,7 @@ namespace chdr::solvers {
                         // Check if node is not already visited:
                         if (!closed.contains(n)) {
 
-                            if (closed.capacity() < n) {
-                                closed.reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
-                            }
+                            closed.allocate(n, _capacity, _maze.count());
                             closed.emplace(n);
 
                             // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
@@ -132,8 +126,6 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_start, _size);
             const auto e = utils::to_1d(_end,   _size);
 
-            const auto count = _maze.count();
-
             // Create closed set:
             _capacity = std::max(_capacity, std::max(s, e));
             existence_set<low_memory_usage> closed({ s }, _capacity);
@@ -154,9 +146,7 @@ namespace chdr::solvers {
 
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
-                    if (closed.capacity() < curr.m_index) {
-                        closed.reserve(std::min(_capacity * ((curr.m_index % _capacity) + 1U), count));
-                    }
+                    closed.allocate(curr.m_index, _capacity, _maze.count());
                     closed.emplace(curr.m_index);
 
                     for (const auto& neighbour : _maze.get_neighbours(curr.m_index)) {
@@ -166,9 +156,7 @@ namespace chdr::solvers {
                         // Check if node is not already visited:
                         if (!closed.contains(n)) {
 
-                            if (closed.capacity() < n) {
-                                closed.reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
-                            }
+                            closed.allocate(n, _capacity, _maze.count());
                             closed.emplace(n);
 
                             // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
@@ -194,8 +182,6 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_start, _maze.size());
             const auto e = utils::to_1d(_end,   _maze.size());
 
-            const auto count = _maze.count();
-
             // Create closed set:
             _capacity = std::max(_capacity, std::max(s, e));
             existence_set<low_memory_usage> closed({ s }, _capacity);
@@ -215,9 +201,7 @@ namespace chdr::solvers {
 
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
-                    if (closed.capacity() < curr.m_index) {
-                        closed.reserve(std::min(_capacity * ((curr.m_index % _capacity) + 1U), count));
-                    }
+                    closed.allocate(curr.m_index, _capacity, _maze.count());
                     closed.emplace(curr.m_index);
 
                     for (const auto& neighbour : _maze.get_neighbours(curr.m_index)) {
@@ -229,9 +213,7 @@ namespace chdr::solvers {
                             // Check if node is not already visited:
                             if (!closed.contains(n)) {
 
-                                if (closed.capacity() < n) {
-                                    closed.reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
-                                }
+                                closed.allocate(n, _capacity, _maze.count());
                                 closed.emplace(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
@@ -259,8 +241,6 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_start, _maze.size());
             const auto e = utils::to_1d(_end,   _maze.size());
 
-            const auto count = _maze.count();
-
             // Create closed set:
             _capacity = std::max(_capacity, std::max(s, e));
             existence_set<low_memory_usage> closed({ s }, _capacity);
@@ -281,9 +261,7 @@ namespace chdr::solvers {
 
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
-                    if (closed.capacity() < curr.m_index) {
-                        closed.reserve(std::min(_capacity * ((curr.m_index % _capacity) + 1U), count));
-                    }
+                    closed.allocate(curr.m_index, _capacity, _maze.count());
                     closed.emplace(curr.m_index);
 
                     for (const auto& neighbour : _maze.get_neighbours(curr.m_index)) {
@@ -295,9 +273,7 @@ namespace chdr::solvers {
                             // Check if node is not already visited:
                             if (!closed.contains(n)) {
 
-                                if (closed.capacity() < n) {
-                                    closed.reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
-                                }
+                                closed.allocate(n, _capacity, _maze.count());
                                 closed.emplace(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
@@ -331,18 +307,16 @@ namespace chdr::solvers {
 
             std::vector<coord_t> result;
 
-            const auto count = _maze.count();
-
-            if (count <= 32U) {
+            if (_maze.count() <= 32U) {
                 result = solve_linear<16U>(_maze, _start, _end, _size, _h, _weight, _capacity);
             }
-            else if (count <= 64U) {
+            else if (_maze.count() <= 64U) {
                 result = solve_linear<32U>(_maze, _start, _end, _size, _h, _weight, _capacity);
             }
-            else if (count <= 128U) {
+            else if (_maze.count() <= 128U) {
                 result = solve_linear<64U>(_maze, _start, _end, _size, _h, _weight, _capacity);
             }
-            else if (count <= lmax) {
+            else if (_maze.count() <= lmax) {
                 result = solve_linear<lmax / 2U>(_maze, _start, _end, _size, _h, _weight, _capacity);
             }
             else {
@@ -364,15 +338,13 @@ namespace chdr::solvers {
 
             std::vector<coord_t> result;
 
-            const auto count = _maze.count();
-
-            if (count <= 64U) {
+            if (_maze.count() <= 64U) {
                 result = solve_linear<32U>(_maze, _start, _end, _h, _weight, _capacity);
             }
-            else if (count <= 128U) {
+            else if (_maze.count() <= 128U) {
                 result = solve_linear<64U>(_maze, _start, _end, _h, _weight, _capacity);
             }
-            else if (count <= lmax) {
+            else if (_maze.count() <= lmax) {
                 result = solve_linear<lmax / 2U>(_maze, _start, _end, _h, _weight, _capacity);
             }
             else {

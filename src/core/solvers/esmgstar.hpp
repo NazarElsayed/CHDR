@@ -251,7 +251,7 @@ namespace chdr::solvers {
             std::vector<coord_t> result;
 
             const auto s = utils::to_1d(_start, _maze.size());
-            const auto e = utils::to_1d(_end, _maze.size());
+            const auto e = utils::to_1d(_end,   _maze.size());
 
             // Create Open Set:
             heap_t open;
@@ -308,7 +308,8 @@ namespace chdr::solvers {
                 else { // SOLUTION REACHED ...
 
                     // Free data which is no longer relevant:
-                    open.clear(); open.shrink_to_fit();
+                    open.clear();
+                    open.shrink_to_fit();
 
                     if (curr != nullptr) {
 

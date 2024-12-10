@@ -55,6 +55,15 @@ namespace chdr {
 
         [[maybe_unused]] constexpr void pop() { c.pop(); }
 
+        [[maybe_unused]]
+#if __cplusplus >= 202002L
+        constexpr
+#endif // __cplusplus >= 202002L
+        void clear() {
+            static stack_t empty;
+            std::swap(c, empty);
+        }
+
         using               iterator_t = typename std::vector<T>::iterator;
         using         const_iterator_t = typename std::vector<T>::const_iterator;
         using       reverse_iterator_t = typename std::vector<T>::reverse_iterator;

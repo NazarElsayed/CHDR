@@ -9,8 +9,6 @@
 #ifndef CHDR_GBFS_HPP
 #define CHDR_GBFS_HPP
 
-#include <queue>
-
 #include "base/bsolver.hpp"
 #include "base/managed_node.hpp"
 #include "mazes/graph.hpp"
@@ -55,14 +53,12 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_start, _size);
             const auto e = utils::to_1d(_end,   _size);
 
-            const auto count = _maze.count();
-
             // Create closed set:
             _capacity = std::max(_capacity, std::max(s, e));
             existence_set closed({ s }, _capacity);
 
             // Create open set:
-            std::queue<gbfs_node> open;
+            chdr::queue<gbfs_node> open;
             open.emplace(s);
 
             // Main loop:
@@ -73,9 +69,7 @@ namespace chdr::solvers {
 
                 if (curr.m_index != e) {
 
-                    if (closed.capacity() < curr.m_index) {
-                        closed.reserve(std::min(_capacity * ((curr.m_index % _capacity) + 1U), count));
-                    }
+                    closed.allocate(curr.m_index, _capacity, _maze.count());
                     closed.emplace(curr.m_index);
 
                     for (const auto& neighbour: _maze.get_neighbours(curr.m_index)) {
@@ -87,9 +81,7 @@ namespace chdr::solvers {
                             // Check if node is not already visited:
                             if (!closed.contains(n)) {
 
-                                if (closed.capacity() < n) {
-                                    closed.reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
-                                }
+                                closed.allocate(n, _capacity, _maze.count());
                                 closed.emplace(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
@@ -101,8 +93,7 @@ namespace chdr::solvers {
                 else { // SOLUTION REACHED ...
 
                     // Free data which is no longer relevant:
-                    std::queue<gbfs_node> empty;
-                    std::swap(open, empty);
+                    open.clear();
 
                     closed.clear();
                     closed.shrink_to_fit();
@@ -124,14 +115,12 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_start, _maze.size());
             const auto e = utils::to_1d(_end, _maze.size());
 
-            const auto count = _maze.count();
-
             // Create closed set:
             _capacity = std::max(_capacity, std::max(s, e));
             existence_set closed({ s }, _capacity);
 
             // Create open set:
-            std::queue<gbfs_node> open;
+            chdr::queue<gbfs_node> open;
             open.emplace(s);
 
             // Main loop:
@@ -142,9 +131,7 @@ namespace chdr::solvers {
 
                 if (curr.m_index != e) {
 
-                    if (closed.capacity() < curr.m_index) {
-                        closed.reserve(std::min(_capacity * ((curr.m_index % _capacity) + 1U), count));
-                    }
+                    closed.allocate(curr.m_index, _capacity, _maze.count());
                     closed.emplace(curr.m_index);
 
                     for (const auto& neighbour: _maze.get_neighbours(curr.m_index)) {
@@ -156,9 +143,7 @@ namespace chdr::solvers {
                             // Check if node is not already visited:
                             if (!closed.contains(n)) {
 
-                                if (closed.capacity() < n) {
-                                    closed.reserve(std::min(_capacity * ((n % _capacity) + 1U), count));
-                                }
+                                closed.allocate(n, _capacity, _maze.count());
                                 closed.emplace(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
@@ -170,9 +155,7 @@ namespace chdr::solvers {
                 else { // SOLUTION REACHED ...
 
                     // Free data which is no longer relevant:
-                    std::queue<gbfs_node> empty;
-                    std::swap(open, empty);
-
+                      open.clear();
                     closed.clear();
                     closed.shrink_to_fit();
 

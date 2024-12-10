@@ -59,6 +59,27 @@ namespace chdr {
 
         std::vector<boolean_t> m_bits;
 
+        constexpr void enable(const size_t& _hash) {
+
+            if (_hash >= m_bits.size()) {
+                resize(_hash + 1U);
+            }
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-overflow"
+
+            m_bits[_hash] = static_cast<boolean_t>(true);
+
+#pragma GCC diagnostic pop
+        }
+
+        constexpr void disable(const size_t& _hash) {
+
+            if (_hash < m_bits.size()) {
+                m_bits[_hash] = static_cast<boolean_t>(false);
+            }
+        }
+
     public:
 
         /**
@@ -92,21 +113,23 @@ namespace chdr {
         }
 
         /**
+         * @brief Preallocates memory based on the hash and bucket size.
+         * @param[in] _hash The value for which memory needs to be preallocated.
+         * @param[in] _increment Size of bucket to be considered for memory allocation.
+         * @param[in] _maxSize (optional) Maximum limit for the memory allocation.
+         */
+        constexpr void allocate(const size_t& _hash, const size_t& _increment, const size_t& _maxSize = std::numeric_limits<size_t>::infinity()) {
+            if (capacity() < _hash) {
+                reserve(std::min(_increment * ((_hash % _increment) + 1U), _maxSize));
+            }
+        }
+
+        /**
          * @brief add a hash to the set.
          * @param[in] _hash The hash value to be added.
          */
         constexpr void push(const size_t& _hash) {
-
-            if (_hash >= m_bits.size()) {
-                resize(_hash + 1U);
-            }
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstringop-overflow"
-
-            m_bits[_hash] = static_cast<boolean_t>(true);
-
-#pragma GCC diagnostic pop
+            enable(_hash);
         }
 
         template <typename T>
@@ -114,18 +137,7 @@ namespace chdr {
 
             static_assert(std::is_integral_v<std::decay_t<T>>, "Hash must be an integral type");
 
-            auto hash_ = static_cast<size_t>(std::forward<T>(_hash));
-
-            if (hash_ >= m_bits.size()) {
-                resize(hash_ + 1U);
-            }
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstringop-overflow"
-
-            m_bits[hash_] = static_cast<boolean_t>(true);
-
-#pragma GCC diagnostic pop
+            enable(static_cast<size_t>(std::forward<T>(_hash)));
         }
 
         /**
@@ -137,10 +149,7 @@ namespace chdr {
          * @see set::clear()
          */
         [[maybe_unused]] constexpr void erase(const size_t& _hash) {
-
-            if (_hash < m_bits.size()) {
-                m_bits[_hash] = static_cast<boolean_t>(false);
-            }
+            disable(_hash);
         }
 
         /**
@@ -159,11 +168,11 @@ namespace chdr {
          */
         [[maybe_unused]] constexpr void trim() {
 
-            auto it = std::find_if(m_bits.rbegin(), m_bits.rend(), [](const auto& _bit) constexpr {
-                return static_cast<bool>(_bit);
-            });
-
-            m_bits.resize(it == m_bits.rend() ? 0U : std::distance(it, m_bits.rend()));
+            auto it = m_bits.rbegin();
+            while (it != m_bits.rend() && !static_cast<boolean_t>(*it)) {
+                ++it;
+            }
+            m_bits.erase(it.base(), m_bits.end());
         }
 
         /**
