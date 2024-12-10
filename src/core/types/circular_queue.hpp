@@ -36,26 +36,13 @@ namespace chdr {
         circular_queue& operator =(const circular_queue&  _other)          = default;
         circular_queue& operator =(      circular_queue&& _other) noexcept = default;
 
-        [[maybe_unused, nodiscard]] constexpr bool empty() const { return m_count == 0U; }
+        [[maybe_unused, nodiscard]] constexpr bool empty() const noexcept { return m_count == 0U; }
 
-        [[maybe_unused, nodiscard]] constexpr bool full() const { return m_count == m_capacity; }
+        [[maybe_unused, nodiscard]] constexpr bool full() const noexcept { return m_count == m_capacity; }
 
-        [[maybe_unused, nodiscard]] constexpr const size_t& size() const { return m_count; }
+        [[maybe_unused, nodiscard]] constexpr const size_t& size() const noexcept { return m_count; }
 
-        [[maybe_unused]] constexpr void push(const T& _value) {
-
-            if (full()) {
-                m_head = (m_head + 1U) % m_capacity;
-            }
-            else {
-                ++m_count;
-            }
-
-            c[m_tail] = _value;
-            m_tail    = (m_tail + 1U) % m_capacity;
-        }
-
-        [[maybe_unused]] constexpr void push(T&& _value) {
+        [[maybe_unused]] constexpr void push(const T& _value) noexcept {
 
             if (full()) {
                 m_head = (m_head + 1U) % m_capacity;
@@ -68,7 +55,21 @@ namespace chdr {
             m_tail    = (m_tail + 1U) % m_capacity;
         }
 
-        [[maybe_unused]] constexpr void emplace(T&& _value) {
+        [[maybe_unused]] constexpr void push(T&& _value) noexcept {
+
+            if (full()) {
+                m_head = (m_head + 1U) % m_capacity;
+            }
+            else {
+                ++m_count;
+            }
+
+            c[m_tail] = std::move(_value);
+            m_tail    = (m_tail + 1U) % m_capacity;
+        }
+
+        [[maybe_unused]] constexpr void emplace(T&& _value) noexcept {
+
             if (full()) {
                 m_head = (m_head + 1U) % m_capacity;
             }
@@ -81,7 +82,8 @@ namespace chdr {
         }
 
         template <typename... Args>
-        [[maybe_unused]] constexpr void emplace(Args&&... args) {
+        [[maybe_unused]] constexpr void emplace(Args&&... args) noexcept {
+
             if (full()) {
                 m_head = (m_head + 1U) % m_capacity;
             }
@@ -93,9 +95,9 @@ namespace chdr {
             m_tail    = (m_tail + 1U) % m_capacity;
         }
 
-        [[maybe_unused]] constexpr void enqueue(const T& _value) { push(_value); }
+        [[maybe_unused]] constexpr void enqueue(const T& _value) noexcept { push(_value); }
 
-        [[maybe_unused]] constexpr void enqueue(T&& _value) { push(_value); }
+        [[maybe_unused]] constexpr void enqueue(T&& _value) noexcept { push(_value); }
 
         [[maybe_unused]] constexpr T dequeue() {
 
@@ -165,7 +167,7 @@ namespace chdr {
             }
         }
 
-        [[maybe_unused]] constexpr void clear() {
+        [[maybe_unused]] constexpr void clear() noexcept {
             m_head  = 0U;
             m_tail  = 0U;
             m_count = 0U;
@@ -192,21 +194,21 @@ namespace chdr {
         using       reverse_iterator_t = typename Container::reverse_iterator;
         using const_reverse_iterator_t = typename Container::const_reverse_iterator;
 
-        [[maybe_unused]] constexpr       iterator_t  begin()       { return c.begin() + m_head; }
-        [[maybe_unused]] constexpr const_iterator_t  begin() const { return c.begin() + m_head; }
-        [[maybe_unused]] constexpr const_iterator_t cbegin() const { return c.begin() + m_head; }
+        [[maybe_unused]] constexpr       iterator_t  begin()       noexcept { return c.begin() + m_head; }
+        [[maybe_unused]] constexpr const_iterator_t  begin() const noexcept { return c.begin() + m_head; }
+        [[maybe_unused]] constexpr const_iterator_t cbegin() const noexcept { return c.begin() + m_head; }
 
-        [[maybe_unused]] constexpr       iterator_t  end()       { return c.begin() + m_tail; }
-        [[maybe_unused]] constexpr const_iterator_t  end() const { return c.begin() + m_tail; }
-        [[maybe_unused]] constexpr const_iterator_t cend() const { return c.begin() + m_tail; }
+        [[maybe_unused]] constexpr       iterator_t  end()       noexcept { return c.begin() + m_tail; }
+        [[maybe_unused]] constexpr const_iterator_t  end() const noexcept { return c.begin() + m_tail; }
+        [[maybe_unused]] constexpr const_iterator_t cend() const noexcept { return c.begin() + m_tail; }
 
-        [[maybe_unused]] constexpr       reverse_iterator_t  rbegin()       { return       reverse_iterator_t(end()); }
-        [[maybe_unused]] constexpr const_reverse_iterator_t  rbegin() const { return const_reverse_iterator_t(end()); }
-        [[maybe_unused]] constexpr const_reverse_iterator_t crbegin() const { return const_reverse_iterator_t(end()); }
+        [[maybe_unused]] constexpr       reverse_iterator_t  rbegin()       noexcept { return       reverse_iterator_t(end()); }
+        [[maybe_unused]] constexpr const_reverse_iterator_t  rbegin() const noexcept { return const_reverse_iterator_t(end()); }
+        [[maybe_unused]] constexpr const_reverse_iterator_t crbegin() const noexcept { return const_reverse_iterator_t(end()); }
 
-        [[maybe_unused]] constexpr       reverse_iterator_t  rend()       { return       reverse_iterator_t(begin()); }
-        [[maybe_unused]] constexpr const_reverse_iterator_t  rend() const { return const_reverse_iterator_t(begin()); }
-        [[maybe_unused]] constexpr const_reverse_iterator_t crend() const { return const_reverse_iterator_t(begin()); }
+        [[maybe_unused]] constexpr       reverse_iterator_t  rend()       noexcept { return       reverse_iterator_t(begin()); }
+        [[maybe_unused]] constexpr const_reverse_iterator_t  rend() const noexcept { return const_reverse_iterator_t(begin()); }
+        [[maybe_unused]] constexpr const_reverse_iterator_t crend() const noexcept { return const_reverse_iterator_t(begin()); }
     };
 
 } //chdr

@@ -119,7 +119,7 @@ namespace chdr {
                 }
             }
 
-            stable_iterator &operator ++() {
+            stable_iterator &operator ++() noexcept {
 
                 ++m_element_iter;
                 --m_remaining_elements;
@@ -135,33 +135,33 @@ namespace chdr {
                 return *this;
             }
 
-            stable_iterator operator ++(int) {
+            stable_iterator operator ++(int) noexcept {
                 auto tmp = *this;
                 ++(*this);
                 return tmp;
             }
 
-            reference_t operator* () const { return *m_element_iter; }
-              pointer_t operator->() const { return  m_element_iter; }
+            reference_t operator* () const noexcept { return *m_element_iter; }
+              pointer_t operator->() const noexcept { return  m_element_iter; }
 
-            bool operator == (const stable_iterator &_other) const {
+            bool operator == (const stable_iterator &_other) const noexcept {
                 return m_block_iter == _other.m_block_iter &&
                     (m_block_iter == m_block_end || (m_element_iter == _other.m_element_iter && m_remaining_elements == _other.m_remaining_elements));
             }
 
-            bool operator != (const stable_iterator &_other) const { return !(*this == _other); } // NOLINT(*-simplify)
+            bool operator != (const stable_iterator &_other) const noexcept { return !(*this == _other); } // NOLINT(*-simplify)
         };
 
         using       iterator_t = stable_iterator<false>;
         using const_iterator_t = stable_iterator<true>;
 
-        [[maybe_unused, nodiscard]] constexpr       iterator_t  begin()       { return       iterator(c.begin(), c.end(), m_index); }
-        [[maybe_unused, nodiscard]] constexpr const_iterator_t  begin() const { return const_iterator(c.begin(), c.end(), m_index); }
-        [[maybe_unused, nodiscard]] constexpr const_iterator_t cbegin() const { return const_iterator(c.begin(), c.end(), m_index); }
+        [[maybe_unused, nodiscard]] constexpr       iterator_t  begin()       noexcept { return       iterator(c.begin(), c.end(), m_index); }
+        [[maybe_unused, nodiscard]] constexpr const_iterator_t  begin() const noexcept { return const_iterator(c.begin(), c.end(), m_index); }
+        [[maybe_unused, nodiscard]] constexpr const_iterator_t cbegin() const noexcept { return const_iterator(c.begin(), c.end(), m_index); }
 
-        [[maybe_unused, nodiscard]] constexpr       iterator_t  end()       { return       iterator(c.end(), c.end(), 0U); }
-        [[maybe_unused, nodiscard]] constexpr const_iterator_t  end() const { return const_iterator(c.end(), c.end(), 0U); }
-        [[maybe_unused, nodiscard]] constexpr const_iterator_t cend() const { return const_iterator(c.end(), c.end(), 0U); }
+        [[maybe_unused, nodiscard]] constexpr       iterator_t  end()       noexcept { return       iterator(c.end(), c.end(), 0U); }
+        [[maybe_unused, nodiscard]] constexpr const_iterator_t  end() const noexcept { return const_iterator(c.end(), c.end(), 0U); }
+        [[maybe_unused, nodiscard]] constexpr const_iterator_t cend() const noexcept { return const_iterator(c.end(), c.end(), 0U); }
     };
 
 } //chdr

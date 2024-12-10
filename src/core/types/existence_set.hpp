@@ -73,7 +73,7 @@ namespace chdr {
 #pragma GCC diagnostic pop
         }
 
-        constexpr void disable(const size_t& _hash) {
+        constexpr void disable(const size_t& _hash) noexcept {
 
             if (_hash < m_bits.size()) {
                 m_bits[_hash] = static_cast<boolean_t>(false);
@@ -148,7 +148,7 @@ namespace chdr {
          * @see set::prune()
          * @see set::clear()
          */
-        [[maybe_unused]] constexpr void erase(const size_t& _hash) {
+        [[maybe_unused]] constexpr void erase(const size_t& _hash) noexcept {
             disable(_hash);
         }
 
@@ -157,7 +157,7 @@ namespace chdr {
          * @param[in] _hash The hash value to check.
          * @return True if the hash exists in the set, false otherwise.
          */
-        [[maybe_unused, nodiscard]] constexpr bool contains(const size_t& _hash) const {
+        [[maybe_unused, nodiscard]] constexpr bool contains(const size_t& _hash) const noexcept {
             return _hash < m_bits.size() && static_cast<bool>(m_bits[_hash]);
         }
 
@@ -209,7 +209,7 @@ namespace chdr {
          * @brief clear the content of the set.
          * @details remove all elements from the set.
          */
-        [[maybe_unused]] constexpr void clear() {
+        [[maybe_unused]] constexpr void clear() noexcept {
             m_bits.clear();
         }
 
@@ -227,7 +227,7 @@ namespace chdr {
          *
          * @return The size of the set.
          */
-        [[maybe_unused, nodiscard]] constexpr auto size() const {
+        [[maybe_unused, nodiscard]] constexpr auto size() const noexcept {
             return m_bits.size();
         }
 
@@ -237,7 +237,7 @@ namespace chdr {
          *
          * @return The capacity of the set.
          */
-        [[maybe_unused, nodiscard]] constexpr auto capacity() const {
+        [[maybe_unused, nodiscard]] constexpr auto capacity() const noexcept {
             return m_bits.capacity();
         }
 
@@ -246,21 +246,21 @@ namespace chdr {
         using       reverse_iterator_t = typename std::vector<alignment_type>::reverse_iterator;
         using const_reverse_iterator_t = typename std::vector<alignment_type>::const_reverse_iterator;
 
-        [[maybe_unused, nodiscard]] constexpr       iterator_t  begin()       { return m_bits.begin();  }
-        [[maybe_unused, nodiscard]] constexpr const_iterator_t  begin() const { return m_bits.begin();  }
-        [[maybe_unused, nodiscard]] constexpr const_iterator_t cbegin() const { return m_bits.cbegin(); }
+        [[maybe_unused, nodiscard]] constexpr       iterator_t  begin()       noexcept { return m_bits.begin();  }
+        [[maybe_unused, nodiscard]] constexpr const_iterator_t  begin() const noexcept { return m_bits.begin();  }
+        [[maybe_unused, nodiscard]] constexpr const_iterator_t cbegin() const noexcept { return m_bits.cbegin(); }
 
-        [[maybe_unused, nodiscard]] constexpr       iterator_t  end()       { return m_bits.end();  }
-        [[maybe_unused, nodiscard]] constexpr const_iterator_t  end() const { return m_bits.end();  }
-        [[maybe_unused, nodiscard]] constexpr const_iterator_t cend() const { return m_bits.cend(); }
+        [[maybe_unused, nodiscard]] constexpr       iterator_t  end()       noexcept { return m_bits.end();  }
+        [[maybe_unused, nodiscard]] constexpr const_iterator_t  end() const noexcept { return m_bits.end();  }
+        [[maybe_unused, nodiscard]] constexpr const_iterator_t cend() const noexcept { return m_bits.cend(); }
 
-        [[maybe_unused, nodiscard]] constexpr       reverse_iterator_t  rbegin()       { return m_bits.rbegin();  }
-        [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t  rbegin() const { return m_bits.rbegin();  }
-        [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t crbegin() const { return m_bits.crbegin(); }
+        [[maybe_unused, nodiscard]] constexpr       reverse_iterator_t  rbegin()       noexcept { return m_bits.rbegin();  }
+        [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t  rbegin() const noexcept { return m_bits.rbegin();  }
+        [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t crbegin() const noexcept { return m_bits.crbegin(); }
 
-        [[maybe_unused, nodiscard]] constexpr       reverse_iterator_t  rend()       { return m_bits.rend();  }
-        [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t  rend() const { return m_bits.rend();  }
-        [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t crend() const { return m_bits.crend(); }
+        [[maybe_unused, nodiscard]] constexpr       reverse_iterator_t  rend()       noexcept { return m_bits.rend();  }
+        [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t  rend() const noexcept { return m_bits.rend();  }
+        [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t crend() const noexcept { return m_bits.crend(); }
     };
 
 }//chdr

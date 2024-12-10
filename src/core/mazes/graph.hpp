@@ -36,28 +36,28 @@ namespace chdr::mazes {
 
         struct index_hash {
 
-            constexpr size_t operator () (const index_t& _index) const {
+            constexpr size_t operator () (const index_t& _index) const noexcept {
                 return static_cast<index_t>(_index);
             }
         };
 
         struct index_equal {
 
-            constexpr bool operator () (const index_t& _a, const index_t& _b) const {
+            constexpr bool operator () (const index_t& _a, const index_t& _b) const noexcept {
                 return _a == _b;
             }
         };
 
         struct edge_hash {
 
-            constexpr size_t operator () (const std::pair<index_t, scalar_t> &_edge) const {
+            constexpr size_t operator () (const std::pair<index_t, scalar_t> &_edge) const noexcept {
                 return static_cast<size_t>(_edge.first) ^ (std::hash<scalar_t>()(_edge.second) << 1);
             }
         };
 
         struct edge_equal {
 
-            constexpr bool operator () (const std::pair<index_t, scalar_t>& _a, const std::pair<index_t, scalar_t>& _b) const {
+            constexpr bool operator () (const std::pair<index_t, scalar_t>& _a, const std::pair<index_t, scalar_t>& _b) const noexcept {
                 return _a.first == _b.first && _a.second == _b.second;
             }
         };
@@ -343,28 +343,28 @@ namespace chdr::mazes {
             return m_entries.find(_id)->second;
         }
 
-        [[maybe_unused, nodiscard]] constexpr bool contains(const index_t& _id) const override {
+        [[maybe_unused, nodiscard]] constexpr bool contains(const index_t& _id) const noexcept override {
             return m_entries.find(_id) != m_entries.end();
         }
 
-        [[maybe_unused, nodiscard]] constexpr size_t count() const override {
+        [[maybe_unused, nodiscard]] constexpr size_t count() const noexcept override {
             return m_entries.size();
         }
 
-        [[maybe_unused]] void clear() {
+        [[maybe_unused]] void clear() noexcept {
             m_entries.clear();
         }
 
         using       iterator_t = typename adjacency_set_t::iterator;
         using const_iterator_t = typename adjacency_set_t::const_iterator;
 
-        [[maybe_unused, nodiscard]]       iterator_t  begin()       { return m_entries.begin();  }
-        [[maybe_unused, nodiscard]] const_iterator_t  begin() const { return m_entries.begin();  }
-        [[maybe_unused, nodiscard]] const_iterator_t cbegin() const { return m_entries.cbegin(); }
+        [[maybe_unused, nodiscard]]       iterator_t  begin()       noexcept { return m_entries.begin();  }
+        [[maybe_unused, nodiscard]] const_iterator_t  begin() const noexcept { return m_entries.begin();  }
+        [[maybe_unused, nodiscard]] const_iterator_t cbegin() const noexcept { return m_entries.cbegin(); }
 
-        [[maybe_unused, nodiscard]]       iterator_t  end()       { return m_entries.end();  }
-        [[maybe_unused, nodiscard]] const_iterator_t  end() const { return m_entries.end();  }
-        [[maybe_unused, nodiscard]] const_iterator_t cend() const { return m_entries.cend(); }
+        [[maybe_unused, nodiscard]]       iterator_t  end()       noexcept { return m_entries.end();  }
+        [[maybe_unused, nodiscard]] const_iterator_t  end() const noexcept { return m_entries.end();  }
+        [[maybe_unused, nodiscard]] const_iterator_t cend() const noexcept { return m_entries.cend(); }
 
     };
 

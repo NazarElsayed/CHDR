@@ -182,7 +182,7 @@ namespace chdr {
 		 * @note The input is not modified.
 		 */
 		template <typename T, typename Ta, size_t Kd>
-		static constexpr T product(const std::array<Ta, Kd>& _array) {
+		static constexpr T product(const std::array<Ta, Kd>& _array) noexcept {
 
 			if constexpr (Kd == 0U) {
 				return T{0};
@@ -226,7 +226,7 @@ namespace chdr {
 		 * \endcode
 		 */
 		template<typename T, typename... Args>
-		static constexpr auto to_nd(const T& _index, const Args&... _sizes) {
+		static constexpr auto to_nd(const T& _index, const Args&... _sizes) noexcept {
 			return to_nd(_index, {_sizes...});
 		}
 
@@ -246,7 +246,7 @@ namespace chdr {
 		 * @note The function assumes that the number of dimensions (_dimensions) is greater than 0.
 		 */
 		template<typename T, const size_t Kd>
-		static constexpr auto to_nd(const T& _index, const coord<T, Kd>& _sizes) {
+		static constexpr auto to_nd(const T& _index, const coord<T, Kd>& _sizes) noexcept {
 
 			static_assert(std::is_integral_v<T>, "Only integer types are allowed.");
 
@@ -317,7 +317,7 @@ namespace chdr {
 		 * Only integer types are allowed for the indices.
 		 */
 		template<typename T, typename... Args>
-		static constexpr auto to_1d(const coord<T, sizeof...(Args)>& _indices, const Args&... _sizes) {
+		static constexpr auto to_1d(const coord<T, sizeof...(Args)>& _indices, const Args&... _sizes) noexcept {
 			return to_1d({_indices}, {_sizes...});
 		}
 
@@ -330,7 +330,7 @@ namespace chdr {
 		 * Only integer types are allowed for the indices.
 		 */
 		template<typename T, const size_t Kd>
-		static constexpr auto to_1d(const coord<T, Kd>& _indices, const coord<T, Kd>& _sizes) {
+		static constexpr auto to_1d(const coord<T, Kd>& _indices, const coord<T, Kd>& _sizes) noexcept {
 
 			static_assert(std::is_integral_v<T>, "Only integer types are allowed.");
 

@@ -20,6 +20,7 @@
 #include <stdexcept> // NOLINT(*-include-cleaner)
 
 namespace chdr {
+
     template <typename T, const size_t StackSize>
     class stack_allocator {
 
@@ -33,9 +34,9 @@ namespace chdr {
         using value_type [[maybe_unused]] = T;
 
         // ReSharper disable once CppPossiblyUninitializedMember
-        stack_allocator() : m_stack_ptr(0U) {}
+        constexpr stack_allocator() : m_stack_ptr(0U) {}
 
-        [[maybe_unused, nodiscard]] T* allocate(const size_t& _n) {
+        [[maybe_unused, nodiscard]] constexpr T* allocate(const size_t& _n) {
 
             T* result;
 
@@ -50,7 +51,7 @@ namespace chdr {
             return result;
         }
 
-        void deallocate(T* _p, const size_t& _n) {
+        constexpr void deallocate(T* _p, const size_t& _n) {
 
             if (_p >= reinterpret_cast<T*>(m_stack.data()) && _p < reinterpret_cast<T*>(m_stack.data() + m_stack.size())) {
 

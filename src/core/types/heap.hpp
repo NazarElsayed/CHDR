@@ -47,8 +47,8 @@ namespace chdr {
 
     private:
 
-        [[nodiscard]] size_t index_of(const T& _item) const {
-            return static_cast<size_t>(&(_item) - &(top()));
+        [[nodiscard]] size_t index_of(const T& _item) const noexcept {
+            return static_cast<size_t>(&(_item) - &(c[1U]));
         }
 
         constexpr void sort_up(const T& _item) {
@@ -123,9 +123,9 @@ namespace chdr {
             c.push_back({}); // Add super element.
         }
 
-        [[maybe_unused, nodiscard]] constexpr bool empty() const { return size() == 0U;  }
+        [[maybe_unused, nodiscard]] constexpr bool empty() const noexcept { return size() == 0U;  }
 
-        [[maybe_unused, nodiscard]] constexpr size_t size() const { return c.size() - 1U; }
+        [[maybe_unused, nodiscard]] constexpr size_t size() const noexcept { return c.size() - 1U; }
 
         [[maybe_unused, nodiscard]] constexpr T& front() { return top(); }
 
@@ -309,7 +309,7 @@ namespace chdr {
             sort_up(c[index_of(_item)]);
         }
 
-        [[maybe_unused, nodiscard]] constexpr bool contains(T& _item) {
+        [[maybe_unused, nodiscard]] constexpr bool contains(T& _item) noexcept {
 
             constexpr bool result = !empty();
 
@@ -347,7 +347,7 @@ namespace chdr {
 #ifndef HEAP_SUPPRESS_EXCEPTION_WARNING
         [[deprecated("This function does not perform bounds checking.\nSuppress this warning by defining \"HEAP_SUPPRESS_UNSAFE_WARNING\".")]]
 #endif
-        [[maybe_unused, nodiscard]] constexpr const T& operator[](const size_t& _index) const {
+        [[maybe_unused, nodiscard]] constexpr const T& operator[](const size_t& _index) const noexcept {
             return c[_index];
         }
 
@@ -356,21 +356,21 @@ namespace chdr {
         using       reverse_iterator_t = typename std::vector<T>::reverse_iterator;
         using const_reverse_iterator_t = typename std::vector<T>::const_reverse_iterator;
 
-        [[maybe_unused, nodiscard]] constexpr       iterator_t  begin()       { return c.begin()  + 1U; }
-        [[maybe_unused, nodiscard]] constexpr const_iterator_t  begin() const { return c.begin()  + 1U; }
-        [[maybe_unused, nodiscard]] constexpr const_iterator_t cbegin() const { return c.cbegin() + 1U; }
+        [[maybe_unused, nodiscard]] constexpr       iterator_t  begin()       noexcept { return c.begin()  + 1U; }
+        [[maybe_unused, nodiscard]] constexpr const_iterator_t  begin() const noexcept { return c.begin()  + 1U; }
+        [[maybe_unused, nodiscard]] constexpr const_iterator_t cbegin() const noexcept { return c.cbegin() + 1U; }
 
-        [[maybe_unused, nodiscard]] constexpr       iterator_t  end()       { return c.end();  }
-        [[maybe_unused, nodiscard]] constexpr const_iterator_t  end() const { return c.end();  }
-        [[maybe_unused, nodiscard]] constexpr const_iterator_t cend() const { return c.cend(); }
+        [[maybe_unused, nodiscard]] constexpr       iterator_t  end()       noexcept { return c.end();  }
+        [[maybe_unused, nodiscard]] constexpr const_iterator_t  end() const noexcept { return c.end();  }
+        [[maybe_unused, nodiscard]] constexpr const_iterator_t cend() const noexcept { return c.cend(); }
 
-        [[maybe_unused, nodiscard]] constexpr       reverse_iterator_t  rbegin()       { return c.rbegin();  }
-        [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t  rbegin() const { return c.rbegin();  }
-        [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t crbegin() const { return c.crbegin(); }
+        [[maybe_unused, nodiscard]] constexpr       reverse_iterator_t  rbegin()       noexcept { return c.rbegin();  }
+        [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t  rbegin() const noexcept { return c.rbegin();  }
+        [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t crbegin() const noexcept { return c.crbegin(); }
 
-        [[maybe_unused, nodiscard]] constexpr       reverse_iterator_t  rend()       { return c.rend();  }
-        [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t  rend() const { return c.rend();  }
-        [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t crend() const { return c.crend(); }
+        [[maybe_unused, nodiscard]] constexpr       reverse_iterator_t  rend()       noexcept { return c.rend();  }
+        [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t  rend() const noexcept { return c.rend();  }
+        [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t crend() const noexcept { return c.crend(); }
 
     };
 

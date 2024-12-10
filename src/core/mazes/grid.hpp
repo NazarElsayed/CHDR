@@ -72,33 +72,33 @@ namespace chdr::mazes {
         }
 
         [[nodiscard]]
-        constexpr const std::vector<weighted_node<T>>& nodes() const {
+        constexpr const std::vector<weighted_node<T>>& nodes() const noexcept {
             return m_nodes;
         }
 
-        constexpr void nodes(const std::vector<weighted_node<T>>& _value) {
+        constexpr void nodes(const std::vector<weighted_node<T>>& _value) noexcept {
             m_nodes = _value;
         }
 
         [[nodiscard]]
-        constexpr const coord_t& size() const {
+        constexpr const coord_t& size() const noexcept {
             return m_size;
         }
 
         [[nodiscard]]
-        constexpr size_t count() const override {
+        constexpr size_t count() const noexcept override {
             return utils::product<size_t>(m_size);
         }
 
         template<bool IncludeDiagonals = false, typename... Args>
         [[nodiscard]]
-        constexpr auto get_neighbours(const Args&... _id) const {
+        constexpr auto get_neighbours(const Args&... _id) const noexcept {
             return get_neighbours<IncludeDiagonals>({ _id... });
         }
 
         template<bool IncludeDiagonals = false>
         [[nodiscard]]
-        constexpr auto get_neighbours(const coord_t& _id) const {
+        constexpr auto get_neighbours(const coord_t& _id) const noexcept {
 
             constexpr size_t neighbours = IncludeDiagonals ?
                 static_cast<size_t>(std::pow(3U, Kd)) - 1U : Kd * 2U;
@@ -160,7 +160,7 @@ namespace chdr::mazes {
 
         template<bool IncludeDiagonals = false>
         [[nodiscard]]
-        constexpr auto get_neighbours(const size_t& _id) const {
+        constexpr auto get_neighbours(const size_t& _id) const noexcept {
             return get_neighbours<IncludeDiagonals>(utils::to_nd<size_t, Kd>(_id, size()));
         }
 
@@ -194,12 +194,12 @@ namespace chdr::mazes {
 
         template<typename... Args>
         [[nodiscard]]
-        constexpr bool contains(const Args&... _id) const {
+        constexpr bool contains(const Args&... _id) const noexcept {
             return contains({ _id... });
         }
 
         [[nodiscard]]
-        constexpr bool contains(const coord_t& _id) const {
+        constexpr bool contains(const coord_t& _id) const noexcept {
 
             bool result = true;
 
@@ -216,12 +216,12 @@ namespace chdr::mazes {
         }
 
         [[nodiscard]]
-        constexpr bool contains(const size_t& _id) const override {
+        constexpr bool contains(const size_t& _id) const noexcept override {
             return _id < count();
         }
 
         [[nodiscard]]
-        constexpr bool is_transitory(const size_t& _index) const {
+        constexpr bool is_transitory(const size_t& _index) const noexcept {
 
             size_t count = 0U;
 
@@ -239,21 +239,21 @@ namespace chdr::mazes {
         using       reverse_iterator_t = typename std::vector<weighted_node<T>>::reverse_iterator;
         using const_reverse_iterator_t = typename std::vector<weighted_node<T>>::const_reverse_iterator;
 
-        [[maybe_unused, nodiscard]]       iterator_t  begin()       { return m_nodes.begin();  }
-        [[maybe_unused, nodiscard]] const_iterator_t  begin() const { return m_nodes.begin();  }
-        [[maybe_unused, nodiscard]] const_iterator_t cbegin() const { return m_nodes.cbegin(); }
+        [[maybe_unused, nodiscard]]       iterator_t  begin()       noexcept { return m_nodes.begin();  }
+        [[maybe_unused, nodiscard]] const_iterator_t  begin() const noexcept { return m_nodes.begin();  }
+        [[maybe_unused, nodiscard]] const_iterator_t cbegin() const noexcept { return m_nodes.cbegin(); }
 
-        [[maybe_unused, nodiscard]]       iterator_t  end()       { return m_nodes.end();  }
-        [[maybe_unused, nodiscard]] const_iterator_t  end() const { return m_nodes.end();  }
-        [[maybe_unused, nodiscard]] const_iterator_t cend() const { return m_nodes.cend(); }
+        [[maybe_unused, nodiscard]]       iterator_t  end()       noexcept { return m_nodes.end();  }
+        [[maybe_unused, nodiscard]] const_iterator_t  end() const noexcept { return m_nodes.end();  }
+        [[maybe_unused, nodiscard]] const_iterator_t cend() const noexcept { return m_nodes.cend(); }
 
-        [[maybe_unused, nodiscard]]       reverse_iterator_t  rbegin()       { return m_nodes.rbegin();  }
-        [[maybe_unused, nodiscard]] const_reverse_iterator_t  rbegin() const { return m_nodes.rbegin();  }
-        [[maybe_unused, nodiscard]] const_reverse_iterator_t crbegin() const { return m_nodes.crbegin(); }
+        [[maybe_unused, nodiscard]]       reverse_iterator_t  rbegin()       noexcept { return m_nodes.rbegin();  }
+        [[maybe_unused, nodiscard]] const_reverse_iterator_t  rbegin() const noexcept { return m_nodes.rbegin();  }
+        [[maybe_unused, nodiscard]] const_reverse_iterator_t crbegin() const noexcept { return m_nodes.crbegin(); }
 
-        [[maybe_unused, nodiscard]]       reverse_iterator_t  rend()       { return m_nodes.rend();  }
-        [[maybe_unused, nodiscard]] const_reverse_iterator_t  rend() const { return m_nodes.rend();  }
-        [[maybe_unused, nodiscard]] const_reverse_iterator_t crend() const { return m_nodes.crend(); }
+        [[maybe_unused, nodiscard]]       reverse_iterator_t  rend()       noexcept { return m_nodes.rend();  }
+        [[maybe_unused, nodiscard]] const_reverse_iterator_t  rend() const noexcept { return m_nodes.rend();  }
+        [[maybe_unused, nodiscard]] const_reverse_iterator_t crend() const noexcept { return m_nodes.crend(); }
 
     };
 
