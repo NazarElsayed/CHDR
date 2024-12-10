@@ -13,6 +13,8 @@
 
 #include "intrinsics.hpp"
 
+// NOLINTBEGIN(*-simd-intrinsics)
+
 namespace chdr {
 
     struct simd_extensions {
@@ -21,15 +23,15 @@ namespace chdr {
 
     #ifdef __SSE2__
 
-            [[maybe_unused, nodiscard]] static auto abs_sub_128_v(const __m128i& _regA, const __m128i& _regB) {
+            [[maybe_unused, nodiscard]] static auto abs_sub_128_v(const __m128i& _regA, const __m128i& _regB) noexcept {
 
                 // Perform A - B:
-                const auto sub = _mm_sub_epi8(_regA, _regB);                        // NOLINT(*-simd-intrinsics)
+                const auto sub = _mm_sub_epi8(_regA, _regB);
 
                 // Horizontal add:
                 const __m128i sum1     = _mm_sad_epu8(sub, _mm_setzero_si128());
                 const __m128i sum2     = _mm_shuffle_epi32(sum1, _MM_SHUFFLE(2, 3, 0, 1));
-                const __m128i finalSum = _mm_add_epi16(sum1, sum2);                       // NOLINT(*-simd-intrinsics)
+                const __m128i finalSum = _mm_add_epi16(sum1, sum2);                       
 
                 uint16_t resultOut;
                 memcpy(&resultOut, &finalSum, sizeof(resultOut)); // Copy first 2 bytes.
@@ -45,10 +47,10 @@ namespace chdr {
 
     #ifdef __SSE2__
 
-            [[maybe_unused, nodiscard]] static auto abs_sub_128_v(const __m128i& _regA, const __m128i& _regB) {
+            [[maybe_unused, nodiscard]] static auto abs_sub_128_v(const __m128i& _regA, const __m128i& _regB) noexcept {
 
                 // Perform A - B:
-                const auto sub = _mm_sub_epi16(_regA, _regB);                       // NOLINT(*-simd-intrinsics)
+                const auto sub = _mm_sub_epi16(_regA, _regB);                       
 
                 // Horizontal add:
     #ifdef __SSSE3__
@@ -83,7 +85,7 @@ namespace chdr {
 
     #ifdef __SSE2__
 
-            [[maybe_unused, nodiscard]] static auto abs_128_v(__m128i& _value) {
+            [[maybe_unused, nodiscard]] static auto abs_128_v(__m128i& _value) noexcept {
 
                 // Get absolute value to prevent underflow
 
@@ -103,10 +105,10 @@ namespace chdr {
                 return result;
             }
 
-            [[maybe_unused, nodiscard]] static auto abs_sub_128_v(const __m128i& _regA, const __m128i& _regB) {
+            [[maybe_unused, nodiscard]] static auto abs_sub_128_v(const __m128i& _regA, const __m128i& _regB) noexcept {
 
                 // Perform A - B:
-                const auto sub = _mm_sub_epi32(_regA, _regB);                       // NOLINT(*-simd-intrinsics)
+                const auto sub = _mm_sub_epi32(_regA, _regB);                       
 
                 __m128i resultOut{};
 
@@ -142,7 +144,7 @@ namespace chdr {
 
     #ifdef __SSE4_1__
 
-            [[maybe_unused, nodiscard]] static auto abs_128_v(__m128i& _value) {
+            [[maybe_unused, nodiscard]] static auto abs_128_v(__m128i& _value) noexcept {
 
                 // Get absolute value to prevent underflow
 
@@ -152,7 +154,7 @@ namespace chdr {
                 result = _mm_abs_epi64(_value);
     #elif defined(__AVX2__)
                 const __m128i sign = _mm_cmpgt_epi64(_mm_set1_epi64x(0), _value);
-                result = _mm_sub_epi64(_mm_xor_si128(_value,sign), sign);           // NOLINT(*-simd-intrinsics)
+                result = _mm_sub_epi64(_mm_xor_si128(_value,sign), sign);           
     #else // #ifndef __AVX2__
 
                 // Implement it manually for older CPUs
@@ -167,12 +169,12 @@ namespace chdr {
 
     #endif // __SSE4_1__
 
-            [[maybe_unused, nodiscard]] static auto abs_sub_128_v(const __m128i& _regA, const __m128i& _regB) {
+            [[maybe_unused, nodiscard]] static auto abs_sub_128_v(const __m128i& _regA, const __m128i& _regB) noexcept {
 
                 uint64_t result;
 
     #ifdef __SSE4_2__
-                auto sub = _mm_sub_epi64(_regA, _regB);                             // NOLINT(*-simd-intrinsics)
+                auto sub = _mm_sub_epi64(_regA, _regB);                             
                 sub = abs_128_v(sub);
 
                 // Unpack into 2 halves:
@@ -180,7 +182,7 @@ namespace chdr {
                 const auto low = _mm_unpacklo_epi64(sub, sub);
 
                 // Horizontal add:
-                const auto sum = _mm_add_epi64(high, low);                          // NOLINT(*-simd-intrinsics)
+                const auto sum = _mm_add_epi64(high, low);                          
 
                 // Extract the lower 64-bit integer:
                 result = _mm_extract_epi64(sum, 0);
@@ -211,11 +213,11 @@ namespace chdr {
 
     #ifdef __SSE2__
 
-            [[maybe_unused, nodiscard]] static auto sub_128_v(const __m128& _regA, const __m128& _regB) {
+            [[maybe_unused, nodiscard]] static auto sub_128_v(const __m128& _regA, const __m128& _regB) noexcept {
 
                 double result{};
 
-                const auto sub = _mm_sub_ps(_regA, _regB);                          // NOLINT(*-simd-intrinsics)
+                const auto sub = _mm_sub_ps(_regA, _regB);                          
 
                 // Horizontal add:
     #ifdef __SSSE3__
@@ -234,12 +236,12 @@ namespace chdr {
                 return result;
             }
 
-            [[maybe_unused, nodiscard]] static auto sqr_sub_128_v(const __m128& _regA, const __m128& _regB) {
+            [[maybe_unused, nodiscard]] static auto sqr_sub_128_v(const __m128& _regA, const __m128& _regB) noexcept {
 
                 float result;
 
-                const auto sub = _mm_sub_ps(_regA, _regB);                          // NOLINT(*-simd-intrinsics)
-                const auto sqr = _mm_mul_ps(sub, sub);                              // NOLINT(*-simd-intrinsics)
+                const auto sub = _mm_sub_ps(_regA, _regB);                          
+                const auto sqr = _mm_mul_ps(sub, sub);                              
 
                 // Horizontal add:
     #ifdef __SSSE3__
@@ -266,11 +268,11 @@ namespace chdr {
 
     #ifdef __SSE2__
 
-            [[maybe_unused, nodiscard]] static auto sub_128_v(const __m128d& _regA, const __m128d& _regB) {
+            [[maybe_unused, nodiscard]] static auto sub_128_v(const __m128d& _regA, const __m128d& _regB) noexcept {
 
                 double result{};
 
-                const auto sub = _mm_sub_pd(_regA, _regB);                          // NOLINT(*-simd-intrinsics)
+                const auto sub = _mm_sub_pd(_regA, _regB);                          
 
                 // Horizontal add:
     #ifdef __SSSE3__
@@ -289,12 +291,12 @@ namespace chdr {
                 return result;
             }
 
-            [[maybe_unused, nodiscard]] static auto sqr_sub_128_v(const __m128d& _regA, const __m128d& _regB) {
+            [[maybe_unused, nodiscard]] static auto sqr_sub_128_v(const __m128d& _regA, const __m128d& _regB) noexcept {
 
                 double result{};
 
-                const auto sub = _mm_sub_pd(_regA, _regB);                          // NOLINT(*-simd-intrinsics)
-                const auto sqr = _mm_mul_pd(sub, sub);                              // NOLINT(*-simd-intrinsics)
+                const auto sub = _mm_sub_pd(_regA, _regB);                          
+                const auto sqr = _mm_mul_pd(sub, sub);                              
 
                 // Horizontal add:
     #ifdef __SSSE3__
@@ -319,5 +321,7 @@ namespace chdr {
     };
 
 }//chdr
+
+// NOLINTEND(*-simd-intrinsics)
 
 #endif //CHDR_SIMDEXTENSIONS_HPP
