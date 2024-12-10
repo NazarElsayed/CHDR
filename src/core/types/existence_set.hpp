@@ -159,20 +159,11 @@ namespace chdr {
          */
         [[maybe_unused]] constexpr void trim() {
 
-            const auto it = std::find_if(
-                    m_bits.rbegin(),
-                    m_bits.rend(),
-                    [](const auto& _bit) constexpr {
-                    return static_cast<bool>(_bit);
-                }
-            );
+            auto it = std::find_if(m_bits.rbegin(), m_bits.rend(), [](const auto& _bit) constexpr {
+                return static_cast<bool>(_bit);
+            });
 
-            if (it != m_bits.rend()) {
-                resize(std::distance(it, m_bits.rend()));
-            }
-            else {
-                clear();
-            }
+            m_bits.resize(it == m_bits.rend() ? 0U : std::distance(it, m_bits.rend()));
         }
 
         /**
