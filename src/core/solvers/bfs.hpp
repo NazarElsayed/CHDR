@@ -90,7 +90,7 @@ namespace chdr::solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    curr.template backtrack<bfs_node>(result, _size, _capacity);
+                    result = curr.template backtrack<bfs_node>(_size, _capacity);
 
                     break;
                 }
@@ -151,7 +151,7 @@ namespace chdr::solvers {
                     }
                     else { // SOLUTION REACHED ...
 
-                        curr.template backtrack<bfs_node>(result, _maze.size(), _capacity);
+                        result = curr.template backtrack<bfs_node>(_maze.size(), _capacity);
 
                         break;
                     }

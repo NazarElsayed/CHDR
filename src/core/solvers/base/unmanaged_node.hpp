@@ -26,20 +26,23 @@ namespace chdr::solvers {
                 bnode<index_t>(_index), m_parent(std::move(_parent)) {}
 
         template<typename node_t, typename coord_t>
-        auto backtrack(std::vector<coord_t>& _path, const coord_t& _size, const size_t& _capacity = 0U) {
+        auto backtrack(const coord_t& _size, const size_t& _capacity = 0U) const {
 
             static_assert(std::is_base_of_v<unmanaged_node, node_t>, "node_t must derive from UnmanagedNode");
 
             // Reserve space in result:
-            _path.reserve(_capacity);
+            std::vector<coord_t> result;
+            result.reserve(_capacity);
 
             // Recurse from end node to start node, inserting into a result buffer:
             for (const auto* temp = this; temp->m_parent != nullptr; temp = static_cast<const node_t*>(temp->m_parent)) {
-                _path.emplace_back(utils::to_nd(temp->m_index, _size));
+                result.emplace_back(utils::to_nd(temp->m_index, _size));
             }
 
             // Reverse the result:
-            std::reverse(_path.begin(), _path.end());
+            std::reverse(result.begin(), result.end());
+
+            return result;
         }
     };
 }

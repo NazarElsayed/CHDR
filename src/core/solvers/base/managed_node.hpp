@@ -56,20 +56,21 @@ namespace chdr::solvers {
         }
 
         template<typename node_t, typename coord_t>
-        void backtrack(std::vector<coord_t>& _path, const coord_t& _size, const size_t& _capacity = 0U) {
+        auto backtrack(const coord_t& _size, const size_t& _capacity = 0U) {
 
             static_assert(std::is_base_of_v<managed_node, node_t>, "node_t must derive from managed_node");
 
             const auto& curr = *static_cast<const node_t*>(this);
 
             // Recurse from end node to start node, inserting into a result buffer:
-            _path.reserve(_capacity);
-            _path.emplace_back(utils::to_nd(curr.m_index, _size));
+            std::vector<coord_t> result;
+            result.reserve(_capacity);
+            result.emplace_back(utils::to_nd(curr.m_index, _size));
 
             if (curr.m_parent != nullptr) {
 
                 for (auto item = curr.m_parent; item->m_parent != nullptr;) {
-                    _path.emplace_back(utils::to_nd(item->m_index, _size));
+                    result.emplace_back(utils::to_nd(item->m_index, _size));
 
                     auto oldItem = item;
                     item = item->m_parent;
@@ -78,7 +79,7 @@ namespace chdr::solvers {
             }
 
             // Reverse the result:
-            std::reverse(_path.begin(), _path.end());
+            std::reverse(result.begin(), result.end());
 
         }
     };

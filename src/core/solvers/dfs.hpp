@@ -50,8 +50,6 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_start, _size);
             const auto e = utils::to_1d(_end,   _size);
 
-
-
             // Create closed Set:
             _capacity = std::max(_capacity, std::max(s, e));
             existence_set<low_memory_usage> closed({ s }, _capacity);
@@ -91,7 +89,7 @@ namespace chdr::solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    curr.template backtrack<dfs_node>(result, _size, _capacity);
+                    result = curr.template backtrack<dfs_node>(_size, _capacity);
 
                     break;
                 }
@@ -150,7 +148,7 @@ namespace chdr::solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    curr.template backtrack<dfs_node>(result, _maze.size(), _capacity);
+                    result = curr.template backtrack<dfs_node>(_maze.size(), _capacity);
 
                     break;
                 }

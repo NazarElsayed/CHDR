@@ -99,7 +99,7 @@ namespace chdr::solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    curr.template backtrack<bs_node>(result, _size, static_cast<size_t>(_h(_start, _end)));
+                    result = curr.template backtrack<bs_node>(_size, static_cast<size_t>(_h(_start, _end)));
 
                     break;
                 }
@@ -156,7 +156,7 @@ namespace chdr::solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    curr.template backtrack<bs_node>(result, _size, static_cast<size_t>(_h(_start, _end)));
+                    result = curr.template backtrack<bs_node>(_size, static_cast<size_t>(_h(_start, _end)));
 
                     break;
                 }
@@ -214,7 +214,7 @@ namespace chdr::solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    curr.template backtrack<bs_node>(result, _maze.size(), static_cast<size_t>(_h(_start, _end)));
+                    result = curr.template backtrack<bs_node>(_maze.size(), static_cast<size_t>(_h(_start, _end)));
 
                     break;
                 }
@@ -274,7 +274,7 @@ namespace chdr::solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    curr.template backtrack<bs_node>(result, _maze.size(), static_cast<size_t>(_h(_start, _end)));
+                    result = curr.template backtrack<bs_node>(_maze.size(), static_cast<size_t>(_h(_start, _end)));
 
                     break;
                 }

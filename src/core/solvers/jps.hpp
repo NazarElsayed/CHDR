@@ -297,7 +297,7 @@ namespace chdr::solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    curr.template backtrack<jps_node>(result, _maze.size(), curr.m_gScore);
+                    result = curr.template backtrack<jps_node>(_maze.size(), curr.m_gScore);
 
                     break;
                 }

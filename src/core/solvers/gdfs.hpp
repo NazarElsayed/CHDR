@@ -158,7 +158,7 @@ namespace chdr::solvers {
                     closed.clear();
                     closed.shrink_to_fit();
 
-                    curr.template backtrack<gdfs_node>(result, _maze.size(), _capacity);
+                    result = curr.template backtrack<gdfs_node>(_maze.size(), _capacity);
 
                     break;
                 }

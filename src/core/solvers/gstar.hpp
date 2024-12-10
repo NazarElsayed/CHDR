@@ -174,7 +174,7 @@ namespace chdr::solvers {
                     closed.clear();
                     closed.shrink_to_fit();
 
-                    curr.template backtrack<gs_node>(result, _maze.size(), curr.m_gScore);
+                    result = curr.template backtrack<gs_node>(_maze.size(), curr.m_gScore);
 
                     break;
                 }

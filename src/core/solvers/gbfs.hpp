@@ -98,7 +98,7 @@ namespace chdr::solvers {
                     closed.clear();
                     closed.shrink_to_fit();
 
-                    curr.template backtrack<gbfs_node>(result, _size, _capacity);
+                    result = curr.template backtrack<gbfs_node>(_size, _capacity);
 
                     break;
                 }
