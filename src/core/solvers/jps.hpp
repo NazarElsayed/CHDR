@@ -61,20 +61,20 @@ namespace chdr::solvers {
             scalar_t m_fScore;
 
             // ReSharper disable once CppPossiblyUninitializedMember
-            [[nodiscard]] constexpr jps_node() : unmanaged_node<index_t>() {}
+            [[nodiscard]] constexpr jps_node() noexcept : unmanaged_node<index_t>() {}
 
-            [[nodiscard]] constexpr jps_node(const index_t& _index, const std::array<int8_t, 2U>& _direction, const scalar_t& _gScore, const scalar_t& _hScore, const jps_node* RESTRICT const _parent) : unmanaged_node<index_t>(_index, _parent),
+            [[nodiscard]] constexpr jps_node(const index_t& _index, const std::array<int8_t, 2U>& _direction, const scalar_t& _gScore, const scalar_t& _hScore, const jps_node* RESTRICT const _parent) noexcept : unmanaged_node<index_t>(_index, _parent),
                 m_direction(_direction),
                 m_gScore(_gScore),
                 m_fScore(_gScore + _hScore) {}
 
             struct max {
 
-                [[nodiscard]] constexpr bool operator () (const jps_node& _a, const jps_node& _b) const {
+                [[nodiscard]] constexpr bool operator () (const jps_node& _a, const jps_node& _b) const noexcept {
 
                     return _a.m_fScore == _b.m_fScore ?
-                        _a.m_gScore > _b.m_gScore :
-                        _a.m_fScore > _b.m_fScore;
+                           _a.m_gScore >  _b.m_gScore :
+                           _a.m_fScore >  _b.m_fScore;
                 }
             };
         };

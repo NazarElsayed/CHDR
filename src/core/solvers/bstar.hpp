@@ -40,14 +40,14 @@ namespace chdr::solvers {
              *
              * This constructor creates an BSNode with uninitialized members.
              */
-            [[nodiscard]] constexpr bs_node() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
+            [[nodiscard]] constexpr bs_node() noexcept {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] constexpr bs_node(const index_t& _index, const scalar_t& _hScore, const unmanaged_node<index_t>* RESTRICT const _parent) : unmanaged_node<index_t>(_index, _parent),
-                                                                                                                                                    m_hScore(_hScore) {}
+            [[nodiscard]] constexpr bs_node(const index_t& _index, const scalar_t& _hScore, const unmanaged_node<index_t>* RESTRICT const _parent) noexcept : unmanaged_node<index_t>(_index, _parent),
+                m_hScore(_hScore) {}
 
             struct max {
 
-                [[nodiscard]] constexpr bool operator () (const bs_node& _a, const bs_node& _b) const {
+                [[nodiscard]] constexpr bool operator () (const bs_node& _a, const bs_node& _b) const noexcept {
                     return _a.m_hScore > _b.m_hScore;
                 }
             };

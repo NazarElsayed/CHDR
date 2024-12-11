@@ -27,17 +27,17 @@ namespace chdr::mazes {
 
     public:
 
-        constexpr id_node(const index_t& _id) : m_id(_id) {}
+        constexpr id_node(const index_t& _id) noexcept : m_id(_id) {}
 
-        [[maybe_unused, nodiscard]] bool is_active() const override  {
+        [[maybe_unused, nodiscard]] bool is_active() const noexcept override  {
             return true;
         }
 
-        [[maybe_unused, nodiscard]] constexpr const index_t& id() const {
+        [[maybe_unused, nodiscard]] constexpr const index_t& id() const noexcept {
             return m_id;
         }
 
-        [[maybe_unused]] constexpr void id(const index_t& _id) {
+        [[maybe_unused]] constexpr void id(const index_t& _id) noexcept {
             m_id = _id;
         }
     };

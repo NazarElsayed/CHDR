@@ -29,8 +29,7 @@ namespace chdr::solvers {
         // ReSharper disable once CppPossiblyUninitializedMember
         constexpr managed_node() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-        [[nodiscard]] constexpr managed_node(const index_t& _index) :
-                bnode<index_t>(_index),
+        [[nodiscard]] constexpr managed_node(const index_t& _index) : bnode<index_t>(_index),
                 m_parent() {}
 
         [[nodiscard]] constexpr managed_node(const index_t& _index, managed_node&& _parent) :
@@ -39,7 +38,7 @@ namespace chdr::solvers {
         ~managed_node() { // NOLINT(*-use-equals-default)
 
 #ifdef __OPTIMIZE__
-            Expunge_Recursive(m_parent);    // Only attempt TRO if compiled with optimisation flags.
+            expunge_recursive(m_parent);    // Only attempt TRO if compiled with optimisation flags.
 #else //!__OPTIMIZE__
             while (m_parent && m_parent.unique()) {
                 m_parent = std::move(m_parent->m_parent);
@@ -51,7 +50,7 @@ namespace chdr::solvers {
         void expunge_recursive(std::shared_ptr<const managed_node>& _node) {
             if (_node && _node.unique()) {
                 _node = std::move(_node->m_parent);
-                Expunge_Recursive(_node);
+                expunge_recursive(_node);
             }
         }
 
@@ -81,6 +80,7 @@ namespace chdr::solvers {
             // Reverse the result:
             std::reverse(result.begin(), result.end());
 
+            return result;
         }
     };
 

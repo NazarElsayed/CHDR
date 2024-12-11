@@ -36,9 +36,9 @@ namespace chdr::solvers {
              *
              * This constructor creates an BFSNode with uninitialized members.
              */
-            bfs_node() : unmanaged_node<index_t>() {}
+            bfs_node() noexcept : unmanaged_node<index_t>() {}
 
-            [[nodiscard]] constexpr bfs_node(const index_t& _index, const unmanaged_node<index_t>* RESTRICT const _parent) : unmanaged_node<index_t>(_index, _parent) {}
+            [[nodiscard]] constexpr bfs_node(const index_t& _index, const unmanaged_node<index_t>* RESTRICT const _parent) noexcept : unmanaged_node<index_t>(_index, _parent) {}
         };
 
     public:

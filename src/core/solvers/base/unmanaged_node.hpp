@@ -20,10 +20,10 @@ namespace chdr::solvers {
         * This constructor creates an UnmanagedNode with uninitialized members.
         */
         // ReSharper disable once CppPossiblyUninitializedMember
-        constexpr unmanaged_node() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
+        constexpr unmanaged_node() noexcept {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-        [[nodiscard]] constexpr unmanaged_node(const index_t& _index, const unmanaged_node* RESTRICT const _parent) :
-                bnode<index_t>(_index), m_parent(std::move(_parent)) {}
+        [[nodiscard]] constexpr unmanaged_node(const index_t& _index, const unmanaged_node* RESTRICT const _parent) noexcept : bnode<index_t>(_index),
+            m_parent(std::move(_parent)) {}
 
         template<typename node_t, typename coord_t>
         auto backtrack(const coord_t& _size, const size_t& _capacity = 0U) const {

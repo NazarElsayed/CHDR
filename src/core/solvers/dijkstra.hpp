@@ -65,22 +65,14 @@ namespace chdr::solvers {
                 }
             }
 
-            [[nodiscard]] constexpr bool operator == (const d_node& _node) const { return m_index == _node.m_index; }
+            [[nodiscard]] constexpr bool operator == (const d_node& _node) const noexcept { return m_index == _node.m_index; }
 
             struct max {
 
-                [[nodiscard]] constexpr bool operator () (const d_node& _a, const d_node& _b) const {
-
-                    bool result{};
-
-                    if (_a.m_fScore == _b.m_fScore) {
-                        result = _a.m_gScore > _b.m_gScore;
-                    }
-                    else {
-                        result = _a.m_fScore > _b.m_fScore;
-                    }
-
-                    return result;
+                [[nodiscard]] constexpr bool operator () (const d_node& _a, const d_node& _b) const noexcept {
+                    return _a.m_fScore == _b.m_fScore ?
+                           _a.m_gScore >  _b.m_gScore :
+                           _a.m_fScore >  _b.m_fScore;
                 }
             };
         };

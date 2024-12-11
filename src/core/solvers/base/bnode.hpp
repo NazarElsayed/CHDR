@@ -22,11 +22,11 @@ namespace chdr::solvers {
          * This constructor creates an BNode with uninitialized members.
          */
         // ReSharper disable once CppPossiblyUninitializedMember
-        constexpr bnode() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
+        constexpr bnode() noexcept {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-        bnode(const index_t& _index) : m_index(_index) {}
+        bnode(const index_t& _index) noexcept : m_index(_index) {}
 
-        [[nodiscard]] constexpr bool operator == (const bnode& _node) const { return m_index == _node.m_index; }
+        [[nodiscard]] constexpr bool operator == (const bnode& _node) const noexcept { return m_index == _node.m_index; }
 
     };
 

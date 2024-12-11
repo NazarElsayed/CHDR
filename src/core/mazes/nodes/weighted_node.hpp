@@ -24,17 +24,17 @@ namespace chdr::mazes {
 
     public:
 
-        constexpr weighted_node(const W& _value = 0) : m_value(_value) {}
+        constexpr weighted_node(const W& _value = 0) noexcept : m_value(_value) {}
 
-        [[nodiscard]] constexpr bool is_active() const {
+        [[nodiscard]] constexpr bool is_active() const noexcept {
             return m_value != std::numeric_limits<W>::max();
         }
 
-        [[nodiscard]] constexpr const W& value() const {
+        [[nodiscard]] constexpr const W& value() const noexcept {
             return m_value;
         }
 
-        constexpr void value(const W& _value) {
+        constexpr void value(const W& _value) noexcept {
             m_value = _value;
         }
     };
