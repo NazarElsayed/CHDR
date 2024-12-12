@@ -51,7 +51,7 @@ namespace chdr::solvers {
             }
         };
 
-        template <typename priority_queue_t>
+        template <typename heap_t>
         [[maybe_unused, nodiscard]] static constexpr auto solve(const params_t& _params) {
 
             std::vector<coord_t> result;
@@ -64,7 +64,7 @@ namespace chdr::solvers {
             existence_set<low_memory_usage> closed({ s }, capacity);
 
             // Create open set:
-            priority_queue_t open(capacity / 8U);
+            heap_t open(capacity / 8U);
             open.emplace(s, _params._h(_params._start, _params._end));
 
             // Create buffer:
@@ -104,6 +104,8 @@ namespace chdr::solvers {
 
                                 const auto n = utils::to_1d(nCoord, _params._size);
 
+                                constexpr scalar_t nDistance{1};
+
                                 // Check if node is not already visited:
                                 if (!closed.contains(n)) {
                                      closed.allocate(n, capacity, _params._maze.count());
@@ -118,7 +120,7 @@ namespace chdr::solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    result = curr.template backtrack<node>(_params._size, static_cast<size_t>(_params._h(_params._start, _params._end)));
+                    result = std::move(curr.template backtrack<node>(_params._size, curr.m_gScore));
 
                     break;
                 }
@@ -127,7 +129,7 @@ namespace chdr::solvers {
             return result;
         }
 
-        template <typename priority_queue_t, size_t StackSize>
+        template <typename heap_t, size_t Stack>
         [[maybe_unused, nodiscard]] static constexpr auto solve_stack(const params_t& _params) {
 
             std::vector<coord_t> result;
@@ -140,12 +142,12 @@ namespace chdr::solvers {
             existence_set<low_memory_usage> closed({ s }, capacity);
 
             // Create open set:
-            priority_queue_t open;
-            open.reserve(StackSize);
+            heap_t open;
+            open.reserve(Stack);
             open.emplace(s, _params._h(_params._start, _params._end));
 
             // Create buffer:
-            stable_forward_buf<node, StackSize / 2U> buf;
+            stable_forward_buf<node, Stack / 2U> buf;
 
             // Main loop:
             while (!open.empty()) {
@@ -179,6 +181,8 @@ namespace chdr::solvers {
 
                                 const auto n = utils::to_1d(nCoord, _params._size);
 
+                                constexpr scalar_t nDistance{1};
+
                                 // Check if node is not already visited:
                                 if (!closed.contains(n)) {
                                      closed.allocate(n, capacity, _params._maze.count());
@@ -191,7 +195,7 @@ namespace chdr::solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    result = curr.template backtrack<node>(_params._size, static_cast<size_t>(_params._h(_params._start, _params._end)));
+                    result = std::move(curr.template backtrack<node>(_params._size, curr.m_gScore));
 
                     break;
                 }

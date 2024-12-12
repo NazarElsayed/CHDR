@@ -75,7 +75,7 @@ namespace chdr::solvers {
 
             // Create open set:
             heap_t open(capacity / 8U);
-            open.emplace(s, static_cast<scalar_t>(0), _params._h(_params._start, _params._end));
+            open.emplace(s, static_cast<scalar_t>(0), _params._h(_params._start, _params._end) * _params._weight);
 
             // Create buffer:
             stable_forward_buf<node> buf;
@@ -154,7 +154,7 @@ namespace chdr::solvers {
             // Create open set:
             heap_t open;
             open.reserve(Stack);
-            open.emplace(s, static_cast<scalar_t>(0), _params._h(_params._start, _params._end));
+            open.emplace(s, static_cast<scalar_t>(0), _params._h(_params._start, _params._end) * _params._weight);
 
             // Create buffer:
             stable_forward_buf<node, Stack / 2U> buf;
