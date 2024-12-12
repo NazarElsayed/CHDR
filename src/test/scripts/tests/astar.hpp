@@ -129,7 +129,7 @@ namespace test::tests {
             debug::log("(A*):");
             debug::log("\t" + std::string(path.size() != 0U ? "[SOLVED]" : "[IMPOSSIBLE]") +
                 "\t(<= ~" + chdr::utils::to_string(std::max(result - noise_floor_min, std::numeric_limits<long double>::epsilon())) + ") / "
-                  "(<= ~" + chdr::utils::to_string((result - noise_floor_min) / static_cast<long double>(path.size())) + "/n)");
+                  "(<= ~" + chdr::utils::to_string((result - noise_floor_min) / static_cast<long double>(path.size() > 1U ? path.size() + 1U : path.size())) + "/n)");
 
             #undef HEURISTIC
         }
