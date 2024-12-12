@@ -29,7 +29,7 @@ namespace chdr::solvers {
 
         virtual ~bsolver() = default;
 
-        [[nodiscard]] auto solve(const params_t& _params) const {
+        [[maybe_unused, nodiscard]] auto solve(const params_t& _params) const {
 
             const auto s = utils::to_1d(_params._start, _params._maze.size());
             const auto e = utils::to_1d(_params._end  , _params._maze.size());

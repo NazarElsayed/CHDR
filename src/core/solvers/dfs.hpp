@@ -31,8 +31,7 @@ namespace chdr::solvers {
 
     public:
         
-        [[maybe_unused]]
-        std::vector<coord_t> execute(const params_t& _params) const override {
+        [[maybe_unused, nodiscard]] std::vector<coord_t> execute(const params_t& _params) const override {
 
             std::vector<coord_t> result;
 

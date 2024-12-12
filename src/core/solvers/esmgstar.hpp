@@ -243,15 +243,14 @@ namespace chdr::solvers {
 
     public:
 
-        [[maybe_unused]]
-        auto solve(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight = 1, const size_t& _memoryLimit = -1U) const {
+        [[maybe_unused, nodiscard]] std::vector<coord_t> solve(const params_t& _params) const {
 
             /** @see: https://easychair.org/publications/paper/TL2M/open */
 
             std::vector<coord_t> result;
 
-            const auto s = utils::to_1d(_start, _maze.size());
-            const auto e = utils::to_1d(_end,   _maze.size());
+            const auto s = utils::to_1d(_params._start, _params._maze.size());
+            const auto e = utils::to_1d(_params._end,   _params._maze.size());
 
             // Create Open Set:
             heap_t open;
@@ -259,7 +258,7 @@ namespace chdr::solvers {
                 0U,                         // Depth
                 s,                          // Coordinate
                 static_cast<scalar_t>(0),   // G-Score
-                _h(_start, _end) * _weight  // F-Score
+                _params._h(_params._start, _params._end) * _params._weight  // F-Score
             ));
 
             // Main loop:
@@ -273,7 +272,7 @@ namespace chdr::solvers {
 
                 if (curr->m_index != e) { // SEARCH FOR SOLUTION...
 
-                    auto successors_current = curr->expand(_maze, _end, _h, _weight, _memoryLimit);
+                    auto successors_current = curr->expand(_params._maze, _params._end, _params._h, _params._weight, _params._memoryLimit);
 
                     for (size_t i = 0U; i < successors_current.size(); ++i) {
 
@@ -289,7 +288,7 @@ namespace chdr::solvers {
                             curr->m_forgottenFCosts.erase(nCoord);
                         }
                         else {
-                            successor->m_fScore = std::max(curr->m_fScore, successor->m_gScore + (_h(utils::to_nd(successor->m_index, _maze.size()), _end) * _weight));
+                            successor->m_fScore = std::max(curr->m_fScore, successor->m_gScore + (_params._h(utils::to_nd(successor->m_index, _params._maze.size()), _params._end) * _params._weight));
                         }
 
                         // Add successor to open.
@@ -298,8 +297,8 @@ namespace chdr::solvers {
                         }
                     }
 
-                    while (open.size() > _memoryLimit) {
-                        cull_worst_leaf(_maze, _end, _h, _weight, _memoryLimit, open);
+                    while (open.size() > _params._memoryLimit) {
+                        cull_worst_leaf(_params._maze, _params._end, _params._h, _params._weight, _params._memoryLimit, open);
                     }
 
                     // Shrink the node to release ownership of children, allowing automatic GC of parents with no valid candidate children.
@@ -317,12 +316,12 @@ namespace chdr::solvers {
                         result.reserve(curr->m_gScore);
 
                         // Recurse from end node to start node, inserting into a result buffer:
-                        result.emplace_back(utils::to_nd(curr->m_index, _maze.size()));
+                        result.emplace_back(utils::to_nd(curr->m_index, _params._maze.size()));
 
                         if (auto item = curr->m_parent) {
 
                             while (const auto item_parent = item->m_parent) {
-                                result.emplace_back(utils::to_nd(item->m_index, _maze.size()));
+                                result.emplace_back(utils::to_nd(item->m_index, _params._maze.size()));
 
                                 auto oldItem = item;
                                 item = item_parent;
@@ -340,7 +339,6 @@ namespace chdr::solvers {
 
             return result;
         }
-
     };
 
 } //chdr::solvers

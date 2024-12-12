@@ -9,8 +9,6 @@
 #ifndef CHDR_GSTAR_HPP
 #define CHDR_GSTAR_HPP
 
-#include <memory>
-
 #include "base/bsolver.hpp"
 #include "mazes/graph.hpp"
 #include "mazes/grid.hpp"
@@ -59,21 +57,20 @@ namespace chdr::solvers {
 
     public:
 
-        [[maybe_unused]]
-        std::vector<coord_t> execute(const mazes::graph<index_t, scalar_t>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, size_t _capacity) const override {
+        [[maybe_unused, nodiscard]] std::vector<coord_t> execute(const params_t& _params) const override {
 
             std::vector<coord_t> result;
 
-            const auto s = utils::to_1d(_start, _size);
-            const auto e = utils::to_1d(_end,   _size);
+            const auto s = utils::to_1d(_params._start, _params._maze.size());
+            const auto e = utils::to_1d(_params._end,   _params._maze.size());
 
             // Create closed set:
-            _capacity = std::max(_capacity, std::max(s, e));
-            existence_set closed({ s }, _capacity);
+            const auto capacity = std::max(_params._capacity, std::max(s, e));
+            existence_set closed({ s }, capacity);
 
             // Create open set:
             heap<gs_node, typename gs_node::max> open;
-            open.emplace(s, static_cast<scalar_t>(0), _h(_start, _end));
+            open.emplace(s, static_cast<scalar_t>(0), _params._h(_params._start, _params._end));
 
             // Main loop:
             while (!open.empty()) {
@@ -83,23 +80,38 @@ namespace chdr::solvers {
 
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
-                    closed.allocate(curr.m_index, _capacity, _maze.count());
+                    closed.allocate(curr.m_index, capacity, _params._maze.count());
                     closed.emplace(curr.m_index);
 
-                    for (const auto& neighbour : _maze.get_neighbours(curr.m_index)) {
+                    for (const auto& neighbour : _params._maze.get_neighbours(curr.m_index)) {
 
-                        if (const auto& [nActive, nCoord] = neighbour; nActive) {
+                        if constexpr (std::is_same_v<std::decay_t<decltype(_params._maze)>, mazes::graph<index_t, scalar_t>>) {
 
                             const auto& [n, nDistance] = neighbour;
 
+                            const auto nCoord = utils::to_nd(n, _params._maze.size());
+
                             // Check if node is not already visited:
                             if (!closed.contains(n)) {
+                                 closed.allocate(n, capacity, _params._maze.count());
+                                 closed.emplace(n);
+                                   open.emplace(n, curr.m_gScore + static_cast<scalar_t>(nDistance), _params._h(nCoord, _params._end) * _params._weight, std::move(curr)); // Note: 'current' is now moved!
+                            }
+                        }
+                        else {
 
-                                closed.allocate(n, _capacity, _maze.count());
-                                closed.emplace(n);
+                            if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-                                // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                open.emplace(n, curr.m_gScore + static_cast<scalar_t>(1), _h(utils::to_nd(n, _size), _end) * _weight, std::move(curr));
+                                const auto n = utils::to_1d(nCoord, _params._maze.size());
+
+                                constexpr auto nDistance = static_cast<scalar_t>(1);
+
+                                // Check if node is not already visited:
+                                if (!closed.contains(n)) {
+                                     closed.allocate(n, capacity, _params._maze.count());
+                                     closed.emplace(n);
+                                       open.emplace(n, curr.m_gScore + static_cast<scalar_t>(nDistance), _params._h(nCoord, _params._end) * _params._weight, std::move(curr)); // Note: 'current' is now moved!
+                                }
                             }
                         }
                     }
@@ -112,7 +124,7 @@ namespace chdr::solvers {
                     closed.clear();
                     closed.shrink_to_fit();
 
-                    curr.template backtrack<gs_node>(result, _size, curr.m_gScore);
+                    result = curr.template backtrack<gs_node>(_params._maze.size(), curr.m_gScore);
 
                     break;
                 }
@@ -120,69 +132,6 @@ namespace chdr::solvers {
 
             return result;
         }
-
-        [[maybe_unused]]
-        std::vector<coord_t> execute(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, size_t _capacity) const override {
-
-            std::vector<coord_t> result;
-
-            const auto s = utils::to_1d(_start, _maze.size());
-            const auto e = utils::to_1d(_end, _maze.size());
-
-            // Create closed set:
-            _capacity = std::max(_capacity, std::max(s, e));
-            existence_set closed({ s }, _capacity);
-
-            // Create open set:
-            heap<gs_node, typename gs_node::max> open;
-            open.emplace(s, static_cast<scalar_t>(0), _h(_start, _end));
-
-            // Main loop:
-            while (!open.empty()) {
-
-                auto curr(std::move(open.top()));
-                open.pop();
-
-                if (curr.m_index != e) { // SEARCH FOR SOLUTION...
-
-                    closed.allocate(curr.m_index, _capacity, _maze.count());
-                    closed.emplace(curr.m_index);
-
-                    for (const auto& neighbour : _maze.get_neighbours(curr.m_index)) {
-
-                        if (const auto& [nActive, nCoord] = neighbour; nActive) {
-
-                            const auto n = utils::to_1d(nCoord, _maze.size());
-
-                            // Check if node is not already visited:
-                            if (!closed.contains(n)) {
-
-                                closed.allocate(n, _capacity, _maze.count());
-                                closed.emplace(n);
-
-                                // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                open.emplace(n, curr.m_gScore + static_cast<scalar_t>(1), _h(nCoord, _end) * _weight, std::move(curr));
-                            }
-                        }
-                    }
-                }
-                else { // SOLUTION REACHED ...
-
-                    // Free data which is no longer relevant:
-                      open.clear();
-                      open.shrink_to_fit();
-                    closed.clear();
-                    closed.shrink_to_fit();
-
-                    result = curr.template backtrack<gs_node>(_maze.size(), curr.m_gScore);
-
-                    break;
-                }
-            }
-
-            return result;
-        }
-
     };
 
 } //chdr::solvers

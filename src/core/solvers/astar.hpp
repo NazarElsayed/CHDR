@@ -63,7 +63,7 @@ namespace chdr::solvers {
             };
         };
 
-        auto solve_heap(const params_t& _params) const {
+        [[maybe_unused, nodiscard]] auto solve_heap(const params_t& _params) const {
 
             std::vector<coord_t> result;
 
@@ -115,7 +115,7 @@ namespace chdr::solvers {
 
                                 const auto n = utils::to_1d(nCoord, _params._maze.size());
 
-                                const auto nDistance = static_cast<scalar_t>(1);
+                                constexpr auto nDistance = static_cast<scalar_t>(1);
 
                                 // Check if node is not already visited:
                                 if (!closed.contains(n)) {
@@ -141,7 +141,7 @@ namespace chdr::solvers {
         }
 
         template <size_t StackSize>
-        auto solve_linear(const params_t& _params) const {
+        [[maybe_unused, nodiscard]] auto solve_linear(const params_t& _params) const {
 
             std::vector<coord_t> result;
 
@@ -221,8 +221,7 @@ namespace chdr::solvers {
 
     public:
 
-        [[maybe_unused]]
-        std::vector<coord_t> execute(const params_t& _params) const override {
+        [[maybe_unused, nodiscard]] std::vector<coord_t> execute(const params_t& _params) const override {
 
             /*
              * Determine whether to solve using a linear search or constant-time

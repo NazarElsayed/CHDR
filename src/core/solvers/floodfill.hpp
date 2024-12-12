@@ -24,10 +24,7 @@ namespace chdr::solvers {
 
     public:
 
-        [[maybe_unused]]
-        auto solve(const params_t& _params) {
-
-	        bool result = false;
+        [[maybe_unused, nodiscard]] bool solve(const params_t& _params) {
 
             const auto s = utils::to_1d(_params._start, _params._maze.size());
             const auto e = utils::to_1d(_params._end,   _params._maze.size());
@@ -48,7 +45,7 @@ namespace chdr::solvers {
                     open.emplace(s);
 
                     // Main loop:
-                    while (!open.empty() && !result) {
+                    while (!open.empty()) {
 
                         for (size_t i = 0U; i < open.size(); ++i) {
 
@@ -90,19 +87,17 @@ namespace chdr::solvers {
                                 }
                             }
                             else {
-                                result = true;
-
-                                break;
+                                return true;
                             }
                         }
                     }
                 }
                 else {
-                    result = true;
+                    return true;
                 }
             }
 
-            return result;
+            return false;
         }
     };
 

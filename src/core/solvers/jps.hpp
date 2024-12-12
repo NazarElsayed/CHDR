@@ -246,20 +246,20 @@ namespace chdr::solvers {
             return result;
         }
 
-        std::vector<coord_t> execute(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, size_t _capacity) const override {
+        [[maybe_unused, nodiscard]] std::vector<coord_t> execute(const params_t& _params) const override {
 
             std::vector<coord_t> result;
 
-            const auto s = utils::to_1d(_start, _maze.size());
-            const auto e = utils::to_1d(_end  , _maze.size());
+            const auto s = utils::to_1d(_params._start, _params._maze.size());
+            const auto e = utils::to_1d(_params._end  , _params._maze.size());
 
             // Create closed set:
-            _capacity = std::max(_capacity, std::max(s, e));
-            existence_set<low_memory_usage> closed({ s }, _capacity);
+            const auto capacity = std::max(_params._capacity, std::max(s, e));
+            existence_set<low_memory_usage> closed({ s }, capacity);
 
             // Create open set:
-            heap<jps_node, typename jps_node::max> open(_capacity / 8U);
-            open.emplace(s, std::array<int8_t, 2U>{ 0, 0 }, static_cast<scalar_t>(0), _h(_start, _end), nullptr);
+            heap<jps_node, typename jps_node::max> open(capacity / 8U);
+            open.emplace(s, std::array<int8_t, 2U>{ 0, 0 }, static_cast<scalar_t>(0), _params._h(_params._start, _params._end), nullptr);
 
             // Create buffer:
             stable_forward_buf<jps_node> buf;
@@ -272,32 +272,33 @@ namespace chdr::solvers {
 
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
-                    closed.allocate(curr.m_index, _capacity, _maze.count());
+                    closed.allocate(curr.m_index, capacity, _params._maze.count());
                     closed.emplace(curr.m_index);
 
-                    auto coord = utils::to_nd(curr.m_index, _maze.size());
-                    auto successors = find_jump_points(_maze, coord, curr.m_direction, _end);
+                    auto      coord = utils::to_nd(curr.m_index, _params._maze.size());
+                    auto successors = find_jump_points(_params._maze, coord, curr.m_direction, _params._end);
 
                     for (const auto& successor : successors) {
 
-                        const auto n = utils::to_1d(successor, _maze.size());
+                        const auto n = utils::to_1d(successor, _params._maze.size());
+
+                        constexpr auto nDistance = static_cast<scalar_t>(1);
 
                         if (!closed.contains(n)) {
-
-                            closed.allocate(n, _capacity, _maze.count());
-                            closed.emplace(n);
+                             closed.allocate(n, capacity, _params._maze.count());
+                             closed.emplace(n);
 
                             const std::array<int8_t, 2U> direction { static_cast<int8_t>(sign(static_cast<int>(successor[0U]) - static_cast<int>(coord[0U]))) ,
                                                                      static_cast<int8_t>(sign(static_cast<int>(successor[1U]) - static_cast<int>(coord[1U]))) };
 
                             // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                            open.emplace(n, direction, curr.m_gScore + static_cast<scalar_t>(1), _h(successor, _end) * _weight, &buf.emplace(std::move(curr)));
+                            open.emplace(n, direction, curr.m_gScore + static_cast<scalar_t>(nDistance), _params._h(successor, _params._end) * _params._weight, &buf.emplace(std::move(curr)));
                         }
                     }
                 }
                 else { // SOLUTION REACHED ...
 
-                    result = curr.template backtrack<jps_node>(_maze.size(), curr.m_gScore);
+                    result = curr.template backtrack<jps_node>(_params._maze.size(), curr.m_gScore);
 
                     break;
                 }
