@@ -51,7 +51,7 @@ namespace chdr::solvers {
             }
         };
 
-        template <typename heap_t>
+        template <typename open_set_t>
         [[maybe_unused, nodiscard]] static constexpr auto solve(const params_t& _params) {
 
             std::vector<coord_t> result;
@@ -64,7 +64,7 @@ namespace chdr::solvers {
             existence_set<low_memory_usage> closed({ s }, capacity);
 
             // Create open set:
-            heap_t open(capacity / 8U);
+            open_set_t open(capacity / 8U);
             open.emplace(s, _params.h(_params.start, _params.end));
 
             // Create buffer:
@@ -129,7 +129,7 @@ namespace chdr::solvers {
             return result;
         }
 
-        template <typename heap_t, size_t Stack>
+        template <typename open_set_t, size_t Stack>
         [[maybe_unused, nodiscard]] static constexpr auto solve_stack(const params_t& _params) {
 
             std::vector<coord_t> result;
@@ -142,7 +142,7 @@ namespace chdr::solvers {
             existence_set<low_memory_usage> closed({ s }, capacity);
 
             // Create open set:
-            heap_t open;
+            open_set_t open;
             open.reserve(Stack);
             open.emplace(s, _params.h(_params.start, _params.end));
 

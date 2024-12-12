@@ -30,27 +30,29 @@ namespace chdr::solvers {
 
         using coord_t = coord<index_t, Kd>;
 
-        struct gs_node final : managed_node<index_t> {
+        struct node final : managed_node<index_t> {
 
             scalar_t m_gScore;
             scalar_t m_fScore;
 
-            [[nodiscard]] constexpr gs_node() : managed_node<index_t>() {}
+            [[nodiscard]] constexpr node() : managed_node<index_t>() {}
 
-            [[nodiscard]] constexpr gs_node(const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore) : managed_node<index_t>(_index),
+            [[nodiscard]] constexpr node(const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore) : managed_node<index_t>(_index),
                 m_gScore(_gScore),
                 m_fScore(_gScore + _hScore) {}
 
-            [[nodiscard]] constexpr gs_node(const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore, gs_node&& _parent) : managed_node<index_t>(_index, std::move(_parent)),
+            [[nodiscard]] constexpr node(const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore, node&& _parent) : managed_node<index_t>(_index, std::move(_parent)),
                 m_gScore(_gScore),
                 m_fScore(_gScore + _hScore) {}
 
-            [[nodiscard]] friend constexpr bool operator < (const gs_node& _a, const gs_node& _b) noexcept {
+            [[nodiscard]] friend constexpr bool operator < (const node& _a, const node& _b) noexcept {
                 return _a.m_fScore == _b.m_fScore ?
                        _a.m_gScore >  _b.m_gScore :
                        _a.m_fScore >  _b.m_fScore;
             }
         };
+
+        using open_set_t = heap<node>;
 
         [[maybe_unused, nodiscard]] static constexpr std::vector<coord_t> execute(const params_t& _params) {
 
@@ -64,7 +66,7 @@ namespace chdr::solvers {
             existence_set closed({ s }, capacity);
 
             // Create open set:
-            heap<gs_node> open;
+            open_set_t open;
             open.emplace(s, static_cast<scalar_t>(0), _params.h(_params.start, _params.end));
 
             // Main loop:
@@ -119,7 +121,7 @@ namespace chdr::solvers {
                     closed.clear();
                     closed.shrink_to_fit();
 
-                    result = curr.template backtrack<gs_node>(_params.size, curr.m_gScore);
+                    result = curr.template backtrack<node>(_params.size, curr.m_gScore);
 
                     break;
                 }

@@ -177,9 +177,9 @@ namespace chdr::solvers {
             }
         };
 
-        using priority_queue_t = heap<std::shared_ptr<node>>;
+        using open_set_t = heap<std::shared_ptr<node>>;
 
-        static constexpr void cull_worst_leaf(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, const size_t& _memoryLimit, priority_queue_t& _open) {
+        static constexpr void cull_worst_leaf(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, const size_t& _memoryLimit, open_set_t& _open) {
 
             const auto w = safe_culling_heuristic(_open);
 
@@ -212,7 +212,7 @@ namespace chdr::solvers {
             }
         }
 
-        [[nodiscard]] static constexpr auto safe_culling_heuristic(priority_queue_t& _open) {
+        [[nodiscard]] static constexpr auto safe_culling_heuristic(open_set_t& _open) {
 
             auto w = _open.back(); // Worst leaf according to c(n) in _open
 
@@ -251,7 +251,7 @@ namespace chdr::solvers {
             const auto e = utils::to_1d(_params.end,   _params.size);
 
             // Create Open Set:
-            priority_queue_t open;
+            open_set_t open;
             open.emplace(node::create_shared(
                 0U,                         // Depth
                 s,                          // Coordinate

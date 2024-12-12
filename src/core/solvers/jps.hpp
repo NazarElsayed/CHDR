@@ -78,6 +78,8 @@ namespace chdr::solvers {
             }
         };
 
+        using open_set_t = heap<node>;
+
         template <typename T>
         static constexpr int sign(const T _val) {
             return (static_cast<T>(0) < _val) - (_val < static_cast<T>(0));
@@ -257,7 +259,7 @@ namespace chdr::solvers {
             existence_set<low_memory_usage> closed({ s }, capacity);
 
             // Create open set:
-            heap<node> open(capacity / 8U);
+            open_set_t open(capacity / 8U);
             open.emplace(s, std::array<int8_t, 2U>{ 0, 0 }, static_cast<scalar_t>(0), _params.h(_params.start, _params.end));
 
             // Create buffer:

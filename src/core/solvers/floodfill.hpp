@@ -22,6 +22,12 @@ namespace chdr::solvers {
 
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
+    private:
+
+        using open_set_t = queue<index_t>;
+
+    public:
+
         [[maybe_unused, nodiscard]] static constexpr bool solve(const params_t& _params) {
 
             const auto s = utils::to_1d(_params.start, _params.size);
@@ -39,7 +45,7 @@ namespace chdr::solvers {
                     existence_set closed ({ s }, std::max(_params.capacity, std::max(s, e)));
 
                     // Create open set:
-                    queue<index_t> open;
+                    open_set_t open;
                     open.emplace(s);
 
                     // Main loop:

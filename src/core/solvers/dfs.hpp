@@ -27,8 +27,9 @@ namespace chdr::solvers {
 
     private:
 
-        using coord_t = coord<index_t, Kd>;
-        using    node = unmanaged_node<index_t>;
+        using    coord_t = coord<index_t, Kd>;
+        using       node = unmanaged_node<index_t>;
+        using open_set_t = stack<node>;
 
         [[maybe_unused, nodiscard]] static constexpr std::vector<coord_t> execute(const params_t& _params) {
 
@@ -42,7 +43,7 @@ namespace chdr::solvers {
             existence_set<low_memory_usage> closed({ s }, capacity);
 
             // Create open set:
-            stack<node> open(capacity);
+            open_set_t open(capacity);
             open.emplace(s);
 
             // Create buffer:

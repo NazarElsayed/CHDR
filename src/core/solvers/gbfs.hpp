@@ -28,9 +28,9 @@ namespace chdr::solvers {
 
     private:
 
-        using coord_t = coord<index_t, Kd>;
-
-        using node = managed_node<index_t>;
+        using    coord_t = coord<index_t, Kd>;
+        using       node = managed_node<index_t>;
+        using open_set_t = queue<node>;
 
         [[maybe_unused, nodiscard]] static constexpr std::vector<coord_t> execute(const params_t& _params) {
 
@@ -44,7 +44,7 @@ namespace chdr::solvers {
             existence_set closed({ s }, capacity);
 
             // Create open set:
-            queue<node> open;
+            open_set_t open;
             open.emplace(s);
 
             // Main loop:
