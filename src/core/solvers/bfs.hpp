@@ -20,8 +20,8 @@
 
 namespace chdr::solvers {
 
-    template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t>
-    class [[maybe_unused]] bfs final : public bsolver<weight_t, Kd, scalar_t, index_t> {
+    template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t, typename params_t>
+    class [[maybe_unused]] bfs final : public bsolver<weight_t, Kd, scalar_t, index_t, params_t> {
 
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 

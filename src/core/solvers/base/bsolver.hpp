@@ -11,49 +11,16 @@
 
 namespace chdr::solvers {
 
-    template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t>
+    template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t, typename params_t>
     class bsolver {
 
     private:
 
         using coord_t = coord<index_t, Kd>;
 
-        virtual std::vector<coord_t> execute(
-            const mazes::grid<Kd, weight_t>& _maze,
-            const coord_t& _start,
-            const coord_t& _end,
-            scalar_t (*_h)(const coord_t&, const coord_t&),
-            const scalar_t& _weight,
-            const size_t _capacity
-        ) const {
+       [[nodiscard]] virtual std::vector<coord_t> execute(const params_t& _params) const {
 
-            (void)_maze;
-            (void)_start;
-            (void)_end;
-            (void)_h;
-            (void)_weight;
-            (void)_capacity;
-
-            throw std::runtime_error("Not implemented");
-        }
-
-        virtual std::vector<coord_t> execute(
-            const mazes::graph<index_t, scalar_t>& _maze,
-            const coord_t& _start,
-            const coord_t& _end,
-            const coord_t& _size,
-            scalar_t (*_h)(const coord_t&, const coord_t&),
-            const scalar_t& _weight,
-            const size_t _capacity
-        ) const {
-
-            (void)_maze;
-            (void)_start;
-            (void)_end;
-            (void)_size;
-            (void)_h;
-            (void)_weight;
-            (void)_capacity;
+            (void)_params;
 
             throw std::runtime_error("Not implemented");
         }
@@ -62,67 +29,21 @@ namespace chdr::solvers {
 
         virtual ~bsolver() = default;
 
-        auto solve(
-            const mazes::grid<Kd, weight_t>& _maze,
-            const coord_t& _start,
-            const coord_t& _end,
-            scalar_t (*_h)(const coord_t&, const coord_t&) = nullptr,
-            const scalar_t& _weight = 1,
-            const size_t _capacity = 0U
-        ) const {
+        [[nodiscard]] auto solve(const params_t& _params) const {
 
-            std::vector<coord_t> result;
+            const auto s = utils::to_1d(_params._start, _params._maze.size());
+            const auto e = utils::to_1d(_params._end  , _params._maze.size());
 
-            const auto size  = _maze.size();
-
-            const auto s = utils::to_1d(_start, size);
-            const auto e = utils::to_1d(_end  , size);
-
-            if (_maze.contains(s) &&
-                _maze.contains(e) &&
-                _maze.at(s).is_active() &&
-                _maze.at(e).is_active()
+            if (_params._maze.contains(s)       &&
+                _params._maze.contains(e)       &&
+                _params._maze.at(s).is_active() &&
+                _params._maze.at(e).is_active()
             ) {
-                if (s != e) {
-                    result = execute(_maze, _start, _end, _h, _weight, _capacity);
-                }
-                else {
-                    result.emplace_back(_end);
-                }
+                return (s != e) ? execute(_params) : std::vector<coord_t> { _params._end };
             }
-
-            return result;
-        }
-
-        auto solve(
-            const mazes::graph<index_t, scalar_t>& _maze,
-            const coord_t& _start,
-            const coord_t& _end,
-            const coord_t& _size,
-            scalar_t (*_h)(const coord_t&, const coord_t&) = nullptr,
-            const scalar_t& _weight = 1,
-            const size_t _capacity = 0U
-        ) const {
-
-            std::vector<coord_t> result;
-
-            const auto s = utils::to_1d(_start, _size);
-            const auto e = utils::to_1d(_end  , _size);
-
-            if (_maze.contains(s) &&
-                _maze.contains(e) &&
-                    _maze.at(s).is_active() &&
-                _maze.at(e).is_active()
-            ) {
-                if (s != e) {
-                    result = execute(_maze, _start, _end, _size, _h, _weight, _capacity);
-                }
-                else {
-                    result.emplace_back(_end);
-                }
+            else {
+                return std::vector<coord_t> {};
             }
-
-            return result;
         }
     };
 

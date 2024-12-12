@@ -84,8 +84,17 @@ namespace test::tests {
 
                 auto sw_start = std::chrono::high_resolution_clock::now();
 
-                auto solver = chdr::solvers::astar<weight_t, Kd, scalar_t, index_t>();
-                path = solver.solve(grid, start, end, HEURISTIC);
+                struct params {
+                    const decltype(grid)       _maze;
+                    const coord_t              _start;
+                    const coord_t              _end;
+                    const decltype(&HEURISTIC) _h; // Change HEURISTIC to a function pointer
+                    const scalar_t             _weight;
+                    const size_t               _capacity;
+                };
+
+                chdr::solvers::astar<weight_t, Kd, scalar_t, index_t, params> solver;
+                path = solver.solve({grid, start, end, HEURISTIC, static_cast<scalar_t>(1), 0U});
                 //path = solver.solve(graph, start, end, size, HEURISTIC);
 
                 result = std::min(result, std::chrono::duration_cast<std::chrono::duration<long double>>(std::chrono::high_resolution_clock::now() - sw_start).count());

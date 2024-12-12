@@ -17,7 +17,7 @@
 
 namespace chdr::solvers {
 
-    template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t>
+    template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t, typename params_t>
     class [[maybe_unused]] floodfill final {
 
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
