@@ -22,33 +22,29 @@ namespace chdr::solvers {
 
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
-    private:
-
-        using coord_t = coord<index_t, Kd>;
-
     public:
 
         [[maybe_unused]]
-        auto solve(const mazes::graph<index_t, scalar_t>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, size_t _capacity = 0U) {
+        auto solve(const params_t& _params) {
 
 	        bool result = false;
 
-            const auto s = utils::to_1d(_start, _size);
-            const auto e = utils::to_1d(_end,   _size);
+            const auto s = utils::to_1d(_params._start, _params._maze.size());
+            const auto e = utils::to_1d(_params._end,   _params._maze.size());
 
-            if (_maze.contains(s) &&
-                _maze.contains(e) &&
-                _maze.at(s).is_active() &&
-                _maze.at(e).is_active()
+            if (_params._maze.contains(s) &&
+                _params._maze.contains(e) &&
+                _params._maze.at(s).is_active() &&
+                _params._maze.at(e).is_active()
             ) {
 
                 if (s != e) {
 
                     // Create closed Set:
-                    existence_set closed ({ s }, std::max(_capacity, std::max(s, e)));
+                    existence_set closed ({ s }, std::max(_params._capacity, std::max(s, e)));
 
                     // Create open set:
-                    chdr::queue<index_t> open;
+                    queue<index_t> open;
                     open.emplace(s);
 
                     // Main loop:
@@ -61,89 +57,34 @@ namespace chdr::solvers {
 
                             if (curr != e) {
 
-                                closed.allocate(curr.m_index, _capacity, _maze.count());
-                                closed.emplace(curr.m_index);
+                                closed.allocate(curr, _params._capacity, _params._maze.count());
+                                closed.emplace(curr);
 
-                                for (const auto& neighbour : _maze.get_neighbours(curr)) {
+                                for (const auto& neighbour : _params._maze.get_neighbours(curr)) {
 
-                                    if (const auto& [nActive, nCoord] = neighbour; nActive) {
+                                    if constexpr (std::is_same_v<std::decay_t<decltype(_params._maze)>, mazes::graph<index_t, scalar_t>>) {
 
-                                        const auto n = utils::to_1d(nCoord, _maze.size());
+                                        const auto& n = neighbour.first;
 
+                                        // Check if node is not already visited:
                                         if (!closed.contains(n)) {
-
-                                            closed.allocate(n, _capacity, _maze.count());
-                                            closed.emplace(n);
-
-                                            open.emplace(n);
+                                             closed.allocate(n, _params._capacity, _params._maze.count());
+                                             closed.emplace(n);
+                                               open.emplace(n);
                                         }
                                     }
-                                }
-                            }
-                            else {
-                                result = true;
+                                    else {
 
-                                break;
-                            }
-                        }
-                    }
-                }
-                else {
-                    result = true;
-                }
-            }
+                                        if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-            return result;
-        }
+                                            const auto n = utils::to_1d(nCoord, _params._maze.size());
 
-        [[maybe_unused]]
-        auto solve(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, size_t _capacity = 0U) {
-
-	        bool result = false;
-
-            const auto s = utils::to_1d(_start, _maze.size());
-            const auto e = utils::to_1d(_end,   _maze.size());
-
-            if (_maze.contains(s) &&
-                _maze.contains(e) &&
-                _maze.at(s).is_active() &&
-                _maze.at(e).is_active()
-            ) {
-
-                if (s != e) {
-
-                    // Create closed set:
-                    existence_set closed ({ s }, std::max(_capacity, std::max(s, e)));
-
-                    // Create open set:
-                    chdr::queue<index_t> open;
-                    open.emplace(s);
-
-                    // Main loop:
-                    while (!open.empty() && !result) {
-
-                        for (size_t i = 0U; i < open.size(); ++i) {
-
-                            const auto curr(std::move(open.front()));
-                            open.pop();
-
-                            if (curr != e) {
-
-                                closed.allocate(curr.m_index, _capacity, _maze.count());
-                                closed.emplace(curr.m_index);
-
-                                for (const auto& neighbour : _maze.get_neighbours(curr)) {
-
-                                    if (const auto& [nActive, nCoord] = neighbour; nActive) {
-
-                                        const auto n = utils::to_1d(nCoord, _maze.size());
-
-                                        if (!closed.contains(n)) {
-
-                                            closed.allocate(n, _capacity, _maze.count());
-                                            closed.emplace(n);
-
-                                            open.emplace(n);
+                                            // Check if node is not already visited:
+                                            if (!closed.contains(n)) {
+                                                 closed.allocate(n, _params._capacity, _params._maze.count());
+                                                 closed.emplace(n);
+                                                   open.emplace(n);
+                                            }
                                         }
                                     }
                                 }

@@ -44,7 +44,15 @@ namespace test::tests {
             using coord_t = chdr::coord<index_t, Kd>;
 
             // Test parameters:
-            const size_t test_samples = std::max(100000000UL / chdr::utils::product<size_t>(_dimensions), 1UL);
+            const size_t test_samples = std::max(
+#ifndef NDEBUG
+                1000000UL
+#else //!NDEBUG
+                100000000UL
+#endif //!NDEBUG
+                / chdr::utils::product<size_t>(_dimensions),
+                1UL
+            );
 
             constexpr size_t seed(0U);
 
@@ -93,7 +101,7 @@ namespace test::tests {
                     const size_t               _capacity;
                 };
 
-                chdr::solvers::dfs<weight_t, Kd, scalar_t, index_t, params> solver;
+                chdr::solvers::astar<weight_t, Kd, scalar_t, index_t, params> solver;
                 path = solver.solve({grid, start, end, HEURISTIC, static_cast<scalar_t>(1), 0U});
                 //path = solver.solve(graph, start, end, size, HEURISTIC);
 
