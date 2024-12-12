@@ -51,7 +51,8 @@ namespace chdr::solvers {
             }
         };
 
-        [[maybe_unused, nodiscard]] static constexpr auto solve_heap(const params_t& _params) {
+        template <typename priority_queue_t>
+        [[maybe_unused, nodiscard]] static constexpr auto solve(const params_t& _params) {
 
             std::vector<coord_t> result;
 
@@ -63,7 +64,7 @@ namespace chdr::solvers {
             existence_set<low_memory_usage> closed({ s }, capacity);
 
             // Create open set:
-            heap<node> open(capacity / 8U);
+            priority_queue_t open(capacity / 8U);
             open.emplace(s, _params._h(_params._start, _params._end));
 
             // Create buffer:
@@ -126,8 +127,8 @@ namespace chdr::solvers {
             return result;
         }
 
-        template <size_t StackSize>
-        [[maybe_unused, nodiscard]] static constexpr auto solve_linear(const params_t& _params) {
+        template <typename priority_queue_t, size_t StackSize>
+        [[maybe_unused, nodiscard]] static constexpr auto solve_stack(const params_t& _params) {
 
             std::vector<coord_t> result;
 
@@ -139,7 +140,7 @@ namespace chdr::solvers {
             existence_set<low_memory_usage> closed({ s }, capacity);
 
             // Create open set:
-            linear_priority_queue<node, std::less<node>, std::vector<node, stack_allocator<node, StackSize>>> open;
+            priority_queue_t open;
             open.reserve(StackSize);
             open.emplace(s, _params._h(_params._start, _params._end));
 
@@ -210,12 +211,12 @@ namespace chdr::solvers {
 
             std::vector<coord_t> result;
 
-            if      (_params._maze.count() <=  32U) { result = solve_linear<16U>(_params); }
-            else if (_params._maze.count() <=  64U) { result = solve_linear<32U>(_params); }
-            else if (_params._maze.count() <= 128U) { result = solve_linear<64U>(_params); }
-            else if (_params._maze.count() <= lmax) { result = solve_linear<lmax / 2U>(_params); }
+                 if (_params._maze.count() <=  32U) { constexpr auto stack =       16U; result = solve_stack<linear_priority_queue<node, std::less<node>, std::vector<node, stack_allocator<node, stack>>>, stack>(_params); }
+            else if (_params._maze.count() <=  64U) { constexpr auto stack =       32U; result = solve_stack<linear_priority_queue<node, std::less<node>, std::vector<node, stack_allocator<node, stack>>>, stack>(_params); }
+            else if (_params._maze.count() <= 128U) { constexpr auto stack =       64U; result = solve_stack<linear_priority_queue<node, std::less<node>, std::vector<node, stack_allocator<node, stack>>>, stack>(_params); }
+            else if (_params._maze.count() <= lmax) { constexpr auto stack = lmax / 2U; result = solve_stack<linear_priority_queue<node, std::less<node>, std::vector<node, stack_allocator<node, stack>>>, stack>(_params); }
             else {
-                result = solve_heap(_params);
+                result = solve<heap<node>>(_params);
             }
 
             return result;
