@@ -24,19 +24,19 @@ namespace chdr::solvers {
 
         [[maybe_unused, nodiscard]] static constexpr bool solve(const params_t& _params) {
 
-            const auto s = utils::to_1d(_params._start, _params._size);
-            const auto e = utils::to_1d(_params._end,   _params._size);
+            const auto s = utils::to_1d(_params.start, _params.size);
+            const auto e = utils::to_1d(_params.end,   _params.size);
 
-            if (_params._maze.contains(s) &&
-                _params._maze.contains(e) &&
-                _params._maze.at(s).is_active() &&
-                _params._maze.at(e).is_active()
+            if (_params.maze.contains(s) &&
+                _params.maze.contains(e) &&
+                _params.maze.at(s).is_active() &&
+                _params.maze.at(e).is_active()
             ) {
 
                 if (s != e) {
 
                     // Create closed Set:
-                    existence_set closed ({ s }, std::max(_params._capacity, std::max(s, e)));
+                    existence_set closed ({ s }, std::max(_params.capacity, std::max(s, e)));
 
                     // Create open set:
                     queue<index_t> open;
@@ -52,18 +52,18 @@ namespace chdr::solvers {
 
                             if (curr != e) {
 
-                                closed.allocate(curr, _params._capacity, _params._maze.count());
+                                closed.allocate(curr, _params.capacity, _params.maze.count());
                                 closed.emplace(curr);
 
-                                for (const auto& neighbour : _params._maze.get_neighbours(curr)) {
+                                for (const auto& neighbour : _params.maze.get_neighbours(curr)) {
 
-                                    if constexpr (std::is_same_v<std::decay_t<decltype(_params._maze)>, mazes::graph<index_t, scalar_t>>) {
+                                    if constexpr (std::is_same_v<std::decay_t<decltype(_params.maze)>, mazes::graph<index_t, scalar_t>>) {
 
                                         const auto& n = neighbour.first;
 
                                         // Check if node is not already visited:
                                         if (!closed.contains(n)) {
-                                             closed.allocate(n, _params._capacity, _params._maze.count());
+                                             closed.allocate(n, _params.capacity, _params.maze.count());
                                              closed.emplace(n);
                                                open.emplace(n);
                                         }
@@ -72,11 +72,11 @@ namespace chdr::solvers {
 
                                         if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-                                            const auto n = utils::to_1d(nCoord, _params._size);
+                                            const auto n = utils::to_1d(nCoord, _params.size);
 
                                             // Check if node is not already visited:
                                             if (!closed.contains(n)) {
-                                                 closed.allocate(n, _params._capacity, _params._maze.count());
+                                                 closed.allocate(n, _params.capacity, _params.maze.count());
                                                  closed.emplace(n);
                                                    open.emplace(n);
                                             }

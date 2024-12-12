@@ -249,16 +249,16 @@ namespace chdr::solvers {
 
             std::vector<coord_t> result;
 
-            const auto s = utils::to_1d(_params._start, _params._size);
-            const auto e = utils::to_1d(_params._end  , _params._size);
+            const auto s = utils::to_1d(_params.start, _params.size);
+            const auto e = utils::to_1d(_params.end  , _params.size);
 
             // Create closed set:
-            const auto capacity = std::max(_params._capacity, std::max(s, e));
+            const auto capacity = std::max(_params.capacity, std::max(s, e));
             existence_set<low_memory_usage> closed({ s }, capacity);
 
             // Create open set:
             heap<node> open(capacity / 8U);
-            open.emplace(s, std::array<int8_t, 2U>{ 0, 0 }, static_cast<scalar_t>(0), _params._h(_params._start, _params._end));
+            open.emplace(s, std::array<int8_t, 2U>{ 0, 0 }, static_cast<scalar_t>(0), _params.h(_params.start, _params.end));
 
             // Create buffer:
             stable_forward_buf<node> buf;
@@ -271,32 +271,32 @@ namespace chdr::solvers {
 
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
-                    closed.allocate(curr.m_index, capacity, _params._maze.count());
+                    closed.allocate(curr.m_index, capacity, _params.maze.count());
                     closed.emplace(curr.m_index);
 
-                    auto      coord = utils::to_nd(curr.m_index, _params._size);
-                    auto successors = find_jump_points(_params._maze, coord, curr.m_direction, _params._end);
+                    auto      coord = utils::to_nd(curr.m_index, _params.size);
+                    auto successors = find_jump_points(_params.maze, coord, curr.m_direction, _params.end);
 
                     for (const auto& successor : successors) {
 
-                        const auto n = utils::to_1d(successor, _params._size);
+                        const auto n = utils::to_1d(successor, _params.size);
 
                         constexpr scalar_t nDistance{1};
 
                         if (!closed.contains(n)) {
-                             closed.allocate(n, capacity, _params._maze.count());
+                             closed.allocate(n, capacity, _params.maze.count());
                              closed.emplace(n);
 
                             const std::array<int8_t, 2U> direction { static_cast<int8_t>(sign(static_cast<int>(successor[0U]) - static_cast<int>(coord[0U]))) ,
                                                                      static_cast<int8_t>(sign(static_cast<int>(successor[1U]) - static_cast<int>(coord[1U]))) };
 
-                            open.emplace(n, direction, curr.m_gScore + nDistance, _params._h(successor, _params._end) * _params._weight, &buf.emplace(std::move(curr))); // Note: 'current' is now moved!
+                            open.emplace(n, direction, curr.m_gScore + nDistance, _params.h(successor, _params.end) * _params.weight, &buf.emplace(std::move(curr))); // Note: 'current' is now moved!
                         }
                     }
                 }
                 else { // SOLUTION REACHED ...
 
-                    result = curr.template backtrack<node>(_params._size, curr.m_gScore);
+                    result = curr.template backtrack<node>(_params.size, curr.m_gScore);
 
                     break;
                 }

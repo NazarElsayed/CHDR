@@ -72,9 +72,9 @@ namespace test::tests {
 
             const auto grid = generator::grid::generate<weight_t>(start, end, 0.0, 0.0, seed, size);
 
-            const auto maze = grid;
-            //const auto maze = chdr::mazes::graph<index_t, scalar_t>(grid);
-            //const auto maze = generator::graph::generate<weight_t, index_t, scalar_t>(start, end, 0.0, 0.0, seed, size); drawable = false;
+            const auto test = grid;
+            //const auto test = chdr::mazes::graph<index_t, scalar_t>(grid);
+            //const auto test = generator::graph::generate<weight_t, index_t, scalar_t>(start, end, 0.0, 0.0, seed, size); drawable = false;
 
             /* CAPTURE SYSTEM NOISE */
 
@@ -104,18 +104,18 @@ namespace test::tests {
 
                     using weight_type = weight_t;
 
-                    const decltype(maze)       _maze;
-                    const coord_t              _start;
-                    const coord_t              _end;
-                    const coord_t              _size;
-                    const decltype(&HEURISTIC) _h;
-                    const scalar_t             _weight      =  1U;
-                    const size_t               _capacity    =  0U;
-                    const size_t               _memoryLimit = -1U;
+                    const decltype(test)       maze;
+                    const coord_t              start;
+                    const coord_t              end;
+                    const coord_t              size;
+                    const decltype(&HEURISTIC) h;
+                    const scalar_t             weight      =  1U;
+                    const size_t               capacity    =  0U;
+                    const size_t               memoryLimit = -1U;
                 };
 
                 const auto solver = chdr::solvers::make_solver<chdr::solvers::astar, Kd, scalar_t, index_t, params>();
-                path = solver(maze, start, end, size, HEURISTIC);
+                path = solver(test, start, end, size, HEURISTIC);
 
                 result = std::min(
                     result,

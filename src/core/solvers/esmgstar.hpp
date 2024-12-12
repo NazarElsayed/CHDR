@@ -247,8 +247,8 @@ namespace chdr::solvers {
 
             std::vector<coord_t> result;
 
-            const auto s = utils::to_1d(_params._start, _params._size);
-            const auto e = utils::to_1d(_params._end,   _params._size);
+            const auto s = utils::to_1d(_params.start, _params.size);
+            const auto e = utils::to_1d(_params.end,   _params.size);
 
             // Create Open Set:
             priority_queue_t open;
@@ -256,7 +256,7 @@ namespace chdr::solvers {
                 0U,                         // Depth
                 s,                          // Coordinate
                 static_cast<scalar_t>(0),   // G-Score
-                _params._h(_params._start, _params._end) * _params._weight  // F-Score
+                _params.h(_params.start, _params.end) * _params.weight  // F-Score
             ));
 
             // Main loop:
@@ -267,7 +267,7 @@ namespace chdr::solvers {
 
                 if (curr->m_index != e) { // SEARCH FOR SOLUTION...
 
-                    auto successors_current = curr->expand(_params._maze, _params._end, _params._h, _params._weight, _params._memoryLimit);
+                    auto successors_current = curr->expand(_params.maze, _params.end, _params.h, _params.weight, _params.memoryLimit);
 
                     for (size_t i = 0U; i < successors_current.size(); ++i) {
 
@@ -283,7 +283,7 @@ namespace chdr::solvers {
                             curr->m_forgottenFCosts.erase(nCoord);
                         }
                         else {
-                            successor->m_fScore = std::max(curr->m_fScore, successor->m_gScore + (_params._h(utils::to_nd(successor->m_index, _params._size), _params._end) * _params._weight));
+                            successor->m_fScore = std::max(curr->m_fScore, successor->m_gScore + (_params.h(utils::to_nd(successor->m_index, _params.size), _params.end) * _params.weight));
                         }
 
                         // Add successor to open.
@@ -292,8 +292,8 @@ namespace chdr::solvers {
                         }
                     }
 
-                    while (open.size() > _params._memoryLimit) {
-                        cull_worst_leaf(_params._maze, _params._end, _params._h, _params._weight, _params._memoryLimit, open);
+                    while (open.size() > _params.memoryLimit) {
+                        cull_worst_leaf(_params.maze, _params.end, _params.h, _params.weight, _params.memoryLimit, open);
                     }
 
                     // Shrink the node to release ownership of children, allowing automatic GC of parents with no valid candidate children.
@@ -311,12 +311,12 @@ namespace chdr::solvers {
                         result.reserve(curr->m_gScore);
 
                         // Recurse from end node to start node, inserting into a result buffer:
-                        result.emplace_back(utils::to_nd(curr->m_index, _params._size));
+                        result.emplace_back(utils::to_nd(curr->m_index, _params.size));
 
                         if (auto item = curr->m_parent) {
 
                             while (const auto item_parent = item->m_parent) {
-                                result.emplace_back(utils::to_nd(item->m_index, _params._size));
+                                result.emplace_back(utils::to_nd(item->m_index, _params.size));
 
                                 auto oldItem = item;
                                 item = item_parent;

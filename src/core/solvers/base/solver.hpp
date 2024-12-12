@@ -35,17 +35,17 @@ namespace chdr::solvers {
 
             const params_t params { std::forward<Args>(_args)... };
 
-            const auto s = utils::to_1d(params._start, params._size);
-            const auto e = utils::to_1d(params._end,   params._size);
+            const auto s = utils::to_1d(params.start, params.size);
+            const auto e = utils::to_1d(params.end,   params.size);
 
-            if (params._maze.contains(s)       &&
-                params._maze.contains(e)       &&
-                params._maze.at(s).is_active() &&
-                params._maze.at(e).is_active()
+            if (params.maze.contains(s)       &&
+                params.maze.contains(e)       &&
+                params.maze.at(s).is_active() &&
+                params.maze.at(e).is_active()
             ) {
                 return s != e ?
                     Derived<Kd, scalar_t, index_t, params_t>::execute(params) :
-                    std::vector<coord_t> { params._end };
+                    std::vector<coord_t> { params.end };
             }
             else {
                 return std::vector<coord_t>{};

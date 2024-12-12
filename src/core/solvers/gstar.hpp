@@ -56,16 +56,16 @@ namespace chdr::solvers {
 
             std::vector<coord_t> result;
 
-            const auto s = utils::to_1d(_params._start, _params._size);
-            const auto e = utils::to_1d(_params._end,   _params._size);
+            const auto s = utils::to_1d(_params.start, _params.size);
+            const auto e = utils::to_1d(_params.end,   _params.size);
 
             // Create closed set:
-            const auto capacity = std::max(_params._capacity, std::max(s, e));
+            const auto capacity = std::max(_params.capacity, std::max(s, e));
             existence_set closed({ s }, capacity);
 
             // Create open set:
             heap<gs_node> open;
-            open.emplace(s, static_cast<scalar_t>(0), _params._h(_params._start, _params._end));
+            open.emplace(s, static_cast<scalar_t>(0), _params.h(_params.start, _params.end));
 
             // Main loop:
             while (!open.empty()) {
@@ -75,37 +75,37 @@ namespace chdr::solvers {
 
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
-                    closed.allocate(curr.m_index, capacity, _params._maze.count());
+                    closed.allocate(curr.m_index, capacity, _params.maze.count());
                     closed.emplace(curr.m_index);
 
-                    for (const auto& neighbour : _params._maze.get_neighbours(curr.m_index)) {
+                    for (const auto& neighbour : _params.maze.get_neighbours(curr.m_index)) {
 
-                        if constexpr (std::is_same_v<std::decay_t<decltype(_params._maze)>, mazes::graph<index_t, scalar_t>>) {
+                        if constexpr (std::is_same_v<std::decay_t<decltype(_params.maze)>, mazes::graph<index_t, scalar_t>>) {
 
                             const auto& [n, nDistance] = neighbour;
 
-                            const auto nCoord = utils::to_nd(n, _params._size);
+                            const auto nCoord = utils::to_nd(n, _params.size);
 
                             // Check if node is not already visited:
                             if (!closed.contains(n)) {
-                                 closed.allocate(n, capacity, _params._maze.count());
+                                 closed.allocate(n, capacity, _params.maze.count());
                                  closed.emplace(n);
-                                   open.emplace(n, curr.m_gScore + nDistance, _params._h(nCoord, _params._end) * _params._weight, std::move(curr)); // Note: 'current' is now moved!
+                                   open.emplace(n, curr.m_gScore + nDistance, _params.h(nCoord, _params.end) * _params.weight, std::move(curr)); // Note: 'current' is now moved!
                             }
                         }
                         else {
 
                             if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-                                const auto n = utils::to_1d(nCoord, _params._size);
+                                const auto n = utils::to_1d(nCoord, _params.size);
 
                                 constexpr scalar_t nDistance{1};
 
                                 // Check if node is not already visited:
                                 if (!closed.contains(n)) {
-                                     closed.allocate(n, capacity, _params._maze.count());
+                                     closed.allocate(n, capacity, _params.maze.count());
                                      closed.emplace(n);
-                                       open.emplace(n, curr.m_gScore + nDistance, _params._h(nCoord, _params._end) * _params._weight, std::move(curr)); // Note: 'current' is now moved!
+                                       open.emplace(n, curr.m_gScore + nDistance, _params.h(nCoord, _params.end) * _params.weight, std::move(curr)); // Note: 'current' is now moved!
                                 }
                             }
                         }
@@ -119,7 +119,7 @@ namespace chdr::solvers {
                     closed.clear();
                     closed.shrink_to_fit();
 
-                    result = curr.template backtrack<gs_node>(_params._size, curr.m_gScore);
+                    result = curr.template backtrack<gs_node>(_params.size, curr.m_gScore);
 
                     break;
                 }
