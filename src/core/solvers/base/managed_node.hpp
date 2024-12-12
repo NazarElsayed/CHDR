@@ -68,11 +68,11 @@ namespace chdr::solvers {
 
             if (curr.m_parent != nullptr) {
 
-                for (auto item = curr.m_parent; item->m_parent != nullptr;) {
-                    result.emplace_back(utils::to_nd(item->m_index, _size));
+                for (auto t = curr.m_parent; t->m_parent != nullptr;) {
+                    result.emplace_back(utils::to_nd(t->m_index, _size));
 
-                    auto oldItem = item;
-                    item = item->m_parent;
+                    auto oldItem = t;
+                    t = t->m_parent;
                     oldItem.reset();
                 }
             }

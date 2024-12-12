@@ -32,7 +32,7 @@ namespace chdr::solvers {
 
         using coord_t = coord<index_t, Kd>;
 
-        struct bs_node final : unmanaged_node<index_t> {
+        struct node final : unmanaged_node<index_t> {
 
             scalar_t m_hScore;
 
@@ -41,17 +41,14 @@ namespace chdr::solvers {
              *
              * This constructor creates an BSNode with uninitialized members.
              */
-            [[nodiscard]] constexpr bs_node() noexcept {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
+            [[nodiscard]] constexpr node() noexcept {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] constexpr bs_node(const index_t& _index, const scalar_t& _hScore, const unmanaged_node<index_t>* RESTRICT const _parent = nullptr) noexcept : unmanaged_node<index_t>(_index, _parent),
+            [[nodiscard]] constexpr node(const index_t& _index, const scalar_t& _hScore, const unmanaged_node<index_t>* RESTRICT const _parent = nullptr) noexcept : unmanaged_node<index_t>(_index, _parent),
                 m_hScore(_hScore) {}
 
-            struct max {
-
-                [[nodiscard]] constexpr bool operator () (const bs_node& _a, const bs_node& _b) const noexcept {
-                    return _a.m_hScore > _b.m_hScore;
-                }
-            };
+            [[nodiscard]] friend constexpr bool operator < (const node& _a, const node& _b) noexcept {
+                return _a.m_hScore > _b.m_hScore;
+            }
         };
 
         [[maybe_unused, nodiscard]] static constexpr auto solve_heap(const params_t& _params) {
@@ -66,11 +63,11 @@ namespace chdr::solvers {
             existence_set<low_memory_usage> closed({ s }, capacity);
 
             // Create open set:
-            heap<bs_node, typename bs_node::max> open(capacity / 8U);
+            heap<node> open(capacity / 8U);
             open.emplace(s, _params._h(_params._start, _params._end));
 
             // Create buffer:
-            stable_forward_buf<bs_node> buf;
+            stable_forward_buf<node> buf;
 
             // Main loop:
             while (!open.empty()) {
@@ -120,7 +117,7 @@ namespace chdr::solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    result = curr.template backtrack<bs_node>(_params._size, static_cast<size_t>(_params._h(_params._start, _params._end)));
+                    result = curr.template backtrack<node>(_params._size, static_cast<size_t>(_params._h(_params._start, _params._end)));
 
                     break;
                 }
@@ -142,12 +139,12 @@ namespace chdr::solvers {
             existence_set<low_memory_usage> closed({ s }, capacity);
 
             // Create open set:
-            linear_priority_queue<bs_node, typename bs_node::max, std::vector<bs_node, stack_allocator<bs_node, StackSize>>> open;
+            linear_priority_queue<node, std::less<node>, std::vector<node, stack_allocator<node, StackSize>>> open;
             open.reserve(StackSize);
             open.emplace(s, _params._h(_params._start, _params._end));
 
             // Create buffer:
-            stable_forward_buf<bs_node, StackSize / 2U> buf;
+            stable_forward_buf<node, StackSize / 2U> buf;
 
             // Main loop:
             while (!open.empty()) {
@@ -193,7 +190,7 @@ namespace chdr::solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    result = curr.template backtrack<bs_node>(_params._size, static_cast<size_t>(_params._h(_params._start, _params._end)));
+                    result = curr.template backtrack<node>(_params._size, static_cast<size_t>(_params._h(_params._start, _params._end)));
 
                     break;
                 }
@@ -209,7 +206,7 @@ namespace chdr::solvers {
              * method based on which is more efficient given the maze's size.
              */
 
-            constexpr size_t lmax = 256U;
+            constexpr size_t lmax{256U};
 
             std::vector<coord_t> result;
 

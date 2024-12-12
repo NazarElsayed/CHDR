@@ -45,14 +45,11 @@ namespace chdr::solvers {
                 m_gScore(_gScore),
                 m_fScore(_gScore + _hScore) {}
 
-            struct max {
-
-                [[nodiscard]] constexpr bool operator () (const gs_node& _a, const gs_node& _b) const {
-                    return _a.m_fScore == _b.m_fScore ?
-                           _a.m_gScore >  _b.m_gScore :
-                           _a.m_fScore >  _b.m_fScore;
-                }
-            };
+            [[nodiscard]] friend constexpr bool operator < (const gs_node& _a, const gs_node& _b) noexcept {
+                return _a.m_fScore == _b.m_fScore ?
+                       _a.m_gScore >  _b.m_gScore :
+                       _a.m_fScore >  _b.m_fScore;
+            }
         };
 
         [[maybe_unused, nodiscard]] static constexpr std::vector<coord_t> execute(const params_t& _params) {
@@ -67,7 +64,7 @@ namespace chdr::solvers {
             existence_set closed({ s }, capacity);
 
             // Create open set:
-            heap<gs_node, typename gs_node::max> open;
+            heap<gs_node> open;
             open.emplace(s, static_cast<scalar_t>(0), _params._h(_params._start, _params._end));
 
             // Main loop:
@@ -102,7 +99,7 @@ namespace chdr::solvers {
 
                                 const auto n = utils::to_1d(nCoord, _params._size);
 
-                                constexpr auto nDistance = static_cast<scalar_t>(1);
+                                constexpr scalar_t nDistance{1};
 
                                 // Check if node is not already visited:
                                 if (!closed.contains(n)) {

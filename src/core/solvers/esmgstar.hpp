@@ -33,9 +33,9 @@ namespace chdr::solvers {
 
         using weight_t = typename params_t::weight_type;
 
-        struct esmg_node final : std::enable_shared_from_this<esmg_node> {
+        struct node final : std::enable_shared_from_this<node> {
 
-            friend std::shared_ptr<esmg_node>;
+            friend std::shared_ptr<node>;
 
             size_t m_depth;
             index_t m_index;
@@ -43,15 +43,15 @@ namespace chdr::solvers {
             scalar_t m_gScore;
             scalar_t m_fScore;
 
-            std::shared_ptr<esmg_node> m_parent;
+            std::shared_ptr<node> m_parent;
 
-            std::vector<std::shared_ptr<esmg_node>> m_successors;
+            std::vector<std::shared_ptr<node>> m_successors;
 
             std::unordered_map<size_t, scalar_t> m_forgottenFCosts;
 
         private:
 
-            [[nodiscard]] constexpr esmg_node(const size_t& _depth, const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore) :
+            [[nodiscard]] constexpr node(const size_t& _depth, const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore) :
                 m_depth (_depth),
                 m_index (_index),
                 m_gScore(_gScore),
@@ -59,7 +59,7 @@ namespace chdr::solvers {
                 m_parent(),
                 m_forgottenFCosts() {}
 
-            [[nodiscard]] constexpr esmg_node(const size_t& _depth, const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore, const std::shared_ptr<esmg_node>&& _parent) :
+            [[nodiscard]] constexpr node(const size_t& _depth, const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore, const std::shared_ptr<node>&& _parent) :
                 m_depth (_depth),
                 m_index (_index),
                 m_gScore(_gScore),
@@ -75,7 +75,7 @@ namespace chdr::solvers {
              * This constructor creates an ESMGSNode with uninitialized members.
              */
             // ReSharper disable once CppPossiblyUninitializedMember
-            [[nodiscard]] constexpr esmg_node() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
+            [[nodiscard]] constexpr node() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
             constexpr void shrink() {
 
@@ -110,7 +110,7 @@ namespace chdr::solvers {
 
                                     if (const auto& [snActive, snCoord] = successor_neighbours; snActive) {
 
-                                        m_successors.emplace_back(esmg_node::create_shared(
+                                        m_successors.emplace_back(node::create_shared(
                                                 m_depth + 1U,              // Depth
                                                 n,                          // Coordinate
                                                 m_gScore + 1U,              // G-Score
@@ -132,11 +132,11 @@ namespace chdr::solvers {
             }
 
             template<typename... Args>
-            static constexpr std::shared_ptr<esmg_node> create_shared(Args&&... _args) {
+            static constexpr std::shared_ptr<node> create_shared(Args&&... _args) {
 
-                auto result = std::shared_ptr<esmg_node>(
-                    new esmg_node(std::forward<Args>(_args)...),
-                    [](esmg_node* _ptr) {
+                auto result = std::shared_ptr<node>(
+                    new node(std::forward<Args>(_args)...),
+                    [](node* _ptr) {
 
                         while (_ptr->m_parent && static_cast<unsigned>(_ptr->m_parent.use_count()) < 2U) {
 
@@ -168,21 +168,18 @@ namespace chdr::solvers {
                 return result;
             }
 
-            [[nodiscard]] constexpr bool operator == (const std::shared_ptr<esmg_node>& _node) const { return m_index == _node->m_index; }
+            [[nodiscard]] friend constexpr bool operator == (const node& _a, const node& _b) noexcept { return _a.m_index == _b.m_index; }
 
-            struct max {
-
-                [[nodiscard]] constexpr bool operator () (const std::shared_ptr<esmg_node>& _a, const std::shared_ptr<esmg_node>& _b) const {
-                    return _a->m_fScore == _b->m_fScore ?
-                        _a->m_gScore > _b->m_gScore :
-                        _a->m_fScore > _b->m_fScore;
-                }
-            };
+            [[nodiscard]] friend constexpr bool operator < (const node& _a, const node& _b) noexcept {
+                return _a->m_fScore == _b->m_fScore ?
+                    _a->m_gScore > _b->m_gScore :
+                    _a->m_fScore > _b->m_fScore;
+            }
         };
 
-        using heap_t = heap<std::shared_ptr<esmg_node>, typename esmg_node::max>;
+        using priority_queue_t = heap<std::shared_ptr<node>>;
 
-        static constexpr void cull_worst_leaf(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, const size_t& _memoryLimit, heap_t& _open) {
+        static constexpr void cull_worst_leaf(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, const size_t& _memoryLimit, priority_queue_t& _open) {
 
             const auto w = safe_culling_heuristic(_open);
 
@@ -215,7 +212,7 @@ namespace chdr::solvers {
             }
         }
 
-        [[nodiscard]] static constexpr auto safe_culling_heuristic(heap_t& _open) {
+        [[nodiscard]] static constexpr auto safe_culling_heuristic(priority_queue_t& _open) {
 
             auto w = _open.back(); // Worst leaf according to c(n) in _open
 
@@ -230,7 +227,7 @@ namespace chdr::solvers {
                     const auto& a = _open[i];
                     const auto& b = w;
 
-                    if (typename esmg_node::max()(a, b)) {
+                    if (a < b) {
                         w = _open[i]; // Assign the second-worst leaf to w
                     }
                 }
@@ -254,8 +251,8 @@ namespace chdr::solvers {
             const auto e = utils::to_1d(_params._end,   _params._size);
 
             // Create Open Set:
-            heap_t open;
-            open.emplace(esmg_node::create_shared(
+            priority_queue_t open;
+            open.emplace(node::create_shared(
                 0U,                         // Depth
                 s,                          // Coordinate
                 static_cast<scalar_t>(0),   // G-Score

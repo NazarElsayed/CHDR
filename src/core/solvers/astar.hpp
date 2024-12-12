@@ -38,7 +38,7 @@ namespace chdr::solvers {
 
         using coord_t = coord<index_t, Kd>;
 
-        struct as_node final : unmanaged_node<index_t> {
+        struct node final : unmanaged_node<index_t> {
 
             scalar_t m_gScore;
             scalar_t m_fScore;
@@ -48,23 +48,21 @@ namespace chdr::solvers {
              *
              * This constructor creates an ASNode with uninitialized members.
              */
-            [[nodiscard]] constexpr as_node() noexcept : unmanaged_node<index_t>() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
+            [[nodiscard]] constexpr node() noexcept : unmanaged_node<index_t>() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] constexpr as_node(const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore, const unmanaged_node<index_t>* RESTRICT const _parent = nullptr) noexcept : unmanaged_node<index_t>(_index, _parent),
+            [[nodiscard]] constexpr node(const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore, const unmanaged_node<index_t>* RESTRICT const _parent = nullptr) noexcept : unmanaged_node<index_t>(_index, _parent),
                 m_gScore(_gScore),
                 m_fScore(_gScore + _hScore) {}
 
-            struct max {
-
-                [[nodiscard]] constexpr bool operator () (const as_node& _a, const as_node& _b) const noexcept {
-                    return _a.m_fScore == _b.m_fScore ?
-                           _a.m_gScore >  _b.m_gScore :
-                           _a.m_fScore >  _b.m_fScore;
-                }
-            };
+            [[nodiscard]] friend constexpr bool operator < (const node& _a, const node& _b) noexcept {
+                return _a.m_fScore == _b.m_fScore ?
+                       _a.m_gScore >  _b.m_gScore :
+                       _a.m_fScore >  _b.m_fScore;
+            }
         };
 
-        [[maybe_unused, nodiscard]] static constexpr auto solve_heap(const params_t& _params) {
+        template <typename heap_t>
+        [[maybe_unused, nodiscard]] static constexpr auto solve(const params_t& _params) {
 
             std::vector<coord_t> result;
 
@@ -76,11 +74,11 @@ namespace chdr::solvers {
             existence_set<low_memory_usage> closed({ s }, capacity);
 
             // Create open set:
-            heap<as_node, typename as_node::max> open(capacity / 8U);
+            heap_t open(capacity / 8U);
             open.emplace(s, static_cast<scalar_t>(0), _params._h(_params._start, _params._end));
 
             // Create buffer:
-            stable_forward_buf<as_node> buf;
+            stable_forward_buf<node> buf;
 
             // Main loop:
             while (!open.empty()) {
@@ -116,7 +114,7 @@ namespace chdr::solvers {
 
                                 const auto n = utils::to_1d(nCoord, _params._size);
 
-                                constexpr auto nDistance = static_cast<scalar_t>(1);
+                                constexpr scalar_t nDistance{1};
 
                                 // Check if node is not already visited:
                                 if (!closed.contains(n)) {
@@ -132,7 +130,7 @@ namespace chdr::solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    result = std::move(curr.template backtrack<as_node>(_params._size, curr.m_gScore));
+                    result = std::move(curr.template backtrack<node>(_params._size, curr.m_gScore));
 
                     break;
                 }
@@ -141,8 +139,8 @@ namespace chdr::solvers {
             return result;
         }
 
-        template <size_t StackSize>
-        [[maybe_unused, nodiscard]] static constexpr auto solve_linear(const params_t& _params) {
+        template <typename heap_t, size_t Stack>
+        [[maybe_unused, nodiscard]] static constexpr auto solve_stack(const params_t& _params) {
 
             std::vector<coord_t> result;
 
@@ -154,12 +152,12 @@ namespace chdr::solvers {
             existence_set<low_memory_usage> closed({ s }, capacity);
 
             // Create open set:
-            linear_priority_queue<as_node, typename as_node::max, std::vector<as_node, stack_allocator<as_node, StackSize>>> open;
-            open.reserve(StackSize);
+            heap_t open;
+            open.reserve(Stack);
             open.emplace(s, static_cast<scalar_t>(0), _params._h(_params._start, _params._end));
 
             // Create buffer:
-            stable_forward_buf<as_node, StackSize / 2U> buf;
+            stable_forward_buf<node, Stack / 2U> buf;
 
             // Main loop:
             while (!open.empty()) {
@@ -193,7 +191,7 @@ namespace chdr::solvers {
 
                                 const auto n = utils::to_1d(nCoord, _params._size);
 
-                                const auto nDistance = static_cast<scalar_t>(1);
+                                constexpr scalar_t nDistance{1};
 
                                 // Check if node is not already visited:
                                 if (!closed.contains(n)) {
@@ -207,7 +205,7 @@ namespace chdr::solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    result = std::move(curr.template backtrack<as_node>(_params._size, curr.m_gScore));
+                    result = std::move(curr.template backtrack<node>(_params._size, curr.m_gScore));
 
                     break;
                 }
@@ -223,16 +221,16 @@ namespace chdr::solvers {
              * method based on which is more efficient given the maze's size.
              */
 
-            constexpr size_t lmax = 256U;
+            constexpr size_t lmax{256U};
 
             std::vector<coord_t> result;
 
-                 if (_params._maze.count() <=  32U) { result = solve_linear<16U>(_params); }
-            else if (_params._maze.count() <=  64U) { result = solve_linear<32U>(_params); }
-            else if (_params._maze.count() <= 128U) { result = solve_linear<64U>(_params); }
-            else if (_params._maze.count() <= lmax) { result = solve_linear<lmax / 2U>(_params); }
+                 if (_params._maze.count() <=  32U) { constexpr auto stack =       16U; result = solve_stack<linear_priority_queue<node, std::less<node>, std::vector<node, stack_allocator<node, stack>>>, stack>(_params); }
+            else if (_params._maze.count() <=  64U) { constexpr auto stack =       32U; result = solve_stack<linear_priority_queue<node, std::less<node>, std::vector<node, stack_allocator<node, stack>>>, stack>(_params); }
+            else if (_params._maze.count() <= 128U) { constexpr auto stack =       64U; result = solve_stack<linear_priority_queue<node, std::less<node>, std::vector<node, stack_allocator<node, stack>>>, stack>(_params); }
+            else if (_params._maze.count() <= lmax) { constexpr auto stack = lmax / 2U; result = solve_stack<linear_priority_queue<node, std::less<node>, std::vector<node, stack_allocator<node, stack>>>, stack>(_params); }
             else {
-                result = solve_heap(_params);
+                result = solve<heap<node>>(_params);
             }
 
             return result;

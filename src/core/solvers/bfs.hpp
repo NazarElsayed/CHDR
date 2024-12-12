@@ -28,8 +28,8 @@ namespace chdr::solvers {
 
     private:
 
-        using    coord_t = coord<index_t, Kd>;
-        using bfs_node_t = unmanaged_node<index_t>;
+        using coord_t = coord<index_t, Kd>;
+        using    node = unmanaged_node<index_t>;
 
         [[maybe_unused, nodiscard]] static constexpr std::vector<coord_t> execute(const params_t& _params) {
 
@@ -43,11 +43,11 @@ namespace chdr::solvers {
             existence_set<low_memory_usage> closed({ s }, capacity);
 
             // Create open:
-            queue<bfs_node_t> open;
+            queue<node> open;
             open.emplace(s);
 
             // Create buffer:
-            stable_forward_buf<bfs_node_t> buf;
+            stable_forward_buf<node> buf;
 
             // Main loop:
             while (!open.empty()) { // SEARCH FOR SOLUTION...
@@ -91,7 +91,7 @@ namespace chdr::solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    result = curr.template backtrack<bfs_node_t>(_params._size, capacity);
+                    result = curr.template backtrack<node>(_params._size, capacity);
 
                     break;
                 }

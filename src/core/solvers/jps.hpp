@@ -56,7 +56,7 @@ namespace chdr::solvers {
                 { { 1, -1}, s_rotate_r }
         };
 
-        struct jps_node final : unmanaged_node<index_t> {
+        struct node final : unmanaged_node<index_t> {
 
             std::array<int8_t, 2U> m_direction;
 
@@ -64,21 +64,18 @@ namespace chdr::solvers {
             scalar_t m_fScore;
 
             // ReSharper disable once CppPossiblyUninitializedMember
-            [[nodiscard]] constexpr jps_node() noexcept : unmanaged_node<index_t>() {}
+            [[nodiscard]] constexpr node() noexcept : unmanaged_node<index_t>() {}
 
-            [[nodiscard]] constexpr jps_node(const index_t& _index, const std::array<int8_t, 2U>& _direction, const scalar_t& _gScore, const scalar_t& _hScore, const jps_node* RESTRICT const _parent) noexcept : unmanaged_node<index_t>(_index, _parent),
+            [[nodiscard]] constexpr node(const index_t& _index, const std::array<int8_t, 2U>& _direction, const scalar_t& _gScore, const scalar_t& _hScore, const node* RESTRICT const _parent) noexcept : unmanaged_node<index_t>(_index, _parent),
                 m_direction(_direction),
                 m_gScore(_gScore),
                 m_fScore(_gScore + _hScore) {}
 
-            struct max {
-
-                [[nodiscard]] constexpr bool operator () (const jps_node& _a, const jps_node& _b) const noexcept {
-                    return _a.m_fScore == _b.m_fScore ?
-                           _a.m_gScore >  _b.m_gScore :
-                           _a.m_fScore >  _b.m_fScore;
-                }
-            };
+            [[nodiscard]] friend constexpr bool operator < (const node& _a, const node& _b) noexcept {
+                return _a.m_fScore == _b.m_fScore ?
+                       _a.m_gScore >  _b.m_gScore :
+                       _a.m_fScore >  _b.m_fScore;
+            }
         };
 
         template <typename T>
@@ -260,11 +257,11 @@ namespace chdr::solvers {
             existence_set<low_memory_usage> closed({ s }, capacity);
 
             // Create open set:
-            heap<jps_node, typename jps_node::max> open(capacity / 8U);
+            heap<node> open(capacity / 8U);
             open.emplace(s, std::array<int8_t, 2U>{ 0, 0 }, static_cast<scalar_t>(0), _params._h(_params._start, _params._end));
 
             // Create buffer:
-            stable_forward_buf<jps_node> buf;
+            stable_forward_buf<node> buf;
 
             // Main loop:
             while (!open.empty()) {
@@ -284,7 +281,7 @@ namespace chdr::solvers {
 
                         const auto n = utils::to_1d(successor, _params._size);
 
-                        constexpr auto nDistance = static_cast<scalar_t>(1);
+                        constexpr scalar_t nDistance{1};
 
                         if (!closed.contains(n)) {
                              closed.allocate(n, capacity, _params._maze.count());
@@ -299,7 +296,7 @@ namespace chdr::solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    result = curr.template backtrack<jps_node>(_params._size, curr.m_gScore);
+                    result = curr.template backtrack<node>(_params._size, curr.m_gScore);
 
                     break;
                 }

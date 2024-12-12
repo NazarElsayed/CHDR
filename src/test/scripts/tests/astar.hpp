@@ -71,6 +71,7 @@ namespace test::tests {
             /* GENERATE MAZE */
 
             const auto grid = generator::grid::generate<weight_t>(start, end, 0.0, 0.0, seed, size);
+
             const auto maze = grid;
             //const auto maze = chdr::mazes::graph<index_t, scalar_t>(grid);
             //const auto maze = generator::graph::generate<weight_t, index_t, scalar_t>(start, end, 0.0, 0.0, seed, size); drawable = false;
@@ -113,7 +114,7 @@ namespace test::tests {
                     const size_t               _memoryLimit = -1U;
                 };
 
-                const auto solver = chdr::solvers::make_solver<chdr::solvers::gstar, Kd, scalar_t, index_t, params>();
+                const auto solver = chdr::solvers::make_solver<chdr::solvers::astar, Kd, scalar_t, index_t, params>();
                 path = solver(maze, start, end, size, HEURISTIC);
 
                 result = std::min(

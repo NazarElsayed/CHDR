@@ -30,7 +30,7 @@ namespace chdr::solvers {
 
         using coord_t = coord<index_t, Kd>;
 
-        using gbfs_node_t = managed_node<index_t>;
+        using node = managed_node<index_t>;
 
         [[maybe_unused, nodiscard]] static constexpr std::vector<coord_t> execute(const params_t& _params) {
 
@@ -44,7 +44,7 @@ namespace chdr::solvers {
             existence_set closed({ s }, capacity);
 
             // Create open set:
-            queue<gbfs_node_t> open;
+            queue<node> open;
             open.emplace(s);
 
             // Main loop:
@@ -94,7 +94,7 @@ namespace chdr::solvers {
                     closed.clear();
                     closed.shrink_to_fit();
 
-                    result = curr.template backtrack<gbfs_node_t>(_params._size, capacity);
+                    result = curr.template backtrack<node>(_params._size, capacity);
 
                     break;
                 }

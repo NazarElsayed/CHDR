@@ -26,7 +26,7 @@ namespace chdr::solvers {
 
         bnode(const index_t& _index) noexcept : m_index(_index) {}
 
-        [[nodiscard]] constexpr bool operator == (const bnode& _node) const noexcept { return m_index == _node.m_index; }
+        [[nodiscard]] friend constexpr bool operator == (const bnode& _a, const bnode& _b) noexcept { return _a.m_index == _b.m_index; }
 
     };
 
