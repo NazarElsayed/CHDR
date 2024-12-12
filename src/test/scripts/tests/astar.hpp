@@ -114,7 +114,7 @@ namespace test::tests {
                     const size_t               _memoryLimit = -1U;
                 };
 
-                const auto solver = chdr::solvers::make_solver<chdr::solvers::bstar, Kd, scalar_t, index_t, params>();
+                const auto solver = chdr::solvers::make_solver<chdr::solvers::astar, Kd, scalar_t, index_t, params>();
                 path = solver(maze, start, end, size, HEURISTIC);
 
                 result = std::min(
