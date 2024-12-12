@@ -11,7 +11,6 @@
 
 #include <map>
 
-#include "base/bsolver.hpp"
 #include "mazes/grid.hpp"
 #include "types/existence_set.hpp"
 #include "types/stable_forward_buf.hpp"
@@ -19,8 +18,10 @@
 
 namespace chdr::solvers {
 
-    template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t, typename params_t>
-    class [[maybe_unused]] jps final : public bsolver<weight_t, Kd, scalar_t, index_t, params_t> {
+    template<size_t Kd, typename scalar_t, typename index_t, typename params_t>
+    struct [[maybe_unused]] jps final {
+
+        friend struct solver<jps, Kd, scalar_t, index_t, params_t>;
 
         static_assert(std::is_integral_v<scalar_t> || std::is_floating_point_v<scalar_t>, "scalar_t must be either an integral or floating point type");
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
@@ -28,6 +29,8 @@ namespace chdr::solvers {
     private:
 
         using coord_t = coord<index_t, Kd>;
+
+        using weight_t = typename params_t::weight_type;
 
         static constexpr std::array<uint8_t, 8U> s_rotate_l { 2U, 4U, 7U,
                                                               1U,     6U,
@@ -41,7 +44,7 @@ namespace chdr::solvers {
                                                               6U,     1U,
                                                               7U, 4U, 2U };
 
-        const std::map<std::array<int8_t, 2U>, std::array<uint8_t, 8U>> m_rotation_map {
+        inline static const std::map<std::array<int8_t, 2U>, std::array<uint8_t, 8U>> s_rotation_map {
                 { { 0,  0}, { 0U, 1U, 2U, 3U, 4U, 5U, 6U, 7U } },
                 { { 1,  0}, { 0U, 1U, 2U, 3U, 4U, 5U, 6U, 7U } },
                 { { 1,  1}, { 0U, 1U, 2U, 3U, 4U, 5U, 6U, 7U } },
@@ -71,7 +74,6 @@ namespace chdr::solvers {
             struct max {
 
                 [[nodiscard]] constexpr bool operator () (const jps_node& _a, const jps_node& _b) const noexcept {
-
                     return _a.m_fScore == _b.m_fScore ?
                            _a.m_gScore >  _b.m_gScore :
                            _a.m_fScore >  _b.m_fScore;
@@ -84,12 +86,12 @@ namespace chdr::solvers {
             return (static_cast<T>(0) < _val) - (_val < static_cast<T>(0));
         }
 
-        constexpr std::vector<coord_t> find_jump_points(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _current, const std::array<int8_t, 2U> _direction, const coord_t& _end) const {
+        static constexpr std::vector<coord_t> find_jump_points(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _current, const std::array<int8_t, 2U> _direction, const coord_t& _end) {
 
             std::vector<coord_t> result;
 
             const auto neighbours = _maze. template get_neighbours<true>(_current);
-            const auto map = m_rotation_map.at(_direction);
+            const auto map = s_rotation_map.at(_direction);
 
             // Start Node:
             if (_direction[0U] == 0 && _direction[1U] == 0) {
@@ -167,7 +169,7 @@ namespace chdr::solvers {
         }
 
         [[nodiscard]]
-        constexpr std::pair<bool, coord_t> jump(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _current, const coord_t& _previous, const coord_t& _end) const {
+        static constexpr std::pair<bool, coord_t> jump(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _current, const coord_t& _previous, const coord_t& _end) {
 
             const std::array<int8_t, 2U> direction { static_cast<int8_t>(sign(static_cast<int>(_current[0U]) - static_cast<int>(_previous[0U]))) ,
                                                      static_cast<int8_t>(sign(static_cast<int>(_current[1U]) - static_cast<int>(_previous[1U]))) };
@@ -176,12 +178,12 @@ namespace chdr::solvers {
         }
 
         [[nodiscard]]
-        constexpr std::pair<bool, coord_t> jump(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _current, const std::array<int8_t, 2U>& _direction, const coord_t& _end) const {
+        static constexpr std::pair<bool, coord_t> jump(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _current, const std::array<int8_t, 2U>& _direction, const coord_t& _end) {
 
             std::pair<bool, coord_t> result { false, _current };
 
             const auto neighbours = _maze. template get_neighbours<true>(_current);
-            const auto map = m_rotation_map.at(_direction);
+            const auto map = s_rotation_map.at(_direction);
 
             if (_direction[0U] == 0 || _direction[1U] == 0) { // Straight Direction
 
@@ -246,7 +248,7 @@ namespace chdr::solvers {
             return result;
         }
 
-        [[maybe_unused, nodiscard]] constexpr std::vector<coord_t> execute(const params_t& _params) const override {
+        [[maybe_unused, nodiscard]] static constexpr std::vector<coord_t> execute(const params_t& _params) {
 
             std::vector<coord_t> result;
 

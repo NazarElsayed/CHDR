@@ -19,7 +19,7 @@ namespace test::generator {
 
 	struct grid final {
 
-		template <typename T, const size_t Kd, typename... Args>
+		template <typename T, size_t Kd, typename... Args>
 		static constexpr auto generate(const chdr::coord<size_t, Kd>& _start, chdr::coord<size_t, Kd>& _end, const double& _loops = 0.0, const double& _obstacles = 0.0, const size_t& _seed = -1U, const Args&... _size) {
 
 			static_assert(std::is_integral_v<T>, "Type T must be an integral type.");

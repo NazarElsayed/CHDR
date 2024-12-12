@@ -70,7 +70,7 @@ namespace chdr {
 		 * @return The resulting array.
 		 * @throws std::runtime_error if the size of the vector does not match the size of the array.
 		 */
-		template<typename Tp, const size_t Nm>
+		template<typename Tp, size_t Nm>
 		static constexpr std::array<Tp, Nm> to_array(const std::vector<Tp>&& _vector) {
 
             std::array<Tp, Nm> result;
@@ -107,7 +107,7 @@ namespace chdr {
 		 * or equal to the maximum value of size_t. If this condition is not met, a
 		 * static_assert will be triggered.
 		 */
-		template<typename Tp, const size_t Nm>
+		template<typename Tp, size_t Nm>
 		static constexpr std::vector<Tp> to_vector(const std::array<Tp, Nm>&& _array) {
 
 			std::vector<Tp> result;
@@ -245,7 +245,7 @@ namespace chdr {
 		 *
 		 * @note The function assumes that the number of dimensions (_dimensions) is greater than 0.
 		 */
-		template<typename T, const size_t Kd>
+		template<typename T, size_t Kd>
 		static constexpr auto to_nd(const T& _index, const coord<T, Kd>& _sizes) noexcept {
 
 			static_assert(std::is_integral_v<T>, "Only integer types are allowed.");
@@ -329,7 +329,7 @@ namespace chdr {
 		 * This method takes in multi-dimensional indices and array sizes and returns the corresponding one-dimensional index.
 		 * Only integer types are allowed for the indices.
 		 */
-		template<typename T, const size_t Kd>
+		template<typename T, size_t Kd>
 		static constexpr auto to_1d(const coord<T, Kd>& _indices, const coord<T, Kd>& _sizes) noexcept {
 
 			static_assert(std::is_integral_v<T>, "Only integer types are allowed.");

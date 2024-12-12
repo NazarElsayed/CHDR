@@ -11,15 +11,16 @@
 
 #include <memory>
 
-#include "base/bsolver.hpp"
 #include "mazes/grid.hpp"
 #include "mazes/base/imaze.hpp"
 #include "types/existence_set.hpp"
 
 namespace chdr::solvers {
 
-    template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t, typename params_t>
-    class [[maybe_unused]] dijkstra final : bsolver<weight_t, Kd, scalar_t, index_t, params_t> {
+    template<size_t Kd, typename scalar_t, typename index_t, typename params_t>
+    struct [[maybe_unused]] dijkstra final {
+
+        friend struct solver<dijkstra, Kd, scalar_t, index_t, params_t>;
 
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
@@ -77,9 +78,7 @@ namespace chdr::solvers {
             };
         };
 
-    public:
-
-        [[maybe_unused, nodiscard]] constexpr std::vector<coord_t> solve(const params_t& _params) {
+        [[maybe_unused, nodiscard]] static constexpr std::vector<coord_t> execute(const params_t& _params) {
 
             (void)_params;
 

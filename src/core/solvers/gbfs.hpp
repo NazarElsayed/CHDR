@@ -9,7 +9,6 @@
 #ifndef CHDR_GBFS_HPP
 #define CHDR_GBFS_HPP
 
-#include "base/bsolver.hpp"
 #include "base/managed_node.hpp"
 #include "mazes/graph.hpp"
 #include "mazes/grid.hpp"
@@ -20,8 +19,10 @@
 
 namespace chdr::solvers {
 
-    template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t, typename params_t>
-    class [[maybe_unused]] gbfs final : public bsolver<weight_t, Kd, scalar_t, index_t, params_t> {
+    template<size_t Kd, typename scalar_t, typename index_t, typename params_t>
+    struct [[maybe_unused]] gbfs final {
+
+        friend struct solver<gbfs, Kd, scalar_t, index_t, params_t>;
 
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
@@ -31,9 +32,7 @@ namespace chdr::solvers {
 
         using gbfs_node_t = managed_node<index_t>;
 
-    public:
-
-        [[maybe_unused, nodiscard]] constexpr std::vector<coord_t> execute(const params_t& _params) const override {
+        [[maybe_unused, nodiscard]] static constexpr std::vector<coord_t> execute(const params_t& _params) {
 
             std::vector<coord_t> result;
 

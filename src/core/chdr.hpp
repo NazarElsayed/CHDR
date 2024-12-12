@@ -23,7 +23,7 @@
 
 #include "solvers/astar.hpp"
 #include "solvers/base/bnode.hpp"
-#include "solvers/base/bsolver.hpp"
+#include "solvers/base/solver.hpp"
 #include "solvers/bfs.hpp"
 #include "solvers/bstar.hpp"
 #include "solvers/dfs.hpp"

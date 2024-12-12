@@ -18,7 +18,7 @@
 
 namespace chdr {
 
-    template <typename T, const size_t BlockWidth = 1024U>
+    template <typename T, size_t BlockWidth = 1024U>
     class stable_forward_buf {
 
     private:

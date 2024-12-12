@@ -137,7 +137,7 @@ add_library(CHDR INTERFACE
     src/core/mazes/nodes/weighted_node.hpp
     src/core/solvers/astar.hpp
     src/core/solvers/base/bnode.hpp
-    src/core/solvers/base/bsolver.hpp
+        src/core/solvers/base/solver.hpp
     src/core/solvers/base/managed_node.hpp
     src/core/solvers/bfs.hpp
     src/core/solvers/bstar.hpp

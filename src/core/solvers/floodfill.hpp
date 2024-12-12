@@ -17,14 +17,12 @@
 
 namespace chdr::solvers {
 
-    template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t, typename params_t>
-    class [[maybe_unused]] floodfill final {
+    template<typename scalar_t, typename index_t, typename params_t>
+    struct [[maybe_unused]] floodfill final {
 
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
-    public:
-
-        [[maybe_unused, nodiscard]] constexpr bool solve(const params_t& _params) {
+        [[maybe_unused, nodiscard]] static constexpr bool solve(const params_t& _params) {
 
             const auto s = utils::to_1d(_params._start, _params._maze.size());
             const auto e = utils::to_1d(_params._end,   _params._maze.size());

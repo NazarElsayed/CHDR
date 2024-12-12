@@ -21,7 +21,7 @@
 
 namespace chdr {
 
-    template <typename T, const size_t StackSize>
+    template <typename T, size_t StackSize>
     class stack_allocator {
 
     private:

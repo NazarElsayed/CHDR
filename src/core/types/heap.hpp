@@ -36,7 +36,7 @@ namespace chdr {
     template<> struct dimension<septenary>  { static constexpr size_t Kd {7U}; };
     template<> struct dimension<octonary>   { static constexpr size_t Kd {8U}; };
 
-    template<typename T, typename Compare = std::less<T>, typename Container = std::vector<T>, const size_t Kd = dimension<binary>::Kd>
+    template<typename T, typename Compare = std::less<T>, typename Container = std::vector<T>, size_t Kd = dimension<binary>::Kd>
     class heap {
 
         static_assert(Kd >= 2, "Template parameter D must be greater than or equal to 2.");
@@ -311,10 +311,10 @@ namespace chdr {
 
         [[maybe_unused, nodiscard]] constexpr bool contains(T& _item) noexcept {
 
-            constexpr bool result = !empty();
+            bool result = !empty();
 
             if (result) {
-                constexpr const auto& i = index_of(_item);
+                const auto& i = index_of(_item);
                 result = i < c.size() && _item == c[i];
             }
 

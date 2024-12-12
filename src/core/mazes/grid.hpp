@@ -27,7 +27,7 @@ namespace chdr::mazes {
     /**
      * @tparam Kd Dimensionality of the grid.
      */
-    template <const size_t Kd, typename T = uint32_t>
+    template<size_t Kd, typename T = uint32_t>
     class grid final : public imaze<weighted_node<T>, size_t> {
 
         using coord_t = coord<size_t, Kd>;

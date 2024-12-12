@@ -9,7 +9,6 @@
 #ifndef CHDR_GSTAR_HPP
 #define CHDR_GSTAR_HPP
 
-#include "base/bsolver.hpp"
 #include "mazes/graph.hpp"
 #include "mazes/grid.hpp"
 #include "mazes/base/imaze.hpp"
@@ -19,8 +18,10 @@
 
 namespace chdr::solvers {
 
-    template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t, typename params_t>
-    class [[maybe_unused]] gstar final : public bsolver<weight_t, Kd, scalar_t, index_t, params_t> {
+    template<size_t Kd, typename scalar_t, typename index_t, typename params_t>
+    struct [[maybe_unused]] gstar final {
+
+        friend struct solver<gstar, Kd, scalar_t, index_t, params_t>;
 
         static_assert(std::is_integral_v<scalar_t> || std::is_floating_point_v<scalar_t>, "scalar_t must be either an integral or floating point type");
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
@@ -47,17 +48,14 @@ namespace chdr::solvers {
             struct max {
 
                 [[nodiscard]] constexpr bool operator () (const gs_node& _a, const gs_node& _b) const {
-
                     return _a.m_fScore == _b.m_fScore ?
-                        _a.m_gScore > _b.m_gScore :
-                        _a.m_fScore > _b.m_fScore;
+                           _a.m_gScore >  _b.m_gScore :
+                           _a.m_fScore >  _b.m_fScore;
                 }
             };
         };
 
-    public:
-
-        [[maybe_unused, nodiscard]] constexpr std::vector<coord_t> execute(const params_t& _params) const override {
+        [[maybe_unused, nodiscard]] static constexpr std::vector<coord_t> execute(const params_t& _params) {
 
             std::vector<coord_t> result;
 

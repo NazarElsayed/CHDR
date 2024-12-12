@@ -17,7 +17,7 @@
 
 namespace test::generator::utils {
 
-    template<const size_t Kd = 2U>
+    template<size_t Kd = 2U>
     class backtracking {
 
         using coord_t = chdr::coord<size_t, Kd>;

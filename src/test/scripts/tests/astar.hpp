@@ -36,7 +36,7 @@ namespace test::tests {
 
     public:
 
-        template <typename weight_t, const size_t Kd, typename scalar_t = uint32_t, typename index_t = uint32_t>
+        template <typename weight_t, size_t Kd, typename scalar_t = uint32_t, typename index_t = uint32_t>
         static void run(const std::array<index_t, Kd>& _dimensions) {
 
             #define HEURISTIC chdr::heuristics<Kd, scalar_t>::manhattan_distance
@@ -93,6 +93,9 @@ namespace test::tests {
                 const auto sw_start = std::chrono::high_resolution_clock::now();
 
                 struct params {
+
+                    using weight_type = weight_t;
+
                     const decltype(grid)       _maze;
                     const coord_t              _start;
                     const coord_t              _end;
@@ -102,8 +105,9 @@ namespace test::tests {
                     const size_t               _memoryLimit = -1U;
                 };
 
-                path = chdr::solvers::astar<weight_t, Kd, scalar_t, index_t, params>()(grid, start, end, HEURISTIC);
-                //path = solver.solve(graph, start, end, size, HEURISTIC);
+                auto solver = chdr::solvers::make_solver<chdr::solvers::astar, Kd, scalar_t, index_t, params>();
+                path = solver(grid, start, end, HEURISTIC);
+                //path = solver(graph, start, end, HEURISTIC);
 
                 result = std::min(result, std::chrono::duration_cast<std::chrono::duration<long double>>(std::chrono::high_resolution_clock::now() - sw_start).count());
             }

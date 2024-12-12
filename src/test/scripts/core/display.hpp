@@ -16,7 +16,7 @@
 
 namespace test {
 
-    template<typename T, const size_t Kd>
+    template<typename T, size_t Kd>
     class display {
 
     private:

@@ -14,14 +14,15 @@
 #include <cmath>
 #include <cstddef>
 
-#include "base/bsolver.hpp"
 #include "mazes/grid.hpp"
 #include "utils/utils.hpp"
 
 namespace chdr::solvers {
 
-    template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t, typename params_t>
-    class [[maybe_unused]] esmgstar final : public bsolver<weight_t, Kd, scalar_t, index_t, params_t> {
+    template<size_t Kd, typename scalar_t, typename index_t, typename params_t>
+    struct [[maybe_unused]] esmgstar final {
+
+        friend struct solver<esmgstar, Kd, scalar_t, index_t, params_t>;
 
         static_assert(std::is_integral_v<scalar_t> || std::is_floating_point_v<scalar_t>, "scalar_t must be either an integral or floating point type");
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
@@ -29,6 +30,8 @@ namespace chdr::solvers {
     private:
 
         using coord_t = coord<index_t, Kd>;
+
+        using weight_t = typename params_t::weight_type;
 
         struct esmg_node final : std::enable_shared_from_this<esmg_node> {
 
@@ -177,9 +180,9 @@ namespace chdr::solvers {
             };
         };
 
-        using heap_t = heap<std::shared_ptr<esmg_node>, typename esmg_node::min>;
+        using heap_t = heap<std::shared_ptr<esmg_node>, typename esmg_node::max>;
 
-        constexpr void cull_worst_leaf(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, const size_t& _memoryLimit, heap_t& _open) const {
+        static constexpr void cull_worst_leaf(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, const size_t& _memoryLimit, heap_t& _open) {
 
             const auto w = safe_culling_heuristic(_open);
 
@@ -212,7 +215,7 @@ namespace chdr::solvers {
             }
         }
 
-        [[nodiscard]] constexpr auto safe_culling_heuristic(heap_t& _open) const {
+        [[nodiscard]] static constexpr auto safe_culling_heuristic(heap_t& _open) {
 
             auto w = _open.back(); // Worst leaf according to c(n) in _open
 
@@ -241,9 +244,7 @@ namespace chdr::solvers {
             return w;
         }
 
-    public:
-
-        [[maybe_unused, nodiscard]] constexpr std::vector<coord_t> solve(const params_t& _params) const {
+        [[maybe_unused, nodiscard]] static constexpr std::vector<coord_t> execute(const params_t& _params) {
 
             /** @see: https://easychair.org/publications/paper/TL2M/open */
 
@@ -265,10 +266,7 @@ namespace chdr::solvers {
             while (!open.empty()) {
 
                 auto curr(std::move(open.top()));
-                open.pop(); // Node with smallest f-cost in O
-
-                debug::log(std::to_string(curr->m_index ));
-                debug::log(std::to_string(curr->m_fScore));
+                open.pop();
 
                 if (curr->m_index != e) { // SEARCH FOR SOLUTION...
 

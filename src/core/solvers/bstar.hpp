@@ -9,7 +9,6 @@
 #ifndef CHDR_BSTAR_HPP
 #define CHDR_BSTAR_HPP
 
-#include "base/bsolver.hpp"
 #include "mazes/graph.hpp"
 #include "mazes/grid.hpp"
 #include "solvers/base/unmanaged_node.hpp"
@@ -21,8 +20,10 @@
 
 namespace chdr::solvers {
 
-    template<typename weight_t, const size_t Kd, typename scalar_t, typename index_t, typename params_t>
-    class [[maybe_unused]] bstar final : public bsolver<weight_t, Kd, scalar_t, index_t, params_t> {
+    template<size_t Kd, typename scalar_t, typename index_t, typename params_t>
+    struct [[maybe_unused]] bstar final {
+
+        friend struct solver<bstar, Kd, scalar_t, index_t, params_t>;
 
         static_assert(std::is_integral_v<scalar_t> || std::is_floating_point_v<scalar_t>, "scalar_t must be either an integral or floating point type.");
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
@@ -53,7 +54,7 @@ namespace chdr::solvers {
             };
         };
 
-        [[maybe_unused, nodiscard]] constexpr auto solve_heap(const params_t& _params) const {
+        [[maybe_unused, nodiscard]] static constexpr auto solve_heap(const params_t& _params) {
 
             std::vector<coord_t> result;
 
@@ -129,7 +130,7 @@ namespace chdr::solvers {
         }
 
         template <size_t StackSize>
-        [[maybe_unused, nodiscard]] constexpr auto solve_linear(const params_t& _params) const {
+        [[maybe_unused, nodiscard]] static constexpr auto solve_linear(const params_t& _params) {
 
             std::vector<coord_t> result;
 
@@ -205,9 +206,7 @@ namespace chdr::solvers {
             return result;
         }
 
-    public:
-
-        [[maybe_unused, nodiscard]] constexpr std::vector<coord_t> execute(const params_t& _params) const override {
+        [[maybe_unused, nodiscard]] static constexpr std::vector<coord_t> execute(const params_t& _params) {
 
             /*
              * Determine whether to solve using a linear search or constant-time

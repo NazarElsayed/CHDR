@@ -590,7 +590,7 @@ namespace {
 		 *
 		 * @warning Please note that if the function cannot identify the correct signal for a breakpoint, no breakpoint will occur.
 		 */
-        [[maybe_unused]] static void brk() noexcept  {
+        [[maybe_unused]] static void brk() noexcept {
 		
 #if !defined(NDEBUG) || _DEBUG
 			
@@ -648,7 +648,7 @@ namespace {
 		 * @par Related Functions
 		 * - debug::log(const std::string_view&, const LogType&, const bool&)
 		 */
-        [[maybe_unused]] static void log(const std::exception& _e, const log_type& _type = error, const bool& _makeInline = false) noexcept  {
+        [[maybe_unused]] static void log(const std::exception& _e, const log_type& _type = error, const bool& _makeInline = false) noexcept {
 			log(_e.what(), _type, _makeInline);
 		}
 		

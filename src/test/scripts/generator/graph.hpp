@@ -22,7 +22,7 @@ namespace test::generator {
 
         using uniform_rng_t = std::mt19937_64;
 
-        template <typename T, typename index_t, typename scalar_t, const size_t Kd, typename... Args>
+        template <typename T, typename index_t, typename scalar_t, size_t Kd, typename... Args>
         static auto generate(const chdr::coord<size_t, Kd>& _start, chdr::coord<size_t, Kd>& _end, const size_t& _seed = -1U, const Args&... _size) {
 
 			static_assert(std::is_integral_v<T>, "Type T must be an integral type.");
@@ -81,7 +81,7 @@ namespace test::generator {
                     _end = chdr::utils::to_nd(curr, size);
                 }
 
-                if (result.get_neighbours(curr).size() <= 1U)  {
+                if (result.get_neighbours(curr).size() <= 1U) {
 
                     constexpr bool includeDiagonals = false;
 

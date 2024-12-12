@@ -17,7 +17,7 @@
 
 namespace chdr {
 
-    template <const size_t Kd, typename scalar_t>
+    template<size_t Kd, typename scalar_t>
 	struct heuristics {
 
         using coord_t = coord<size_t, Kd>;
