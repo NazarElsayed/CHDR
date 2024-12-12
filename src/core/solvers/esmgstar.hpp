@@ -74,7 +74,7 @@ namespace chdr::solvers {
             // ReSharper disable once CppPossiblyUninitializedMember
             [[nodiscard]] constexpr esmg_node() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            void shrink() {
+            constexpr void shrink() {
 
                 if (!m_successors.empty()) {
 
@@ -87,7 +87,7 @@ namespace chdr::solvers {
                 }
             }
 
-            auto& expand(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, const size_t& _memoryLimit) {
+            constexpr auto& expand(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, const size_t& _memoryLimit) {
 
                 if (m_successors.empty()) {
 
@@ -179,7 +179,7 @@ namespace chdr::solvers {
 
         using heap_t = heap<std::shared_ptr<esmg_node>, typename esmg_node::min>;
 
-        void cull_worst_leaf(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, const size_t& _memoryLimit, heap_t& _open) const {
+        constexpr void cull_worst_leaf(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, const size_t& _memoryLimit, heap_t& _open) const {
 
             const auto w = safe_culling_heuristic(_open);
 
@@ -212,7 +212,7 @@ namespace chdr::solvers {
             }
         }
 
-        [[nodiscard]] auto safe_culling_heuristic(heap_t& _open) const {
+        [[nodiscard]] constexpr auto safe_culling_heuristic(heap_t& _open) const {
 
             auto w = _open.back(); // Worst leaf according to c(n) in _open
 
@@ -243,7 +243,7 @@ namespace chdr::solvers {
 
     public:
 
-        [[maybe_unused, nodiscard]] std::vector<coord_t> solve(const params_t& _params) const {
+        [[maybe_unused, nodiscard]] constexpr std::vector<coord_t> solve(const params_t& _params) const {
 
             /** @see: https://easychair.org/publications/paper/TL2M/open */
 

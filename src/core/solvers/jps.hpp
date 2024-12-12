@@ -84,7 +84,7 @@ namespace chdr::solvers {
             return (static_cast<T>(0) < _val) - (_val < static_cast<T>(0));
         }
 
-        std::vector<coord_t> find_jump_points(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _current, const std::array<int8_t, 2U> _direction, const coord_t& _end) const {
+        constexpr std::vector<coord_t> find_jump_points(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _current, const std::array<int8_t, 2U> _direction, const coord_t& _end) const {
 
             std::vector<coord_t> result;
 
@@ -167,7 +167,7 @@ namespace chdr::solvers {
         }
 
         [[nodiscard]]
-        std::pair<bool, coord_t> jump(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _current, const coord_t& _previous, const coord_t& _end) const {
+        constexpr std::pair<bool, coord_t> jump(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _current, const coord_t& _previous, const coord_t& _end) const {
 
             const std::array<int8_t, 2U> direction { static_cast<int8_t>(sign(static_cast<int>(_current[0U]) - static_cast<int>(_previous[0U]))) ,
                                                      static_cast<int8_t>(sign(static_cast<int>(_current[1U]) - static_cast<int>(_previous[1U]))) };
@@ -176,7 +176,7 @@ namespace chdr::solvers {
         }
 
         [[nodiscard]]
-        std::pair<bool, coord_t> jump(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _current, const std::array<int8_t, 2U>& _direction, const coord_t& _end) const {
+        constexpr std::pair<bool, coord_t> jump(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _current, const std::array<int8_t, 2U>& _direction, const coord_t& _end) const {
 
             std::pair<bool, coord_t> result { false, _current };
 
@@ -246,7 +246,7 @@ namespace chdr::solvers {
             return result;
         }
 
-        [[maybe_unused, nodiscard]] std::vector<coord_t> execute(const params_t& _params) const override {
+        [[maybe_unused, nodiscard]] constexpr std::vector<coord_t> execute(const params_t& _params) const override {
 
             std::vector<coord_t> result;
 

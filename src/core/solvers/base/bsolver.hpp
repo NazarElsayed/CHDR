@@ -29,17 +29,20 @@ namespace chdr::solvers {
 
         virtual ~bsolver() = default;
 
-        [[maybe_unused, nodiscard]] auto solve(const params_t& _params) const {
+        template <typename... Args>
+        [[maybe_unused, nodiscard]] constexpr auto operator() (Args&&... _args) {
 
-            const auto s = utils::to_1d(_params._start, _params._maze.size());
-            const auto e = utils::to_1d(_params._end  , _params._maze.size());
+            const params_t params { std::forward<Args>(_args)... };
 
-            if (_params._maze.contains(s)       &&
-                _params._maze.contains(e)       &&
-                _params._maze.at(s).is_active() &&
-                _params._maze.at(e).is_active()
+            const auto s = utils::to_1d(params._start, params._maze.size());
+            const auto e = utils::to_1d(params._end  , params._maze.size());
+
+            if (params._maze.contains(s)       &&
+                params._maze.contains(e)       &&
+                params._maze.at(s).is_active() &&
+                params._maze.at(e).is_active()
             ) {
-                return (s != e) ? execute(_params) : std::vector<coord_t> { _params._end };
+                return (s != e) ? execute(params) : std::vector<coord_t> { params._end };
             }
             else {
                 return std::vector<coord_t> {};

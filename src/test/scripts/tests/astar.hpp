@@ -79,7 +79,7 @@ namespace test::tests {
             auto noise_floor_min = std::numeric_limits<long double>::infinity();
             for (size_t i = 0U; i < test_samples; ++i) {
 
-                auto sw_start = std::chrono::high_resolution_clock::now();
+                const auto sw_start = std::chrono::high_resolution_clock::now();
                 noise_floor_min = std::min(noise_floor_min, std::chrono::duration_cast<std::chrono::duration<long double>>(std::chrono::high_resolution_clock::now() - sw_start).count());
             }
 
@@ -90,20 +90,19 @@ namespace test::tests {
             auto result = std::numeric_limits<long double>::infinity();
             for (size_t i = 0U; i < test_samples; ++i) {
 
-                auto sw_start = std::chrono::high_resolution_clock::now();
+                const auto sw_start = std::chrono::high_resolution_clock::now();
 
                 struct params {
                     const decltype(grid)       _maze;
                     const coord_t              _start;
                     const coord_t              _end;
-                    const decltype(&HEURISTIC) _h; // Change HEURISTIC to a function pointer
+                    const decltype(&HEURISTIC) _h;
                     const scalar_t             _weight      =  1U;
                     const size_t               _capacity    =  0U;
                     const size_t               _memoryLimit = -1U;
                 };
 
-                chdr::solvers::astar<weight_t, Kd, scalar_t, index_t, params> solver;
-                path = solver.solve({ grid, start, end, HEURISTIC });
+                path = chdr::solvers::astar<weight_t, Kd, scalar_t, index_t, params>()(grid, start, end, HEURISTIC);
                 //path = solver.solve(graph, start, end, size, HEURISTIC);
 
                 result = std::min(result, std::chrono::duration_cast<std::chrono::duration<long double>>(std::chrono::high_resolution_clock::now() - sw_start).count());

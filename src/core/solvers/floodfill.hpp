@@ -24,7 +24,7 @@ namespace chdr::solvers {
 
     public:
 
-        [[maybe_unused, nodiscard]] bool solve(const params_t& _params) {
+        [[maybe_unused, nodiscard]] constexpr bool solve(const params_t& _params) {
 
             const auto s = utils::to_1d(_params._start, _params._maze.size());
             const auto e = utils::to_1d(_params._end,   _params._maze.size());

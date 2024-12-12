@@ -79,7 +79,7 @@ namespace chdr::solvers {
 
     public:
 
-        [[maybe_unused, nodiscard]] std::vector<coord_t> solve(const params_t& _params) {
+        [[maybe_unused, nodiscard]] constexpr std::vector<coord_t> solve(const params_t& _params) {
 
             (void)_params;
 
