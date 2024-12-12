@@ -71,7 +71,7 @@ namespace chdr::solvers {
             const auto e = utils::to_1d(_params._end,   _params._maze.size());
 
             // Create closed set:
-            auto capacity = std::max(_params._capacity, std::max(s, e));
+            const auto capacity = std::max(_params._capacity, std::max(s, e));
             existence_set<low_memory_usage> closed({ s }, capacity);
 
             // Create open set:
@@ -102,8 +102,8 @@ namespace chdr::solvers {
 
                             // Check if node is not already visited:
                             if (!closed.contains(n)) {
-                                closed.allocate(n, capacity, _params._maze.count());
-                                closed.emplace(n);
+                                 closed.allocate(n, capacity, _params._maze.count());
+                                 closed.emplace(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
                                 open.emplace(n, curr.m_gScore + static_cast<scalar_t>(nDistance), _params._h(nCoord, _params._end) * _params._weight, &buf.emplace(std::move(curr)));
@@ -119,8 +119,8 @@ namespace chdr::solvers {
 
                                 // Check if node is not already visited:
                                 if (!closed.contains(n)) {
-                                    closed.allocate(n, capacity, _params._maze.count());
-                                    closed.emplace(n);
+                                     closed.allocate(n, capacity, _params._maze.count());
+                                     closed.emplace(n);
 
                                     // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
                                     open.emplace(n, curr.m_gScore + static_cast<scalar_t>(nDistance), _params._h(nCoord, _params._end) * _params._weight, &buf.emplace(std::move(curr)));
@@ -149,7 +149,7 @@ namespace chdr::solvers {
             const auto e = utils::to_1d(_params._end,   _params._maze.size());
 
             // Create closed set:
-            auto capacity = std::max(_params._capacity, std::max(s, e));
+            const auto capacity = std::max(_params._capacity, std::max(s, e));
             existence_set<low_memory_usage> closed({ s }, capacity);
 
             // Create open set:
@@ -181,8 +181,8 @@ namespace chdr::solvers {
 
                             // Check if node is not already visited:
                             if (!closed.contains(n)) {
-                                closed.allocate(n, capacity, _params._maze.count());
-                                closed.emplace(n);
+                                 closed.allocate(n, capacity, _params._maze.count());
+                                 closed.emplace(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
                                 open.emplace(n, curr.m_gScore + static_cast<scalar_t>(nDistance), _params._h(nCoord, _params._end) * _params._weight, &buf.emplace(std::move(curr)));
@@ -198,8 +198,8 @@ namespace chdr::solvers {
 
                                 // Check if node is not already visited:
                                 if (!closed.contains(n)) {
-                                    closed.allocate(n, capacity, _params._maze.count());
-                                    closed.emplace(n);
+                                     closed.allocate(n, capacity, _params._maze.count());
+                                     closed.emplace(n);
 
                                     // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
                                     open.emplace(n, curr.m_gScore + static_cast<scalar_t>(nDistance), _params._h(nCoord, _params._end) * _params._weight, &buf.emplace(std::move(curr)));

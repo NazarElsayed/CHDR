@@ -93,7 +93,7 @@ namespace test::tests {
                     const size_t               _capacity;
                 };
 
-                chdr::solvers::astar<weight_t, Kd, scalar_t, index_t, params> solver;
+                chdr::solvers::dfs<weight_t, Kd, scalar_t, index_t, params> solver;
                 path = solver.solve({grid, start, end, HEURISTIC, static_cast<scalar_t>(1), 0U});
                 //path = solver.solve(graph, start, end, size, HEURISTIC);
 

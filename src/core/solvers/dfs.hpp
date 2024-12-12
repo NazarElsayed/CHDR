@@ -26,96 +26,29 @@ namespace chdr::solvers {
 
     private:
 
-        using coord_t = coord<index_t, Kd>;
-
-        struct dfs_node final : unmanaged_node<index_t> {
-
-            /**
-             * @brief Constructs an uninitialized DFSNode.
-             *
-             * This constructor creates an DFSNode with uninitialized members.
-             */
-            dfs_node() noexcept : unmanaged_node<index_t>() {}
-
-            [[nodiscard]] constexpr dfs_node(const index_t& _index, const unmanaged_node<index_t>* RESTRICT const _parent) noexcept : unmanaged_node<index_t>(_index, _parent) {}
-        };
+        using    coord_t = coord<index_t, Kd>;
+        using dfs_node_t = unmanaged_node<index_t>;
 
     public:
-
+        
         [[maybe_unused]]
-        std::vector<coord_t> execute(const mazes::graph<index_t, scalar_t>& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, size_t _capacity) const override {
+        std::vector<coord_t> execute(const params_t& _params) const override {
 
             std::vector<coord_t> result;
 
-            const auto s = utils::to_1d(_start, _size);
-            const auto e = utils::to_1d(_end,   _size);
-
-            // Create closed Set:
-            _capacity = std::max(_capacity, std::max(s, e));
-            existence_set<low_memory_usage> closed({ s }, _capacity);
-
-            // Create open Set:
-            stack<dfs_node> open(_capacity);
-            open.emplace(s, nullptr);
-
-            // Create buffer:
-            stable_forward_buf<dfs_node> buf;
-
-            // Main loop:
-            while (!open.empty()) { // SEARCH FOR SOLUTION...
-
-                auto curr(std::move(open.top()));
-                open.pop();
-
-                if (curr.m_index != e) {
-
-                    closed.allocate(curr.m_index, _capacity, _maze.count());
-                    closed.emplace(curr.m_index);
-
-                    for (const auto& neighbour : _maze.get_neighbours(curr.m_index)) {
-
-                        const auto& [n, nDistance] = neighbour;
-
-                        // Check if node is not already visited:
-                        if (!closed.contains(n)) {
-
-                            closed.allocate(n, _capacity, _maze.count());
-                            closed.emplace(n);
-
-                            // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                            open.emplace(n, &buf.emplace(std::move(curr)));
-                        }
-                    }
-                }
-                else { // SOLUTION REACHED ...
-
-                    result = curr.template backtrack<dfs_node>(_size, _capacity);
-
-                    break;
-                }
-            }
-
-            return result;
-        }
-
-        [[maybe_unused]]
-        std::vector<coord_t> execute(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, size_t _capacity) const override {
-
-            std::vector<coord_t> result;
-
-            const auto s = utils::to_1d(_start, _maze.size());
-            const auto e = utils::to_1d(_end,   _maze.size());
+            const auto s = utils::to_1d(_params._start, _params._maze.size());
+            const auto e = utils::to_1d(_params._end,   _params._maze.size());
 
             // Create closed set:
-            _capacity = std::max(_capacity, std::max(s, e));
-            existence_set<low_memory_usage> closed({ s }, _capacity);
+            const auto capacity = std::max(_params._capacity, std::max(s, e));
+            existence_set<low_memory_usage> closed({ s }, capacity);
 
             // Create open set:
-            stack<dfs_node> open(_capacity);
+            stack<dfs_node_t> open(capacity);
             open.emplace(s, nullptr);
 
             // Create buffer:
-            stable_forward_buf<dfs_node> buf;
+            stable_forward_buf<dfs_node_t> buf;
 
             // Main loop:
             while (!open.empty()) { // SEARCH FOR SOLUTION...
@@ -125,30 +58,45 @@ namespace chdr::solvers {
 
                 if (curr.m_index != e) {
 
-                    closed.allocate(curr.m_index, _capacity, _maze.count());
+                    closed.allocate(curr.m_index, capacity, _params._maze.count());
                     closed.emplace(curr.m_index);
 
-                    for (const auto& neighbour: _maze.get_neighbours(curr.m_index)) {
+                    for (const auto& neighbour: _params._maze.get_neighbours(curr.m_index)) {
 
-                        if (const auto& [nActive, nCoord] = neighbour; nActive) {
+                        if constexpr (std::is_same_v<std::decay_t<decltype(_params._maze)>, mazes::graph<index_t, scalar_t>>) {
 
-                            const auto n = utils::to_1d(nCoord, _maze.size());
+                            const auto& [n, nDistance] = neighbour;
 
                             // Check if node is not already visited:
                             if (!closed.contains(n)) {
-
-                                closed.allocate(n, _capacity, _maze.count());
-                                closed.emplace(n);
+                                 closed.allocate(n, capacity, _params._maze.count());
+                                 closed.emplace(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
                                 open.emplace(n, &buf.emplace(std::move(curr)));
+                            }
+                        }
+                        else {
+
+                            if (const auto& [nActive, nCoord] = neighbour; nActive) {
+
+                                const auto n = utils::to_1d(nCoord, _params._maze.size());
+
+                                // Check if node is not already visited:
+                                if (!closed.contains(n)) {
+                                     closed.allocate(n, capacity, _params._maze.count());
+                                     closed.emplace(n);
+
+                                    // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
+                                    open.emplace(n, &buf.emplace(std::move(curr)));
+                                }
                             }
                         }
                     }
                 }
                 else { // SOLUTION REACHED ...
 
-                    result = curr.template backtrack<dfs_node>(_maze.size(), _capacity);
+                    result = curr.template backtrack<dfs_node_t>(_params._maze.size(), capacity);
 
                     break;
                 }
@@ -156,7 +104,6 @@ namespace chdr::solvers {
 
             return result;
         }
-
     };
 
 } //chdr::solvers

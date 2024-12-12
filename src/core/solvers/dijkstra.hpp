@@ -80,13 +80,9 @@ namespace chdr::solvers {
     public:
 
         [[maybe_unused]]
-        void solve(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const size_t _capacity = 0U) {
+        void solve(const params_t& _params) {
 
-            (void)_maze; // Suppress unused variable warnings.
-            (void)_start;
-            (void)_end;
-            (void)_h;
-            (void)_capacity;
+            (void)_params;
 
             throw std::runtime_error("Djikstra::solve(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U): Not implemented!");
         }
