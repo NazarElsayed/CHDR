@@ -26,12 +26,12 @@ namespace chdr::solvers {
 
     public:
 
-        [[maybe_unused, nodiscard]] constexpr auto operator() () {
+        [[maybe_unused, nodiscard]] constexpr auto operator() () const {
             return operator()(params_t {});
         }
 
         template <typename... Args>
-        [[maybe_unused, nodiscard]] constexpr auto operator() (Args&&... _args) {
+        [[maybe_unused, nodiscard]] constexpr auto operator() (Args&&... _args) const {
 
             const params_t params { std::forward<Args>(_args)... };
 
@@ -60,7 +60,7 @@ namespace chdr::solvers {
         typename index_t,
         typename params_t
     >
-    [[nodiscard]] constexpr auto make_solver() {
+    [[nodiscard]] static constexpr auto make_solver() {
         return solver<Derived, Kd, scalar_t, index_t, params_t>();
     }
 
@@ -71,7 +71,7 @@ namespace chdr::solvers {
         typename index_t,
         typename params_t
     >
-    [[nodiscard]] constexpr auto solve() {
+    [[nodiscard]] static constexpr auto solve() {
         return solver<Derived, Kd, scalar_t, index_t, params_t>()();
     }
 
@@ -83,7 +83,7 @@ namespace chdr::solvers {
         typename params_t,
         typename... Args
     >
-    [[nodiscard]] constexpr auto solve(Args&&... _args) {
+    [[nodiscard]] static constexpr auto solve(Args&&... _args) {
         return solver<Derived, Kd, scalar_t, index_t, params_t>()(std::forward<Args>(_args)...);
     }
 
