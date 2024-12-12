@@ -50,7 +50,7 @@ namespace chdr::solvers {
              */
             [[nodiscard]] constexpr as_node() noexcept : unmanaged_node<index_t>() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] constexpr as_node(const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore, const unmanaged_node<index_t>* RESTRICT const _parent) noexcept : unmanaged_node<index_t>(_index, _parent),
+            [[nodiscard]] constexpr as_node(const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore, const unmanaged_node<index_t>* RESTRICT const _parent = nullptr) noexcept : unmanaged_node<index_t>(_index, _parent),
                 m_gScore(_gScore),
                 m_fScore(_gScore + _hScore) {}
 
@@ -68,8 +68,8 @@ namespace chdr::solvers {
 
             std::vector<coord_t> result;
 
-            const auto s = utils::to_1d(_params._start, _params._maze.size());
-            const auto e = utils::to_1d(_params._end,   _params._maze.size());
+            const auto s = utils::to_1d(_params._start, _params._size);
+            const auto e = utils::to_1d(_params._end,   _params._size);
 
             // Create closed set:
             const auto capacity = std::max(_params._capacity, std::max(s, e));
@@ -77,7 +77,7 @@ namespace chdr::solvers {
 
             // Create open set:
             heap<as_node, typename as_node::max> open(capacity / 8U);
-            open.emplace(s, static_cast<scalar_t>(0), _params._h(_params._start, _params._end), nullptr);
+            open.emplace(s, static_cast<scalar_t>(0), _params._h(_params._start, _params._end));
 
             // Create buffer:
             stable_forward_buf<as_node> buf;
@@ -107,14 +107,14 @@ namespace chdr::solvers {
                                  closed.emplace(n);
 
                                 // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                open.emplace(n, curr.m_gScore + static_cast<scalar_t>(nDistance), _params._h(nCoord, _params._end) * _params._weight, &buf.emplace(std::move(curr)));
+                                open.emplace(n, curr.m_gScore + nDistance, _params._h(nCoord, _params._end) * _params._weight, &buf.emplace(std::move(curr)));
                             }
                         }
                         else {
 
                             if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-                                const auto n = utils::to_1d(nCoord, _params._maze.size());
+                                const auto n = utils::to_1d(nCoord, _params._size);
 
                                 constexpr auto nDistance = static_cast<scalar_t>(1);
 
@@ -124,7 +124,7 @@ namespace chdr::solvers {
                                      closed.emplace(n);
 
                                     // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                    open.emplace(n, curr.m_gScore + static_cast<scalar_t>(nDistance), _params._h(nCoord, _params._end) * _params._weight, &buf.emplace(std::move(curr)));
+                                    open.emplace(n, curr.m_gScore + nDistance, _params._h(nCoord, _params._end) * _params._weight, &buf.emplace(std::move(curr)));
                                 }
                             }
                         }
@@ -132,7 +132,7 @@ namespace chdr::solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    result = std::move(curr.template backtrack<as_node>(_params._maze.size(), curr.m_gScore));
+                    result = std::move(curr.template backtrack<as_node>(_params._size, curr.m_gScore));
 
                     break;
                 }
@@ -146,8 +146,8 @@ namespace chdr::solvers {
 
             std::vector<coord_t> result;
 
-            const auto s = utils::to_1d(_params._start, _params._maze.size());
-            const auto e = utils::to_1d(_params._end,   _params._maze.size());
+            const auto s = utils::to_1d(_params._start, _params._size);
+            const auto e = utils::to_1d(_params._end,   _params._size);
 
             // Create closed set:
             const auto capacity = std::max(_params._capacity, std::max(s, e));
@@ -156,7 +156,7 @@ namespace chdr::solvers {
             // Create open set:
             linear_priority_queue<as_node, typename as_node::max, std::vector<as_node, stack_allocator<as_node, StackSize>>> open;
             open.reserve(StackSize);
-            open.emplace(s, static_cast<scalar_t>(0), _params._h(_params._start, _params._end), nullptr);
+            open.emplace(s, static_cast<scalar_t>(0), _params._h(_params._start, _params._end));
 
             // Create buffer:
             stable_forward_buf<as_node, StackSize / 2U> buf;
@@ -184,16 +184,14 @@ namespace chdr::solvers {
                             if (!closed.contains(n)) {
                                  closed.allocate(n, capacity, _params._maze.count());
                                  closed.emplace(n);
-
-                                // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                open.emplace(n, curr.m_gScore + static_cast<scalar_t>(nDistance), _params._h(nCoord, _params._end) * _params._weight, &buf.emplace(std::move(curr)));
+                                   open.emplace(n, curr.m_gScore + nDistance, _params._h(nCoord, _params._end) * _params._weight, &buf.emplace(std::move(curr))); // Note: 'current' is now moved!
                             }
                         }
                         else {
 
                             if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-                                const auto n = utils::to_1d(nCoord, _params._maze.size());
+                                const auto n = utils::to_1d(nCoord, _params._size);
 
                                 const auto nDistance = static_cast<scalar_t>(1);
 
@@ -201,9 +199,7 @@ namespace chdr::solvers {
                                 if (!closed.contains(n)) {
                                      closed.allocate(n, capacity, _params._maze.count());
                                      closed.emplace(n);
-
-                                    // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                    open.emplace(n, curr.m_gScore + static_cast<scalar_t>(nDistance), _params._h(nCoord, _params._end) * _params._weight, &buf.emplace(std::move(curr)));
+                                       open.emplace(n, curr.m_gScore + nDistance, _params._h(nCoord, _params._end) * _params._weight, &buf.emplace(std::move(curr))); // Note: 'current' is now moved!
                                 }
                             }
                         }
@@ -211,7 +207,7 @@ namespace chdr::solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    result = std::move(curr.template backtrack<as_node>(_params._maze.size(), curr.m_gScore));
+                    result = std::move(curr.template backtrack<as_node>(_params._size, curr.m_gScore));
 
                     break;
                 }

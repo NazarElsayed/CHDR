@@ -250,8 +250,8 @@ namespace chdr::solvers {
 
             std::vector<coord_t> result;
 
-            const auto s = utils::to_1d(_params._start, _params._maze.size());
-            const auto e = utils::to_1d(_params._end,   _params._maze.size());
+            const auto s = utils::to_1d(_params._start, _params._size);
+            const auto e = utils::to_1d(_params._end,   _params._size);
 
             // Create Open Set:
             heap_t open;
@@ -286,7 +286,7 @@ namespace chdr::solvers {
                             curr->m_forgottenFCosts.erase(nCoord);
                         }
                         else {
-                            successor->m_fScore = std::max(curr->m_fScore, successor->m_gScore + (_params._h(utils::to_nd(successor->m_index, _params._maze.size()), _params._end) * _params._weight));
+                            successor->m_fScore = std::max(curr->m_fScore, successor->m_gScore + (_params._h(utils::to_nd(successor->m_index, _params._size), _params._end) * _params._weight));
                         }
 
                         // Add successor to open.
@@ -314,12 +314,12 @@ namespace chdr::solvers {
                         result.reserve(curr->m_gScore);
 
                         // Recurse from end node to start node, inserting into a result buffer:
-                        result.emplace_back(utils::to_nd(curr->m_index, _params._maze.size()));
+                        result.emplace_back(utils::to_nd(curr->m_index, _params._size));
 
                         if (auto item = curr->m_parent) {
 
                             while (const auto item_parent = item->m_parent) {
-                                result.emplace_back(utils::to_nd(item->m_index, _params._maze.size()));
+                                result.emplace_back(utils::to_nd(item->m_index, _params._size));
 
                                 auto oldItem = item;
                                 item = item_parent;

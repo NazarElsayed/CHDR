@@ -35,8 +35,8 @@ namespace chdr::solvers {
 
             std::vector<coord_t> result;
 
-            const auto s = utils::to_1d(_params._start, _params._maze.size());
-            const auto e = utils::to_1d(_params._end,   _params._maze.size());
+            const auto s = utils::to_1d(_params._start, _params._size);
+            const auto e = utils::to_1d(_params._end,   _params._size);
 
             // Create closed set:
             const auto capacity = std::max(_params._capacity, std::max(s, e));
@@ -44,7 +44,7 @@ namespace chdr::solvers {
 
             // Create open:
             queue<bfs_node_t> open;
-            open.emplace(s, nullptr);
+            open.emplace(s);
 
             // Create buffer:
             stable_forward_buf<bfs_node_t> buf;
@@ -70,24 +70,20 @@ namespace chdr::solvers {
                             if (!closed.contains(n)) {
                                  closed.allocate(n, capacity, _params._maze.count());
                                  closed.emplace(n);
-
-                                // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                open.emplace(n, &buf.emplace(std::move(curr)));
+                                   open.emplace(n, &buf.emplace(std::move(curr))); // Note: 'current' is now moved!
                             }
                         }
                         else {
 
                             if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-                                const auto n = utils::to_1d(nCoord, _params._maze.size());
+                                const auto n = utils::to_1d(nCoord, _params._size);
 
                                 // Check if node is not already visited:
                                 if (!closed.contains(n)) {
                                      closed.allocate(n, capacity, _params._maze.count());
                                      closed.emplace(n);
-
-                                    // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                    open.emplace(n, &buf.emplace(std::move(curr)));
+                                       open.emplace(n, &buf.emplace(std::move(curr))); // Note: 'current' is now moved!
                                 }
                             }
                         }
@@ -95,7 +91,7 @@ namespace chdr::solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    result = curr.template backtrack<bfs_node_t>(_params._maze.size(), capacity);
+                    result = curr.template backtrack<bfs_node_t>(_params._size, capacity);
 
                     break;
                 }

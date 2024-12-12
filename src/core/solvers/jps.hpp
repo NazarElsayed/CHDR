@@ -252,8 +252,8 @@ namespace chdr::solvers {
 
             std::vector<coord_t> result;
 
-            const auto s = utils::to_1d(_params._start, _params._maze.size());
-            const auto e = utils::to_1d(_params._end  , _params._maze.size());
+            const auto s = utils::to_1d(_params._start, _params._size);
+            const auto e = utils::to_1d(_params._end  , _params._size);
 
             // Create closed set:
             const auto capacity = std::max(_params._capacity, std::max(s, e));
@@ -261,7 +261,7 @@ namespace chdr::solvers {
 
             // Create open set:
             heap<jps_node, typename jps_node::max> open(capacity / 8U);
-            open.emplace(s, std::array<int8_t, 2U>{ 0, 0 }, static_cast<scalar_t>(0), _params._h(_params._start, _params._end), nullptr);
+            open.emplace(s, std::array<int8_t, 2U>{ 0, 0 }, static_cast<scalar_t>(0), _params._h(_params._start, _params._end));
 
             // Create buffer:
             stable_forward_buf<jps_node> buf;
@@ -277,12 +277,12 @@ namespace chdr::solvers {
                     closed.allocate(curr.m_index, capacity, _params._maze.count());
                     closed.emplace(curr.m_index);
 
-                    auto      coord = utils::to_nd(curr.m_index, _params._maze.size());
+                    auto      coord = utils::to_nd(curr.m_index, _params._size);
                     auto successors = find_jump_points(_params._maze, coord, curr.m_direction, _params._end);
 
                     for (const auto& successor : successors) {
 
-                        const auto n = utils::to_1d(successor, _params._maze.size());
+                        const auto n = utils::to_1d(successor, _params._size);
 
                         constexpr auto nDistance = static_cast<scalar_t>(1);
 
@@ -293,14 +293,13 @@ namespace chdr::solvers {
                             const std::array<int8_t, 2U> direction { static_cast<int8_t>(sign(static_cast<int>(successor[0U]) - static_cast<int>(coord[0U]))) ,
                                                                      static_cast<int8_t>(sign(static_cast<int>(successor[1U]) - static_cast<int>(coord[1U]))) };
 
-                            // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                            open.emplace(n, direction, curr.m_gScore + static_cast<scalar_t>(nDistance), _params._h(successor, _params._end) * _params._weight, &buf.emplace(std::move(curr)));
+                            open.emplace(n, direction, curr.m_gScore + nDistance, _params._h(successor, _params._end) * _params._weight, &buf.emplace(std::move(curr))); // Note: 'current' is now moved!
                         }
                     }
                 }
                 else { // SOLUTION REACHED ...
 
-                    result = curr.template backtrack<jps_node>(_params._maze.size(), curr.m_gScore);
+                    result = curr.template backtrack<jps_node>(_params._size, curr.m_gScore);
 
                     break;
                 }

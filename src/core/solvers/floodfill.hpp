@@ -24,8 +24,8 @@ namespace chdr::solvers {
 
         [[maybe_unused, nodiscard]] static constexpr bool solve(const params_t& _params) {
 
-            const auto s = utils::to_1d(_params._start, _params._maze.size());
-            const auto e = utils::to_1d(_params._end,   _params._maze.size());
+            const auto s = utils::to_1d(_params._start, _params._size);
+            const auto e = utils::to_1d(_params._end,   _params._size);
 
             if (_params._maze.contains(s) &&
                 _params._maze.contains(e) &&
@@ -72,7 +72,7 @@ namespace chdr::solvers {
 
                                         if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-                                            const auto n = utils::to_1d(nCoord, _params._maze.size());
+                                            const auto n = utils::to_1d(nCoord, _params._size);
 
                                             // Check if node is not already visited:
                                             if (!closed.contains(n)) {

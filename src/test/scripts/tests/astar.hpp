@@ -61,7 +61,7 @@ namespace test::tests {
                       coord_t end;
 
             /* MAX DRAW SIZE */
-            const bool drawable (
+            bool drawable (
                 size[0U] <= 100U &&
                 size[1U] <= 100U &&
                       Kd >    0U &&
@@ -70,9 +70,10 @@ namespace test::tests {
 
             /* GENERATE MAZE */
 
-            const auto maze = generator::grid::generate<weight_t>(start, end, 0.0, 0.0, seed, size);
-            //const auto maze = chdr::mazes::graph<index_t, scalar_t>(generator::grid::generate<weight_t>(start, end, 0.0, 0.0, seed, size));
-            //const auto maze = generator::graph::generate<weight_t, index_t, scalar_t>(start, end, 0.0, 0.0, seed, size);
+            const auto grid = generator::grid::generate<weight_t>(start, end, 0.0, 0.0, seed, size);
+            const auto maze = grid;
+            //const auto maze = chdr::mazes::graph<index_t, scalar_t>(grid);
+            //const auto maze = generator::graph::generate<weight_t, index_t, scalar_t>(start, end, 0.0, 0.0, seed, size); drawable = false;
 
             /* CAPTURE SYSTEM NOISE */
 
@@ -105,6 +106,7 @@ namespace test::tests {
                     const decltype(maze)       _maze;
                     const coord_t              _start;
                     const coord_t              _end;
+                    const coord_t              _size;
                     const decltype(&HEURISTIC) _h;
                     const scalar_t             _weight      =  1U;
                     const size_t               _capacity    =  0U;
@@ -112,7 +114,7 @@ namespace test::tests {
                 };
 
                 auto solver = chdr::solvers::make_solver<chdr::solvers::astar, Kd, scalar_t, index_t, params>();
-                path = solver(maze, start, end, HEURISTIC);
+                path = solver(maze, start, end, size, HEURISTIC);
 
                 result = std::min(
                     result,
@@ -123,7 +125,7 @@ namespace test::tests {
             }
 
             if (drawable) {
-                display<weight_t, Kd>::draw_maze(start, end, size, maze, path);
+                display<weight_t, Kd>::draw_maze(start, end, size, grid, path);
             }
 
             debug::log("(A*):");

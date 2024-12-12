@@ -26,20 +26,24 @@ namespace chdr::solvers {
 
     public:
 
+        [[maybe_unused, nodiscard]] constexpr auto operator() () {
+            return operator()(params_t {});
+        }
+
         template <typename... Args>
         [[maybe_unused, nodiscard]] constexpr auto operator() (Args&&... _args) {
 
             const params_t params { std::forward<Args>(_args)... };
 
-            const auto s = utils::to_1d(params._start, params._maze.size());
-            const auto e = utils::to_1d(params._end,   params._maze.size());
+            const auto s = utils::to_1d(params._start, params._size);
+            const auto e = utils::to_1d(params._end,   params._size);
 
             if (params._maze.contains(s)       &&
                 params._maze.contains(e)       &&
                 params._maze.at(s).is_active() &&
                 params._maze.at(e).is_active()
             ) {
-                return LIKELY(s != e) ?
+                return s != e ?
                     Derived<Kd, scalar_t, index_t, params_t>::execute(params) :
                     std::vector<coord_t> { params._end };
             }
@@ -47,7 +51,6 @@ namespace chdr::solvers {
                 return std::vector<coord_t>{};
             }
         }
-
     };
 
     template <
@@ -59,6 +62,17 @@ namespace chdr::solvers {
     >
     [[nodiscard]] constexpr auto make_solver() {
         return solver<Derived, Kd, scalar_t, index_t, params_t>();
+    }
+
+    template <
+        template <size_t Kd, typename scalar_t, typename index_t, typename params_t> typename Derived,
+        size_t Kd,
+        typename scalar_t,
+        typename index_t,
+        typename params_t
+    >
+    [[nodiscard]] constexpr auto solve() {
+        return solver<Derived, Kd, scalar_t, index_t, params_t>()();
     }
 
     template <

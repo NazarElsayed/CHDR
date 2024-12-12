@@ -59,8 +59,8 @@ namespace chdr::solvers {
 
             std::vector<coord_t> result;
 
-            const auto s = utils::to_1d(_params._start, _params._maze.size());
-            const auto e = utils::to_1d(_params._end,   _params._maze.size());
+            const auto s = utils::to_1d(_params._start, _params._size);
+            const auto e = utils::to_1d(_params._end,   _params._size);
 
             // Create closed set:
             const auto capacity = std::max(_params._capacity, std::max(s, e));
@@ -87,20 +87,20 @@ namespace chdr::solvers {
 
                             const auto& [n, nDistance] = neighbour;
 
-                            const auto nCoord = utils::to_nd(n, _params._maze.size());
+                            const auto nCoord = utils::to_nd(n, _params._size);
 
                             // Check if node is not already visited:
                             if (!closed.contains(n)) {
                                  closed.allocate(n, capacity, _params._maze.count());
                                  closed.emplace(n);
-                                   open.emplace(n, curr.m_gScore + static_cast<scalar_t>(nDistance), _params._h(nCoord, _params._end) * _params._weight, std::move(curr)); // Note: 'current' is now moved!
+                                   open.emplace(n, curr.m_gScore + nDistance, _params._h(nCoord, _params._end) * _params._weight, std::move(curr)); // Note: 'current' is now moved!
                             }
                         }
                         else {
 
                             if (const auto& [nActive, nCoord] = neighbour; nActive) {
 
-                                const auto n = utils::to_1d(nCoord, _params._maze.size());
+                                const auto n = utils::to_1d(nCoord, _params._size);
 
                                 constexpr auto nDistance = static_cast<scalar_t>(1);
 
@@ -108,7 +108,7 @@ namespace chdr::solvers {
                                 if (!closed.contains(n)) {
                                      closed.allocate(n, capacity, _params._maze.count());
                                      closed.emplace(n);
-                                       open.emplace(n, curr.m_gScore + static_cast<scalar_t>(nDistance), _params._h(nCoord, _params._end) * _params._weight, std::move(curr)); // Note: 'current' is now moved!
+                                       open.emplace(n, curr.m_gScore + nDistance, _params._h(nCoord, _params._end) * _params._weight, std::move(curr)); // Note: 'current' is now moved!
                                 }
                             }
                         }
@@ -122,7 +122,7 @@ namespace chdr::solvers {
                     closed.clear();
                     closed.shrink_to_fit();
 
-                    result = curr.template backtrack<gs_node>(_params._maze.size(), curr.m_gScore);
+                    result = curr.template backtrack<gs_node>(_params._size, curr.m_gScore);
 
                     break;
                 }

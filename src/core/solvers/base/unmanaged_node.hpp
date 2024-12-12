@@ -22,7 +22,7 @@ namespace chdr::solvers {
         // ReSharper disable once CppPossiblyUninitializedMember
         constexpr unmanaged_node() noexcept {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-        [[nodiscard]] constexpr unmanaged_node(const index_t& _index, const unmanaged_node* RESTRICT const _parent) noexcept : bnode<index_t>(_index),
+        [[nodiscard]] constexpr unmanaged_node(const index_t& _index, const unmanaged_node* RESTRICT const _parent = nullptr) noexcept : bnode<index_t>(_index),
             m_parent(std::move(_parent)) {}
 
         template<typename node_t, typename coord_t>
