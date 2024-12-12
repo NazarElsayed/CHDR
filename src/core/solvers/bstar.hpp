@@ -120,7 +120,7 @@ namespace chdr::solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    result = std::move(curr.template backtrack<node>(_params._size, curr.m_gScore));
+                    result = std::move(curr.template backtrack<node>(_params._size, static_cast<size_t>(_params._h(_params._start, _params._end))));
 
                     break;
                 }
@@ -195,7 +195,7 @@ namespace chdr::solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    result = std::move(curr.template backtrack<node>(_params._size, curr.m_gScore));
+                    result = std::move(curr.template backtrack<node>(_params._size, static_cast<size_t>(_params._h(_params._start, _params._end))));
 
                     break;
                 }
