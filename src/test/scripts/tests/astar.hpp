@@ -70,9 +70,9 @@ namespace test::tests {
 
             /* GENERATE MAZE */
 
-            const auto grid = generator::grid::generate<weight_t>(start, end, 0.0, 0.0, seed, size);
-            //const auto graph = chdr::mazes::graph<index_t, scalar_t>(grid);
-            //const auto graph = generator::graph::generate<weight_t, index_t, scalar_t>(start, end, 0.0, 0.0, seed, size);
+            const auto maze = generator::grid::generate<weight_t>(start, end, 0.0, 0.0, seed, size);
+            //const auto maze = chdr::mazes::graph<index_t, scalar_t>(generator::grid::generate<weight_t>(start, end, 0.0, 0.0, seed, size));
+            //const auto maze = generator::graph::generate<weight_t, index_t, scalar_t>(start, end, 0.0, 0.0, seed, size);
 
             /* CAPTURE SYSTEM NOISE */
 
@@ -80,7 +80,13 @@ namespace test::tests {
             for (size_t i = 0U; i < test_samples; ++i) {
 
                 const auto sw_start = std::chrono::high_resolution_clock::now();
-                noise_floor_min = std::min(noise_floor_min, std::chrono::duration_cast<std::chrono::duration<long double>>(std::chrono::high_resolution_clock::now() - sw_start).count());
+
+                noise_floor_min = std::min(
+                    noise_floor_min,
+                    std::chrono::duration_cast<std::chrono::duration<long double>>(
+                        std::chrono::high_resolution_clock::now() - sw_start
+                    ).count()
+                );
             }
 
             /* TEST ALGORITHM */
@@ -96,7 +102,7 @@ namespace test::tests {
 
                     using weight_type = weight_t;
 
-                    const decltype(grid)       _maze;
+                    const decltype(maze)       _maze;
                     const coord_t              _start;
                     const coord_t              _end;
                     const decltype(&HEURISTIC) _h;
@@ -106,14 +112,18 @@ namespace test::tests {
                 };
 
                 auto solver = chdr::solvers::make_solver<chdr::solvers::astar, Kd, scalar_t, index_t, params>();
-                path = solver(grid, start, end, HEURISTIC);
-                //path = solver(graph, start, end, HEURISTIC);
+                path = solver(maze, start, end, HEURISTIC);
 
-                result = std::min(result, std::chrono::duration_cast<std::chrono::duration<long double>>(std::chrono::high_resolution_clock::now() - sw_start).count());
+                result = std::min(
+                    result,
+                    std::chrono::duration_cast<std::chrono::duration<long double>>(
+                        std::chrono::high_resolution_clock::now() - sw_start
+                    ).count()
+                );
             }
 
             if (drawable) {
-                display<weight_t, Kd>::draw_maze(start, end, size, grid, path);
+                display<weight_t, Kd>::draw_maze(start, end, size, maze, path);
             }
 
             debug::log("(A*):");
