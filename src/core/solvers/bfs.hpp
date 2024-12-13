@@ -32,6 +32,44 @@ namespace chdr::solvers {
         using       node = unmanaged_node<index_t>;
         using open_set_t = queue<node>;
 
+        struct node_data {
+
+            const bool active;
+
+            const  coord_t    coord;
+            const  index_t    index;
+            const scalar_t distance;
+        };
+
+        template <typename node_data_t>
+        static constexpr node_data get_data(const node_data_t& _n, const params_t& _params) {
+
+            constexpr bool is_graph = std::is_same_v<std::decay_t<decltype(_params.maze)>, mazes::graph<index_t, scalar_t>>;
+
+            if constexpr(is_graph) {
+
+                const auto& [nIndex, nDistance] = _n;
+
+                return {
+                    true,
+                    utils::to_nd(nIndex, _params.size),
+                    nIndex,
+                    nDistance
+                };
+            }
+            else {
+
+                const auto& [nActive, nCoord] = _n;
+
+                return {
+                    nActive,
+                    nCoord,
+                    nActive ? utils::to_1d(nCoord, _params.size) : index_t{},
+                    static_cast<scalar_t>(1)
+                };
+            }
+        }
+
         [[maybe_unused, nodiscard]] static constexpr std::vector<coord_t> execute(const params_t& _params) {
 
             std::vector<coord_t> result;
@@ -61,31 +99,15 @@ namespace chdr::solvers {
                     closed.allocate(curr.m_index, capacity, _params.maze.count());
                     closed.emplace(curr.m_index);
 
-                    for (const auto& neighbour : _params.maze.get_neighbours(curr.m_index)) {
+                    for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
 
-                        if constexpr (std::is_same_v<std::decay_t<decltype(_params.maze)>, mazes::graph<index_t, scalar_t>>) {
-
-                            const auto& [n, nDistance] = neighbour;
+                        if (const auto n = get_data(n_data, _params); n.active) {
 
                             // Check if node is not already visited:
-                            if (!closed.contains(n)) {
-                                 closed.allocate(n, capacity, _params.maze.count());
-                                 closed.emplace(n);
-                                   open.emplace(n, &buf.emplace(std::move(curr))); // Note: 'current' is now moved!
-                            }
-                        }
-                        else {
-
-                            if (const auto& [nActive, nCoord] = neighbour; nActive) {
-
-                                const auto n = utils::to_1d(nCoord, _params.size);
-
-                                // Check if node is not already visited:
-                                if (!closed.contains(n)) {
-                                     closed.allocate(n, capacity, _params.maze.count());
-                                     closed.emplace(n);
-                                       open.emplace(n, &buf.emplace(std::move(curr))); // Note: 'current' is now moved!
-                                }
+                            if (!closed.contains(n.index)) {
+                                 closed.allocate(n.index, capacity, _params.maze.count());
+                                 closed.emplace(n.index);
+                                   open.emplace(n.index, &buf.emplace(std::move(curr))); // Note: 'current' is now moved!
                             }
                         }
                     }
