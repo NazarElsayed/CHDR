@@ -215,7 +215,7 @@ namespace {
 		
 #if __linux__ | __APPLE__
 		
-		static void ansi(const std::string_view& _message, const log_type& _type, const bool& _makeInline) {
+		static constexpr void ansi(const std::string_view& _message, const log_type& _type, const bool& _makeInline) {
 			
 			/* ANSI TEXT COLORS */
 			#define ANSI_RESET   "\033[0m"
@@ -530,7 +530,78 @@ namespace {
 		
 		/** Metadata about the previous log. */
 		inline static meta s_last_log = { 0U, -1U, false };
-		
+
+		static void log_internal(const std::string_view& _message, const log_type& _type, const bool& _makeInline) {
+
+			const std::lock_guard guard(s_lock);
+
+			static constexpr size_t max_frames = 10;
+
+			try {
+				try {
+
+					/*
+					 * Construct a header containing various pieces of metadata about the current log.
+					 */
+					std::ostringstream message;
+
+					const meta meta {
+						std::time(nullptr),
+						thread_id::get(),
+						_makeInline
+					};
+
+					// Timestamp:
+					if (!s_last_log.m_inline) {
+						message << std::put_time(std::localtime(&meta.m_timestamp), "[%H:%M:%S %d/%m/%Y] ");
+					}
+
+					// Thread id:
+					if (!s_last_log.m_inline || s_last_log.m_thread_id != meta.m_thread_id) {
+						message << "[" + std::to_string(meta.m_thread_id) + "] ";
+					}
+
+					message << _message.data();
+
+					// Print log to console:
+					print::multiplatform(message.str(), _type, _makeInline);
+
+					// Add trace information:
+					if (_type == trace || _type == critical) {
+
+						// Start trace on new line always.
+						if (s_last_log.m_inline) {
+							std::cout << "\n";
+						}
+
+						const auto trace = stack_trace(max_frames);
+						for (size_t i = 0U; i < trace.size(); ++i) {
+
+							// Indent each trace:
+							for (size_t j = 0; j < i; ++j) {
+								std::cout << '\t';
+							}
+
+							print::multiplatform(trace[i], log_type::trace, false);
+						}
+
+						// Flush the console.
+						std::cout << std::flush;
+					}
+
+#if !defined(NDEBUG) || _DEBUG
+					if (_type == log_type::critical) { brk(); }
+#endif
+					s_last_log = meta;
+
+				}
+				catch (const std::exception& e) {
+					std::cerr << "LOG_ERR: " << e.what() << std::endl;
+				}
+			}
+			catch (...) {}
+		}
+
 	public:
 		
 		struct thread_id final {
@@ -576,7 +647,8 @@ namespace {
 		 * @param[in] _type (optional) The type of log message to log.
 		 * @param[in] _makeInline (optional) A flag indicating if the log message should be displayed inline.
 		 */
-        [[maybe_unused]] static void asrt(const bool& _condition, const std::string_view& _message, const log_type& _type = log_type::debug, const bool& _makeInline = false) noexcept {
+		template <typename T>
+        [[maybe_unused]] static void asrt(const bool& _condition, const T& _message, const log_type& _type = log_type::debug, const bool& _makeInline = false) noexcept {
 			
 			if (!_condition) {
 				log(_message, _type, _makeInline);
@@ -634,25 +706,6 @@ namespace {
 		}
 		
 		/**
-		 * @brief Logs an exception with a specified log type.
-		 *
-		 * This static method is used to log an exception with a specified log type.
-		 * By default, the log type is set to `LogType::error`.
-		 *
-		 * @param[in] _e The exception to log.
-		 * @param[in] _type (optional) The log type of the message.
-		 * @param[in] _makeInline (optional) A flag indicating if the log message should be displayed inline.
-		 *
-		 * @note This method is declared `noexcept`, indicating that it does not throw any exceptions.
-		 *
-		 * @par Related Functions
-		 * - debug::log(const std::string_view&, const LogType&, const bool&)
-		 */
-        [[maybe_unused]] static void log(const std::exception& _e, const log_type& _type = error, const bool& _makeInline = false) noexcept {
-			log(_e.what(), _type, _makeInline);
-		}
-		
-		/**
 		 * @brief Logs a message with a specified log type.
 		 *
 		 * This function logs a message with a specified log type.
@@ -662,78 +715,30 @@ namespace {
 		 * @param[in] _type (optional) The log type for the message (default is `LogType::debug`).
 		 * @param[in] _makeInline (optional) Specifies whether the log message should be displayed inline (default is `false`).
 		 */
-        [[maybe_unused]] static void log(const std::string_view& _message, const log_type& _type = log_type::debug, const bool& _makeInline = false) noexcept {
-			
-			const std::lock_guard guard(s_lock);
-			
-			static constexpr size_t max_frames = 10;
-			
-			try {
-				try {
-					
-					/*
-					 * Construct a header containing various pieces of metadata about the current log.
-					 */
-					std::ostringstream message;
-					
-					const meta meta {
-						std::time(nullptr),
-						thread_id::get(),
-						_makeInline
-					};
-					
-					// Timestamp:
-					if (!s_last_log.m_inline) {
-						message << std::put_time(std::localtime(&meta.m_timestamp), "[%H:%M:%S %d/%m/%Y] ");
-					}
-					
-					// Thread id:
-					if (!s_last_log.m_inline || s_last_log.m_thread_id != meta.m_thread_id) {
-						message << "[" + std::to_string(meta.m_thread_id) + "] ";
-					}
-					
-					message << _message.data();
-					
-					// Print log to console:
-					print::multiplatform(message.str(), _type, _makeInline);
-					
-					// Add trace information:
-					if (_type == trace || _type == critical) {
-						
-						// Start trace on new line always.
-						if (s_last_log.m_inline) {
-							std::cout << "\n";
-						}
-						
-						const auto trace = stack_trace(max_frames);
-						for (size_t i = 0U; i < trace.size(); ++i) {
-							
-							// Indent each trace:
-							for (size_t j = 0; j < i; ++j) {
-								std::cout << '\t';
-							}
-							
-							print::multiplatform(trace[i], log_type::trace, false);
-						}
-						
-						// Flush the console.
-						std::cout << std::flush;
-					}
+		template <typename T>
+		static void log(const T& _message, const log_type& _type = log_type::debug, const bool& _makeInline = false) noexcept {
 
-#if !defined(NDEBUG) || _DEBUG
-					if (_type == log_type::critical) { brk(); }
-#endif
-					s_last_log = meta;
-					
-				}
-				catch (const std::exception& e) {
-					std::cerr << "LOG_ERR: " << e.what() << std::endl;
-				}
+			if constexpr (
+				std::is_same_v<std::decay_t<T>, std::string>      ||
+				std::is_same_v<std::decay_t<T>, std::string_view>
+			) {
+				log_internal(_message, _type, _makeInline);
 			}
-			catch (...) {}
-		}
-		
-        [[maybe_unused, nodiscard]] static std::vector<std::string> stack_trace(const size_t& _frames) {
+			else if constexpr (std::is_array_v<T> && std::is_same_v<std::remove_extent_t<T>, const char>) {
+				log_internal(_message, _type, _makeInline);
+			}
+			else if constexpr (std::is_base_of_v<std::exception, std::remove_cv_t<std::remove_reference_t<T>>>) {
+				log_internal(_message.what(), _type, _makeInline);
+			}
+			else if constexpr (std::is_arithmetic_v<T>) {
+				log_internal(std::to_string(_message), _type, _makeInline);
+			}
+			else {
+				log_internal(std::string(_message), _type, _makeInline);
+			}
+        }
+
+		[[maybe_unused, nodiscard]] static std::vector<std::string> stack_trace(const size_t& _frames) {
 
 			std::vector<std::string> result;
 			
@@ -769,7 +774,7 @@ namespace {
 			return result;
 		}
 	};
-	
+
 } //
 
 #if defined(__clang__)
