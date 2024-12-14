@@ -12,7 +12,6 @@
 #include <algorithm>
 #include <cstddef>
 #include <exception>
-#include <random>
 #include <vector>
 
 namespace test::generator::utils {
@@ -22,8 +21,44 @@ namespace test::generator::utils {
 
         using coord_t = chdr::coord<size_t, Kd>;
 
-        using uniform_rng_t = std::mt19937_64;
+        template <typename T = uint32_t>
+        struct [[maybe_unused]] linear_congruential_generator {
+            static_assert(std::is_integral_v<T>, "Template parameter T must be an integral type");
 
+            using result_type = T;
+
+            result_type state;
+
+            static constexpr result_type multiplier = sizeof(T) == 4U ?
+                static_cast<result_type>(1664525U) :                    // ranqd1
+                static_cast<result_type>(6364136223846793005ULL);       // MMIX
+
+            static constexpr result_type increment = sizeof(T) == 4U ?
+                static_cast<result_type>(1013904223U) :                 // ranqd1
+                static_cast<result_type>(1442695040888963407ULL);       // MMIX
+
+            static constexpr result_type modulus = sizeof(T) == 4U ?
+                static_cast<result_type>(1U << 31U) :                   // ranqd1
+                static_cast<result_type>(1ULL << 63ULL);                // MMIX
+
+            [[maybe_unused]] constexpr explicit linear_congruential_generator(const result_type& _seed = 0) noexcept :
+                state(_seed < 0 ? -_seed : _seed) {}
+
+            [[maybe_unused]] constexpr void seed(const result_type& _seed) noexcept {
+                state = _seed < 0 ? -_seed : _seed;
+            }
+
+            [[maybe_unused]] constexpr const result_type& operator()() noexcept {
+                return state = static_cast<result_type>((multiplier * static_cast<std::make_unsigned_t<result_type>>(state) + increment) % modulus);
+            }
+
+            [[maybe_unused]] static constexpr result_type min() noexcept { return 0; }
+
+            [[maybe_unused]] static constexpr result_type max() noexcept { return modulus - 1; }
+        };
+
+        using uniform_rng_t = linear_congruential_generator<size_t>;
+        
     public:
 
         enum cell : bool {
@@ -229,7 +264,7 @@ namespace test::generator::utils {
                  */
                 if (valid_dimensionality(_size)) {
 
-                    const auto seed = _seed == null_v ? std::random_device().operator()() : _seed;
+                    const auto seed = _seed == null_v ? time(nullptr) : _seed;
                     uniform_rng_t rng(seed);
 
                     debug::log("\tBacktracking Algorithm \t(Seed " + std::to_string(seed) + ")");
@@ -237,7 +272,7 @@ namespace test::generator::utils {
                     // Carve a maze using the recursive backtracking algorithm:
                     carve_from(_start, farthest, _size, result, rng);
 
-                    if (_loops > 0.0F || _obstacles > 0.0F) {
+                    if (_loops > 0.0 || _obstacles > 0.0) {
 
                         // Randomly knock down walls if the maze is meant to contain loops:
                         for (size_t i = 1U; i < result.size(); ++i) {
@@ -248,14 +283,14 @@ namespace test::generator::utils {
 
                                 if (!is_edge(c, _size)) {
 
-                                    if (const auto obstacle_chance = static_cast<double>(rng()) / static_cast<double>(std::mt19937::max());
+                                    if (const auto obstacle_chance = static_cast<double>(rng()) / static_cast<double>(uniform_rng_t::max());
                                         obstacle_chance < _obstacles
                                     ) {
                                         result[chdr::utils::to_1d<size_t>(c, _size)] = WALL;
                                     }
                                     else {
 
-                                        if (const auto loop_chance = static_cast<double>(rng()) / static_cast<double>(std::mt19937::max());
+                                        if (const auto loop_chance = static_cast<double>(rng()) / static_cast<double>(uniform_rng_t::max());
                                             loop_chance < _loops
                                         ) {
                                             result[chdr::utils::to_1d<size_t>(c, _size)] = PATH;
