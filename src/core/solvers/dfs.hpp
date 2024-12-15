@@ -44,7 +44,8 @@ namespace chdr::solvers {
             existence_set<low_memory_usage> closed({ s }, capacity);
 
             // Create open set:
-            open_set_t open(capacity);
+            open_set_t open;
+            open.reserve(capacity / 8U);
             open.emplace(s);
 
             // Create buffer:

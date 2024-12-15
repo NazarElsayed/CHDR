@@ -49,6 +49,7 @@ namespace chdr::solvers {
 
                     // Create open set:
                     open_set_t open;
+                    open.reserve(capacity / 8U);
                     open.emplace(s);
 
                     // Main loop:

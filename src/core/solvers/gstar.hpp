@@ -68,6 +68,7 @@ namespace chdr::solvers {
 
             // Create open set:
             open_set_t open;
+            open.reserve(capacity / 8U);
             open.emplace(s, static_cast<scalar_t>(0), _params.h(_params.start, _params.end));
 
             // Main loop:
