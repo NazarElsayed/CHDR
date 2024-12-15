@@ -28,7 +28,8 @@ namespace chdr::solvers {
 
     private:
 
-        using coord_t = coord<index_t, Kd>;
+        using solver_t = solver<gstar, Kd, scalar_t, index_t, params_t>;
+        using  coord_t = coord<index_t, Kd>;
 
         struct node final : managed_node<index_t> {
 

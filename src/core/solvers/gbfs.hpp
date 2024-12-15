@@ -28,6 +28,7 @@ namespace chdr::solvers {
 
     private:
 
+        using   solver_t = solver<gbfs, Kd, scalar_t, index_t, params_t>;
         using    coord_t = coord<index_t, Kd>;
         using       node = managed_node<index_t>;
         using open_set_t = queue<node>;

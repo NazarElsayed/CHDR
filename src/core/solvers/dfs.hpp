@@ -27,7 +27,7 @@ namespace chdr::solvers {
 
     private:
 
-        using    solver_t = solver<bfs, Kd, scalar_t, index_t, params_t>;
+        using    solver_t = solver<dfs, Kd, scalar_t, index_t, params_t>;
         using    coord_t = coord<index_t, Kd>;
         using       node = unmanaged_node<index_t>;
         using open_set_t = stack<node>;

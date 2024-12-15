@@ -28,8 +28,8 @@ namespace chdr::solvers {
 
     private:
 
-        using coord_t = coord<index_t, Kd>;
-
+        using solver_t = solver<jps, Kd, scalar_t, index_t, params_t>;
+        using  coord_t = coord<index_t, Kd>;
         using weight_t = typename params_t::weight_type;
 
         static constexpr std::array<uint8_t, 8U> s_rotate_l { 2U, 4U, 7U,

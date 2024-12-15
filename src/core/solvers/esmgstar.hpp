@@ -29,8 +29,8 @@ namespace chdr::solvers {
 
     private:
 
-        using coord_t = coord<index_t, Kd>;
-
+        using solver_t = solver<esmgstar, Kd, scalar_t, index_t, params_t>;
+        using  coord_t = coord<index_t, Kd>;
         using weight_t = typename params_t::weight_type;
 
         struct node final : std::enable_shared_from_this<node> {
