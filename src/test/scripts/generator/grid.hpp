@@ -30,17 +30,14 @@ namespace test::generator {
 
 			std::array size { _size... };
 
-			auto maze = backtracking_t::generate(_start, _end, size, _loops, _obstacles, _seed);
+			const auto maze = backtracking_t::generate(_start, _end, size, _loops, _obstacles, _seed);
 
 			std::vector<chdr::mazes::weighted_node<T>> nodes;
             nodes.reserve(maze.size());
 
-            while (!maze.empty()) {
-                nodes.emplace_back(maze.back() == backtracking_t::WALL);
-                maze.pop_back();
-            }
-
-            std::reverse(nodes.begin(), nodes.end());
+            for (auto it = maze.begin(); it != maze.end(); ++it) {
+				nodes.emplace_back(*it == backtracking_t::WALL);
+			}
 
             debug::log("\t[FINISHED] \t(~" + chdr::utils::trim_trailing_zeros(std::to_string(chdr::utils::product<size_t>(size) / static_cast<long double>(1000000000.0))) + "b total candidate nodes)");
 

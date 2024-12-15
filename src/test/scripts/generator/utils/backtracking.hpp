@@ -68,7 +68,7 @@ namespace test::generator::utils {
 
     private:
 
-        static constexpr bool valid_dimensionality(const chdr::coord<size_t, Kd>& _size) {
+        static constexpr bool valid_dimensionality(const coord_t& _size) {
 
             bool result = true;
 
@@ -82,7 +82,7 @@ namespace test::generator::utils {
             return result;
         }
 
-        static constexpr bool is_link(const chdr::coord<size_t, Kd>& _coord) {
+        static constexpr bool is_link(const coord_t& _coord) {
 
             bool result = false;
 
@@ -96,7 +96,7 @@ namespace test::generator::utils {
             return result;
         }
 
-        static constexpr bool is_edge(const chdr::coord<size_t, Kd>& _coord, const chdr::coord<size_t, Kd>& _size) {
+        static constexpr bool is_edge(const coord_t& _coord, const coord_t& _size) {
 
             bool result = false;
 
@@ -112,7 +112,7 @@ namespace test::generator::utils {
 
         static constexpr auto get_directions(const coord_t& _coord, const coord_t& _size) {
 
-            std::array<std::pair<bool, chdr::coord<size_t, Kd>>, Kd * 2U> result{};
+            std::array<std::pair<bool, coord_t>, Kd * 2U> result{};
 
             IVDEP
             VECTOR_ALWAYS
@@ -132,11 +132,15 @@ namespace test::generator::utils {
             return result;
         }
 
+        template <typename container_t>
         static
 #if __cplusplus >= 202302L
         constexpr
 #endif // __cplusplus >= 202302L
-        void carve_from(const coord_t& _coord, std::pair<coord_t, size_t>& _farthest, const coord_t& _size, std::vector<cell>& _grid, uniform_rng_t& _rng) {
+        void carve_from(const coord_t& _coord, std::pair<coord_t, size_t>& _farthest, const coord_t& _size, container_t& _grid, uniform_rng_t& _rng) {
+
+            static_assert(std::is_invocable_v<decltype(static_cast<typename container_t::reference (container_t::*)(size_t)>(&container_t::operator[])), container_t&, size_t>,
+                    "container_t must implement the subscript operator []");
 
             chdr::stack<std::pair<coord_t, size_t>> stack;
             stack.emplace(_coord, 0U);
@@ -147,7 +151,7 @@ namespace test::generator::utils {
                 _grid[chdr::utils::to_1d(currentCoord, _size)] = PATH;
 
                 if (depth > _farthest.second) {
-                    _farthest.first = currentCoord;
+                    _farthest.first  = currentCoord;
                     _farthest.second = depth;
                 }
 
@@ -159,8 +163,8 @@ namespace test::generator::utils {
 
                     if (inBounds) {
 
-                        auto lc = currentCoord; // last
-                        auto cc = currentCoord; // current
+                        auto lc = currentCoord;
+                        auto cc = currentCoord;
 
                         bool validCellNeighbor = true;
 
@@ -170,9 +174,9 @@ namespace test::generator::utils {
                             cc[j] += 2U * dir[j];
 
                             if (cc[j] >= _size[j]) {
-                                validCellNeighbor = false;
+                                validCellNeighbor &= false;
 
-                                break;
+                                if constexpr (Kd > 4U) { break; }
                             }
                         }
 
@@ -187,16 +191,13 @@ namespace test::generator::utils {
                                 stack.emplace(cc, depth + 1U);
 
                                 hasUnvisited = true;
-
                                 break;
                             }
                         }
                     }
                 }
 
-                if (!hasUnvisited) {
-                    stack.pop();
-                }
+                if (!hasUnvisited) { stack.pop(); }
             }
         }
 
@@ -253,9 +254,6 @@ namespace test::generator::utils {
 
             try {
 
-                // Maze algo:
-                result.resize(product, WALL);
-
                 std::pair<coord_t, size_t> farthest { _start, 0U };
 
                 /*
@@ -270,6 +268,8 @@ namespace test::generator::utils {
                     debug::log("\tBacktracking Algorithm \t(Seed " + std::to_string(seed) + ")");
 
                     // Carve a maze using the recursive backtracking algorithm:
+                    result.reserve(product);
+                    result.assign(product, WALL);
                     carve_from(_start, farthest, _size, result, rng);
 
                     if (_loops > 0.0 || _obstacles > 0.0) {
@@ -279,23 +279,13 @@ namespace test::generator::utils {
 
                             auto c = chdr::utils::to_nd<size_t, Kd>(i, _size);
 
-                            if (is_link(c)) {
+                            if (is_link(c) && !is_edge(c, _size)) {
 
-                                if (!is_edge(c, _size)) {
-
-                                    if (const auto obstacle_chance = static_cast<double>(rng()) / static_cast<double>(uniform_rng_t::max());
-                                        obstacle_chance < _obstacles
-                                    ) {
-                                        result[chdr::utils::to_1d<size_t>(c, _size)] = WALL;
-                                    }
-                                    else {
-
-                                        if (const auto loop_chance = static_cast<double>(rng()) / static_cast<double>(uniform_rng_t::max());
-                                            loop_chance < _loops
-                                        ) {
-                                            result[chdr::utils::to_1d<size_t>(c, _size)] = PATH;
-                                        }
-                                    }
+                                if (const auto obstacle_chance = static_cast<double>(rng()) / static_cast<double>(uniform_rng_t::max()); obstacle_chance < _obstacles) {
+                                    result[chdr::utils::to_1d<size_t>(c, _size)] = WALL;
+                                }
+                                else if (const auto loop_chance = static_cast<double>(rng()) / static_cast<double>(uniform_rng_t::max()); loop_chance < _loops) {
+                                    result[chdr::utils::to_1d<size_t>(c, _size)] = PATH;
                                 }
                             }
                         }
