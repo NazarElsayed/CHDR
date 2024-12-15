@@ -17,13 +17,14 @@
 
 namespace chdr::solvers {
 
-    template<typename scalar_t, typename index_t, typename params_t>
+    template<size_t Kd, typename scalar_t, typename index_t, typename params_t>
     struct [[maybe_unused]] floodfill final {
 
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
     private:
 
+        using   solver_t = solver<floodfill, Kd, scalar_t, index_t, params_t>;
         using open_set_t = queue<index_t>;
 
     public:
@@ -33,16 +34,18 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
-            if (_params.maze.contains(s) &&
-                _params.maze.contains(e) &&
+            if (_params.maze.contains(s)       &&
+                _params.maze.contains(e)       &&
                 _params.maze.at(s).is_active() &&
                 _params.maze.at(e).is_active()
             ) {
 
                 if (s != e) {
 
+                    const auto capacity = std::max(_params.capacity, std::max(s, e));
+
                     // Create closed Set:
-                    existence_set closed ({ s }, std::max(_params.capacity, std::max(s, e)));
+                    existence_set closed ({ s }, capacity);
 
                     // Create open set:
                     open_set_t open;
@@ -61,31 +64,15 @@ namespace chdr::solvers {
                                 closed.allocate(curr, _params.capacity, _params.maze.count());
                                 closed.emplace(curr);
 
-                                for (const auto& neighbour : _params.maze.get_neighbours(curr)) {
+                                for (const auto& n_data : _params.maze.get_neighbours(curr)) {
 
-                                    if constexpr (std::is_same_v<std::decay_t<decltype(_params.maze)>, mazes::graph<index_t, scalar_t>>) {
-
-                                        const auto& n = neighbour.first;
+                                    if (const auto n = solver_t::get_data(n_data, _params); n.active) {
 
                                         // Check if node is not already visited:
-                                        if (!closed.contains(n)) {
-                                             closed.allocate(n, _params.capacity, _params.maze.count());
-                                             closed.emplace(n);
-                                               open.emplace(n);
-                                        }
-                                    }
-                                    else {
-
-                                        if (const auto& [nActive, nCoord] = neighbour; nActive) {
-
-                                            const auto n = utils::to_1d(nCoord, _params.size);
-
-                                            // Check if node is not already visited:
-                                            if (!closed.contains(n)) {
-                                                 closed.allocate(n, _params.capacity, _params.maze.count());
-                                                 closed.emplace(n);
-                                                   open.emplace(n);
-                                            }
+                                        if (!closed.contains(n.index)) {
+                                             closed.allocate(n.index, capacity, _params.maze.count());
+                                             closed.emplace(n.index);
+                                               open.emplace(n.index); // Note: 'current' is now moved!
                                         }
                                     }
                                 }

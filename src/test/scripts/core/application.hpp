@@ -153,7 +153,7 @@ namespace test {
                                 tests::astar::run<bool>(_dimensions);
 							}
 							catch (const std::exception& e) {
-								debug::log(e);
+								debug::log(e, error);
 							}
 
 						}

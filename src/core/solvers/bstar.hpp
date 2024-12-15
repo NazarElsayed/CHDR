@@ -82,39 +82,15 @@ namespace chdr::solvers {
                     closed.allocate(curr.m_index, capacity, _params.maze.count());
                     closed.emplace(curr.m_index);
 
-                    for (const auto& neighbour : _params.maze.get_neighbours(curr.m_index)) {
+                    for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
 
-                        if constexpr (std::is_same_v<std::decay_t<decltype(_params.maze)>, mazes::graph<index_t, scalar_t>>) {
-
-                            const auto& [n, nDistance] = neighbour;
-
-                            const auto nCoord = utils::to_nd(n, _params.size);
+                        if (const auto n = solver_t::get_data(n_data, _params); n.active) {
 
                             // Check if node is not already visited:
-                            if (!closed.contains(n)) {
-                                 closed.allocate(n, capacity, _params.maze.count());
-                                 closed.emplace(n);
-
-                                // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                open.emplace(n, _params.h(nCoord, _params.end), &buf.emplace(std::move(curr)));
-                            }
-                        }
-                        else {
-
-                            if (const auto& [nActive, nCoord] = neighbour; nActive) {
-
-                                const auto n = utils::to_1d(nCoord, _params.size);
-
-                                constexpr scalar_t nDistance{1};
-
-                                // Check if node is not already visited:
-                                if (!closed.contains(n)) {
-                                     closed.allocate(n, capacity, _params.maze.count());
-                                     closed.emplace(n);
-
-                                    // Create a parent node and transfer ownership of 'current' to it. Note: 'current' is now moved!
-                                    open.emplace(n, _params.h(nCoord, _params.end), &buf.emplace(std::move(curr)));
-                                }
+                            if (!closed.contains(n.index)) {
+                                 closed.allocate(n.index, capacity, _params.maze.count());
+                                 closed.emplace(n.index);
+                                   open.emplace(n.index, _params.h(n.coord, _params.end), &buf.emplace(std::move(curr)));
                             }
                         }
                     }
@@ -161,35 +137,15 @@ namespace chdr::solvers {
                     closed.allocate(curr.m_index, capacity, _params.maze.count());
                     closed.emplace(curr.m_index);
 
-                    for (const auto& neighbour : _params.maze.get_neighbours(curr.m_index)) {
+                    for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
 
-                        if constexpr (std::is_same_v<std::decay_t<decltype(_params.maze)>, mazes::graph<index_t, scalar_t>>) {
-
-                            const auto& [n, nDistance] = neighbour;
-
-                            const auto nCoord = utils::to_nd(n, _params.size);
+                        if (const auto n = solver_t::get_data(n_data, _params); n.active) {
 
                             // Check if node is not already visited:
-                            if (!closed.contains(n)) {
-                                 closed.allocate(n, capacity, _params.maze.count());
-                                 closed.emplace(n);
-                                   open.emplace(n, _params.h(nCoord, _params.end), &buf.emplace(std::move(curr))); // Note: 'current' is now moved!
-                            }
-                        }
-                        else {
-
-                            if (const auto& [nActive, nCoord] = neighbour; nActive) {
-
-                                const auto n = utils::to_1d(nCoord, _params.size);
-
-                                constexpr scalar_t nDistance{1};
-
-                                // Check if node is not already visited:
-                                if (!closed.contains(n)) {
-                                     closed.allocate(n, capacity, _params.maze.count());
-                                     closed.emplace(n);
-                                       open.emplace(n, _params.h(nCoord, _params.end), &buf.emplace(std::move(curr))); // Note: 'current' is now moved!
-                                }
+                            if (!closed.contains(n.index)) {
+                                 closed.allocate(n.index, capacity, _params.maze.count());
+                                 closed.emplace(n.index);
+                                   open.emplace(n.index, _params.h(n.coord, _params.end), &buf.emplace(std::move(curr)));
                             }
                         }
                     }

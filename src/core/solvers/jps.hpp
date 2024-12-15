@@ -260,7 +260,7 @@ namespace chdr::solvers {
 
             // Create open set:
             open_set_t open(capacity / 8U);
-            open.emplace(s, std::array<int8_t, 2U>{ 0, 0 }, static_cast<scalar_t>(0), _params.h(_params.start, _params.end));
+            open.emplace(s, std::array<int8_t, 2U>{{0, 0}}, static_cast<scalar_t>(0), _params.h(_params.start, _params.end), nullptr);
 
             // Create buffer:
             stable_forward_buf<node> buf;
