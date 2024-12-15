@@ -9,8 +9,6 @@
 #ifndef CHDR_BSOLVER_HPP
 #define CHDR_BSOLVER_HPP
 
-#include "../../utils/intrinsics.hpp"
-
 namespace chdr::solvers {
 
     template <
@@ -26,12 +24,50 @@ namespace chdr::solvers {
 
     public:
 
-        [[maybe_unused, nodiscard]] constexpr auto operator() () const {
+        struct node_data {
+
+            const bool active;
+
+            const  coord_t    coord;
+            const  index_t    index;
+            const scalar_t distance;
+        };
+
+        template <typename maze_neighbour_t>
+        static constexpr node_data get_data(const maze_neighbour_t& _n, const params_t& _params) {
+
+            constexpr bool is_graph = std::is_same_v<std::decay_t<decltype(_params.maze)>, mazes::graph<index_t, scalar_t>>;
+
+            if constexpr (is_graph) {
+
+                const auto& [nIndex, nDistance] = _n;
+
+                return {
+                    true,
+                    utils::to_nd(nIndex, _params.size),
+                    nIndex,
+                    nDistance
+                };
+            }
+            else {
+
+                const auto& [nActive, nCoord] = _n;
+
+                return {
+                    nActive,
+                    nCoord,
+                    nActive ? utils::to_1d(nCoord, _params.size) : index_t{},
+                    static_cast<scalar_t>(1)
+                };
+            }
+        }
+
+        [[maybe_unused, nodiscard]] constexpr auto operator()() const {
             return operator()(params_t {});
         }
 
         template <typename... Args>
-        [[maybe_unused, nodiscard]] constexpr auto operator() (Args&&... _args) const {
+        [[maybe_unused, nodiscard]] constexpr auto operator()(Args&&... _args) const {
 
             const params_t params { std::forward<Args>(_args)... };
 

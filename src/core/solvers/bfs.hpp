@@ -28,47 +28,10 @@ namespace chdr::solvers {
 
     private:
 
-        using    coord_t = coord<index_t, Kd>;
-        using       node = unmanaged_node<index_t>;
-        using open_set_t = queue<node>;
-
-        struct node_data {
-
-            const bool active;
-
-            const  coord_t    coord;
-            const  index_t    index;
-            const scalar_t distance;
-        };
-
-        template <typename node_data_t>
-        static constexpr node_data get_data(const node_data_t& _n, const params_t& _params) {
-
-            constexpr bool is_graph = std::is_same_v<std::decay_t<decltype(_params.maze)>, mazes::graph<index_t, scalar_t>>;
-
-            if constexpr(is_graph) {
-
-                const auto& [nIndex, nDistance] = _n;
-
-                return {
-                    true,
-                    utils::to_nd(nIndex, _params.size),
-                    nIndex,
-                    nDistance
-                };
-            }
-            else {
-
-                const auto& [nActive, nCoord] = _n;
-
-                return {
-                    nActive,
-                    nCoord,
-                    nActive ? utils::to_1d(nCoord, _params.size) : index_t{},
-                    static_cast<scalar_t>(1)
-                };
-            }
-        }
+        using    solver_t = solver<bfs, Kd, scalar_t, index_t, params_t>;
+        using     coord_t = coord<index_t, Kd>;
+        using        node = unmanaged_node<index_t>;
+        using  open_set_t = queue<node>;
 
         [[maybe_unused, nodiscard]] static constexpr std::vector<coord_t> execute(const params_t& _params) {
 
@@ -101,7 +64,7 @@ namespace chdr::solvers {
 
                     for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
 
-                        if (const auto n = get_data(n_data, _params); n.active) {
+                        if (const auto n = solver_t::get_data(n_data, _params); n.active) {
 
                             // Check if node is not already visited:
                             if (!closed.contains(n.index)) {
