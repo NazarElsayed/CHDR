@@ -72,7 +72,6 @@ namespace chdr::solvers {
             return std::vector<coord_t>{};
         }
 
-
         [[maybe_unused, nodiscard]] static constexpr auto execute(const params_t& _params) {
 
             const auto s = utils::to_1d(_params.start, _params.size);
