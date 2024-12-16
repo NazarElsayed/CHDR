@@ -9,6 +9,8 @@
 #ifndef CHDR_BSOLVER_HPP
 #define CHDR_BSOLVER_HPP
 
+#include <new>
+
 #include "types/existence_set.hpp"
 #include "types/stable_forward_buf.hpp"
 
@@ -85,21 +87,27 @@ namespace chdr::solvers {
         }
 
         template <typename... Args>
-        [[maybe_unused, nodiscard]] constexpr auto operator()(Args&&... _args) const {
+        [[maybe_unused, nodiscard]] auto operator()(Args&&... _args) const {
 
             using solver_t = Derived<Kd, scalar_t, index_t, params_t>;
 
             const params_t params { std::forward<Args>(_args)... };
 
-            const auto s = utils::to_1d(params.start, params.size);
-            const auto e = utils::to_1d(params.end,   params.size);
+            try {
+                
+                const auto s = utils::to_1d(params.start, params.size);
+                const auto e = utils::to_1d(params.end,   params.size);
 
-            if (params.maze.contains(s)       &&
-                params.maze.contains(e)       &&
-                params.maze.at(s).is_active() &&
-                params.maze.at(e).is_active()
-            ) {
-                return s != e ? solver_t::execute(params) : std::vector<coord_t>{ params.end };
+                if (params.maze.contains(s)       &&
+                    params.maze.contains(e)       &&
+                    params.maze.at(s).is_active() &&
+                    params.maze.at(e).is_active()
+                ) {
+                    return s != e ? solver_t::execute(params) : std::vector<coord_t> { params.end };
+                }
+            }
+            catch (const std::bad_alloc& e) {
+                std::cerr << "[std::bad_alloc] (solver::operator()): " << e.what() << "\n";
             }
 
             return std::vector<coord_t>{};
