@@ -57,7 +57,7 @@ namespace test::generator::utils {
             [[maybe_unused]] static constexpr result_type max() noexcept { return modulus - 1; }
         };
 
-        using uniform_rng_t = linear_congruential_generator<size_t>;
+        using uniform_rng_t = linear_congruential_generator<size_t>; //std::mt19937_64;
         
     public:
 

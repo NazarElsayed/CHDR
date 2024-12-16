@@ -36,7 +36,6 @@ namespace chdr::solvers {
                 bnode<index_t>(_index), m_parent(std::make_shared<const managed_node>(std::move(_parent))) {}
 
         ~managed_node() { // NOLINT(*-use-equals-default)
-
 #ifdef __OPTIMIZE__
             expunge_recursive(m_parent);    // Only attempt TRO if compiled with optimisation flags.
 #else //!__OPTIMIZE__
@@ -44,7 +43,6 @@ namespace chdr::solvers {
                 m_parent = std::move(m_parent->m_parent);
             }
 #endif//!__OPTIMIZE__
-
         }
 
         void expunge_recursive(std::shared_ptr<const managed_node>& _node) {

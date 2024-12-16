@@ -65,7 +65,7 @@ namespace chdr::solvers {
 
                     for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
 
-                        if (const auto n = solver_t::get_data(n_data, _params); n.active) {
+                        if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
 
                             // Check if node is not already visited:
                             if (!closed.contains(n.index)) {
@@ -77,14 +77,11 @@ namespace chdr::solvers {
                     }
                 }
                 else { // SOLUTION REACHED ...
-
-                    result = curr.template backtrack<node>(_params.size, capacity);
-
-                    break;
+                    return curr.template backtrack<node>(_params.size, capacity);
                 }
             }
 
-            return result;
+            return std::vector<coord_t>{};
         }
     };
 

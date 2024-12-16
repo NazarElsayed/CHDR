@@ -298,14 +298,11 @@ namespace chdr::solvers {
                     }
                 }
                 else { // SOLUTION REACHED ...
-
-                    result = curr.template backtrack<node>(_params.size, curr.m_gScore);
-
-                    break;
+                    return curr.template backtrack<node>(_params.size, curr.m_gScore);
                 }
             }
 
-            return result;
+            return std::vector<coord_t>{};
         }
 
     };

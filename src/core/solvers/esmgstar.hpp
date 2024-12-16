@@ -14,6 +14,7 @@
 #include <cmath>
 #include <cstddef>
 
+#include "base/managed_node.hpp"
 #include "mazes/grid.hpp"
 #include "utils/utils.hpp"
 
@@ -33,7 +34,7 @@ namespace chdr::solvers {
         using  coord_t = coord<index_t, Kd>;
         using weight_t = typename params_t::weight_type;
 
-        struct node final : std::enable_shared_from_this<node> {
+        struct node final : std::enable_shared_from_this<node>, managed_node<index_t> {
 
             friend std::shared_ptr<node>;
 
@@ -43,39 +44,9 @@ namespace chdr::solvers {
             scalar_t m_gScore;
             scalar_t m_fScore;
 
-            std::shared_ptr<node> m_parent;
-
             std::vector<std::shared_ptr<node>> m_successors;
 
             std::unordered_map<size_t, scalar_t> m_forgottenFCosts;
-
-        private:
-
-            [[nodiscard]] constexpr node(const size_t& _depth, const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore) :
-                m_depth (_depth),
-                m_index (_index),
-                m_gScore(_gScore),
-                m_fScore(_gScore + _hScore),
-                m_parent(),
-                m_forgottenFCosts() {}
-
-            [[nodiscard]] constexpr node(const size_t& _depth, const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore, const std::shared_ptr<node>&& _parent) :
-                m_depth (_depth),
-                m_index (_index),
-                m_gScore(_gScore),
-                m_fScore(_gScore + _hScore),
-                m_parent(std::move(_parent)),
-                m_forgottenFCosts() {}
-
-        public:
-
-            /**
-             * @brief Constructs an uninitialized ESMGSNode.
-             *
-             * This constructor creates an ESMGSNode with uninitialized members.
-             */
-            // ReSharper disable once CppPossiblyUninitializedMember
-            [[nodiscard]] constexpr node() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
             constexpr void shrink() {
 
@@ -103,7 +74,7 @@ namespace chdr::solvers {
 
                             const auto n = utils::to_1d(nCoord, _maze.size());
 
-                            if ((m_parent == nullptr || m_parent->m_index != n) && m_depth + 1U < _memoryLimit) {
+                            if ((this->m_parent == nullptr || this->m_parent->m_index != n) && m_depth + 1U < _memoryLimit) {
 
                                 // Check for any potential successor for the child before its creation.
                                 for (auto& successor_neighbours : _maze.get_neighbours(n)) {
@@ -111,7 +82,7 @@ namespace chdr::solvers {
                                     if (const auto& [snActive, snCoord] = successor_neighbours; snActive) {
 
                                         m_successors.emplace_back(node::create_shared(
-                                                m_depth + 1U,              // Depth
+                                                m_depth + 1U,               // Depth
                                                 n,                          // Coordinate
                                                 m_gScore + 1U,              // G-Score
                                                 _h(nCoord, _end) * _weight, // F-Score
@@ -172,8 +143,8 @@ namespace chdr::solvers {
 
             [[nodiscard]] friend constexpr bool operator < (const node& _a, const node& _b) noexcept {
                 return _a->m_fScore == _b->m_fScore ?
-                    _a->m_gScore > _b->m_gScore :
-                    _a->m_fScore > _b->m_fScore;
+                       _a->m_gScore >  _b->m_gScore :
+                       _a->m_fScore >  _b->m_fScore;
             }
         };
 
@@ -245,17 +216,15 @@ namespace chdr::solvers {
 
             /** @see: https://easychair.org/publications/paper/TL2M/open */
 
-            std::vector<coord_t> result;
-
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
             // Create Open Set:
             open_set_t open;
             open.emplace(node::create_shared(
-                0U,                         // Depth
-                s,                          // Coordinate
-                static_cast<scalar_t>(0),   // G-Score
+                0U,                                                     // Depth
+                s,                                                      // Coordinate
+                static_cast<scalar_t>(0),                               // G-Score
                 _params.h(_params.start, _params.end) * _params.weight  // F-Score
             ));
 
@@ -305,34 +274,11 @@ namespace chdr::solvers {
                     open.clear();
                     open.shrink_to_fit();
 
-                    if (curr != nullptr) {
-
-                        // reserve space in result:
-                        result.reserve(curr->m_gScore);
-
-                        // Recurse from end node to start node, inserting into a result buffer:
-                        result.emplace_back(utils::to_nd(curr->m_index, _params.size));
-
-                        if (auto item = curr->m_parent) {
-
-                            while (const auto item_parent = item->m_parent) {
-                                result.emplace_back(utils::to_nd(item->m_index, _params.size));
-
-                                auto oldItem = item;
-                                item = item_parent;
-                                oldItem.reset();
-                            }
-                        }
-
-                        // Reverse the result:
-                        std::reverse(result.begin(), result.end());
-                    }
-
-                    break;
+                    return curr.template backtrack<node>(_params.size, curr->m_gScore);
                 }
             }
 
-            return result;
+            return std::vector<coord_t>{};
         }
     };
 

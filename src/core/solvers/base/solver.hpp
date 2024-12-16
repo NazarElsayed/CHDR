@@ -8,6 +8,8 @@
 
 #ifndef CHDR_BSOLVER_HPP
 #define CHDR_BSOLVER_HPP
+#include "types/existence_set.hpp"
+#include "types/stable_forward_buf.hpp"
 
 namespace chdr::solvers {
 
@@ -83,9 +85,8 @@ namespace chdr::solvers {
                     Derived<Kd, scalar_t, index_t, params_t>::execute(params) :
                     std::vector<coord_t> { params.end };
             }
-            else {
-                return std::vector<coord_t>{};
-            }
+
+            return std::vector<coord_t>{};
         }
     };
 
