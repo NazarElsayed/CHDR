@@ -28,20 +28,24 @@ namespace chdr {
         size_t m_index;
         std::forward_list<block_t> c;
 
-        constexpr void expand() {
+        constexpr void alloc_block() noexcept {
             c.emplace_front(std::make_unique<T[]>(BlockWidth)); // NOLINT(*-avoid-c-arrays)
+        }
+
+        constexpr void expand() {
+            alloc_block();
             m_index = 0U;
         }
 
     public:
 
         [[maybe_unused]] constexpr explicit stable_forward_buf() : m_index(0U), c() {
-            c.emplace_front(std::make_unique<T[]>(BlockWidth)); // NOLINT(*-avoid-c-arrays)
+            alloc_block();
         }
 
         [[maybe_unused]] constexpr stable_forward_buf(const std::initializer_list<size_t>& _items) : m_index(0U), c() {
 
-            c.emplace_front(std::make_unique<T[]>(BlockWidth)); // NOLINT(*-avoid-c-arrays)
+            alloc_block();
 
             for (const auto& item : _items) {
                 push(item);

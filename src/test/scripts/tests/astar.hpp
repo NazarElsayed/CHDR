@@ -97,12 +97,10 @@ namespace test::tests {
 
             auto result = std::numeric_limits<long double>::infinity();
             for (size_t i = 0U; i < test_samples; ++i) {
+
                 const auto sw_start = std::chrono::high_resolution_clock::now();
 
                 struct params {
-
-                    using weight_type = weight_t;
-
                     const decltype(test)       maze;
                     const coord_t              start;
                     const coord_t              end;
