@@ -30,7 +30,53 @@ namespace chdr::solvers {
         using   solver_t = solver<gdfs, Kd, scalar_t, index_t, params_t>;
         using    coord_t = coord<index_t, Kd>;
         using       node = managed_node<index_t>;
-        using open_set_t = stack<node>;
+
+        template <typename open_set_t, typename closed_set_t>
+        [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, const size_t& _capacity, const params_t& _params) {
+
+            const auto s = utils::to_1d(_params.start, _params.size);
+            const auto e = utils::to_1d(_params.end,   _params.size);
+
+            _open.emplace(s);
+
+            // Main loop:
+            while (!_open.empty()) { // SEARCH FOR SOLUTION...
+
+                auto curr(std::move(_open.front()));
+                _open.pop();
+
+                if (curr.m_index != e) {
+
+                    _closed.allocate(curr.m_index, _capacity, _params.maze.count());
+                    _closed.emplace(curr.m_index);
+
+                    for (const auto& n_data: _params.maze.get_neighbours(curr.m_index)) {
+
+                        if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
+
+                            // Check if node is not already visited:
+                            if (!_closed.contains(n.index)) {
+                                 _closed.allocate(n.index, _capacity, _params.maze.count());
+                                 _closed.emplace (n.index);
+
+                                _open.emplace(n.index, std::move(curr)); // Note: 'current' is now moved!
+                            }
+                        }
+                    }
+                }
+                else { // SOLUTION REACHED ...
+
+                    // Free data which is no longer relevant:
+                      _open.clear();
+                    _closed.clear();
+                    _closed.shrink_to_fit();
+
+                    return curr.template backtrack<node>(_params.size, _capacity);
+                }
+            }
+
+            return std::vector<coord_t>{};
+        }
 
         [[maybe_unused, nodiscard]] static constexpr auto execute(const params_t& _params) {
 
@@ -42,46 +88,10 @@ namespace chdr::solvers {
             existence_set closed({ s }, capacity);
 
             // Create open set:
-            open_set_t open;
+            stack<node> open;
             open.reserve(capacity / 8U);
-            open.emplace(s);
 
-            // Main loop:
-            while (!open.empty()) { // SEARCH FOR SOLUTION...
-
-                auto curr(std::move(open.front()));
-                open.pop();
-
-                if (curr.m_index != e) {
-
-                    closed.allocate(curr.m_index, capacity, _params.maze.count());
-                    closed.emplace(curr.m_index);
-
-                    for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
-
-                        if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
-
-                            // Check if node is not already visited:
-                            if (!closed.contains(n.index)) {
-                                 closed.allocate(n.index, capacity, _params.maze.count());
-                                 closed.emplace(n.index);
-                                   open.emplace(n.index, std::move(curr)); // Note: 'current' is now moved!
-                            }
-                        }
-                    }
-                }
-                else { // SOLUTION REACHED ...
-
-                    // Free data which is no longer relevant:
-                      open.clear();
-                    closed.clear();
-                    closed.shrink_to_fit();
-
-                    return curr.template backtrack<node>(_params.size, capacity);
-                }
-            }
-
-            return std::vector<coord_t>{};
+            return solve_internal(open, closed, capacity, _params);
         }
     };
 

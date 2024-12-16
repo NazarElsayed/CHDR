@@ -24,12 +24,53 @@ namespace chdr::solvers {
 
     private:
 
-        using   solver_t = solver<floodfill, Kd, scalar_t, index_t, params_t>;
-        using open_set_t = queue<index_t>;
+        using solver_t = solver<floodfill, Kd, scalar_t, index_t, params_t>;
 
     public:
 
-        [[maybe_unused, nodiscard]] static constexpr bool execute(const params_t& _params) {
+        template <typename open_set_t, typename closed_set_t>
+        [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, const size_t& _capacity, const params_t& _params) {
+
+            const auto s = utils::to_1d(_params.start, _params.size);
+            const auto e = utils::to_1d(_params.end,   _params.size);
+
+            _open.emplace(s);
+
+            // Main loop:
+            while (!_open.empty()) {
+
+                for (size_t i = 0U; i < _open.size(); ++i) {
+
+                    const auto curr(std::move(_open.front()));
+                    _open.pop();
+
+                    if (curr != e) {
+
+                        _closed.allocate(curr, _params.capacity, _params.maze.count());
+                        _closed.emplace(curr);
+
+                        for (const auto& n_data : _params.maze.get_neighbours(curr)) {
+
+                            if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
+
+                                // Check if node is not already visited:
+                                if (!_closed.contains(n.index)) {
+                                    _closed.allocate(n.index, _capacity, _params.maze.count());
+                                    _closed.emplace(n.index);
+
+                                     _open.emplace(n.index); // Note: 'current' is now moved!
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        [[maybe_unused, nodiscard]] static constexpr auto execute(const params_t& _params) {
 
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
@@ -48,41 +89,10 @@ namespace chdr::solvers {
                     existence_set closed ({ s }, capacity);
 
                     // Create open set:
-                    open_set_t open;
+                    queue<index_t> open;
                     open.reserve(capacity / 8U);
-                    open.emplace(s);
 
-                    // Main loop:
-                    while (!open.empty()) {
-
-                        for (size_t i = 0U; i < open.size(); ++i) {
-
-                            const auto curr(std::move(open.front()));
-                            open.pop();
-
-                            if (curr != e) {
-
-                                closed.allocate(curr, _params.capacity, _params.maze.count());
-                                closed.emplace(curr);
-
-                                for (const auto& n_data : _params.maze.get_neighbours(curr)) {
-
-                                    if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
-
-                                        // Check if node is not already visited:
-                                        if (!closed.contains(n.index)) {
-                                             closed.allocate(n.index, capacity, _params.maze.count());
-                                             closed.emplace(n.index);
-                                               open.emplace(n.index); // Note: 'current' is now moved!
-                                        }
-                                    }
-                                }
-                            }
-                            else {
-                                return true;
-                            }
-                        }
-                    }
+                    return solve_internal(closed, open);
                 }
                 else {
                     return true;

@@ -66,7 +66,7 @@ namespace chdr::solvers {
             // ReSharper disable once CppPossiblyUninitializedMember
             [[nodiscard]] constexpr node() noexcept : unmanaged_node<index_t>() {}
 
-            [[nodiscard]] constexpr node(const index_t& _index, const std::array<int8_t, 2U>& _direction, const scalar_t& _gScore, const scalar_t& _hScore, const node* RESTRICT const _parent) noexcept : unmanaged_node<index_t>(_index, _parent),
+            [[nodiscard]] constexpr node(const index_t& _index, const std::array<int8_t, 2U>& _direction, const scalar_t& _gScore, const scalar_t& _hScore, const node* RESTRICT const _parent = nullptr) noexcept : unmanaged_node<index_t>(_index, _parent),
                 m_direction(_direction),
                 m_gScore(_gScore),
                 m_fScore(_gScore + _hScore) {}
@@ -77,8 +77,6 @@ namespace chdr::solvers {
                        _a.m_fScore >  _b.m_fScore;
             }
         };
-
-        using open_set_t = heap<node>;
 
         template <typename T>
         static constexpr int sign(const T _val) {
@@ -257,9 +255,9 @@ namespace chdr::solvers {
             existence_set<low_memory_usage> closed({ s }, capacity);
 
             // Create open set:
-            open_set_t open;
+            heap<node> open;
             open.reserve(capacity / 8U);
-            open.emplace(s, std::array<int8_t, 2U>{{0, 0}}, static_cast<scalar_t>(0), _params.h(_params.start, _params.end), nullptr);
+            open.emplace(s, {{0, 0}}, static_cast<scalar_t>(0), _params.h(_params.start, _params.end));
 
             // Create buffer:
             stable_forward_buf<node> buf;

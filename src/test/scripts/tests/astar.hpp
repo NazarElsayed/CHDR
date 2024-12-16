@@ -101,6 +101,9 @@ namespace test::tests {
                 const auto sw_start = std::chrono::high_resolution_clock::now();
 
                 struct params {
+
+                    using weight_type [[maybe_unused]] = weight_t;
+
                     const decltype(test)       maze;
                     const coord_t              start;
                     const coord_t              end;
