@@ -19,7 +19,6 @@
 #include "types/coord.hpp"
 #include "types/existence_set.hpp"
 #include "types/heap.hpp"
-#include "types/linear_priority_queue.hpp"
 #include "types/stable_forward_buf.hpp"
 #include "types/stack_allocator.hpp"
 #include "utils/utils.hpp"
@@ -65,7 +64,10 @@ namespace chdr::solvers {
         template <typename open_set_t, typename closed_set_t, typename buf_t>
         static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, buf_t& _buf, const size_t& _capacity, const params_t& _params) {
 
-            const auto e = utils::to_1d(_params.end, _params.size);
+            const auto s = utils::to_1d(_params.start, _params.size);
+            const auto e = utils::to_1d(_params.end,   _params.size);
+
+            _open.emplace(s, static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
 
             // Main loop:
             while (!_open.empty()) {
@@ -100,7 +102,7 @@ namespace chdr::solvers {
             return std::vector<coord_t>{};
         }
 
-        static constexpr auto solve(const params_t& _params) {
+        [[maybe_unused, nodiscard]] static constexpr auto execute(const params_t& _params) {
 
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
@@ -110,46 +112,10 @@ namespace chdr::solvers {
 
             heap<node> open;
             open.reserve(capacity / 8U);
-            open.emplace(s, static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
 
             stable_forward_buf<node> buf;
 
             return solve_internal(open, closed, buf, capacity, _params);
-        };
-
-        template <size_t Stack>
-        static constexpr auto solve(const params_t& _params) {
-
-            const auto s = utils::to_1d(_params.start, _params.size);
-            const auto e = utils::to_1d(_params.end,   _params.size);
-
-            const auto capacity = std::max(_params.capacity, std::max(s, e));
-            existence_set<low_memory_usage> closed({ s }, capacity);
-
-            linear_priority_queue<node, std::less<node>, std::vector<node, stack_allocator<node, Stack>>> open;
-            open.reserve(Stack);
-            open.emplace(s, static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
-
-            stable_forward_buf<node, Stack / 2U> buf;
-
-            return solve_internal(open, closed, buf, capacity, _params);
-        };
-
-        [[maybe_unused, nodiscard]] static constexpr std::vector<coord_t> execute(const params_t& _params) {
-
-            /*
-             * Determine whether to solve using a linear search or constant-time
-             * method based on which is more efficient given the maze's size.
-             */
-
-            constexpr size_t lmax{256U};
-
-            if (_params.maze.count() <=  32U) { return solve<      16U>(_params); }
-            if (_params.maze.count() <=  64U) { return solve<      32U>(_params); }
-            if (_params.maze.count() <= 128U) { return solve<      64U>(_params); }
-            if (_params.maze.count() <= lmax) { return solve<lmax / 2U>(_params); }
-
-            return solve(_params);
         }
     };
 

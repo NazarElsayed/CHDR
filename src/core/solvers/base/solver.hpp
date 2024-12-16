@@ -24,6 +24,21 @@ namespace chdr::solvers {
 
         using coord_t = coord<index_t, Kd>;
 
+    private:
+
+        template <typename C, typename = void>
+        struct has_execute : std::false_type {};
+
+        template <typename C>
+        struct has_execute<C, std::void_t<decltype(std::declval<C>().execute(std::declval<params_t>()))>> : std::true_type {};
+
+        // Check for `template<size_t> execute(params_t)`
+        template <typename C, typename = void>
+        struct has_templated_execute : std::false_type {};
+
+        template <typename C>
+        struct has_templated_execute<C, std::void_t<decltype(C::template execute<0U>(std::declval<params_t>()))>> : std::true_type {};
+
     public:
 
         struct node_data {
@@ -71,6 +86,8 @@ namespace chdr::solvers {
         template <typename... Args>
         [[maybe_unused, nodiscard]] constexpr auto operator()(Args&&... _args) const {
 
+            using solver_t = Derived<Kd, scalar_t, index_t, params_t>;
+
             const params_t params { std::forward<Args>(_args)... };
 
             const auto s = utils::to_1d(params.start, params.size);
@@ -81,9 +98,7 @@ namespace chdr::solvers {
                 params.maze.at(s).is_active() &&
                 params.maze.at(e).is_active()
             ) {
-                return s != e ?
-                    Derived<Kd, scalar_t, index_t, params_t>::execute(params) :
-                    std::vector<coord_t> { params.end };
+                return s != e ? solver_t::execute(params) : std::vector<coord_t>{ params.end };
             }
 
             return std::vector<coord_t>{};

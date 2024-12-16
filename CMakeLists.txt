@@ -153,8 +153,7 @@ add_library(CHDR INTERFACE
     src/core/types/coord.hpp
     src/core/types/existence_set.hpp
     src/core/types/heap.hpp
-    src/core/types/linear_priority_queue.hpp
-    src/core/types/queue.hpp
+        src/core/types/queue.hpp
     src/core/types/stable_forward_buf.hpp
     src/core/types/stack.hpp
     src/core/types/stack_allocator.hpp

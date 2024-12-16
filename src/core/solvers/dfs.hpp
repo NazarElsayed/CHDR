@@ -27,60 +27,66 @@ namespace chdr::solvers {
 
     private:
 
-        using    solver_t = solver<dfs, Kd, scalar_t, index_t, params_t>;
-        using    coord_t = coord<index_t, Kd>;
-        using       node = unmanaged_node<index_t>;
-        using open_set_t = stack<node>;
+        using solver_t = solver<dfs, Kd, scalar_t, index_t, params_t>;
+        using coord_t = coord<index_t, Kd>;
+        using    node = unmanaged_node<index_t>;
 
-        [[maybe_unused, nodiscard]] static constexpr std::vector<coord_t> execute(const params_t& _params) {
-
-            std::vector<coord_t> result;
+        template <typename open_set_t, typename closed_set_t, typename buf_t>
+        static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, buf_t& _buf, const size_t& _capacity, const params_t& _params) {
 
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
-            // Create closed set:
-            const auto capacity = std::max(_params.capacity, std::max(s, e));
-            existence_set<low_memory_usage> closed({ s }, capacity);
-
-            // Create open set:
-            open_set_t open;
-            open.reserve(capacity / 8U);
-            open.emplace(s);
-
-            // Create buffer:
-            stable_forward_buf<node> buf;
+            _open.emplace(s);
 
             // Main loop:
-            while (!open.empty()) { // SEARCH FOR SOLUTION...
+            while (!_open.empty()) {
 
-                auto curr(std::move(open.top()));
-                open.pop();
+                auto curr(std::move(_open.top()));
+                _open.pop();
 
-                if (curr.m_index != e) {
+                if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
-                    closed.allocate(curr.m_index, capacity, _params.maze.count());
-                    closed.emplace(curr.m_index);
+                    _closed.allocate(curr.m_index, _capacity, _params.maze.count());
+                    _closed.emplace(curr.m_index);
 
                     for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
 
                         if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
 
                             // Check if node is not already visited:
-                            if (!closed.contains(n.index)) {
-                                 closed.allocate(n.index, capacity, _params.maze.count());
-                                 closed.emplace(n.index);
-                                   open.emplace(n.index, &buf.emplace(std::move(curr))); // Note: 'current' is now moved!
+                            if (!_closed.contains(n.index)) {
+                                _closed.allocate(n.index, _capacity, _params.maze.count());
+                                _closed.emplace (n.index);
+
+                                _open.emplace(n.index, &_buf.emplace(std::move(curr)));
                             }
                         }
                     }
                 }
                 else { // SOLUTION REACHED ...
-                    return curr.template backtrack<node>(_params.size, capacity);
+                    return curr.template backtrack<node>(_params.size, _capacity);
                 }
             }
 
             return std::vector<coord_t>{};
+        }
+
+
+        [[maybe_unused, nodiscard]] static constexpr auto execute(const params_t& _params) {
+
+            const auto s = utils::to_1d(_params.start, _params.size);
+            const auto e = utils::to_1d(_params.end,   _params.size);
+
+            const auto capacity = std::max(_params.capacity, std::max(s, e));
+            existence_set<low_memory_usage> closed({ s }, capacity);
+
+            stack<node> open;
+            open.emplace(s);
+
+            stable_forward_buf<node> buf;
+
+            return solve_internal(open, closed, buf, capacity, _params);
         }
     };
 

@@ -29,7 +29,7 @@ namespace chdr::solvers {
 
     public:
 
-        [[maybe_unused, nodiscard]] static constexpr bool solve(const params_t& _params) {
+        [[maybe_unused, nodiscard]] static constexpr bool execute(const params_t& _params) {
 
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);

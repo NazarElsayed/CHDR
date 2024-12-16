@@ -73,7 +73,7 @@ namespace chdr {
                 expand();
             }
 
-            return *(new(&c.front()[m_index++]) T(std::forward<Args>(_args)...));
+            return c.front()[m_index++] = T(std::forward<Args>(_args)...);
         }
 
         [[maybe_unused]] constexpr void clear() {

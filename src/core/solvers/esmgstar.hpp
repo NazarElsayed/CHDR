@@ -11,7 +11,6 @@
 
 #include <debug.hpp>
 
-#include <cmath>
 #include <cstddef>
 
 #include "base/managed_node.hpp"
@@ -212,7 +211,7 @@ namespace chdr::solvers {
             return w;
         }
 
-        [[maybe_unused, nodiscard]] static constexpr std::vector<coord_t> execute(const params_t& _params) {
+        [[maybe_unused, nodiscard]] static constexpr auto execute(const params_t& _params) {
 
             /** @see: https://easychair.org/publications/paper/TL2M/open */
 

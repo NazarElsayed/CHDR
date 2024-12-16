@@ -32,9 +32,7 @@ namespace chdr::solvers {
         using       node = managed_node<index_t>;
         using open_set_t = stack<node>;
 
-        [[maybe_unused, nodiscard]] static constexpr std::vector<coord_t> execute(const params_t& _params) {
-
-            std::vector<coord_t> result;
+        [[maybe_unused, nodiscard]] static constexpr auto execute(const params_t& _params) {
 
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
