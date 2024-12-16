@@ -19,7 +19,6 @@
 #include "../utils/utils.hpp"
 #include "base/imaze.hpp"
 #include "nodes/weighted_node.hpp"
-
 #include "utils/intrinsics.hpp"
 
 namespace chdr::mazes {

@@ -57,8 +57,8 @@ namespace chdr {
         [[maybe_unused]] constexpr void push(T&& _value) { c.push(std::move(_value)); }
 
         template <typename... Args>
-        [[maybe_unused]] constexpr void emplace(Args&&... args) {
-            c.emplace(std::forward<Args>(args)...);
+        [[maybe_unused]] constexpr void emplace(Args&&... _args) {
+            c.emplace(std::forward<Args>(_args)...);
         }
 
         [[maybe_unused]] constexpr void pop() { c.pop(); }

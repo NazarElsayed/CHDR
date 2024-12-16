@@ -20,7 +20,6 @@
 #include "types/existence_set.hpp"
 #include "types/heap.hpp"
 #include "types/stable_forward_buf.hpp"
-#include "types/stack_allocator.hpp"
 #include "utils/utils.hpp"
 
 namespace chdr::solvers {

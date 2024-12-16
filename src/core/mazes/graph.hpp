@@ -21,8 +21,8 @@
 #include <utility>
 #include <vector>
 
-#include "grid.hpp"
 #include "base/igraph.hpp"
+#include "grid.hpp"
 #include "utils/intrinsics.hpp"
 
 namespace chdr::mazes {

@@ -9,9 +9,9 @@
 #ifndef CHDR_GSTAR_HPP
 #define CHDR_GSTAR_HPP
 
+#include "mazes/base/imaze.hpp"
 #include "mazes/graph.hpp"
 #include "mazes/grid.hpp"
-#include "mazes/base/imaze.hpp"
 #include "types/existence_set.hpp"
 #include "types/heap.hpp"
 #include "utils/utils.hpp"

@@ -11,8 +11,8 @@
 
 #include <memory>
 
-#include "mazes/grid.hpp"
 #include "mazes/base/imaze.hpp"
+#include "mazes/grid.hpp"
 #include "types/existence_set.hpp"
 
 namespace chdr::solvers {

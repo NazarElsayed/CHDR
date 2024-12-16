@@ -10,9 +10,9 @@
 #define CHDR_GBFS_HPP
 
 #include "base/managed_node.hpp"
+#include "mazes/base/imaze.hpp"
 #include "mazes/graph.hpp"
 #include "mazes/grid.hpp"
-#include "mazes/base/imaze.hpp"
 #include "types/existence_set.hpp"
 #include "types/stable_forward_buf.hpp"
 #include "utils/utils.hpp"

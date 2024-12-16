@@ -9,7 +9,9 @@
 #ifndef CHDR_BSOLVER_HPP
 #define CHDR_BSOLVER_HPP
 
+#include <cstddef>
 #include <new>
+#include <type_traits>
 
 #include "types/existence_set.hpp"
 #include "types/stable_forward_buf.hpp"
@@ -33,7 +35,7 @@ namespace chdr::solvers {
         struct has_execute : std::false_type {};
 
         template <typename C>
-        struct has_execute<C, std::void_t<decltype(std::declval<C>().execute(std::declval<params_t>()))>> : std::true_type {};
+        struct has_execute<C, std::void_t<decltype(std::declval<C>().execute(std::declval<params_t>()))>> : std::integral_constant<bool, true> {};
 
         // Check for `template<size_t> execute(params_t)`
         template <typename C, typename = void>
