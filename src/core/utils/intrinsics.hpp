@@ -1,5 +1,5 @@
 /*
-* Computational Helper for Direction and Routing (CHDR)
+ * Computational Helper for Direction and Routing (CHDR)
  * Copyright (c) 2024 by Nazar Elsayed & Louis Eriksson
  *
  * Licensed under CC BY-NC-ND 4.0

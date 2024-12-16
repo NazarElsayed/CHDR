@@ -8,6 +8,7 @@
 
 #ifndef CHDR_BSOLVER_HPP
 #define CHDR_BSOLVER_HPP
+
 #include "types/existence_set.hpp"
 #include "types/stable_forward_buf.hpp"
 
