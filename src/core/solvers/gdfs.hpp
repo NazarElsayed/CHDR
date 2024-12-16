@@ -83,11 +83,9 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
-            // Create closed set:
             const auto capacity = std::max(_params.capacity, std::max(s, e));
             existence_set closed({ s }, capacity);
 
-            // Create open set:
             stack<node> open;
             open.reserve(capacity / 8U);
 

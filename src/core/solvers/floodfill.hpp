@@ -85,10 +85,8 @@ namespace chdr::solvers {
 
                     const auto capacity = std::max(_params.capacity, std::max(s, e));
 
-                    // Create closed Set:
                     existence_set closed ({ s }, capacity);
 
-                    // Create open set:
                     queue<index_t> open;
                     open.reserve(capacity / 8U);
 

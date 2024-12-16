@@ -138,8 +138,6 @@ namespace chdr::solvers {
                 return result;
             }
 
-            [[nodiscard]] friend constexpr bool operator == (const node& _a, const node& _b) noexcept { return _a.m_index == _b.m_index; }
-
             [[nodiscard]] friend constexpr bool operator < (const node& _a, const node& _b) noexcept {
                 return _a->m_fScore == _b->m_fScore ?
                        _a->m_gScore >  _b->m_gScore :

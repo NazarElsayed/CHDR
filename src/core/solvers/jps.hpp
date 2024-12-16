@@ -79,11 +79,11 @@ namespace chdr::solvers {
         };
 
         template <typename T>
-        static constexpr int sign(const T _val) {
+        [[nodiscard]] static constexpr int sign(const T _val) noexcept {
             return (static_cast<T>(0) < _val) - (_val < static_cast<T>(0));
         }
 
-        static constexpr std::vector<coord_t> find_jump_points(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _current, const std::array<int8_t, 2U> _direction, const coord_t& _end) {
+        [[nodiscard]] static constexpr std::vector<coord_t> find_jump_points(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _current, const std::array<int8_t, 2U> _direction, const coord_t& _end) {
 
             std::vector<coord_t> result;
 
@@ -165,8 +165,7 @@ namespace chdr::solvers {
             return result;
         }
 
-        [[nodiscard]]
-        static constexpr std::pair<bool, coord_t> jump(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _current, const coord_t& _previous, const coord_t& _end) {
+        [[nodiscard]] static constexpr std::pair<bool, coord_t> jump(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _current, const coord_t& _previous, const coord_t& _end) {
 
             const std::array<int8_t, 2U> direction { static_cast<int8_t>(sign(static_cast<int>(_current[0U]) - static_cast<int>(_previous[0U]))) ,
                                                      static_cast<int8_t>(sign(static_cast<int>(_current[1U]) - static_cast<int>(_previous[1U]))) };
@@ -174,8 +173,7 @@ namespace chdr::solvers {
             return jump(_maze, _current, direction, _end);
         }
 
-        [[nodiscard]]
-        static constexpr std::pair<bool, coord_t> jump(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _current, const std::array<int8_t, 2U>& _direction, const coord_t& _end) {
+        [[nodiscard]] static constexpr std::pair<bool, coord_t> jump(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _current, const std::array<int8_t, 2U>& _direction, const coord_t& _end) {
 
             std::pair<bool, coord_t> result { false, _current };
 
@@ -245,33 +243,24 @@ namespace chdr::solvers {
             return result;
         }
 
-        [[maybe_unused, nodiscard]] static constexpr auto execute(const params_t& _params) {
+        template <typename open_set_t, typename closed_set_t, typename buf_t>
+        [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, buf_t& _buf, const size_t& _capacity, const params_t& _params) {
 
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end  , _params.size);
 
-            // Create closed set:
-            const auto capacity = std::max(_params.capacity, std::max(s, e));
-            existence_set<low_memory_usage> closed({ s }, capacity);
-
-            // Create open set:
-            heap<node> open;
-            open.reserve(capacity / 8U);
-            open.emplace(s, {{0, 0}}, static_cast<scalar_t>(0), _params.h(_params.start, _params.end));
-
-            // Create buffer:
-            stable_forward_buf<node> buf;
+            _open.emplace(s, std::array<int8_t, 2U> {{ 0, 0 }}, static_cast<scalar_t>(0), _params.h(_params.start, _params.end));
 
             // Main loop:
-            while (!open.empty()) {
+            while (!_open.empty()) {
 
-                auto curr(std::move(open.top()));
-                open.pop();
+                auto curr(std::move(_open.top()));
+                _open.pop();
 
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
-                    closed.allocate(curr.m_index, capacity, _params.maze.count());
-                    closed.emplace(curr.m_index);
+                    _closed.allocate(curr.m_index, _capacity, _params.maze.count());
+                    _closed.emplace(curr.m_index);
 
                     auto      coord = utils::to_nd(curr.m_index, _params.size);
                     auto successors = find_jump_points(_params.maze, coord, curr.m_direction, _params.end);
@@ -282,14 +271,14 @@ namespace chdr::solvers {
 
                         constexpr scalar_t nDistance{1};
 
-                        if (!closed.contains(n)) {
-                             closed.allocate(n, capacity, _params.maze.count());
-                             closed.emplace(n);
+                        if (!_closed.contains(n)) {
+                             _closed.allocate(n, _capacity, _params.maze.count());
+                             _closed.emplace (n);
 
                             const std::array<int8_t, 2U> direction { static_cast<int8_t>(sign(static_cast<int>(successor[0U]) - static_cast<int>(coord[0U]))) ,
                                                                      static_cast<int8_t>(sign(static_cast<int>(successor[1U]) - static_cast<int>(coord[1U]))) };
 
-                            open.emplace(n, direction, curr.m_gScore + nDistance, _params.h(successor, _params.end) * _params.weight, &buf.emplace(std::move(curr))); // Note: 'current' is now moved!
+                            _open.emplace(n, direction, curr.m_gScore + nDistance, _params.h(successor, _params.end) * _params.weight, &_buf.emplace(std::move(curr))); // Note: 'current' is now moved!
                         }
                     }
                 }
@@ -299,6 +288,22 @@ namespace chdr::solvers {
             }
 
             return std::vector<coord_t>{};
+        }
+
+        [[maybe_unused, nodiscard]] static constexpr auto execute(const params_t& _params) {
+
+            const auto s = utils::to_1d(_params.start, _params.size);
+            const auto e = utils::to_1d(_params.end  , _params.size);
+
+            const auto capacity = std::max(_params.capacity, std::max(s, e));
+            existence_set<low_memory_usage> closed({ s }, capacity);
+
+            heap<node> open;
+            open.reserve(capacity / 8U);
+
+            stable_forward_buf<node> buf;
+
+            return solve_internal(open, closed, buf, capacity, _params);
         }
 
     };
