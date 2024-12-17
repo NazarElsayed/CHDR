@@ -44,15 +44,13 @@ namespace test::tests {
             using coord_t = chdr::coord<index_t, Kd>;
 
             // Test parameters:
-            const size_t test_samples = std::max(
 #ifndef NDEBUG
-                1000000UL
+            constexpr size_t base_samples = 1000000UL;
 #else //!NDEBUG
-                100000000UL
+            constexpr size_t base_samples = 100000000UL;
 #endif //!NDEBUG
-                / chdr::utils::product<size_t>(_dimensions),
-                1UL
-            );
+
+            const size_t test_samples = std::max(base_samples / chdr::utils::product<size_t>(_dimensions), 1UL);
 
             constexpr size_t seed(0U);
 

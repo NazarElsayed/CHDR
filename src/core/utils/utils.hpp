@@ -35,25 +35,25 @@ namespace chdr {
 		struct build_indices<0, Is...> : indices<Is...> {};
 
 		template <typename T, typename U, size_t N, size_t... Is>
-		static constexpr auto array_cast_helper(const std::array<U, N>& _a, indices<Is...> /*unused*/) {
+		[[nodiscard]] static constexpr auto array_cast_helper(const std::array<U, N>& _a, indices<Is...> /*unused*/) {
 			return std::array<T, N>{ static_cast<T>(std::get<Is>(_a))... };
 		}
 
 		template <typename T, typename Ta, size_t Kd>
-		static constexpr T product_helper(const std::array<Ta, Kd>& _array, const size_t& _index = 0U) {
+		[[nodiscard]] static constexpr T product_helper(const std::array<Ta, Kd>& _array, const size_t& _index = 0U) {
 			return (_index < Kd) ? _array[_index] * product_helper<T, Ta, Kd>(_array, _index + 1U) : T{1};
 		}
 
 	public:
 
 		template <typename T, size_t N, T Value, size_t... Indices>
-		static constexpr std::array<T, N> build_array(std::index_sequence<Indices...> /*unused*/) { return {{((void)Indices, Value)...}}; }
+		[[nodiscard]] static constexpr std::array<T, N> build_array(std::index_sequence<Indices...> /*unused*/) { return {{((void)Indices, Value)...}}; }
 
 		template <typename T, size_t N, T Value>
-		static constexpr std::array<T, N> build_array() { return build_array<T, N, Value>(std::make_index_sequence<N>()); }
+		[[nodiscard]] static constexpr auto build_array() { return build_array<T, N, Value>(std::make_index_sequence<N>()); }
 
 		template<typename T, typename U, size_t N>
-		static constexpr auto array_cast(const std::array<U, N> &_a) {
+		[[nodiscard]] static constexpr auto array_cast(const std::array<U, N> &_a) {
 			return array_cast_helper<T>(_a, build_indices<N>());
 		}
 
@@ -71,7 +71,7 @@ namespace chdr {
 		 * @throws std::runtime_error if the size of the vector does not match the size of the array.
 		 */
 		template<typename Tp, size_t Nm>
-		static constexpr std::array<Tp, Nm> to_array(const std::vector<Tp>&& _vector) {
+		[[nodiscard]] static constexpr std::array<Tp, Nm> to_array(const std::vector<Tp>&& _vector) {
 
             std::array<Tp, Nm> result;
 
@@ -108,7 +108,7 @@ namespace chdr {
 		 * static_assert will be triggered.
 		 */
 		template<typename Tp, size_t Nm>
-		static constexpr std::vector<Tp> to_vector(const std::array<Tp, Nm>&& _array) {
+		[[nodiscard]] static constexpr std::vector<Tp> to_vector(const std::array<Tp, Nm>&& _array) {
 
 			std::vector<Tp> result;
 			result.reserve(Nm);
@@ -182,7 +182,7 @@ namespace chdr {
 		 * @note The input is not modified.
 		 */
 		template <typename T, typename Ta, size_t Kd>
-		static constexpr T product(const std::array<Ta, Kd>& _array) noexcept {
+		[[nodiscard]] static constexpr T product(const std::array<Ta, Kd>& _array) noexcept {
 
 			if constexpr (Kd == 0U) {
 				return T{0};
@@ -226,7 +226,7 @@ namespace chdr {
 		 * \endcode
 		 */
 		template<typename T, typename... Args>
-		static constexpr auto to_nd(const T& _index, const Args&... _sizes) noexcept {
+		[[nodiscard]] static constexpr auto to_nd(const T& _index, const Args&... _sizes) noexcept {
 			return to_nd(_index, {_sizes...});
 		}
 
@@ -246,7 +246,7 @@ namespace chdr {
 		 * @note The function assumes that the number of dimensions (_dimensions) is greater than 0.
 		 */
 		template<typename T, size_t Kd>
-		static constexpr auto to_nd(const T& _index, const coord<T, Kd>& _sizes) noexcept {
+		[[nodiscard]] static constexpr auto to_nd(const T& _index, const coord<T, Kd>& _sizes) noexcept {
 
 			static_assert(std::is_integral_v<T>, "Only integer types are allowed.");
 
@@ -317,7 +317,7 @@ namespace chdr {
 		 * Only integer types are allowed for the indices.
 		 */
 		template<typename T, typename... Args>
-		static constexpr auto to_1d(const coord<T, sizeof...(Args)>& _indices, const Args&... _sizes) noexcept {
+		[[nodiscard]] static constexpr auto to_1d(const coord<T, sizeof...(Args)>& _indices, const Args&... _sizes) noexcept {
 			return to_1d({_indices}, {_sizes...});
 		}
 
@@ -330,7 +330,7 @@ namespace chdr {
 		 * Only integer types are allowed for the indices.
 		 */
 		template<typename T, size_t Kd>
-		static constexpr auto to_1d(const coord<T, Kd>& _indices, const coord<T, Kd>& _sizes) noexcept {
+		[[nodiscard]] static constexpr auto to_1d(const coord<T, Kd>& _indices, const coord<T, Kd>& _sizes) noexcept {
 
 			static_assert(std::is_integral_v<T>, "Only integer types are allowed.");
 
@@ -369,7 +369,28 @@ namespace chdr {
 			return result;
 		}
 
-        static std::string trim_trailing_zeros(std::string _str) {
+		/**
+		 * Determines the sign of a given value.
+		 *
+		 * @param _val The value for which the sign needs to be determined.
+		 *     The type of value must be suitable for comparison with zero.
+		 * @return 1 if the value is positive, -1 if the value is negative, and 0 if the value is zero.
+		 */
+		template <typename T, typename Ta>
+		[[nodiscard]] static constexpr int sign(const Ta& _val) noexcept {
+
+			constexpr auto zero_v = static_cast<Ta>(0);
+			constexpr auto  one_v = static_cast<Ta>(1);
+
+			if constexpr (std::is_signed_v<Ta>) {
+				return static_cast<T>(zero_v < _val) - (_val < zero_v);
+			}
+			else {
+				return _val == zero_v ? zero_v : one_v;
+			}
+		}
+
+        [[nodiscard]] static std::string trim_trailing_zeros(std::string _str) {
 
             _str.erase(_str.find_last_not_of('0') + 1U, std::string::npos);
 
@@ -380,7 +401,7 @@ namespace chdr {
             return _str;
         }
 
-        static std::string to_string(long double _duration) {
+        [[nodiscard]] static std::string to_string(long double _duration) {
 
             static std::array<std::string, 4U> units = { "s", "ms", "µs", "ns" };
 

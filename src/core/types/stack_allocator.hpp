@@ -13,6 +13,7 @@
 
 #include <array>
 #include <cstddef>
+#include <cstdint>
 #include <memory>
 #include <type_traits>
 
@@ -21,13 +22,13 @@
 
 namespace chdr {
 
-    template <typename T, size_t StackSize>
+    template <typename T, uintptr_t StackSize>
     class stack_allocator {
 
     private:
 
         alignas(T) std::array<std::byte, StackSize * sizeof(T)> m_stack;
-        size_t m_stack_ptr;
+        uintptr_t m_stack_ptr;
 
     public:
 
@@ -36,7 +37,7 @@ namespace chdr {
         // ReSharper disable once CppPossiblyUninitializedMember
         constexpr stack_allocator() : m_stack_ptr(0U) {}
 
-        [[maybe_unused, nodiscard]] constexpr T* allocate(const size_t& _n) {
+        [[maybe_unused, nodiscard]] constexpr T* allocate(const uintptr_t& _n) {
 
             T* result;
 
@@ -51,7 +52,7 @@ namespace chdr {
             return result;
         }
 
-        constexpr void deallocate(T* _p, const size_t& _n) {
+        constexpr void deallocate(T* _p, const uintptr_t& _n) {
 
             if (_p >= reinterpret_cast<T*>(m_stack.data()) && _p < reinterpret_cast<T*>(m_stack.data() + m_stack.size())) {
 

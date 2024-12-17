@@ -78,11 +78,6 @@ namespace chdr::solvers {
             }
         };
 
-        template <typename T>
-        [[nodiscard]] static constexpr int sign(const T _val) noexcept {
-            return (static_cast<T>(0) < _val) - (_val < static_cast<T>(0));
-        }
-
         [[nodiscard]] static constexpr std::vector<coord_t> find_jump_points(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _current, const std::array<int8_t, 2U> _direction, const coord_t& _end) {
 
             std::vector<coord_t> result;
@@ -167,8 +162,8 @@ namespace chdr::solvers {
 
         [[nodiscard]] static constexpr std::pair<bool, coord_t> jump(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _current, const coord_t& _previous, const coord_t& _end) {
 
-            const std::array<int8_t, 2U> direction { static_cast<int8_t>(sign(static_cast<int>(_current[0U]) - static_cast<int>(_previous[0U]))) ,
-                                                     static_cast<int8_t>(sign(static_cast<int>(_current[1U]) - static_cast<int>(_previous[1U]))) };
+            const std::array<int8_t, 2U> direction { static_cast<int8_t>(utils::sign<int8_t>(static_cast<signed>(_current[0U]) - static_cast<signed>(_previous[0U]))) ,
+                                                     static_cast<int8_t>(utils::sign<int8_t>(static_cast<signed>(_current[1U]) - static_cast<signed>(_previous[1U]))) };
 
             return jump(_maze, _current, direction, _end);
         }
@@ -262,10 +257,9 @@ namespace chdr::solvers {
                     _closed.allocate(curr.m_index, _capacity, _params.maze.count());
                     _closed.emplace(curr.m_index);
 
-                    auto      coord = utils::to_nd(curr.m_index, _params.size);
-                    auto successors = find_jump_points(_params.maze, coord, curr.m_direction, _params.end);
+                    const auto coord = utils::to_nd(curr.m_index, _params.size);
 
-                    for (const auto& successor : successors) {
+                    for (const auto& successor : find_jump_points(_params.maze, coord, curr.m_direction, _params.end)) {
 
                         const auto n = utils::to_1d(successor, _params.size);
 
@@ -275,8 +269,8 @@ namespace chdr::solvers {
                              _closed.allocate(n, _capacity, _params.maze.count());
                              _closed.emplace (n);
 
-                            const std::array<int8_t, 2U> direction { static_cast<int8_t>(sign(static_cast<int>(successor[0U]) - static_cast<int>(coord[0U]))) ,
-                                                                     static_cast<int8_t>(sign(static_cast<int>(successor[1U]) - static_cast<int>(coord[1U]))) };
+                            const std::array<int8_t, 2U> direction { static_cast<int8_t>(utils::sign<int8_t>(static_cast<signed>(successor[0U]) - static_cast<signed>(coord[0U]))) ,
+                                                                     static_cast<int8_t>(utils::sign<int8_t>(static_cast<signed>(successor[1U]) - static_cast<signed>(coord[1U]))) };
 
                             _open.emplace(n, direction, curr.m_gScore + nDistance, _params.h(successor, _params.end) * _params.weight, &_buf.emplace(std::move(curr))); // Note: 'current' is now moved!
                         }
