@@ -83,7 +83,9 @@ namespace chdr::solvers {
 
                 if (s != e) {
 
-                    const auto capacity = std::max(_params.capacity, std::max(s, e));
+                    const auto capacity = solver_t::template is_graph<decltype(_params.maze)>::value ?
+                        (_params.capacity == 0U ? std::max(_params.maze.count() / 10U, static_cast<size_t>(1U)) : _params.capacity) :
+                        std::max(_params.capacity, std::max(s, e));
 
                     existence_set closed ({ s }, capacity);
 

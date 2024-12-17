@@ -13,9 +13,6 @@
 #include <new>
 #include <type_traits>
 
-#include "types/existence_set.hpp"
-#include "types/stable_forward_buf.hpp"
-
 namespace chdr::solvers {
 
     template <
@@ -46,6 +43,9 @@ namespace chdr::solvers {
 
     public:
 
+        template <typename T>
+        struct is_graph : std::is_same<std::decay_t<T>, mazes::graph<index_t, scalar_t>> {};
+
         struct node_data {
 
             const bool active;
@@ -58,9 +58,9 @@ namespace chdr::solvers {
         template <typename maze_neighbour_t>
         static constexpr node_data get_data(const maze_neighbour_t& _n, const params_t& _params) {
 
-            constexpr bool is_graph = std::is_same_v<std::decay_t<decltype(_params.maze)>, mazes::graph<index_t, scalar_t>>;
+            if constexpr (std::is_same_v<std::decay_t<decltype(_params.maze)>, mazes::graph<index_t, scalar_t>>) {
 
-            if constexpr (is_graph) {
+                // _params.maze is graph...
 
                 const auto& [nIndex, nDistance] = _n;
 
@@ -72,6 +72,8 @@ namespace chdr::solvers {
                 };
             }
             else {
+
+                // _params.maze is grid...
 
                 const auto& [nActive, nCoord] = _n;
 

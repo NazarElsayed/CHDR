@@ -289,7 +289,10 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end  , _params.size);
 
-            const auto capacity = std::max(_params.capacity, std::max(s, e));
+            const auto capacity = solver_t::template is_graph<decltype(_params.maze)>::value ?
+                (_params.capacity == 0U ? std::max(_params.maze.count() / 10U, static_cast<size_t>(1U)) : _params.capacity) :
+                std::max(_params.capacity, std::max(s, e));
+
             existence_set<low_memory_usage> closed({ s }, capacity);
 
             heap<node> open;

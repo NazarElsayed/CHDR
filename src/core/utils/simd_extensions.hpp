@@ -320,7 +320,7 @@ namespace chdr {
         };
     };
 
-}//chdr
+} //chdr
 
 // NOLINTEND(*-simd-intrinsics)
 

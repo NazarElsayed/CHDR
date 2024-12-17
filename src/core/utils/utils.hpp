@@ -341,7 +341,7 @@ namespace chdr {
                 result = 0;
 
                 // Please note this loop uses integer underflow to bypass a quirk of reverse for-loops.
-                for (size_t i = Kd - 1U; i != std::numeric_limits<size_t>::max(); --i) {
+                for (size_t i = Kd - 1UL; i != -1UL; --i) {
                     result = (result * _sizes[i]) + _indices[i];
                 }
             }
@@ -401,17 +401,19 @@ namespace chdr {
             return _str;
         }
 
-        [[nodiscard]] static std::string to_string(long double _duration) {
+        [[nodiscard]] static std::string to_string(const long double& _duration) {
 
             static std::array<std::string, 4U> units = { "s", "ms", "µs", "ns" };
 
+			auto result = _duration;
+
             size_t i = 0U;
-            while (i < units.size() && _duration < static_cast<long double>(1.0)) {
-                _duration *= static_cast<long double>(1000.0);
+            while (i < units.size() && result < static_cast<long double>(1.0)) {
+                result *= static_cast<long double>(1000.0);
                 ++i;
             }
 
-            return trim_trailing_zeros(std::to_string(_duration)) + units[i];
+            return trim_trailing_zeros(std::to_string(result)) + units[i];
         }
 
 	};
