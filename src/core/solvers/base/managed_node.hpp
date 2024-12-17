@@ -35,6 +35,9 @@ namespace chdr::solvers {
         [[nodiscard]] constexpr managed_node(const index_t& _index, managed_node&& _parent) :
                 bnode<index_t>(_index), m_parent(std::make_shared<const managed_node>(std::move(_parent))) {}
 
+        [[nodiscard]] constexpr managed_node(const index_t& _index, const std::shared_ptr<const managed_node>& _parent) :
+                bnode<index_t>(_index), m_parent{_parent} {}
+
         ~managed_node() { // NOLINT(*-use-equals-default)
 #ifdef __OPTIMIZE__
             expunge_recursive(m_parent);    // Only attempt TRO if compiled with optimisation flags.
@@ -53,7 +56,7 @@ namespace chdr::solvers {
         }
 
         template<typename node_t, typename coord_t>
-        auto backtrack(const coord_t& _size, const size_t& _capacity = 0U) {
+        [[nodiscard]] auto backtrack(const coord_t& _size, const size_t& _capacity = 0U) {
 
             static_assert(std::is_base_of_v<managed_node, node_t>, "node_t must derive from managed_node");
 

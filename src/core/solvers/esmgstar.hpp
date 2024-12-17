@@ -33,9 +33,11 @@ namespace chdr::solvers {
         using  coord_t = coord<index_t, Kd>;
         using weight_t = typename params_t::weight_type;
 
-        struct node final : std::enable_shared_from_this<node>, managed_node<index_t> {
+        struct node final : std::enable_shared_from_this<node> {
 
             friend std::shared_ptr<node>;
+
+            std::shared_ptr<node> m_parent;
 
             size_t m_depth;
             index_t m_index;
@@ -46,6 +48,49 @@ namespace chdr::solvers {
             std::vector<std::shared_ptr<node>> m_successors;
 
             std::unordered_map<size_t, scalar_t> m_forgottenFCosts;
+
+            [[nodiscard]] constexpr node() : managed_node<index_t>() {}
+
+            [[nodiscard]] constexpr node(const size_t& _depth, const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore) :
+                m_depth (_depth),
+                m_index (_index),
+                m_gScore(_gScore),
+                m_fScore(_gScore + _hScore),
+                m_parent() {}
+
+            [[nodiscard]] constexpr node(const size_t& _depth, const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore, const std::shared_ptr<node>& _parent) :
+                m_depth (_depth),
+                m_index (_index),
+                m_gScore(_gScore),
+                m_fScore(_gScore + _hScore),
+                m_parent(_parent) {}
+
+            template<typename node_t, typename coord_t>
+            [[nodiscard]] auto backtrack(const coord_t& _size, const size_t& _capacity = 0U) {
+
+                const auto& curr = *static_cast<const node_t*>(this);
+
+                // Recurse from end node to start node, inserting into a result buffer:
+                std::vector<coord_t> result;
+                result.reserve(_capacity);
+                result.emplace_back(utils::to_nd(curr.m_index, _size));
+
+                if (curr.m_parent != nullptr) {
+
+                    for (auto t = curr.m_parent; t->m_parent != nullptr;) {
+                        result.emplace_back(utils::to_nd(t->m_index, _size));
+
+                        auto oldItem = t;
+                        t = t->m_parent;
+                        oldItem.reset();
+                    }
+                }
+
+                // Reverse the result:
+                std::reverse(result.begin(), result.end());
+
+                return result;
+            }
 
             constexpr void shrink() {
 
@@ -101,7 +146,7 @@ namespace chdr::solvers {
                 return m_successors;
             }
 
-            template<typename... Args>
+            template <typename... Args>
             static constexpr std::shared_ptr<node> create_shared(Args&&... _args) {
 
                 auto result = std::shared_ptr<node>(
@@ -110,29 +155,31 @@ namespace chdr::solvers {
 
                         while (_ptr->m_parent && static_cast<unsigned>(_ptr->m_parent.use_count()) < 2U) {
 
-                            if (_ptr->m_parent) {
+                            if (auto node_parent = std::dynamic_pointer_cast<node>(_ptr->m_parent)) {
 
-                                for (size_t i = 0U; i < _ptr->m_parent->m_successors.size(); ++i) {
+                                for (size_t i = 0U; i < node_parent->m_successors.size(); ++i) {
+                                    node_parent->m_forgottenFCosts.erase(_ptr->m_index);
 
-                                    _ptr->m_parent->m_forgottenFCosts.erase(_ptr->m_index);
-
-                                    if (_ptr->m_parent->m_successors[i].get() == _ptr) {
-                                        _ptr->m_parent->m_successors.erase(_ptr->m_parent->m_successors.begin() + i);
+                                    if (node_parent->m_successors[i].get() == _ptr) {
+                                        node_parent->m_successors.erase(node_parent->m_successors.begin() + i);
 
                                         break;
                                     }
                                 }
-                            }
 
-                            _ptr->m_parent = std::move(_ptr->m_parent->m_parent);
+                                _ptr->m_parent = std::move(node_parent->m_parent);
+                            }
+                            else {
+                                break;
+                            }
                         }
 
                         delete _ptr;
                     }
                 );
 
-                if (result->m_parent) {
-                    result->m_parent->m_successors.emplace_back(result);
+                if (auto node_parent = std::dynamic_pointer_cast<node>(result->m_parent)) {
+                    node_parent->m_successors.emplace_back(result);
                 }
 
                 return result;
@@ -270,7 +317,7 @@ namespace chdr::solvers {
                     _open.clear();
                     _open.shrink_to_fit();
 
-                    return curr.template backtrack<node>(_params.size, curr->m_gScore);
+                    return curr->template backtrack<node>(_params.size, curr->m_gScore);
                 }
             }
 
