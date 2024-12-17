@@ -209,7 +209,7 @@ namespace chdr::solvers {
             return w;
         }
 
-        [[maybe_unused, nodiscard]] static constexpr auto execute(const params_t& _params) {
+        [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, const params_t& _params) {
 
             /** @see: https://easychair.org/publications/paper/TL2M/open */
 
@@ -217,8 +217,7 @@ namespace chdr::solvers {
             const auto e = utils::to_1d(_params.end,   _params.size);
 
             // Create Open Set:
-            open_set_t open;
-            open.emplace(node::create_shared(
+            _open.emplace(node::create_shared(
                 0U,                                                     // Depth
                 s,                                                      // Coordinate
                 static_cast<scalar_t>(0),                               // G-Score
@@ -226,10 +225,10 @@ namespace chdr::solvers {
             ));
 
             // Main loop:
-            while (!open.empty()) {
+            while (!_open.empty()) {
 
-                auto curr(std::move(open.top()));
-                open.pop();
+                auto curr(std::move(_open.top()));
+                _open.pop();
 
                 if (curr->m_index != e) { // SEARCH FOR SOLUTION...
 
@@ -253,13 +252,13 @@ namespace chdr::solvers {
                         }
 
                         // Add successor to open.
-                        if (!open.contains(successor)) {
-                             open.emplace(successor);
+                        if (!_open.contains(successor)) {
+                             _open.emplace(successor);
                         }
                     }
 
-                    while (open.size() > _params.memoryLimit) {
-                        cull_worst_leaf(_params.maze, _params.end, _params.h, _params.weight, _params.memoryLimit, open);
+                    while (_open.size() > _params.memoryLimit) {
+                        cull_worst_leaf(_params.maze, _params.end, _params.h, _params.weight, _params.memoryLimit, _open);
                     }
 
                     // Shrink the node to release ownership of children, allowing automatic GC of parents with no valid candidate children.
@@ -268,14 +267,21 @@ namespace chdr::solvers {
                 else { // SOLUTION REACHED ...
 
                     // Free data which is no longer relevant:
-                    open.clear();
-                    open.shrink_to_fit();
+                    _open.clear();
+                    _open.shrink_to_fit();
 
                     return curr.template backtrack<node>(_params.size, curr->m_gScore);
                 }
             }
 
             return std::vector<coord_t>{};
+        }
+
+        [[maybe_unused, nodiscard]] static constexpr auto execute(const params_t& _params) {
+
+            open_set_t open;
+
+            return solve_internal(open, _params);
         }
     };
 
