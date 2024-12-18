@@ -26,8 +26,6 @@ namespace chdr::solvers {
 
         using solver_t = solver<floodfill, Kd, scalar_t, index_t, params_t>;
 
-    public:
-
         template <typename open_set_t, typename closed_set_t>
         [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, const size_t& _capacity, const params_t& _params) {
 
@@ -58,7 +56,7 @@ namespace chdr::solvers {
                                      _closed.allocate(n.index, _capacity, _params.maze.count());
                                      _closed.emplace(n.index);
 
-                                     _open.emplace(n.index); // Note: 'current' is now moved!
+                                    _open.emplace(n.index); // Note: 'current' is now moved!
                                 }
                             }
                         }
@@ -69,6 +67,8 @@ namespace chdr::solvers {
                 }
             }
         }
+
+    public:
 
         [[maybe_unused, nodiscard]] static constexpr auto execute(const params_t& _params) {
 
@@ -83,9 +83,7 @@ namespace chdr::solvers {
 
                 if (s != e) {
 
-                    const auto capacity = solver_t::template is_graph<decltype(_params.maze)>::value ?
-                        (_params.capacity == 0U ? std::max(_params.maze.count() / 10U, static_cast<size_t>(1U)) : _params.capacity) :
-                        std::max(_params.capacity, std::max(s, e));
+                    const auto capacity = solver_t::determine_capacity(_params);
 
                     existence_set closed ({ s }, capacity);
 
@@ -94,9 +92,8 @@ namespace chdr::solvers {
 
                     return solve_internal(closed, open);
                 }
-                else {
-                    return true;
-                }
+
+                return true;
             }
 
             return false;

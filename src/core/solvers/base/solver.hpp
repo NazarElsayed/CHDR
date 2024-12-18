@@ -58,7 +58,7 @@ namespace chdr::solvers {
         template <typename maze_neighbour_t>
         static constexpr node_data get_data(const maze_neighbour_t& _n, const params_t& _params) {
 
-            if constexpr (std::is_same_v<std::decay_t<decltype(_params.maze)>, mazes::graph<index_t, scalar_t>>) {
+            if constexpr (is_graph<decltype(_params.maze)>::value) {
 
                 // _params.maze is graph...
 
@@ -83,6 +83,22 @@ namespace chdr::solvers {
                     nActive ? utils::to_1d(nCoord, _params.size) : index_t{},
                     static_cast<scalar_t>(1)
                 };
+            }
+        }
+
+        static constexpr size_t determine_capacity(const params_t& _params) {
+
+            if constexpr (is_graph<decltype(_params.maze)>::value) {
+
+                return _params.capacity != 0U ?
+                    _params.capacity :
+                    std::max(_params.maze.count() / 10U, static_cast<size_t>(1U));
+            }
+            else {
+                const auto s = utils::to_1d(_params.start, _params.size);
+                const auto e = utils::to_1d(_params.end,   _params.size);
+
+                return std::max(_params.capacity, std::max(s, e));
             }
         }
 
