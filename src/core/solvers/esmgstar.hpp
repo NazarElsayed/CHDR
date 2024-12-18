@@ -314,8 +314,9 @@ namespace chdr::solvers {
                 else { // SOLUTION REACHED ...
 
                     // Free data which is no longer relevant:
-                    _open.clear();
-                    _open.shrink_to_fit();
+
+                    if constexpr (utils::has_method_clear        <open_set_t>::value) {   _open.clear();         }
+                    if constexpr (utils::has_method_shrink_to_fit<open_set_t>::value) {   _open.shrink_to_fit(); }
 
                     return curr->template backtrack<node>(_params.size, curr->m_gScore);
                 }

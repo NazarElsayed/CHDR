@@ -17,6 +17,7 @@
 #include <vector>
 
 #include "types/coord.hpp"
+#include "types/existence_set.hpp"
 
 namespace chdr {
 
@@ -45,6 +46,23 @@ namespace chdr {
 		}
 
 	public:
+
+		template<typename T, typename = void>
+		struct has_method_clear : std::false_type {};
+
+		template<typename T>
+		struct has_method_clear<T, std::void_t<decltype(std::declval<T>().clear())>> : std::true_type {};
+
+		template<typename T, typename = void>
+		struct has_method_shrink_to_fit : std::false_type {};
+
+		template<typename T>
+		struct has_method_shrink_to_fit<T, std::void_t<decltype(std::declval<T>().shrink_to_fit())>> : std::true_type {};
+
+		template <typename T>
+		[[nodiscard]] static constexpr bool is_existence_set() {
+			return std::is_same_v<T, existence_set<>>;
+		}
 
 		template <typename T, size_t N, T Value, size_t... Indices>
 		[[nodiscard]] static constexpr std::array<T, N> build_array(std::index_sequence<Indices...> /*unused*/) { return {{((void)Indices, Value)...}}; }

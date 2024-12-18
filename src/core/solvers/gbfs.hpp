@@ -41,15 +41,15 @@ namespace chdr::solvers {
             _open.emplace(s);
 
             // Main loop:
-            while (!_open.empty()) { // SEARCH FOR SOLUTION...
+            while (!_open.empty()) {
 
                 auto curr(std::move(_open.front()));
                 _open.pop();
 
-                if (curr.m_index != e) {
+                if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
                     _closed.allocate(curr.m_index, _capacity, _params.maze.count());
-                    _closed.emplace(curr.m_index);
+                    _closed.emplace (curr.m_index);
 
                     for (const auto& n_data: _params.maze.get_neighbours(curr.m_index)) {
 
@@ -68,9 +68,11 @@ namespace chdr::solvers {
                 else { // SOLUTION REACHED ...
 
                     // Free data which is no longer relevant:
-                      _open.clear();
-                    _closed.clear();
-                    _closed.shrink_to_fit();
+
+                    if constexpr (utils::has_method_clear        <  open_set_t>::value) {   _open.clear();         }
+                    if constexpr (utils::has_method_shrink_to_fit<  open_set_t>::value) {   _open.shrink_to_fit(); }
+                    if constexpr (utils::has_method_clear        <closed_set_t>::value) { _closed.clear();         }
+                    if constexpr (utils::has_method_shrink_to_fit<closed_set_t>::value) { _closed.shrink_to_fit(); }
 
                     return curr.template backtrack<node>(_params.size, _capacity);
                 }
@@ -88,7 +90,6 @@ namespace chdr::solvers {
             existence_set closed({ s }, capacity);
 
             queue<node> open;
-            open.reserve(capacity / 8U);
 
             return solve_internal(open, closed, capacity, _params);
         }

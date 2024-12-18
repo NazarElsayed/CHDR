@@ -77,7 +77,7 @@ namespace chdr::solvers {
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
                     _closed.allocate(curr.m_index, _capacity, _params.maze.count());
-                    _closed.emplace(curr.m_index);
+                    _closed.emplace (curr.m_index);
 
                     for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
 

@@ -42,10 +42,10 @@ namespace chdr::solvers {
                     const auto curr(std::move(_open.front()));
                     _open.pop();
 
-                    if (curr != e) {
+                    if (curr != e) { // SEARCH FOR SOLUTION...
 
-                        _closed.allocate(curr, _params.capacity, _params.maze.count());
-                        _closed.emplace(curr);
+                        _closed.allocate(curr, _capacity, _params.maze.count());
+                        _closed.emplace (curr);
 
                         for (const auto& n_data : _params.maze.get_neighbours(curr)) {
 
@@ -54,14 +54,14 @@ namespace chdr::solvers {
                                 // Check if node is not already visited:
                                 if (!_closed.contains(n.index)) {
                                      _closed.allocate(n.index, _capacity, _params.maze.count());
-                                     _closed.emplace(n.index);
+                                     _closed.emplace (n.index);
 
                                     _open.emplace(n.index); // Note: 'current' is now moved!
                                 }
                             }
                         }
                     }
-                    else {
+                    else { // SOLUTION REACHED ...
                         return true;
                     }
                 }

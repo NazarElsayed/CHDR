@@ -70,7 +70,7 @@ namespace chdr::solvers {
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
                     _closed.allocate(curr.m_index, _capacity, _params.maze.count());
-                    _closed.emplace(curr.m_index);
+                    _closed.emplace (curr.m_index);
 
                     for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
 
@@ -89,10 +89,11 @@ namespace chdr::solvers {
                 else { // SOLUTION REACHED ...
 
                     // Free data which is no longer relevant:
-                      _open.clear();
-                      _open.shrink_to_fit();
-                    _closed.clear();
-                    _closed.shrink_to_fit();
+
+                    if constexpr (utils::has_method_clear        <  open_set_t>::value) {   _open.clear();         }
+                    if constexpr (utils::has_method_shrink_to_fit<  open_set_t>::value) {   _open.shrink_to_fit(); }
+                    if constexpr (utils::has_method_clear        <closed_set_t>::value) { _closed.clear();         }
+                    if constexpr (utils::has_method_shrink_to_fit<closed_set_t>::value) { _closed.shrink_to_fit(); }
 
                     return curr.template backtrack<node>(_params.size, curr.m_gScore);
                 }
