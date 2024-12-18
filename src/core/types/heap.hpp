@@ -279,7 +279,7 @@ namespace chdr {
         [[maybe_unused]] constexpr void pop() {
 
             if (!empty()) {
-                if (size() > 0U) {
+                if (size() > 1U) {
                     c[1U] = std::move(c.back());
                 }
                 c.pop_back();
