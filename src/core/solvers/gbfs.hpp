@@ -60,7 +60,7 @@ namespace chdr::solvers {
                                  _closed.allocate(n.index, _capacity, _params.maze.count());
                                  _closed.emplace (n.index);
 
-                                _open.emplace(n.index, std::move(curr)); // Note: 'current' is now moved!
+                                _open.emplace(n.index, new node(curr));
                             }
                         }
                     }

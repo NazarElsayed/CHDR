@@ -59,7 +59,7 @@ namespace chdr::solvers {
                                  _closed.allocate(n.index, _capacity, _params.maze.count());
                                  _closed.emplace (n.index);
 
-                                _open.emplace(n.index, std::move(curr)); // Note: 'current' is now moved!
+                                _open.emplace(n.index, new node(curr));
                             }
                         }
                     }
@@ -89,7 +89,6 @@ namespace chdr::solvers {
             existence_set closed({ s }, capacity);
 
             stack<node> open;
-            open.reserve(capacity / 8U);
 
             return solve_internal(open, closed, capacity, _params);
         }

@@ -49,21 +49,21 @@ namespace chdr::solvers {
 
             std::unordered_map<size_t, scalar_t> m_forgottenFCosts;
 
-            [[nodiscard]] constexpr node() : managed_node<index_t>() {}
+            [[nodiscard]] constexpr node() {}
 
             [[nodiscard]] constexpr node(const size_t& _depth, const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore) :
+                m_parent(),
                 m_depth (_depth),
                 m_index (_index),
                 m_gScore(_gScore),
-                m_fScore(_gScore + _hScore),
-                m_parent() {}
+                m_fScore(_gScore + _hScore) {}
 
             [[nodiscard]] constexpr node(const size_t& _depth, const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore, const std::shared_ptr<node>& _parent) :
+                m_parent(_parent),
                 m_depth (_depth),
                 m_index (_index),
                 m_gScore(_gScore),
-                m_fScore(_gScore + _hScore),
-                m_parent(_parent) {}
+                m_fScore(_gScore + _hScore) {}
 
             template<typename node_t, typename coord_t>
             [[nodiscard]] auto backtrack(const coord_t& _size, const size_t& _capacity = 0U) {

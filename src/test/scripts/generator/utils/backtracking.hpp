@@ -57,7 +57,7 @@ namespace test::generator::utils {
             [[maybe_unused]] static constexpr result_type max() noexcept { return modulus - 1; }
         };
 
-        using uniform_rng_t = linear_congruential_generator<size_t>; //std::mt19937_64;
+        using rng_engine_t = linear_congruential_generator<size_t>; //std::mt19937_64;
         
     public:
 
@@ -137,7 +137,7 @@ namespace test::generator::utils {
 #if __cplusplus >= 202302L
         constexpr
 #endif // __cplusplus >= 202302L
-        void carve_from(const coord_t& _coord, std::pair<coord_t, size_t>& _farthest, const coord_t& _size, container_t& _grid, uniform_rng_t& _rng) {
+        void carve_from(const coord_t& _coord, std::pair<coord_t, size_t>& _farthest, const coord_t& _size, container_t& _grid, rng_engine_t& _rng) {
 
             static_assert(std::is_invocable_v<decltype(static_cast<typename container_t::reference (container_t::*)(size_t)>(&container_t::operator[])), container_t&, size_t>,
                     "container_t must implement the subscript operator []");
@@ -263,7 +263,7 @@ namespace test::generator::utils {
                 if (valid_dimensionality(_size)) {
 
                     const auto seed = _seed == null_v ? time(nullptr) : _seed;
-                    uniform_rng_t rng(seed);
+                    rng_engine_t rng(seed);
 
                     debug::log("\tBacktracking Algorithm \t(Seed " + std::to_string(seed) + ")");
 
@@ -281,10 +281,10 @@ namespace test::generator::utils {
 
                             if (is_link(c) && !is_edge(c, _size)) {
 
-                                if (const auto obstacle_chance = static_cast<double>(rng()) / static_cast<double>(uniform_rng_t::max()); obstacle_chance < _obstacles) {
+                                if (const auto obstacle_chance = static_cast<double>(rng()) / static_cast<double>(rng_engine_t::max()); obstacle_chance < _obstacles) {
                                     result[chdr::utils::to_1d<size_t>(c, _size)] = WALL;
                                 }
-                                else if (const auto loop_chance = static_cast<double>(rng()) / static_cast<double>(uniform_rng_t::max()); loop_chance < _loops) {
+                                else if (const auto loop_chance = static_cast<double>(rng()) / static_cast<double>(rng_engine_t::max()); loop_chance < _loops) {
                                     result[chdr::utils::to_1d<size_t>(c, _size)] = PATH;
                                 }
                             }

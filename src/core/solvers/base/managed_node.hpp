@@ -9,9 +9,10 @@
 #ifndef CHDR_MANAGEDNODE_HPP
 #define CHDR_MANAGEDNODE_HPP
 
+#include <cassert>
 #include <cstddef>
-#include <memory>
 
+#include "../../utils/intrinsics.hpp"
 #include "bnode.hpp"
 
 namespace chdr::solvers {
@@ -19,69 +20,133 @@ namespace chdr::solvers {
     template<typename index_t>
     struct managed_node : bnode<index_t> {
 
-        std::shared_ptr<const managed_node> m_parent;
+        managed_node* RESTRICT m_parent;
+        unsigned char m_successors;
 
         /**
-         * @brief Constructs an uninitialized ManagedNode.
+         * @brief Constructs an uninitialized ASNode.
          *
-         * This constructor creates an managed_node with uninitialized members.
+         * This constructor creates an ASNode with uninitialized members.
          */
-        // ReSharper disable once CppPossiblyUninitializedMember
-        constexpr managed_node() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
+        [[nodiscard]] constexpr managed_node() noexcept : // NOLINT(*-pro-type-member-init, *-use-equals-default)
+            m_parent     (nullptr),
+            m_successors (0U     ) {}
 
-        [[nodiscard]] constexpr managed_node(const index_t& _index) : bnode<index_t>(_index),
-                m_parent() {}
-
-        [[nodiscard]] constexpr managed_node(const index_t& _index, managed_node&& _parent) :
-                bnode<index_t>(_index), m_parent(std::make_shared<const managed_node>(std::move(_parent))) {}
-
-        [[nodiscard]] constexpr managed_node(const index_t& _index, const std::shared_ptr<const managed_node>& _parent) :
-                bnode<index_t>(_index), m_parent{_parent} {}
-
-        ~managed_node() { // NOLINT(*-use-equals-default)
-#ifdef __OPTIMIZE__
-            expunge_recursive(m_parent);    // Only attempt TRO if compiled with optimisation flags.
-#else //!__OPTIMIZE__
-            while (m_parent && m_parent.unique()) {
-                m_parent = std::move(m_parent->m_parent);
-            }
-#endif//!__OPTIMIZE__
+        [[nodiscard]] constexpr managed_node(const index_t& _index, managed_node* RESTRICT const _parent = nullptr) noexcept : bnode<index_t>(_index),
+            m_parent     (_parent),
+            m_successors (0U     )
+        {
+            incr();
         }
 
-        void expunge_recursive(std::shared_ptr<const managed_node>& _node) {
-            if (_node && _node.unique()) {
-                _node = std::move(_node->m_parent);
-                expunge_recursive(_node);
+        [[nodiscard]] constexpr managed_node(const managed_node& _other) noexcept : bnode<index_t>(_other.m_index),
+            m_parent     (_other.m_parent),
+            m_successors (0U             )
+        {
+            incr();
+        }
+
+        managed_node& operator=(const managed_node& _other) noexcept {
+
+            assert(this != &_other);
+
+            expunge();
+
+            bnode<index_t>::operator=(_other.m_index);
+
+            m_parent     = _other.m_parent;
+            m_successors = _other.m_successors;
+
+            return *this;
+        }
+
+        [[nodiscard]] constexpr managed_node(managed_node&& _other) noexcept : bnode<index_t>(std::move(_other.m_index)),
+            m_parent     (_other.m_parent    ),
+            m_successors (_other.m_successors)
+        {
+            _other.m_parent     = nullptr;
+            _other.m_successors = 0U;
+        }
+
+        constexpr managed_node& operator=(managed_node&& _other) noexcept {
+
+            assert(this != &_other);
+
+            expunge();
+
+            bnode<index_t>::operator=(std::move(_other.m_index));
+
+            m_parent     = _other.m_parent;
+            m_successors = _other.m_successors;
+
+            _other.m_parent     = nullptr;
+            _other.m_successors = 0U;
+
+            return *this;
+        }
+
+        virtual ~managed_node() noexcept {
+            expunge();
+        }
+
+        void expunge() noexcept {
+
+            while (m_parent != nullptr) {
+
+                decr();
+
+                if (m_parent->m_successors == 0U) {
+
+                    auto* temp = m_parent;
+                    m_parent = temp->m_parent;
+
+                    temp->m_parent = nullptr;
+                    delete temp;
+                }
+                else {
+                    break;
+                }
+            }
+        }
+
+        constexpr void decr() noexcept {
+            if (m_parent != nullptr) {
+                assert(m_parent->m_successors != static_cast<decltype(m_successors)>(0U) && "Underflow detected!");
+                m_parent->m_successors -= 1U;
+            }
+        }
+
+        constexpr void incr() noexcept {
+            if (m_parent != nullptr) {
+                assert(m_parent->m_successors != static_cast<decltype(m_successors)>(-1U) && "Overflow detected!");
+                m_parent->m_successors += 1U;
             }
         }
 
         template<typename node_t, typename coord_t>
-        [[nodiscard]] auto backtrack(const coord_t& _size, const size_t& _capacity = 0U) {
+        auto backtrack(const coord_t& _size, const size_t& _capacity = 0U) const {
 
             static_assert(std::is_base_of_v<managed_node, node_t>, "node_t must derive from managed_node");
 
-            const auto& curr = *static_cast<const node_t*>(this);
-
-            // Recurse from end node to start node, inserting into a result buffer:
+            // Reserve space in result:
             std::vector<coord_t> result;
             result.reserve(_capacity);
-            result.emplace_back(utils::to_nd(curr.m_index, _size));
 
-            if (curr.m_parent != nullptr) {
-
-                for (auto t = curr.m_parent; t->m_parent != nullptr;) {
-                    result.emplace_back(utils::to_nd(t->m_index, _size));
-
-                    auto oldItem = t;
-                    t = t->m_parent;
-                    oldItem.reset();
-                }
+            // Recurse from end node to start node, inserting into a result buffer:
+            for (const auto* t = this; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent)) {
+                result.emplace_back(utils::to_nd(t->m_index, _size));
             }
 
             // Reverse the result:
             std::reverse(result.begin(), result.end());
 
             return result;
+        }
+
+        [[nodiscard]] friend constexpr bool operator < (const managed_node& _a, const managed_node& _b) noexcept {
+            return _a.m_fScore == _b.m_fScore ?
+                   _a.m_gScore >  _b.m_gScore :
+                   _a.m_fScore >  _b.m_fScore;
         }
     };
 

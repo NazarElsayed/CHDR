@@ -20,7 +20,7 @@ namespace test::generator {
 
 	struct graph final {
 
-        using uniform_rng_t = std::mt19937_64;
+        using rng_engine_t = std::mt19937_64;
 
         template <typename T, typename index_t, typename scalar_t, size_t Kd, typename... Args>
         static auto generate(const chdr::coord<size_t, Kd>& _start, chdr::coord<size_t, Kd>& _end, const size_t& _seed = -1U, const Args&... _size) {
@@ -41,7 +41,7 @@ namespace test::generator {
             constexpr size_t null_v = -1U;
 
             const auto seed = _seed == null_v ? std::random_device().operator()() : _seed;
-            uniform_rng_t rng(seed);
+            rng_engine_t rng(seed);
 
             const auto maxIndex = chdr::utils::product<index_t>(size);
 
