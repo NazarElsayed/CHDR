@@ -60,28 +60,22 @@ namespace chdr::solvers {
             }
         };
 
-        template <typename closed_set_t, typename buf_t>
-        [[nodiscard]] static constexpr auto solve_internal(closed_set_t& _closed, buf_t& _buf, const size_t& _capacity, const params_t& _params) {
+        template <typename open_set_t, typename closed_set_t, typename buf_t>
+        [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, open_set_t& _next, closed_set_t& _closed, buf_t& _buf, const size_t& _capacity, const params_t& _params) {
 
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
             float min_threshold = _params.h(_params.start, _params.end) * _params.weight;
 
-            std::vector<node> open;
-            open.reserve(_capacity);
-
-            std::vector<node> next;
-            next.reserve(_capacity);
-
-            open.emplace_back(s, static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
+            _open.emplace_back(s, static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
 
             // Main loop:
-            while (!open.empty()) {
+            while (!_open.empty()) {
 
                 auto next_threshold = std::numeric_limits<scalar_t>::max();
 
-                for (const auto& curr : open) {
+                for (const auto& curr : _open) {
 
                     if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
@@ -113,18 +107,18 @@ namespace chdr::solvers {
                                         /* SORTED INSERTION */
 
                                         const auto insertion_point = std::partition_point(
-                                            next.begin(),
-                                            next.end(),
+                                            _next.begin(),
+                                            _next.end(),
                                             [&new_node](const node& _other) [[always_inline]] {
                                                 return _other < new_node;
                                             }
                                         );
 
-                                        if (insertion_point == next.end()) {
-                                            next.emplace_back(new_node);
+                                        if (insertion_point == _next.end()) {
+                                            _next.emplace_back(new_node);
                                         }
                                         else {
-                                            next.insert(insertion_point, new_node);
+                                            _next.insert(insertion_point, new_node);
                                         }
                                     }
                                     else {
@@ -135,12 +129,23 @@ namespace chdr::solvers {
                         }
                     }
                     else { // SOLUTION REACHED ...
+
+                        // Free data which is no longer relevant:
+
+                        if constexpr (utils::has_method_clear        <  open_set_t>::value) {   _next.clear();         }
+                        if constexpr (utils::has_method_shrink_to_fit<  open_set_t>::value) {   _next.shrink_to_fit(); }
+
+                        if constexpr (utils::has_method_clear        <closed_set_t>::value) { _closed.clear();         }
+                        if constexpr (utils::has_method_shrink_to_fit<closed_set_t>::value) { _closed.shrink_to_fit(); }
+
+                        std::cout << curr.m_gScore << '\n';
+
                         return curr.template backtrack<node>(_params.size, curr.m_gScore);
                     }
                 }
 
-                open = std::move(next);
-                next.clear();
+                _open = std::move(_next);
+                _next.clear();
 
                 min_threshold = next_threshold;
             }
@@ -156,9 +161,15 @@ namespace chdr::solvers {
 
             existence_set<low_memory_usage> closed({ s }, capacity);
 
+            std::vector<node> open;
+            open.reserve(capacity / 8U);
+
+            std::vector<node> next;
+            next.reserve(capacity / 8U);
+
             stable_forward_buf<node> buf;
 
-            return solve_internal(closed, buf, capacity, _params);
+            return solve_internal(open, next, closed, buf, capacity, _params);
         }
     };
 
