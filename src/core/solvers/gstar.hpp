@@ -87,7 +87,7 @@ namespace chdr::solvers {
 
                 return *this;
             }
-            
+
             [[nodiscard]] constexpr node(node&& _other) noexcept :
                 m_index      (_other.m_index     ),
                 m_gScore     (_other.m_gScore    ),
@@ -179,8 +179,8 @@ namespace chdr::solvers {
             }
         };
 
-        template <typename open_set_t, typename closed_set_t, typename buf_t>
-        [[maybe_unused, nodiscard]] static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, buf_t& _buf, const size_t& _capacity, const params_t& _params) {
+        template <typename open_set_t, typename closed_set_t>
+        [[maybe_unused, nodiscard]] static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, const size_t& _capacity, const params_t& _params) {
 
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
@@ -239,9 +239,7 @@ namespace chdr::solvers {
             heap<node> open;
             open.reserve(capacity / 8U);
 
-            stable_forward_buf<node*> buf;
-
-            return solve_internal(open, closed, buf, capacity, _params);
+            return solve_internal(open, closed, capacity, _params);
         }
     };
 
