@@ -145,7 +145,7 @@ add_library(CHDR INTERFACE
     src/core/solvers/dijkstra.hpp
     src/core/solvers/esmgstar.hpp
     src/core/solvers/floodfill.hpp
-        src/core/solvers/fstar.hpp
+    src/core/solvers/fstar.hpp
     src/core/solvers/gbfs.hpp
     src/core/solvers/gdfs.hpp
     src/core/solvers/gstar.hpp
@@ -186,6 +186,7 @@ add_executable(Test
     src/test/scripts/generator/graph.hpp
     src/test/scripts/generator/grid.hpp
     src/test/scripts/generator/utils/backtracking.hpp
+    src/test/scripts/generator/utils/lcg.hpp
     src/test/scripts/tests/astar.hpp
 )
 

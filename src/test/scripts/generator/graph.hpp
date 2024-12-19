@@ -16,11 +16,13 @@
 #include <algorithm>
 #include <random>
 
+#include "utils/lcg.hpp"
+
 namespace test::generator {
 
 	struct graph final {
 
-        using rng_engine_t = std::mt19937_64;
+	    using rng_engine_t = utils::linear_congruential_generator<size_t>; //std::mt19937_64;
 
         template <typename T, typename index_t, typename scalar_t, size_t Kd, typename... Args>
         static auto generate(const chdr::coord<size_t, Kd>& _start, chdr::coord<size_t, Kd>& _end, const size_t& _seed = -1U, const Args&... _size) {
