@@ -50,6 +50,8 @@ namespace chdr::solvers {
                     _closed.allocate(curr.m_index, _capacity, _params.maze.count());
                     _closed.emplace (curr.m_index);
 
+                    node* curr_ptr = nullptr;
+
                     for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
 
                         if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
@@ -59,7 +61,11 @@ namespace chdr::solvers {
                                  _closed.allocate(n.index, _capacity, _params.maze.count());
                                  _closed.emplace (n.index);
 
-                                _open.emplace(n.index, &_buf.emplace(std::move(curr)));
+                                if (curr_ptr == nullptr) {
+                                    curr_ptr = &_buf.emplace(std::move(curr));
+                                }
+
+                                _open.emplace(n.index, curr_ptr);
                             }
                         }
                     }

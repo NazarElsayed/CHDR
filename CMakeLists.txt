@@ -145,7 +145,7 @@ add_library(CHDR INTERFACE
     src/core/solvers/dijkstra.hpp
     src/core/solvers/esmgstar.hpp
     src/core/solvers/floodfill.hpp
-    src/core/solvers/fringe.hpp
+        src/core/solvers/fstar.hpp
     src/core/solvers/gbfs.hpp
     src/core/solvers/gdfs.hpp
     src/core/solvers/gstar.hpp

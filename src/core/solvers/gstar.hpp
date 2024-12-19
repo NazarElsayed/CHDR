@@ -73,6 +73,8 @@ namespace chdr::solvers {
                     _closed.allocate(curr.m_index, _capacity, _params.maze.count());
                     _closed.emplace (curr.m_index);
 
+                    node* curr_ptr = nullptr;
+
                     for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
 
                         if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
@@ -82,7 +84,11 @@ namespace chdr::solvers {
                                  _closed.allocate(n.index, _capacity, _params.maze.count());
                                  _closed.emplace (n.index);
 
-                                _open.emplace(n.index, curr.m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight, new node(curr));
+                                if (curr_ptr == nullptr) {
+                                    curr_ptr = new node(curr);
+                                }
+
+                                _open.emplace(n.index, curr.m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight, curr_ptr);
                             }
                         }
                     }

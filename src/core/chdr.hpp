@@ -30,7 +30,7 @@
 #include "solvers/dijkstra.hpp"
 #include "solvers/esmgstar.hpp"
 #include "solvers/floodfill.hpp"
-#include "solvers/fringe.hpp"
+#include "solvers/fstar.hpp"
 #include "solvers/gbfs.hpp"
 #include "solvers/gdfs.hpp"
 #include "solvers/gstar.hpp"

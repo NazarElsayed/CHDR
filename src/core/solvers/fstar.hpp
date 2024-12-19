@@ -25,16 +25,16 @@
 namespace chdr::solvers {
 
     template<size_t Kd, typename scalar_t, typename index_t, typename params_t>
-    struct [[maybe_unused]] fringe final {
+    struct [[maybe_unused]] fstar final {
 
-        friend struct solver<fringe, Kd, scalar_t, index_t, params_t>;
+        friend struct solver<fstar, Kd, scalar_t, index_t, params_t>;
 
         static_assert(std::is_integral_v<scalar_t> || std::is_floating_point_v<scalar_t>, "scalar_t must be either an integral or floating point type.");
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
     private:
 
-        using solver_t = solver<fringe, Kd, scalar_t, index_t, params_t>;
+        using solver_t = solver<fstar, Kd, scalar_t, index_t, params_t>;
         using  coord_t = coord<index_t, Kd>;
 
         struct node final : unmanaged_node<index_t> {
@@ -88,6 +88,8 @@ namespace chdr::solvers {
                         _closed.allocate(curr.m_index, _capacity, _params.maze.count());
                         _closed.emplace (curr.m_index);
 
+                        node* curr_ptr = nullptr;
+
                         for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
 
                             if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
@@ -102,7 +104,11 @@ namespace chdr::solvers {
 
                                     if (f <= min_threshold) {
 
-                                        const auto new_node = node(n.index, g, f, &_buf.emplace(curr));
+                                        if (curr_ptr == nullptr) {
+                                            curr_ptr = &_buf.emplace(std::move(curr));
+                                        }
+
+                                        const auto new_node = node(n.index, g, f, curr_ptr);
 
                                         const auto insertion_point = std::partition_point(next.begin(), next.end(), [&new_node](const node& _other) [[always_inline]] {
                                             return _other < new_node;

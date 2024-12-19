@@ -48,14 +48,14 @@ namespace chdr::solvers {
 
         managed_node& operator=(const managed_node& _other) noexcept {
 
-            assert(this != &_other);
+            if (this != &_other) {
+                expunge();
 
-            expunge();
+                bnode<index_t>::operator=(_other.m_index);
 
-            bnode<index_t>::operator=(_other.m_index);
-
-            m_parent     = _other.m_parent;
-            m_successors = _other.m_successors;
+                m_parent     = _other.m_parent;
+                m_successors = _other.m_successors;
+            }
 
             return *this;
         }
@@ -70,17 +70,17 @@ namespace chdr::solvers {
 
         constexpr managed_node& operator=(managed_node&& _other) noexcept {
 
-            assert(this != &_other);
+            if (this != &_other) {
+                expunge();
 
-            expunge();
+                bnode<index_t>::operator=(std::move(_other.m_index));
 
-            bnode<index_t>::operator=(std::move(_other.m_index));
+                m_parent     = _other.m_parent;
+                m_successors = _other.m_successors;
 
-            m_parent     = _other.m_parent;
-            m_successors = _other.m_successors;
-
-            _other.m_parent     = nullptr;
-            _other.m_successors = 0U;
+                _other.m_parent     = nullptr;
+                _other.m_successors = 0U;
+            }
 
             return *this;
         }

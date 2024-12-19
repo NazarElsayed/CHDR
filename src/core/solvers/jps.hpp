@@ -255,8 +255,9 @@ namespace chdr::solvers {
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
                     _closed.allocate(curr.m_index, _capacity, _params.maze.count());
+                    _closed.emplace (curr.m_index);
 
-                    _closed.emplace(curr.m_index);
+                    node* curr_ptr = nullptr;
 
                     const auto coord = utils::to_nd(curr.m_index, _params.size);
 
@@ -273,7 +274,11 @@ namespace chdr::solvers {
                             const std::array<int8_t, 2U> direction { static_cast<int8_t>(utils::sign<int8_t>(static_cast<signed>(successor[0U]) - static_cast<signed>(coord[0U]))) ,
                                                                      static_cast<int8_t>(utils::sign<int8_t>(static_cast<signed>(successor[1U]) - static_cast<signed>(coord[1U]))) };
 
-                            _open.emplace(n, direction, curr.m_gScore + nDistance, _params.h(successor, _params.end) * _params.weight, &_buf.emplace(std::move(curr))); // Note: 'current' is now moved!
+                            if (curr_ptr == nullptr) {
+                                curr_ptr = &_buf.emplace(std::move(curr));
+                            }
+
+                            _open.emplace(n, direction, curr.m_gScore + nDistance, _params.h(successor, _params.end) * _params.weight, curr_ptr); // Note: 'current' is now moved!
                         }
                     }
                 }
