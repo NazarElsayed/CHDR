@@ -105,16 +105,21 @@ namespace chdr::solvers {
                                     if (f <= min_threshold) {
 
                                         if (curr_ptr == nullptr) {
-                                            curr_ptr = &_buf.emplace(std::move(curr));
+                                            curr_ptr = &_buf.emplace(std::move(curr)); // Note: 'current' is now moved!
                                         }
 
                                         const auto new_node = node(n.index, g, f, curr_ptr);
 
-                                        const auto insertion_point = std::partition_point(next.begin(), next.end(), [&new_node](const node& _other) [[always_inline]] {
-                                            return _other < new_node;
-                                        });
+                                        /* SORTED INSERTION */
 
-                                        // Insert with tie-breaking rules applied:
+                                        const auto insertion_point = std::partition_point(
+                                            next.begin(),
+                                            next.end(),
+                                            [&new_node](const node& _other) [[always_inline]] {
+                                                return _other < new_node;
+                                            }
+                                        );
+
                                         if (insertion_point == next.end()) {
                                             next.emplace_back(new_node);
                                         }

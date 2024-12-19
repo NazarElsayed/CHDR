@@ -82,7 +82,7 @@ namespace chdr::solvers {
                                  _closed.emplace (n.index);
 
                                 if (curr_ptr == nullptr) {
-                                    curr_ptr = &_buf.emplace(std::move(curr));
+                                    curr_ptr = &_buf.emplace(std::move(curr)); // Note: 'current' is now moved!
                                 }
 
                                 _open.emplace(n.index, _params.h(n.coord, _params.end), curr_ptr);

@@ -241,6 +241,8 @@ namespace chdr::solvers {
         template <typename open_set_t, typename closed_set_t, typename buf_t>
         [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, buf_t& _buf, const size_t& _capacity, const params_t& _params) {
 
+            static_assert(std::is_same<decltype(_params.maze), mazes::grid<Kd, weight_t>>::value, "JPS only supports mazes of type grid<Kd, weight_t>.");
+            
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end  , _params.size);
 
@@ -275,10 +277,10 @@ namespace chdr::solvers {
                                                                      static_cast<int8_t>(utils::sign<int8_t>(static_cast<signed>(successor[1U]) - static_cast<signed>(coord[1U]))) };
 
                             if (curr_ptr == nullptr) {
-                                curr_ptr = &_buf.emplace(std::move(curr));
+                                curr_ptr = &_buf.emplace(std::move(curr)); // Note: 'current' is now moved!
                             }
 
-                            _open.emplace(n, direction, curr.m_gScore + nDistance, _params.h(successor, _params.end) * _params.weight, curr_ptr); // Note: 'current' is now moved!
+                            _open.emplace(n, direction, curr.m_gScore + nDistance, _params.h(successor, _params.end) * _params.weight, curr_ptr);
                         }
                     }
                 }
