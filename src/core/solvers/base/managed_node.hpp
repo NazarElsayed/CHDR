@@ -22,7 +22,7 @@ namespace chdr::solvers {
 
     private:
 
-#define TAGGED
+//#define TAGGED
 
 #ifdef TAGGED
 
@@ -102,13 +102,13 @@ namespace chdr::solvers {
 
         managed_node& operator=(const managed_node& _other) noexcept {
 
-            assert(this != &_other);
+            if (this != &_other) {
+                expunge();
 
-            expunge();
+                bnode<index_t>::operator=(_other.m_index);
 
-            bnode<index_t>::operator=(_other.m_index);
-
-            m_counter = _other.m_counter;
+                m_counter = _other.m_counter;
+            }
 
             return *this;
         }
@@ -119,13 +119,13 @@ namespace chdr::solvers {
 
         constexpr managed_node& operator=(managed_node&& _other) noexcept {
 
-            assert(this != &_other);
+            if (this != &_other) {
+                expunge();
 
-            expunge();
+                bnode<index_t>::operator=(std::move(_other.m_index));
 
-            bnode<index_t>::operator=(std::move(_other.m_index));
-
-            m_counter = std::move(_other.m_counter);
+                m_counter = std::move(_other.m_counter);
+            }
 
             return *this;
         }
