@@ -138,8 +138,6 @@ namespace chdr::solvers {
                         if constexpr (utils::has_method_clear        <closed_set_t>::value) { _closed.clear();         }
                         if constexpr (utils::has_method_shrink_to_fit<closed_set_t>::value) { _closed.shrink_to_fit(); }
 
-                        std::cout << curr.m_gScore << '\n';
-
                         return curr.template backtrack<node>(_params.size, curr.m_gScore);
                     }
                 }
