@@ -10,7 +10,7 @@
 
 ### About
 
-CHDR is a C++ library aiming to offer a comprehensive cross-platform solution for pathfinding in K-dimensions. It provides routing support for a variety of maze types including grid-based graph-based recursive and weighted (fields) using an extensive range of algorithms.
+CHDR is a C++ library aiming to offer a comprehensive cross-platform solution for pathfinding in K-dimensions. It provides routing support for a variety of maze types including grid-based, graph-based, recursive, and weighted (fields) using an extensive range of algorithms.
 
 CHDR is designed to be fast and lightweight. Alongside data and algorithmic optimisations it utilises metaprogramming to resolve expensive code paths at compile time.
 
