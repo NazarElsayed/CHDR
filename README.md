@@ -26,21 +26,21 @@ CHDR is designed to be fast and lightweight. Alongside data and algorithmic opti
 
 #### Pathfinding Algorithms
 
-| Type                                                    |     Status      |
-|:--------------------------------------------------------|:---------------:|
-| A-Star (A*)                                             |  Completed ✔️   |
-| Best-First Search (B*)                                  |  Completed ✔️   |
-| Breadth-First Search (BFS)                              |  Completed ✔️   |
-| Depth-First Search (DFS)                                |  Completed ✔️   |
-| Dijkstra's Algorithm                                    |   Planned 📝    |
-| Enhanced Iterative Deepening Search (EIDA*)             |   Planned 📝    |
-| Enhanced Simple Memory Bounded A-Star (SMA*+)           |   Planned 📝    |
-| Enhanced Simple Memory Bounded Graveyard Search (SMG*+) | In Progress 🏗️ |
-| Graveyard Breadth-First Search (GBFS)                   |  Completed ✔️   |
-| Graveyard Depth-First Search (GDFS)                     |  Completed ✔️   |
-| Graveyard Jump-Point Search (GJPS)                      |   Planned 📝    |
-| Graveyard Search (G*)                                   |  Completed ✔️   |
-| Jump-Point Search (JPS)                                 |  Completed ✔️️  |
+| Type                                                    |    Status     |
+|:--------------------------------------------------------|:-------------:|
+| A-Star (A*)                                             | Completed ✔️  |
+| Best-First Search (B*)                                  | Completed ✔️  |
+| Breadth-First Search (BFS)                              | Completed ✔️  |
+| Depth-First Search (DFS)                                | Completed ✔️  |
+| Dijkstra's Algorithm                                    |  Planned 📝   |
+| Enhanced Iterative Deepening Search (EIDA*)             |  Planned 📝   |
+| Enhanced Simple Memory Bounded A-Star (SMA*+)           |  Planned 📝   |
+| Enhanced Simple Memory Bounded Graveyard Search (SMG*+) |  Planned 📝   |
+| Graveyard Breadth-First Search (GBFS)                   | Completed ✔️  |
+| Graveyard Depth-First Search (GDFS)                     | Completed ✔️  |
+| Graveyard Jump-Point Search (GJPS)                      |  Planned 📝   |
+| Graveyard Search (G*)                                   | Completed ✔️  |
+| Jump-Point Search (JPS)                                 | Completed ✔️️ |
 
 #### Maze types
 
@@ -102,24 +102,7 @@ Each programming language has its unique characteristics and paradigms. With thi
 
 CHDR is completely standalone and does not require the use of any third-party libraries.
 
-However CHDR does require that your project is compatible with a C++17 environment and supports the following standard libraries:
-
-#### &lt;algorithm&gt;
-#### &lt;array&gt;
-#### &lt;cmath&gt;
-#### &lt;cstddef&gt;
-#### &lt;cstring&gt;
-#### &lt;forward_list&gt;
-#### &lt;initializer_list&gt;
-#### &lt;iterator&gt;
-#### &lt;limits&gt;
-#### &lt;memory&gt;
-#### &lt;queue&gt;
-#### &lt;stack&gt;
-#### &lt;type_traits&gt;
-#### &lt;unordered_set&gt;
-#### &lt;utility&gt;
-#### &lt;vector&gt;
+However CHDR does require that your project is compatible with a C++17 environment and supports use of the standard library.
 
 ### References
 
