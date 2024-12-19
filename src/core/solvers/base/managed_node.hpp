@@ -19,6 +19,7 @@ namespace chdr::solvers {
 
     template<typename index_t>
     struct managed_node : bnode<index_t> {
+
         managed_node* RESTRICT m_parent;
         unsigned char m_successors;
 
