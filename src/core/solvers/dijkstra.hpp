@@ -9,11 +9,11 @@
 #ifndef CHDR_DIJKSTRA_HPP
 #define CHDR_DIJKSTRA_HPP
 
-#include <memory>
+#include <cstddef>
+#include <vector>
 
-#include "mazes/base/imaze.hpp"
-#include "mazes/grid.hpp"
-#include "types/existence_set.hpp"
+#include "base/solver.hpp"
+#include "types/coord.hpp"
 
 namespace chdr::solvers {
 
@@ -40,4 +40,4 @@ namespace chdr::solvers {
 
 } //chdr::solvers
 
-#endif //CHDR_DJIKSTRA_HPP
+#endif //CHDR_DIJKSTRA_HPP

@@ -17,6 +17,7 @@ namespace chdr::mazes {
     class weighted_node {
 
         static_assert(std::is_integral_v<W>, "Type W must be an integral type.");
+        static_assert(std::numeric_limits<W>::is_specialized, "W must be a numeric type with defined numeric limits.");
 
     private:
 

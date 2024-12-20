@@ -12,9 +12,13 @@
 #include <debug.hpp>
 
 #include <cstddef>
+#include <memory>
+#include <unordered_map>
+#include <vector>
 
-#include "base/managed_node.hpp"
-#include "mazes/grid.hpp"
+#include "base/solver.hpp"
+#include "types/coord.hpp"
+#include "types/heap.hpp"
 #include "utils/utils.hpp"
 
 namespace chdr::solvers {
@@ -49,7 +53,8 @@ namespace chdr::solvers {
 
             std::unordered_map<size_t, scalar_t> m_forgottenFCosts;
 
-            [[nodiscard]] constexpr node() {}
+            // ReSharper disable once CppPossiblyUninitializedMember
+            [[nodiscard]] constexpr node() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
             [[nodiscard]] constexpr node(const size_t& _depth, const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore) :
                 m_parent(),

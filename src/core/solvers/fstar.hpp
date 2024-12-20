@@ -10,15 +10,15 @@
 #define CHDR_FRINGE_HPP
 
 #include <cstddef>
+#include <limits>
+#include <vector>
 
-#include "../utils/intrinsics.hpp"
 #include "base/solver.hpp"
-#include "mazes/graph.hpp"
-#include "mazes/grid.hpp"
 #include "solvers/base/unmanaged_node.hpp"
 #include "types/coord.hpp"
 #include "types/existence_set.hpp"
 #include "types/stable_forward_buf.hpp"
+#include "utils/intrinsics.hpp"
 #include "utils/utils.hpp"
 
 namespace chdr::solvers {
@@ -61,6 +61,8 @@ namespace chdr::solvers {
 
         template <typename open_set_t, typename closed_set_t, typename buf_t>
         [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, open_set_t& _next, closed_set_t& _closed, buf_t& _buf, const size_t& _capacity, const params_t& _params) {
+
+            static_assert(std::numeric_limits<scalar_t>::is_specialized, "scalar_t must be a numeric type with defined numeric limits.");
 
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);

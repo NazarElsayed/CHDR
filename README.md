@@ -26,23 +26,24 @@ CHDR is designed to be fast and lightweight. Alongside data and algorithmic opti
 
 #### Solvers
 
-| Type                                                      |     Status      |
-|:----------------------------------------------------------|:---------------:|
-| A-Star (A*)                                               |  Completed ✔️   |
-| Best-First Search (B*)                                    |  Completed ✔️   |
-| Breadth-First Search (BFS)                                |  Completed ✔️   |
-| Depth-First Search (DFS)                                  |  Completed ✔️   |
-| Dijkstra's Algorithm                                      |   Planned 📝    |
-| Enhanced Iterative Deepening Search (EIDA*)               |   Planned 📝    |
-| Enhanced Simple Memory Bounded A-Star (SMA*+)             |   Planned 📝    |
-| Enhanced Simple Memory Bounded Graveyard Search (SMG*+)   |   Planned 📝    |
-| Flood Fill                                                |  Completed ✔️   |
-| Fringe Search (F*)                                        |  Completed ✔️   |
-| Graveyard Breadth-First Search (GBFS)                     |  Completed ✔️   |
-| Graveyard Depth-First Search (GDFS)                       |  Completed ✔️   |
-| Graveyard Jump-Point Search (GJPS)                        |   Planned 📝    |
-| Graveyard Search (G*)                                     |  Completed ✔️   |
-| Jump-Point Search (JPS)                                   |  Completed ✔️️  |
+| Type                                                    |     Status      |
+|:--------------------------------------------------------|:---------------:|
+| A-Star (A*)                                             |  Completed ✔️   |
+| Best-First Search (B*)                                  |  Completed ✔️   |
+| Breadth-First Search (BFS)                              |  Completed ✔️   |
+| Depth-First Search (DFS)                                |  Completed ✔️   |
+| Dijkstra's Algorithm                                    |   Planned 📝    |
+| Enhanced Iterative Deepening Search (EIDA*)             |   Planned 📝    |
+| Enhanced Simple Memory Bounded A-Star (SMA*+)           |   Planned 📝    |
+| Enhanced Simple Memory Bounded Graveyard Search (SMG*+) |   Planned 📝    |
+| Flood Fill                                              |  Completed ✔️   |
+| Fringe Search (F*)                                      |  Completed ✔️   |
+| Graveyard Breadth-First Search (GBFS)                   |  Completed ✔️   |
+| Graveyard Depth-First Search (GDFS)                     |  Completed ✔️   |
+| Graveyard Jump-Point Search (GJPS)                      |   Planned 📝    |
+| Graveyard Search (G*)                                   |  Completed ✔️   |
+| Iterative-Deepening A* (IDA*)                           |  Completed ✔️   |
+| Jump-Point Search (JPS)                                 |  Completed ✔️️  |
 
 #### Maze types
 

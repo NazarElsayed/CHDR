@@ -9,11 +9,14 @@
 #ifndef CHDR_GSTAR_HPP
 #define CHDR_GSTAR_HPP
 
-#include "mazes/base/imaze.hpp"
-#include "mazes/graph.hpp"
-#include "mazes/grid.hpp"
+#include <cstddef>
+
+#include "base/solver.hpp"
+#include "solvers/base/managed_node.hpp"
+#include "types/coord.hpp"
 #include "types/existence_set.hpp"
 #include "types/heap.hpp"
+#include "utils/intrinsics.hpp"
 #include "utils/utils.hpp"
 
 namespace chdr::solvers {

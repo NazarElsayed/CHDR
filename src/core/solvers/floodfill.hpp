@@ -9,10 +9,11 @@
 #ifndef CHDR_FLOODFILL_HPP
 #define CHDR_FLOODFILL_HPP
 
-#include "mazes/base/imaze.hpp"
-#include "mazes/graph.hpp"
-#include "mazes/grid.hpp"
+#include <cstddef>
+
+#include "base/solver.hpp"
 #include "types/existence_set.hpp"
+#include "types/queue.hpp"
 #include "utils/utils.hpp"
 
 namespace chdr::solvers {

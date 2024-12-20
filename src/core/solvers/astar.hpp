@@ -10,16 +10,15 @@
 #define CHDR_ASTAR_HPP
 
 #include <cstddef>
+#include <vector>
 
-#include "../utils/heuristics.hpp"
 #include "base/solver.hpp"
-#include "mazes/graph.hpp"
-#include "mazes/grid.hpp"
-#include "solvers/base/unmanaged_node.hpp"
+#include "base/unmanaged_node.hpp"
 #include "types/coord.hpp"
 #include "types/existence_set.hpp"
 #include "types/heap.hpp"
 #include "types/stable_forward_buf.hpp"
+#include "utils/intrinsics.hpp"
 #include "utils/utils.hpp"
 
 namespace chdr::solvers {

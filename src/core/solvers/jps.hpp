@@ -11,9 +11,11 @@
 
 #include <map>
 
+#include "base/solver.hpp"
 #include "mazes/grid.hpp"
 #include "types/existence_set.hpp"
 #include "types/stable_forward_buf.hpp"
+#include "utils/intrinsics.hpp"
 #include "utils/utils.hpp"
 
 namespace chdr::solvers {
@@ -241,7 +243,7 @@ namespace chdr::solvers {
         template <typename open_set_t, typename closed_set_t, typename buf_t>
         [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, buf_t& _buf, const size_t& _capacity, const params_t& _params) {
 
-            static_assert(std::is_same<decltype(_params.maze), mazes::grid<Kd, weight_t>>::value, "JPS only supports mazes of type grid<Kd, weight_t>.");
+            static_assert(std::is_same_v<decltype(_params.maze), mazes::grid<Kd, weight_t>>, "JPS only supports mazes of type grid<Kd, weight_t>.");
             
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end  , _params.size);

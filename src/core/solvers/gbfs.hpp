@@ -9,12 +9,15 @@
 #ifndef CHDR_GBFS_HPP
 #define CHDR_GBFS_HPP
 
-#include "base/managed_node.hpp"
-#include "mazes/base/imaze.hpp"
-#include "mazes/graph.hpp"
-#include "mazes/grid.hpp"
+#include <cstddef>
+#include <vector>
+
+#include "base/solver.hpp"
+#include "solvers/base/managed_node.hpp"
+#include "types/coord.hpp"
 #include "types/existence_set.hpp"
-#include "types/stable_forward_buf.hpp"
+#include "types/queue.hpp"
+#include "utils/intrinsics.hpp"
 #include "utils/utils.hpp"
 
 namespace chdr::solvers {
