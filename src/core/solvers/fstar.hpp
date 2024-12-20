@@ -11,14 +11,13 @@
 
 #include <cstddef>
 
-#include "../utils/heuristics.hpp"
+#include "../utils/intrinsics.hpp"
 #include "base/solver.hpp"
 #include "mazes/graph.hpp"
 #include "mazes/grid.hpp"
 #include "solvers/base/unmanaged_node.hpp"
 #include "types/coord.hpp"
 #include "types/existence_set.hpp"
-#include "types/heap.hpp"
 #include "types/stable_forward_buf.hpp"
 #include "utils/utils.hpp"
 
@@ -66,9 +65,9 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
-            float min_threshold = _params.h(_params.start, _params.end) * _params.weight;
+            auto min_threshold = _params.h(_params.start, _params.end) * _params.weight;
 
-            _open.emplace_back(s, static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
+            _open.emplace_back(s, static_cast<scalar_t>(0), min_threshold);
 
             // Main loop:
             while (!_open.empty()) {
@@ -82,7 +81,7 @@ namespace chdr::solvers {
                         _closed.allocate(curr.m_index, _capacity, _params.maze.count());
                         _closed.emplace (curr.m_index);
 
-                        node* curr_ptr = nullptr;
+                        node* RESTRICT curr_ptr = nullptr;
 
                         for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
 
@@ -102,24 +101,18 @@ namespace chdr::solvers {
                                             curr_ptr = &_buf.emplace(std::move(curr)); // Note: 'current' is now moved!
                                         }
 
-                                        const auto new_node = node(n.index, g, f, curr_ptr);
-
                                         /* SORTED INSERTION */
 
-                                        const auto insertion_point = std::partition_point(
-                                            _next.begin(),
-                                            _next.end(),
-                                            [&new_node](const node& _other) [[always_inline]] {
-                                                return _other < new_node;
-                                            }
-                                        );
+                                        const auto new_node = node(n.index, g, f, curr_ptr);
 
-                                        if (insertion_point == _next.end()) {
-                                            _next.emplace_back(new_node);
-                                        }
-                                        else {
-                                            _next.insert(insertion_point, new_node);
-                                        }
+                                        _next.insert(
+                                            std::partition_point(
+                                                _next.begin(),
+                                                _next.end(),
+                                                [&new_node](const node& _other) ALWAYS_INLINE { return _other < new_node; }
+                                            ),
+                                            new_node
+                                        );
                                     }
                                     else {
                                         next_threshold = std::min(next_threshold, f);
@@ -142,7 +135,7 @@ namespace chdr::solvers {
                     }
                 }
 
-                _open = std::move(_next);
+                std::swap(_open, _next);
                 _next.clear();
 
                 min_threshold = next_threshold;

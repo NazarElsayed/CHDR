@@ -259,7 +259,7 @@ namespace chdr::solvers {
                     _closed.allocate(curr.m_index, _capacity, _params.maze.count());
                     _closed.emplace (curr.m_index);
 
-                    node* curr_ptr = nullptr;
+                    node* RESTRICT curr_ptr = nullptr;
 
                     const auto coord = utils::to_nd(curr.m_index, _params.size);
 
