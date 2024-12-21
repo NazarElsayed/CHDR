@@ -35,32 +35,22 @@ namespace chdr::mazes {
         using edge_t = typename igraph<index_t, scalar_t>::edge_t;
 
         struct index_hash {
-
-            constexpr size_t operator () (const index_t& _index) const noexcept {
-                return static_cast<index_t>(_index);
-            }
+            constexpr size_t operator () (const index_t& _index) const noexcept { return static_cast<index_t>(_index); }
         };
 
         struct index_equal {
-
-            constexpr bool operator () (const index_t& _a, const index_t& _b) const noexcept {
-                return _a == _b;
-            }
+            constexpr bool operator () (const index_t& _a, const index_t& _b) const noexcept { return _a == _b; }
         };
 
         struct edge_hash {
-
-            constexpr size_t operator () (const std::pair<index_t, scalar_t> &_edge) const noexcept {
-                return static_cast<size_t>(_edge.first) ^ (std::hash<scalar_t>()(_edge.second) << 1);
-            }
+            constexpr size_t operator () (const std::pair<index_t, scalar_t> &_edge) const noexcept { return static_cast<size_t>(_edge.first) ^ (std::hash<scalar_t>()(_edge.second) << 1); }
         };
 
         struct edge_equal {
-
-            constexpr bool operator () (const std::pair<index_t, scalar_t>& _a, const std::pair<index_t, scalar_t>& _b) const noexcept {
-                return _a.first == _b.first && _a.second == _b.second;
-            }
+            constexpr bool operator () (const std::pair<index_t, scalar_t>& _a, const std::pair<index_t, scalar_t>& _b) const noexcept { return _a.first == _b.first && _a.second == _b.second; }
         };
+
+    private:
 
         using neighbours_t    = std::unordered_set<edge_t, edge_hash, edge_equal>;
         using adjacency_set_t = std::unordered_map<index_t, neighbours_t, index_hash, index_equal>;

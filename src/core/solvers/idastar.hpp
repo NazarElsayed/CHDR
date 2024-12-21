@@ -11,10 +11,11 @@
 
 #include <cstddef>
 #include <limits>
-#include <vector>
+#include <list>
 
 #include "base/solver.hpp"
 #include "types/coord.hpp"
+#include "types/stack.hpp"
 #include "utils/intrinsics.hpp"
 #include "utils/utils.hpp"
 
@@ -26,6 +27,7 @@ namespace chdr::solvers {
         friend struct solver<idastar, Kd, scalar_t, index_t, params_t>;
 
         static_assert(std::is_integral_v<scalar_t> || std::is_floating_point_v<scalar_t>, "scalar_t must be either an integral or floating point type.");
+        static_assert(std::numeric_limits<scalar_t>::is_specialized, "scalar_t must be a numeric type with defined numeric limits.");
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
     private:
@@ -56,20 +58,65 @@ namespace chdr::solvers {
             }
         };
 
+        template <typename neighbours_t>
+        struct state {
+
+            node curr;
+            const scalar_t bound;
+
+            neighbours_t neighbours;
+            size_t       neighbours_idx;
+
+            state(const node& _curr, const scalar_t& _bound, const params_t& _params) :
+                curr(_curr),
+                bound(_bound),
+                neighbours(_params.maze.get_neighbours(curr.m_index)),
+                neighbours_idx(0U) {}
+        };
+
         template <typename open_set_t>
-        static constexpr scalar_t search(open_set_t& _open, const scalar_t& _bound, const params_t& _params) {
+        [[nodiscard]] static constexpr auto backtrack(const open_set_t& _open, const coord_t& _size, const size_t& _capacity = 1U) {
 
-            static_assert(std::numeric_limits<scalar_t>::is_specialized, "scalar_t must be a numeric type with defined numeric limits.");
+            // Reserve space in result:
+            std::vector<coord_t> result;
+            result.reserve(_capacity);
 
-            const auto e = utils::to_1d(_params.end, _params.size);
+            // Recurse from end node to start node, inserting into a result buffer:
+            for (const auto& t : _open) {
+                result.emplace_back(utils::to_nd(t.m_index, _size));
+            }
+
+            // Reverse the result:
+            std::reverse(result.begin(), result.end());
+
+            return result;
+        }
+
+        template <typename open_set_t>
+        [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, const params_t& _params) {
+
+            using neighbours_t = decltype(_params.maze.get_neighbours());
+
+            const auto s = utils::to_1d(_params.start, _params.size);
+            const auto e = utils::to_1d(_params.end,   _params.size);
 
             auto min = std::numeric_limits<scalar_t>::max();
 
-            const auto& curr = _open.back();
+            auto bound = _params.h(_params.start, _params.end) * _params.weight;
 
-            if (curr.m_fScore <= _bound) {
+            _open.emplace_back(s, static_cast<scalar_t>(0), bound);
 
-                for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
+            stack<state<neighbours_t>> stack;
+            stack.emplace(_open.back(), bound, _params);
+
+            // Main loop:
+            while (!stack.empty()) {
+
+                auto& _ = stack.top();
+                auto& curr = _.curr;
+
+                if (_.neighbours_idx != _.neighbours.size()) {
+                    const auto& n_data = _.neighbours[_.neighbours_idx++];
 
                     if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
 
@@ -77,55 +124,20 @@ namespace chdr::solvers {
 
                             _open.emplace_back(n.index, curr.m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight);
 
-                            if (n.index != e) {
-                                min = std::min(min, search(_open, _bound, _params));
-                                _open.pop_back();
+                            if (n.index != e) { // SEARCH FOR SOLUTION...
+                                stack.emplace(_open.back(), _.bound, _params);
                             }
-                            else {
-                                min = _bound;
-                                break;
+                            else {              // SOLUTION REACHED ...
+                                return backtrack(_open, _params.size, curr.m_gScore);
                             }
                         }
                     }
                 }
-            }
+                else {
+                    min = std::min(min, curr.m_fScore);
 
-            return min;
-        }
-
-        template <typename open_set_t>
-        static constexpr auto solve_internal(open_set_t& _open, const params_t& _params) {
-
-            const auto s = utils::to_1d(_params.start, _params.size);
-            const auto e = utils::to_1d(_params.end,   _params.size);
-
-            auto bound = _params.h(_params.start, _params.end) * _params.weight;
-
-            _open.emplace_back(s, static_cast<scalar_t>(0), bound);
-
-            // Main loop:
-            while (!_open.empty()) {
-
-                const auto& curr = _open.back();
-
-                if (curr.m_index != e) { // SEARCH FOR SOLUTION...
-                    bound = search(_open, bound, _params);
-                }
-                else { // SOLUTION REACHED ...
-
-                    // Reserve space in result:
-                    std::vector<coord_t> result;
-                    result.reserve(curr.m_gScore);
-
-                    // Recurse from end node to start node, inserting into a result buffer:
-                    for (auto& t : _open) {
-                        result.emplace_back(utils::to_nd(t.m_index, _params.size));
-                    }
-
-                    // Reverse the result:
-                    std::reverse(result.begin(), result.end());
-
-                    return result;
+                    _open.pop_back();
+                    stack.pop();
                 }
             }
 

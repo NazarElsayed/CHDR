@@ -99,18 +99,17 @@ namespace chdr::mazes {
         [[nodiscard]]
         constexpr auto get_neighbours(const coord_t& _id) const noexcept {
 
-            constexpr size_t neighbours = IncludeDiagonals ?
-                static_cast<size_t>(std::pow(3U, Kd)) - 1U : Kd * 2U;
+            constexpr auto neighbours_count = IncludeDiagonals ? static_cast<size_t>(std::pow(3U, Kd)) - 1U : Kd * 2U;
 
-            auto result = std::array<std::pair<bool, coord_t>, neighbours>();
+            auto result = std::array<std::pair<bool, coord_t>, neighbours_count>();
 
             if constexpr (IncludeDiagonals) {
 
                 constexpr coord_t kernelSize = utils::build_array<size_t, Kd, 3U>();
 
-                for (size_t i = 0U; i < neighbours; i++) {
+                for (size_t i = 0U; i < neighbours_count; i++) {
 
-                    const size_t sampleIndex = i < neighbours / 2U ? i : i + 1U;
+                    const size_t sampleIndex = i < neighbours_count / 2U ? i : i + 1U;
 
                     coord_t direction = utils::to_nd<size_t, Kd>(sampleIndex, kernelSize);
 

@@ -29,6 +29,7 @@ namespace chdr::solvers {
         friend struct solver<fstar, Kd, scalar_t, index_t, params_t>;
 
         static_assert(std::is_integral_v<scalar_t> || std::is_floating_point_v<scalar_t>, "scalar_t must be either an integral or floating point type.");
+        static_assert(std::numeric_limits<scalar_t>::is_specialized, "scalar_t must be a numeric type with defined numeric limits.");
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
     private:
@@ -61,8 +62,6 @@ namespace chdr::solvers {
 
         template <typename open_set_t, typename closed_set_t, typename buf_t>
         [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, open_set_t& _next, closed_set_t& _closed, buf_t& _buf, const size_t& _capacity, const params_t& _params) {
-
-            static_assert(std::numeric_limits<scalar_t>::is_specialized, "scalar_t must be a numeric type with defined numeric limits.");
 
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
