@@ -35,7 +35,25 @@ namespace chdr::solvers {
         using solver_t = solver<iddfs, Kd, scalar_t, index_t, params_t>;
         using  coord_t = coord<index_t, Kd>;
 
-        using node = bnode<index_t>;
+        struct node final : bnode<index_t> {
+
+            scalar_t m_depth;
+
+            /**
+             * @brief Constructs an uninitialized node.
+             *
+             * This constructor creates a node with uninitialized members.
+             */
+            // ReSharper disable once CppPossiblyUninitializedMember
+            [[nodiscard]] constexpr node() noexcept : bnode<index_t>() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
+
+            [[nodiscard]] constexpr node(const index_t& _index, const scalar_t& _depth) noexcept : bnode<index_t>(_index),
+                m_depth(_depth) {}
+
+            [[nodiscard]] friend constexpr bool operator < (const node& _a, const node& _b) noexcept {
+                return _a.m_hScore > _b.m_hScore;
+            }
+        };
 
         template <typename neighbours_t>
         struct state {
@@ -74,38 +92,44 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
-            _open.emplace_back(s);
-
             stack<state<neighbours_t>> stack;
-            stack.emplace(_open.back(), _params);
 
-            // Main loop:
-            while (!stack.empty()) {
+            for (size_t bound = 0U; bound < std::numeric_limits<size_t>::max(); ++bound) {
 
-                auto& _ = stack.top();
+                stack.emplace(_open.emplace_back(s, 0U), _params);
 
-                if (_.neighbours_idx != _.neighbours.size()) {
-                    const auto& n_data = _.neighbours[_.neighbours_idx++];
+                // Main loop:
+                while (!stack.empty()) {
 
-                    if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
+                    auto& _ = stack.top();
+                    auto& curr = _open.back();
 
-                        if (!std::any_of(_open.begin(), _open.end(), [&n](const auto& _item) ALWAYS_INLINE { return _item.m_index == n.index; })) {
+                    if (curr.m_depth <= bound && _.neighbours_idx != _.neighbours.size()) {
+                        const auto& n_data = _.neighbours[_.neighbours_idx++];
 
-                            _open.emplace_back(n.index);
+                        if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
 
-                            if (n.index != e) { // SEARCH FOR SOLUTION...
-                                stack.emplace(_open.back(), _params);
-                            }
-                            else { // SOLUTION REACHED ...
-                                return backtrack(_open, _params.size);
+                            if (!std::any_of(_open.begin(), _open.end(), [&n](const auto& _item) ALWAYS_INLINE { return _item.m_index == n.index; })) {
+
+                                _open.emplace_back(n.index, curr.m_depth + 1U);
+
+                                if (n.index != e) { // SEARCH FOR SOLUTION...
+                                    stack.emplace(_open.back(), _params);
+                                }
+                                else { // SOLUTION REACHED ...
+                                    return backtrack(_open, _params.size);
+                                }
                             }
                         }
                     }
+                    else {
+                        _open.pop_back();
+                        stack.pop();
+                    }
                 }
-                else {
-                    _open.pop_back();
-                    stack.pop();
-                }
+
+                _open.clear();
+                stack.clear();
             }
 
             return std::vector<coord_t>{};
