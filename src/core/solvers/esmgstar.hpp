@@ -53,6 +53,11 @@ namespace chdr::solvers {
 
             std::unordered_map<size_t, scalar_t> m_forgottenFCosts;
 
+            /**
+             * @brief Constructs an uninitialized BSNode.
+             *
+             * This constructor creates an BSNode with uninitialized members.
+             */
             // ReSharper disable once CppPossiblyUninitializedMember
             [[nodiscard]] constexpr node() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 

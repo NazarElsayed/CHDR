@@ -22,10 +22,10 @@ namespace chdr::solvers {
         const unmanaged_node* RESTRICT m_parent;
 
         /**
-        * @brief Constructs an uninitialized UnmanagedNode.
-        *
-        * This constructor creates an UnmanagedNode with uninitialized members.
-        */
+         * @brief Constructs an uninitialized node.
+         *
+         * This constructor creates a node with uninitialized members.
+         */
         // ReSharper disable once CppPossiblyUninitializedMember
         constexpr unmanaged_node() noexcept {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 

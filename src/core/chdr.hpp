@@ -35,6 +35,7 @@
 #include "solvers/gdfs.hpp"
 #include "solvers/gstar.hpp"
 #include "solvers/idastar.hpp"
+#include "solvers/idbstar.hpp"
 #include "solvers/iddfs.hpp"
 #include "solvers/jps.hpp"
 

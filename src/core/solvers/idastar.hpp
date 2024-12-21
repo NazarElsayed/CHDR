@@ -41,10 +41,11 @@ namespace chdr::solvers {
             scalar_t m_fScore;
 
             /**
-             * @brief Constructs an uninitialized ASNode.
+             * @brief Constructs an uninitialized node.
              *
-             * This constructor creates an ASNode with uninitialized members.
+             * This constructor creates a node with uninitialized members.
              */
+            // ReSharper disable once CppPossiblyUninitializedMember
             [[nodiscard]] constexpr node() noexcept : bnode<index_t>() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
             [[nodiscard]] constexpr node(const index_t& _index, const scalar_t& _gScore, const scalar_t& _fScore) noexcept : bnode<index_t>(_index),

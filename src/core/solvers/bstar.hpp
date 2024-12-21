@@ -45,6 +45,7 @@ namespace chdr::solvers {
              *
              * This constructor creates an BSNode with uninitialized members.
              */
+            // ReSharper disable once CppPossiblyUninitializedMember
             [[nodiscard]] constexpr node() noexcept {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
             [[nodiscard]] constexpr node(const index_t& _index, const scalar_t& _hScore, const unmanaged_node<index_t>* RESTRICT const _parent = nullptr) noexcept : unmanaged_node<index_t>(_index, _parent),

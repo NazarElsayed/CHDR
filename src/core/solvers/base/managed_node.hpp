@@ -24,9 +24,9 @@ namespace chdr::solvers {
         unsigned char m_successors;
 
         /**
-         * @brief Constructs an uninitialized ASNode.
+         * @brief Constructs an uninitialized node.
          *
-         * This constructor creates an ASNode with uninitialized members.
+         * This constructor creates a node with uninitialized members.
          */
         [[nodiscard]] constexpr managed_node() noexcept : // NOLINT(*-pro-type-member-init, *-use-equals-default)
             m_parent     (nullptr),
