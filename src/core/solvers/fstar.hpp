@@ -28,7 +28,7 @@ namespace chdr::solvers {
 
         friend struct solver<fstar, Kd, scalar_t, index_t, params_t>;
 
-        static_assert(std::is_integral_v<scalar_t> || std::is_floating_point_v<scalar_t>, "scalar_t must be either an integral or floating point type.");
+        static_assert(std::is_arithmetic_v<scalar_t>, "scalar_t must be an integral or floating point type.");
         static_assert(std::numeric_limits<scalar_t>::is_specialized, "scalar_t must be a numeric type with defined numeric limits.");
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 

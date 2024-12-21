@@ -148,7 +148,8 @@ add_library(CHDR INTERFACE
     src/core/solvers/fstar.hpp
     src/core/solvers/gbfs.hpp
     src/core/solvers/gdfs.hpp
-    src/core/solvers/gstar.hpp
+    src/core/solvers/idastar.hpp
+    src/core/solvers/iddfs.hpp
     src/core/solvers/jps.hpp
     src/core/types/circular_queue.hpp
     src/core/types/coord.hpp
