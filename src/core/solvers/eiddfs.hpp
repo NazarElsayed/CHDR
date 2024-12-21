@@ -6,8 +6,8 @@
  * https://creativecommons.org/licenses/by-nc-nd/4.0/
  */
 
-#ifndef CHDR_IDDFS_HPP
-#define CHDR_IDDFS_HPP
+#ifndef CHDR_EIDDFS_HPP
+#define CHDR_EIDDFS_HPP
 
 #include <cstddef>
 #include <limits>
@@ -15,6 +15,7 @@
 
 #include "base/solver.hpp"
 #include "types/coord.hpp"
+#include "types/existence_set.hpp"
 #include "types/stack.hpp"
 #include "utils/intrinsics.hpp"
 #include "utils/utils.hpp"
@@ -22,9 +23,9 @@
 namespace chdr::solvers {
 
     template<size_t Kd, typename scalar_t, typename index_t, typename params_t>
-    struct [[maybe_unused]] iddfs final {
+    struct [[maybe_unused]] eiddfs final {
 
-        friend struct solver<iddfs, Kd, scalar_t, index_t, params_t>;
+        friend struct solver<eiddfs, Kd, scalar_t, index_t, params_t>;
 
         static_assert(std::is_arithmetic_v<scalar_t>, "scalar_t must be an integral or floating point type.");
         static_assert(std::numeric_limits<scalar_t>::is_specialized, "scalar_t must be a numeric type with defined numeric limits.");
@@ -32,7 +33,7 @@ namespace chdr::solvers {
 
     private:
 
-        using solver_t = solver<iddfs, Kd, scalar_t, index_t, params_t>;
+        using solver_t = solver<eiddfs, Kd, scalar_t, index_t, params_t>;
         using  coord_t = coord<index_t, Kd>;
 
         using node = bnode<index_t>;
@@ -75,9 +76,13 @@ namespace chdr::solvers {
             const auto e = utils::to_1d(_params.end,   _params.size);
 
             _open.emplace_back(s);
+            auto& curr = _open.back();
 
             stack<state<neighbours_t>> stack;
-            stack.emplace(_open.back(), _params);
+            stack.emplace(curr, _params);
+
+            existence_set<low_memory_usage> transposition_table;
+            transposition_table.emplace(curr.m_index);
 
             // Main loop:
             while (!stack.empty()) {
@@ -89,7 +94,8 @@ namespace chdr::solvers {
 
                     if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
 
-                        if (!std::any_of(_open.begin(), _open.end(), [&n](const auto& _item) ALWAYS_INLINE { return _item.m_index == n.index; })) {
+                        if (!transposition_table.contains(n.index)) {
+                             transposition_table.emplace (n.index);
 
                             _open.emplace_back(n.index);
 
@@ -124,4 +130,4 @@ namespace chdr::solvers {
 
 } //chdr::solvers
 
-#endif //CHDR_IDDFS_HPP
+#endif //CHDR_EIDDFS_HPP

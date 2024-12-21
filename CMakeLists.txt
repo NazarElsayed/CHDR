@@ -143,6 +143,9 @@ add_library(CHDR INTERFACE
     src/core/solvers/bstar.hpp
     src/core/solvers/dfs.hpp
     src/core/solvers/dijkstra.hpp
+    src/core/solvers/eidastar.hpp
+    src/core/solvers/eidbstar.hpp
+    src/core/solvers/eiddfs.hpp
     src/core/solvers/esmgstar.hpp
     src/core/solvers/floodfill.hpp
     src/core/solvers/fstar.hpp
