@@ -11,7 +11,6 @@
 
 #include <cstddef>
 #include <limits>
-#include <list>
 
 #include "base/solver.hpp"
 #include "types/coord.hpp"
