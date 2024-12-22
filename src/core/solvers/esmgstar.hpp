@@ -244,17 +244,7 @@ namespace chdr::solvers {
             if (w == _open.top()) { // Top == Best node according to f(n) in _open
 
                 // Code to find second-worst leaf according to c(n) goes here
-
-                for (size_t i = _open.size() / 2U; i < _open.size(); ++i) {
-
-                    const auto& a = _open[i];
-                    const auto& b = w;
-
-                    if (a < b) {
-                        w = _open[i]; // Assign the second-worst leaf to w
-                    }
-                }
-
+                w = _open[_open.size() / 2U];
                 _open.erase(w);
             }
             else {

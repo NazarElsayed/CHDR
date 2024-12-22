@@ -138,8 +138,9 @@ namespace chdr::solvers {
                         auto g = curr.m_gScore + n.distance;
                         auto f = g + (_params.h(n.coord, _params.end) * _params.weight);
 
-                        if (!(transposition_table.find(n.index) != transposition_table.end() && f >= transposition_table[n.index])) {
-                            transposition_table[n.index] = f;
+                        auto search = transposition_table.find(n.index);
+                        if (!(search != transposition_table.end() && f >= search->second)) {
+                            *transposition_table[n.index] = f;
 
                             _open.emplace_back(n.index, g, f);
 

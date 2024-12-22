@@ -126,7 +126,8 @@ namespace chdr::solvers {
 
                             const auto next_depth = curr.m_depth + 1U;
 
-                            if (!(transposition_table.find(n.index) != transposition_table.end() && next_depth >= transposition_table[n.index])) {
+                            auto search = transposition_table.find(n.index);
+                            if (!(search != transposition_table.end() && next_depth >= search->second)) {
                                 transposition_table[n.index] = next_depth;
 
                                 _open.emplace_back(n.index, next_depth);

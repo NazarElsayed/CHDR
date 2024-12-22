@@ -133,7 +133,8 @@ namespace chdr::solvers {
 
                         auto h = _params.h(n.coord, _params.end) * _params.weight;
 
-                        if (!(transposition_table.find(n.index) != transposition_table.end() && h >= transposition_table[n.index])) {
+                        auto search = transposition_table.find(n.index);
+                        if (!(search != transposition_table.end() && h >= search->second)) {
                             transposition_table[n.index] = h;
 
                             _open.emplace_back(n.index, h);
