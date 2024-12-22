@@ -36,7 +36,25 @@ namespace chdr::solvers {
         using solver_t = solver<eiddfs, Kd, scalar_t, index_t, params_t>;
         using  coord_t = coord<index_t, Kd>;
 
-        using node = bnode<index_t>;
+        struct node final : bnode<index_t> {
+
+            scalar_t m_depth;
+
+            /**
+             * @brief Constructs an uninitialized node.
+             *
+             * This constructor creates a node with uninitialized members.
+             */
+            // ReSharper disable once CppPossiblyUninitializedMember
+            [[nodiscard]] constexpr node() noexcept : bnode<index_t>() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
+
+            [[nodiscard]] constexpr node(const index_t& _index, const scalar_t& _depth) noexcept : bnode<index_t>(_index),
+                m_depth(_depth) {}
+
+            [[nodiscard]] friend constexpr bool operator < (const node& _a, const node& _b) noexcept {
+                return _a.m_hScore > _b.m_hScore;
+            }
+        };
 
         template <typename neighbours_t>
         struct state {
@@ -49,6 +67,15 @@ namespace chdr::solvers {
                 neighbours_idx(0U) {}
         };
 
+        struct index_hash {
+            constexpr size_t operator () (const index_t& _index) const noexcept { return static_cast<index_t>(_index); }
+        };
+
+        struct index_equal {
+            constexpr bool operator () (const index_t& _a, const index_t& _b) const noexcept { return _a == _b; }
+        };
+
+        using transposition_table_t = std::unordered_map<index_t, index_t, index_hash, index_equal>;
         template <typename open_set_t>
         [[nodiscard]] static constexpr auto backtrack(const open_set_t& _open, const coord_t& _size, const size_t& _capacity = 1U) {
 
@@ -75,43 +102,51 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
-            _open.emplace_back(s);
-            auto& curr = _open.back();
-
             stack<state<neighbours_t>> stack;
-            stack.emplace(curr, _params);
 
-            existence_set<low_memory_usage> transposition_table;
-            transposition_table.emplace(curr.m_index);
+            transposition_table_t transposition_table;
+            transposition_table[s] = 0U;
 
-            // Main loop:
-            while (!stack.empty()) {
+            for (size_t bound = 0U; bound < std::numeric_limits<size_t>::max(); ++bound) {
 
-                auto& _ = stack.top();
+                stack.emplace(_open.emplace_back(s, 0U), _params);
 
-                if (_.neighbours_idx != _.neighbours.size()) {
-                    const auto& n_data = _.neighbours[_.neighbours_idx++];
+                // Main loop:
+                while (!stack.empty()) {
 
-                    if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
+                    auto& _ = stack.top();
+                    auto& curr = _open.back();
 
-                        if (!transposition_table.contains(n.index)) {
-                             transposition_table.emplace (n.index);
+                    if (curr.m_depth <= bound && _.neighbours_idx != _.neighbours.size()) {
+                        const auto& n_data = _.neighbours[_.neighbours_idx++];
 
-                            _open.emplace_back(n.index);
+                        if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
 
-                            if (n.index != e) { // SEARCH FOR SOLUTION...
-                                stack.emplace(_open.back(), _params);
-                            }
-                            else { // SOLUTION REACHED ...
-                                return backtrack(_open, _params.size);
+                            const auto next_depth = curr.m_depth + 1U;
+
+                            if (!(transposition_table.find(n.index) != transposition_table.end() && next_depth >= transposition_table[n.index])) {
+                                transposition_table[n.index] = next_depth;
+
+                                _open.emplace_back(n.index, next_depth);
+
+                                if (n.index != e) { // SEARCH FOR SOLUTION...
+                                    stack.emplace(_open.back(), _params);
+                                }
+                                else { // SOLUTION REACHED ...
+                                    return backtrack(_open, _params.size);
+                                }
                             }
                         }
                     }
+                    else {
+                        _open.pop_back();
+                        stack.pop();
+                    }
                 }
-                else {
-                    _open.pop_back();
-                    stack.pop();
-                }
+
+                _open.clear();
+                stack.clear();
+                transposition_table.clear();
             }
 
             return std::vector<coord_t>{};
