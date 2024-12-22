@@ -49,6 +49,7 @@ namespace test::tests {
 #else //!NDEBUG
             constexpr size_t base_samples = 100000000UL;
 #endif //!NDEBUG
+            // constexpr size_t base_samples = 1UL;
 
             const size_t test_samples = std::max(base_samples / chdr::utils::product<size_t>(_dimensions), 1UL);
 
@@ -112,7 +113,7 @@ namespace test::tests {
                     const size_t               memoryLimit = -1U;
                 };
 
-                const auto solver = chdr::solvers::make_solver<chdr::solvers::astar, Kd, scalar_t, index_t, params>();
+                const auto solver = chdr::solvers::make_solver<chdr::solvers::jps, Kd, scalar_t, index_t, params>();
                 path = solver(test, start, end, size, HEURISTIC);
 
                 result = std::min(
