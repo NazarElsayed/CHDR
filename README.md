@@ -92,7 +92,6 @@ CHDR is designed to be fast and lightweight. Alongside data and algorithmic opti
 | POWER        |                                           AltiVec<br/>VSX                                            |                                                                              Planned 📝<br/>Planned 📝                                                                               | 128-bits<br/>128-bits                                                                                                                                                            |
 | MIPS         |                                                 MSA                                                  |                                                                                      Planned 📝                                                                                      | 128-bits                                                                                                                                                                         |
 
-
 ### Instructions
 
 #### C++ (17 and above)

@@ -245,8 +245,6 @@ namespace chdr::solvers {
 
                 // Code to find second-worst leaf according to c(n) goes here
 
-                w = _open.back();
-
                 for (size_t i = _open.size() / 2U; i < _open.size(); ++i) {
 
                     const auto& a = _open[i];

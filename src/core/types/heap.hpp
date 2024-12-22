@@ -39,9 +39,10 @@ namespace chdr {
     template<typename T, typename Compare = std::less<T>, typename Container = std::vector<T>, size_t Kd = dimension<binary>::Kd>
     class heap {
 
-        static_assert(Kd >= 2, "Template parameter D must be greater than or equal to 2.");
+        static_assert(Kd >= 2U, "Template parameter D must be greater than or equal to 2.");
 
     protected:
+
         Container c;
         Compare comp;
 
@@ -117,6 +118,8 @@ namespace chdr {
         }
 
     public:
+
+        inline static const auto dimension_v = Kd;
 
         heap(const size_t& _capacity = 0U) : c() {
             c.reserve(_capacity + 1U);
@@ -327,7 +330,7 @@ namespace chdr {
 
         [[maybe_unused]] constexpr void swap(heap& _other) noexcept {
             if (this != &_other) {
-                std::swap(c, _other.c);
+                std::swap(c,    _other.c);
                 std::swap(comp, _other.comp);
             }
         }
@@ -341,14 +344,14 @@ namespace chdr {
         }
 
         [[maybe_unused, nodiscard]] constexpr const T& at(const size_t& _index) const {
-            return c.at(_index);
+            return c.at(_index + 1U);
         }
 
 #ifndef HEAP_SUPPRESS_EXCEPTION_WARNING
         [[deprecated("This function does not perform bounds checking.\nSuppress this warning by defining \"HEAP_SUPPRESS_UNSAFE_WARNING\".")]]
 #endif
         [[maybe_unused, nodiscard]] constexpr const T& operator[](const size_t& _index) const noexcept {
-            return c[_index];
+            return c[_index + 1U];
         }
 
         using               iterator_t = typename std::vector<T>::iterator;
