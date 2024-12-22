@@ -35,6 +35,9 @@ namespace chdr::solvers {
 
             _open.emplace(s);
 
+            _closed.allocate(s, _capacity, _params.maze.count());
+            _closed.emplace (s);
+
             // Main loop:
             while (!_open.empty()) {
 
@@ -44,9 +47,6 @@ namespace chdr::solvers {
                     _open.pop();
 
                     if (curr != e) { // SEARCH FOR SOLUTION...
-
-                        _closed.allocate(curr, _capacity, _params.maze.count());
-                        _closed.emplace (curr);
 
                         for (const auto& n_data : _params.maze.get_neighbours(curr)) {
 

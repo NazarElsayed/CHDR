@@ -34,6 +34,10 @@ namespace chdr::solvers {
         using  coord_t = coord<index_t, Kd>;
         using weight_t = typename params_t::weight_type;
 
+        static constexpr std::array<uint8_t, 8U> s_identity { 0U, 1U, 2U,
+                                                              3U,     4U,
+                                                              5U, 6U, 7U };
+
         static constexpr std::array<uint8_t, 8U> s_rotate_l { 2U, 4U, 7U,
                                                               1U,     6U,
                                                               0U, 3U, 5U };
@@ -47,15 +51,18 @@ namespace chdr::solvers {
                                                               7U, 4U, 2U };
 
         inline static const std::map<std::array<int8_t, 2U>, std::array<uint8_t, 8U>> s_rotation_map {
-                { { 0,  0}, { 0U, 1U, 2U, 3U, 4U, 5U, 6U, 7U } },
-                { { 1,  0}, { 0U, 1U, 2U, 3U, 4U, 5U, 6U, 7U } },
-                { { 1,  1}, { 0U, 1U, 2U, 3U, 4U, 5U, 6U, 7U } },
-                { { 0,  1}, s_rotate_l },
-                { {-1,  1}, s_rotate_l },
-                { {-1,  0}, s_rotate_2 },
-                { {-1, -1}, s_rotate_2 },
-                { { 0, -1}, s_rotate_r },
-                { { 1, -1}, s_rotate_r }
+
+                { {-1, -1 }, s_rotate_2 },
+                { { 0, -1 }, s_rotate_r },
+                { {-1,  0 }, s_rotate_2 },
+
+                { { 0,  0 }, s_identity },
+                { { 1,  0 }, s_identity },
+                { { 0,  1 }, s_rotate_l },
+                { { 1,  1 }, s_identity },
+
+                { { 1, -1 }, s_rotate_r },
+                { {-1,  1 }, s_rotate_l }
         };
 
         struct node final : unmanaged_node<index_t> {
@@ -80,12 +87,19 @@ namespace chdr::solvers {
             }
         };
 
+        [[nodiscard]] static constexpr auto get_direction(const coord_t& _from, const coord_t& _to) {
+
+            return std::array<int8_t, 2U> { static_cast<int8_t>(utils::sign<int8_t>(static_cast<signed>(_to[0U]) - static_cast<signed>(_from[0U]))),
+                                            static_cast<int8_t>(utils::sign<int8_t>(static_cast<signed>(_to[1U]) - static_cast<signed>(_from[1U]))) };
+
+        }
+
         [[nodiscard]] static constexpr std::vector<coord_t> find_jump_points(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _current, const std::array<int8_t, 2U> _direction, const coord_t& _end) {
 
             std::vector<coord_t> result;
+            result.reserve(8U);
 
-            const auto neighbours = _maze. template get_neighbours<true>(_current);
-            const auto map = s_rotation_map.at(_direction);
+            const auto neighbours = _maze.template get_neighbours<true>(_current);
 
             // Start Node:
             if (_direction[0U] == 0 && _direction[1U] == 0) {
@@ -97,34 +111,15 @@ namespace chdr::solvers {
                     }
                 }
             }
-            // Straight Direction:
-            else if (_direction[0U] == 0 || _direction[1U] == 0) {
+            else if ((_direction[0U] ==  1 && _direction[1U] == -1) ||
+                     (_direction[0U] == -1 && _direction[1U] ==  1)) {
 
-                // Check and expand forced neighbours:
-                if (neighbours[map[2U]].first && !neighbours[map[1U]].first) {
-                    if (const auto& [nActive, nCoord] = jump(_maze, neighbours[map[2U]].second, _current, _end); nActive) {
-                        result.emplace_back(nCoord);
-                    }
-                }
-                if (neighbours[map[7U]].first && !neighbours[map[6U]].first) {
-                    if (const auto& [nActive, nCoord] = jump(_maze, neighbours[map[7U]].second, _current, _end); nActive) {
-                        result.emplace_back(nCoord);
-                    }
-                }
-
-                // Expand natural neighbours:
-                if (neighbours[map[4U]].first) {
-                    if (const auto& [nActive, nCoord] = jump(_maze, neighbours[map[4U]].second, _direction, _end); nActive) {
-                        result.emplace_back(nCoord);
-                    }
-                }
             }
-            // Diagonal Direction:
             else {
 
-                // Check diagonal is not blocked:
-                if (neighbours[map[1U]].first ||
-                    neighbours[map[3U]].first) {
+                if (_direction[0U] == 0 || _direction[1U] == 0) { // Straight Direction:
+
+                    const auto map = s_rotation_map.at(_direction);
 
                     // Check and expand forced neighbours:
                     if (neighbours[map[2U]].first && !neighbours[map[1U]].first) {
@@ -132,28 +127,56 @@ namespace chdr::solvers {
                             result.emplace_back(nCoord);
                         }
                     }
-                    if (neighbours[map[5U]].first && !neighbours[map[3U]].first) {
-                        if (const auto& [nActive, nCoord] = jump(_maze, neighbours[map[5U]].second, _current, _end); nActive) {
+                    if (neighbours[map[7U]].first && !neighbours[map[6U]].first) {
+                        if (const auto& [nActive, nCoord] = jump(_maze, neighbours[map[7U]].second, _current, _end); nActive) {
                             result.emplace_back(nCoord);
                         }
                     }
 
                     // Expand natural neighbours:
                     if (neighbours[map[4U]].first) {
-                        if (const auto& [nActive, nCoord] = jump(_maze, neighbours[map[4U]].second, _current, _end); nActive) {
+                        if (const auto& [nActive, nCoord] = jump(_maze, neighbours[map[4U]].second, _direction, _end); nActive) {
                             result.emplace_back(nCoord);
                         }
                     }
+                }
+                else { // Diagonal Direction:
 
-                    if (neighbours[map[6U]].first) {
-                        if (const auto& [nActive, nCoord] = jump(_maze, neighbours[map[6U]].second, _current, _end); nActive) {
-                            result.emplace_back(nCoord);
+                    const auto map = s_rotation_map.at(_direction);
+
+                    // Check diagonal is not blocked:
+                    if (neighbours[map[1U]].first ||
+                        neighbours[map[3U]].first) {
+
+                        // Check and expand forced neighbours:
+                        if (neighbours[map[2U]].first && !neighbours[map[1U]].first) {
+                            if (const auto& [nActive, nCoord] = jump(_maze, neighbours[map[2U]].second, _current, _end); nActive) {
+                                result.emplace_back(nCoord);
+                            }
                         }
-                    }
+                        if (neighbours[map[5U]].first && !neighbours[map[3U]].first) {
+                            if (const auto& [nActive, nCoord] = jump(_maze, neighbours[map[5U]].second, _current, _end); nActive) {
+                                result.emplace_back(nCoord);
+                            }
+                        }
 
-                    if (neighbours[map[7U]].first) {
-                        if (const auto& [nActive, nCoord] = jump(_maze, neighbours[map[7U]].second, _direction, _end); nActive) {
-                            result.emplace_back(nCoord);
+                        // Expand natural neighbours:
+                        if (neighbours[map[4U]].first) {
+                            if (const auto& [nActive, nCoord] = jump(_maze, neighbours[map[4U]].second, _current, _end); nActive) {
+                                result.emplace_back(nCoord);
+                            }
+                        }
+
+                        if (neighbours[map[6U]].first) {
+                            if (const auto& [nActive, nCoord] = jump(_maze, neighbours[map[6U]].second, _current, _end); nActive) {
+                                result.emplace_back(nCoord);
+                            }
+                        }
+
+                        if (neighbours[map[7U]].first) {
+                            if (const auto& [nActive, nCoord] = jump(_maze, neighbours[map[7U]].second, _direction, _end); nActive) {
+                                result.emplace_back(nCoord);
+                            }
                         }
                     }
                 }
@@ -163,11 +186,7 @@ namespace chdr::solvers {
         }
 
         [[nodiscard]] static constexpr std::pair<bool, coord_t> jump(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _current, const coord_t& _previous, const coord_t& _end) {
-
-            const std::array<int8_t, 2U> direction { static_cast<int8_t>(utils::sign<int8_t>(static_cast<signed>(_current[0U]) - static_cast<signed>(_previous[0U]))) ,
-                                                     static_cast<int8_t>(utils::sign<int8_t>(static_cast<signed>(_current[1U]) - static_cast<signed>(_previous[1U]))) };
-
-            return jump(_maze, _current, direction, _end);
+            return jump(_maze, _current, get_direction(_previous, _current), _end);
         }
 
         [[nodiscard]] static constexpr std::pair<bool, coord_t> jump(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _current, const std::array<int8_t, 2U>& _direction, const coord_t& _end) {
@@ -243,12 +262,50 @@ namespace chdr::solvers {
         template <typename open_set_t, typename closed_set_t, typename buf_t>
         [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, buf_t& _buf, const size_t& _capacity, const params_t& _params) {
 
-            static_assert(std::is_same_v<decltype(_params.maze), mazes::grid<Kd, weight_t>>, "JPS only supports mazes of type grid<Kd, weight_t>.");
-            
+            static_assert(std::is_base_of_v<mazes::grid<Kd, weight_t>, std::remove_cv_t<std::remove_reference_t<decltype(_params.maze)>>>,
+                          "JPS only supports mazes of type grid<Kd, weight_t>.");
+
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end  , _params.size);
 
             _open.emplace(s, std::array<int8_t, 2U> {{ 0, 0 }}, static_cast<scalar_t>(0), _params.h(_params.start, _params.end));
+
+            _closed.allocate(s, _capacity, _params.maze.count());
+            _closed.emplace (s);
+
+            constexpr std::array<std::array<int8_t, 2U>, 9U> keys {{
+
+                {{-1, -1}},
+                {{ 0, -1}},
+                {{-1,  0}},
+
+                {{ 0,  0}},
+                {{ 1,  0}},
+                {{ 0,  1}},
+                {{ 1,  1}},
+
+                {{ 1, -1}},
+                {{-1,  1}},
+            }};
+
+            for (const auto& k : keys) {
+                std::array<index_t, Kd> size;
+                size[0U] = 2U;
+                size[1U] = 2U;
+
+                std::array<index_t, Kd> coord;
+                coord[0U] = static_cast<index_t>(k[0U] + 1U);
+                coord[1U] = static_cast<index_t>(k[1U] + 1U);
+
+                if (k[0U] < 0 || k[1U] < 0) {
+                    std::cout << "NEGATIVE: ";
+                }
+                else {
+                    std::cout << "POSITIVE: ";
+                }
+
+                std::cout << static_cast<int>(k[0U]) << ", " << static_cast<int>(k[1U]) << " : " << utils::to_1d<index_t>(coord, size) << '\n';
+            }
 
             // Main loop:
             while (!_open.empty()) {
@@ -257,9 +314,6 @@ namespace chdr::solvers {
                 _open.pop();
 
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
-
-                    _closed.allocate(curr.m_index, _capacity, _params.maze.count());
-                    _closed.emplace (curr.m_index);
 
                     node* RESTRICT curr_ptr = nullptr;
 
@@ -275,14 +329,11 @@ namespace chdr::solvers {
                              _closed.allocate(n, _capacity, _params.maze.count());
                              _closed.emplace (n);
 
-                            const std::array<int8_t, 2U> direction { static_cast<int8_t>(utils::sign<int8_t>(static_cast<signed>(successor[0U]) - static_cast<signed>(coord[0U]))) ,
-                                                                     static_cast<int8_t>(utils::sign<int8_t>(static_cast<signed>(successor[1U]) - static_cast<signed>(coord[1U]))) };
-
                             if (curr_ptr == nullptr) {
                                 curr_ptr = &_buf.emplace(std::move(curr)); // Note: 'current' is now moved!
                             }
 
-                            _open.emplace(n, direction, curr.m_gScore + nDistance, _params.h(successor, _params.end) * _params.weight, curr_ptr);
+                            _open.emplace(n, get_direction(coord, successor), curr.m_gScore + nDistance, _params.h(successor, _params.end) * _params.weight, curr_ptr);
                         }
                     }
                 }
@@ -309,7 +360,6 @@ namespace chdr::solvers {
 
             return solve_internal(open, closed, buf, capacity, _params);
         }
-
     };
 
 } //chdr::solvers

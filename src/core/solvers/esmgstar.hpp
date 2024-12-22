@@ -206,7 +206,8 @@ namespace chdr::solvers {
 
         static constexpr void cull_worst_leaf(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, const size_t& _memoryLimit, open_set_t& _open) {
 
-            const auto w = safe_culling_heuristic(_open);
+            const auto w = std::move(safe_culling_heuristic(_open));
+            _open.erase(w);
 
             if (auto p = w->m_parent) { // parent node of w
 
@@ -225,7 +226,7 @@ namespace chdr::solvers {
                 // Add s(w) to forgotten f-cost table of p, with value of f (w)
                 p->m_forgottenFCosts.insert_or_assign(w->m_index, w->m_fScore);
 
-                // f (p) ← min of forgotten f-costs of p
+                // f(p) ← min of forgotten f-costs of p
                 for (const auto& [pState, pCost] : p->m_forgottenFCosts) {
                     p->m_fScore = std::min(p->m_fScore, pCost);
                 }
@@ -237,18 +238,14 @@ namespace chdr::solvers {
             }
         }
 
-        [[nodiscard]] static constexpr auto safe_culling_heuristic(open_set_t& _open) {
+        [[nodiscard]] static constexpr auto& safe_culling_heuristic(open_set_t& _open) {
 
-            auto w = _open.back(); // Worst leaf according to c(n) in _open
+            auto& w = _open.back(); // Worst leaf according to c(n) in _open
 
             if (w == _open.top()) { // Top == Best node according to f(n) in _open
 
                 // Code to find second-worst leaf according to c(n) goes here
                 w = _open[_open.size() / 2U];
-                _open.erase(w);
-            }
-            else {
-                _open.pop_back();
             }
 
             return w;
@@ -279,9 +276,7 @@ namespace chdr::solvers {
 
                     auto successors_current = curr->expand(_params.maze, _params.end, _params.h, _params.weight, _params.memoryLimit);
 
-                    for (size_t i = 0U; i < successors_current.size(); ++i) {
-
-                        auto& successor = successors_current[i];
+                    for (auto& successor : successors_current) {
 
                         // Check if s(n) is in forgotten f-cost table of b.
                         auto search = curr->m_forgottenFCosts.find(successor->m_index);
@@ -302,19 +297,19 @@ namespace chdr::solvers {
                         }
                     }
 
+                    // Shrink the node to release ownership of children, allowing automatic GC of parents with no valid candidate children.
+                    curr->shrink();
+
                     while (_open.size() > _params.memoryLimit) {
                         cull_worst_leaf(_params.maze, _params.end, _params.h, _params.weight, _params.memoryLimit, _open);
                     }
-
-                    // Shrink the node to release ownership of children, allowing automatic GC of parents with no valid candidate children.
-                    curr->shrink();
                 }
                 else { // SOLUTION REACHED ...
 
                     // Free data which is no longer relevant:
 
-                    if constexpr (utils::has_method_clear        <open_set_t>::value) {   _open.clear();         }
-                    if constexpr (utils::has_method_shrink_to_fit<open_set_t>::value) {   _open.shrink_to_fit(); }
+                    if constexpr (utils::has_method_clear        <open_set_t>::value) { _open.clear();         }
+                    if constexpr (utils::has_method_shrink_to_fit<open_set_t>::value) { _open.shrink_to_fit(); }
 
                     return curr->template backtrack<node>(_params.size, curr->m_gScore);
                 }

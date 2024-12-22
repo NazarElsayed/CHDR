@@ -71,6 +71,9 @@ namespace chdr::solvers {
 
             _open.emplace_back(s, static_cast<scalar_t>(0), min_threshold);
 
+            _closed.allocate(s, _capacity, _params.maze.count());
+            _closed.emplace (s);
+
             // Main loop:
             while (!_open.empty()) {
 
@@ -79,9 +82,6 @@ namespace chdr::solvers {
                 for (const auto& curr : _open) {
 
                     if (curr.m_index != e) { // SEARCH FOR SOLUTION...
-
-                        _closed.allocate(curr.m_index, _capacity, _params.maze.count());
-                        _closed.emplace (curr.m_index);
 
                         node* RESTRICT curr_ptr = nullptr;
 
