@@ -43,10 +43,10 @@ namespace chdr::solvers {
 
         struct node final : unmanaged_node<index_t> {
 
-            direction_t m_direction;
-
             scalar_t m_gScore;
             scalar_t m_fScore;
+
+            direction_t m_direction;
 
             // ReSharper disable once CppPossiblyUninitializedMember
             [[nodiscard]] constexpr node() noexcept : unmanaged_node<index_t>() {}
