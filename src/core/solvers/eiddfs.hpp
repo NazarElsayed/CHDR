@@ -102,6 +102,8 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
+            _open.emplace_back(s, 0U);
+
             stack<state<neighbours_t>> stack;
 
             transposition_table_t transposition_table;
@@ -109,7 +111,7 @@ namespace chdr::solvers {
 
             for (size_t bound = 0U; bound < std::numeric_limits<size_t>::max(); ++bound) {
 
-                stack.emplace(_open.emplace_back(s, 0U), _params);
+                stack.emplace(_open.back(), _params);
 
                 // Main loop:
                 while (!stack.empty()) {
@@ -144,7 +146,7 @@ namespace chdr::solvers {
                     }
                 }
 
-                _open.clear();
+                _open.erase(_open.begin() + 1U, _open.end());
                 stack.clear();
                 transposition_table.clear();
             }
