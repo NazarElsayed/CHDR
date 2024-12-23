@@ -38,8 +38,8 @@ namespace chdr::solvers {
         using    solver_t = solver<jps, Kd, scalar_t, index_t, params_t>;
         using     coord_t = coord<index_t, Kd>;
         using    weight_t = typename params_t::weight_type;
-        using direction_t = coord<int8_t, Kd>;
-        using  rotation_t = std::array<uint8_t, 8U>;
+        using direction_t = char;
+        using  rotation_t = std::array<direction_t, 8U>;
 
         struct node final : unmanaged_node<index_t> {
 
@@ -52,9 +52,9 @@ namespace chdr::solvers {
             [[nodiscard]] constexpr node() noexcept : unmanaged_node<index_t>() {}
 
             [[nodiscard]] constexpr node(const index_t& _index, const direction_t& _direction, const scalar_t& _gScore, const scalar_t& _hScore, const node* RESTRICT const _parent = nullptr) noexcept : unmanaged_node<index_t>(_index, _parent),
-                m_direction(_direction),
                 m_gScore(_gScore),
-                m_fScore(_gScore + _hScore) {}
+                m_fScore(_gScore + _hScore),
+                m_direction(_direction) {}
 
             [[nodiscard]] friend constexpr bool operator < (const node& _a, const node& _b) noexcept {
                 return _a.m_fScore == _b.m_fScore ?
@@ -79,6 +79,8 @@ namespace chdr::solvers {
                                                  6U,     1U,
                                                  7U, 4U, 2U };
 
+        static constexpr direction_t zero_direction_v = 3U;
+
         static constexpr std::array<rotation_t, 9U> s_rotation_lookup {
             /*  { -1, -1 }  :  0  */ s_rotate_2, // 0
             /*  {  0, -1 }  :  1  */ s_rotate_r, // 1
@@ -91,38 +93,33 @@ namespace chdr::solvers {
             /*  { -1,  1 }  :  4  */ s_rotate_l, // 8
         };
 
-        static constexpr auto increment(const direction_t& _value) noexcept {
-
-            std::array<index_t, Kd> result;
-
-            for (size_t i = 0U; i < _value.size(); ++i) {
-                result[i] = _value[i] + 1U;
-            }
-
-            return result;
-        }
-
-        static constexpr auto get_rotation(const direction_t& _direction) noexcept {
-
-            index_t index;
-
-            if (_direction[0U] != 1 || _direction[1U] != -1) {
-                if (_direction[0U] != -1 || _direction[1U] != 1) {
-                    index = utils::to_1d<index_t>(increment(_direction), utils::build_array<index_t, Kd, 2U>());
-                }
-                else { index = 8U; }
-            }
-            else { index = 7U; }
-
-            return s_rotation_lookup[index];
+        static constexpr bool is_straight(const direction_t& _direction) noexcept {
+            return _direction == 1U ||
+                   _direction == 2U ||
+                   _direction == 4U ||
+                   _direction == 5U;
         }
 
         [[nodiscard]] static constexpr auto get_direction(const coord_t& _from, const coord_t& _to) {
 
+            std::array<int8_t, Kd> dir;
+            for (size_t i = 0U; i < Kd; ++i) {
+                dir[i] = static_cast<int8_t>(utils::sign<int8_t>(static_cast<signed>(_to[i]) - static_cast<signed>(_from[i])));
+            }
+
             direction_t result;
 
-            for (size_t i = 0U; i < Kd; ++i) {
-                result[i] = static_cast<int8_t>(utils::sign<int8_t>(static_cast<signed>(_to[i]) - static_cast<signed>(_from[i])));
+                 if (dir[0U] == -1 && dir[1U] ==  -1 ) { result = 0; }
+            else if (dir[0U] ==  0 && dir[1U] ==  -1 ) { result = 1; }
+            else if (dir[0U] == -1 && dir[1U] ==   0 ) { result = 2; }
+            else if (dir[0U] ==  0 && dir[1U] ==   0 ) { result = 3; }
+            else if (dir[0U] ==  1 && dir[1U] ==   0 ) { result = 4; }
+            else if (dir[0U] ==  0 && dir[1U] ==   1 ) { result = 5; }
+            else if (dir[0U] ==  1 && dir[1U] ==   1 ) { result = 6; }
+            else if (dir[0U] ==  1 && dir[1U] ==  -1 ) { result = 7; }
+            else if (dir[0U] == -1 && dir[1U] ==   1 ) { result = 8; }
+            else {
+                assert(false && "Invalid direction provided in get_direction");
             }
 
             return result;
@@ -136,7 +133,7 @@ namespace chdr::solvers {
             const auto neighbours = _maze.template get_neighbours<true>(_current);
 
             // Start Node:
-            if (_direction[0U] == 0 && _direction[1U] == 0) {
+            if (_direction == zero_direction_v) {
                 for (auto& neighbour : neighbours) {
                     if (neighbour.first) {
                         if (const auto& [nActive, nCoord] = jump(_maze, neighbour.second, _current, _end); nActive) {
@@ -147,9 +144,9 @@ namespace chdr::solvers {
             }
             else {
 
-                const auto map = get_rotation(_direction);
+                const auto map = s_rotation_lookup[_direction];
 
-                if (_direction[0U] == 0 || _direction[1U] == 0) { // Straight Direction:
+                if (is_straight(_direction)) { // Straight Direction:
 
                     // Check and expand forced neighbours:
                     if (neighbours[map[2U]].first && !neighbours[map[1U]].first) {
@@ -222,9 +219,9 @@ namespace chdr::solvers {
 
                 const auto neighbours = _maze.template get_neighbours<true>(_current);
 
-                const auto map = get_rotation(_direction);
+                const auto map = s_rotation_lookup[_direction];
 
-                if (_direction[0U] == 0 || _direction[1U] == 0) { // Straight Direction
+                if (is_straight(_direction)) { // Straight Direction
 
                     // Check for forced neighbours:
                     if ((neighbours[map[2U]].first && !neighbours[map[1U]].first) || (neighbours[map[7U]].first && !neighbours[map[6U]].first)) {
@@ -267,7 +264,7 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end  , _params.size);
 
-            _open.emplace(s, utils::build_array<int8_t, Kd, 0U>(), static_cast<scalar_t>(0), _params.h(_params.start, _params.end));
+            _open.emplace(s, zero_direction_v, static_cast<scalar_t>(0), _params.h(_params.start, _params.end));
 
             _closed.allocate(s, _capacity, _params.maze.count());
             _closed.emplace (s);
