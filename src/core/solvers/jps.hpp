@@ -11,7 +11,6 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <map>
 #include <type_traits>
 #include <utility>
 
@@ -81,7 +80,7 @@ namespace chdr::solvers {
 
         static constexpr direction_t zero_direction_v = 3U;
 
-        static constexpr std::array<rotation_t, 9U> s_rotation_lookup {
+        static constexpr std::array<rotation_t, 9U> s_lookup {
             /*  { -1, -1 }  :  0  */ s_rotate_2, // 0
             /*  {  0, -1 }  :  1  */ s_rotate_r, // 1
             /*  { -1,  0 }  :  2  */ s_rotate_2, // 2
@@ -109,15 +108,15 @@ namespace chdr::solvers {
 
             direction_t result;
 
-                 if (dir[0U] == -1 && dir[1U] ==  -1 ) { result = 0; }
-            else if (dir[0U] ==  0 && dir[1U] ==  -1 ) { result = 1; }
-            else if (dir[0U] == -1 && dir[1U] ==   0 ) { result = 2; }
-            else if (dir[0U] ==  0 && dir[1U] ==   0 ) { result = 3; }
-            else if (dir[0U] ==  1 && dir[1U] ==   0 ) { result = 4; }
-            else if (dir[0U] ==  0 && dir[1U] ==   1 ) { result = 5; }
-            else if (dir[0U] ==  1 && dir[1U] ==   1 ) { result = 6; }
-            else if (dir[0U] ==  1 && dir[1U] ==  -1 ) { result = 7; }
-            else if (dir[0U] == -1 && dir[1U] ==   1 ) { result = 8; }
+                 if (dir[0U] == -1 && dir[1U] == -1) { result = 0U; }
+            else if (dir[0U] ==  0 && dir[1U] == -1) { result = 1U; }
+            else if (dir[0U] == -1 && dir[1U] ==  0) { result = 2U; }
+            else if (dir[0U] ==  0 && dir[1U] ==  0) { result = 3U; }
+            else if (dir[0U] ==  1 && dir[1U] ==  0) { result = 4U; }
+            else if (dir[0U] ==  0 && dir[1U] ==  1) { result = 5U; }
+            else if (dir[0U] ==  1 && dir[1U] ==  1) { result = 6U; }
+            else if (dir[0U] ==  1 && dir[1U] == -1) { result = 7U; }
+            else if (dir[0U] == -1 && dir[1U] ==  1) { result = 8U; }
             else {
                 assert(false && "Invalid direction provided in get_direction");
             }
@@ -133,7 +132,7 @@ namespace chdr::solvers {
             const auto neighbours = _maze.template get_neighbours<true>(_current);
 
             // Start Node:
-            if (_direction == zero_direction_v) {
+            if (UNLIKELY(_direction == zero_direction_v)) {
                 for (auto& neighbour : neighbours) {
                     if (neighbour.first) {
                         if (const auto& [nActive, nCoord] = jump(_maze, neighbour.second, _current, _end); nActive) {
@@ -144,7 +143,7 @@ namespace chdr::solvers {
             }
             else {
 
-                const auto map = s_rotation_lookup[_direction];
+                const auto map = s_lookup[_direction];
 
                 if (is_straight(_direction)) { // Straight Direction:
 
@@ -219,7 +218,7 @@ namespace chdr::solvers {
 
                 const auto neighbours = _maze.template get_neighbours<true>(_current);
 
-                const auto map = s_rotation_lookup[_direction];
+                const auto map = s_lookup[_direction];
 
                 if (is_straight(_direction)) { // Straight Direction
 
