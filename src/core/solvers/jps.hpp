@@ -10,7 +10,6 @@
 #define CHDR_JPS_HPP
 
 #include <cstddef>
-#include <cstdint>
 #include <type_traits>
 #include <utility>
 
@@ -48,7 +47,7 @@ namespace chdr::solvers {
             direction_t m_direction;
 
             // ReSharper disable once CppPossiblyUninitializedMember
-            [[nodiscard]] constexpr node() noexcept : unmanaged_node<index_t>() {}
+            [[nodiscard]] constexpr node() noexcept : unmanaged_node<index_t>() {} // NOLINT(*-use-equals-default)
 
             [[nodiscard]] constexpr node(const index_t& _index, const direction_t& _direction, const scalar_t& _gScore, const scalar_t& _hScore, const node* RESTRICT const _parent = nullptr) noexcept : unmanaged_node<index_t>(_index, _parent),
                 m_gScore(_gScore),
@@ -101,24 +100,17 @@ namespace chdr::solvers {
 
         [[nodiscard]] static constexpr auto get_direction(const coord_t& _from, const coord_t& _to) {
 
-            std::array<int8_t, Kd> dir;
+            coord_t dir;
             for (size_t i = 0U; i < Kd; ++i) {
-                dir[i] = static_cast<int8_t>(utils::sign<int8_t>(static_cast<signed>(_to[i]) - static_cast<signed>(_from[i])));
+                dir[i] = static_cast<index_t>(utils::sign<signed>(static_cast<signed>(_to[i]) - static_cast<signed>(_from[i])) + 1U);
             }
 
             direction_t result;
 
-                 if (dir[0U] == -1 && dir[1U] == -1) { result = 0U; }
-            else if (dir[0U] ==  0 && dir[1U] == -1) { result = 1U; }
-            else if (dir[0U] == -1 && dir[1U] ==  0) { result = 2U; }
-            else if (dir[0U] ==  0 && dir[1U] ==  0) { result = 3U; }
-            else if (dir[0U] ==  1 && dir[1U] ==  0) { result = 4U; }
-            else if (dir[0U] ==  0 && dir[1U] ==  1) { result = 5U; }
-            else if (dir[0U] ==  1 && dir[1U] ==  1) { result = 6U; }
-            else if (dir[0U] ==  1 && dir[1U] == -1) { result = 7U; }
-            else if (dir[0U] == -1 && dir[1U] ==  1) { result = 8U; }
+                 if (dir[0U] == 2U && dir[1U] == 0U) { result = 7U; }
+            else if (dir[0U] == 0U && dir[1U] == 2U) { result = 8U; }
             else {
-                assert(false && "Invalid direction provided in get_direction");
+                result = utils::to_1d<index_t>(dir, utils::build_array<index_t, Kd, Kd>());
             }
 
             return result;
@@ -211,10 +203,7 @@ namespace chdr::solvers {
             std::pair<bool, coord_t> result;
             result.second = _current;
 
-            if (_current == _end) {
-                result.first = true;
-            }
-            else {
+            if (_current != _end) { // SEARCH FOR SOLUTION...
 
                 const auto neighbours = _maze.template get_neighbours<true>(_current);
 
@@ -223,7 +212,9 @@ namespace chdr::solvers {
                 if (is_straight(_direction)) { // Straight Direction
 
                     // Check for forced neighbours:
-                    if ((neighbours[map[2U]].first && !neighbours[map[1U]].first) || (neighbours[map[7U]].first && !neighbours[map[6U]].first)) {
+                    if ((neighbours[map[2U]].first && !neighbours[map[1U]].first) ||
+                        (neighbours[map[7U]].first && !neighbours[map[6U]].first)
+                    ) {
                         result.first = true;
                     }
                     else if (neighbours[map[4U]].first) { // Expand natural neighbours:
@@ -233,7 +224,9 @@ namespace chdr::solvers {
                 else if (neighbours[map[1U]].first || neighbours[map[3U]].first) { // Diagonal Direction (if diagonal is not blocked)
 
                     // Check for forced neighbours:
-                    if ((neighbours[map[2U]].first && !neighbours[map[1U]].first) || (neighbours[map[5U]].first && !neighbours[map[3U]].first)) {
+                    if ((neighbours[map[2U]].first && !neighbours[map[1U]].first) ||
+                        (neighbours[map[5U]].first && !neighbours[map[3U]].first)
+                    ) {
                         result.first = true;
                     }
                     else { // Expand natural neighbours:
@@ -249,6 +242,9 @@ namespace chdr::solvers {
                         }
                     }
                 }
+            }
+            else { // SOLUTION REACHED...
+                result.first = true;
             }
 
             return result;
