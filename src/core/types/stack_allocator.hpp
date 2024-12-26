@@ -27,23 +27,23 @@ namespace chdr {
 
     private:
 
-        alignas(T) std::array<std::byte, StackSize * sizeof(T)> m_stack;
-        uintptr_t m_stack_ptr;
+        alignas(T) std::byte dataa[StackSize * sizeof(T)]; // NOLINT(*-avoid-c-arrays)
+        uintptr_t data_ptr;
 
     public:
 
         using value_type [[maybe_unused]] = T;
 
         // ReSharper disable once CppPossiblyUninitializedMember
-        constexpr stack_allocator() : m_stack_ptr(0U) {}
+        constexpr stack_allocator() : data_ptr(0U) {}
 
         [[maybe_unused, nodiscard]] constexpr T* allocate(const uintptr_t& _n) {
 
             T* result;
 
-            if (m_stack_ptr + _n <= StackSize) {
-                result = reinterpret_cast<T*>(m_stack.data() + (m_stack_ptr * sizeof(T)));
-                m_stack_ptr += _n;
+            if (data_ptr + _n <= StackSize) {
+                result = reinterpret_cast<T*>(dataa.data() + (data_ptr * sizeof(T)));
+                data_ptr += _n;
             }
             else {
                 result = std::allocator<T>().allocate(_n);
@@ -54,15 +54,15 @@ namespace chdr {
 
         constexpr void deallocate(T* _p, const uintptr_t& _n) {
 
-            if (_p >= reinterpret_cast<T*>(m_stack.data()) && _p < reinterpret_cast<T*>(m_stack.data() + m_stack.size())) {
+            if (_p >= reinterpret_cast<T*>(dataa.data()) && _p < reinterpret_cast<T*>(dataa.data() + dataa.size())) {
 
 #ifndef NDEBUG
-                if (m_stack_ptr < _n) {
+                if (data_ptr < _n) {
                     throw std::runtime_error("Deallocate called with too large n");
                 }
 #endif //NDEBUG
 
-                m_stack_ptr -= _n;
+                data_ptr -= _n;
             }
             else {
                 std::allocator<T>().deallocate(_p, _n);
