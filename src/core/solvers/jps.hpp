@@ -77,7 +77,7 @@ namespace chdr::solvers {
                                                  6U,     1U,
                                                  7U, 4U, 2U };
 
-        static constexpr direction_t zero_direction_v = 3U;
+        static constexpr direction_t zero_direction_v { 3U };
 
         static constexpr std::array<rotation_t, 9U> s_lookup {
             /*  { -1, -1 }  :  0  */ s_rotate_2, // 0
@@ -120,9 +120,9 @@ namespace chdr::solvers {
 
             constexpr auto null_v = std::make_pair(false, coord_t{});
 
-            const auto neighbours = _maze.template get_neighbours<true>(_current);
+            const auto& neighbours = _maze.template get_neighbours<true>(_current);
 
-            if (UNLIKELY(_direction == zero_direction_v)) { // Start Node...
+            if (UNLIKELY(_direction == zero_direction_v)) { // START NODE:
 
                 return {
                     neighbours[0U].first ? jump(_maze, neighbours[0U].second, _current, _end) : null_v, // FORCED
@@ -137,14 +137,14 @@ namespace chdr::solvers {
             }
             else {
 
-                const auto map = s_lookup[_direction];
+                const auto& map = s_lookup[_direction];
 
                 if (is_straight(_direction)) { // STRAIGHT:
 
                     return {
                         neighbours[map[2U]].first && !neighbours[map[1U]].first ? jump(_maze, neighbours[map[2U]].second,   _current, _end) : null_v, // FORCED
                         neighbours[map[7U]].first && !neighbours[map[6U]].first ? jump(_maze, neighbours[map[7U]].second,   _current, _end) : null_v, // FORCED
-                        neighbours[map[4U]].first ?                               jump(_maze, neighbours[map[4U]].second, _direction, _end) : null_v, // NATURAL
+                        neighbours[map[4U]].first                               ? jump(_maze, neighbours[map[4U]].second, _direction, _end) : null_v, // NATURAL
                         null_v,                                                                                                                       // NULL
                         null_v,                                                                                                                       // NULL
                         null_v,                                                                                                                       // NULL
@@ -157,9 +157,9 @@ namespace chdr::solvers {
                     return {
                         neighbours[map[2U]].first && !neighbours[map[1U]].first ? jump(_maze, neighbours[map[2U]].second,   _current, _end) : null_v, // FORCED
                         neighbours[map[5U]].first && !neighbours[map[3U]].first ? jump(_maze, neighbours[map[5U]].second,   _current, _end) : null_v, // FORCED
-                        neighbours[map[4U]].first ?                               jump(_maze, neighbours[map[4U]].second,   _current, _end) : null_v, // NATURAL
-                        neighbours[map[6U]].first ?                               jump(_maze, neighbours[map[6U]].second,   _current, _end) : null_v, // NATURAL
-                        neighbours[map[7U]].first ?                               jump(_maze, neighbours[map[7U]].second, _direction, _end) : null_v, // NATURAL
+                        neighbours[map[4U]].first                               ? jump(_maze, neighbours[map[4U]].second,   _current, _end) : null_v, // NATURAL
+                        neighbours[map[6U]].first                               ? jump(_maze, neighbours[map[6U]].second,   _current, _end) : null_v, // NATURAL
+                        neighbours[map[7U]].first                               ? jump(_maze, neighbours[map[7U]].second, _direction, _end) : null_v, // NATURAL
                         null_v,                                                                                                                       // NULL
                         null_v,                                                                                                                       // NULL
                         null_v                                                                                                                        // NULL
@@ -182,8 +182,8 @@ namespace chdr::solvers {
             }
             else { // SEARCH FOR SOLUTION...
 
-                const auto neighbours = _maze.template get_neighbours<true>(_current);
-                const auto map = s_lookup[_direction];
+                const auto& neighbours = _maze.template get_neighbours<true>(_current);
+                const auto& map = s_lookup[_direction];
 
                 const auto check_forced = [&neighbours, &map](const size_t& _a, const size_t& _b) ALWAYS_INLINE {
                     return neighbours[map[_a]].first && !neighbours[map[_b]].first;
@@ -198,7 +198,7 @@ namespace chdr::solvers {
                         return jump(_maze, neighbours[map[4U]].second, _direction, _end);
                     }
                 }
-                else if (neighbours[map[1U]].first || neighbours[map[3U]].first) { // DIAGONAL (if not blocked)
+                else if (neighbours[map[1U]].first || neighbours[map[3U]].first) { // DIAGONAL (if not blocked)...
 
                     if (check_forced(2U, 1U) || check_forced(5U, 3U)) { // FORCED:
                         return { true, _current };
