@@ -177,10 +177,8 @@ namespace chdr::solvers {
 
         [[nodiscard]] static constexpr std::pair<bool, coord_t> jump(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _current, const direction_t& _direction, const coord_t& _end) {
 
-            std::pair<bool, coord_t> result { false, _current };
-
             if (UNLIKELY(_current == _end)) { // SOLUTION REACHED...
-                result.first = true;
+                return { true, _current };
             }
             else { // SEARCH FOR SOLUTION...
 
@@ -194,32 +192,36 @@ namespace chdr::solvers {
                 if (is_straight(_direction)) { // STRAIGHT...
 
                     if (check_forced(2U, 1U) || check_forced(7U, 6U)) { // FORCED:
-                        result.first = true;
+                        return { true, _current };
                     }
                     else if (neighbours[map[4U]].first) { // NATURAL:
-                        result = jump(_maze, neighbours[map[4U]].second, _direction, _end);
+                        return jump(_maze, neighbours[map[4U]].second, _direction, _end);
                     }
                 }
                 else if (neighbours[map[1U]].first || neighbours[map[3U]].first) { // DIAGONAL (if not blocked)
 
                     if (check_forced(2U, 1U) || check_forced(5U, 3U)) { // FORCED:
-                        result.first = true;
+                        return { true, _current };
                     }
                     else { // NATURAL:
 
                         for (const auto& i : { 4U, 6U }) {
-                            if (!result.first && neighbours[map[i]].first) {
-                                result.first = jump(_maze, neighbours[map[i]].second, _current, _end).first;
+
+                            if (neighbours[map[i]].first) {
+                                if (jump(_maze, neighbours[map[i]].second, _current, _end).first) {
+                                    return { true, _current };
+                                }
                             }
                         }
-                        if (!result.first && neighbours[map[7U]].first) {
-                            result = jump(_maze, neighbours[map[7U]].second, _direction, _end);
+
+                        if (neighbours[map[7U]].first) {
+                            return jump(_maze, neighbours[map[7U]].second, _direction, _end);
                         }
                     }
                 }
             }
 
-            return result;
+            return { false, _current };
         }
 
         template <typename open_set_t, typename closed_set_t, typename buf_t>
