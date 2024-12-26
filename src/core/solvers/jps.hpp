@@ -187,13 +187,13 @@ namespace chdr::solvers {
                 const auto neighbours = _maze.template get_neighbours<true>(_current);
                 const auto map = s_lookup[_direction];
 
-                const auto check_forced = [&](const size_t a, const size_t _b) ALWAYS_INLINE {
-                    return neighbours[map[a]].first && !neighbours[map[_b]].first;
+                const auto check_forced = [&neighbours, &map](const size_t& _a, const size_t& _b) ALWAYS_INLINE {
+                    return neighbours[map[_a]].first && !neighbours[map[_b]].first;
                 };
 
                 if (is_straight(_direction)) { // STRAIGHT...
 
-                    if (check_forced(2U, 1U) || check_forced(7U, 6U)) {
+                    if (check_forced(2U, 1U) || check_forced(7U, 6U)) { // FORCED:
                         result.first = true;
                     }
                     else if (neighbours[map[4U]].first) { // NATURAL:
@@ -201,13 +201,15 @@ namespace chdr::solvers {
                     }
                 }
                 else if (neighbours[map[1U]].first || neighbours[map[3U]].first) { // DIAGONAL (if not blocked)
-                    if (check_forced(2U, 1U) || check_forced(5U, 3U)) {
+
+                    if (check_forced(2U, 1U) || check_forced(5U, 3U)) { // FORCED:
                         result.first = true;
                     }
                     else { // NATURAL:
-                        for (const auto& i : {4U, 6U}) {
+
+                        for (const auto& i : { 4U, 6U }) {
                             if (!result.first && neighbours[map[i]].first) {
-                                result = jump(_maze, neighbours[map[i]].second, _current, _end);
+                                result.first = jump(_maze, neighbours[map[i]].second, _current, _end).first;
                             }
                         }
                         if (!result.first && neighbours[map[7U]].first) {
