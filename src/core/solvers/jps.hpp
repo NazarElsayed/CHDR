@@ -116,7 +116,7 @@ namespace chdr::solvers {
             return result;
         }
 
-        [[nodiscard]] static constexpr auto go_find_jump_points(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _current, const direction_t _direction, const coord_t& _end) {
+        [[nodiscard]] static constexpr std::array<std::pair<bool, coord_t>, 8U> go_find_jump_points(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _current, const direction_t _direction, const coord_t& _end) {
 
             constexpr auto null_v = std::make_pair(false, coord_t{});
 
@@ -124,7 +124,7 @@ namespace chdr::solvers {
 
             if (UNLIKELY(_direction == zero_direction_v)) { // Start Node...
 
-                return std::array {
+                return {
                     neighbours[0U].first ? jump(_maze, neighbours[0U].second, _current, _end) : null_v, // FORCED
                     neighbours[1U].first ? jump(_maze, neighbours[1U].second, _current, _end) : null_v, // FORCED
                     neighbours[2U].first ? jump(_maze, neighbours[2U].second, _current, _end) : null_v, // FORCED
@@ -141,7 +141,7 @@ namespace chdr::solvers {
 
                 if (is_straight(_direction)) { // STRAIGHT:
 
-                    return std::array {
+                    return {
                         neighbours[map[2U]].first && !neighbours[map[1U]].first ? jump(_maze, neighbours[map[2U]].second,   _current, _end) : null_v, // FORCED
                         neighbours[map[7U]].first && !neighbours[map[6U]].first ? jump(_maze, neighbours[map[7U]].second,   _current, _end) : null_v, // FORCED
                         neighbours[map[4U]].first ?                               jump(_maze, neighbours[map[4U]].second, _direction, _end) : null_v, // NATURAL
@@ -154,7 +154,7 @@ namespace chdr::solvers {
                 }
                 else if (neighbours[map[1U]].first || neighbours[map[3U]].first) { // DIAGONAL (if not blocked):
 
-                    return std::array {
+                    return {
                         neighbours[map[2U]].first && !neighbours[map[1U]].first ? jump(_maze, neighbours[map[2U]].second,   _current, _end) : null_v, // FORCED
                         neighbours[map[5U]].first && !neighbours[map[3U]].first ? jump(_maze, neighbours[map[5U]].second,   _current, _end) : null_v, // FORCED
                         neighbours[map[4U]].first ?                               jump(_maze, neighbours[map[4U]].second,   _current, _end) : null_v, // NATURAL
@@ -166,16 +166,7 @@ namespace chdr::solvers {
                     };
                 }
                 else {
-                    return std::array {
-                        null_v,
-                        null_v,
-                        null_v,
-                        null_v,
-                        null_v,
-                        null_v,
-                        null_v,
-                        null_v
-                    };
+                    return { null_v };
                 }
             }
         }
@@ -186,8 +177,7 @@ namespace chdr::solvers {
 
         [[nodiscard]] static constexpr std::pair<bool, coord_t> jump(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _current, const direction_t& _direction, const coord_t& _end) {
 
-            std::pair<bool, coord_t> result;
-            result.second = _current;
+            std::pair<bool, coord_t> result { false, _current };
 
             if (UNLIKELY(_current == _end)) { // SOLUTION REACHED...
                 result.first = true;
@@ -195,36 +185,30 @@ namespace chdr::solvers {
             else { // SEARCH FOR SOLUTION...
 
                 const auto neighbours = _maze.template get_neighbours<true>(_current);
-
                 const auto map = s_lookup[_direction];
+
+                const auto check_forced = [&](const size_t a, const size_t _b) ALWAYS_INLINE {
+                    return neighbours[map[a]].first && !neighbours[map[_b]].first;
+                };
 
                 if (is_straight(_direction)) { // STRAIGHT...
 
-                    // FORCED:
-                    if ((neighbours[map[2U]].first && !neighbours[map[1U]].first) ||
-                        (neighbours[map[7U]].first && !neighbours[map[6U]].first)
-                    ) {
+                    if (check_forced(2U, 1U) || check_forced(7U, 6U)) {
                         result.first = true;
                     }
                     else if (neighbours[map[4U]].first) { // NATURAL:
                         result = jump(_maze, neighbours[map[4U]].second, _direction, _end);
                     }
                 }
-                else if (neighbours[map[1U]].first || neighbours[map[3U]].first) { // DIAGONAL (if not blocked)...
-
-                    // FORCED:
-                    if ((neighbours[map[2U]].first && !neighbours[map[1U]].first) ||
-                        (neighbours[map[5U]].first && !neighbours[map[3U]].first)
-                    ) {
+                else if (neighbours[map[1U]].first || neighbours[map[3U]].first) { // DIAGONAL (if not blocked)
+                    if (check_forced(2U, 1U) || check_forced(5U, 3U)) {
                         result.first = true;
                     }
                     else { // NATURAL:
-
-                        if (neighbours[map[4U]].first) {
-                            result.first = jump(_maze, neighbours[map[4U]].second, _current, _end).first;
-                        }
-                        if (!result.first && neighbours[map[6U]].first) {
-                            result.first = jump(_maze, neighbours[map[6U]].second, _current, _end).first;
+                        for (const auto& i : {4U, 6U}) {
+                            if (!result.first && neighbours[map[i]].first) {
+                                result = jump(_maze, neighbours[map[i]].second, _current, _end);
+                            }
                         }
                         if (!result.first && neighbours[map[7U]].first) {
                             result = jump(_maze, neighbours[map[7U]].second, _direction, _end);
