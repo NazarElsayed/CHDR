@@ -117,7 +117,7 @@ namespace chdr::solvers {
 
                     if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
 
-                        if (!std::any_of(_open.begin(), _open.end(), [&n](const auto& _item) ALWAYS_INLINE { return _item.m_index == n.index; })) {
+                        if (std::none_of(_open.begin(), _open.end(), [&n](const auto& _item) ALWAYS_INLINE { return _item.m_index == n.index; })) {
 
                             _open.emplace_back(n.index, _params.h(n.coord, _params.end) * _params.weight);
 
