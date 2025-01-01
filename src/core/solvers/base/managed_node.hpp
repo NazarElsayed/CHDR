@@ -11,11 +11,11 @@
 
 #include <cassert>
 #include <cstddef>
-
-#include "../../utils/intrinsics.hpp"
-#include "bnode.hpp"
+#include <vector>
 
 #include "../../types/dynamic_pool_allocator.hpp"
+#include "../../utils/intrinsics.hpp"
+#include "bnode.hpp"
 
 namespace chdr::solvers {
 

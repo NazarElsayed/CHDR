@@ -10,6 +10,7 @@
 #define CHDR_UNMANAGEDNODE_HPP
 
 #include <cstddef>
+#include <vector>
 
 #include "../../utils/intrinsics.hpp"
 #include "bnode.hpp"
