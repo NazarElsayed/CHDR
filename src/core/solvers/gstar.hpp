@@ -79,7 +79,7 @@ namespace chdr::solvers {
 
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
-                    node* curr_ptr = nullptr;
+                    node* RESTRICT curr_ptr = nullptr;
 
                     for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
 
@@ -97,6 +97,10 @@ namespace chdr::solvers {
                                 _open.emplace(n.index, curr.m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight, curr_ptr);
                             }
                         }
+                    }
+
+                    if (curr_ptr == nullptr) {
+                        curr.expunge();
                     }
                 }
                 else { // SOLUTION REACHED ...

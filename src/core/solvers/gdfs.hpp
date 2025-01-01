@@ -75,6 +75,10 @@ namespace chdr::solvers {
                             }
                         }
                     }
+
+                    if (curr_ptr == nullptr) {
+                        curr.expunge();
+                    }
                 }
                 else { // SOLUTION REACHED ...
 

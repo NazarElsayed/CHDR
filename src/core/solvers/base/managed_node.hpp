@@ -19,10 +19,10 @@
 
 namespace chdr::solvers {
 
-    template <typename index_t, typename derived = void, typename Allocator = dynamic_pool_allocator<derived>>
+    template <typename index_t, typename derived = void, typename alloc_t = dynamic_pool_allocator<derived>>
     struct managed_node : bnode<index_t> {
 
-        static Allocator alloc;
+        static alloc_t alloc;
 
         managed_node* RESTRICT m_parent;
         unsigned char m_successors;
@@ -93,21 +93,16 @@ namespace chdr::solvers {
             return *this;
         }
 
-        virtual ~managed_node() noexcept {
-            expunge();
-        }
-
         void expunge() noexcept {
 
             while (m_parent != nullptr) {
                 decr();
 
                 if (m_parent->m_successors == 0U) {
-                    auto* temp = m_parent;
-                    m_parent   = temp->m_parent;
-
+                    auto* temp = std::exchange(m_parent, m_parent->m_parent);
                     temp->m_parent = nullptr;
-                    alloc.deallocate(static_cast<typename Allocator::value_type*>(temp), 1U);
+
+                    alloc.deallocate(static_cast<typename alloc_t::value_type*>(temp), 1U);
                 }
                 else {
                     break;
@@ -116,14 +111,14 @@ namespace chdr::solvers {
         }
 
         constexpr void decr() noexcept {
-            assert(m_parent != nullptr && "Nullptr dereferencing.");
+            assert(m_parent != nullptr && "Dereferencing of nullptr.");
             assert(m_parent->m_successors != static_cast<decltype(m_successors)>(0U) && "Underflow detected!");
 
             --m_parent->m_successors;
         }
 
         constexpr void incr() noexcept {
-            assert(m_parent != nullptr && "Nullptr dereferencing.");
+            assert(m_parent != nullptr && "Dereferencing of nullptr.");
             assert(m_parent->m_successors != static_cast<decltype(m_successors)>(-1U) && "Overflow detected!");
 
             ++m_parent->m_successors;
