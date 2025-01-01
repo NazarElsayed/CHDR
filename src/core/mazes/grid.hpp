@@ -123,13 +123,10 @@ namespace chdr::mazes {
 
                         nCoord[j] = _id[j] + (direction[j] - 1U);
 
-                        if (nCoord[j] < 0U || nCoord[j] > m_size[j]) {
-                            oob = true;
-                            break;
-                        }
+                        oob |= (nCoord[j] >= m_size[j]);
                     }
 
-                    result[i].first = !oob && at(nCoord).is_active();
+                    result[i].first  = !oob && at(nCoord).is_active();
                     result[i].second = nCoord;
                 }
             }

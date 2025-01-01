@@ -123,7 +123,7 @@ namespace chdr {
 
         heap(const size_t& _capacity = 0U) : c() {
             c.reserve(_capacity + 1U);
-            c.push_back({}); // Add super element.
+            c.resize(1U); // Add uninitialised super element.
         }
 
         [[maybe_unused, nodiscard]] constexpr bool empty() const noexcept { return size() == 0U;  }

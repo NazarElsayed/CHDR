@@ -116,11 +116,11 @@ namespace chdr {
          * @brief Preallocates memory based on the hash and bucket size.
          * @param[in] _hash The value for which memory needs to be preallocated.
          * @param[in] _increment Size of bucket to be considered for memory allocation.
-         * @param[in] _maxSize (optional) Maximum limit for the memory allocation.
+         * @param[in] _max_increment (optional) Maximum limit for the memory allocation.
          */
-        constexpr void allocate(const size_t& _hash, const size_t& _increment, const size_t& _maxSize = std::numeric_limits<size_t>::infinity()) {
+        constexpr void allocate(const size_t& _hash, const size_t& _increment, const size_t& _max_increment = std::numeric_limits<size_t>::infinity()) {
             if (capacity() < _hash) {
-                reserve(std::min(size() + _increment, _maxSize));
+                reserve(std::min(capacity() + _increment, _max_increment));
             }
         }
 
