@@ -314,7 +314,7 @@ namespace chdr {
                 result = { _index };
             }
             else {
-                static_assert([]{ return false; }(), "No specialisation exists for n-dimensional value to 0D");
+                static_assert([]{ return false; }(), "No specialisation exists for n-dimensional values to 0D");
             }
 
 			return result;
@@ -375,7 +375,7 @@ namespace chdr {
                 result = _indices[0U];
             }
             else {
-                static_assert([]{ return false; }(), "No specialisation exists for converting 0-dimensional value to 1D");
+                static_assert([]{ return false; }(), "No specialisation exists for converting 0-dimensional values to 1D");
             }
 
 			return result;
