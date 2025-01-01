@@ -61,8 +61,8 @@ namespace chdr::solvers {
             }
         };
 
-        template <typename open_set_t, typename closed_set_t, typename allocator_t>
-        [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, open_set_t& _next, closed_set_t& _closed, allocator_t& _alloc, const size_t& _capacity, const params_t& _params) {
+        template <typename open_set_t, typename closed_set_t, typename alloc_t>
+        [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, open_set_t& _next, closed_set_t& _closed, alloc_t& _alloc, const size_t& _capacity, const params_t& _params) {
 
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
@@ -160,9 +160,9 @@ namespace chdr::solvers {
             std::vector<node> next;
             next.reserve(capacity / 8U);
 
-            append_only_allocator<node> buf;
+            append_only_allocator<node> alloc;
 
-            return solve_internal(open, next, closed, buf, capacity, _params);
+            return solve_internal(open, next, closed, alloc, capacity, _params);
         }
     };
 
