@@ -142,10 +142,13 @@ namespace chdr::mazes {
                     --nCoord[i];
                     ++pCoord[i];
 
-                    result[i].first  = _id[i] > 0U && at(nCoord).is_active();
+                    const auto nID = utils::to_1d(nCoord, m_size);
+                    const auto pID = utils::to_1d(pCoord, m_size);
+
+                    result[i].first  = _id[i] > 0U && at(nID).is_active();
                     result[i].second = nCoord;
 
-                    result[Kd + i].first  = _id[i] < m_size[i] - 1U && at(pCoord).is_active();
+                    result[Kd + i].first  = _id[i] < m_size[i] - 1U && at(pID).is_active();
                     result[Kd + i].second = pCoord;
                 }
             }
