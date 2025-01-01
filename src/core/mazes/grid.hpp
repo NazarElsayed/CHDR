@@ -99,61 +99,14 @@ namespace chdr::mazes {
         [[nodiscard]]
         constexpr auto get_neighbours(const coord_t& _id) const noexcept {
 
-            constexpr auto neighbours_count = IncludeDiagonals ? static_cast<size_t>(std::pow(3U, Kd)) - 1U : Kd * 2U;
-
-            auto result = std::array<std::pair<bool, coord_t>, neighbours_count>();
-
             if constexpr (IncludeDiagonals) {
+                constexpr auto NeighbourCount = static_cast<size_t>(std::pow(3U, Kd)) - 1U;
 
-                constexpr coord_t kernelSize = utils::build_array<size_t, Kd, 3U>();
-
-                for (size_t i = 0U; i < neighbours_count; i++) {
-
-                    const size_t sampleIndex = i < neighbours_count / 2U ? i : i + 1U;
-
-                    coord_t direction = utils::to_nd<size_t, Kd>(sampleIndex, kernelSize);
-
-                    bool oob = false;
-
-                    coord_t nCoord;
-
-                    IVDEP
-                    VECTOR_ALWAYS
-                    for (size_t j = 0U; j < Kd; j++) {
-
-                        nCoord[j] = _id[j] + (direction[j] - 1U);
-
-                        oob |= (nCoord[j] >= m_size[j]);
-                    }
-
-                    result[i].first  = !oob && at(nCoord).is_active();
-                    result[i].second = nCoord;
-                }
+                return compute_diagonal_neighbours(_id, std::make_index_sequence<NeighbourCount>{});
             }
             else {
-
-                IVDEP
-                VECTOR_ALWAYS
-                for (size_t i = 0U; i < Kd; ++i) {
-
-                    coord_t nCoord = _id;
-                    coord_t pCoord = _id;
-
-                    --nCoord[i];
-                    ++pCoord[i];
-
-                    const auto nID = utils::to_1d(nCoord, m_size);
-                    const auto pID = utils::to_1d(pCoord, m_size);
-
-                    result[i].first  = _id[i] > 0U && at(nID).is_active();
-                    result[i].second = nCoord;
-
-                    result[Kd + i].first  = _id[i] < m_size[i] - 1U && at(pID).is_active();
-                    result[Kd + i].second = pCoord;
-                }
+                return compute_axis_neighbours(_id, std::make_index_sequence<Kd>{});
             }
-
-            return result;
         }
 
         template<bool IncludeDiagonals = false>
@@ -252,6 +205,65 @@ namespace chdr::mazes {
         [[maybe_unused, nodiscard]]       reverse_iterator_t  rend()       noexcept { return m_nodes.rend();  }
         [[maybe_unused, nodiscard]] const_reverse_iterator_t  rend() const noexcept { return m_nodes.rend();  }
         [[maybe_unused, nodiscard]] const_reverse_iterator_t crend() const noexcept { return m_nodes.crend(); }
+
+    private:
+
+        template<size_t... Indices>
+        constexpr auto compute_diagonal_neighbours(const coord_t& _id, std::index_sequence<Indices...>) const noexcept { // NOLINT(*-named-parameter)
+
+            constexpr size_t NeighbourCount = sizeof...(Indices);
+
+            std::array<std::pair<bool, coord_t>, NeighbourCount> result;
+            (compute_single_diagonal<Indices, NeighbourCount>(_id, result[Indices]), ...);
+
+            return result;
+        }
+
+        template<size_t... Indices>
+        constexpr auto compute_axis_neighbours(const coord_t& _id, std::index_sequence<Indices...>) const noexcept { // NOLINT(*-named-parameter)
+
+            std::array<std::pair<bool, coord_t>, Kd * 2U> result;
+            (compute_single_axis<Indices>(_id, result[Indices], result[Kd + Indices]), ...);
+
+            return result;
+        }
+
+        template<size_t Index, size_t NeighbourCount>
+        constexpr void compute_single_diagonal(const coord_t& _id, std::pair<bool, coord_t>& _output) const noexcept {
+
+            constexpr  size_t sampleIndex = (Index >= NeighbourCount / 2U) ? (Index + 1U) : Index;
+            constexpr coord_t direction   = utils::to_nd<size_t, Kd>(sampleIndex, { 3U });
+
+            bool    oob    = false;
+            coord_t nCoord = _id;
+
+            IVDEP
+            VECTOR_ALWAYS
+            for (size_t j = 0U; j < Kd; ++j) {
+
+                nCoord[j] += (direction[j] - 1U);
+                      oob |= (nCoord[j] >= m_size[j]);
+
+                if constexpr (Kd > 4U) {
+                    if (oob) { break; }
+                }
+            }
+
+            _output = { !oob && at(nCoord).is_active(), nCoord };
+        }
+
+        template<size_t Index>
+        constexpr void compute_single_axis(const coord_t& _id, std::pair<bool, coord_t>& negOutput, std::pair<bool, coord_t>& posOutput) const noexcept {
+
+            coord_t nCoord = _id; // Negative
+            coord_t pCoord = _id; // Positive
+
+            --nCoord[Index];
+            ++pCoord[Index];
+
+            negOutput = { _id[Index] > 0U                 && at(utils::to_1d(nCoord, m_size)).is_active(), nCoord };
+            posOutput = { _id[Index] < m_size[Index] - 1U && at(utils::to_1d(pCoord, m_size)).is_active(), pCoord };
+        }
 
     };
 

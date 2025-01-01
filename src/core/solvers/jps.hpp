@@ -110,7 +110,7 @@ namespace chdr::solvers {
                  if (dir[0U] == 2U && dir[1U] == 0U) { result = 7U; }
             else if (dir[0U] == 0U && dir[1U] == 2U) { result = 8U; }
             else {
-                result = utils::to_1d<index_t>(dir, utils::build_array<index_t, Kd, Kd>());
+                result = utils::to_1d<index_t>(dir, { Kd });
             }
 
             return result;
@@ -226,53 +226,56 @@ namespace chdr::solvers {
 
         template <typename open_set_t, typename closed_set_t, typename alloc_t>
         [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, alloc_t& _alloc, const size_t& _capacity, const params_t& _params) {
+            //
+            // static_assert(std::is_base_of_v<mazes::grid<Kd, weight_t>, std::remove_cv_t<std::remove_reference_t<decltype(_params.maze)>>>,
+            //               "JPS only supports mazes of type grid<Kd, weight_t>.");
 
-            static_assert(std::is_base_of_v<mazes::grid<Kd, weight_t>, std::remove_cv_t<std::remove_reference_t<decltype(_params.maze)>>>,
-                          "JPS only supports mazes of type grid<Kd, weight_t>.");
+            if constexpr (Kd == 2U) {
 
-            const auto s = utils::to_1d(_params.start, _params.size);
-            const auto e = utils::to_1d(_params.end  , _params.size);
+                const auto s = utils::to_1d(_params.start, _params.size);
+                const auto e = utils::to_1d(_params.end  , _params.size);
 
-            _open.emplace(s, zero_direction_v, static_cast<scalar_t>(0), _params.h(_params.start, _params.end));
+                _open.emplace(s, zero_direction_v, static_cast<scalar_t>(0), _params.h(_params.start, _params.end));
 
-            _closed.allocate(s, _capacity, _params.maze.count());
-            _closed.emplace (s);
+                _closed.allocate(s, _capacity, _params.maze.count());
+                _closed.emplace (s);
 
-            // Main loop:
-            while (!_open.empty()) {
+                // Main loop:
+                while (!_open.empty()) {
 
-                auto curr(std::move(_open.top()));
-                _open.pop();
+                    auto curr(std::move(_open.top()));
+                    _open.pop();
 
-                if (curr.m_index != e) { // SEARCH FOR SOLUTION...
+                    if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
-                    node* RESTRICT curr_ptr = nullptr;
+                        node* RESTRICT curr_ptr = nullptr;
 
-                    const auto coord = utils::to_nd(curr.m_index, _params.size);
+                        const auto coord = utils::to_nd(curr.m_index, _params.size);
 
-                    for (const auto& n_data : go_find_jump_points(_params.maze, coord, curr.m_direction, _params.end)) {
+                        for (const auto& n_data : go_find_jump_points(_params.maze, coord, curr.m_direction, _params.end)) {
 
-                        if (const auto& [nActive, nCoord] = n_data; nActive) {
+                            if (const auto& [nActive, nCoord] = n_data; nActive) {
 
-                            const auto n = utils::to_1d(nCoord, _params.size);
+                                const auto n = utils::to_1d(nCoord, _params.size);
 
-                            constexpr scalar_t nDistance{1};
+                                constexpr scalar_t nDistance{1};
 
-                            if (!_closed.contains(n)) {
-                                 _closed.allocate(n, _capacity, _params.maze.count());
-                                 _closed.emplace (n);
+                                if (!_closed.contains(n)) {
+                                     _closed.allocate(n, _capacity, _params.maze.count());
+                                     _closed.emplace (n);
 
-                                if (curr_ptr == nullptr) {
-                                    curr_ptr = _alloc.allocate_and_construct(std::move(curr)); // Note: 'current' is now moved!
+                                    if (curr_ptr == nullptr) {
+                                        curr_ptr = _alloc.allocate_and_construct(std::move(curr)); // Note: 'current' is now moved!
+                                    }
+
+                                    _open.emplace(n, get_direction(coord, nCoord), curr.m_gScore + nDistance, _params.h(nCoord, _params.end) * _params.weight, curr_ptr);
                                 }
-
-                                _open.emplace(n, get_direction(coord, nCoord), curr.m_gScore + nDistance, _params.h(nCoord, _params.end) * _params.weight, curr_ptr);
                             }
                         }
                     }
-                }
-                else { // SOLUTION REACHED ...
-                    return curr.template backtrack<node>(_params.size, curr.m_gScore);
+                    else { // SOLUTION REACHED ...
+                        return curr.template backtrack<node>(_params.size, curr.m_gScore);
+                    }
                 }
             }
 

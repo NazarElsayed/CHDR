@@ -64,12 +64,6 @@ namespace chdr {
 			return std::is_same_v<T, existence_set<>>;
 		}
 
-		template <typename T, size_t N, T Value, size_t... Indices>
-		[[nodiscard]] static constexpr std::array<T, N> build_array(std::index_sequence<Indices...> /*unused*/) { return {{((void)Indices, Value)...}}; }
-
-		template <typename T, size_t N, T Value>
-		[[nodiscard]] static constexpr auto build_array() { return build_array<T, N, Value>(std::make_index_sequence<N>()); }
-
 		template<typename T, typename U, size_t N>
 		[[nodiscard]] static constexpr auto array_cast(const std::array<U, N> &_a) {
 			return array_cast_helper<T>(_a, build_indices<N>());
