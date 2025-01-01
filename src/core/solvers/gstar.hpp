@@ -34,7 +34,7 @@ namespace chdr::solvers {
         using solver_t = solver<gstar, Kd, scalar_t, index_t, params_t>;
         using  coord_t = coord<index_t, Kd>;
 
-        struct node final : managed_node<index_t> {
+        struct node final : managed_node<index_t, node> {
 
             scalar_t m_gScore;
             scalar_t m_fScore;
@@ -45,11 +45,11 @@ namespace chdr::solvers {
              * This constructor creates a node with uninitialized members.
              */
             // ReSharper disable once CppPossiblyUninitializedMember
-            [[nodiscard]] constexpr node() noexcept : managed_node<index_t>() {}; // NOLINT(*-pro-type-member-init, *-use-equals-default)
+            [[nodiscard]] constexpr node() noexcept : managed_node<index_t, node>() {}; // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] constexpr node(const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore, node* RESTRICT const _parent = nullptr) noexcept : managed_node<index_t>(_index, _parent),
-                m_gScore     (_gScore          ),
-                m_fScore     (_gScore + _hScore) {}
+            [[nodiscard]] constexpr node(const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore, node* RESTRICT const _parent = nullptr) noexcept : managed_node<index_t, node>(_index, _parent),
+                m_gScore(_gScore          ),
+                m_fScore(_gScore + _hScore) {}
 
             [[nodiscard]] friend constexpr bool operator < (const node& _a, const node& _b) noexcept {
                 return _a.m_fScore == _b.m_fScore ?
@@ -60,6 +60,8 @@ namespace chdr::solvers {
 
         template <typename open_set_t, typename closed_set_t>
         [[maybe_unused, nodiscard]] static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, const size_t& _capacity, const params_t& _params) {
+
+            std::vector<coord_t> result;
 
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
@@ -77,7 +79,7 @@ namespace chdr::solvers {
 
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
-                    node* RESTRICT curr_ptr = nullptr;
+                    node* curr_ptr = nullptr;
 
                     for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
 
@@ -89,7 +91,7 @@ namespace chdr::solvers {
                                  _closed.emplace (n.index);
 
                                 if (curr_ptr == nullptr) {
-                                    curr_ptr = new node(curr);
+                                    curr_ptr = node::alloc.allocate_and_construct(std::move(curr));
                                 }
 
                                 _open.emplace(n.index, curr.m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight, curr_ptr);
@@ -106,11 +108,12 @@ namespace chdr::solvers {
                     if constexpr (utils::has_method_clear        <closed_set_t>::value) { _closed.clear();         }
                     if constexpr (utils::has_method_shrink_to_fit<closed_set_t>::value) { _closed.shrink_to_fit(); }
 
-                    return curr.template backtrack<node>(_params.size, curr.m_gScore);
+                    result = curr.template backtrack<node>(_params.size, curr.m_gScore);
                 }
             }
 
-            return std::vector<coord_t>{};
+            node::alloc.reset();
+            return result;
         }
 
         [[maybe_unused, nodiscard]] static constexpr auto execute(const params_t& _params) {

@@ -15,10 +15,14 @@
 #include "../../utils/intrinsics.hpp"
 #include "bnode.hpp"
 
+#include "../../types/dynamic_pool_allocator.hpp"
+
 namespace chdr::solvers {
 
-    template<typename index_t>
+    template <typename index_t, typename derived = void, typename Allocator = dynamic_pool_allocator<derived>>
     struct managed_node : bnode<index_t> {
+
+        static Allocator alloc;
 
         managed_node* RESTRICT m_parent;
         unsigned char m_successors;
@@ -29,21 +33,25 @@ namespace chdr::solvers {
          * This constructor creates a node with uninitialized members.
          */
         [[nodiscard]] constexpr managed_node() noexcept : // NOLINT(*-pro-type-member-init, *-use-equals-default)
-            m_parent     (nullptr),
-            m_successors (0U     ) {}
+            m_parent(nullptr),
+            m_successors(0U) {}
 
         [[nodiscard]] constexpr managed_node(const index_t& _index, managed_node* RESTRICT const _parent = nullptr) noexcept : bnode<index_t>(_index),
-            m_parent     (_parent),
-            m_successors (0U     )
+            m_parent(_parent),
+            m_successors(0U)
         {
-            incr();
+            if (_parent != nullptr) {
+                incr();
+            }
         }
 
         [[nodiscard]] constexpr managed_node(const managed_node& _other) noexcept : bnode<index_t>(_other.m_index),
-            m_parent     (_other.m_parent),
-            m_successors (0U             )
+            m_parent(_other.m_parent),
+            m_successors(0U)
         {
-            incr();
+            if (m_parent != nullptr) {
+                incr();
+            }
         }
 
         managed_node& operator=(const managed_node& _other) noexcept {
@@ -61,8 +69,8 @@ namespace chdr::solvers {
         }
 
         [[nodiscard]] constexpr managed_node(managed_node&& _other) noexcept : bnode<index_t>(std::move(_other.m_index)),
-            m_parent     (_other.m_parent    ),
-            m_successors (_other.m_successors)
+            m_parent(_other.m_parent),
+            m_successors(_other.m_successors)
         {
             _other.m_parent     = nullptr;
             _other.m_successors = 0U;
@@ -92,16 +100,14 @@ namespace chdr::solvers {
         void expunge() noexcept {
 
             while (m_parent != nullptr) {
-
                 decr();
 
                 if (m_parent->m_successors == 0U) {
-
                     auto* temp = m_parent;
-                    m_parent = temp->m_parent;
+                    m_parent   = temp->m_parent;
 
                     temp->m_parent = nullptr;
-                    delete temp;
+                    alloc.deallocate(static_cast<typename Allocator::value_type*>(temp), 1U);
                 }
                 else {
                     break;
@@ -110,20 +116,20 @@ namespace chdr::solvers {
         }
 
         constexpr void decr() noexcept {
-            if (m_parent != nullptr) {
-                assert(m_parent->m_successors != static_cast<decltype(m_successors)>(0U) && "Underflow detected!");
-                m_parent->m_successors -= 1U;
-            }
+            assert(m_parent != nullptr && "Nullptr dereferencing.");
+            assert(m_parent->m_successors != static_cast<decltype(m_successors)>(0U) && "Underflow detected!");
+
+            --m_parent->m_successors;
         }
 
         constexpr void incr() noexcept {
-            if (m_parent != nullptr) {
-                assert(m_parent->m_successors != static_cast<decltype(m_successors)>(-1U) && "Overflow detected!");
-                m_parent->m_successors += 1U;
-            }
+            assert(m_parent != nullptr && "Nullptr dereferencing.");
+            assert(m_parent->m_successors != static_cast<decltype(m_successors)>(-1U) && "Overflow detected!");
+
+            ++m_parent->m_successors;
         }
 
-        template<typename node_t, typename coord_t>
+        template <typename node_t, typename coord_t>
         auto backtrack(const coord_t& _size, const size_t& _capacity = 1U) const {
 
             static_assert(std::is_base_of_v<managed_node, node_t>, "node_t must derive from managed_node");
@@ -143,12 +149,15 @@ namespace chdr::solvers {
             return result;
         }
 
-        [[nodiscard]] friend constexpr bool operator < (const managed_node& _a, const managed_node& _b) noexcept {
+        [[nodiscard]] friend constexpr bool operator <(const managed_node& _a, const managed_node& _b) noexcept {
             return _a.m_fScore == _b.m_fScore ?
-                   _a.m_gScore >  _b.m_gScore :
-                   _a.m_fScore >  _b.m_fScore;
+                   _a.m_gScore > _b.m_gScore :
+                   _a.m_fScore > _b.m_fScore;
         }
     };
+
+    template <typename index_t, typename derived, typename Allocator>
+    Allocator managed_node<index_t, derived, Allocator>::alloc;
 
 } //chdr::solvers
 

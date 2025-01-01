@@ -11,7 +11,6 @@
 #ifndef CHDR_STACKALLOCATOR_HPP
 #define CHDR_STACKALLOCATOR_HPP
 
-#include <array>
 #include <cstddef>
 #include <cstdint>
 #include <memory>
@@ -27,7 +26,7 @@ namespace chdr {
 
     private:
 
-        alignas(T) std::byte dataa[StackSize * sizeof(T)]; // NOLINT(*-avoid-c-arrays)
+        alignas(T) std::byte data[StackSize * sizeof(T)]; // NOLINT(*-avoid-c-arrays)
         uintptr_t data_ptr;
 
     public:
@@ -42,7 +41,7 @@ namespace chdr {
             T* result;
 
             if (data_ptr + _n <= StackSize) {
-                result = reinterpret_cast<T*>(dataa.data() + (data_ptr * sizeof(T)));
+                result = reinterpret_cast<T*>(data.data() + (data_ptr * sizeof(T)));
                 data_ptr += _n;
             }
             else {
@@ -54,7 +53,7 @@ namespace chdr {
 
         constexpr void deallocate(T* _p, const uintptr_t& _n) {
 
-            if (_p >= reinterpret_cast<T*>(dataa.data()) && _p < reinterpret_cast<T*>(dataa.data() + dataa.size())) {
+            if (_p >= reinterpret_cast<T*>(data.data()) && _p < reinterpret_cast<T*>(data.data() + data.size())) {
 
 #ifndef NDEBUG
                 if (data_ptr < _n) {

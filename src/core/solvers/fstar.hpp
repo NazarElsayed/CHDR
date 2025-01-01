@@ -17,7 +17,7 @@
 #include "solvers/base/unmanaged_node.hpp"
 #include "types/coord.hpp"
 #include "types/existence_set.hpp"
-#include "types/stable_forward_buf.hpp"
+#include "types/append_only_allocator.hpp"
 #include "utils/intrinsics.hpp"
 #include "utils/utils.hpp"
 
@@ -61,8 +61,8 @@ namespace chdr::solvers {
             }
         };
 
-        template <typename open_set_t, typename closed_set_t, typename buf_t>
-        [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, open_set_t& _next, closed_set_t& _closed, buf_t& _buf, const size_t& _capacity, const params_t& _params) {
+        template <typename open_set_t, typename closed_set_t, typename allocator_t>
+        [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, open_set_t& _next, closed_set_t& _closed, allocator_t& _alloc, const size_t& _capacity, const params_t& _params) {
 
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
@@ -100,7 +100,7 @@ namespace chdr::solvers {
                                     if (f <= min_threshold) {
 
                                         if (curr_ptr == nullptr) {
-                                            curr_ptr = &_buf.emplace(std::move(curr)); // Note: 'current' is now moved!
+                                            curr_ptr = _alloc.allocate_and_construct(std::move(curr)); // Note: 'current' is now moved!
                                         }
 
                                         /* SORTED INSERTION */
@@ -160,7 +160,7 @@ namespace chdr::solvers {
             std::vector<node> next;
             next.reserve(capacity / 8U);
 
-            stable_forward_buf<node> buf;
+            append_only_allocator<node> buf;
 
             return solve_internal(open, next, closed, buf, capacity, _params);
         }

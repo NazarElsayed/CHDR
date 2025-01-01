@@ -38,6 +38,8 @@ namespace chdr::solvers {
         template <typename open_set_t, typename closed_set_t>
         [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, const size_t& _capacity, const params_t& _params) {
 
+            std::vector<coord_t> result;
+
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
@@ -66,7 +68,7 @@ namespace chdr::solvers {
                                  _closed.emplace (n.index);
 
                                 if (curr_ptr == nullptr) {
-                                    curr_ptr = new node(curr);
+                                    curr_ptr = node::alloc.allocate_and_construct(std::move(curr));
                                 }
 
                                 _open.emplace(n.index, curr_ptr);
@@ -83,11 +85,12 @@ namespace chdr::solvers {
                     if constexpr (utils::has_method_clear        <closed_set_t>::value) { _closed.clear();         }
                     if constexpr (utils::has_method_shrink_to_fit<closed_set_t>::value) { _closed.shrink_to_fit(); }
 
-                    return curr.template backtrack<node>(_params.size, _capacity);
+                    result = curr.template backtrack<node>(_params.size, _capacity);
                 }
             }
 
-            return std::vector<coord_t>{};
+            node::alloc.reset();
+            return result;
         }
 
         [[maybe_unused, nodiscard]] static constexpr auto execute(const params_t& _params) {

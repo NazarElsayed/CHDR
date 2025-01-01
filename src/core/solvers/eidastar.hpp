@@ -113,7 +113,7 @@ namespace chdr::solvers {
 
             auto min = std::numeric_limits<scalar_t>::max();
 
-            auto bound = _params.h(_params.start, _params.end) * _params.weight;
+            const auto bound = _params.h(_params.start, _params.end) * _params.weight;
 
             _open.emplace_back(s, static_cast<scalar_t>(0), bound);
             auto curr = _open.back();

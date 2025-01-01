@@ -44,10 +44,11 @@
 
 #include "types/circular_queue.hpp"
 #include "types/coord.hpp"
+#include "types/dynamic_pool_allocator.hpp"
 #include "types/existence_set.hpp"
 #include "types/heap.hpp"
 #include "types/queue.hpp"
-#include "types/stable_forward_buf.hpp"
+#include "types/append_only_allocator.hpp"
 #include "types/stack.hpp"
 #include "types/stack_allocator.hpp"
 

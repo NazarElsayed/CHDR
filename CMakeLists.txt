@@ -157,10 +157,11 @@ add_library(CHDR INTERFACE
     src/core/solvers/jps.hpp
     src/core/types/circular_queue.hpp
     src/core/types/coord.hpp
+    src/core/types/dynamic_pool_allocator.hpp
     src/core/types/existence_set.hpp
     src/core/types/heap.hpp
     src/core/types/queue.hpp
-    src/core/types/stable_forward_buf.hpp
+    src/core/types/append_only_allocator.hpp
     src/core/types/stack.hpp
     src/core/types/stack_allocator.hpp
     src/core/utils/heuristics.hpp

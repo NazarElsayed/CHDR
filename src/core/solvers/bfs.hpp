@@ -17,7 +17,7 @@
 #include "types/coord.hpp"
 #include "types/existence_set.hpp"
 #include "types/queue.hpp"
-#include "types/stable_forward_buf.hpp"
+#include "types/append_only_allocator.hpp"
 #include "utils/intrinsics.hpp"
 #include "utils/utils.hpp"
 
@@ -36,8 +36,8 @@ namespace chdr::solvers {
         using  coord_t = coord<index_t, Kd>;
         using     node = unmanaged_node<index_t>;
 
-        template <typename open_set_t, typename closed_set_t, typename buf_t>
-        [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, buf_t& _buf, const size_t& _capacity, const params_t& _params) {
+        template <typename open_set_t, typename closed_set_t, typename allocator_t>
+        [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, allocator_t& _alloc, const size_t& _capacity, const params_t& _params) {
 
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
@@ -67,7 +67,7 @@ namespace chdr::solvers {
                                  _closed.emplace (n.index);
 
                                 if (curr_ptr == nullptr) {
-                                    curr_ptr = &_buf.emplace(std::move(curr)); // Note: 'current' is now moved!
+                                    curr_ptr = _alloc.allocate_and_construct(std::move(curr)); // Note: 'current' is now moved!
                                 }
 
                                 _open.emplace(n.index, curr_ptr);
@@ -94,7 +94,7 @@ namespace chdr::solvers {
             queue<node> open;
             open.emplace(s);
 
-            stable_forward_buf<node> buf;
+            append_only_allocator<node> buf;
 
             return solve_internal(open, closed, buf, capacity, _params);
         }
