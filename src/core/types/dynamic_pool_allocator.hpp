@@ -28,23 +28,23 @@ namespace chdr {
 
         using block_t = std::unique_ptr<T[]>; // NOLINT(*-avoid-c-arrays)
 
-        size_t initial_capacity;
-        size_t capacity;
+        static constexpr size_t max_block_width { 16384U };
 
-        static constexpr size_t max_capacity = 4096U;
+        size_t initial_block_width;
+        size_t block_width;
 
         std::forward_list<block_t> c;
         std::vector<T*> free;
 
         void expand() {
-            const auto& new_block = c.emplace_front(std::make_unique<T[]>(capacity)); // NOLINT(*-avoid-c-arrays)
+            const auto& new_block = c.emplace_front(std::make_unique<T[]>(block_width)); // NOLINT(*-avoid-c-arrays)
 
-            free.reserve(free.size() + capacity);
-            for (size_t i = 0U; i < capacity; ++i) {
+            free.reserve(free.size() + block_width);
+            for (size_t i = 0U; i < block_width; ++i) {
                 free.emplace_back(&new_block[i]);
             }
 
-            capacity = std::min(capacity * 2U, max_capacity);
+            block_width = std::min(block_width * 2U, max_block_width);
         }
 
     public:
@@ -52,8 +52,13 @@ namespace chdr {
         using value_type [[maybe_unused]] = T;
 
         constexpr dynamic_pool_allocator(const size_t& _capacity = 16U) :
-            initial_capacity(_capacity),
-            capacity(_capacity) {}
+            initial_block_width(std::min(_capacity, max_block_width)),
+            block_width(initial_block_width)
+        {
+            if (_capacity == 0U) {
+                throw std::invalid_argument("Capacity cannot be zero.");
+            }
+        }
 
         template <typename... Args>
         [[nodiscard]] T* allocate_and_construct(Args&&... _args) {
@@ -102,7 +107,7 @@ namespace chdr {
 
         void reset() {
 
-            capacity = initial_capacity;
+            block_width = initial_block_width;
 
                c.clear();
             free.clear();

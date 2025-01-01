@@ -9,6 +9,7 @@
 #ifndef CHDR_APPEND_ONLY_ALLOCATOR_HPP
 #define CHDR_APPEND_ONLY_ALLOCATOR_HPP
 
+#include <cmath>
 #include <cstddef>
 #include <forward_list>
 #include <memory>
@@ -16,29 +17,39 @@
 
 namespace chdr {
 
-    template <typename T, size_t BlockWidth = 4096U>
+    template <typename T>
     class append_only_allocator {
 
-        static_assert(BlockWidth >= 1U, "BlockWidth must be at least 1 or greater.");
-        
     private:
 
         using block_t = std::unique_ptr<T[]>; // NOLINT(*-avoid-c-arrays)
 
-        std::forward_list<block_t> c;
+        static constexpr size_t max_block_width { 16384U };
+
+        size_t block_width;
         size_t index;
 
+        std::forward_list<block_t> c;
+
         void expand() {
-            c.emplace_front(std::make_unique<T[]>(BlockWidth)); // NOLINT(*-avoid-c-arrays)
+            c.emplace_front(std::make_unique<T[]>(block_width)); // NOLINT(*-avoid-c-arrays)
             index = 0U;
+
+            block_width = std::min(block_width * 2U, max_block_width);
         }
 
     public:
 
         using value_type [[maybe_unused]] = T;
 
-        // ReSharper disable once CppPossiblyUninitializedMember
-        constexpr append_only_allocator() : index(BlockWidth) {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
+        constexpr append_only_allocator(const size_t& _capacity = 64U) :
+            block_width(std::min(_capacity, max_block_width)),
+            index(block_width / 2U)
+        {
+            if (_capacity == 0U) {
+                throw std::invalid_argument("Capacity cannot be zero.");
+            }
+        }
 
         template <typename... Args>
         [[nodiscard]] T* allocate_and_construct(Args&&... _args) {
@@ -65,7 +76,7 @@ namespace chdr {
 
         [[nodiscard]] T* allocate([[maybe_unused]] const uintptr_t& _n) {
 
-            if (index == BlockWidth) {
+            if (index == block_width / 2U) {
                 expand();
             }
 

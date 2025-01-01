@@ -120,7 +120,7 @@ namespace chdr {
          */
         constexpr void allocate(const size_t& _hash, const size_t& _increment, const size_t& _maxSize = std::numeric_limits<size_t>::infinity()) {
             if (capacity() < _hash) {
-                reserve(std::min(_increment * ((_hash % _increment) + 1U), _maxSize));
+                reserve(std::min(size() + _increment, _maxSize));
             }
         }
 
