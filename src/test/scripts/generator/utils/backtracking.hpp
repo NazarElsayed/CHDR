@@ -35,31 +35,11 @@ namespace test::generator::utils {
     private:
 
         static constexpr bool valid_dimensionality(const coord_t& _size) {
-
-            bool result = true;
-
-            for (auto& element : _size) {
-                if (element == 0U) {
-                    result = false;
-                    break;
-                }
-            }
-
-            return result;
+            return std::all_of(_size.begin(), _size.end(), [](const auto _item) { return _item != 0U; });
         }
 
         static constexpr bool is_link(const coord_t& _coord) {
-
-            bool result = false;
-
-            for (size_t j = 0U; j < Kd; ++j) {
-                if (_coord[j] % 2U == 0U) {
-                    result = true;
-                    break;
-                }
-            }
-
-            return result;
+            return std::any_of(_coord.begin(), _coord.end(), [](const auto _item) { return _item % 2U == 0U; });
         }
 
         static constexpr bool is_edge(const coord_t& _coord, const coord_t& _size) {
@@ -76,26 +56,31 @@ namespace test::generator::utils {
             return result;
         }
 
-        static constexpr auto get_directions(const coord_t& _coord, const coord_t& _size) {
+        template <size_t Index>
+        constexpr static void compute_single_axis(const coord_t& _coord, const coord_t& _size, std::pair<bool, coord_t>& negOutput, std::pair<bool, coord_t>& posOutput) noexcept {
 
-            std::array<std::pair<bool, coord_t>, Kd * 2U> result{};
+            constexpr size_t step(1U);
 
-            IVDEP
-            VECTOR_ALWAYS
-            for (size_t i = 0U; i < Kd; ++i) {
+            coord_t dir{};
 
-                constexpr size_t step(1U);
+            dir[Index] = step;
+            negOutput = { _coord[Index] < _size[Index] - step, dir };
 
-                coord_t dir{};
+            dir[Index] = -step;
+            posOutput = { _coord[Index] >= step, dir };
+        }
 
-                dir[i] = step;
-                result[i] = { _coord[i] < _size[i] - step, dir };
+        template <size_t... Indices>
+        constexpr static auto compute_axis_neighbours(const coord_t& _coord, const coord_t& _size, std::index_sequence<Indices...>) {
 
-                dir[i] = -step;
-                result[Kd + i] = { _coord[i] >= step, dir };
-            }
+            std::array<std::pair<bool, coord_t>, Kd * 2U> result;
+            (compute_single_axis<Indices>(_coord, _size, result[Indices], result[Kd + Indices]), ...);
 
             return result;
+        }
+
+        static constexpr auto get_directions(const coord_t& _coord, const coord_t& _size) {
+            return compute_axis_neighbours(_coord, _size, std::make_index_sequence<Kd>{});
         }
 
         template <typename container_t>
