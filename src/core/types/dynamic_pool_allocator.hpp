@@ -42,12 +42,12 @@ namespace chdr {
 
             constexpr size_t skip_first { 1U };
 
-            free.reserve(free.size() + (block_width - skip_first));
+            free.resize(free.size() + (block_width - skip_first), {});
 
             IVDEP
             VECTOR_ALWAYS
             for (size_t i = 0U; i != block_width - skip_first; ++i) {
-                free.emplace_back(&new_block[block_width - skip_first - i]);
+                free[i] = &new_block[block_width - skip_first - i];
             }
 
             block_width = std::min(block_width * 2U, max_block_width);
