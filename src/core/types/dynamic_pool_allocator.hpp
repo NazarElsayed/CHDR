@@ -32,33 +32,41 @@ namespace chdr {
 
         size_t initial_block_width;
         size_t block_width;
-        T*     current_block_start;
-        T*     current_block_end;
 
         std::forward_list<block_t> c;
         std::vector<T*> free;
 
         constexpr void expand() {
-            current_block_start = c.emplace_front(std::make_unique<T[]>(block_width)).get(); // NOLINT(*-avoid-c-arrays);
-            current_block_end   = current_block_start + block_width;
+
+            const auto& new_block = c.emplace_front(std::make_unique<T[]>(block_width)); // NOLINT(*-avoid-c-arrays)
+
+            constexpr size_t skip_first { 1U };
+
+            free.resize(free.size() + (block_width - skip_first), {});
+
+            IVDEP
+            VECTOR_ALWAYS
+            for (size_t i = 0U; i != block_width - skip_first; ++i) {
+                free[i] = &new_block[block_width - skip_first - i];
+            }
 
             block_width = std::min(block_width * 2U, max_block_width);
         }
 
     public:
+
         using value_type [[maybe_unused]] = T;
 
-        constexpr dynamic_pool_allocator(const size_t& _capacity = 32U) noexcept :
-            initial_block_width (std::min(_capacity, max_block_width)),
-            block_width         (initial_block_width                 ),
-            current_block_start (nullptr                             ),
-            current_block_end   (nullptr                             )
+        constexpr dynamic_pool_allocator(const size_t& _capacity = 16U) noexcept :
+            initial_block_width(std::min(_capacity, max_block_width)),
+            block_width(initial_block_width)
         {
             assert(_capacity != 0U && "Capacity cannot be zero.");
         }
 
         void construct(T* _p, T&& _val) noexcept {
             assert(_p != nullptr && "Nullptr deferencing.");
+
             new(_p) T(std::move(_val));
         }
 
@@ -68,6 +76,7 @@ namespace chdr {
             static_assert(std::is_constructible_v<T, Args...>, "Object type cannot be constructed with the provided arguments");
 
             assert(_p != nullptr && "Nullptr deferencing.");
+
             new(_p) T(std::forward<Args>(_args)...);
         }
 
@@ -75,29 +84,28 @@ namespace chdr {
 
             T* result;
 
-            if (!free.empty()) {
-                result = free.back();
-                free.pop_back();
+            if (free.empty()) {
+                expand();
+                result = c.front().get();
             }
             else {
-                if (current_block_start == current_block_end) {
-                    expand();
-                }
-                result = current_block_start++;
+                result = free.back();
+                free.pop_back();
             }
 
             return result;
         }
 
         void deallocate(T* _p, [[maybe_unused]] const uintptr_t& _n) noexcept {
+
             assert(_p != nullptr && "Nullptr deferencing.");
+
             free.emplace_back(_p);
         }
 
         void reset() noexcept {
-            block_width         = initial_block_width;
-            current_block_start = nullptr;
-            current_block_end   = nullptr;
+
+            block_width = initial_block_width;
 
                c.clear();
             free.clear();
@@ -112,6 +120,7 @@ namespace chdr {
         using propagate_on_container_move_assignment = std::true_type;
         using is_always_equal                        = std::true_type;
     };
+
 } //chdr
 
 #endif //CHDR_DYNAMIC_POOL_ALLOCATOR_HPP
