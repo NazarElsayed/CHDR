@@ -36,12 +36,18 @@ namespace chdr {
         std::forward_list<block_t> c;
         std::vector<T*> free;
 
-        void expand() {
+        constexpr void expand() {
+
             const auto& new_block = c.emplace_front(std::make_unique<T[]>(block_width)); // NOLINT(*-avoid-c-arrays)
 
-            free.reserve(free.size() + block_width);
-            for (size_t i = 0U; i < block_width; ++i) {
-                free.emplace_back(&new_block[(block_width - 1U) - i]);
+            constexpr size_t skip_first { 1U };
+
+            free.resize(free.size() + (block_width - skip_first), {});
+
+            IVDEP
+            VECTOR_ALWAYS
+            for (size_t i = 0U; i != block_width - skip_first; ++i) {
+                free[i] = &new_block[block_width - skip_first - i];
             }
 
             block_width = std::min(block_width * 2U, max_block_width);
@@ -76,12 +82,16 @@ namespace chdr {
 
         [[nodiscard]] T* allocate([[maybe_unused]] const uintptr_t& _n) {
 
+            T* result;
+
             if (free.empty()) {
                 expand();
+                result = c.front().get();
             }
-
-            T* result(free.back());
-            free.pop_back();
+            else {
+                result = free.back();
+                free.pop_back();
+            }
 
             return result;
         }

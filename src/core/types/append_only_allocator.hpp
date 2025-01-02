@@ -31,7 +31,8 @@ namespace chdr {
 
         std::forward_list<block_t> c;
 
-        void expand() {
+        constexpr void expand() {
+
             c.emplace_front(std::make_unique<T[]>(block_width)); // NOLINT(*-avoid-c-arrays)
             index = 0U;
 
