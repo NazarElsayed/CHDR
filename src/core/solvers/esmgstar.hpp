@@ -259,7 +259,7 @@ namespace chdr::solvers {
             const auto e = utils::to_1d(_params.end,   _params.size);
 
             // Create Open Set:
-            _open.emplace(node::create_shared(
+            _open.emplace_nosort(node::create_shared(
                 0U,                                                     // Depth
                 s,                                                      // Coordinate
                 static_cast<scalar_t>(0),                               // G-Score

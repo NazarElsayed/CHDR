@@ -33,7 +33,7 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
-            _open.emplace(s);
+            _open.emplace_nosort(s);
 
             _closed.allocate(s, _capacity, _params.maze.count());
             _closed.emplace (s);
@@ -42,6 +42,8 @@ namespace chdr::solvers {
             while (!_open.empty()) {
 
                 for (size_t i = 0U; i < _open.size(); ++i) {
+
+                    bool dirty = false;
 
                     const auto curr(std::move(_open.front()));
                     _open.pop();
@@ -57,9 +59,15 @@ namespace chdr::solvers {
                                      _closed.allocate(n.index, _capacity, _params.maze.count());
                                      _closed.emplace (n.index);
 
-                                    _open.emplace(n.index);
+                                    _open.emplace_nosort(n.index);
+
+                                    dirty = true;
                                 }
                             }
+                        }
+
+                        if (dirty) {
+                            _open.reheapify(_open.back());
                         }
                     }
                     else { // SOLUTION REACHED ...

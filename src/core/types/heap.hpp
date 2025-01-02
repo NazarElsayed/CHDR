@@ -48,7 +48,7 @@ namespace chdr {
 
     private:
 
-        [[nodiscard]] size_t index_of(const T& _item) const noexcept {
+        [[nodiscard]] constexpr size_t index_of(const T& _item) const noexcept {
             return static_cast<size_t>(&(_item) - &(c[1U]));
         }
 
@@ -129,6 +129,8 @@ namespace chdr {
         [[maybe_unused, nodiscard]] constexpr bool empty() const noexcept { return size() == 0U;  }
 
         [[maybe_unused, nodiscard]] constexpr size_t size() const noexcept { return c.size() - 1U; }
+
+        [[maybe_unused, nodiscard]] constexpr size_t capacity() const noexcept { return c.capacity(); }
 
         [[maybe_unused, nodiscard]] constexpr T& front() { return top(); }
 
@@ -217,6 +219,24 @@ namespace chdr {
         [[maybe_unused]] constexpr void emplace(Args&&... _args) {
             c.emplace_back(std::forward<Args>(_args)...);
             sort_up(c.back());
+        }
+
+        [[maybe_unused]] constexpr void enqueue_nosort(const T& _item) { push_nosort(_item); }
+
+        template <class... Args>
+        [[maybe_unused]] constexpr void enqueue_nosort(Args&&... _args) { emplace_nosort(std::forward<Args>(_args)...); }
+
+        [[maybe_unused]] constexpr void push_nosort(const T& _item) {
+            c.push_back(_item);
+        }
+
+        [[maybe_unused]] constexpr void push_nosort(T&& _item) {
+            c.push_back(std::move(_item));
+        }
+
+        template <class... Args>
+        [[maybe_unused]] constexpr void emplace_nosort(Args&&... _args) {
+            c.emplace_back(std::forward<Args>(_args)...);
         }
 
         [[maybe_unused]] constexpr void erase(const T& _item) {

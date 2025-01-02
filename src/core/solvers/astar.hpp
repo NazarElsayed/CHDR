@@ -66,7 +66,7 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
-            _open.emplace(s, static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
+            _open.emplace_nosort(s, static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
 
             _closed.allocate(s, _capacity, _params.maze.count());
             _closed.emplace (s);
@@ -94,9 +94,13 @@ namespace chdr::solvers {
                                     _alloc.construct(curr_ptr = _alloc.allocate(1U), std::move(curr)); // Note: 'current' is now moved!
                                 }
 
-                                _open.emplace(n.index, curr.m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight, curr_ptr);
+                                _open.emplace_nosort(n.index, curr.m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight, curr_ptr);
                             }
                         }
+                    }
+
+                    if (curr_ptr != nullptr) {
+                        _open.reheapify(_open.back());
                     }
                 }
                 else { // SOLUTION REACHED ...
