@@ -113,7 +113,7 @@ namespace test::tests {
                     const size_t               memoryLimit = -1U;
                 };
 
-                const auto solver = chdr::solvers::make_solver<chdr::solvers::gstar, Kd, scalar_t, index_t, params>();
+                const auto solver = chdr::solvers::make_solver<chdr::solvers::astar, Kd, scalar_t, index_t, params>();
                 path = solver(test, start, end, size, HEURISTIC);
 
                 result = std::min(
