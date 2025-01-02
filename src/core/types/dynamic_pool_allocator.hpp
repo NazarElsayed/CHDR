@@ -65,7 +65,7 @@ namespace chdr {
         }
 
         template <typename... Args>
-        void construct(T* _p, Args&&... _args) {
+        void construct(T* _p, Args&&... _args) noexcept {
 
             static_assert(std::is_constructible_v<T, Args...>, "Object type cannot be constructed with the provided arguments");
 
