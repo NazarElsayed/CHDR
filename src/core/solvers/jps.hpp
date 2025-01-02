@@ -265,7 +265,7 @@ namespace chdr::solvers {
                                      _closed.emplace (n);
 
                                     if (curr_ptr == nullptr) {
-                                        curr_ptr = _alloc.allocate_and_construct(std::move(curr)); // Note: 'current' is now moved!
+                                        node::alloc.construct(curr_ptr = node::alloc.allocate(1U), std::move(curr)); // Note: 'current' is now moved!
                                     }
 
                                     _open.emplace(n, get_direction(coord, nCoord), curr.m_gScore + nDistance, _params.h(nCoord, _params.end) * _params.weight, curr_ptr);

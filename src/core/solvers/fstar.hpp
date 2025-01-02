@@ -100,7 +100,7 @@ namespace chdr::solvers {
                                     if (f <= min_threshold) {
 
                                         if (curr_ptr == nullptr) {
-                                            curr_ptr = _alloc.allocate_and_construct(std::move(curr)); // Note: 'current' is now moved!
+                                            node::alloc.construct(curr_ptr = node::alloc.allocate(1U), std::move(curr)); // Note: 'current' is now moved!
                                         }
 
                                         /* SORTED INSERTION */

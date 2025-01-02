@@ -28,7 +28,7 @@ namespace chdr {
 
         using block_t = std::unique_ptr<T[]>; // NOLINT(*-avoid-c-arrays)
 
-        static constexpr size_t max_block_width { 16384U };
+        static constexpr size_t max_block_width { 65536U / 4U };
 
         size_t initial_block_width;
         size_t block_width;
@@ -41,7 +41,7 @@ namespace chdr {
 
             free.reserve(free.size() + block_width);
             for (size_t i = 0U; i < block_width; ++i) {
-                free.emplace_back(&new_block[i]);
+                free.emplace_back(&new_block[(block_width - 1U) - i]);
             }
 
             block_width = std::min(block_width * 2U, max_block_width);
@@ -51,29 +51,17 @@ namespace chdr {
 
         using value_type [[maybe_unused]] = T;
 
-        constexpr dynamic_pool_allocator(const size_t& _capacity = 16U) :
+        constexpr dynamic_pool_allocator(const size_t& _capacity = 16U) noexcept :
             initial_block_width(std::min(_capacity, max_block_width)),
             block_width(initial_block_width)
         {
-            if (_capacity == 0U) {
-                throw std::invalid_argument("Capacity cannot be zero.");
-            }
+            assert(_capacity != 0U && "Capacity cannot be zero.");
         }
 
-        template <typename... Args>
-        [[nodiscard]] T* allocate_and_construct(Args&&... _args) {
+        void construct(T* _p, T&& _val) noexcept {
+            assert(_p != nullptr && "Nullptr deferencing.");
 
-            static_assert(std::is_constructible_v<T, Args...>, "Object type cannot be constructed with the provided arguments");
-
-            T* memory { allocate(1U) };
-            construct(memory, std::forward<Args>(_args)...);
-            return memory;
-        }
-
-        void construct(T* _p, T&& _val) {
-            if (_p != nullptr) {
-                new(_p) T(std::move(_val));
-            }
+            new(_p) T(std::move(_val));
         }
 
         template <typename... Args>
@@ -81,9 +69,9 @@ namespace chdr {
 
             static_assert(std::is_constructible_v<T, Args...>, "Object type cannot be constructed with the provided arguments");
 
-            if (_p != nullptr) {
-                new(_p) T(std::forward<Args>(_args)...);
-            }
+            assert(_p != nullptr && "Nullptr deferencing.");
+
+            new(_p) T(std::forward<Args>(_args)...);
         }
 
         [[nodiscard]] T* allocate([[maybe_unused]] const uintptr_t& _n) {
@@ -98,14 +86,14 @@ namespace chdr {
             return result;
         }
 
-        void deallocate(T* _p, [[maybe_unused]] const uintptr_t& _n) {
-            
-            if (_p != nullptr) {
-                free.emplace_back(_p);
-            }
+        void deallocate(T* _p, [[maybe_unused]] const uintptr_t& _n) noexcept {
+
+            assert(_p != nullptr && "Nullptr deferencing.");
+
+            free.emplace_back(_p);
         }
 
-        void reset() {
+        void reset() noexcept {
 
             block_width = initial_block_width;
 

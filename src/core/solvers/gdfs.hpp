@@ -68,7 +68,7 @@ namespace chdr::solvers {
                                  _closed.emplace (n.index);
 
                                 if (curr_ptr == nullptr) {
-                                    curr_ptr = node::alloc.allocate_and_construct(std::move(curr));
+                                    node::alloc.construct(curr_ptr = node::alloc.allocate(1U), std::move(curr)); // Note: 'current' is now moved!
                                 }
 
                                 _open.emplace(n.index, curr_ptr);

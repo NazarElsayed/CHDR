@@ -24,7 +24,7 @@ namespace chdr {
 
         using block_t = std::unique_ptr<T[]>; // NOLINT(*-avoid-c-arrays)
 
-        static constexpr size_t max_block_width { 16384U };
+        static constexpr size_t max_block_width { 65536U / 4U };
 
         size_t block_width;
         size_t index;
@@ -49,16 +49,6 @@ namespace chdr {
             if (_capacity == 0U) {
                 throw std::invalid_argument("Capacity cannot be zero.");
             }
-        }
-
-        template <typename... Args>
-        [[nodiscard]] T* allocate_and_construct(Args&&... _args) {
-
-            static_assert(std::is_constructible_v<T, Args...>, "Object type cannot be constructed with the provided arguments");
-
-            T* memory { allocate(1U) };
-            construct(memory, std::forward<Args>(_args)...);
-            return memory;
         }
 
         void construct(T* _p, T&& _val) {
