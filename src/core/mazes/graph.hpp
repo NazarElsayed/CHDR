@@ -345,6 +345,10 @@ namespace chdr::mazes {
             m_entries.clear();
         }
 
+        [[nodiscard]] constexpr const id_node<index_t>& operator[](const size_t& _id) const noexcept {
+            return at(_id);
+        }
+
         using       iterator_t = typename adjacency_set_t::iterator;
         using const_iterator_t = typename adjacency_set_t::const_iterator;
 

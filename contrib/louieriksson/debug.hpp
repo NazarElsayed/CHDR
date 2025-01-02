@@ -752,7 +752,8 @@ namespace {
 				
 				// Convert addresses into an array of human-readable strings
 				const std::unique_ptr<char*, void(*)(void*)> strings(backtrace_symbols(array, frames), std::free);
-				
+
+				result.reserve(frames + 1);
 				for (int i = 0; i < frames; ++i) {
 				    result.emplace_back(strings.get()[i]);
 				}

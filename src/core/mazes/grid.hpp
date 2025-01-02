@@ -41,6 +41,7 @@ namespace chdr::mazes {
     private:
 
         coord_t m_size;
+        size_t m_count;
 
         std::vector<weighted_node<T>> m_nodes;
 
@@ -48,15 +49,18 @@ namespace chdr::mazes {
 
         constexpr grid(const coord_t& _size) :
             m_size(_size),
+            m_count(utils::product<size_t>(m_size)),
             m_nodes(count()) {}
 
         constexpr grid(const coord_t& _size, const std::vector<weighted_node<T>>& _nodes) :
             m_size(_size),
+            m_count(utils::product<size_t>(m_size)),
             m_nodes(_nodes) {}
 
         template <typename... Args>
         constexpr grid(const Args&... _size) :
-            m_size {_size... },
+            m_size { _size... },
+            m_count(utils::product<size_t>(m_size)),
             m_nodes(count())
         {
             static_assert(sizeof...(Args) == s_rank, "Number of arguments must equal the Grid's rank.");
@@ -64,14 +68,14 @@ namespace chdr::mazes {
 
         template <typename... Args>
         constexpr grid(const Args&... _size, const std::vector<weighted_node<T>>& _nodes) :
-            m_size {_size... },
+            m_size { _size... },
+            m_count(utils::product<size_t>(m_size)),
             m_nodes(_nodes)
         {
             static_assert(sizeof...(Args) == s_rank, "Number of arguments must equal the Grid's rank.");
         }
 
-        [[nodiscard]]
-        constexpr const std::vector<weighted_node<T>>& nodes() const noexcept {
+        [[nodiscard]] constexpr const std::vector<weighted_node<T>>& nodes() const noexcept {
             return m_nodes;
         }
 
@@ -79,25 +83,21 @@ namespace chdr::mazes {
             m_nodes = _value;
         }
 
-        [[nodiscard]]
-        constexpr const coord_t& size() const noexcept {
+        [[nodiscard]] constexpr const coord_t& size() const noexcept {
             return m_size;
         }
 
-        [[nodiscard]]
-        constexpr size_t count() const noexcept override {
-            return utils::product<size_t>(m_size);
+        [[nodiscard]] constexpr size_t count() const noexcept override {
+            return m_count;
         }
 
         template<bool IncludeDiagonals = false, typename... Args>
-        [[nodiscard]]
-        constexpr auto get_neighbours(const Args&... _id) const noexcept {
+        [[nodiscard]] constexpr auto get_neighbours(const Args&... _id) const noexcept {
             return get_neighbours<IncludeDiagonals>({ _id... });
         }
 
         template<bool IncludeDiagonals = false>
-        [[nodiscard]]
-        constexpr auto get_neighbours(const coord_t& _id) const noexcept {
+        [[nodiscard]] constexpr auto get_neighbours(const coord_t& _id) const noexcept {
 
             if constexpr (IncludeDiagonals) {
                 constexpr auto NeighbourCount = static_cast<size_t>(std::pow(3U, Kd)) - 1U;
@@ -110,19 +110,16 @@ namespace chdr::mazes {
         }
 
         template<bool IncludeDiagonals = false>
-        [[nodiscard]]
-        constexpr auto get_neighbours(const size_t& _id) const noexcept {
+        [[nodiscard]] constexpr auto get_neighbours(const size_t& _id) const noexcept {
             return get_neighbours<IncludeDiagonals>(utils::to_nd<size_t, Kd>(_id, size()));
         }
 
         template<typename... Args>
-        [[nodiscard]]
-        constexpr const weighted_node<T>& at(const Args&... _id) const {
+        [[nodiscard]] constexpr const weighted_node<T>& at(const Args&... _id) const {
             return at({ _id... });
         }
 
-        [[nodiscard]]
-        constexpr const weighted_node<T>& at(const coord_t& _id) const {
+        [[nodiscard]] constexpr const weighted_node<T>& at(const coord_t& _id) const {
 
             const size_t index = utils::to_1d(_id, m_size);
 
@@ -133,8 +130,7 @@ namespace chdr::mazes {
 #endif // NDEBUG
         }
 
-        [[nodiscard]]
-        constexpr const weighted_node<T>& at(const size_t& _id) const {
+        [[nodiscard]] constexpr const weighted_node<T>& at(const size_t& _id) const {
 
 #ifndef NDEBUG
             return m_nodes.at(_id);
@@ -144,13 +140,11 @@ namespace chdr::mazes {
         }
 
         template<typename... Args>
-        [[nodiscard]]
-        constexpr bool contains(const Args&... _id) const noexcept {
+        [[nodiscard]] constexpr bool contains(const Args&... _id) const noexcept {
             return contains({ _id... });
         }
 
-        [[nodiscard]]
-        constexpr bool contains(const coord_t& _id) const noexcept {
+        [[nodiscard]] constexpr bool contains(const coord_t& _id) const noexcept {
 
             bool result = true;
 
@@ -166,13 +160,11 @@ namespace chdr::mazes {
             return result;
         }
 
-        [[nodiscard]]
-        constexpr bool contains(const size_t& _id) const noexcept override {
+        [[nodiscard]] constexpr bool contains(const size_t& _id) const noexcept override {
             return _id < count();
         }
 
-        [[nodiscard]]
-        constexpr bool is_transitory(const size_t& _index) const noexcept {
+        [[nodiscard]] constexpr bool is_transitory(const size_t& _index) const noexcept {
 
             size_t count = 0U;
 
@@ -185,6 +177,10 @@ namespace chdr::mazes {
             return count == 2U;
         }
 
+        [[nodiscard]] constexpr const weighted_node<T>& operator[](const size_t& _id) const noexcept {
+            return at(_id);
+        }
+        
         using               iterator_t = typename std::vector<weighted_node<T>>::iterator;
         using         const_iterator_t = typename std::vector<weighted_node<T>>::const_iterator;
         using       reverse_iterator_t = typename std::vector<weighted_node<T>>::reverse_iterator;
@@ -209,7 +205,7 @@ namespace chdr::mazes {
     private:
 
         template<size_t... Indices>
-        constexpr auto compute_diagonal_neighbours(const coord_t& _id, std::index_sequence<Indices...>) const noexcept { // NOLINT(*-named-parameter)
+        [[nodiscard]] constexpr auto compute_diagonal_neighbours(const coord_t& _id, std::index_sequence<Indices...>) const noexcept { // NOLINT(*-named-parameter)
 
             constexpr size_t NeighbourCount = sizeof...(Indices);
 
@@ -220,7 +216,7 @@ namespace chdr::mazes {
         }
 
         template<size_t... Indices>
-        constexpr auto compute_axis_neighbours(const coord_t& _id, std::index_sequence<Indices...>) const noexcept { // NOLINT(*-named-parameter)
+        [[nodiscard]] constexpr auto compute_axis_neighbours(const coord_t& _id, std::index_sequence<Indices...>) const noexcept { // NOLINT(*-named-parameter)
 
             std::array<std::pair<bool, coord_t>, Kd * 2U> result;
             (compute_single_axis<Indices>(_id, result[Indices], result[Kd + Indices]), ...);
