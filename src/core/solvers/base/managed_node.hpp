@@ -102,7 +102,7 @@ namespace chdr::solvers {
                 decr();
 
                 if (m_parent->m_successors == 0U) {
-                    auto* temp     = std::exchange(m_parent, m_parent->m_parent);
+                    auto* temp = std::exchange(m_parent, m_parent->m_parent);
                     temp->m_parent = nullptr;
 
                     alloc.deallocate(static_cast<typename alloc_t::value_type*>(temp), 1U);
