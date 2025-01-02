@@ -42,12 +42,12 @@ namespace chdr {
 
             constexpr size_t skip_first { 1U };
 
-            free.resize(free.size() + (block_width - skip_first), {});
+            free.reserve(free.size() + (block_width - skip_first));
 
             IVDEP
             VECTOR_ALWAYS
             for (size_t i = 0U; i != block_width - skip_first; ++i) {
-                free[i] = &new_block[block_width - skip_first - i];
+                free.emplace_back(&new_block[block_width - skip_first - i]);
             }
 
             block_width = std::min(block_width * 2U, max_block_width);
@@ -61,7 +61,7 @@ namespace chdr {
             initial_block_width(std::min(_capacity, max_block_width)),
             block_width(initial_block_width)
         {
-            assert(_capacity != 0U && "dynamic_pool_allocator: Capacity cannot be zero.");
+            assert(_capacity != 0U && "Capacity cannot be zero.");
         }
 
         template <typename... Args>
@@ -69,16 +69,16 @@ namespace chdr {
 
             static_assert(std::is_constructible_v<T, Args...>, "Object type cannot be constructed with the provided arguments");
 
-            assert(_p != nullptr                && "dynamic_pool_allocator: Attempt to construct at a null pointer.");
-            assert(!_p || c.front().get() <= _p || "dynamic_pool_allocator: Pointer does not belong to the pool.");
+            assert(_p != nullptr                && "Attempt to construct at a null pointer.");
+            assert(!_p || c.front().get() <= _p || "Pointer does not belong to the pool.");
 
             new(_p) T(std::forward<Args>(_args)...);
         }
 
         [[nodiscard]] T* allocate([[maybe_unused]] const uintptr_t& _n) {
 
-            assert(_n != 0U && "dynamic_pool_allocator: Tried to allocate 0 objects.");
-            assert(_n == 1U && "dynamic_pool_allocator: Does not support batch allocation.");
+            assert(_n != 0U && "Tried to allocate 0 objects.");
+            assert(_n == 1U && "Does not support batch allocation.");
             
             T* result;
 
@@ -96,10 +96,10 @@ namespace chdr {
 
         void deallocate(T* _p, [[maybe_unused]] const uintptr_t& _n) noexcept {
 
-            assert(!_p || c.front().get() <= _p || "dynamic_pool_allocator: Pointer does not belong to the pool.");
+            assert(!_p || c.front().get() <= _p || "Pointer does not belong to the pool.");
 
-            assert(_n != 0U && "dynamic_pool_allocator: Tried to allocate 0 objects.");
-            assert(_n == 1U && "dynamic_pool_allocator: Does not support batch deallocation.");
+            assert(_n != 0U && "Tried to allocate 0 objects.");
+            assert(_n == 1U && "Does not support batch deallocation.");
 
             free.emplace_back(_p);
         }
