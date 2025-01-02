@@ -42,7 +42,7 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
-            _open.emplace_nosort(s);
+            _open.emplace(s);
 
             _closed.allocate(s, _capacity, _params.maze.count());
             _closed.emplace (s);
@@ -70,13 +70,9 @@ namespace chdr::solvers {
                                     _alloc.construct(curr_ptr = _alloc.allocate(1U), std::move(curr)); // Note: 'current' is now moved!
                                 }
 
-                                _open.emplace_nosort(n.index, curr_ptr);
+                                _open.emplace(n.index, curr_ptr);
                             }
                         }
-                    }
-
-                    if (curr_ptr != nullptr) {
-                        _open.reheapify(_open.back());
                     }
                 }
                 else { // SOLUTION REACHED ...

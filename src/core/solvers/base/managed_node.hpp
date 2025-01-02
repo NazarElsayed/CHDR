@@ -19,10 +19,13 @@
 
 namespace chdr::solvers {
 
-    template <typename index_t, typename derived = void, typename alloc_t = dynamic_pool_allocator<derived>>
+    template <typename index_t, typename derived = void>
     struct managed_node : bnode<index_t> {
 
-        static alloc_t alloc;
+        using  node_t = std::conditional_t<std::is_void_v<derived>, managed_node<index_t>, derived>;
+        using alloc_t = dynamic_pool_allocator<node_t>;
+
+        inline static alloc_t alloc{};
 
         managed_node* RESTRICT m_parent;
         unsigned char m_successors;
@@ -150,9 +153,6 @@ namespace chdr::solvers {
                    _a.m_fScore > _b.m_fScore;
         }
     };
-
-    template <typename index_t, typename derived, typename Allocator>
-    Allocator managed_node<index_t, derived, Allocator>::alloc;
 
 } //chdr::solvers
 

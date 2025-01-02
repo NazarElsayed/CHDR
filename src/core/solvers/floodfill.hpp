@@ -26,6 +26,7 @@ namespace chdr::solvers {
     private:
 
         using solver_t = solver<floodfill, Kd, scalar_t, index_t, params_t>;
+        using  coord_t = coord<index_t, Kd>;
 
         template <typename open_set_t, typename closed_set_t>
         [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, const size_t& _capacity, const params_t& _params) {
@@ -79,7 +80,7 @@ namespace chdr::solvers {
 
     public:
 
-        [[maybe_unused, nodiscard]] static constexpr auto execute(const params_t& _params) {
+        [[maybe_unused, nodiscard]] static constexpr std::vector<coord_t> execute(const params_t& _params) {
 
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
@@ -90,7 +91,9 @@ namespace chdr::solvers {
                 _params.maze.at(e).is_active()
             ) {
 
-                if (s != e) {
+                bool success { s == e };
+
+                if (!success) {
 
                     const auto capacity = solver_t::determine_capacity(_params);
 
@@ -99,13 +102,15 @@ namespace chdr::solvers {
                     queue<index_t> open;
                     open.reserve(capacity / 8U);
 
-                    return solve_internal(closed, open);
+                    success = solve_internal(closed, open);
                 }
 
-                return true;
+                if (success) {
+                    return { _params.end() };
+                }
             }
 
-            return false;
+            return {};
         }
     };
 

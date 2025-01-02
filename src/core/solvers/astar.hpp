@@ -94,7 +94,7 @@ namespace chdr::solvers {
                                     _alloc.construct(curr_ptr = _alloc.allocate(1U), std::move(curr)); // Note: 'current' is now moved!
                                 }
 
-                                _open.emplace_nosort(n.index, curr.m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight, curr_ptr);
+                                _open.emplace_nosort(n.index, curr_ptr->m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight, curr_ptr);
                             }
                         }
                     }

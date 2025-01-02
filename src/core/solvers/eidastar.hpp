@@ -116,19 +116,18 @@ namespace chdr::solvers {
             const auto bound = _params.h(_params.start, _params.end) * _params.weight;
 
             _open.emplace_back(s, static_cast<scalar_t>(0), bound);
-            auto curr = _open.back();
 
             stack<state<neighbours_t>> stack;
-            stack.emplace(curr, bound, _params);
+            stack.emplace(_open.back(), bound, _params);
 
             transposition_table_t transposition_table;
-            transposition_table[curr.m_index] = bound;
+            transposition_table[_open.back().m_index] = bound;
 
             // Main loop:
             while (!stack.empty()) {
 
                 auto& _ = stack.top();
-                curr = std::move(_.curr);
+                auto& curr = _.curr;
 
                 if (_.neighbours_idx != _.neighbours.size()) {
                     const auto& n_data = _.neighbours[_.neighbours_idx++];
@@ -140,7 +139,7 @@ namespace chdr::solvers {
 
                         auto search = transposition_table.find(n.index);
                         if (!(search != transposition_table.end() && f >= search->second)) {
-                            *transposition_table[n.index] = f;
+                            transposition_table[n.index] = f;
 
                             _open.emplace_back(n.index, g, f);
 
