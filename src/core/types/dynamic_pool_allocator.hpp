@@ -23,12 +23,12 @@ namespace chdr {
 
     template <typename T>
     class dynamic_pool_allocator {
-
+    
     private:
 
         using block_t = std::unique_ptr<T[]>; // NOLINT(*-avoid-c-arrays)
 
-        static constexpr size_t max_block_width { 65536U / 4U };
+        static constexpr size_t max_block_width { 65536U / sizeof(T*) };
 
         size_t initial_block_width;
         size_t block_width;
@@ -61,13 +61,7 @@ namespace chdr {
             initial_block_width(std::min(_capacity, max_block_width)),
             block_width(initial_block_width)
         {
-            assert(_capacity != 0U && "Capacity cannot be zero.");
-        }
-
-        void construct(T* _p, T&& _val) noexcept {
-            assert(_p != nullptr && "Nullptr deferencing.");
-
-            new(_p) T(std::move(_val));
+            assert(_capacity != 0U && "dynamic_pool_allocator: Capacity cannot be zero.");
         }
 
         template <typename... Args>
@@ -75,13 +69,17 @@ namespace chdr {
 
             static_assert(std::is_constructible_v<T, Args...>, "Object type cannot be constructed with the provided arguments");
 
-            assert(_p != nullptr && "Nullptr deferencing.");
+            assert(_p != nullptr                && "dynamic_pool_allocator: Attempt to construct at a null pointer.");
+            assert(!_p || c.front().get() <= _p || "dynamic_pool_allocator: Pointer does not belong to the pool.");
 
             new(_p) T(std::forward<Args>(_args)...);
         }
 
         [[nodiscard]] T* allocate([[maybe_unused]] const uintptr_t& _n) {
 
+            assert(_n != 0U && "dynamic_pool_allocator: Tried to allocate 0 objects.");
+            assert(_n == 1U && "dynamic_pool_allocator: Does not support batch allocation.");
+            
             T* result;
 
             if (free.empty()) {
@@ -98,7 +96,10 @@ namespace chdr {
 
         void deallocate(T* _p, [[maybe_unused]] const uintptr_t& _n) noexcept {
 
-            assert(_p != nullptr && "Nullptr deferencing.");
+            assert(!_p || c.front().get() <= _p || "dynamic_pool_allocator: Pointer does not belong to the pool.");
+
+            assert(_n != 0U && "dynamic_pool_allocator: Tried to allocate 0 objects.");
+            assert(_n == 1U && "dynamic_pool_allocator: Does not support batch deallocation.");
 
             free.emplace_back(_p);
         }
