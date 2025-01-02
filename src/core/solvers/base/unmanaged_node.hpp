@@ -36,7 +36,7 @@ namespace chdr::solvers {
         template<typename node_t, typename coord_t>
         auto backtrack(const coord_t& _size, const size_t& _capacity = 1U) const {
 
-            static_assert(std::is_base_of_v<unmanaged_node, node_t>, "node_t must derive from UnmanagedNode");
+            static_assert(std::is_base_of_v<unmanaged_node, node_t>, "node_t must derive from unmanaged_node");
 
             // Reserve space in result:
             std::vector<coord_t> result;
