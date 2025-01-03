@@ -104,9 +104,16 @@ namespace chdr::solvers {
                     }
                 }
                 else { // SOLUTION REACHED ...
+
+                    _open   = {};
+                    _closed = {};
+
                     return curr.template backtrack<node>(_params.size, curr.m_gScore);
                 }
             }
+
+            _open   = {};
+            _closed = {};
 
             return std::vector<coord_t>{};
         }

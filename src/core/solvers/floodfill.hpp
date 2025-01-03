@@ -29,12 +29,12 @@ namespace chdr::solvers {
         using  coord_t = coord<index_t, Kd>;
 
         template <typename open_set_t, typename closed_set_t>
-        [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, const size_t& _capacity, const params_t& _params) {
+        [[nodiscard]] static constexpr bool solve_internal(open_set_t& _open, closed_set_t& _closed, const size_t& _capacity, const params_t& _params) {
 
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
-            _open.emplace_nosort(s);
+            _open.emplace(s);
 
             _closed.allocate(s, _capacity, _params.maze.count());
             _closed.emplace (s);
@@ -43,8 +43,6 @@ namespace chdr::solvers {
             while (!_open.empty()) {
 
                 for (size_t i = 0U; i < _open.size(); ++i) {
-
-                    bool dirty = false;
 
                     const auto curr(std::move(_open.front()));
                     _open.pop();
@@ -60,22 +58,25 @@ namespace chdr::solvers {
                                      _closed.allocate(n.index, _capacity, _params.maze.count());
                                      _closed.emplace (n.index);
 
-                                    _open.emplace_nosort(n.index);
-
-                                    dirty = true;
+                                    _open.emplace(n.index);
                                 }
                             }
                         }
-
-                        if (dirty) {
-                            _open.reheapify(_open.back());
-                        }
                     }
                     else { // SOLUTION REACHED ...
+
+                        _open   = {};
+                        _closed = {};
+
                         return true;
                     }
                 }
             }
+
+            _open   = {};
+            _closed = {};
+
+            return false;
         }
 
     public:
@@ -100,13 +101,12 @@ namespace chdr::solvers {
                     existence_set closed ({ s }, capacity);
 
                     queue<index_t> open;
-                    open.reserve(capacity / 8U);
 
-                    success = solve_internal(closed, open);
+                    success = solve_internal(open, closed, capacity, _params);
                 }
 
                 if (success) {
-                    return { _params.end() };
+                    return { _params.end };
                 }
             }
 

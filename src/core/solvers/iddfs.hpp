@@ -119,7 +119,14 @@ namespace chdr::solvers {
                                     stack.emplace(_open.back(), _params);
                                 }
                                 else { // SOLUTION REACHED ...
-                                    return backtrack(_open, _params.size);
+
+                                    stack = {};
+
+                                    const auto result = backtrack(_open, _params.size);
+
+                                    _open = {};
+
+                                    return result;
                                 }
                             }
                         }
@@ -133,6 +140,9 @@ namespace chdr::solvers {
                 _open.erase(_open.begin() + 1U, _open.end());
                 stack.clear();
             }
+
+            _open = {};
+            stack = {};
 
             return std::vector<coord_t>{};
         }

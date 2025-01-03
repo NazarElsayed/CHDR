@@ -125,15 +125,15 @@ namespace chdr::solvers {
                     }
                     else { // SOLUTION REACHED ...
 
-                        // Free data which is no longer relevant:
+                        // Release:
+                        _next   = {};
+                        _closed = {};
 
-                        if constexpr (utils::has_method_clear        <  open_set_t>::value) {   _next.clear();         }
-                        if constexpr (utils::has_method_shrink_to_fit<  open_set_t>::value) {   _next.shrink_to_fit(); }
+                        const auto result = curr.template backtrack<node>(_params.size, curr.m_gScore);
 
-                        if constexpr (utils::has_method_clear        <closed_set_t>::value) { _closed.clear();         }
-                        if constexpr (utils::has_method_shrink_to_fit<closed_set_t>::value) { _closed.shrink_to_fit(); }
+                        _open = {};
 
-                        return curr.template backtrack<node>(_params.size, curr.m_gScore);
+                        return result;
                     }
                 }
 
@@ -142,6 +142,10 @@ namespace chdr::solvers {
 
                 min_threshold = next_threshold;
             }
+
+            _open   = {};
+            _next   = {};
+            _closed = {};
 
             return std::vector<coord_t>{};
         }

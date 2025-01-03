@@ -231,7 +231,6 @@ namespace chdr::solvers {
             //               "JPS only supports mazes of type grid<Kd, weight_t>.");
 
             if constexpr (Kd == 2U) {
-
                 const auto s = utils::to_1d(_params.start, _params.size);
                 const auto e = utils::to_1d(_params.end  , _params.size);
 
@@ -261,8 +260,8 @@ namespace chdr::solvers {
                                 constexpr scalar_t nDistance{1};
 
                                 if (!_closed.contains(n)) {
-                                     _closed.allocate(n, _capacity, _params.maze.count());
-                                     _closed.emplace (n);
+                                    _closed.allocate(n, _capacity, _params.maze.count());
+                                    _closed.emplace (n);
 
                                     if (curr_ptr == nullptr) {
                                         _alloc.construct(curr_ptr = _alloc.allocate(1U), std::move(curr)); // Note: 'current' is now moved!
@@ -278,10 +277,17 @@ namespace chdr::solvers {
                         }
                     }
                     else { // SOLUTION REACHED ...
+
+                        _open   = {};
+                        _closed = {};
+
                         return curr.template backtrack<node>(_params.size, curr.m_gScore);
                     }
                 }
             }
+
+            _open   = {};
+            _closed = {};
 
             return std::vector<coord_t>{};
         }

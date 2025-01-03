@@ -82,11 +82,13 @@ namespace chdr {
 
     public:
 
+        [[maybe_unused]] constexpr existence_set() noexcept {}
+
         /**
          * @brief Initialise set.
          * @param[in] _capacity Initial capacity of the set. Must be larger than 0.
          */
-        [[maybe_unused]] constexpr explicit existence_set(const size_t& _capacity = 1U) {
+        [[maybe_unused]] constexpr explicit existence_set(const size_t& _capacity) {
             reserve(_capacity);
         }
 
@@ -176,30 +178,30 @@ namespace chdr {
         }
 
         /**
-         * @brief Reserves memory for the DenseExistenceSet.
+         * @brief Reserves memory for the existence_set.
          *
          * @param _newCapacity The new capacity to reserve.
          * @note This method does not resize the set, only reserves memory for future elements.
          *
-         * @see DenseExistenceSet::capacity()
+         * @see existence_set::capacity()
          */
         [[maybe_unused]] constexpr void reserve(const size_t& _newCapacity) {
             m_bits.reserve(_newCapacity);
         }
 
         /**
-         * @brief resize the DenseExistenceSet.
+         * @brief resize the existence_set.
          *
-         * This method resizes the DenseExistenceSet by calling the resize method on the internal vector.
+         * This method resizes the existence_set by calling the resize method on the internal vector.
          *
          * @param _newSize The new size to resize the set to.
          * @param _newValue The optional value to fill the new elements with. (default is false).
          * @note If the new size is smaller than the current size, the elements at the end will be removed.
          * If the new size is greater than the current size, the new elements will be filled with the specified value.
          *
-         * @see DenseExistenceSet::reserve(const size_t&)
-         * @see DenseExistenceSet::prune()
-         * @see DenseExistenceSet::clear()
+         * @see existence_set::reserve(const size_t&)
+         * @see existence_set::prune()
+         * @see existence_set::clear()
          */
         [[maybe_unused]] constexpr void resize(const size_t& _newSize, const boolean_t& _newValue = static_cast<boolean_t>(false)) {
             m_bits.resize(_newSize, _newValue);

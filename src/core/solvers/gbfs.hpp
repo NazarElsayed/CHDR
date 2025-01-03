@@ -39,7 +39,7 @@ namespace chdr::solvers {
         [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, const size_t& _capacity, const params_t& _params) {
 
             std::vector<coord_t> result;
-            
+
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
@@ -82,18 +82,19 @@ namespace chdr::solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    // Free data which is no longer relevant:
-
-                    if constexpr (utils::has_method_clear        <  open_set_t>::value) {   _open.clear();         }
-                    if constexpr (utils::has_method_shrink_to_fit<  open_set_t>::value) {   _open.shrink_to_fit(); }
-                    if constexpr (utils::has_method_clear        <closed_set_t>::value) { _closed.clear();         }
-                    if constexpr (utils::has_method_shrink_to_fit<closed_set_t>::value) { _closed.shrink_to_fit(); }
+                    // Release:
+                    _open = {};
 
                     result = curr.template backtrack<node>(_params.size, _capacity);
+                    break;
                 }
             }
 
+            // Release:
+              _open = {};
+            _closed = {};
             node::alloc.reset();
+
             return result;
         }
 

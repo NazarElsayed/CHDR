@@ -106,18 +106,18 @@ namespace chdr::solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    // Free data which is no longer relevant:
-
-                    if constexpr (utils::has_method_clear        <  open_set_t>::value) {   _open.clear();         }
-                    if constexpr (utils::has_method_shrink_to_fit<  open_set_t>::value) {   _open.shrink_to_fit(); }
-                    if constexpr (utils::has_method_clear        <closed_set_t>::value) { _closed.clear();         }
-                    if constexpr (utils::has_method_shrink_to_fit<closed_set_t>::value) { _closed.shrink_to_fit(); }
+                    // Release:
+                    _open = {};
 
                     result = curr.template backtrack<node>(_params.size, curr.m_gScore);
+                    break;
                 }
             }
 
+            // Release:
+            _closed = {};
             node::alloc.reset();
+
             return result;
         }
 

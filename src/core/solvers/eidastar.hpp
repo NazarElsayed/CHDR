@@ -147,7 +147,14 @@ namespace chdr::solvers {
                                 stack.emplace(_open.back(), _.bound, _params);
                             }
                             else { // SOLUTION REACHED ...
-                                return backtrack(_open, _params.size, curr.m_gScore);
+
+                                transposition_table = {};
+
+                                const auto result = backtrack(_open, _params.size, curr.m_gScore);
+
+                                _open = {};
+
+                                return result;
                             }
                         }
                     }
@@ -159,6 +166,10 @@ namespace chdr::solvers {
                     stack.pop();
                 }
             }
+
+                          _open = {};
+                          stack = {};
+            transposition_table = {};
 
             return std::vector<coord_t>{};
         }
