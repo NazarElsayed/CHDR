@@ -129,8 +129,7 @@ namespace chdr::solvers {
 
             existence_set closed({ s }, capacity);
 
-            heap<node> open;
-            open.reserve(capacity / 8U);
+            heap<node> open(capacity / 8U);
 
             return solve_internal(open, closed, capacity, _params);
         }

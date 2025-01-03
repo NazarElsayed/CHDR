@@ -14,9 +14,11 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <exception>
+#include <exception>
+#include <list>
 #include <memory>
 #include <type_traits>
-#include <forward_list>
 #include <vector>
 
 namespace chdr {
@@ -26,28 +28,24 @@ namespace chdr {
     
     private:
 
-        using block_t = std::unique_ptr<T[]>; // NOLINT(*-avoid-c-arrays)
+        using block_t = std::vector<T>;
 
         static constexpr size_t max_block_width { 65536U / sizeof(T*) };
 
         size_t initial_block_width;
         size_t block_width;
 
-        std::forward_list<block_t> c;
+        std::list<block_t> c;
         std::vector<T*> free;
 
-        constexpr void expand() {
+        constexpr void expand(T* const _new_block, const size_t& _skip_first) {
 
-            const auto& new_block = c.emplace_front(std::make_unique<T[]>(block_width)); // NOLINT(*-avoid-c-arrays)
-
-            constexpr size_t skip_first { 1U };
-
-            free.resize(free.size() + (block_width - skip_first), {});
+            free.resize(free.size() + (block_width - _skip_first), {});
 
             IVDEP
             VECTOR_ALWAYS
-            for (size_t i = 0U; i != block_width - skip_first; ++i) {
-                free[i] = &new_block[block_width - skip_first - i];
+            for (size_t i = 0U; i != block_width - _skip_first; ++i) {
+                free[i] = &_new_block[block_width - _skip_first - i];
             }
 
             block_width = std::min(block_width * 2U, max_block_width);
@@ -69,8 +67,7 @@ namespace chdr {
 
             static_assert(std::is_constructible_v<T, Args...>, "Object type cannot be constructed with the provided arguments");
 
-            assert(_p != nullptr                && "Attempt to construct at a null pointer.");
-            assert(!_p || c.front().get() <= _p || "Pointer does not belong to the pool.");
+            assert(_p != nullptr && "Attempt to construct at a null pointer.");
 
             new(_p) T(std::forward<Args>(_args)...);
         }
@@ -83,8 +80,7 @@ namespace chdr {
             T* result;
 
             if (free.empty()) {
-                expand();
-                result = c.front().get();
+                expand(result = &c.emplace_front(block_t(block_width))[0U], 1U);
             }
             else {
                 result = free.back();
@@ -96,7 +92,7 @@ namespace chdr {
 
         void deallocate(T* _p, [[maybe_unused]] const uintptr_t& _n) noexcept {
 
-            assert(!_p || c.front().get() <= _p || "Pointer does not belong to the pool.");
+            assert(_p != nullptr && "Attempt to deallocate a null pointer.");
 
             assert(_n != 0U && "Tried to allocate 0 objects.");
             assert(_n == 1U && "Does not support batch deallocation.");
@@ -104,13 +100,31 @@ namespace chdr {
             free.emplace_back(_p);
         }
 
+        void release() noexcept {
+
+            block_width = initial_block_width;
+
+            free.clear();
+
+            try {
+                for (auto& block : c) {
+                    for (auto& item : block) {
+                        free.emplace_back(&item);
+                    }
+                }
+            }
+            catch ([[maybe_unused]] const std::exception& _e) {
+                free = {};
+                   c = {};
+            }
+        }
+
         void reset() noexcept {
 
             block_width = initial_block_width;
 
-               c.clear();
-            free.clear();
-            free.shrink_to_fit();
+            free = {};
+               c = {};
         }
 
         template <typename U>
