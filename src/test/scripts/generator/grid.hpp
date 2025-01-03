@@ -32,16 +32,26 @@ namespace test::generator {
 
 			const auto maze = backtracking_t::generate(_start, _end, size, _loops, _obstacles, _seed);
 
-			std::vector<chdr::mazes::weighted_node<T>> nodes;
-            nodes.resize(maze.size(), {});
+			debug::log("\t[FINISHED] \t(~" + chdr::utils::trim_trailing_zeros(std::to_string(chdr::utils::product<size_t>(size) / static_cast<long double>(1000000000.0))) + "b total candidate nodes)");
 
-            for (size_t i = 0U; i != nodes.size(); ++i) {
-				nodes[i] = (maze[i] == backtracking_t::WALL);
+			if constexpr (std::is_same_v<T, bool>) {
+				return chdr::mazes::grid<Kd, T>(size, maze);
 			}
+			else {
 
-            debug::log("\t[FINISHED] \t(~" + chdr::utils::trim_trailing_zeros(std::to_string(chdr::utils::product<size_t>(size) / static_cast<long double>(1000000000.0))) + "b total candidate nodes)");
+				std::vector<T> nodes;
+				nodes.reserve(maze.size());
 
-			return chdr::mazes::grid<Kd, T>(size, nodes);
+				for (const auto& node : maze) {
+					nodes.emplace_back(
+						node == backtracking_t::WALL ?
+						std::numeric_limits<T>::max() :
+						std::numeric_limits<T>::lowest()
+					);
+				}
+
+				return chdr::mazes::grid<Kd, T>(size, nodes);
+			}
 		}
 	};
 

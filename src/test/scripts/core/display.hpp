@@ -133,8 +133,8 @@ namespace test {
                 std::cout << s_line_brk;
             }
 
-            const auto& nodes = _maze.nodes();
-            for (size_t i = 0U; i < nodes.size(); ++i) {
+            size_t i = 0U;
+            for (auto node : _maze) {
 
                 if (i % _size[0U] == 0U) { std::cout << s_wall_str; }
 
@@ -146,13 +146,21 @@ namespace test {
                         std::cout << s_path_str;
                     }
                     else {
-                        const auto val = nodes[i].value();
+                        const auto val = node;
 
                         if constexpr (std::is_same_v<T, bool>) {
                             std::cout << (val ? s_wall_str : s_empty_str);
                         }
                         else {
-                            std::cout << std::hex << std::setfill('0') << std::setw(2) << static_cast<unsigned>(val);
+                            if (val == std::numeric_limits<T>::lowest()) {
+                                std::cout << s_empty_str;
+                            }
+                            else if (val == std::numeric_limits<T>::max()) {
+                                std::cout << s_wall_str;
+                            }
+                            else {
+                                std::cout << std::hex << std::setfill('0') << std::setw(2) << static_cast<unsigned>(val);
+                            }
                         }
                     }
 
@@ -164,6 +172,7 @@ namespace test {
                         std::cout << s_line_brk;
                     }
                 }
+                ++i;
             }
 
             // Handle the addition of a lower boundary:

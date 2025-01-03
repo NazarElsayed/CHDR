@@ -24,13 +24,10 @@ namespace test::generator::utils {
         using coord_t = chdr::coord<size_t, Kd>;
 
         using rng_engine_t = linear_congruential_generator<size_t>; //std::mt19937_64;
-        
-    public:
 
-        enum cell : bool {
-            PATH = 0U,
-            WALL = 1U,
-        };
+    public:
+        static constexpr bool PATH { false };
+        static constexpr bool WALL { true  };
 
     private:
 
@@ -201,7 +198,7 @@ namespace test::generator::utils {
 
             // TODO: Ensure that product does not overflow!
 
-            std::vector<cell> result;
+            std::vector<bool> result;
 
             try {
 

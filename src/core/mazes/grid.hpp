@@ -26,7 +26,7 @@ namespace chdr::mazes {
     /**
      * @tparam Kd Dimensionality of the grid.
      */
-    template<size_t Kd, typename T = uint32_t>
+    template<size_t Kd, typename T = bool>
     class grid final : public imaze<weighted_node<T>, size_t> {
 
         using coord_t = coord<size_t, Kd>;
@@ -43,7 +43,7 @@ namespace chdr::mazes {
         coord_t m_size;
         size_t m_count;
 
-        std::vector<weighted_node<T>> m_nodes;
+        std::vector<T> m_nodes;
 
     public:
 
@@ -52,28 +52,10 @@ namespace chdr::mazes {
             m_count(utils::product<size_t>(m_size)),
             m_nodes(count()) {}
 
-        constexpr grid(const coord_t& _size, const std::vector<weighted_node<T>>& _nodes) :
+        constexpr grid(const coord_t& _size, const std::vector<T>& _nodes) :
             m_size(_size),
             m_count(utils::product<size_t>(m_size)),
             m_nodes(_nodes) {}
-
-        template <typename... Args>
-        constexpr grid(const Args&... _size) :
-            m_size { _size... },
-            m_count(utils::product<size_t>(m_size)),
-            m_nodes(count())
-        {
-            static_assert(sizeof...(Args) == s_rank, "Number of arguments must equal the Grid's rank.");
-        }
-
-        template <typename... Args>
-        constexpr grid(const Args&... _size, const std::vector<weighted_node<T>>& _nodes) :
-            m_size { _size... },
-            m_count(utils::product<size_t>(m_size)),
-            m_nodes(_nodes)
-        {
-            static_assert(sizeof...(Args) == s_rank, "Number of arguments must equal the Grid's rank.");
-        }
 
         [[nodiscard]] constexpr const std::vector<weighted_node<T>>& nodes() const noexcept {
             return m_nodes;
@@ -115,27 +97,20 @@ namespace chdr::mazes {
         }
 
         template<typename... Args>
-        [[nodiscard]] constexpr const weighted_node<T>& at(const Args&... _id) const {
+        [[nodiscard]] constexpr weighted_node<T> at(const Args&... _id) const {
             return at({ _id... });
         }
 
-        [[nodiscard]] constexpr const weighted_node<T>& at(const coord_t& _id) const {
-
-            const size_t index = utils::to_1d(_id, m_size);
-
-#ifndef NDEBUG
-            return m_nodes.at(index);
-#else
-            return m_nodes[index];
-#endif // NDEBUG
+        [[nodiscard]] constexpr weighted_node<T> at(const coord_t& _id) const {
+            return m_nodes[utils::to_1d(_id, m_size)];
         }
 
-        [[nodiscard]] constexpr const weighted_node<T>& at(const size_t& _id) const {
+        [[nodiscard]] constexpr weighted_node<T> at(const size_t& _id) const {
 
 #ifndef NDEBUG
-            return m_nodes.at(_id);
+            return { m_nodes.at(_id) };
 #else
-            return m_nodes[_id];
+            return { m_nodes[_id] };
 #endif // NDEBUG
         }
 
@@ -177,14 +152,14 @@ namespace chdr::mazes {
             return count == 2U;
         }
 
-        [[nodiscard]] constexpr const weighted_node<T>& operator[](const size_t& _id) const noexcept {
+        [[nodiscard]] constexpr T operator[](const size_t& _id) const noexcept {
             return at(_id);
         }
         
-        using               iterator_t = typename std::vector<weighted_node<T>>::iterator;
-        using         const_iterator_t = typename std::vector<weighted_node<T>>::const_iterator;
-        using       reverse_iterator_t = typename std::vector<weighted_node<T>>::reverse_iterator;
-        using const_reverse_iterator_t = typename std::vector<weighted_node<T>>::const_reverse_iterator;
+        using               iterator_t = typename std::vector<T>::iterator;
+        using         const_iterator_t = typename std::vector<T>::const_iterator;
+        using       reverse_iterator_t = typename std::vector<T>::reverse_iterator;
+        using const_reverse_iterator_t = typename std::vector<T>::const_reverse_iterator;
 
         [[maybe_unused, nodiscard]]       iterator_t  begin()       noexcept { return m_nodes.begin();  }
         [[maybe_unused, nodiscard]] const_iterator_t  begin() const noexcept { return m_nodes.begin();  }
