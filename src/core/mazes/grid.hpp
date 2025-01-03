@@ -102,15 +102,15 @@ namespace chdr::mazes {
         }
 
         [[nodiscard]] constexpr weighted_node<T> at(const coord_t& _id) const {
-            return m_nodes[utils::to_1d(_id, m_size)];
+            return at(utils::to_1d(_id, m_size));
         }
 
         [[nodiscard]] constexpr weighted_node<T> at(const size_t& _id) const {
 
 #ifndef NDEBUG
-            return { m_nodes.at(_id) };
+            return m_nodes.at(_id);
 #else
-            return { m_nodes[_id] };
+            return m_nodes[_id];
 #endif // NDEBUG
         }
 
@@ -152,10 +152,10 @@ namespace chdr::mazes {
             return count == 2U;
         }
 
-        [[nodiscard]] constexpr T operator[](const size_t& _id) const noexcept {
+        [[nodiscard]] constexpr auto operator[](const size_t& _id) const noexcept {
             return at(_id);
         }
-        
+
         using               iterator_t = typename std::vector<T>::iterator;
         using         const_iterator_t = typename std::vector<T>::const_iterator;
         using       reverse_iterator_t = typename std::vector<T>::reverse_iterator;
