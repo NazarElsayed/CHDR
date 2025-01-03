@@ -74,7 +74,7 @@ namespace chdr {
             return &c.front().get()[index++];
         }
 
-        void deallocate(T* _p, [[maybe_unused]] const uintptr_t& _n) {
+        void deallocate([[maybe_unused]] T* _p, [[maybe_unused]] const uintptr_t& _n) {
             static_assert(true, "Allocator is append-only.");
         }
 

@@ -23,8 +23,8 @@ configure_file(CHDR_Version.hpp.in CHDR_Version.hpp)
 
 if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(i[0-9]86|x86_64|AMD64)$") # x86 Processors
     set(SIMD_FLAGS
-        -mmmx       # <- MMX Flags
-        -m3dnow     # <- 3DNOW
+        #-mmmx       # <- MMX Flags     (deprecated)
+        #-m3dnow     # <- 3DNOW         (deprecated)
         -msse       # <- SSE Flags
         -msse2      # <- SSE2 Flags
         -msse3      # <- SSE3 Flags
@@ -111,7 +111,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "-fsanitize=address,leak,undefined -Wall -Wextra -fno-
 
 set(CMAKE_CXX_FLAGS_NOSANITIZERS "-Wall -Wextra -fno-omit-frame-pointer -g -O0")
 
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast -march=native -mtune=native -funroll-loops -ftree-vectorize -ffast-math -DNDEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -flto -march=native -mtune=native -funroll-loops -ftree-vectorize -ffast-math -DNDEBUG")
 
 include_directories(
     ${CHDR_BINARY_DIR}
@@ -174,7 +174,7 @@ target_link_libraries(CHDR INTERFACE)
 
 target_precompile_headers(CHDR INTERFACE src/core/stdafx.hpp)
 
-# LINK OPTIONS:
+## LINK OPTIONS:
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     target_link_options(CHDR INTERFACE -flto=auto -Wl,--strip-all -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
 else()
@@ -202,7 +202,7 @@ target_include_directories(Test PRIVATE
 
 target_precompile_headers(CHDR INTERFACE src/core/stdafx.hpp)
 
-# LINK OPTIONS:
+## LINK OPTIONS:
 if(UNIX)
     if(CMAKE_BUILD_TYPE STREQUAL "Release")
         target_link_options(Test PRIVATE -flto=auto -Wl,--strip-all -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)

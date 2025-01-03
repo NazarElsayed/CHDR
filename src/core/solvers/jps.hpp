@@ -26,7 +26,7 @@ namespace chdr::solvers {
     template<size_t Kd, typename scalar_t, typename index_t, typename params_t>
     struct [[maybe_unused]] jps final {
 
-        friend struct solver<jps, Kd, scalar_t, index_t, params_t>;
+        friend class solver<jps, Kd, scalar_t, index_t, params_t>;
 
         static_assert(std::is_arithmetic_v<scalar_t>, "scalar_t must be an integral or floating point type.");
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
@@ -105,7 +105,7 @@ namespace chdr::solvers {
                 dir[i] = static_cast<index_t>(utils::sign<signed>(static_cast<signed>(_to[i]) - static_cast<signed>(_from[i])) + 1U);
             }
 
-            direction_t result;
+            direction_t result{};
 
                  if (dir[0U] == 2U && dir[1U] == 0U) { result = 7U; }
             else if (dir[0U] == 0U && dir[1U] == 2U) { result = 8U; }
@@ -292,7 +292,7 @@ namespace chdr::solvers {
             return std::vector<coord_t>{};
         }
 
-        [[maybe_unused, nodiscard]] static constexpr auto execute(const params_t& _params) {
+        [[maybe_unused, nodiscard]] static auto execute(const params_t& _params) {
 
             const auto s = utils::to_1d(_params.start, _params.size);
 

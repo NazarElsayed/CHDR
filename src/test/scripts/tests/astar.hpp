@@ -77,7 +77,7 @@ namespace test::tests {
 
             /* CAPTURE SYSTEM NOISE */
 
-            auto noise_floor_min = std::numeric_limits<long double>::infinity();
+            auto noise_floor_min = std::numeric_limits<long double>::max();
             for (size_t i = 0U; i < test_samples; ++i) {
 
                 const auto sw_start = std::chrono::high_resolution_clock::now();
@@ -94,7 +94,7 @@ namespace test::tests {
 
             std::vector<coord_t> path;
 
-            auto result = std::numeric_limits<long double>::infinity();
+            auto result = std::numeric_limits<long double>::max();
             for (size_t i = 0U; i < test_samples; ++i) {
 
                 const auto sw_start = std::chrono::high_resolution_clock::now();

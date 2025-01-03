@@ -25,7 +25,7 @@ namespace chdr::solvers {
     template<size_t Kd, typename scalar_t, typename index_t, typename params_t>
     struct [[maybe_unused]] eiddfs final {
 
-        friend struct solver<eiddfs, Kd, scalar_t, index_t, params_t>;
+        friend class solver<eiddfs, Kd, scalar_t, index_t, params_t>;
 
         static_assert(std::is_arithmetic_v<scalar_t>, "scalar_t must be an integral or floating point type.");
         static_assert(std::numeric_limits<scalar_t>::is_specialized, "scalar_t must be a numeric type with defined numeric limits.");

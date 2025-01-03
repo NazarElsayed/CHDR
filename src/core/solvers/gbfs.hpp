@@ -25,7 +25,7 @@ namespace chdr::solvers {
     template<size_t Kd, typename scalar_t, typename index_t, typename params_t>
     struct [[maybe_unused]] gbfs final {
 
-        friend struct solver<gbfs, Kd, scalar_t, index_t, params_t>;
+        friend class solver<gbfs, Kd, scalar_t, index_t, params_t>;
 
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 

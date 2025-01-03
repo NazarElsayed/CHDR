@@ -65,12 +65,16 @@ namespace chdr {
                 resize(_hash + 1U);
             }
 
+#if defined(GCC)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstringop-overflow"
+#endif
 
             m_bits[_hash] = static_cast<boolean_t>(true);
 
+#if defined(GCC)
 #pragma GCC diagnostic pop
+#endif
         }
 
         constexpr void disable(const size_t& _hash) noexcept {
@@ -120,7 +124,7 @@ namespace chdr {
          * @param[in] _increment Size of bucket to be considered for memory allocation.
          * @param[in] _max_increment (optional) Maximum limit for the memory allocation.
          */
-        constexpr void allocate(const size_t& _hash, const size_t& _increment, const size_t& _max_increment = std::numeric_limits<size_t>::infinity()) {
+        constexpr void allocate(const size_t& _hash, const size_t& _increment, const size_t& _max_increment = std::numeric_limits<size_t>::max()) {
             if (capacity() < _hash) {
                 reserve(std::min(capacity() + _increment, _max_increment));
             }

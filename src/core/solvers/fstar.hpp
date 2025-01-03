@@ -26,7 +26,7 @@ namespace chdr::solvers {
     template<size_t Kd, typename scalar_t, typename index_t, typename params_t>
     struct [[maybe_unused]] fstar final {
 
-        friend struct solver<fstar, Kd, scalar_t, index_t, params_t>;
+        friend class solver<fstar, Kd, scalar_t, index_t, params_t>;
 
         static_assert(std::is_arithmetic_v<scalar_t>, "scalar_t must be an integral or floating point type.");
         static_assert(std::numeric_limits<scalar_t>::is_specialized, "scalar_t must be a numeric type with defined numeric limits.");
@@ -150,7 +150,7 @@ namespace chdr::solvers {
             return std::vector<coord_t>{};
         }
 
-        [[maybe_unused, nodiscard]] static constexpr auto execute(const params_t& _params) {
+        [[maybe_unused, nodiscard]] static auto execute(const params_t& _params) {
 
             const auto s = utils::to_1d(_params.start, _params.size);
 

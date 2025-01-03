@@ -26,7 +26,7 @@ namespace chdr::solvers {
     template<size_t Kd, typename scalar_t, typename index_t, typename params_t>
     struct [[maybe_unused]] dfs final {
 
-        friend struct solver<dfs, Kd, scalar_t, index_t, params_t>;
+        friend class solver<dfs, Kd, scalar_t, index_t, params_t>;
 
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
@@ -90,7 +90,7 @@ namespace chdr::solvers {
             return std::vector<coord_t>{};
         }
 
-        [[maybe_unused, nodiscard]] static constexpr auto execute(const params_t& _params) {
+        [[maybe_unused, nodiscard]] static auto execute(const params_t& _params) {
 
             const auto s = utils::to_1d(_params.start, _params.size);
 

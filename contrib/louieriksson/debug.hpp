@@ -747,11 +747,11 @@ namespace {
 	#if __linux__ || __APPLE__
 				
 				// Capture stack frames:
-				void* array[_frames];
-				const auto frames = backtrace(array, static_cast<int>(_frames));
+				std::vector<void*> array(static_cast<size_t>(_frames));
+				const auto frames = backtrace(array.data(), static_cast<int>(_frames));
 				
 				// Convert addresses into an array of human-readable strings
-				const std::unique_ptr<char*, void(*)(void*)> strings(backtrace_symbols(array, frames), std::free);
+				const std::unique_ptr<char*, void(*)(void*)> strings(backtrace_symbols(array.data(), frames), std::free);
 
 				result.reserve(frames + 1);
 				for (int i = 0; i < frames; ++i) {
