@@ -151,12 +151,15 @@ namespace chdr::solvers {
             return std::vector<coord_t>{};
         }
 
-        [[maybe_unused, nodiscard]] static constexpr auto execute(const params_t& _params) {
+        [[maybe_unused, nodiscard]] static auto execute(const params_t& _params) {
 
             const auto capacity = solver_t::determine_capacity(_params);
 
             std::vector<node> open;
-            open.reserve(capacity / 8U);
+            try {
+                open.reserve(capacity / 8U);
+            }
+            catch ([[maybe_unused]] const std::exception& e) {} // NOLINT(*-empty-catch)
 
             return solve_internal(open, capacity, _params);
         }

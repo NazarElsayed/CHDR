@@ -300,7 +300,11 @@ namespace chdr::solvers {
 
             existence_set<low_memory_usage> closed({ s }, capacity);
 
-            heap<node> open(capacity / 8U);
+            heap<node> open;
+            try {
+                open.reserve(capacity / 8U);
+            }
+            catch ([[maybe_unused]] const std::exception& e) {} // NOLINT(*-empty-catch)
 
             append_only_allocator<node> alloc;
 

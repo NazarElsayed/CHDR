@@ -316,7 +316,7 @@ namespace chdr::solvers {
             return std::vector<coord_t>{};
         }
 
-        [[maybe_unused, nodiscard]] static constexpr auto execute(const params_t& _params) {
+        [[maybe_unused, nodiscard]] static auto execute(const params_t& _params) {
 
             open_set_t open;
 

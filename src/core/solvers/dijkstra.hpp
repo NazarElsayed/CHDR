@@ -29,7 +29,7 @@ namespace chdr::solvers {
         using solver_t = solver<dijkstra, Kd, scalar_t, index_t, params_t>;
         using  coord_t = coord<index_t, Kd>;
 
-        [[maybe_unused, nodiscard]] static constexpr std::vector<coord_t> execute(const params_t& _params) {
+        [[maybe_unused, nodiscard]] static auto execute(const params_t& _params) {
 
             (void)_params;
 

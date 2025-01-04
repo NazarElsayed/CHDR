@@ -81,7 +81,7 @@ namespace chdr::solvers {
 
     public:
 
-        [[maybe_unused, nodiscard]] static constexpr std::vector<coord_t> execute(const params_t& _params) {
+        [[maybe_unused, nodiscard]] static auto execute(const params_t& _params) {
 
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
@@ -98,7 +98,7 @@ namespace chdr::solvers {
 
                     const auto capacity = solver_t::determine_capacity(_params);
 
-                    existence_set closed ({ s }, capacity);
+                    existence_set<low_memory_usage> closed ({ s }, capacity);
 
                     queue<index_t> open;
 
@@ -106,11 +106,11 @@ namespace chdr::solvers {
                 }
 
                 if (success) {
-                    return { _params.end };
+                    return std::vector<coord_t> { _params.end };
                 }
             }
 
-            return {};
+            return std::vector<coord_t>{};
         }
     };
 
