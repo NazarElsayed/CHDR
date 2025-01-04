@@ -107,14 +107,14 @@ namespace chdr::solvers {
         }
 
         template <typename... Args>
-        [[maybe_unused, nodiscard]] auto operator()(Args&&... _args) const {
+        [[maybe_unused, nodiscard]] auto operator()(Args&&... _args) const noexcept {
 
             using solver_t = Derived<Kd, scalar_t, index_t, params_t>;
 
-            const params_t params { std::forward<Args>(_args)... };
-
             try {
-                
+
+                const params_t params { std::forward<Args>(_args)... };
+
                 const auto s = utils::to_1d(params.start, params.size);
                 const auto e = utils::to_1d(params.end,   params.size);
 
@@ -126,8 +126,8 @@ namespace chdr::solvers {
                     return s != e ? solver_t::execute(params) : std::vector<coord_t> { params.end };
                 }
             }
-            catch (const std::bad_alloc& e) {
-                std::cerr << "[std::bad_alloc] (solver::operator()): " << e.what() << "\n";
+            catch (const std::exception& e) {
+                std::cerr << e.what() << "\n";
             }
 
             return std::vector<coord_t>{};
