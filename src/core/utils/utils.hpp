@@ -402,6 +402,25 @@ namespace chdr {
 			}
 		}
 
+		template <typename T>
+		static constexpr T powui(T _base, T _exp) noexcept {
+
+			static_assert(std::is_integral_v<T>, "powui only supports integral types.");
+			static_assert(std::is_unsigned_v<T>, "powui requires an unsigned integral.");
+
+			T result { 1U };
+
+			while (_exp > 0U) {
+				if (_exp % 2U == 1U) {
+					result *= _base;
+				}
+				_base *= _base;
+				_exp /= 2U;
+			}
+			
+			return result;
+		}
+
         [[nodiscard]] static std::string trim_trailing_zeros(std::string _str) {
 
             _str.erase(_str.find_last_not_of('0') + 1U, std::string::npos);

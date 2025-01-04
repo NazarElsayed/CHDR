@@ -87,7 +87,7 @@ namespace test::generator {
 
                     constexpr bool includeDiagonals = false;
 
-                    size_t rand = (rng() % (includeDiagonals ? static_cast<size_t>(std::pow(3U, Kd)) - 1U : Kd * 2U));
+                    size_t rand = (rng() % (includeDiagonals ? chdr::utils::powui(static_cast<size_t>(3U), Kd) - 1U : Kd * 2U));
 
                     branchFactor = std::max(rand, static_cast<size_t>(2U));
 

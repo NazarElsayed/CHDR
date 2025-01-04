@@ -21,9 +21,9 @@
 #include "mazes/nodes/id_node.hpp"
 #include "mazes/nodes/weighted_node.hpp"
 
-#include "solvers/astar.hpp"
 #include "solvers/base/bnode.hpp"
 #include "solvers/base/solver.hpp"
+#include "solvers/astar.hpp"
 #include "solvers/bfs.hpp"
 #include "solvers/bstar.hpp"
 #include "solvers/dfs.hpp"
@@ -42,20 +42,19 @@
 #include "solvers/iddfs.hpp"
 #include "solvers/jps.hpp"
 
+#include "types/append_only_allocator.hpp"
 #include "types/circular_queue.hpp"
 #include "types/coord.hpp"
 #include "types/dynamic_pool_allocator.hpp"
 #include "types/existence_set.hpp"
 #include "types/heap.hpp"
 #include "types/queue.hpp"
-#include "types/append_only_allocator.hpp"
 #include "types/stack.hpp"
 #include "types/stack_allocator.hpp"
 
 #include "utils/heuristics.hpp"
 #include "utils/intrinsics.hpp"
 #include "utils/simd_extensions.hpp"
-
 #include "utils/utils.hpp"
 
 // NOLINTEND(*-include-cleaner)

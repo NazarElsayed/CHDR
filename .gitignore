@@ -55,5 +55,8 @@ Doxyfile
 /cmake-build-release-coverage/
 /cmake-build-release-coverage/**
 
+/cmake-build-release-intel/
+/cmake-build-release-intel/**
+
 #WHITELIST /src
 !/src/**

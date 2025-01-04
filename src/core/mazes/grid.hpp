@@ -10,7 +10,7 @@
 #define CHDR_GRID_HPP
 
 #include <array>
-#include <cmath>
+#include <cassert>
 #include <cstddef>
 #include <utility>
 #include <vector>
@@ -33,12 +33,14 @@ namespace chdr::mazes {
 
     public:
 
-        static constexpr auto s_rank = Kd;
+        static constexpr auto s_rank { Kd };
 
         static_assert(              Kd > 0U, "Kd must be greater than 0.");
         static_assert(std::is_integral_v<T>, "T must be integral."       );
 
     private:
+
+        static constexpr auto s_neighbour_count { utils::powui(static_cast<size_t>(3U), Kd) - 1U };
 
         coord_t m_size;
         size_t m_count;
@@ -57,21 +59,13 @@ namespace chdr::mazes {
             m_count(utils::product<size_t>(m_size)),
             m_nodes(_nodes) {}
 
-        [[nodiscard]] constexpr const std::vector<weighted_node<T>>& nodes() const noexcept {
-            return m_nodes;
-        }
+        [[nodiscard]] constexpr const std::vector<weighted_node<T>>& nodes() const noexcept { return m_nodes; }
 
-        constexpr void nodes(const std::vector<weighted_node<T>>& _value) noexcept {
-            m_nodes = _value;
-        }
+        constexpr void nodes(const std::vector<weighted_node<T>>& _value) noexcept {  m_nodes = _value; }
 
-        [[nodiscard]] constexpr const coord_t& size() const noexcept {
-            return m_size;
-        }
+        [[nodiscard]] constexpr const coord_t& size() const noexcept { return m_size; }
 
-        [[nodiscard]] constexpr size_t count() const noexcept override {
-            return m_count;
-        }
+        [[nodiscard]] constexpr size_t count() const noexcept override { return m_count; }
 
         template<bool IncludeDiagonals = false, typename... Args>
         [[nodiscard]] constexpr auto get_neighbours(const Args&... _id) const noexcept {
@@ -82,9 +76,7 @@ namespace chdr::mazes {
         [[nodiscard]] constexpr auto get_neighbours(const coord_t& _id) const noexcept {
 
             if constexpr (IncludeDiagonals) {
-                constexpr auto NeighbourCount = static_cast<size_t>(std::pow(3U, Kd)) - 1U;
-
-                return compute_diagonal_neighbours(_id, std::make_index_sequence<NeighbourCount>{});
+                return compute_diagonal_neighbours(_id, std::make_index_sequence<s_neighbour_count>{});
             }
             else {
                 return compute_axis_neighbours(_id, std::make_index_sequence<Kd>{});
@@ -97,21 +89,17 @@ namespace chdr::mazes {
         }
 
         template<typename... Args>
-        [[nodiscard]] constexpr weighted_node<T> at(const Args&... _id) const {
+        [[nodiscard]] constexpr const auto& at(const Args&... _id) const {
             return at({ _id... });
         }
 
-        [[nodiscard]] constexpr weighted_node<T> at(const coord_t& _id) const {
+        [[nodiscard]] constexpr const auto& at(const coord_t& _id) const {
             return at(utils::to_1d(_id, m_size));
         }
 
-        [[nodiscard]] constexpr weighted_node<T> at(const size_t& _id) const {
-
-#ifndef NDEBUG
-            return m_nodes.at(_id);
-#else
-            return m_nodes[_id];
-#endif // NDEBUG
+        [[nodiscard]] constexpr const auto& at(const size_t& _id) const {
+            assert(contains(_id) && "Out of bounds access.");
+            return reinterpret_cast<const weighted_node<T>&>(m_nodes[_id]);
         }
 
         template<typename... Args>
@@ -120,19 +108,7 @@ namespace chdr::mazes {
         }
 
         [[nodiscard]] constexpr bool contains(const coord_t& _id) const noexcept {
-
-            bool result = true;
-
-            for (size_t i = 0U; i < Kd; ++i) {
-
-                if (_id[i] >= m_size[i]) {
-                    result = false;
-
-                    break;
-                }
-            }
-
-            return result;
+            return std::all_of(0U, Kd, [&](const size_t& _i) noexcept ALWAYS_INLINE { return _id[_i] < m_size[_i]; });
         }
 
         [[nodiscard]] constexpr bool contains(const size_t& _id) const noexcept override {
@@ -152,7 +128,7 @@ namespace chdr::mazes {
             return count == 2U;
         }
 
-        [[nodiscard]] constexpr auto operator[](const size_t& _id) const noexcept {
+        [[nodiscard]] constexpr auto& operator[](const size_t& _id) const noexcept {
             return at(_id);
         }
 
@@ -182,10 +158,8 @@ namespace chdr::mazes {
         template<size_t... Indices>
         [[nodiscard]] constexpr auto compute_diagonal_neighbours(const coord_t& _id, std::index_sequence<Indices...>) const noexcept { // NOLINT(*-named-parameter)
 
-            constexpr size_t NeighbourCount = sizeof...(Indices);
-
-            std::array<std::pair<bool, coord_t>, NeighbourCount> result;
-            (compute_single_diagonal<Indices, NeighbourCount>(_id, result[Indices]), ...);
+            std::array<std::pair<bool, coord_t>, s_neighbour_count> result;
+            (compute_single_diagonal<Indices>(_id, result[Indices]), ...);
 
             return result;
         }
@@ -199,10 +173,10 @@ namespace chdr::mazes {
             return result;
         }
 
-        template<size_t Index, size_t NeighbourCount>
+        template<size_t Index>
         constexpr void compute_single_diagonal(const coord_t& _id, std::pair<bool, coord_t>& _output) const noexcept {
 
-            constexpr  size_t sampleIndex = (Index >= NeighbourCount / 2U) ? (Index + 1U) : Index;
+            constexpr  size_t sampleIndex = (Index >= s_neighbour_count / 2U) ? (Index + 1U) : Index;
             constexpr coord_t direction   = utils::to_nd<size_t, Kd>(sampleIndex, { 3U });
 
             bool    oob    = false;
@@ -224,7 +198,7 @@ namespace chdr::mazes {
         }
 
         template<size_t Index>
-        constexpr void compute_single_axis(const coord_t& _id, std::pair<bool, coord_t>& negOutput, std::pair<bool, coord_t>& posOutput) const noexcept {
+        constexpr void compute_single_axis(const coord_t& _id, std::pair<bool, coord_t>& _negative, std::pair<bool, coord_t>& _positive) const noexcept {
 
             coord_t nCoord = _id; // Negative
             coord_t pCoord = _id; // Positive
@@ -232,8 +206,8 @@ namespace chdr::mazes {
             --nCoord[Index];
             ++pCoord[Index];
 
-            negOutput = { _id[Index] > 0U                 && at(utils::to_1d(nCoord, m_size)).is_active(), nCoord };
-            posOutput = { _id[Index] < m_size[Index] - 1U && at(utils::to_1d(pCoord, m_size)).is_active(), pCoord };
+            _negative = { _id[Index] > 0U                 && at(utils::to_1d(nCoord, m_size)).is_active(), nCoord };
+            _positive = { _id[Index] < m_size[Index] - 1U && at(utils::to_1d(pCoord, m_size)).is_active(), pCoord };
         }
 
     };
