@@ -119,8 +119,8 @@ namespace chdr::mazes {
 
             size_t count = 0U;
 
-            for (const auto& n : get_neighbours(_index)) {
-                if (const auto& [nActive, nCoord] = n; nActive && ++count > 2U) {
+            for (const auto& [nActive, nCoord] : get_neighbours(_index)) {
+                if (nActive && ++count > 2U) {
                     break;
                 }
             }

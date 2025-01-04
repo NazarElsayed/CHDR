@@ -13,8 +13,6 @@
 
 #include "types/coord.hpp"
 
-#include "simd_extensions.hpp"
-
 namespace chdr {
 
     template<size_t Kd, typename scalar_t>

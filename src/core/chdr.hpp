@@ -54,7 +54,6 @@
 
 #include "utils/heuristics.hpp"
 #include "utils/intrinsics.hpp"
-#include "utils/simd_extensions.hpp"
 #include "utils/utils.hpp"
 
 // NOLINTEND(*-include-cleaner)
