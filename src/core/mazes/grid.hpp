@@ -108,7 +108,7 @@ namespace chdr::mazes {
         }
 
         [[nodiscard]] constexpr bool contains(const coord_t& _id) const noexcept {
-            return std::all_of(0U, Kd, [&](const size_t& _i) noexcept ALWAYS_INLINE { return _id[_i] < m_size[_i]; });
+            return std::all_of(0U, Kd, [&](const size_t& _i) noexcept { return _id[_i] < m_size[_i]; });
         }
 
         [[nodiscard]] constexpr bool contains(const size_t& _id) const noexcept override {
