@@ -60,28 +60,32 @@ namespace chdr::solvers {
 
             if constexpr (is_graph<decltype(_params.maze)>::value) {
 
-                // _params.maze is graph...
-
+                // _params.maze is a graph...
                 const auto& [nIndex, nDistance] = _n;
 
+                constexpr bool nActive = true;
+                constexpr auto nCoord = utils::to_nd(nIndex, _params.size);
+
                 return {
-                    true,
-                    utils::to_nd(nIndex, _params.size),
+                    nActive,
+                    nCoord,
                     nIndex,
                     nDistance
                 };
             }
             else {
 
-                // _params.maze is grid...
-
+                // _params.maze is a grid...
                 const auto& [nActive, nCoord] = _n;
+
+                const auto nIndex = nActive ? utils::to_1d(nCoord, _params.size) : index_t{};
+                constexpr auto nDistance = static_cast<scalar_t>(1);
 
                 return {
                     nActive,
                     nCoord,
-                    nActive ? utils::to_1d(nCoord, _params.size) : index_t{},
-                    static_cast<scalar_t>(1)
+                    nIndex,
+                    nDistance
                 };
             }
         }

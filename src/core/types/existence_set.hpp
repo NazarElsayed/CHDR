@@ -168,7 +168,7 @@ namespace chdr {
          * @return True if the hash exists in the set, false otherwise.
          */
         [[maybe_unused, nodiscard]] constexpr bool contains(const size_t& _hash) const noexcept {
-            return _hash < m_bits.size() && static_cast<bool>(m_bits[_hash]);
+            return _hash < size() && static_cast<bool>(m_bits[_hash]);
         }
 
         /**
@@ -193,9 +193,7 @@ namespace chdr {
          *
          * @see existence_set::capacity()
          */
-        [[maybe_unused]] constexpr void reserve(const size_t& _newCapacity) {
-            m_bits.reserve(_newCapacity);
-        }
+        [[maybe_unused]] constexpr void reserve(const size_t& _newCapacity) { m_bits.reserve(_newCapacity); }
 
         /**
          * @brief resize the existence_set.
@@ -211,25 +209,19 @@ namespace chdr {
          * @see existence_set::prune()
          * @see existence_set::clear()
          */
-        [[maybe_unused]] constexpr void resize(const size_t& _newSize, const boolean_t& _newValue = static_cast<boolean_t>(false)) {
-            m_bits.resize(_newSize, _newValue);
-        }
+        [[maybe_unused]] constexpr void resize(const size_t& _newSize, const boolean_t& _newValue = static_cast<boolean_t>(false)) { m_bits.resize(_newSize, _newValue); }
 
         /**
          * @brief clear the content of the set.
          * @details remove all elements from the set.
          */
-        [[maybe_unused]] constexpr void clear() noexcept {
-            m_bits.clear();
-        }
+        [[maybe_unused]] constexpr void clear() noexcept { m_bits.clear(); }
 
         /**
          * @brief Trims unused elements from the end of the set.
          * @details Shrinks the internal container of the set to reduce the structure's overall memory footprint.
          */
-        [[maybe_unused]] constexpr void shrink_to_fit() {
-            m_bits.shrink_to_fit();
-        }
+        [[maybe_unused]] constexpr void shrink_to_fit() { m_bits.shrink_to_fit(); }
 
         /**
          * @brief Get the size of the set.
@@ -237,9 +229,7 @@ namespace chdr {
          *
          * @return The size of the set.
          */
-        [[maybe_unused, nodiscard]] constexpr auto size() const noexcept {
-            return m_bits.size();
-        }
+        [[maybe_unused, nodiscard]] constexpr auto size() const noexcept { return m_bits.size(); }
 
         /**
          * @brief Get the capacity of the set.
@@ -247,9 +237,7 @@ namespace chdr {
          *
          * @return The capacity of the set.
          */
-        [[maybe_unused, nodiscard]] constexpr auto capacity() const noexcept {
-            return m_bits.capacity();
-        }
+        [[maybe_unused, nodiscard]] constexpr auto capacity() const noexcept { return m_bits.capacity(); }
 
         using               iterator_t = typename std::vector<alignment_type>::iterator;
         using         const_iterator_t = typename std::vector<alignment_type>::const_iterator;

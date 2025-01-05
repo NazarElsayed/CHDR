@@ -122,7 +122,7 @@ namespace chdr {
 
         heap(const size_t& _capacity = 0U) : c() {
             c.reserve(_capacity + 1U);
-            c.resize(1U); // Add uninitialised super element.
+            c.emplace_back(); // Add uninitialised super element.
         }
 
         [[maybe_unused, nodiscard]] constexpr bool empty() const noexcept { return size() == 0U;  }
@@ -144,7 +144,7 @@ namespace chdr {
 #endif
 
             if constexpr (std::is_pointer_v<T>) {
-                return static_cast<T>(begin().base());
+                return reinterpret_cast<T&>(begin().base());
             }
             else {
                 return *begin();
@@ -160,7 +160,7 @@ namespace chdr {
 #endif
 
             if constexpr (std::is_pointer_v<T>) {
-                return static_cast<T>(begin().base());
+                return reinterpret_cast<T&>(begin().base());
             }
             else {
                 return *begin();
@@ -176,7 +176,7 @@ namespace chdr {
 #endif
 
             if constexpr (std::is_pointer_v<T>) {
-                return static_cast<T>(end().base());
+                return reinterpret_cast<T&>(end().base());
             }
             else {
                 return *end();
@@ -192,7 +192,7 @@ namespace chdr {
 #endif
 
             if constexpr (std::is_pointer_v<T>) {
-                return static_cast<T>(end().base());
+                return reinterpret_cast<T&>(end().base());
             }
             else {
                 return *end();
