@@ -183,7 +183,6 @@ namespace chdr::mazes {
             coord_t nCoord = _id;
 
             IVDEP
-            VECTOR_ALWAYS
             for (size_t j = 0U; j < Kd; ++j) {
 
                 nCoord[j] += (direction[j] - 1U);

@@ -62,10 +62,8 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
-            _open.emplace_nosort(s, _params.h(_params.start, _params.end));
-
-            _closed.allocate(s, _capacity, _params.maze.count());
-            _closed.emplace (s);
+               _open.emplace_nosort(s, _params.h(_params.start, _params.end));
+             _closed.emplace(s);
 
             // Main loop:
             while (!_open.empty()) {
@@ -83,8 +81,7 @@ namespace chdr::solvers {
 
                             // Check if node is not already visited:
                             if (!_closed.contains(n.index)) {
-                                 _closed.allocate(n.index, _capacity, _params.maze.count());
-                                 _closed.emplace (n.index);
+                                utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());
 
                                 if (curr_ptr == nullptr) {
                                     _alloc.construct(curr_ptr = _alloc.allocate(1U), std::move(curr)); // Note: 'current' is now moved!
@@ -120,7 +117,8 @@ namespace chdr::solvers {
 
             const auto capacity = solver_t::determine_capacity(_params);
 
-            existence_set<low_memory_usage> closed({ s }, capacity);
+            existence_set<low_memory_usage> closed;
+            closed.reserve(capacity);
 
             heap<node> open;
             try {

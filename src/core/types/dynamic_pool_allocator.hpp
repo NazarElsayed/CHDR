@@ -43,7 +43,6 @@ namespace chdr {
             free.resize(free.size() + (block_width - _skip_first), {});
 
             IVDEP
-            VECTOR_ALWAYS
             for (size_t i = 0U; i != block_width - _skip_first; ++i) {
                 free[i] = &_new_block[block_width - _skip_first - i];
             }

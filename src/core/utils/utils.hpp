@@ -10,6 +10,7 @@
 #define CHDR_UTILS_HPP
 
 #include <array>
+#include <cmath>
 #include <cstddef>
 #include <limits>
 #include <type_traits>
@@ -46,23 +47,6 @@ namespace chdr {
 		}
 
 	public:
-
-		template<typename T, typename = void>
-		struct has_method_clear : std::false_type {};
-
-		template<typename T>
-		struct has_method_clear<T, std::void_t<decltype(std::declval<T>().clear())>> : std::true_type {};
-
-		template<typename T, typename = void>
-		struct has_method_shrink_to_fit : std::false_type {};
-
-		template<typename T>
-		struct has_method_shrink_to_fit<T, std::void_t<decltype(std::declval<T>().shrink_to_fit())>> : std::true_type {};
-
-		template <typename T>
-		[[nodiscard]] static constexpr bool is_existence_set() {
-			return std::is_same_v<T, existence_set<>>;
-		}
 
 		template<typename T, typename U, size_t N>
 		[[nodiscard]] static constexpr auto array_cast(const std::array<U, N> &_a) {
@@ -389,16 +373,16 @@ namespace chdr {
 		 * @return 1 if the value is positive, -1 if the value is negative, and 0 if the value is zero.
 		 */
 		template <typename T, typename Ta>
-		[[nodiscard]] static constexpr int sign(const Ta& _val) noexcept {
+		[[nodiscard]] static constexpr T sign(const Ta& _val) noexcept {
 
 			constexpr auto zero_v = static_cast<Ta>(0);
 			constexpr auto  one_v = static_cast<Ta>(1);
 
-			if constexpr (std::is_signed_v<Ta>) {
-				return static_cast<T>(zero_v < _val) - (_val < zero_v);
+			if constexpr (std::is_unsigned_v<Ta>) {
+				return _val == zero_v ? zero_v : one_v;
 			}
 			else {
-				return _val == zero_v ? zero_v : one_v;
+				return static_cast<T>(zero_v < _val) - (_val < zero_v);
 			}
 		}
 
@@ -421,7 +405,65 @@ namespace chdr {
 			return result;
 		}
 
-        [[nodiscard]] static std::string trim_trailing_zeros(std::string _str) {
+		template <typename T>
+		static constexpr T abs(T _value) noexcept {
+
+			static_assert(std::is_arithmetic_v<T>, "abs only supports arithmetic types.");
+
+			return std::is_unsigned_v<T> || _value >= 0 ? _value : -_value;
+		}
+
+		/**
+		* @brief Computes the square root of a number using the Newton-Raphson method.
+		*
+		* This function works for both integral and floating-point types.
+		*
+		* @tparam T The type of the input number (integral or floating-point).
+		* @param _value The number to compute the square root for.
+		* @return The square root of the input value.
+		*/
+		template <typename T>
+		constexpr T sqrt(T _value) noexcept {
+
+			static_assert(std::is_arithmetic_v<T>, "Input must be an arithmetic type.");
+			static_assert(!std::is_same_v<T, bool>, "Input type cannot be boolean.");
+
+			if (!__builtin_is_constant_evaluated()) {
+				return std::sqrt(_value);
+			}
+			else {
+
+				if (_value >= T(0)) {
+
+					if (_value != T(0) && _value != T(1)) {
+
+						T x    {_value};
+						T last {0};
+
+						while (x != last) {
+							last = x;
+							x    = (x + _value / x) / T(2);
+						}
+
+						return x;
+					}
+					return _value; // sqrt(0) = 0, sqrt(1) = 1
+				}
+				return std::numeric_limits<T>::quiet_NaN();
+			}
+		}
+
+		template <typename T, typename collection_t>
+		static constexpr void preallocate_emplace(collection_t& _collection, const T& _value, const size_t& _increment, const size_t& _max_increment = std::numeric_limits<size_t>::max()) noexcept {
+
+			if constexpr (std::is_same_v<collection_t, existence_set<>>) {
+				_collection.allocate(_value, _increment, _max_increment);
+			}
+
+			_collection.emplace(_value);
+		}
+
+		[[nodiscard]] static std::string trim_trailing_zeros(std::string _str) {
 
             _str.erase(_str.find_last_not_of('0') + 1U, std::string::npos);
 

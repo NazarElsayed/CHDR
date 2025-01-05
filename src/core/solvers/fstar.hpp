@@ -69,10 +69,8 @@ namespace chdr::solvers {
 
             auto min_threshold = _params.h(_params.start, _params.end) * _params.weight;
 
-            _open.emplace_back(s, static_cast<scalar_t>(0), min_threshold);
-
-            _closed.allocate(s, _capacity, _params.maze.count());
-            _closed.emplace (s);
+               _open.emplace_back(s, static_cast<scalar_t>(0), min_threshold);
+             _closed.emplace(s);
 
             // Main loop:
             while (!_open.empty()) {
@@ -91,8 +89,7 @@ namespace chdr::solvers {
 
                                 // Check if node is not already visited:
                                 if (!_closed.contains(n.index)) {
-                                     _closed.allocate(n.index, _capacity, _params.maze.count());
-                                     _closed.emplace (n.index);
+                                    utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());
 
                                     const auto g = curr.m_gScore + n.distance;
                                     const auto f = g + (_params.h(n.coord, _params.end) * _params.weight);
@@ -156,7 +153,8 @@ namespace chdr::solvers {
 
             const auto capacity = solver_t::determine_capacity(_params);
 
-            existence_set<low_memory_usage> closed({ s }, capacity);
+            existence_set<low_memory_usage> closed;
+            closed.reserve(capacity);
 
             std::vector<node> open;
             try {

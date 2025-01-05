@@ -9,8 +9,7 @@
 #ifndef CHDR_HEURISTICS_HPP
 #define CHDR_HEURISTICS_HPP
 
-#include <cmath>
-
+#include "utils/utils.hpp"
 #include "types/coord.hpp"
 
 namespace chdr {
@@ -29,7 +28,7 @@ namespace chdr {
          * @return The Euclidean distance between _A and _B.
          */
         [[maybe_unused, nodiscard]] static constexpr auto euclidean_distance(const coord_t& _a, const coord_t& _b) noexcept {
-            return static_cast<scalar_t>(std::sqrt(sqr_euclidean_distance(_a, _b)));
+            return static_cast<scalar_t>(sqrt(sqr_euclidean_distance(_a, _b)));
         }
 
         /*
@@ -48,11 +47,10 @@ namespace chdr {
             scalar_t result{0};
 
             IVDEP
-            VECTOR_ALWAYS
             for (size_t i = 0U; i < Kd; ++i) {
 
-                const auto val = _b[i] - _a[i];
-                result += static_cast<scalar_t>(val * val);
+                const auto val = static_cast<scalar_t>(utils::abs(static_cast<signed>(_b[i]) - static_cast<signed>(_a[i])));
+                result += val * val;
             }
 
             return result;
@@ -74,9 +72,8 @@ namespace chdr {
             scalar_t result{0};
 
             IVDEP
-            VECTOR_ALWAYS
             for (size_t i = 0U; i < Kd; ++i) {
-                result += static_cast<scalar_t>(std::abs(static_cast<signed>(_b[i]) - static_cast<signed>(_a[i])));
+                result += static_cast<scalar_t>(utils::abs(static_cast<signed>(_b[i]) - static_cast<signed>(_a[i])));
             }
 
             return result;

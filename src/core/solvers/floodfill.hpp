@@ -34,10 +34,8 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
-            _open.emplace(s);
-
-            _closed.allocate(s, _capacity, _params.maze.count());
-            _closed.emplace (s);
+               _open.emplace(s);
+             _closed.emplace(s);
 
             // Main loop:
             while (!_open.empty()) {
@@ -55,8 +53,7 @@ namespace chdr::solvers {
 
                                 // Check if node is not already visited:
                                 if (!_closed.contains(n.index)) {
-                                     _closed.allocate(n.index, _capacity, _params.maze.count());
-                                     _closed.emplace (n.index);
+                                    utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());
 
                                     _open.emplace(n.index);
                                 }

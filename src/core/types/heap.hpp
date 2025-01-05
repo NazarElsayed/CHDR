@@ -94,7 +94,6 @@ namespace chdr {
                             min = i;
 
                             IVDEP
-                            VECTOR_ALWAYS
                             for (auto j = c0; j <= cn && j < c.size(); ++j) {
                                 if (comp(c[min], c[j])) {
                                     min = j;

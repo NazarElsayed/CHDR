@@ -45,7 +45,7 @@ namespace {
 #define PREFETCH(P, I) ((void)))
 #define RESTRICT restrict
 #define ALWAYS_INLINE __forceinline
-#elif defined(__INTEL_COMPILER)
+#elif defined(__INTEL_COMPILER) || defined(__INTEL_LLVM_COMPILER)
 #define IVDEP _Pragma("ivdep")
 #define VECTOR_ALWAYS _Pragma("vector always")
 #define LIKELY(x)   __builtin_expect(!!(x), 1)
@@ -81,7 +81,7 @@ namespace {
 
 #ifdef _MSC_VER
 #pragma optimize("", off)
-#elif defined(__INTEL_COMPILER) || defined(__ICC)
+#elif defined(__INTEL_COMPILER) || defined(__INTEL_LLVM_COMPILER)
 #pragma optimize("", off)
 #elif defined(__clang__)
 #pragma clang optimize off
@@ -111,7 +111,7 @@ namespace {
 
 #ifdef _MSC_VER
 #pragma optimize("", on)
-#elif defined(__INTEL_COMPILER) || defined(__ICC)
+#elif defined(__INTEL_COMPILER) || defined(__INTEL_LLVM_COMPILER)
 #pragma optimize("", on)
 #elif defined(__clang__)
 #pragma clang optimize on
