@@ -20,9 +20,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 configure_file(CHDR_Version.hpp.in CHDR_Version.hpp)
 
 # DIFFERENT BUILD MODES:
-set(CMAKE_CXX_FLAGS_DEBUG "-fsanitize=address,leak,undefined -Wall -Wextra -fno-omit-frame-pointer -fno-rtti -g -O0")
+set(CMAKE_CXX_FLAGS_DEBUG "-O0 -fsanitize=address,leak,undefined -Wall -Wextra -fno-omit-frame-pointer -fno-rtti -g")
 
-set(CMAKE_CXX_FLAGS_NOSANITIZERS "-Wall -Wextra -fno-omit-frame-pointer -fno-rtti -g -O0")
+set(CMAKE_CXX_FLAGS_NOSANITIZERS "-O0 -Wall -Wextra -fno-omit-frame-pointer -fno-rtti -g")
 
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast -flto -march=native -mtune=native -funroll-loops -ftree-vectorize -ffast-math -fstrict-aliasing -fomit-frame-pointer -fno-rtti -DNDEBUG")
 
