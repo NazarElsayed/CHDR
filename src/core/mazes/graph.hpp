@@ -76,10 +76,11 @@ namespace chdr::mazes {
         }
 
         template <size_t Kd, typename weight_t, const bool prune = true>
-#if __cplusplus >= 202302L
+        [[maybe_unused]]
+#if defined(__cpp_constexpr_dynamic_alloc) && (__cpp_constexpr_dynamic_alloc >= 201907L)
         constexpr
-#endif // __cplusplus >= 202302L
-        [[maybe_unused]] explicit graph(const grid<Kd, weight_t>& _grid) : m_entries{} {
+#endif // defined(__cpp_constexpr_dynamic_alloc) && (__cpp_constexpr_dynamic_alloc >= 201907L)
+        explicit graph(const grid<Kd, weight_t>& _grid) : m_entries{} {
 
             const auto size = _grid.size();
 
@@ -212,17 +213,17 @@ namespace chdr::mazes {
         }
 
         template<typename... Args>
-        [[nodiscard]] constexpr id_node<index_t> at(const Args&... _id) const {
+        [[nodiscard]] constexpr id_node<index_t> at(const Args&... _id) const noexcept {
             return at({_id...});
         }
 
-        [[nodiscard]] constexpr id_node<index_t> at(const index_t& _id) const {
+        [[nodiscard]] constexpr id_node<index_t> at(const index_t& _id) const noexcept {
 
             auto search = m_entries.find(_id);
 
 #ifndef NDEBUG
             if (search == m_entries.end()) {
-                throw std::runtime_error("Error: The node with the specified ID does not exist in the graph.");
+                assert(search != m_entries.end() && "Error: The node with the specified ID does not exist in the graph.");
             }
 #endif // NDEBUG
 

@@ -209,7 +209,9 @@ namespace chdr {
          * @see existence_set::prune()
          * @see existence_set::clear()
          */
-        [[maybe_unused]] constexpr void resize(const size_t& _newSize, const boolean_t& _newValue = static_cast<boolean_t>(false)) { m_bits.resize(_newSize, _newValue); }
+        [[maybe_unused]] constexpr void resize(const size_t& _newSize, const boolean_t& _newValue = static_cast<boolean_t>(false)) {
+            m_bits.resize(_newSize, _newValue);
+        }
 
         /**
          * @brief clear the content of the set.

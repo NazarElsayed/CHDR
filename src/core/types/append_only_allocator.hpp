@@ -65,7 +65,7 @@ namespace chdr {
             }
         }
 
-        [[nodiscard]] T* allocate([[maybe_unused]] const uintptr_t& _n) {
+        [[nodiscard]] constexpr T* allocate([[maybe_unused]] const uintptr_t& _n) {
 
             if (index == block_width / 2U) {
                 expand();
@@ -74,7 +74,7 @@ namespace chdr {
             return &c.front().get()[index++];
         }
 
-        void deallocate([[maybe_unused]] T* _p, [[maybe_unused]] const uintptr_t& _n) {
+        constexpr void deallocate([[maybe_unused]] T* _p, [[maybe_unused]] const uintptr_t& _n) const noexcept {
             static_assert(true, "Allocator is append-only.");
         }
 

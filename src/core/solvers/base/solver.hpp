@@ -6,8 +6,8 @@
  * https://creativecommons.org/licenses/by-nc-nd/4.0/
  */
 
-#ifndef CHDR_BSOLVER_HPP
-#define CHDR_BSOLVER_HPP
+#ifndef CHDR_SOLVER_HPP
+#define CHDR_SOLVER_HPP
 
 #include <cstddef>
 #include <new>
@@ -25,21 +25,6 @@ namespace chdr::solvers {
     class solver final {
 
         using coord_t = coord<index_t, Kd>;
-
-    private:
-
-        template <typename C, typename = void>
-        struct has_execute : std::false_type {};
-
-        template <typename C>
-        struct has_execute<C, std::void_t<decltype(std::declval<C>().execute(std::declval<params_t>()))>> : std::integral_constant<bool, true> {};
-
-        // Check for `template<size_t> execute(params_t)`
-        template <typename C, typename = void>
-        struct has_templated_execute : std::false_type {};
-
-        template <typename C>
-        struct has_templated_execute<C, std::void_t<decltype(C::template execute<0U>(std::declval<params_t>()))>> : std::true_type {};
 
     public:
 
@@ -111,7 +96,11 @@ namespace chdr::solvers {
         }
 
         template <typename... Args>
-        [[maybe_unused, nodiscard]] auto operator()(Args&&... _args) const noexcept {
+        [[maybe_unused, nodiscard]]
+#if __cplusplus >= 202003L
+        constexpr
+#endif // __cplusplus >= 202003L
+        auto operator()(Args&&... _args) const noexcept {
 
             using solver_t = Derived<Kd, scalar_t, index_t, params_t>;
 
@@ -145,7 +134,11 @@ namespace chdr::solvers {
         typename index_t,
         typename params_t
     >
-    [[nodiscard]] static constexpr auto make_solver() {
+    [[nodiscard]] static
+#if __cplusplus >= 2023L
+    constexpr
+#endif // __cplusplus >= 2023L
+    auto make_solver() {
         return solver<Derived, Kd, scalar_t, index_t, params_t>();
     }
 
@@ -156,7 +149,11 @@ namespace chdr::solvers {
         typename index_t,
         typename params_t
     >
-    [[nodiscard]] static constexpr auto solve() {
+    [[nodiscard]] static
+#if __cplusplus >= 2023L
+    constexpr
+#endif // __cplusplus >= 2023L
+    auto solve() {
         return solver<Derived, Kd, scalar_t, index_t, params_t>()();
     }
 
@@ -168,10 +165,14 @@ namespace chdr::solvers {
         typename params_t,
         typename... Args
     >
-    [[nodiscard]] static constexpr auto solve(Args&&... _args) {
+    [[nodiscard]] static
+#if __cplusplus >= 2023L
+    constexpr
+#endif // __cplusplus >= 2023L
+    auto solve(Args&&... _args) {
         return solver<Derived, Kd, scalar_t, index_t, params_t>()(std::forward<Args>(_args)...);
     }
 
 } //chdr::solvers
 
-#endif //CHDR_BSOLVER_HPP
+#endif //CHDR_SOLVER_HPP

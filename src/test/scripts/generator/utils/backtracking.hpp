@@ -82,9 +82,9 @@ namespace test::generator::utils {
 
         template <typename container_t>
         static
-#if __cplusplus >= 202302L
+#if __cplusplus >= 2023L
         constexpr
-#endif // __cplusplus >= 202302L
+#endif // __cplusplus >= 2023L
         void carve_from(const coord_t& _coord, std::pair<coord_t, size_t>& _farthest, const coord_t& _size, container_t& _grid, rng_engine_t& _rng) {
 
             static_assert(std::is_invocable_v<decltype(static_cast<typename container_t::reference (container_t::*)(size_t)>(&container_t::operator[])), container_t&, size_t>,
@@ -171,9 +171,9 @@ namespace test::generator::utils {
          * @see Buck, J., 2010. Buckblog: Maze Generation: Recursive Backtracking. The Buckblog [online]. Available from: https://weblog.jamisbuck.org/2010/12/27/maze-generation-recursive-backtracking [Accessed 1 Jul 2024].
          */
         static
-#if __cplusplus >= 202302L
+#if defined(__cpp_constexpr_dynamic_alloc) && (__cpp_constexpr_dynamic_alloc >= 201907L)
         constexpr
-#endif // __cplusplus >= 202302L
+#endif // defined(__cpp_constexpr_dynamic_alloc) && (__cpp_constexpr_dynamic_alloc >= 201907L)
         auto generate(const coord_t& _start, coord_t& _end, const coord_t& _size, const double& _loops = 0.0, const double& _obstacles = 0.0, const size_t& _seed = -1U) {
 
             /*
