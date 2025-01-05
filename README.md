@@ -16,14 +16,6 @@ CHDR is designed to be fast and lightweight. Alongside data and algorithmic opti
 
 ### Features
 
-#### Platform Support
-
-| Platform |   Status   |
-|:---------|:----------:|
-| Linux    | Tested ✔️  |
-| Windows  | Tested ✔️  |
-| MacOS    | Untested ❓ |
-
 #### Solvers
 
 | Type                                                     |    Status     |
@@ -49,6 +41,7 @@ CHDR is designed to be fast and lightweight. Alongside data and algorithmic opti
 | Iterative-Deepening Depth-First Search (IDDFS)           | Completed ✔️  |
 | Jump-Point Search (JPS)                                  | Completed ✔️️ |
 
+
 #### Maze types
 
 | Type      |    Status    |
@@ -58,6 +51,7 @@ CHDR is designed to be fast and lightweight. Alongside data and algorithmic opti
 | Grids     | Completed ✔️ |
 | Recursive |  Planned 📝  |
 
+
 #### Post-Processing
 
 | Type                |   Status   |
@@ -65,11 +59,13 @@ CHDR is designed to be fast and lightweight. Alongside data and algorithmic opti
 | Path Smoothing      | Planned 📝 |
 | Path Simplification | Planned 📝 |
 
+
 #### Eikonal Solvers
 
 | Type                          |   Status   |
 |:------------------------------|:----------:|
 | Jump Flooding Algorithm (JFA) | Planned 📝 |
+
 
 #### Computational
 
@@ -81,6 +77,30 @@ CHDR is designed to be fast and lightweight. Alongside data and algorithmic opti
 | Dynamic Mazes and Obstacle-Avoidance |   Planned 📝    |
 | Maze Optimisation (Baking)           | In Progress 🏗️ |
 | Runtime K-dimensionality             | In Progress 🏗️ |
+
+
+#### Support
+
+| Platform |   Status   |
+|:---------|:----------:|
+| Windows  | Tested ✔️  |
+| Linux    | Tested ✔️  |
+| MacOS    | Untested ❓ |
+
+
+| Compiler |   Status   |
+|:---------|:----------:|
+| GCC      | Tested ✔️  |
+| Clang    | Tested ✔️  |
+| ICPX     | Tested ✔️  |
+| MSVC     | Untested ❓ |
+
+
+| Dynamic Analysis  |   Status   |
+|:------------------|:----------:|
+| Google Sanitizers | Tested ✔️  |
+| Valgrind          | Tested ✔️  |
+
 
 ### Instructions
 
