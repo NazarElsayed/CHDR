@@ -95,7 +95,8 @@ namespace chdr::solvers {
 
                     const auto capacity = solver_t::determine_capacity(_params);
 
-                    existence_set<low_memory_usage> closed ({ s }, capacity);
+                    existence_set<low_memory_usage> closed;
+                    closed.reserve(capacity);
 
                     queue<index_t> open;
 

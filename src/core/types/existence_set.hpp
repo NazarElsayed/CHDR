@@ -131,13 +131,17 @@ namespace chdr {
         }
 
         /**
-         * @brief add a hash to the set.
+         * @brief Add a hash to the set.
          * @param[in] _hash The hash value to be added.
          */
         constexpr void push(const size_t& _hash) {
             enable(_hash);
         }
 
+        /**
+         * @brief Add a hash to the set.
+         * @param[in] _hash The hash value to be added.
+         */
         template <typename T>
         constexpr void emplace(T&& _hash) {
 

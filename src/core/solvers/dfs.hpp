@@ -89,15 +89,12 @@ namespace chdr::solvers {
 
         [[maybe_unused, nodiscard]] static auto execute(const params_t& _params) {
 
-            const auto s = utils::to_1d(_params.start, _params.size);
-
             const auto capacity = solver_t::determine_capacity(_params);
 
             existence_set<low_memory_usage> closed;
             closed.reserve(capacity);
 
             stack<node> open;
-            open.emplace(s);
 
             append_only_allocator<node> alloc;
 
