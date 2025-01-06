@@ -80,15 +80,28 @@ namespace test::generator::utils {
             return compute_axis_neighbours(_coord, _size, std::make_index_sequence<Kd>{});
         }
 
-        template <typename container_t>
+        template <typename it>
+        static constexpr void constexpr_shuffle(it _first, it _last, rng_engine_t& _rng) noexcept {
+            using diff_t = typename std::iterator_traits<it>::difference_type;
+
+            for (auto i = (_last - _first) - 1; i > 0; --i) {
+
+                const auto j = static_cast<diff_t>(_rng() % ((_last - _first) - 1));
+
+                std::iter_swap(_first + i, _first + j);
+            }
+        }
+
+        template <typename coord_t, typename container_t>
         static
-#if __cplusplus >= 2023L
+#if defined(__cpp_constexpr_dynamic_alloc) && (__cpp_constexpr_dynamic_alloc >= 201907L)
         constexpr
-#endif // __cplusplus >= 2023L
+#endif // defined(__cpp_constexpr_dynamic_alloc) && (__cpp_constexpr_dynamic_alloc >= 201907L)
         void carve_from(const coord_t& _coord, std::pair<coord_t, size_t>& _farthest, const coord_t& _size, container_t& _grid, rng_engine_t& _rng) {
 
-            static_assert(std::is_invocable_v<decltype(static_cast<typename container_t::reference (container_t::*)(size_t)>(&container_t::operator[])), container_t&, size_t>,
-                    "container_t must implement the subscript operator []");
+            static_assert(std::is_invocable_v<decltype(static_cast<typename container_t::reference (container_t::*)(size_t)>(&container_t::operator[])),
+                          container_t&, size_t>,
+                          "container_t must implement the subscript operator []");
 
             chdr::stack<std::pair<coord_t, size_t>> stack;
             stack.emplace(_coord, 0U);
@@ -99,12 +112,12 @@ namespace test::generator::utils {
                 _grid[chdr::utils::to_1d(currentCoord, _size)] = PATH;
 
                 if (depth > _farthest.second) {
-                    _farthest.first  = currentCoord;
+                    _farthest.first = currentCoord;
                     _farthest.second = depth;
                 }
 
                 auto dirs = get_directions(currentCoord, _size);
-                std::shuffle(dirs.begin(), dirs.end(), _rng);
+                constexpr_shuffle(dirs.begin(), dirs.end(), _rng);
 
                 bool hasUnvisited = false;
                 for (const auto& [inBounds, dir] : dirs) {
@@ -115,36 +128,26 @@ namespace test::generator::utils {
                         auto cc = currentCoord;
 
                         bool validCellNeighbor = true;
-
                         for (size_t j = 0U; j < Kd; ++j) {
 
                             lc[j] +=      dir[j];
                             cc[j] += 2U * dir[j];
 
                             if (cc[j] >= _size[j]) {
-                                validCellNeighbor &= false;
-
-                                if constexpr (Kd > 4U) { break; }
-                            }
-                        }
-
-                        if (validCellNeighbor) {
-
-                            const auto& cn = _grid[chdr::utils::to_1d(cc, _size)];
-
-                            if (cn == WALL) {
-
-                                _grid[chdr::utils::to_1d(lc, _size)] = PATH;
-
-                                stack.emplace(cc, depth + 1U);
-
-                                hasUnvisited = true;
+                                validCellNeighbor = false;
                                 break;
                             }
                         }
+
+                        if (validCellNeighbor && _grid[chdr::utils::to_1d(cc, _size)] == WALL) {
+
+                            _grid[chdr::utils::to_1d(lc, _size)] = PATH;
+                            stack.emplace(cc, depth + 1U);
+                            hasUnvisited = true;
+                            break;
+                        }
                     }
                 }
-
                 if (!hasUnvisited) { stack.pop(); }
             }
         }
@@ -216,8 +219,7 @@ namespace test::generator::utils {
                     debug::log("\tBacktracking Algorithm \t(Seed " + std::to_string(seed) + ")");
 
                     // Carve a maze using the recursive backtracking algorithm:
-                    result.reserve(product);
-                    result.assign(product, WALL);
+                    result.resize(product, WALL);
                     carve_from(_start, farthest, _size, result, rng);
 
                     if (_loops > 0.0 || _obstacles > 0.0) {
