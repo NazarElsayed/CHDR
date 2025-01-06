@@ -82,13 +82,13 @@ namespace test::generator::utils {
 
         template <typename it>
         static constexpr void constexpr_shuffle(it _first, it _last, rng_engine_t& _rng) noexcept {
+
             using diff_t = typename std::iterator_traits<it>::difference_type;
 
-            for (auto i = (_last - _first) - 1; i > 0; --i) {
+            const diff_t length = (_last - _first) - 1;
 
-                const auto j = static_cast<diff_t>(_rng() % ((_last - _first) - 1));
-
-                std::iter_swap(_first + i, _first + j);
+            for (diff_t i = length; i > 0; --i) {
+                std::iter_swap(_first + i, _first + static_cast<diff_t>(_rng() % length));
             }
         }
 
@@ -117,7 +117,8 @@ namespace test::generator::utils {
                 }
 
                 auto dirs = get_directions(currentCoord, _size);
-                constexpr_shuffle(dirs.begin(), dirs.end(), _rng);
+                std::shuffle(dirs.begin(), dirs.end(), _rng);
+                //constexpr_shuffle(dirs.begin(), dirs.end(), _rng);
 
                 bool hasUnvisited = false;
                 for (const auto& [inBounds, dir] : dirs) {

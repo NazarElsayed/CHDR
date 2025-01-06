@@ -83,10 +83,8 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
-            if (_params.maze.contains(s)       &&
-                _params.maze.contains(e)       &&
-                _params.maze.at(s).is_active() &&
-                _params.maze.at(e).is_active()
+            if (_params.maze.contains(s) && _params.maze.at(s).is_active() &&
+                _params.maze.contains(e) && _params.maze.at(e).is_active()
             ) {
 
                 bool success { s == e };

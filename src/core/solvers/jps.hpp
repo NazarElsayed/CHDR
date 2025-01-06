@@ -231,10 +231,11 @@ namespace chdr::solvers {
             //               "JPS only supports mazes of type grid<Kd, weight_t>.");
 
             if constexpr (Kd == 2U) {
+
                 const auto s = utils::to_1d(_params.start, _params.size);
                 const auto e = utils::to_1d(_params.end  , _params.size);
 
-                  _open.emplace_nosort(s, zero_direction_v, static_cast<scalar_t>(0), _params.h(_params.start, _params.end));
+                  _open.emplace_nosort(s, zero_direction_v, static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
                 _closed.emplace(s);
 
                 // Main loop:

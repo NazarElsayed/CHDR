@@ -41,7 +41,7 @@ namespace chdr::solvers {
         };
 
         template <typename maze_neighbour_t>
-        static constexpr node_data get_data(const maze_neighbour_t& _n, const params_t& _params) {
+        static constexpr node_data get_data(const maze_neighbour_t& _n, const params_t& _params) noexcept {
 
             if constexpr (is_graph<decltype(_params.maze)>::value) {
 
@@ -75,7 +75,7 @@ namespace chdr::solvers {
             }
         }
 
-        static constexpr size_t determine_capacity(const params_t& _params) {
+        static constexpr size_t determine_capacity(const params_t& _params) noexcept {
 
             if constexpr (is_graph<decltype(_params.maze)>::value) {
 
@@ -84,10 +84,13 @@ namespace chdr::solvers {
                     std::max(_params.maze.count() / 10U, static_cast<size_t>(1U));
             }
             else {
-                const auto s = utils::to_1d(_params.start, _params.size);
-                const auto e = utils::to_1d(_params.end,   _params.size);
-
-                return std::max(_params.capacity, std::max(s, e));
+                return std::max(
+                    _params.capacity,
+                    std::max(
+                        utils::to_1d(_params.start, _params.size),
+                        utils::to_1d(_params.end,   _params.size)
+                    )
+                );
             }
         }
 
@@ -111,10 +114,8 @@ namespace chdr::solvers {
                 const auto s = utils::to_1d(params.start, params.size);
                 const auto e = utils::to_1d(params.end,   params.size);
 
-                if (params.maze.contains(s)       &&
-                    params.maze.contains(e)       &&
-                    params.maze.at(s).is_active() &&
-                    params.maze.at(e).is_active()
+                if (params.maze.contains(s) && params.maze.at(s).is_active() &&
+                    params.maze.contains(e) && params.maze.at(e).is_active()
                 ) {
                     return s != e ? solver_t::execute(params) : std::vector<coord_t> { params.end };
                 }

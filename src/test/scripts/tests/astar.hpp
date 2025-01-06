@@ -99,22 +99,24 @@ namespace test::tests {
 
                 const auto sw_start = std::chrono::high_resolution_clock::now();
 
-                struct params {
+                {
+                    struct params {
 
-                    using weight_type [[maybe_unused]] = weight_t;
+                        using weight_type [[maybe_unused]] = weight_t;
 
-                    const decltype(test)       maze;
-                    const coord_t              start;
-                    const coord_t              end;
-                    const coord_t              size;
-                    const decltype(&HEURISTIC) h;
-                    const scalar_t             weight      =  1U;
-                    const size_t               capacity    =  0U;
-                    const size_t               memoryLimit = -1U;
-                };
+                        const decltype(test)       maze;
+                        const coord_t              start;
+                        const coord_t              end;
+                        const coord_t              size;
+                        const decltype(&HEURISTIC) h;
+                        const scalar_t             weight      =  1U;
+                        const size_t               capacity    =  0U;
+                        const size_t               memoryLimit = -1U;
+                    };
 
-                const auto solver = chdr::solvers::make_solver<chdr::solvers::astar, Kd, scalar_t, index_t, params>();
-                path = solver(test, start, end, size, HEURISTIC);
+                    const auto solver = chdr::solvers::make_solver<chdr::solvers::astar, Kd, scalar_t, index_t, params>();
+                    path = solver(test, start, end, size, HEURISTIC);
+                }
 
                 result = std::min(
                     result,
