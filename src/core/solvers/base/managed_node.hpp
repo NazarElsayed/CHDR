@@ -105,9 +105,9 @@ namespace chdr::solvers {
                     break;
                 }
                 
-                auto* const RESTRICT last_parent = m_parent;
+                auto* const RESTRICT temp = m_parent;
                 m_parent = m_parent->m_parent;
-                alloc.deallocate(static_cast<typename alloc_t::value_type*>(last_parent), 1U);
+                alloc.deallocate(static_cast<typename alloc_t::value_type*>(temp), 1U);
             }
         }
 
