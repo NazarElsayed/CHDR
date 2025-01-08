@@ -279,7 +279,7 @@ namespace chdr::solvers {
                         _open   = {};
                         _closed = {};
 
-                        return curr.template backtrack<node>(_params.size, curr.m_gScore);
+                        return utils::backtrack(curr, _params.size, curr.m_gScore);
                     }
                 }
             }

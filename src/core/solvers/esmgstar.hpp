@@ -309,7 +309,7 @@ namespace chdr::solvers {
                     // Release:
                     _open = {};
 
-                    return curr->template backtrack<node>(_params.size, curr->m_gScore);
+                    return utils::backtrack(curr, _params.size, curr->m_gScore);
                 }
             }
 

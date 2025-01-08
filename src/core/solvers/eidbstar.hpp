@@ -82,19 +82,16 @@ namespace chdr::solvers {
         using transposition_table_t = std::unordered_map<index_t, scalar_t, index_hash, index_equal>;
 
         template <typename open_set_t>
-        [[nodiscard]] static constexpr auto backtrack(const open_set_t& _open, const coord_t& _size, const size_t& _capacity = 1U) {
+        [[nodiscard]] static constexpr auto backtrack(const open_set_t& _open, const coord_t& _size) {
 
             // Reserve space in result:
             std::vector<coord_t> result;
-            result.reserve(_capacity);
+            result.reserve(_open.size());
 
             // Recurse from end node to start node, inserting into a result buffer:
-            for (const auto& t : _open) {
-                result.emplace_back(utils::to_nd(t.m_index, _size));
+            for (auto it = _open.rbegin(); it != _open.rend(); ++it) {
+                result.emplace_back(utils::to_nd(it->m_index, _size));
             }
-
-            // Reverse the result:
-            std::reverse(result.begin(), result.end());
 
             return result;
         }
@@ -145,7 +142,7 @@ namespace chdr::solvers {
 
                                 transposition_table = {};
 
-                                const auto result = backtrack(_open, _params.size, _capacity);
+                                const auto result = backtrack(_open, _params.size);
 
                                 _open = {};
 

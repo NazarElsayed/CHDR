@@ -19,6 +19,7 @@
 
 #include "types/coord.hpp"
 #include "types/existence_set.hpp"
+#include "utils/intrinsics.hpp"
 
 namespace chdr {
 
@@ -473,6 +474,36 @@ namespace chdr {
 
             return _str;
         }
+
+		template<typename node_t, typename coord_t>
+		static constexpr auto backtrack(const node_t& _node, const coord_t& _size) {
+
+			// Calculate size of the path.
+			size_t count = 0U;
+			for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent), ++count) {}
+
+			// Construct result in reverse order.
+			std::vector<coord_t> result(count);
+			size_t i = 0U;
+			for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent), ++i) {
+				result[count - 1U - i] = utils::to_nd(t->m_index, _size);
+			}
+
+			return result;
+		}
+
+		template<typename node_t, typename coord_t>
+		static constexpr auto backtrack(const node_t& _node, const coord_t& _size, const size_t& _depth) {
+
+			// Construct result in reverse order.
+			std::vector<coord_t> result(_depth);
+			size_t i = 0U;
+			for (const auto* t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent), ++i) {
+				result[_depth - 1U - i] = utils::to_nd(t->m_index, _size);
+			}
+
+			return result;
+		}
 
         [[nodiscard]] static std::string to_string(const long double& _duration) {
 

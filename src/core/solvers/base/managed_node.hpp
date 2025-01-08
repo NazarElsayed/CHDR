@@ -125,26 +125,6 @@ namespace chdr::solvers {
             ++m_parent->m_successors;
         }
 
-        template <typename node_t, typename coord_t>
-        auto backtrack(const coord_t& _size, const size_t& _capacity = 1U) const {
-
-            static_assert(std::is_base_of_v<managed_node, node_t>, "node_t must derive from managed_node");
-
-            // Reserve space in result:
-            std::vector<coord_t> result;
-            result.reserve(_capacity);
-
-            // Recurse from end node to start node, inserting into a result buffer:
-            for (const auto* t = this; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent)) {
-                result.emplace_back(utils::to_nd(t->m_index, _size));
-            }
-
-            // Reverse the result:
-            std::reverse(result.begin(), result.end());
-
-            return result;
-        }
-
         [[nodiscard]] friend constexpr bool operator <(const managed_node& _a, const managed_node& _b) noexcept {
             return _a.m_fScore == _b.m_fScore ?
                    _a.m_gScore > _b.m_gScore :

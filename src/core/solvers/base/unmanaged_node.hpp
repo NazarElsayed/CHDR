@@ -34,21 +34,35 @@ namespace chdr::solvers {
             m_parent(std::move(_parent)) {}
 
         template<typename node_t, typename coord_t>
-        auto backtrack(const coord_t& _size, const size_t& _capacity = 1U) const {
+        auto backtrack(const coord_t& _size) const {
 
             static_assert(std::is_base_of_v<unmanaged_node, node_t>, "node_t must derive from unmanaged_node");
 
-            // Reserve space in result:
-            std::vector<coord_t> result;
-            result.reserve(_capacity);
+            // Calculate size of the path.
+            size_t count = 0U;
+            for (const auto* t = this; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent), ++count) {}
 
-            // Recurse from end node to start node, inserting into a result buffer:
-            for (const auto* t = this; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent)) {
-                result.emplace_back(utils::to_nd(t->m_index, _size));
+            // Construct result in reverse order.
+            std::vector<coord_t> result(count);
+            size_t i = 0U;
+            for (const auto* t = this; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent), ++i) {
+                result[count - 1U - i] = utils::to_nd(t->m_index, _size);
             }
 
-            // Reverse the result:
-            std::reverse(result.begin(), result.end());
+            return result;
+        }
+
+        template<typename node_t, typename coord_t>
+        auto backtrack(const coord_t& _size, const size_t& _depth) const {
+
+            static_assert(std::is_base_of_v<unmanaged_node, node_t>, "node_t must derive from unmanaged_node");
+
+            // Construct result in reverse order.
+            std::vector<coord_t> result(_depth);
+            size_t i = 0U;
+            for (const auto* t = this; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent), ++i) {
+                result[_depth - 1U - i] = utils::to_nd(t->m_index, _size);
+            }
 
             return result;
         }

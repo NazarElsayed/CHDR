@@ -101,7 +101,7 @@ namespace chdr::solvers {
                     _open   = {};
                     _closed = {};
 
-                    return curr.template backtrack<node>(_params.size, static_cast<size_t>(_params.h(_params.start, _params.end)));
+                    return utils::backtrack(curr, _params.size);
                 }
             }
 

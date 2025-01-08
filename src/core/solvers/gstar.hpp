@@ -107,7 +107,7 @@ namespace chdr::solvers {
                     _open   = {};
                     _closed = {};
 
-                    const auto result = curr.template backtrack<node>(_params.size, curr.m_gScore);
+                    const auto result = utils::backtrack(curr, _params.size, curr.m_gScore);
 
                     node::alloc.reset();
 
