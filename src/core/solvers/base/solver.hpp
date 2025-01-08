@@ -49,7 +49,7 @@ namespace chdr::solvers {
                 const auto& [nIndex, nDistance] = _n;
 
                 constexpr bool nActive = true;
-                constexpr auto nCoord = utils::to_nd(nIndex, _params.size);
+                auto nCoord = utils::to_nd(nIndex, _params.size);
 
                 return {
                     nActive,
