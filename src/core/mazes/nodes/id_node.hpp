@@ -17,7 +17,7 @@
 namespace chdr::mazes {
 
     template <typename index_t = size_t>
-    class id_node : inode {
+    class id_node final : inode {
 
         static_assert(std::is_integral_v<index_t>, "Type index_t must be an integral type.");
 

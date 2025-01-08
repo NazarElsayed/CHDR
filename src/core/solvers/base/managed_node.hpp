@@ -111,14 +111,14 @@ namespace chdr::solvers {
             }
         }
 
-        constexpr void decr() noexcept {
+        constexpr void decr() const noexcept {
             assert(m_parent != nullptr && "Dereferencing of nullptr.");
             assert(m_parent->m_successors != static_cast<decltype(m_successors)>(0U) && "Underflow detected!");
 
             --m_parent->m_successors;
         }
 
-        constexpr void incr() noexcept {
+        constexpr void incr() const noexcept {
             assert(m_parent != nullptr && "Dereferencing of nullptr.");
             assert(m_parent->m_successors != static_cast<decltype(m_successors)>(-1U) && "Overflow detected!");
 

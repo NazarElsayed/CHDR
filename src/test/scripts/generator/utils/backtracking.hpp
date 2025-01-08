@@ -235,12 +235,12 @@ namespace test::generator::utils {
                                 if (const auto obstacle_chance = static_cast<double>(rng()) / static_cast<double>(rng_engine_t::max());
                                     obstacle_chance < _obstacles
                                 ) {
-                                    result[chdr::utils::to_1d<size_t>(c, _size)] = WALL;
+                                    result[i] = WALL;
                                 }
                                 else if (const auto loop_chance = static_cast<double>(rng()) / static_cast<double>(rng_engine_t::max());
                                     loop_chance < _loops
                                 ) {
-                                    result[chdr::utils::to_1d<size_t>(c, _size)] = PATH;
+                                    result[i] = PATH;
                                 }
                             }
                         }

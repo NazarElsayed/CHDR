@@ -72,7 +72,7 @@ namespace chdr::solvers {
         };
 
         template <typename open_set_t>
-        [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, const size_t& _capacity, const params_t& _params) {
+        [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, const params_t& _params) {
 
             using neighbours_t = decltype(_params.maze.get_neighbours());
 
@@ -143,7 +143,7 @@ namespace chdr::solvers {
             }
             catch ([[maybe_unused]] const std::exception& e) {} // NOLINT(*-empty-catch)
 
-            return solve_internal(open, capacity, _params);
+            return solve_internal(open, _params);
         }
     };
 
