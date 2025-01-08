@@ -126,7 +126,7 @@ namespace chdr::solvers {
                         _next   = {};
                         _closed = {};
 
-                        const auto result = utils::backtrack(curr, _params.size, curr.m_gScore);
+                        const auto result = utils::rbacktrack(curr, _params.size, curr.m_gScore);
 
                         _open = {};
 

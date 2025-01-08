@@ -476,7 +476,7 @@ namespace chdr {
         }
 
 		template<typename node_t, typename coord_t>
-		static constexpr auto backtrack(const node_t& _node, const coord_t& _size) {
+		static constexpr auto rbacktrack(const node_t& _node, const coord_t& _size) {
 
 			// Calculate size of the path.
 			size_t count = 0U;
@@ -493,13 +493,28 @@ namespace chdr {
 		}
 
 		template<typename node_t, typename coord_t>
-		static constexpr auto backtrack(const node_t& _node, const coord_t& _size, const size_t& _depth) {
+		static constexpr auto rbacktrack(const node_t& _node, const coord_t& _size, const size_t& _depth) {
 
 			// Construct result in reverse order.
 			std::vector<coord_t> result(_depth);
 			size_t i = 0U;
 			for (const auto* t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent), ++i) {
 				result[_depth - 1U - i] = utils::to_nd(t->m_index, _size);
+			}
+
+			return result;
+		}
+
+		template <typename open_set_t, typename coord_t>
+		[[nodiscard]] static constexpr auto ibacktrack(const open_set_t& _open, const coord_t& _size) {
+
+			// Reserve space in result:
+			std::vector<coord_t> result;
+			result.reserve(_open.size());
+
+			// Recurse from end node to start node, inserting into a result buffer:
+			for (auto it = _open.rbegin(); it != _open.rend(); ++it) {
+				result.emplace_back(utils::to_nd(it->m_index, _size));
 			}
 
 			return result;

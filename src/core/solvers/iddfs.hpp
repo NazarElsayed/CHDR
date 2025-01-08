@@ -67,21 +67,6 @@ namespace chdr::solvers {
         };
 
         template <typename open_set_t>
-        [[nodiscard]] static constexpr auto backtrack(const open_set_t& _open, const coord_t& _size) {
-
-            // Reserve space in result:
-            std::vector<coord_t> result;
-            result.reserve(_open.size());
-
-            // Recurse from end node to start node, inserting into a result buffer:
-            for (auto it = _open.rbegin(); it != _open.rend(); ++it) {
-                result.emplace_back(utils::to_nd(it->m_index, _size));
-            }
-
-            return result;
-        }
-
-        template <typename open_set_t>
         [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, const params_t& _params) {
 
             using neighbours_t = decltype(_params.maze.get_neighbours());
@@ -119,7 +104,7 @@ namespace chdr::solvers {
 
                                     stack = {};
 
-                                    const auto result = backtrack(_open, _params.size);
+                                    const auto result = utils::ibacktrack(_open, _params.size);
 
                                     _open = {};
 

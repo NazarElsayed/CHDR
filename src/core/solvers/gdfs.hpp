@@ -81,7 +81,7 @@ namespace chdr::solvers {
                     _open   = {};
                     _closed = {};
 
-                    const auto result = utils::backtrack(curr, _params.size);
+                    const auto result = utils::rbacktrack(curr, _params.size);
 
                     node::alloc.reset();
 

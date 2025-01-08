@@ -82,21 +82,6 @@ namespace chdr::solvers {
         using transposition_table_t = std::unordered_map<index_t, scalar_t, index_hash, index_equal>;
 
         template <typename open_set_t>
-        [[nodiscard]] static constexpr auto backtrack(const open_set_t& _open, const coord_t& _size) {
-
-            // Reserve space in result:
-            std::vector<coord_t> result;
-            result.reserve(_open.size());
-
-            // Recurse from end node to start node, inserting into a result buffer:
-            for (auto it = _open.rbegin(); it != _open.rend(); ++it) {
-                result.emplace_back(utils::to_nd(it->m_index, _size));
-            }
-
-            return result;
-        }
-
-        template <typename open_set_t>
         [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, const size_t& _capacity, const params_t& _params) {
 
             using neighbours_t = decltype(_params.maze.get_neighbours());
@@ -142,7 +127,7 @@ namespace chdr::solvers {
 
                                 transposition_table = {};
 
-                                const auto result = backtrack(_open, _params.size);
+                                const auto result = utils::ibacktrack(_open, _params.size);
 
                                 _open = {};
 
