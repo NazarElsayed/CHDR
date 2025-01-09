@@ -21,8 +21,8 @@
 #include <utility>
 #include <vector>
 
-#include "base/igraph.hpp"
 #include "grid.hpp"
+#include "nodes/id_node.hpp"
 #include "types/dynamic_pool_allocator.hpp"
 #include "types/stack.hpp"
 #include "utils/intrinsics.hpp"
@@ -30,11 +30,11 @@
 namespace chdr::mazes {
 
     template<typename index_t, typename scalar_t>
-    class graph final : public igraph<index_t, scalar_t> {
+    class graph final {
 
     private:
 
-        using edge_t = typename igraph<index_t, scalar_t>::edge_t;
+        using edge_t = std::pair<index_t, scalar_t>;
 
         struct index_hash {
             constexpr size_t operator () (const index_t& _index) const noexcept { return static_cast<size_t>(_index); }
@@ -311,11 +311,11 @@ namespace chdr::mazes {
             return m_entries.find(_id)->second;
         }
 
-        [[maybe_unused, nodiscard]] constexpr bool contains(const index_t& _id) const noexcept override {
+        [[maybe_unused, nodiscard]] constexpr bool contains(const index_t& _id) const noexcept {
             return m_entries.find(_id) != m_entries.end();
         }
 
-        [[maybe_unused, nodiscard]] constexpr size_t count() const noexcept override {
+        [[maybe_unused, nodiscard]] constexpr size_t count() const noexcept {
             return m_entries.size();
         }
 

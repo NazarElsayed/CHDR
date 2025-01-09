@@ -17,7 +17,6 @@
 
 #include "../types/coord.hpp"
 #include "../utils/utils.hpp"
-#include "base/imaze.hpp"
 #include "nodes/weighted_node.hpp"
 #include "utils/intrinsics.hpp"
 
@@ -27,7 +26,7 @@ namespace chdr::mazes {
      * @tparam Kd Dimensionality of the grid.
      */
     template<size_t Kd, typename weight_t = bool>
-    class grid final : public imaze<weighted_node<weight_t>, size_t> {
+    class grid final {
 
         using coord_t = coord<size_t, Kd>;
 
@@ -67,7 +66,7 @@ namespace chdr::mazes {
 
         [[nodiscard]] constexpr const coord_t& size() const noexcept { return m_size; }
 
-        [[nodiscard]] constexpr size_t count() const noexcept override { return m_count; }
+        [[nodiscard]] constexpr size_t count() const noexcept { return m_count; }
 
         template<bool IncludeDiagonals = false, typename... Args>
         [[nodiscard]] constexpr auto get_neighbours(const Args&... _id) const noexcept {
@@ -113,7 +112,7 @@ namespace chdr::mazes {
             return std::all_of(0U, Kd, [&](const size_t& _i) noexcept { return _id[_i] < m_size[_i]; });
         }
 
-        [[nodiscard]] constexpr bool contains(const size_t& _id) const noexcept override {
+        [[nodiscard]] constexpr bool contains(const size_t& _id) const noexcept {
             return _id < count();
         }
 

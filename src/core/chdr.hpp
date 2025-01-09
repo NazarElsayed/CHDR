@@ -13,11 +13,8 @@
 
 #include "CHDR_Version.hpp"
 
-#include "mazes/base/igraph.hpp"
-#include "mazes/base/imaze.hpp"
 #include "mazes/graph.hpp"
 #include "mazes/grid.hpp"
-#include "mazes/nodes/base/inode.hpp"
 #include "mazes/nodes/id_node.hpp"
 #include "mazes/nodes/weighted_node.hpp"
 

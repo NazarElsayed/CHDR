@@ -12,12 +12,10 @@
 #include <cstddef>
 #include <type_traits>
 
-#include "base/inode.hpp"
-
 namespace chdr::mazes {
 
     template <typename index_t = size_t>
-    class id_node final : inode {
+    class id_node final {
 
         static_assert(std::is_integral_v<index_t>, "Type index_t must be an integral type.");
 
@@ -29,7 +27,7 @@ namespace chdr::mazes {
 
         constexpr id_node(const index_t& _id) noexcept : m_id(_id) {}
 
-        [[maybe_unused, nodiscard]] bool is_active() const noexcept override {
+        [[maybe_unused, nodiscard]] bool is_active() const noexcept {
             return true;
         }
 
