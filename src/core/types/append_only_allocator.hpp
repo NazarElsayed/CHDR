@@ -88,6 +88,12 @@ namespace chdr {
             using other [[maybe_unused]] = append_only_allocator<U>;
         };
 
+        template <typename Alloc>
+        struct [[maybe_unused]] allocator_rebind {
+            template <typename U>
+            using other [[maybe_unused]] = typename Alloc::template rebind<U>::other;
+        };
+
         using propagate_on_container_move_assignment = std::true_type;
         using is_always_equal                        = std::true_type;
     };
