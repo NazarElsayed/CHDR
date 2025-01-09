@@ -25,7 +25,7 @@ namespace chdr {
          * @tparam Kd The number of dimensions of the nodes.
          * @param _a The first node.
          * @param _b The second node.
-         * @return The Euclidean distance between _A and _B.
+         * @return The Euclidean distance between _a and _b.
          */
         [[maybe_unused, nodiscard]] static constexpr auto euclidean_distance(const coord_t& _a, const coord_t& _b) noexcept {
             return static_cast<scalar_t>(sqrt(sqr_euclidean_distance(_a, _b)));
@@ -35,9 +35,9 @@ namespace chdr {
          * @brief Computes the squared Euclidean distance between two nodes.
          *
          * @tparam Kd The number of dimensions of the nodes.
-         * @param _A The first node.
-         * @param _B The second node.
-         * @return The squared Euclidean distance between _A and _B.
+         * @param _a The first node.
+         * @param _b The second node.
+         * @return The squared Euclidean distance between _a and _b.
          */
         [[maybe_unused, nodiscard]] static constexpr auto sqr_euclidean_distance(const coord_t& _a, const coord_t& _b) noexcept {
 
@@ -62,7 +62,7 @@ namespace chdr {
           * @tparam Kd The number of dimensions of the nodes.
           * @param _a The first node.
           * @param _b The second node.
-          * @return The Manhattan distance between _A and _B.
+          * @return The Manhattan distance between _a and _b.
           */
         [[maybe_unused, nodiscard]] static constexpr auto manhattan_distance(const coord_t& _a, const coord_t& _b) noexcept {
 
@@ -81,6 +81,6 @@ namespace chdr {
 
 	};
 
-}//chdr
+} //chdr
 
 #endif //CHDR_UTILS_HPP

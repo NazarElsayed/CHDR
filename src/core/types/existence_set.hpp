@@ -257,6 +257,6 @@ namespace chdr {
         [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t crend() const noexcept { return m_bits.crend(); }
     };
 
-}//chdr
+} //chdr
 
 #endif //CHDR_EXISTENCE_SET_HPP

@@ -18,7 +18,7 @@
 namespace chdr {
 
     template <typename T>
-    class append_only_allocator final {
+    class append_only_allocator {
 
     private:
 

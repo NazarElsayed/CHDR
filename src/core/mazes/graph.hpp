@@ -26,6 +26,7 @@
 #include "types/dynamic_pool_allocator.hpp"
 #include "types/stack.hpp"
 #include "utils/intrinsics.hpp"
+#include "types/hashmap.hpp"
 
 namespace chdr::mazes {
 
@@ -45,13 +46,13 @@ namespace chdr::mazes {
         };
 
         using neighbours_t    = std::vector<edge_t>;
-        using adjacency_set_t = std::unordered_map<index_t, neighbours_t, index_hash, index_equal>;
+        using adjacency_set_t = std::unordered_map<index_t, neighbours_t, index_hash>;
 
         adjacency_set_t m_entries;
 
     public:
 
-        [[maybe_unused]] constexpr graph() : m_entries() {}
+        [[maybe_unused]] constexpr graph() {}
 
         [[maybe_unused]] constexpr graph(const std::initializer_list<std::initializer_list<edge_t>>& _adjacencyList) : m_entries() {
 
@@ -72,7 +73,7 @@ namespace chdr::mazes {
 #if defined(__cpp_constexpr_dynamic_alloc) && (__cpp_constexpr_dynamic_alloc >= 201907L)
         constexpr
 #endif // defined(__cpp_constexpr_dynamic_alloc) && (__cpp_constexpr_dynamic_alloc >= 201907L)
-        explicit graph(const grid<Kd, weight_t>& _grid) : m_entries{} {
+        explicit graph(const grid<Kd, weight_t>& _grid) {
 
             const auto size = _grid.size();
 
@@ -92,7 +93,7 @@ namespace chdr::mazes {
                     std::unordered_map<index_t, neighbours_t, index_hash, index_equal> thread_connections;
 
                     for (auto index = _start; index < _end; ++index) {
-                        
+
                         if (const auto& element = _grid.at(index); element.is_active()) {
 
                             global_closed.clear();
@@ -204,11 +205,8 @@ namespace chdr::mazes {
 
         [[nodiscard]] constexpr const auto& at(const index_t& _id) const {
 
-            auto search = m_entries.find(_id);
-
-            assert(search != m_entries.end() && "Error: The node with the specified ID does not exist in the graph.");
-
-            return reinterpret_cast<const id_node<index_t>&>(search->first);
+            assert(contains(_id) && "Error: The node with the specified ID does not exist in the graph.");
+            return reinterpret_cast<const id_node<index_t>&>(_id);
         }
 
         constexpr void add(const index_t& _from_id) {

@@ -79,6 +79,6 @@ namespace chdr {
 
     };
 
-}//chdr
+} //chdr
 
 #endif //QUEUE_HPP

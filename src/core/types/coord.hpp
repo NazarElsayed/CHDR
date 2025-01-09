@@ -17,6 +17,6 @@ namespace chdr {
     template<typename T, size_t Kd>
     using coord [[maybe_unused]] = std::array<T, Kd>;
 
-}//chdr
+} //chdr
 
 #endif //CHDR_COORD_HPP

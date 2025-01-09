@@ -106,8 +106,8 @@ CHDR requires a C++ environment (version 17 or above) with support for the stand
 
 | Dynamic Analysis  |   Status   |
 |:------------------|:----------:|
-| Google Sanitizers | Tested ✔️  |
-| Valgrind          | Tested ✔️  |
+| Google Sanitizers | Passing ✔️ |
+| Valgrind          | Passing ✔️ |
 
 #### Other Languages
 

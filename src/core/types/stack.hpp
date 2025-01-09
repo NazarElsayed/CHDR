@@ -91,6 +91,6 @@ namespace chdr {
 
     };
 
-}//chdr
+} //chdr
 
 #endif //STACK_HPP

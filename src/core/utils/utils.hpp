@@ -537,6 +537,6 @@ namespace chdr {
 
 	};
 
-}//chdr
+} //chdr
 
 #endif //CHDR_UTILS_HPP
