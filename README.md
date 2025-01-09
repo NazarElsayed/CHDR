@@ -3,8 +3,8 @@
 ## Table of Contents
 
 - [About](#About)
-- [Dependencies](#Dependencies)
 - [Instructions](#Instructions)
+- [Dependencies](#Dependencies)
 - [Roadmap](#Roadmap)
 - [References](#References)
 
@@ -14,17 +14,13 @@ CHDR is a C++ library aiming to offer a comprehensive cross-platform solution fo
 
 CHDR is designed to be fast and lightweight. Alongside data and algorithmic optimisations it utilises metaprogramming to resolve expensive code paths at compile time.
 
-### Dependencies
-
-CHDR is completely standalone and does not require the use of any third-party libraries.
-
-However CHDR does require that your project is compatible with a C++17 environment and supports use of the standard library.
-
 ### Instructions
 
-#### C++ (17 and above)
-
 As CHDR is a header-only library you can simply include the headers directly in your project or build and link using your preferred build system.
+
+### Dependencies
+
+CHDR requires a C++ environment (version 17 or above) with support for the standard library.
 
 ### Roadmap
 
