@@ -9,8 +9,8 @@
 #ifndef CHDR_GRAPH_HPP
 #define CHDR_GRAPH_HPP
 
+#include <cassert>
 #include <cstddef>
-#include <functional>
 #include <future>
 #include <initializer_list>
 #include <iostream>
@@ -42,15 +42,7 @@ namespace chdr::mazes {
             constexpr bool operator () (const index_t& _a, const index_t& _b) const noexcept { return _a == _b; }
         };
 
-        struct edge_hash {
-            constexpr size_t operator () (const std::pair<index_t, scalar_t> &_edge) const noexcept { return static_cast<size_t>(_edge.first) ^ (std::hash<scalar_t>()(_edge.second) << 1); }
-        };
-
-        struct edge_equal {
-            constexpr bool operator () (const std::pair<index_t, scalar_t>& _a, const std::pair<index_t, scalar_t>& _b) const noexcept { return _a.first == _b.first && _a.second == _b.second; }
-        };
-
-        using neighbours_t    = std::unordered_set<edge_t, edge_hash, edge_equal>;
+        using neighbours_t    = std::vector<edge_t>;
         using adjacency_set_t = std::unordered_map<index_t, neighbours_t, index_hash, index_equal>;
 
         adjacency_set_t m_entries;
@@ -59,7 +51,7 @@ namespace chdr::mazes {
 
         [[maybe_unused]] constexpr graph() : m_entries() {}
 
-        [[maybe_unused]] constexpr graph(std::initializer_list<std::initializer_list<edge_t>> _adjacencyList) : m_entries() {
+        [[maybe_unused]] constexpr graph(const std::initializer_list<std::initializer_list<edge_t>>& _adjacencyList) : m_entries() {
 
             index_t index{0};
 
@@ -211,37 +203,35 @@ namespace chdr::mazes {
         }
 
         template<typename... Args>
-        [[nodiscard]] constexpr id_node<index_t> at(const Args&... _id) const noexcept {
+        [[nodiscard]] constexpr const auto& at(const Args&... _id) const {
             return at({_id...});
         }
 
-        [[nodiscard]] constexpr id_node<index_t> at(const index_t& _id) const noexcept {
+        [[nodiscard]] constexpr const auto& at(const index_t& _id) const {
 
             auto search = m_entries.find(_id);
 
-#ifndef NDEBUG
-            if (search == m_entries.end()) {
-                assert(search != m_entries.end() && "Error: The node with the specified ID does not exist in the graph.");
-            }
-#endif // NDEBUG
+            assert(search != m_entries.end() && "Error: The node with the specified ID does not exist in the graph.");
 
-            return { search->first };
+            return reinterpret_cast<const id_node<index_t>&>(search->first);
         }
 
-        void add(const index_t& _from_id) {
+        constexpr void add(const index_t& _from_id) {
             m_entries.insert_or_assign(_from_id, neighbours_t{});
         }
 
-        void add(const index_t& _from_id, const edge_t& _edge) {
-            m_entries[_from_id].emplace(_edge);
+        constexpr void add(const index_t& _from_id, const edge_t& _edge) {
+            m_entries[_from_id].emplace_back(_edge);
         }
 
-        [[maybe_unused]] void remove(const index_t& _from_id, const edge_t& _edge) {
+        [[maybe_unused]] constexpr void remove(const index_t& _from_id, const edge_t& _edge) noexcept {
 
             if (contains(_from_id)) {
-                m_entries[_from_id].erase(_edge);
 
-                if (m_entries[_from_id].empty()) {
+                auto& bucket = m_entries[_from_id];
+                bucket.erase(std::remove(bucket.begin(), bucket.end(), _edge), bucket.end());
+
+                if (bucket.empty()) {
                     m_entries.erase(_from_id);
                 }
             }
@@ -309,7 +299,7 @@ namespace chdr::mazes {
             malloc_consolidate();
         }
 
-        [[maybe_unused]] void print() const {
+        [[maybe_unused]] void print() const noexcept {
 
             for (const auto& [node, edges]: m_entries) {
 
@@ -322,13 +312,7 @@ namespace chdr::mazes {
         }
 
         [[maybe_unused, nodiscard]] constexpr const neighbours_t& get_neighbours(const index_t& _id) const {
-        
-#ifndef NDEBUG
-            if (!contains(_id)) {
-              throw std::runtime_error("Node with the specified ID does not exist in the graph.");
-            }
-#endif
-
+            assert(contains(_id) && "Node with the specified ID does not exist in the graph.");
             return m_entries.find(_id)->second;
         }
 

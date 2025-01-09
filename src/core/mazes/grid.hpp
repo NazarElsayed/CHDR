@@ -26,8 +26,8 @@ namespace chdr::mazes {
     /**
      * @tparam Kd Dimensionality of the grid.
      */
-    template<size_t Kd, typename T = bool>
-    class grid final : public imaze<weighted_node<T>, size_t> {
+    template<size_t Kd, typename weight_t = bool>
+    class grid final : public imaze<weighted_node<weight_t>, size_t> {
 
         using coord_t = coord<size_t, Kd>;
 
@@ -36,7 +36,7 @@ namespace chdr::mazes {
         static constexpr auto s_rank { Kd };
 
         static_assert(              Kd > 0U, "Kd must be greater than 0.");
-        static_assert(std::is_integral_v<T>, "T must be integral."       );
+        static_assert(std::is_integral_v<weight_t>, "T must be integral."       );
 
     private:
 
@@ -45,7 +45,7 @@ namespace chdr::mazes {
         coord_t m_size;
         size_t m_count;
 
-        std::vector<T> m_nodes;
+        std::vector<weight_t> m_nodes;
 
     public:
 
@@ -54,14 +54,14 @@ namespace chdr::mazes {
             m_count(utils::product<size_t>(m_size)),
             m_nodes(count()) {}
 
-        constexpr grid(const coord_t& _size, const std::vector<T>& _nodes) :
+        constexpr grid(const coord_t& _size, const std::vector<weight_t>& _nodes) :
             m_size(_size),
             m_count(utils::product<size_t>(m_size)),
             m_nodes(_nodes) {}
 
-        [[nodiscard]] constexpr const std::vector<weighted_node<T>>& nodes() const noexcept { return m_nodes; }
+        [[nodiscard]] constexpr const std::vector<weighted_node<weight_t>>& nodes() const noexcept { return m_nodes; }
 
-        constexpr void nodes(const std::vector<weighted_node<T>>& _value) noexcept {  m_nodes = _value; }
+        constexpr void nodes(const std::vector<weighted_node<weight_t>>& _value) noexcept {  m_nodes = _value; }
 
         [[nodiscard]] constexpr const coord_t& size() const noexcept { return m_size; }
 
@@ -99,7 +99,7 @@ namespace chdr::mazes {
 
         [[nodiscard]] constexpr const auto& at(const size_t& _id) const {
             assert(contains(_id) && "Out of bounds access.");
-            return reinterpret_cast<const weighted_node<T>&>(m_nodes[_id]);
+            return reinterpret_cast<const weighted_node<weight_t>&>(m_nodes[_id]);
         }
 
         template<typename... Args>
@@ -132,10 +132,10 @@ namespace chdr::mazes {
             return at(_id);
         }
 
-        using               iterator_t = typename std::vector<T>::iterator;
-        using         const_iterator_t = typename std::vector<T>::const_iterator;
-        using       reverse_iterator_t = typename std::vector<T>::reverse_iterator;
-        using const_reverse_iterator_t = typename std::vector<T>::const_reverse_iterator;
+        using               iterator_t = typename std::vector<weight_t>::iterator;
+        using         const_iterator_t = typename std::vector<weight_t>::const_iterator;
+        using       reverse_iterator_t = typename std::vector<weight_t>::reverse_iterator;
+        using const_reverse_iterator_t = typename std::vector<weight_t>::const_reverse_iterator;
 
         [[maybe_unused, nodiscard]]       iterator_t  begin()       noexcept { return m_nodes.begin();  }
         [[maybe_unused, nodiscard]] const_iterator_t  begin() const noexcept { return m_nodes.begin();  }
