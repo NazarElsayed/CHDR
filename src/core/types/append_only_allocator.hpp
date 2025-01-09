@@ -18,7 +18,7 @@
 namespace chdr {
 
     template <typename T>
-    class append_only_allocator {
+    class append_only_allocator final {
 
     private:
 
@@ -51,6 +51,11 @@ namespace chdr {
                 throw std::invalid_argument("Capacity cannot be zero.");
             }
         }
+
+        template <typename U>
+        constexpr append_only_allocator([[maybe_unused]] const append_only_allocator<U>& _other) noexcept :
+            block_width(std::min(static_cast<size_t>(64U), max_block_width)),
+            index(block_width / 2U) {}
 
         void construct(T* _p, T&& _val) {
             if (_p != nullptr) {

@@ -23,6 +23,8 @@
 
 #include "base/igraph.hpp"
 #include "grid.hpp"
+#include "types/dynamic_pool_allocator.hpp"
+#include "types/stack.hpp"
 #include "utils/intrinsics.hpp"
 
 namespace chdr::mazes {
@@ -80,14 +82,14 @@ namespace chdr::mazes {
 
                 std::mutex mtx;
 
-                auto worker = [&](const index_t& _start, const index_t& _end) {
+                const auto worker = [&](const index_t& _start, const index_t& _end) ALWAYS_INLINE {
 
-                    std::vector<edge_t> stack(128U);
+                    stack<edge_t> stack;
 
                     std::unordered_set<index_t, index_hash, index_equal> global_closed;
                     std::unordered_set<index_t, index_hash, index_equal> local_closed;
 
-                    std::unordered_map<index_t, std::vector<edge_t>, index_hash, index_equal> thread_connections;
+                    std::unordered_map<index_t, neighbours_t, index_hash, index_equal> thread_connections;
 
                     for (auto index = _start; index < _end; ++index) {
                         
@@ -96,30 +98,23 @@ namespace chdr::mazes {
                             global_closed.clear();
                             global_closed.insert(index);
 
-                            auto index_neighbours = _grid.get_neighbours(index);
+                            const auto& neighbours = _grid.get_neighbours(index);
 
-                            size_t nCount = 0U;
-                            for (const auto& n1 : index_neighbours) {
-                                if (const auto& [nActive, nCoord] = n1; nActive && ++nCount > 2U) {
-                                    break;
-                                }
-                            }
+                            if (!_grid.is_transitory(neighbours)) {
 
-                            if (nCount != 2U) {
-
-                                for (const auto& n1 : index_neighbours) {
+                                for (const auto& n1 : neighbours) {
 
                                     if (const auto& [nActive1, nCoord1] = n1; nActive1) {
 
                                         const auto nIdx1 = utils::to_1d(nCoord1, size);
 
                                         local_closed.clear();
-                                        stack.emplace_back(std::make_pair(nIdx1, static_cast<scalar_t>(1)));
+                                        stack.emplace(std::make_pair(nIdx1, static_cast<scalar_t>(1)));
 
                                         while (!stack.empty()) {
 
-                                            const auto [currIdx, currDistance] = std::move(stack.back());
-                                            stack.pop_back();
+                                            const auto [currIdx, currDistance] = std::move(stack.top());
+                                            stack.pop();
 
                                             if (local_closed.find(currIdx) == local_closed.end()) {
 
@@ -134,10 +129,10 @@ namespace chdr::mazes {
 
                                                         if (global_closed.find(s) == global_closed.end()) {
 
-                                                            const auto next = std::make_pair(s, currDistance + static_cast<scalar_t>(1));
+                                                            const edge_t next = std::make_pair(s, currDistance + static_cast<scalar_t>(1));
 
                                                             if (_grid.is_transitory(s)) {
-                                                                stack.emplace_back(std::move(next));
+                                                                stack.emplace(std::move(next));
                                                             }
                                                             else {
                                                                 thread_connections[nIdx1].emplace_back(std::move(next));

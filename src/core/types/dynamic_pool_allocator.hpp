@@ -15,16 +15,14 @@
 #include <cstddef>
 #include <cstdint>
 #include <exception>
-#include <exception>
 #include <list>
-#include <memory>
 #include <type_traits>
 #include <vector>
 
 namespace chdr {
 
     template <typename T>
-    class dynamic_pool_allocator {
+    class dynamic_pool_allocator final {
     
     private:
 
@@ -61,6 +59,11 @@ namespace chdr {
             assert(_capacity != 0U && "Capacity cannot be zero.");
         }
 
+        template <typename U>
+        constexpr dynamic_pool_allocator([[maybe_unused]] const dynamic_pool_allocator<U>& _other) noexcept :
+            initial_block_width(std::min(static_cast<size_t>(16U), max_block_width)),
+            block_width(initial_block_width) {}
+
         template <typename... Args>
         void construct(T* _p, Args&&... _args) noexcept {
 
@@ -75,7 +78,7 @@ namespace chdr {
 
             assert(_n != 0U && "Tried to allocate 0 objects.");
             assert(_n == 1U && "Does not support batch allocation.");
-            
+
             T* result;
 
             if (free.empty()) {

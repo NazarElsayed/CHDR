@@ -19,16 +19,12 @@
 namespace chdr {
 
     struct lowest_memory_usage {}; /** @brief Each item is represented by 1 bit in memory. */
-    struct    low_memory_usage {}; /** @brief Each item is represented by 8 bits in memory. */
-    struct            balanced {}; /** @brief Each item is represented by 32 bits in memory. */
-    struct highest_performance {}; /** @brief Each item is represented by the system size of a DWORD in memory. */
+    struct    high_performance {}; /** @brief Each item is represented by 8 bits in memory. */
 
     template<typename>
     struct alignment {};
-    template<> struct alignment<lowest_memory_usage> { using type_t [[maybe_unused]] =      bool; };
-    template<> struct alignment<low_memory_usage>    { using type_t [[maybe_unused]] =      char; };
-    template<> struct alignment<balanced>            { using type_t [[maybe_unused]] =  uint32_t; };
-    template<> struct alignment<highest_performance> { using type_t [[maybe_unused]] = uintptr_t; };
+    template<> struct alignment<lowest_memory_usage> { using type_t [[maybe_unused]] = bool; };
+    template<> struct alignment<high_performance>    { using type_t [[maybe_unused]] = char; };
 
     /**
      * @class existence_set
@@ -41,16 +37,14 @@ namespace chdr {
      * @see balanced
      * @see highest_performance
      */
-    template <typename alignment_type = lowest_memory_usage>
+    template <typename alignment_type = high_performance>
     class existence_set {
 
         static_assert(
                 std::is_same_v<alignment_type, lowest_memory_usage> ||
-                std::is_same_v<alignment_type, low_memory_usage>    ||
-                std::is_same_v<alignment_type, balanced>            ||
-                std::is_same_v<alignment_type, highest_performance>,
+                std::is_same_v<alignment_type, high_performance>    ||
             "AlignmentType must be one of the following: "
-            "LowestMemoryUsage, LowMemoryUsage, Balanced, HighestPerformance"
+            "lowest_memory_usage, high_performance"
         );
 
     private:

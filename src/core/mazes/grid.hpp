@@ -42,6 +42,8 @@ namespace chdr::mazes {
 
         static constexpr auto s_neighbour_count { utils::powui(static_cast<size_t>(3U), Kd) - 1U };
 
+        using neighbours_t = std::array<std::pair<bool, coord_t>, s_neighbour_count>;
+
         coord_t m_size;
         size_t m_count;
 
@@ -128,6 +130,19 @@ namespace chdr::mazes {
             return count == 2U;
         }
 
+        [[nodiscard]] constexpr bool is_transitory(const neighbours_t& _neighbours) const noexcept {
+
+            size_t count = 0U;
+
+            for (const auto& [nActive, nCoord] : _neighbours) {
+                if (nActive && ++count > 2U) {
+                    break;
+                }
+            }
+
+            return count == 2U;
+        }
+
         [[nodiscard]] constexpr auto& operator[](const size_t& _id) const noexcept {
             return at(_id);
         }
@@ -158,7 +173,7 @@ namespace chdr::mazes {
         template<size_t... Indices>
         [[nodiscard]] constexpr auto compute_diagonal_neighbours(const coord_t& _id, std::index_sequence<Indices...>) const noexcept { // NOLINT(*-named-parameter)
 
-            std::array<std::pair<bool, coord_t>, s_neighbour_count> result;
+            neighbours_t result;
             (compute_single_diagonal<Indices>(_id, result[Indices]), ...);
 
             return result;
@@ -167,7 +182,7 @@ namespace chdr::mazes {
         template<size_t... Indices>
         [[nodiscard]] constexpr auto compute_axis_neighbours(const coord_t& _id, std::index_sequence<Indices...>) const noexcept { // NOLINT(*-named-parameter)
 
-            std::array<std::pair<bool, coord_t>, Kd * 2U> result;
+            neighbours_t result;
             (compute_single_axis<Indices>(_id, result[Indices], result[Kd + Indices]), ...);
 
             return result;
