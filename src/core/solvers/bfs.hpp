@@ -31,8 +31,8 @@ namespace chdr::solvers {
     private:
 
         using  index_t = typename params_t::index_type;
+        using  coord_t = typename params_t::coord_type;
         using solver_t = solver<bfs, Kd, params_t>;
-        using  coord_t = coord<index_t, Kd>;
         using     node = unmanaged_node<index_t>;
 
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");

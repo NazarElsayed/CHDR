@@ -103,17 +103,18 @@ namespace test::tests {
                     struct params {
 
                         using weight_type [[maybe_unused]] = weight_t;
-                        using scalar_type [[maybe_unused]] = scalar_t;
-                        using index_type  [[maybe_unused]] = index_t;
+                        using scalar_type                  = scalar_t;
+                        using index_type                   = index_t;
+                        using coord_type                   = chdr::coord<index_type, Kd>;
 
-                        const decltype(test)       maze;
-                        const coord_t              start;
-                        const coord_t              end;
-                        const coord_t              size;
-                        const decltype(&HEURISTIC) h;
-                        const scalar_type          weight      =  1U;
-                        const size_t               capacity    =  0U;
-                        const size_t               memoryLimit = -1U;
+                        const decltype(test) maze;
+                        const coord_type     start;
+                        const coord_type     end;
+                        const coord_type     size;
+                        scalar_type          (*h)(const coord_type&, const coord_type&) noexcept;
+                        const scalar_type    weight      = 1U;
+                        const size_t         capacity    = 0U;
+                        const size_t         memoryLimit = -1U;
                     };
 
                     const auto solver = chdr::solvers::make_solver<chdr::solvers::astar, Kd, params>();

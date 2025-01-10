@@ -30,13 +30,13 @@ namespace chdr::solvers {
 
     private:
 
-        using     index_t = typename params_t::index_type;
+        using     index_t = typename params_t:: index_type;
         using    scalar_t = typename params_t::scalar_type;
         using    weight_t = typename params_t::weight_type;
-        using    solver_t = solver<jps, Kd, params_t>;
-        using     coord_t = coord<index_t, Kd>;
+        using     coord_t = typename params_t:: coord_type;
         using direction_t = char;
         using  rotation_t = std::array<direction_t, 8U>;
+        using    solver_t = solver<jps, Kd, params_t>;
 
         static_assert(std::is_arithmetic_v<scalar_t>, "scalar_t must be an integral or floating point type.");
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");

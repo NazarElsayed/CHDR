@@ -15,12 +15,8 @@
 
 namespace chdr::solvers {
 
-    template <
-        template <size_t Kd, typename params_t> typename Derived, size_t Kd, typename params_t
-    >
+    template <template <size_t Kd, typename params_t> typename Derived, size_t Kd, typename params_t>
     class solver final {
-
-        using coord_t = coord<typename params_t::index_type, Kd>;
 
     public:
 
@@ -31,8 +27,8 @@ namespace chdr::solvers {
 
             const bool active;
 
-            const                    coord_t     coord;
-            const typename params_t::index_type  index;
+            const typename params_t:: coord_type coord;
+            const typename params_t:: index_type index;
             const typename params_t::scalar_type distance;
         };
 
@@ -113,22 +109,18 @@ namespace chdr::solvers {
                 if (params.maze.contains(s) && params.maze.at(s).is_active() &&
                     params.maze.contains(e) && params.maze.at(e).is_active()
                 ) {
-                    return s != e ? solver_t::execute(params) : std::vector<coord_t> { params.end };
+                    return s != e ? solver_t::execute(params) : std::vector<typename params_t:: coord_type> { params.end };
                 }
             }
             catch (const std::exception& e) {
                 std::cerr << e.what() << "\n";
             }
 
-            return std::vector<coord_t>{};
+            return std::vector<typename params_t:: coord_type>{};
         }
     };
 
-    template <
-        template <size_t Kd, typename params_t> typename Derived,
-        size_t Kd,
-        typename params_t
-    >
+    template <template <size_t Kd, typename params_t> typename Derived, size_t Kd, typename params_t>
     [[nodiscard]] static
 #if __cplusplus >= 2023L
     constexpr
@@ -137,11 +129,7 @@ namespace chdr::solvers {
         return solver<Derived, Kd, params_t>();
     }
 
-    template <
-        template <size_t Kd, typename params_t> typename Derived,
-        size_t Kd,
-        typename params_t
-    >
+    template <template <size_t Kd, typename params_t> typename Derived, size_t Kd, typename params_t>
     [[nodiscard]] static
 #if __cplusplus >= 2023L
     constexpr
@@ -150,12 +138,7 @@ namespace chdr::solvers {
         return solver<Derived, Kd, params_t>()();
     }
 
-    template <
-        template <size_t Kd, typename params_t> typename Derived,
-        size_t Kd,
-        typename params_t,
-        typename... Args
-    >
+    template <template <size_t Kd, typename params_t> typename Derived, size_t Kd, typename params_t, typename... Args>
     [[nodiscard]] static
 #if __cplusplus >= 2023L
     constexpr
