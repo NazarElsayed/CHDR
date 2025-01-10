@@ -15,7 +15,6 @@
 
 #include "base/solver.hpp"
 #include "types/coord.hpp"
-#include "types/existence_set.hpp"
 #include "types/stack.hpp"
 #include "utils/intrinsics.hpp"
 #include "utils/utils.hpp"

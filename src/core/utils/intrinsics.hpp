@@ -91,7 +91,7 @@ namespace {
 #endif
 
     [[maybe_unused]]
-    void malloc_consolidate(const size_t& _malloc = static_cast<size_t>(1024U) * static_cast<size_t>(2U)) {
+    void malloc_consolidate(const size_t& _malloc = 2048U) {
 
         /*
          * Code designed to purposefully trigger heap defragmentation by the internal memory allocator.
