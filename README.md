@@ -42,7 +42,7 @@ CHDR requires a C++ environment (version 17 or above) with support for the stand
 | Fringe Search (F*)                                       | Completed ✔️  |
 | Graveyard Breadth-First Search (GBFS)                    | Completed ✔️  |
 | Graveyard Depth-First Search (GDFS)                      | Completed ✔️  |
-| Graveyard Jump-Point Search (GJPS)                       |  Planned 📝   |
+| Graveyard Jump-Point Search (GJPS)                       | Completed ✔️  |
 | Graveyard Search (G*)                                    | Completed ✔️  |
 | Iterative-Deepening A* (IDA*)                            | Completed ✔️  |
 | Iterative-Deepening B* (IDB*)                            | Completed ✔️  |
