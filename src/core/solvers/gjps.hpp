@@ -272,7 +272,10 @@ namespace chdr::solvers {
                             }
                         }
 
-                        if (curr_ptr != nullptr) {
+                        if (curr_ptr == nullptr) {
+                            curr.expunge();
+                        }
+                        else {
                             _open.reheapify(_open.back());
                         }
                     }

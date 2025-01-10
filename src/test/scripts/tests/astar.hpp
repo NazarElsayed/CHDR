@@ -104,14 +104,14 @@ namespace test::tests {
 
                         using weight_type [[maybe_unused]] = weight_t;
                         using scalar_type                  = scalar_t;
-                        using index_type                   = index_t;
-                        using coord_type                   = chdr::coord<index_type, Kd>;
+                        using  index_type                  = index_t;
+                        using  coord_type                  = chdr::coord<index_type, Kd>;
 
                         const decltype(test) maze;
-                        const coord_type     start;
-                        const coord_type     end;
-                        const coord_type     size;
-                        scalar_type          (*h)(const coord_type&, const coord_type&) noexcept;
+                        const  coord_type    start;
+                        const  coord_type    end;
+                        const  coord_type    size;
+                              scalar_type    (*h)(const coord_type&, const coord_type&) noexcept;
                         const scalar_type    weight      =  1U;
                         const size_t         capacity    =  0U;
                         const size_t         memoryLimit = -1U;
