@@ -28,18 +28,15 @@ namespace chdr::solvers {
 
     private:
 
-        using  index_t = typename params_t::index_type;
-        using scalar_t = typename params_t::scalar_type;
+        using  index_t = typename params_t:: index_type;
         using  coord_t = typename params_t:: coord_type;
         using solver_t = solver<iddfs, Kd, params_t>;
 
-        static_assert(std::is_arithmetic_v<scalar_t>, "scalar_t must be an integral or floating point type.");
-        static_assert(std::numeric_limits<scalar_t>::is_specialized, "scalar_t must be a numeric type with defined numeric limits.");
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
         struct node final : bnode<index_t> {
 
-            scalar_t m_depth;
+            index_t m_depth;
 
             /**
              * @brief Constructs an uninitialized node.
@@ -49,7 +46,7 @@ namespace chdr::solvers {
             // ReSharper disable once CppPossiblyUninitializedMember
             [[nodiscard]] constexpr node() noexcept : bnode<index_t>() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] constexpr node(const index_t& _index, const scalar_t& _depth) noexcept : bnode<index_t>(_index),
+            [[nodiscard]] constexpr node(const index_t& _index, const index_t& _depth) noexcept : bnode<index_t>(_index),
                 m_depth(_depth) {}
 
             [[nodiscard]] friend constexpr bool operator < (const node& _a, const node& _b) noexcept {
@@ -61,7 +58,7 @@ namespace chdr::solvers {
         struct state {
 
             neighbours_t neighbours;
-            size_t       neighbours_idx;
+            index_t      neighbours_idx;
 
             state(const node& _curr, const params_t& _params) :
                 neighbours(_params.maze.get_neighbours(_curr.m_index)),

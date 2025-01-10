@@ -29,17 +29,14 @@ namespace chdr::solvers {
     private:
 
         using  index_t = typename params_t:: index_type;
-        using scalar_t = typename params_t::scalar_type;
         using  coord_t = typename params_t:: coord_type;
         using solver_t = solver<eiddfs, Kd, params_t>;
 
-        static_assert(std::is_arithmetic_v<scalar_t>, "scalar_t must be an integral or floating point type.");
-        static_assert(std::numeric_limits<scalar_t>::is_specialized, "scalar_t must be a numeric type with defined numeric limits.");
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
         struct node final : bnode<index_t> {
 
-            scalar_t m_depth;
+            index_t m_depth;
 
             /**
              * @brief Constructs an uninitialized node.
@@ -49,7 +46,7 @@ namespace chdr::solvers {
             // ReSharper disable once CppPossiblyUninitializedMember
             [[nodiscard]] constexpr node() noexcept : bnode<index_t>() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] constexpr node(const index_t& _index, const scalar_t& _depth) noexcept : bnode<index_t>(_index),
+            [[nodiscard]] constexpr node(const index_t& _index, const index_t& _depth) noexcept : bnode<index_t>(_index),
                 m_depth(_depth) {}
 
             [[nodiscard]] friend constexpr bool operator < (const node& _a, const node& _b) noexcept {
@@ -61,17 +58,15 @@ namespace chdr::solvers {
         struct state {
 
             neighbours_t neighbours;
-            size_t       neighbours_idx;
+            index_t      neighbours_idx;
 
             state(const node& _curr, const params_t& _params) :
                 neighbours(_params.maze.get_neighbours(_curr.m_index)),
                 neighbours_idx(0U) {}
         };
 
-        using transposition_table_t = std::unordered_map<index_t, index_t>;
-
         template <typename open_set_t>
-        [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, const params_t& _params) {
+        [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, const size_t& _capacity, const params_t& _params) {
 
             using neighbours_t = decltype(_params.maze.get_neighbours());
 
@@ -82,8 +77,7 @@ namespace chdr::solvers {
 
             stack<state<neighbours_t>> stack;
 
-            transposition_table_t transposition_table;
-            transposition_table[s] = 0U;
+            existence_set transposition_table;
 
             for (size_t bound = 0U; bound < std::numeric_limits<size_t>::max(); ++bound) {
 
@@ -100,21 +94,17 @@ namespace chdr::solvers {
 
                         if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
 
-                            const auto next_depth = curr.m_depth + 1U;
+                            if (!transposition_table.contains(n.index)) {
+                                utils::preallocate_emplace(transposition_table, n.index, _capacity, _params.maze.count());
 
-                            auto search = transposition_table.find(n.index);
-                            if (!(search != transposition_table.end() && next_depth >= search->second)) {
-                                transposition_table[n.index] = next_depth;
-
-                                _open.emplace_back(n.index, next_depth);
+                                _open.emplace_back(n.index, curr.m_depth + 1U);
 
                                 if (n.index != e) { // SEARCH FOR SOLUTION...
                                     stack.emplace(_open.back(), _params);
                                 }
                                 else { // SOLUTION REACHED ...
 
-                                                  stack = {};
-                                    transposition_table = {};
+                                    stack = {};
 
                                     const auto result = utils::ibacktrack(_open, _params.size);
 
@@ -128,6 +118,7 @@ namespace chdr::solvers {
                     else {
                         _open.pop_back();
                         stack.pop();
+                        transposition_table.erase(curr.m_index);
                     }
                 }
 
@@ -136,9 +127,8 @@ namespace chdr::solvers {
                 transposition_table.clear();
             }
 
-                          _open = {};
-                          stack = {};
-            transposition_table = {};
+            _open = {};
+            stack = {};
 
             return std::vector<coord_t>{};
         }
@@ -153,7 +143,7 @@ namespace chdr::solvers {
             }
             catch ([[maybe_unused]] const std::exception& e) {} // NOLINT(*-empty-catch)
 
-            return solve_internal(open, _params);
+            return solve_internal(open, capacity, _params);
         }
     };
 

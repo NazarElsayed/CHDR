@@ -68,7 +68,7 @@ namespace chdr::solvers {
             const scalar_t bound;
 
             neighbours_t neighbours;
-            size_t       neighbours_idx;
+            index_t      neighbours_idx;
 
             state(const node& _curr, const scalar_t& _bound, const params_t& _params) :
                 curr(_curr),

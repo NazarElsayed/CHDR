@@ -112,8 +112,8 @@ namespace test::tests {
                         const coord_type     end;
                         const coord_type     size;
                         scalar_type          (*h)(const coord_type&, const coord_type&) noexcept;
-                        const scalar_type    weight      = 1U;
-                        const size_t         capacity    = 0U;
+                        const scalar_type    weight      =  1U;
+                        const size_t         capacity    =  0U;
                         const size_t         memoryLimit = -1U;
                     };
 
