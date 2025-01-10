@@ -117,7 +117,7 @@ namespace test::tests {
                         const size_t         memoryLimit = -1U;
                     };
 
-                    const auto solver = chdr::solvers::make_solver<chdr::solvers::astar, Kd, params>();
+                    const auto solver = chdr::solvers::make_solver<chdr::solvers::gjps, Kd, params>();
                     path = solver(test, start, end, size, HEURISTIC);
                 }
 

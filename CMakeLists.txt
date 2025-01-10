@@ -61,6 +61,7 @@ add_library(CHDR INTERFACE
         src/core/solvers/fstar.hpp
         src/core/solvers/gbfs.hpp
         src/core/solvers/gdfs.hpp
+        src/core/solvers/gjps.hpp
         src/core/solvers/idastar.hpp
         src/core/solvers/idbstar.hpp
         src/core/solvers/iddfs.hpp

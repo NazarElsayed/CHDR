@@ -18,9 +18,9 @@
 #include "mazes/nodes/id_node.hpp"
 #include "mazes/nodes/weighted_node.hpp"
 
+#include "solvers/astar.hpp"
 #include "solvers/base/bnode.hpp"
 #include "solvers/base/solver.hpp"
-#include "solvers/astar.hpp"
 #include "solvers/bfs.hpp"
 #include "solvers/bstar.hpp"
 #include "solvers/dfs.hpp"
@@ -33,6 +33,7 @@
 #include "solvers/fstar.hpp"
 #include "solvers/gbfs.hpp"
 #include "solvers/gdfs.hpp"
+#include "solvers/gjps.hpp"
 #include "solvers/gstar.hpp"
 #include "solvers/idastar.hpp"
 #include "solvers/idbstar.hpp"
