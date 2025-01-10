@@ -71,8 +71,8 @@ namespace test::tests {
 
             const auto grid = generator::grid::generate<weight_t>(start, end, 0.0, 0.0, seed, size);
 
-            //const auto test = grid;
-            const auto test = chdr::mazes::graph<index_t, scalar_t>(grid);
+            const auto test = grid;
+            //const auto test = chdr::mazes::graph<index_t, scalar_t>(grid);
             //const auto test = generator::graph::generate<weight_t, index_t, scalar_t>(start, end, 0.0, 0.0, seed, size); drawable = false;
 
             /* CAPTURE SYSTEM NOISE */
