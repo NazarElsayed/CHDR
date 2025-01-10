@@ -10,34 +10,30 @@
 #define CHDR_SOLVER_HPP
 
 #include <cstddef>
-#include <new>
+#include <exception>
 #include <type_traits>
 
 namespace chdr::solvers {
 
     template <
-        template <size_t Kd, typename scalar_t, typename index_t, typename params_t> typename Derived,
-        size_t Kd,
-        typename scalar_t,
-        typename  index_t,
-        typename params_t
+        template <size_t Kd, typename params_t> typename Derived, size_t Kd, typename params_t
     >
     class solver final {
 
-        using coord_t = coord<index_t, Kd>;
+        using coord_t = coord<typename params_t::index_type, Kd>;
 
     public:
 
         template <typename T>
-        struct is_graph : std::is_same<std::decay_t<T>, mazes::graph<index_t, scalar_t>> {};
+        struct is_graph : std::is_same<std::decay_t<T>, mazes::graph<typename params_t::index_type, typename params_t::scalar_type>> {};
 
         struct node_data {
 
             const bool active;
 
-            const  coord_t    coord;
-            const  index_t    index;
-            const scalar_t distance;
+            const                    coord_t     coord;
+            const typename params_t::index_type  index;
+            const typename params_t::scalar_type distance;
         };
 
         template <typename maze_neighbour_t>
@@ -63,8 +59,8 @@ namespace chdr::solvers {
                 // _params.maze is a grid...
                 const auto& [nActive, nCoord] = _n;
 
-                const auto nIndex = nActive ? utils::to_1d(nCoord, _params.size) : index_t{};
-                constexpr auto nDistance = static_cast<scalar_t>(1);
+                const auto nIndex = nActive ? utils::to_1d(nCoord, _params.size) : typename params_t::index_type{};
+                constexpr auto nDistance = static_cast<typename params_t::scalar_type>(1);
 
                 return {
                     nActive,
@@ -105,7 +101,7 @@ namespace chdr::solvers {
 #endif // __cplusplus >= 202003L
         auto operator()(Args&&... _args) const noexcept {
 
-            using solver_t = Derived<Kd, scalar_t, index_t, params_t>;
+            using solver_t = Derived<Kd, params_t>;
 
             try {
 
@@ -129,10 +125,8 @@ namespace chdr::solvers {
     };
 
     template <
-        template <size_t Kd, typename scalar_t, typename index_t, typename params_t> typename Derived,
+        template <size_t Kd, typename params_t> typename Derived,
         size_t Kd,
-        typename scalar_t,
-        typename index_t,
         typename params_t
     >
     [[nodiscard]] static
@@ -140,14 +134,12 @@ namespace chdr::solvers {
     constexpr
 #endif // __cplusplus >= 2023L
     auto make_solver() {
-        return solver<Derived, Kd, scalar_t, index_t, params_t>();
+        return solver<Derived, Kd, params_t>();
     }
 
     template <
-        template <size_t Kd, typename scalar_t, typename index_t, typename params_t> typename Derived,
+        template <size_t Kd, typename params_t> typename Derived,
         size_t Kd,
-        typename scalar_t,
-        typename index_t,
         typename params_t
     >
     [[nodiscard]] static
@@ -155,14 +147,12 @@ namespace chdr::solvers {
     constexpr
 #endif // __cplusplus >= 2023L
     auto solve() {
-        return solver<Derived, Kd, scalar_t, index_t, params_t>()();
+        return solver<Derived, Kd, params_t>()();
     }
 
     template <
-        template <size_t Kd, typename scalar_t, typename index_t, typename params_t> typename Derived,
+        template <size_t Kd, typename params_t> typename Derived,
         size_t Kd,
-        typename scalar_t,
-        typename index_t,
         typename params_t,
         typename... Args
     >
@@ -171,7 +161,7 @@ namespace chdr::solvers {
     constexpr
 #endif // __cplusplus >= 2023L
     auto solve(Args&&... _args) {
-        return solver<Derived, Kd, scalar_t, index_t, params_t>()(std::forward<Args>(_args)...);
+        return solver<Derived, Kd, params_t>()(std::forward<Args>(_args)...);
     }
 
 } //chdr::solvers

@@ -17,17 +17,19 @@
 
 namespace chdr::solvers {
 
-    template<size_t Kd, typename scalar_t, typename index_t, typename params_t>
+    template<size_t Kd, typename params_t>
     struct [[maybe_unused]] dijkstra final {
 
-        friend class solver<dijkstra, Kd, scalar_t, index_t, params_t>;
-
-        static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
+        friend class solver<dijkstra, Kd, params_t>;
 
     private:
 
-        using solver_t = solver<dijkstra, Kd, scalar_t, index_t, params_t>;
+        using  index_t = typename params_t::index_type;
+        using scalar_t = typename params_t::scalar_type;
+        using solver_t = solver<dijkstra, Kd, params_t>;
         using  coord_t = coord<index_t, Kd>;
+
+        static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
         [[maybe_unused, nodiscard]] static auto execute(const params_t& _params) {
 

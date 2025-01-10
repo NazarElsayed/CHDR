@@ -103,18 +103,20 @@ namespace test::tests {
                     struct params {
 
                         using weight_type [[maybe_unused]] = weight_t;
+                        using scalar_type [[maybe_unused]] = scalar_t;
+                        using index_type  [[maybe_unused]] = index_t;
 
                         const decltype(test)       maze;
                         const coord_t              start;
                         const coord_t              end;
                         const coord_t              size;
                         const decltype(&HEURISTIC) h;
-                        const scalar_t             weight      =  1U;
+                        const scalar_type          weight      =  1U;
                         const size_t               capacity    =  0U;
                         const size_t               memoryLimit = -1U;
                     };
 
-                    const auto solver = chdr::solvers::make_solver<chdr::solvers::astar, Kd, scalar_t, index_t, params>();
+                    const auto solver = chdr::solvers::make_solver<chdr::solvers::astar, Kd, params>();
                     path = solver(test, start, end, size, HEURISTIC);
                 }
 

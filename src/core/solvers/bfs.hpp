@@ -23,18 +23,19 @@
 
 namespace chdr::solvers {
 
-    template<size_t Kd, typename scalar_t, typename index_t, typename params_t>
+    template<size_t Kd, typename params_t>
     struct [[maybe_unused]] bfs final {
 
-        friend class solver<bfs, Kd, scalar_t, index_t, params_t>;
-
-        static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
+        friend class solver<bfs, Kd, params_t>;
 
     private:
 
-        using solver_t = solver<bfs, Kd, scalar_t, index_t, params_t>;
+        using  index_t = typename params_t::index_type;
+        using solver_t = solver<bfs, Kd, params_t>;
         using  coord_t = coord<index_t, Kd>;
         using     node = unmanaged_node<index_t>;
+
+        static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
         template <typename open_set_t, typename closed_set_t, typename alloc_t>
         [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, alloc_t& _alloc, const size_t& _capacity, const params_t& _params) {

@@ -14,7 +14,7 @@ if (CHDR_VERSION_METADATA)
     set(CHDR_VERSION "${CHDR_VERSION_MAJOR}.${CHDR_VERSION_MINOR}.${CHDR_VERSION_PATCH}${CHDR_VERSION_METADATA}")
 endif ()
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 configure_file(CHDR_Version.hpp.in CHDR_Version.hpp)
@@ -41,11 +41,8 @@ add_library(LOUIERIKSSON_DEBUG_HPP INTERFACE
 # ADD CHDR:
 add_library(CHDR INTERFACE
         src/core/chdr.hpp
-        src/core/mazes/base/igraph.hpp
-        src/core/mazes/base/imaze.hpp
         src/core/mazes/graph.hpp
         src/core/mazes/grid.hpp
-        src/core/mazes/nodes/base/inode.hpp
         src/core/mazes/nodes/id_node.hpp
         src/core/mazes/nodes/weighted_node.hpp
         src/core/solvers/astar.hpp
