@@ -26,7 +26,6 @@
 #include "types/dynamic_pool_allocator.hpp"
 #include "types/stack.hpp"
 #include "utils/intrinsics.hpp"
-#include "types/hashmap.hpp"
 
 namespace chdr::mazes {
 
@@ -35,18 +34,9 @@ namespace chdr::mazes {
 
     private:
 
-        using edge_t = std::pair<index_t, scalar_t>;
-
-        struct index_hash {
-            constexpr size_t operator () (const index_t& _index) const noexcept { return static_cast<size_t>(_index); }
-        };
-
-        struct index_equal {
-            constexpr bool operator () (const index_t& _a, const index_t& _b) const noexcept { return _a == _b; }
-        };
-
-        using neighbours_t    = std::vector<edge_t>;
-        using adjacency_set_t = std::unordered_map<index_t, neighbours_t, index_hash>;
+        using          edge_t = std::pair<index_t, scalar_t>;
+        using    neighbours_t = std::vector<edge_t>;
+        using adjacency_set_t = std::unordered_map<index_t, neighbours_t>;
 
         adjacency_set_t m_entries;
 
@@ -54,7 +44,7 @@ namespace chdr::mazes {
 
         [[maybe_unused]] constexpr graph() {}
 
-        [[maybe_unused]] constexpr graph(const std::initializer_list<std::initializer_list<edge_t>>& _adjacencyList) : m_entries() {
+        [[maybe_unused]] constexpr graph(const std::initializer_list<std::initializer_list<edge_t>>& _adjacencyList) {
 
             index_t index{0};
 
@@ -87,10 +77,10 @@ namespace chdr::mazes {
 
                     stack<edge_t> stack;
 
-                    std::unordered_set<index_t, index_hash, index_equal> global_closed;
-                    std::unordered_set<index_t, index_hash, index_equal> local_closed;
+                    std::unordered_set<index_t> global_closed;
+                    std::unordered_set<index_t> local_closed;
 
-                    std::unordered_map<index_t, neighbours_t, index_hash, index_equal> thread_connections;
+                    std::unordered_map<index_t, neighbours_t> thread_connections;
 
                     for (auto index = _start; index < _end; ++index) {
 

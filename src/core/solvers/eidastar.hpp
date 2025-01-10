@@ -75,15 +75,7 @@ namespace chdr::solvers {
                 neighbours_idx(0U) {}
         };
 
-        struct index_hash {
-            constexpr size_t operator () (const index_t& _index) const noexcept { return static_cast<index_t>(_index); }
-        };
-
-        struct index_equal {
-            constexpr bool operator () (const index_t& _a, const index_t& _b) const noexcept { return _a == _b; }
-        };
-
-        using transposition_table_t = std::unordered_map<index_t, scalar_t, index_hash, index_equal>;
+        using transposition_table_t = std::unordered_map<index_t, scalar_t>;
 
         template <typename open_set_t>
         [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, const params_t& _params) {
