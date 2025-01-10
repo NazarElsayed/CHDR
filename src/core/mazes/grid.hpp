@@ -90,13 +90,9 @@ namespace chdr::mazes {
         }
 
         template<typename... Args>
-        [[nodiscard]] constexpr const auto& at(const Args&... _id) const {
-            return at({ _id... });
-        }
+        [[nodiscard]] constexpr const auto& at(const Args&... _id) const { return at({ _id... }); }
 
-        [[nodiscard]] constexpr const auto& at(const coord_t& _id) const {
-            return at(utils::to_1d(_id, m_size));
-        }
+        [[nodiscard]] constexpr const auto& at(const coord_t& _id) const { return at(utils::to_1d(_id, m_size)); }
 
         [[nodiscard]] constexpr const auto& at(const size_t& _id) const {
             assert(contains(_id) && "Out of bounds access.");
@@ -104,17 +100,13 @@ namespace chdr::mazes {
         }
 
         template<typename... Args>
-        [[nodiscard]] constexpr bool contains(const Args&... _id) const noexcept {
-            return contains({ _id... });
-        }
+        [[nodiscard]] constexpr bool contains(const Args&... _id) const noexcept { return contains({ _id... }); }
 
         [[nodiscard]] constexpr bool contains(const coord_t& _id) const noexcept {
             return std::all_of(0U, Kd, [&](const size_t& _i) noexcept { return _id[_i] < m_size[_i]; });
         }
 
-        [[nodiscard]] constexpr bool contains(const size_t& _id) const noexcept {
-            return _id < count();
-        }
+        [[nodiscard]] constexpr bool contains(const size_t& _id) const noexcept { return _id < count(); }
 
         [[nodiscard]] constexpr bool is_transitory(const size_t& _index) const noexcept {
 
@@ -142,9 +134,7 @@ namespace chdr::mazes {
             return count == 2U;
         }
 
-        [[nodiscard]] constexpr auto& operator[](const size_t& _id) const noexcept {
-            return at(_id);
-        }
+        [[nodiscard]] constexpr auto& operator[](const size_t& _id) const noexcept { return at(_id); }
 
         using               iterator_t = typename std::vector<weight_t>::iterator;
         using         const_iterator_t = typename std::vector<weight_t>::const_iterator;
@@ -230,14 +220,17 @@ namespace chdr::mazes {
      */
     template <size_t Kd>
     class grid<Kd, bool> final {
+
         using coord_t = coord<size_t, Kd>;
 
     public:
-        static constexpr auto s_rank{Kd};
+
+        static constexpr auto s_rank { Kd };
 
         static_assert(Kd > 0U, "Kd must be greater than 0.");
 
     private:
+
         static constexpr auto s_neighbour_count{utils::powui(static_cast<size_t>(3U), Kd) - 1U};
 
         using neighbours_t = std::array<std::pair<bool, coord_t>, s_neighbour_count>;
@@ -259,21 +252,13 @@ namespace chdr::mazes {
             m_count(utils::product<size_t>(m_size)),
             m_nodes(_nodes) {}
 
-        [[nodiscard]] constexpr const std::vector<bool>& nodes() const noexcept {
-            return m_nodes;
-        }
+        [[nodiscard]] constexpr const std::vector<bool>& nodes() const noexcept { return m_nodes; }
 
-        constexpr void nodes(const std::vector<bool>& _value) noexcept {
-            m_nodes = _value;
-        }
+        constexpr void nodes(const std::vector<bool>& _value) noexcept { m_nodes = _value; }
 
-        [[nodiscard]] constexpr const coord_t& size() const noexcept {
-            return m_size;
-        }
+        [[nodiscard]] constexpr const coord_t& size() const noexcept { return m_size; }
 
-        [[nodiscard]] constexpr size_t count() const noexcept {
-            return m_count;
-        }
+        [[nodiscard]] constexpr size_t count() const noexcept { return m_count; }
 
         template <bool IncludeDiagonals = false, typename... Args>
         [[nodiscard]] constexpr auto get_neighbours(const Args&... _id) const noexcept {
@@ -282,6 +267,7 @@ namespace chdr::mazes {
 
         template <bool IncludeDiagonals = false>
         [[nodiscard]] constexpr auto get_neighbours(const coord_t& _id) const noexcept {
+
             if constexpr (IncludeDiagonals) {
                 return compute_diagonal_neighbours(_id, std::make_index_sequence<s_neighbour_count>{});
             }
@@ -296,13 +282,9 @@ namespace chdr::mazes {
         }
 
         template <typename... Args>
-        [[nodiscard]] constexpr auto at(const Args&... _id) const {
-            return at({_id...});
-        }
+        [[nodiscard]] constexpr auto at(const Args&... _id) const { return at({_id...}); }
 
-        [[nodiscard]] constexpr auto at(const coord_t& _id) const {
-            return at(utils::to_1d(_id, m_size));
-        }
+        [[nodiscard]] constexpr auto at(const coord_t& _id) const { return at(utils::to_1d(_id, m_size)); }
 
         [[nodiscard]] constexpr weighted_node<bool> at(const size_t& _id) const {
             assert(contains(_id) && "Out of bounds access.");
@@ -310,17 +292,13 @@ namespace chdr::mazes {
         }
 
         template <typename... Args>
-        [[nodiscard]] constexpr bool contains(const Args&... _id) const noexcept {
-            return contains({_id...});
-        }
+        [[nodiscard]] constexpr bool contains(const Args&... _id) const noexcept { return contains({_id...}); }
 
         [[nodiscard]] constexpr bool contains(const coord_t& _id) const noexcept {
             return std::all_of(0U, Kd, [&](const size_t& _i) noexcept { return _id[_i] < m_size[_i]; });
         }
 
-        [[nodiscard]] constexpr bool contains(const size_t& _id) const noexcept {
-            return _id < count();
-        }
+        [[nodiscard]] constexpr bool contains(const size_t& _id) const noexcept { return _id < count(); }
 
         [[nodiscard]] constexpr bool is_transitory(const size_t& _index) const noexcept {
             size_t count = 0U;
@@ -346,9 +324,7 @@ namespace chdr::mazes {
             return count == 2U;
         }
 
-        [[nodiscard]] constexpr auto& operator[](const size_t& _id) const noexcept {
-            return m_nodes[_id];
-        }
+        [[nodiscard]] constexpr auto& operator[](const size_t& _id) const noexcept { return m_nodes[_id]; }
 
         using               iterator_t = std::vector<bool>::              iterator;
         using         const_iterator_t = std::vector<bool>::        const_iterator;
