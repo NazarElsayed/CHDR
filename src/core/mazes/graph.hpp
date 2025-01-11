@@ -58,12 +58,12 @@ namespace chdr::mazes {
             }
         }
 
-        template <size_t Kd, typename weight_t, const bool Prune = true>
+        template <typename coord_t, typename weight_t, const bool Prune = true>
         [[maybe_unused]]
 #if defined(__cpp_constexpr_dynamic_alloc) && (__cpp_constexpr_dynamic_alloc >= 201907L)
         constexpr
 #endif // defined(__cpp_constexpr_dynamic_alloc) && (__cpp_constexpr_dynamic_alloc >= 201907L)
-        explicit graph(const grid<Kd, weight_t>& _grid) {
+        explicit graph(const grid<coord_t, weight_t>& _grid) {
 
             const auto size = _grid.size();
 
@@ -186,11 +186,6 @@ namespace chdr::mazes {
 
                 malloc_consolidate();
             }
-        }
-
-        template<typename... Args>
-        [[nodiscard]] constexpr const auto& at(const Args&... _id) const {
-            return at({_id...});
         }
 
         [[nodiscard]] constexpr const auto& at(const index_t& _id) const {

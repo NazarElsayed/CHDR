@@ -36,10 +36,10 @@ namespace test::tests {
 
     public:
 
-        template <typename weight_t, size_t Kd, typename scalar_t = uint32_t, typename index_t = uint32_t>
-        static void run(const chdr::coord<index_t, Kd>& _dimensions) {
+        template <typename weight_t, typename coord_t, typename scalar_t = uint32_t, typename index_t = uint32_t>
+        static void run(const coord_t& _dimensions) {
 
-            using coord_t = typename std::decay_t<decltype(_dimensions)>;
+            constexpr auto Kd = std::tuple_size_v<std::decay_t<coord_t>>;
 
             /* TEST SAMPLES */
 #ifndef NDEBUG
@@ -54,11 +54,12 @@ namespace test::tests {
                       coord_t end;
 
             /* GENERATE MAZE */
-            const auto grid = generator::grid::generate<weight_t>(start, end, 0.0, 0.0, 0U, size);
+            constexpr auto seed { 0U };
+            const auto grid = generator::grid::generate<weight_t>(start, end, size, 0.0, 0.0, seed);
 
             const auto test = grid;
             //const auto test = chdr::mazes::graph<index_t, scalar_t>(grid);
-            //const auto test = generator::graph::generate<weight_t, index_t, scalar_t>(start, end, 0.0, 0.0, seed, size); drawable = false;
+            //const auto test = generator::graph::generate<weight_t, index_t, coord_t, scalar_t>(start, end, size, seed);
 
             /* CAPTURE SYSTEM NOISE */
             auto noise_floor_min = std::numeric_limits<long double>::max();
@@ -88,8 +89,8 @@ namespace test::tests {
 
                         using weight_type [[maybe_unused]] = weight_t;
                         using scalar_type                  = scalar_t;
-                        using  index_type                  = index_t;
-                        using  coord_type                  = chdr::coord<index_type, Kd>;
+                        using  index_type                  =  index_t;
+                        using  coord_type                  =  coord_t;
 
                         const decltype(test) maze;
                         const  coord_type    start;
@@ -97,8 +98,8 @@ namespace test::tests {
                         const  coord_type    size;
                               scalar_type    (*h)(const coord_type&, const coord_type&) noexcept;
                         const scalar_type    weight      =  1U;
-                        const size_t         capacity    =  0U;
-                        const size_t         memoryLimit = -1U;
+                        const  index_type    capacity    =  0U;
+                        const  index_type    memoryLimit = -1U;
                     };
 
                     const auto solver = chdr::solvers::make_solver<chdr::solvers::astar, params>();
@@ -119,7 +120,7 @@ namespace test::tests {
                       Kd >    0U &&
                       Kd <    3U
             ) {
-                display<weight_t, Kd>::draw_maze(start, end, size, grid, path);
+                display::draw_maze(start, end, size, grid, path);
             }
 
             debug::log("\t" + std::string(!path.empty() ? "[SOLVED]" : "[IMPOSSIBLE]") +

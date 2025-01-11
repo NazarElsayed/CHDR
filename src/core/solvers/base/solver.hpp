@@ -55,7 +55,10 @@ namespace chdr::solvers {
                 // _params.maze is a grid...
                 const auto& [nActive, nCoord] = _n;
 
-                const auto nIndex = nActive ? utils::to_1d(nCoord, _params.size) : typename params_t::index_type{};
+                const auto nIndex = static_cast<typename params_t::index_type>(
+                    nActive ? utils::to_1d(nCoord, _params.size) : typename params_t::index_type{}
+                );
+
                 constexpr auto nDistance = static_cast<typename params_t::scalar_type>(1);
 
                 return {
@@ -71,16 +74,18 @@ namespace chdr::solvers {
 
             if constexpr (is_graph<decltype(_params.maze)>::value) {
 
-                return _params.capacity != 0U ?
-                    _params.capacity :
-                    std::max(_params.maze.count() / 10U, static_cast<size_t>(1U));
+                return static_cast<typename params_t::index_type>(
+                    _params.capacity != 0U ?
+                        _params.capacity :
+                        std::max(_params.maze.count() / 10U, static_cast<size_t>(1U))
+                );
             }
             else {
                 return std::max(
                     _params.capacity,
                     std::max(
-                        utils::to_1d(_params.start, _params.size),
-                        utils::to_1d(_params.end,   _params.size)
+                        static_cast<typename params_t::index_type>(utils::to_1d(_params.start, _params.size)),
+                        static_cast<typename params_t::index_type>(utils::to_1d(_params.end,   _params.size))
                     )
                 );
             }

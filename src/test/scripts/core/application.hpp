@@ -118,8 +118,8 @@ namespace test {
 		 *
 		 * @return An integer error code (0 for successful execution)
 		 */
-		template<size_t Kd>
-		static int main(const chdr::coord<size_t, Kd> _dimensions) {
+		template<typename coord_t>
+		static int main(const coord_t& _dimensions) {
 
 			debug::log("Application::main()", info);
 

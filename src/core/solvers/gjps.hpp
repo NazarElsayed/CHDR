@@ -235,8 +235,8 @@ namespace chdr::solvers {
         template <typename open_set_t, typename closed_set_t>
         [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, const size_t& _capacity, const params_t& _params) {
 
-            static_assert(std::is_base_of_v<mazes::grid<Kd, weight_t>, std::remove_cv_t<std::remove_reference_t<decltype(_params.maze)>>>,
-                          "JPS only supports mazes of type grid<Kd, weight_t>.");
+            static_assert(std::is_base_of_v<mazes::grid<coord_t, weight_t>, std::remove_cv_t<std::remove_reference_t<decltype(_params.maze)>>>,
+                          "GJPS only supports grid mazes.");
 
             if constexpr (Kd == 2U) {
 

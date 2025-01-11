@@ -24,19 +24,19 @@ namespace test::generator {
 
 	    using rng_engine_t = utils::linear_congruential_generator<size_t>; //std::mt19937_64;
 
-        template <typename T, typename index_t, typename scalar_t, size_t Kd, typename... Args>
-        static auto generate(const chdr::coord<size_t, Kd>& _start, chdr::coord<size_t, Kd>& _end, const size_t& _seed = -1U, const Args&... _size) {
+        template <typename weight_t, typename index_t, typename coord_t, typename scalar_t>
+        static auto generate(const coord_t& _start, coord_t& _end, const coord_t& _size, const size_t& _seed = -1U) {
 
-			static_assert(std::is_integral_v<T>, "Type T must be an integral type.");
+			static_assert(std::is_integral_v<weight_t>, "Type weight_t must be an integral type.");
 
+			constexpr auto Kd = std::tuple_size_v<std::decay_t<coord_t>>;
+			
             constexpr bool bidirectional = true;
 
             _end = _start;
 
             debug::log("(Graph):");
             debug::log("\tRandom Spanning Tree\t (Seed " + std::to_string(_seed) + ")");
-
-            std::array size { _size... };
 
             chdr::mazes::graph<index_t, scalar_t> result;
 
@@ -45,14 +45,14 @@ namespace test::generator {
             const auto seed = _seed == null_v ? std::random_device().operator()() : _seed;
             rng_engine_t rng(seed);
 
-            const auto maxIndex = chdr::utils::product<index_t>(size);
+            const auto maxIndex = chdr::utils::product<index_t>(_size);
 
             std::vector<index_t> keys;
             std::unordered_map<index_t, size_t> depths;
             size_t maxDepth = 0U;
 
             {
-                const auto s = chdr::utils::to_1d(_start, size);
+                const auto s = chdr::utils::to_1d(_start, _size);
                 result.add(s, {});
                 keys.emplace_back(s);
                 depths[s] = maxDepth;
@@ -80,7 +80,7 @@ namespace test::generator {
                 if (depth > maxDepth) {
                     maxDepth = depth;
 
-                    _end = chdr::utils::to_nd(curr, size);
+                    _end = chdr::utils::to_nd(curr, _size);
                 }
 
                 if (result.get_neighbours(curr).size() <= 1U) {

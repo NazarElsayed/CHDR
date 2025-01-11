@@ -18,10 +18,10 @@
 
 namespace test::generator::utils {
 
-    template<size_t Kd = 2U>
+    template<typename coord_t>
     class backtracking {
 
-        using coord_t = chdr::coord<size_t, Kd>;
+        static constexpr auto Kd = std::tuple_size_v<std::decay_t<coord_t>>;
 
         using rng_engine_t = linear_congruential_generator<size_t>; //std::mt19937_64;
 
@@ -92,7 +92,7 @@ namespace test::generator::utils {
             }
         }
 
-        template <typename coord_t, typename container_t>
+        template <typename container_t>
         static
 #if defined(__cpp_constexpr_dynamic_alloc) && (__cpp_constexpr_dynamic_alloc >= 201907L)
         constexpr

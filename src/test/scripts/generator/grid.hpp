@@ -19,38 +19,36 @@ namespace test::generator {
 
 	struct grid final {
 
-		template <typename T, size_t Kd, typename... Args>
-		static constexpr auto generate(const chdr::coord<size_t, Kd>& _start, chdr::coord<size_t, Kd>& _end, const double& _loops = 0.0, const double& _obstacles = 0.0, const size_t& _seed = -1U, const Args&... _size) {
+		template <typename weight_t, typename coord_t, typename scalar_t>
+		static constexpr auto generate(const coord_t& _start, coord_t& _end, const coord_t& _size, const scalar_t& _loops = static_cast<scalar_t>(0.0), const scalar_t& _obstacles = static_cast<scalar_t>(0.0), const size_t& _seed = -1U) {
 
-			static_assert(std::is_integral_v<T>, "Type T must be an integral type.");
+			static_assert(std::is_integral_v<weight_t>, "Type T must be an integral type.");
+
+			using backtracking_t = utils::backtracking<coord_t>;
 
             debug::log("(Maze):");
 
-			using backtracking_t = utils::backtracking<Kd>;
+			const auto maze = backtracking_t::generate(_start, _end, _size, _loops, _obstacles, _seed);
 
-			std::array size { _size... };
+			debug::log("\t[FINISHED] \t(~" + chdr::utils::trim_trailing_zeros(std::to_string(chdr::utils::product<size_t>(_size) / static_cast<long double>(1000000000.0))) + "b total candidate nodes)");
 
-			const auto maze = backtracking_t::generate(_start, _end, size, _loops, _obstacles, _seed);
-
-			debug::log("\t[FINISHED] \t(~" + chdr::utils::trim_trailing_zeros(std::to_string(chdr::utils::product<size_t>(size) / static_cast<long double>(1000000000.0))) + "b total candidate nodes)");
-
-			if constexpr (std::is_same_v<T, bool>) {
-				return chdr::mazes::grid<Kd, T>(size, maze);
+			if constexpr (std::is_same_v<weight_t, bool>) {
+				return chdr::mazes::grid<coord_t, weight_t>(_size, maze);
 			}
 			else {
 
-				std::vector<T> nodes;
+				std::vector<weight_t> nodes;
 				nodes.reserve(maze.size());
 
 				for (const auto& node : maze) {
 					nodes.emplace_back(
 						node == backtracking_t::WALL ?
-						std::numeric_limits<T>::max() :
-						std::numeric_limits<T>::lowest()
+						std::numeric_limits<weight_t>::max() :
+						std::numeric_limits<weight_t>::lowest()
 					);
 				}
 
-				return chdr::mazes::grid<Kd, T>(size, nodes);
+				return chdr::mazes::grid<coord_t, weight_t>(_size, nodes);
 			}
 		}
 	};

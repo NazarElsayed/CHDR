@@ -22,23 +22,18 @@
 
 namespace chdr::mazes {
 
-    /**
-     * @tparam Kd Dimensionality of the grid.
-     */
-    template<size_t Kd, typename weight_t>
+    template<typename coord_t, typename weight_t>
     class grid final {
-
-        using coord_t = coord<size_t, Kd>;
 
     public:
 
-        static constexpr auto s_rank { Kd };
+        static constexpr auto s_rank = std::tuple_size_v<std::decay_t<coord_t>>;
 
         static_assert(std::is_integral_v<weight_t>, "weight_t must be integral.");
 
     private:
 
-        static constexpr auto s_neighbour_count { utils::powui(static_cast<size_t>(3U), Kd) - 1U };
+        static constexpr auto s_neighbour_count { utils::powui(static_cast<size_t>(3U), s_rank) - 1U };
 
         using neighbours_t = std::array<std::pair<bool, coord_t>, s_neighbour_count>;
 
@@ -67,11 +62,6 @@ namespace chdr::mazes {
 
         [[nodiscard]] constexpr size_t count() const noexcept { return m_count; }
 
-        template<bool IncludeDiagonals = false, typename... Args>
-        [[nodiscard]] constexpr auto get_neighbours(const Args&... _id) const noexcept {
-            return get_neighbours<IncludeDiagonals>({ _id... });
-        }
-
         template<bool IncludeDiagonals = false>
         [[nodiscard]] constexpr auto get_neighbours(const coord_t& _id) const noexcept {
 
@@ -79,7 +69,7 @@ namespace chdr::mazes {
                 return compute_diagonal_neighbours(_id, std::make_index_sequence<s_neighbour_count>{});
             }
             else {
-                return compute_axis_neighbours(_id, std::make_index_sequence<Kd>{});
+                return compute_axis_neighbours(_id, std::make_index_sequence<s_rank>{});
             }
         }
 
@@ -88,9 +78,6 @@ namespace chdr::mazes {
             return get_neighbours<IncludeDiagonals>(utils::to_nd(_id, size()));
         }
 
-        template<typename... Args>
-        [[nodiscard]] constexpr const auto& at(const Args&... _id) const { return at({ _id... }); }
-
         [[nodiscard]] constexpr const auto& at(const coord_t& _id) const { return at(utils::to_1d(_id, m_size)); }
 
         [[nodiscard]] constexpr const auto& at(const size_t& _id) const {
@@ -98,11 +85,8 @@ namespace chdr::mazes {
             return reinterpret_cast<const weighted_node<weight_t>&>(m_nodes[_id]);
         }
 
-        template<typename... Args>
-        [[nodiscard]] constexpr bool contains(const Args&... _id) const noexcept { return contains({ _id... }); }
-
         [[nodiscard]] constexpr bool contains(const coord_t& _id) const noexcept {
-            return std::all_of(0U, Kd, [&](const size_t& _i) noexcept { return _id[_i] < m_size[_i]; });
+            return std::all_of(0U, s_rank, [&](const size_t& _i) noexcept { return _id[_i] < m_size[_i]; });
         }
 
         [[nodiscard]] constexpr bool contains(const size_t& _id) const noexcept { return _id < count(); }
@@ -171,7 +155,7 @@ namespace chdr::mazes {
         [[nodiscard]] constexpr auto compute_axis_neighbours(const coord_t& _id, std::index_sequence<Indices...>) const noexcept { // NOLINT(*-named-parameter)
 
             neighbours_t result;
-            (compute_single_axis<Indices>(_id, result[Indices], result[Kd + Indices]), ...);
+            (compute_single_axis<Indices>(_id, result[Indices], result[s_rank + Indices]), ...);
 
             return result;
         }
@@ -186,12 +170,12 @@ namespace chdr::mazes {
             coord_t nCoord = _id;
 
             IVDEP
-            for (size_t j = 0U; j < Kd; ++j) {
+            for (size_t j = 0U; j < s_rank; ++j) {
 
                 nCoord[j] += (direction[j] - 1U);
                       oob |= (nCoord[j] >= m_size[j]);
 
-                if constexpr (Kd > 4U) {
+                if constexpr (s_rank > 4U) {
                     if (oob) { break; }
                 }
             }
@@ -215,22 +199,18 @@ namespace chdr::mazes {
 
     /**
      * Specialization of grid for weight_t = bool
-     * @tparam Kd Dimensionality of the grid.
+     * @tparam s_rank Dimensionality of the grid.
      */
-    template <size_t Kd>
-    class grid<Kd, bool> final {
-
-        using coord_t = coord<size_t, Kd>;
+    template <typename coord_t>
+    class grid<coord_t, bool> final {
 
     public:
 
-        static constexpr auto s_rank { Kd };
-
-        static_assert(Kd > 0U, "Kd must be greater than 0.");
+        static constexpr auto s_rank = std::tuple_size_v<std::decay_t<coord_t>>;
 
     private:
 
-        static constexpr auto s_neighbour_count{utils::powui(static_cast<size_t>(3U), Kd) - 1U};
+        static constexpr auto s_neighbour_count{utils::powui(static_cast<size_t>(3U), s_rank) - 1U};
 
         using neighbours_t = std::array<std::pair<bool, coord_t>, s_neighbour_count>;
 
@@ -259,11 +239,6 @@ namespace chdr::mazes {
 
         [[nodiscard]] constexpr size_t count() const noexcept { return m_count; }
 
-        template <bool IncludeDiagonals = false, typename... Args>
-        [[nodiscard]] constexpr auto get_neighbours(const Args&... _id) const noexcept {
-            return get_neighbours<IncludeDiagonals>({_id...});
-        }
-
         template <bool IncludeDiagonals = false>
         [[nodiscard]] constexpr auto get_neighbours(const coord_t& _id) const noexcept {
 
@@ -271,7 +246,7 @@ namespace chdr::mazes {
                 return compute_diagonal_neighbours(_id, std::make_index_sequence<s_neighbour_count>{});
             }
             else {
-                return compute_axis_neighbours(_id, std::make_index_sequence<Kd>{});
+                return compute_axis_neighbours(_id, std::make_index_sequence<s_rank>{});
             }
         }
 
@@ -280,9 +255,6 @@ namespace chdr::mazes {
             return get_neighbours<IncludeDiagonals>(utils::to_nd(_id, size()));
         }
 
-        template <typename... Args>
-        [[nodiscard]] constexpr auto at(const Args&... _id) const { return at({_id...}); }
-
         [[nodiscard]] constexpr auto at(const coord_t& _id) const { return at(utils::to_1d(_id, m_size)); }
 
         [[nodiscard]] constexpr weighted_node<bool> at(const size_t& _id) const {
@@ -290,11 +262,8 @@ namespace chdr::mazes {
             return { m_nodes[_id] };
         }
 
-        template <typename... Args>
-        [[nodiscard]] constexpr bool contains(const Args&... _id) const noexcept { return contains({_id...}); }
-
         [[nodiscard]] constexpr bool contains(const coord_t& _id) const noexcept {
-            return std::all_of(0U, Kd, [&](const size_t& _i) noexcept { return _id[_i] < m_size[_i]; });
+            return std::all_of(0U, s_rank, [&](const size_t& _i) noexcept { return _id[_i] < m_size[_i]; });
         }
 
         [[nodiscard]] constexpr bool contains(const size_t& _id) const noexcept { return _id < count(); }
@@ -358,7 +327,7 @@ namespace chdr::mazes {
         template <size_t... Indices>
         [[nodiscard]] constexpr auto compute_axis_neighbours(const coord_t& _id, std::index_sequence<Indices...>) const noexcept {
             neighbours_t result;
-            (compute_single_axis<Indices>(_id, result[Indices], result[Kd + Indices]), ...);
+            (compute_single_axis<Indices>(_id, result[Indices], result[s_rank + Indices]), ...);
             return result;
         }
 
@@ -371,11 +340,11 @@ namespace chdr::mazes {
             bool    oob    = false;
             coord_t nCoord = _id;
 
-            for (size_t j = 0U; j < Kd; ++j) {
+            for (size_t j = 0U; j < s_rank; ++j) {
                 nCoord[j] += (direction[j] - 1U);
                 oob |= (nCoord[j] >= m_size[j]);
 
-                if constexpr (Kd > 4U) {
+                if constexpr (s_rank > 4U) {
                     if (oob) { break; }
                 }
             }
