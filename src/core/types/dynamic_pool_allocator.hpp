@@ -116,20 +116,20 @@ namespace chdr {
             return *this;
         }
         
-        void construct(T* _p, const T& _val) noexcept {
+        void construct(T* _p, const T& _val) {
             static_assert(std::is_copy_constructible_v<T>, "T must be copy constructible.");
             assert(_p != nullptr && "Attempting to construct at a null pointer.");
             new(_p) T(_val);
         }
 
-        void construct(T* _p, T&& _val) noexcept {
+        void construct(T* _p, T&& _val) {
             static_assert(std::is_move_constructible_v<T>, "T must be move constructible.");
             assert(_p != nullptr && "Attempting to construct at a null pointer.");
             new(_p) T(std::move(_val));
         }
 
         template <typename... Args>
-        void construct(T* _p, Args&&... _args) noexcept {
+        void construct(T* _p, Args&&... _args) {
             static_assert(std::is_constructible_v<T, Args...>, "T cannot be constructed with the provided arguments.");
             assert(_p != nullptr && "Attempting to construct at a null pointer.");
             new(_p) T(std::forward<Args>(_args)...);

@@ -109,14 +109,14 @@ namespace chdr::solvers {
                 if (params.maze.contains(s) && params.maze.at(s).is_active() &&
                     params.maze.contains(e) && params.maze.at(e).is_active()
                 ) {
-                    return s != e ? solver_t::execute(params) : std::vector<typename params_t:: coord_type> { params.end };
+                    return s != e ? solver_t::execute(params) : std::vector<typename params_t::coord_type> { params.end };
                 }
             }
             catch (const std::exception& e) {
                 std::cerr << e.what() << "\n";
             }
 
-            return std::vector<typename params_t:: coord_type>{};
+            return std::vector<typename params_t::coord_type>{};
         }
     };
 

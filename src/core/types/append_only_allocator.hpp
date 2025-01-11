@@ -24,7 +24,7 @@ namespace chdr {
 
         using block_t = std::unique_ptr<T[]>; // NOLINT(*-avoid-c-arrays)
 
-        static constexpr size_t max_block_width { 65536U / 4U };
+        static constexpr size_t max_block_width { 65536U / sizeof(T*) };
 
         size_t block_width;
         size_t index;
@@ -57,17 +57,23 @@ namespace chdr {
             block_width(std::min(static_cast<size_t>(64U), max_block_width)),
             index(block_width / 2U) {}
 
+        void construct(T* _p, const T& _val) {
+            static_assert(std::is_copy_constructible_v<T>, "T must be copy constructible.");
+            assert(_p != nullptr && "Attempting to construct at a null pointer.");
+            new(_p) T(_val);
+        }
+
         void construct(T* _p, T&& _val) {
-            if (_p != nullptr) {
-                new(_p) T(std::move(_val));
-            }
+            static_assert(std::is_move_constructible_v<T>, "T must be move constructible.");
+            assert(_p != nullptr && "Attempting to construct at a null pointer.");
+            new(_p) T(std::move(_val));
         }
 
         template <typename... Args>
         void construct(T* _p, Args&&... _args) {
-            if (_p != nullptr) {
-                new(_p) T(std::forward<Args>(_args)...);
-            }
+            static_assert(std::is_constructible_v<T, Args...>, "T cannot be constructed with the provided arguments.");
+            assert(_p != nullptr && "Attempting to construct at a null pointer.");
+            new(_p) T(std::forward<Args>(_args)...);
         }
 
         [[nodiscard]] constexpr T* allocate([[maybe_unused]] const uintptr_t& _n) {
