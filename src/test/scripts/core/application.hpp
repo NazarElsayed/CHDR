@@ -150,7 +150,7 @@ namespace test {
 							/* Put tests here */
 
 							try {
-                                tests::astar::run<bool>(_dimensions);
+                                tests::astar::run<char>(_dimensions);
 							}
 							catch (const std::exception& e) {
 								debug::log(e, error);

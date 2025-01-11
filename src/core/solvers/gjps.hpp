@@ -23,10 +23,10 @@
 
 namespace chdr::solvers {
 
-    template<size_t Kd, typename params_t>
+    template<typename params_t>
     struct [[maybe_unused]] gjps final {
 
-        friend class solver<gjps, Kd, params_t>;
+        friend class solver<gjps, params_t>;
 
     private:
 
@@ -36,7 +36,9 @@ namespace chdr::solvers {
         using     coord_t = typename params_t:: coord_type;
         using direction_t = char;
         using  rotation_t = std::array<direction_t, 8U>;
-        using    solver_t = solver<gjps, Kd, params_t>;
+        using    solver_t = solver<gjps, params_t>;
+
+        static constexpr auto Kd = std::tuple_size_v<std::decay_t<typename params_t::coord_type>>;
 
         static_assert(std::is_arithmetic_v<scalar_t>, "scalar_t must be an integral or floating point type.");
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
@@ -118,7 +120,8 @@ namespace chdr::solvers {
             return result;
         }
 
-        [[nodiscard]] static constexpr std::array<std::pair<bool, coord_t>, 8U> go_find_jump_points(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _current, const direction_t _direction, const coord_t& _end) {
+        template <typename maze_t>
+        [[nodiscard]] static constexpr std::array<std::pair<bool, coord_t>, 8U> go_find_jump_points(const maze_t& _maze, const coord_t& _current, const direction_t _direction, const coord_t& _end) {
 
             constexpr auto null_v = std::make_pair(false, coord_t{});
 
@@ -173,11 +176,13 @@ namespace chdr::solvers {
             }
         }
 
-        [[nodiscard]] static constexpr auto jump(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _current, const coord_t& _previous, const coord_t& _end) {
+        template <typename maze_t>
+        [[nodiscard]] static constexpr auto jump(const maze_t& _maze, const coord_t& _current, const coord_t& _previous, const coord_t& _end) {
             return jump(_maze, _current, get_direction(_previous, _current), _end);
         }
 
-        [[nodiscard]] static constexpr std::pair<bool, coord_t> jump(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _current, const direction_t& _direction, const coord_t& _end) {
+        template <typename maze_t>
+        [[nodiscard]] static constexpr std::pair<bool, coord_t> jump(const maze_t& _maze, const coord_t& _current, const direction_t& _direction, const coord_t& _end) {
 
             if (UNLIKELY(_current == _end)) { // SOLUTION REACHED...
                 return { true, _current };
@@ -228,9 +233,9 @@ namespace chdr::solvers {
 
         template <typename open_set_t, typename closed_set_t>
         [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, const size_t& _capacity, const params_t& _params) {
-            //
-            // static_assert(std::is_base_of_v<mazes::grid<Kd, weight_t>, std::remove_cv_t<std::remove_reference_t<decltype(_params.maze)>>>,
-            //               "JPS only supports mazes of type grid<Kd, weight_t>.");
+
+            static_assert(std::is_base_of_v<mazes::grid<Kd, weight_t>, std::remove_cv_t<std::remove_reference_t<decltype(_params.maze)>>>,
+                          "JPS only supports mazes of type grid<Kd, weight_t>.");
 
             if constexpr (Kd == 2U) {
 
@@ -304,7 +309,7 @@ namespace chdr::solvers {
 
             const auto capacity = solver_t::determine_capacity(_params);
 
-            existence_set closed;
+            existence_set<lowest_memory_usage> closed;
             closed.reserve(capacity);
 
             heap<node> open;

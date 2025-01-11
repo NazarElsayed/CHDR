@@ -21,17 +21,17 @@
 
 namespace chdr::solvers {
 
-    template<size_t Kd, typename params_t>
+    template<typename params_t>
     struct [[maybe_unused]] idastar final {
 
-        friend class solver<idastar, Kd, params_t>;
+        friend class solver<idastar, params_t>;
 
     private:
 
         using  index_t = typename params_t::index_type;
         using scalar_t = typename params_t::scalar_type;
         using  coord_t = typename params_t:: coord_type;
-        using solver_t = solver<idastar, Kd, params_t>;
+        using solver_t = solver<idastar, params_t>;
 
         static_assert(std::is_arithmetic_v<scalar_t>, "scalar_t must be an integral or floating point type.");
         static_assert(std::numeric_limits<scalar_t>::is_specialized, "scalar_t must be a numeric type with defined numeric limits.");

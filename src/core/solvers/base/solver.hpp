@@ -15,13 +15,13 @@
 
 namespace chdr::solvers {
 
-    template <template <size_t Kd, typename params_t> typename Derived, size_t Kd, typename params_t>
+    template <template <typename params_t> typename Derived, typename params_t>
     class solver final {
 
     public:
 
         template <typename T>
-        struct is_graph : std::is_same<std::decay_t<T>, mazes::graph<typename params_t::index_type, typename params_t::scalar_type>> {};
+        struct is_graph : std::is_same<std::decay_t<T>, mazes::graph<typename params_t::index_type, typename params_t::scalar_type>>{};
 
         struct node_data {
 
@@ -97,7 +97,7 @@ namespace chdr::solvers {
 #endif // __cplusplus >= 202003L
         auto operator()(Args&&... _args) const noexcept {
 
-            using solver_t = Derived<Kd, params_t>;
+            using solver_t = Derived<params_t>;
 
             try {
 
@@ -120,31 +120,31 @@ namespace chdr::solvers {
         }
     };
 
-    template <template <size_t Kd, typename params_t> typename Derived, size_t Kd, typename params_t>
+    template <template <typename params_t> typename Derived, typename params_t>
     [[nodiscard]] static
 #if __cplusplus >= 2023L
     constexpr
 #endif // __cplusplus >= 2023L
     auto make_solver() {
-        return solver<Derived, Kd, params_t>();
+        return solver<Derived, params_t>();
     }
 
-    template <template <size_t Kd, typename params_t> typename Derived, size_t Kd, typename params_t>
+    template <template <typename params_t> typename Derived, typename params_t>
     [[nodiscard]] static
 #if __cplusplus >= 2023L
     constexpr
 #endif // __cplusplus >= 2023L
     auto solve() {
-        return solver<Derived, Kd, params_t>()();
+        return solver<Derived, params_t>()();
     }
 
-    template <template <size_t Kd, typename params_t> typename Derived, size_t Kd, typename params_t, typename... Args>
+    template <template <typename params_t> typename Derived, typename params_t, typename... Args>
     [[nodiscard]] static
 #if __cplusplus >= 2023L
     constexpr
 #endif // __cplusplus >= 2023L
     auto solve(Args&&... _args) {
-        return solver<Derived, Kd, params_t>()(std::forward<Args>(_args)...);
+        return solver<Derived, params_t>()(std::forward<Args>(_args)...);
     }
 
 } //chdr::solvers

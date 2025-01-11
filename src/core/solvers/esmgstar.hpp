@@ -23,10 +23,10 @@
 
 namespace chdr::solvers {
 
-    template<size_t Kd, typename params_t>
+    template<typename params_t>
     struct [[maybe_unused]] esmgstar final {
 
-        friend class solver<esmgstar, Kd, params_t>;
+        friend class solver<esmgstar, params_t>;
 
     private:
 
@@ -34,7 +34,7 @@ namespace chdr::solvers {
         using scalar_t = typename params_t::scalar_type;
         using  coord_t = typename params_t:: coord_type;
         using weight_t = typename params_t::weight_type;
-        using solver_t = solver<esmgstar, Kd, params_t>;
+        using solver_t = solver<esmgstar, params_t>;
 
         static_assert(std::is_arithmetic_v<scalar_t>, "scalar_t must be an integral or floating point type.");
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
@@ -117,7 +117,8 @@ namespace chdr::solvers {
                 }
             }
 
-            constexpr auto& expand(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, const size_t& _memoryLimit) {
+            template <typename maze_t>
+            constexpr auto& expand(const maze_t& _maze, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, const size_t& _memoryLimit) {
 
                 if (m_successors.empty()) {
 
@@ -206,7 +207,8 @@ namespace chdr::solvers {
 
         using open_set_t = heap<std::shared_ptr<node>>;
 
-        static constexpr void cull_worst_leaf(const mazes::grid<Kd, weight_t>& _maze, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, const size_t& _memoryLimit, open_set_t& _open) {
+        template <typename maze_t>
+        static constexpr void cull_worst_leaf(const maze_t& _maze, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), const scalar_t& _weight, const size_t& _memoryLimit, open_set_t& _open) {
 
             const auto w = std::move(safe_culling_heuristic(_open));
             _open.erase(w);

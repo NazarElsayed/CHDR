@@ -22,16 +22,16 @@
 
 namespace chdr::solvers {
 
-    template<size_t Kd, typename params_t>
+    template<typename params_t>
     struct [[maybe_unused]] gdfs final {
 
-        friend class solver<gdfs, Kd, params_t>;
+        friend class solver<gdfs, params_t>;
 
     private:
 
         using  index_t = typename params_t::index_type;
-        using  coord_t = typename params_t:: coord_type;
-        using solver_t = solver<gdfs, Kd, params_t>;
+        using  coord_t = typename params_t::coord_type;
+        using solver_t = solver<gdfs, params_t>;
         using     node = managed_node<index_t>;
 
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
