@@ -18,25 +18,7 @@
 
 namespace chdr {
 
-    struct binary    {};   /** @brief Node with two children.   */
-    struct tertiary  {};   /** @brief Node with three children. */
-    struct quaternary{};   /** @brief Node with four children.  */
-    struct quinary   {};   /** @brief Node with five children.  */
-    struct senary    {};   /** @brief Node with six children.   */
-    struct septenary {};   /** @brief Node with seven children. */
-    struct octonary  {};   /** @brief Node with eight children. */
-
-    template<typename>
-    struct dimension {};
-    template<> struct dimension<binary>     { static constexpr size_t Kd {2U}; };
-    template<> struct dimension<tertiary>   { static constexpr size_t Kd {3U}; };
-    template<> struct dimension<quaternary> { static constexpr size_t Kd {4U}; };
-    template<> struct dimension<quinary>    { static constexpr size_t Kd {5U}; };
-    template<> struct dimension<senary>     { static constexpr size_t Kd {6U}; };
-    template<> struct dimension<septenary>  { static constexpr size_t Kd {7U}; };
-    template<> struct dimension<octonary>   { static constexpr size_t Kd {8U}; };
-
-    template<typename T, typename Compare = std::less<T>, typename Container = std::vector<T>, size_t Kd = dimension<binary>::Kd>
+    template<typename T, typename Compare = std::less<T>, typename Container = std::vector<T>, size_t Kd = 2U>
     class heap {
 
         static_assert(Kd >= 2U, "Template parameter D must be greater than or equal to 2.");
