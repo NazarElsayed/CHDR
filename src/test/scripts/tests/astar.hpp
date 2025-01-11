@@ -37,9 +37,9 @@ namespace test::tests {
     public:
 
         template <typename weight_t, size_t Kd, typename scalar_t = uint32_t, typename index_t = uint32_t>
-        static void run(const std::array<index_t, Kd>& _dimensions) {
+        static void run(const chdr::coord<index_t, Kd>& _dimensions) {
 
-            using coord_t = chdr::coord<index_t, Kd>;
+            using coord_t = typename std::decay_t<decltype(_dimensions)>;
 
             const     coord_t size = _dimensions;
             constexpr coord_t start {};

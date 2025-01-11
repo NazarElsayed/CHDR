@@ -65,8 +65,8 @@ namespace chdr::solvers {
                 neighbours_idx(0U) {}
         };
 
-        template <typename open_set_t>
-        [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, const size_t& _capacity, const params_t& _params) {
+        template <typename open_set_t, typename closed_set_t>
+        [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, const size_t& _capacity, const params_t& _params) {
 
             using neighbours_t = decltype(_params.maze.get_neighbours());
 
@@ -76,8 +76,6 @@ namespace chdr::solvers {
             _open.emplace_back(s, 0U);
 
             stack<state<neighbours_t>> stack;
-
-            existence_set transposition_table;
 
             for (size_t bound = 0U; bound < std::numeric_limits<size_t>::max(); ++bound) {
 
@@ -94,8 +92,8 @@ namespace chdr::solvers {
 
                         if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
 
-                            if (!transposition_table.contains(n.index)) {
-                                utils::preallocate_emplace(transposition_table, n.index, _capacity, _params.maze.count());
+                            if (!_closed.contains(n.index)) {
+                                utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());
 
                                 _open.emplace_back(n.index, curr.m_depth + 1U);
 
@@ -118,13 +116,13 @@ namespace chdr::solvers {
                     else {
                         _open.pop_back();
                         stack.pop();
-                        transposition_table.erase(curr.m_index);
+                        _closed.erase(curr.m_index);
                     }
                 }
 
                 _open.erase(_open.begin() + 1U, _open.end());
                 stack.clear();
-                transposition_table.clear();
+                _closed.clear();
             }
 
             _open = {};
@@ -137,13 +135,16 @@ namespace chdr::solvers {
 
             const auto capacity = solver_t::determine_capacity(_params);
 
+            existence_set closed;
+            closed.reserve(capacity);
+
             std::vector<node> open;
             try {
                 open.reserve(capacity / 8U);
             }
             catch ([[maybe_unused]] const std::exception& e) {} // NOLINT(*-empty-catch)
 
-            return solve_internal(open, capacity, _params);
+            return solve_internal(open, closed, capacity, _params);
         }
     };
 
