@@ -9,6 +9,7 @@
 #ifndef CHDR_JPS_HPP
 #define CHDR_JPS_HPP
 
+#include <array>
 #include <cstddef>
 #include <type_traits>
 #include <utility>

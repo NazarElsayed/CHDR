@@ -392,8 +392,8 @@ namespace chdr::mazes {
             --nCoord[Index];
             ++pCoord[Index];
 
-            _negative = { _id[Index] > 0U                 && at(utils::to_1d(nCoord, m_size)), nCoord };
-            _positive = { _id[Index] < m_size[Index] - 1U && at(utils::to_1d(pCoord, m_size)), pCoord };
+            _negative = { _id[Index] > 0U                 && at(utils::to_1d(nCoord, m_size)).is_active(), nCoord };
+            _positive = { _id[Index] < m_size[Index] - 1U && at(utils::to_1d(pCoord, m_size)).is_active(), pCoord };
         }
     };
     
