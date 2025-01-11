@@ -14,19 +14,16 @@
 
 namespace chdr {
 
-    template<size_t Kd, typename scalar_t>
 	struct heuristics {
-
-        using coord_t = coord<size_t, Kd>;
 
         /**
          * @brief Computes the Euclidean distance between two nodes.
          *
-         * @tparam Kd The number of dimensions of the nodes.
          * @param _a The first node.
          * @param _b The second node.
          * @return The Euclidean distance between _a and _b.
          */
+	    template <typename scalar_t, typename coord_t>
         [[maybe_unused, nodiscard]] static constexpr auto euclidean_distance(const coord_t& _a, const coord_t& _b) noexcept {
             return static_cast<scalar_t>(sqrt(sqr_euclidean_distance(_a, _b)));
         }
@@ -34,15 +31,14 @@ namespace chdr {
         /*
          * @brief Computes the squared Euclidean distance between two nodes.
          *
-         * @tparam Kd The number of dimensions of the nodes.
          * @param _a The first node.
          * @param _b The second node.
          * @return The squared Euclidean distance between _a and _b.
          */
+	    template <typename scalar_t, typename coord_t>
         [[maybe_unused, nodiscard]] static constexpr auto sqr_euclidean_distance(const coord_t& _a, const coord_t& _b) noexcept {
 
-            // ReSharper disable once CppUnsignedZeroComparison
-            static_assert(Kd >= 0U, "Kd must be more than or equal to 0");
+	        constexpr auto Kd = std::tuple_size_v<std::decay_t<coord_t>>;
 
             scalar_t result{0};
 
@@ -59,15 +55,14 @@ namespace chdr {
         /**
           * @brief Calculate the Manhattan distance between two nodes.
           *
-          * @tparam Kd The number of dimensions of the nodes.
           * @param _a The first node.
           * @param _b The second node.
           * @return The Manhattan distance between _a and _b.
           */
+	    template <typename scalar_t, typename coord_t>
         [[maybe_unused, nodiscard]] static constexpr auto manhattan_distance(const coord_t& _a, const coord_t& _b) noexcept {
 
-            // ReSharper disable once CppUnsignedZeroComparison
-            static_assert(Kd >= 0U, "Kd must be more than or equal to 0");
+	        constexpr auto Kd = std::tuple_size_v<std::decay_t<coord_t>>;
 
             scalar_t result{0};
 

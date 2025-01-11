@@ -39,21 +39,7 @@ namespace test::tests {
         template <typename weight_t, size_t Kd, typename scalar_t = uint32_t, typename index_t = uint32_t>
         static void run(const std::array<index_t, Kd>& _dimensions) {
 
-            #define HEURISTIC chdr::heuristics<Kd, scalar_t>::manhattan_distance
-
             using coord_t = chdr::coord<index_t, Kd>;
-
-            // Test parameters:
-#ifndef NDEBUG
-            constexpr size_t base_samples = 1000000UL;
-#else //!NDEBUG
-            constexpr size_t base_samples = 100000000UL;
-#endif //!NDEBUG
-            // constexpr size_t base_samples = 1UL;
-
-            const size_t test_samples = std::max(base_samples / chdr::utils::product<size_t>(_dimensions), 1UL);
-
-            constexpr size_t seed(0U);
 
             const     coord_t size = _dimensions;
             constexpr coord_t start {};
@@ -68,12 +54,19 @@ namespace test::tests {
             );
 
             /* GENERATE MAZE */
-
-            const auto grid = generator::grid::generate<weight_t>(start, end, 0.0, 0.0, seed, size);
+            const auto grid = generator::grid::generate<weight_t>(start, end, 0.0, 0.0, 0U, size);
 
             const auto test = grid;
             //const auto test = chdr::mazes::graph<index_t, scalar_t>(grid);
             //const auto test = generator::graph::generate<weight_t, index_t, scalar_t>(start, end, 0.0, 0.0, seed, size); drawable = false;
+
+            /* TEST SAMPLES */
+#ifndef NDEBUG
+            constexpr size_t base_samples = 1000000UL;
+#else //!NDEBUG
+            constexpr size_t base_samples = 100000000UL;
+#endif //!NDEBUG
+            const size_t test_samples = std::max(base_samples / chdr::utils::product<size_t>(_dimensions), 1UL);
 
             /* CAPTURE SYSTEM NOISE */
 
@@ -117,8 +110,8 @@ namespace test::tests {
                         const size_t         memoryLimit = -1U;
                     };
 
-                    const auto solver = chdr::solvers::make_solver<chdr::solvers::gjps, params>();
-                    path = solver(test, start, end, size, HEURISTIC);
+                    const auto solver = chdr::solvers::make_solver<chdr::solvers::astar, params>();
+                    path = solver(test, start, end, size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>);
                 }
 
                 result = std::min(
