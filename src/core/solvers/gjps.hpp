@@ -309,7 +309,7 @@ namespace chdr::solvers {
 
             const auto capacity = solver_t::determine_capacity(_params);
 
-            existence_set<lowest_memory_usage> closed;
+            existence_set closed;
             closed.reserve(capacity);
 
             heap<node> open;
