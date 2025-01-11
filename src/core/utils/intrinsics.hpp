@@ -34,8 +34,7 @@
     #include <mmintrin.h>
 #endif
 
-// ReSharper disable once CppUnnamedNamespaceInHeaderFile
-namespace {
+namespace chdr {
 
 #ifdef _MSC_VER
 #define IVDEP __pragma(loop(ivdep))
@@ -119,6 +118,6 @@ namespace {
 #pragma GCC pop_options
 #endif
 
-} //
+} //chdr
 
 #endif //CHDR_INTRINSICS_HPP

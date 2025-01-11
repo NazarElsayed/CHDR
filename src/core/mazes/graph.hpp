@@ -58,7 +58,7 @@ namespace chdr::mazes {
             }
         }
 
-        template <size_t Kd, typename weight_t, const bool prune = true>
+        template <size_t Kd, typename weight_t, const bool Prune = true>
         [[maybe_unused]]
 #if defined(__cpp_constexpr_dynamic_alloc) && (__cpp_constexpr_dynamic_alloc >= 201907L)
         constexpr
@@ -67,7 +67,25 @@ namespace chdr::mazes {
 
             const auto size = _grid.size();
 
-            if constexpr (prune) {
+            if constexpr (!Prune) {
+
+                index_t index{0};
+                for (auto& element : _grid) {
+
+                    if (element.is_active()) {
+
+                        for (auto& neighbour : _grid.get_neighbours(index)) {
+
+                            if (const auto& [nActive, nCoord] = neighbour; nActive) {
+                                add(index, std::make_pair(utils::to_1d(nCoord, size), static_cast<scalar_t>(1)));
+                            }
+                        }
+                    }
+
+                    ++index;
+                }
+            }
+            else {
 
                 // TODO: Add support for directed graphs.
 
@@ -109,7 +127,7 @@ namespace chdr::mazes {
 
                                             if (local_closed.find(currIdx) == local_closed.end()) {
 
-                                                 local_closed.insert(currIdx);
+                                                local_closed.insert(currIdx);
                                                 global_closed.insert(currIdx);
 
                                                 for (const auto& n3 : _grid.get_neighbours(currIdx)) {
@@ -148,7 +166,7 @@ namespace chdr::mazes {
                 };
 
                 // Create a thread pool to execute the work in parallel:
-                const size_t count = _grid.count();
+                const size_t count      = _grid.count();
                 const size_t numThreads = std::clamp(std::thread::hardware_concurrency(), 1U, 6U);
 
                 const auto chunkSize = static_cast<index_t>((count + numThreads - 1U) / numThreads);
@@ -165,27 +183,9 @@ namespace chdr::mazes {
                 for (auto& fut : futures) {
                     fut.get();
                 }
+
+                malloc_consolidate();
             }
-            else {
-
-                index_t index{0};
-                for (auto& element : _grid) {
-
-                    if (element.is_active()) {
-
-                        for (auto& neighbour : _grid.get_neighbours(index)) {
-
-                            if (const auto& [nActive, nCoord] = neighbour; nActive) {
-                                add(index, std::make_pair(utils::to_1d(nCoord, size), static_cast<scalar_t>(1)));
-                            }
-                        }
-                    }
-
-                    ++index;
-                }
-            }
-
-            malloc_consolidate();
         }
 
         template<typename... Args>

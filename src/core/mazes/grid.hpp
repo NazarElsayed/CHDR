@@ -25,7 +25,7 @@ namespace chdr::mazes {
     /**
      * @tparam Kd Dimensionality of the grid.
      */
-    template<size_t Kd, typename weight_t = bool>
+    template<size_t Kd, typename weight_t>
     class grid final {
 
         using coord_t = coord<size_t, Kd>;
@@ -34,8 +34,7 @@ namespace chdr::mazes {
 
         static constexpr auto s_rank { Kd };
 
-        static_assert(                     Kd > 0U, "Kd must be greater than 0.");
-        static_assert(std::is_integral_v<weight_t>, "T must be integral."       );
+        static_assert(std::is_integral_v<weight_t>, "weight_t must be integral.");
 
     private:
 
@@ -86,7 +85,7 @@ namespace chdr::mazes {
 
         template<bool IncludeDiagonals = false>
         [[nodiscard]] constexpr auto get_neighbours(const size_t& _id) const noexcept {
-            return get_neighbours<IncludeDiagonals>(utils::to_nd<size_t, Kd>(_id, size()));
+            return get_neighbours<IncludeDiagonals>(utils::to_nd(_id, size()));
         }
 
         template<typename... Args>
@@ -181,7 +180,7 @@ namespace chdr::mazes {
         constexpr void compute_single_diagonal(const coord_t& _id, std::pair<bool, coord_t>& _output) const noexcept {
 
             constexpr  size_t sampleIndex = (Index >= s_neighbour_count / 2U) ? (Index + 1U) : Index;
-            constexpr coord_t direction   = utils::to_nd<size_t, Kd>(sampleIndex, { 3U });
+            constexpr coord_t direction   = utils::to_nd(sampleIndex, coord_t { 3U });
 
             bool    oob    = false;
             coord_t nCoord = _id;
@@ -278,7 +277,7 @@ namespace chdr::mazes {
 
         template <bool IncludeDiagonals = false>
         [[nodiscard]] constexpr auto get_neighbours(const size_t& _id) const noexcept {
-            return get_neighbours<IncludeDiagonals>(utils::to_nd<size_t, Kd>(_id, size()));
+            return get_neighbours<IncludeDiagonals>(utils::to_nd(_id, size()));
         }
 
         template <typename... Args>
@@ -367,7 +366,7 @@ namespace chdr::mazes {
         constexpr void compute_single_diagonal(const coord_t& _id, std::pair<bool, coord_t>& _output) const noexcept {
 
             constexpr size_t  sampleIndex = (Index >= s_neighbour_count / 2U) ? (Index + 1U) : Index;
-            constexpr coord_t direction   = utils::to_nd<size_t, Kd>(sampleIndex, {3U});
+            constexpr coord_t direction   = utils::to_nd(sampleIndex, coord_t { 3U });
 
             bool    oob    = false;
             coord_t nCoord = _id;

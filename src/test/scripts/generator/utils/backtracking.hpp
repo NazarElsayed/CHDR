@@ -228,7 +228,7 @@ namespace test::generator::utils {
                         // Randomly knock down walls if the maze is meant to contain loops:
                         for (size_t i = 1U; i < result.size(); ++i) {
 
-                            const auto c = chdr::utils::to_nd<size_t, Kd>(i, _size);
+                            const auto c = chdr::utils::to_nd(i, _size);
 
                             if (is_link(c) && !is_edge(c, _size)) {
 

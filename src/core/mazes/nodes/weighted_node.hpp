@@ -13,29 +13,29 @@
 
 namespace chdr::mazes {
 
-    template <typename W = bool>
+    template <typename weight_t>
     struct weighted_node {
 
-        static_assert(std::is_integral_v<W>, "Type W must be an integral type.");
-        static_assert(std::numeric_limits<W>::is_specialized, "W must be a numeric type with defined numeric limits.");
+        static_assert(std::is_integral_v<weight_t>, "Type W must be an integral type.");
+        static_assert(std::numeric_limits<weight_t>::is_specialized, "W must be a numeric type with defined numeric limits.");
 
     private:
 
-        W m_value;
+        weight_t m_value;
 
     public:
 
-        constexpr weighted_node(const W& _value = 0) noexcept : m_value(_value) {}
+        constexpr weighted_node(const weight_t& _value = 0) noexcept : m_value(_value) {}
 
         [[nodiscard]] constexpr bool is_active() const noexcept {
-            return m_value != std::numeric_limits<W>::max();
+            return m_value != std::numeric_limits<weight_t>::max();
         }
 
-        [[nodiscard]] constexpr const W& value() const noexcept {
+        [[nodiscard]] constexpr const weight_t& value() const noexcept {
             return m_value;
         }
 
-        constexpr void value(const W& _value) noexcept {
+        constexpr void value(const weight_t& _value) noexcept {
             m_value = _value;
         }
     };

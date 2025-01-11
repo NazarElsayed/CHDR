@@ -13,10 +13,10 @@
 
 #include <debug.hpp>
 
-#include <array>
 #include <chrono>
 #include <cstddef>
 #include <cstdint>
+#include <limits>
 #include <string>
 
 #include "../core/display.hpp"

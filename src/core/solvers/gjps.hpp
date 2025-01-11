@@ -114,7 +114,7 @@ namespace chdr::solvers {
                  if (dir[0U] == 2U && dir[1U] == 0U) { result = 7U; }
             else if (dir[0U] == 0U && dir[1U] == 2U) { result = 8U; }
             else {
-                result = utils::to_1d<index_t>(dir, { Kd });
+                result = utils::to_1d(dir, { Kd });
             }
 
             return result;
