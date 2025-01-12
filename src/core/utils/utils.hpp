@@ -47,12 +47,12 @@ namespace chdr {
 			static_assert(std::is_integral_v<T>, "Only integer types are allowed.");
 
 			constexpr auto Kd = std::tuple_size_v<std::decay_t<coord_t>>;
-			static_assert(Kd > 0, "The number of dimensions must be greater than 0.");
+			static_assert(Kd > 0U, "The number of dimensions must be greater than 0.");
 
 			coord_t result{};
 
 			if constexpr (Kd == 1U) {
-				result = {_index};
+				result = { _index };
 			}
 			else if constexpr (Kd == 2U) {
 				result = {
@@ -110,7 +110,7 @@ namespace chdr {
 			static_assert(std::is_integral_v<T>, "Only integer types are allowed.");
 
 			constexpr auto Kd = std::tuple_size_v<std::decay_t<coord_t>>;
-			static_assert(Kd > 0, "The number of dimensions must be greater than 0.");
+			static_assert(Kd > 0U, "The number of dimensions must be greater than 0.");
 
 			T result{};
 
@@ -172,7 +172,7 @@ namespace chdr {
 					result *= _base;
 				}
 				_base *= _base;
-				_exp /= 2U;
+				_exp  /= 2U;
 			}
 			
 			return result;
@@ -190,10 +190,9 @@ namespace chdr {
 		static constexpr T sqrt(const T& _value) noexcept {
 
 			static_assert(std::is_arithmetic_v<T>, "Input must be an arithmetic type.");
-			static_assert(!std::is_same_v<T, bool>, "Input type cannot be boolean.");
 
 			if (LIKELY(!__builtin_is_constant_evaluated())) {
-				return std::sqrt(_value);
+				return static_cast<T>(std::sqrt(_value));
 			}
 			else {
 
@@ -201,8 +200,8 @@ namespace chdr {
 
 					if (_value != T(0) && _value != T(1)) {
 
-						T x    {_value};
-						T last {0};
+						T x    { _value };
+						T last {    0   };
 
 						while (x != last) {
 							last = x;
@@ -211,14 +210,16 @@ namespace chdr {
 
 						return x;
 					}
+
 					return _value; // sqrt(0) = 0, sqrt(1) = 1
 				}
+
 				return std::numeric_limits<T>::quiet_NaN();
 			}
 		}
 
 		template <typename T, typename collection_t>
-		static constexpr void preallocate_emplace(collection_t& _collection, const T& _value, const size_t& _increment, const size_t& _max_increment = std::numeric_limits<size_t>::max()) noexcept {
+		static constexpr void preallocate_emplace(collection_t& _collection, const T& _value, const size_t& _increment, const size_t& _max_increment = std::numeric_limits<size_t>::max()) {
 
 			if constexpr (std::is_same_v<collection_t, existence_set<>>) {
 				_collection.allocate(_value, _increment, _max_increment);
@@ -230,13 +231,18 @@ namespace chdr {
 		template<typename node_t, typename coord_t>
 		static constexpr auto rbacktrack(const node_t& _node, const coord_t& _size) {
 
-			size_t count = 0U;
-			for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent), ++count) {}
+			std::vector<coord_t> result;
 
-			std::vector<coord_t> result(count);
+			{
+				size_t depth = 0U;
+				for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent), ++depth) {}
+
+				result.resize(depth);
+			}
+
 			size_t i = 0U;
 			for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent), ++i) {
-				result[count - 1U - i] = utils::to_nd(t->m_index, _size);
+				result[(result.size() - 1U) - i] = utils::to_nd(t->m_index, _size);
 			}
 
 			return result;
@@ -246,9 +252,10 @@ namespace chdr {
 		static constexpr auto rbacktrack(const node_t& _node, const coord_t& _size, const size_t& _depth) {
 
 			std::vector<coord_t> result(_depth);
+
 			size_t i = 0U;
-			for (const auto* t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent), ++i) {
-				result[_depth - 1U - i] = utils::to_nd(t->m_index, _size);
+			for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent), ++i) {
+				result[(result.size() - 1U) - i] = utils::to_nd(t->m_index, _size);
 			}
 
 			return result;

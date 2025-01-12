@@ -100,7 +100,7 @@ namespace chdr {
 
     public:
 
-        inline static const auto dimension_v = Kd;
+        inline static const auto dimension_v { Kd };
 
         heap(const size_t& _capacity = 0U) : c() {
             c.reserve(_capacity + 1U);

@@ -9,6 +9,8 @@
 #ifndef CHDR_HEURISTICS_HPP
 #define CHDR_HEURISTICS_HPP
 
+#include <cstddef>
+
 #include "utils/utils.hpp"
 #include "types/coord.hpp"
 
@@ -44,7 +46,6 @@ namespace chdr {
 
             IVDEP
             for (size_t i = 0U; i < Kd; ++i) {
-
                 const auto val = static_cast<scalar_t>(utils::abs(static_cast<signed>(_b[i]) - static_cast<signed>(_a[i])));
                 result += val * val;
             }

@@ -22,7 +22,7 @@ namespace test::generator {
 
 	struct graph final {
 
-	    using rng_engine_t = utils::linear_congruential_generator<size_t>; //std::mt19937_64;
+	    using rng_engine_t = utils::lcg<size_t>;
 
         template <typename weight_t, typename index_t, typename coord_t, typename scalar_t>
         static auto generate(const coord_t& _start, coord_t& _end, const coord_t& _size, const size_t& _seed = -1U) {

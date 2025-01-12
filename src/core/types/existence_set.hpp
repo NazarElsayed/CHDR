@@ -11,7 +11,6 @@
 
 #include <algorithm>
 #include <cstddef>
-#include <cstdint>
 #include <initializer_list>
 #include <type_traits>
 #include <vector>
@@ -41,8 +40,8 @@ namespace chdr {
     class existence_set {
 
         static_assert(
-                std::is_same_v<alignment_type, lowest_memory_usage> ||
-                std::is_same_v<alignment_type, high_performance>    ||
+            std::is_same_v<alignment_type, lowest_memory_usage> ||
+            std::is_same_v<alignment_type, high_performance>    ||
             "AlignmentType must be one of the following: "
             "lowest_memory_usage, high_performance"
         );
@@ -119,7 +118,7 @@ namespace chdr {
          * @param[in] _max_increment (optional) Maximum limit for the memory allocation.
          */
         constexpr void allocate(const size_t& _hash, const size_t& _increment, const size_t& _max_increment = std::numeric_limits<size_t>::max()) {
-            if (capacity() < _hash) {
+            if (capacity() <= _hash) {
                 reserve(std::min(capacity() + _increment, _max_increment));
             }
         }

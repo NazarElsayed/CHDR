@@ -114,7 +114,7 @@ namespace test::tests {
                 );
             }
 
-            if (std::is_same_v<std::decay_t<decltype(test)>, chdr::mazes::graph<index_t, scalar_t>> &&
+            if (std::is_same_v<std::decay_t<decltype(test)>, chdr::mazes::grid<coord_t, weight_t>> &&
                 size[0U] <= 100U &&
                 size[1U] <= 100U &&
                       Kd >    0U &&

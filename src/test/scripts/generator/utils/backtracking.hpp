@@ -23,7 +23,7 @@ namespace test::generator::utils {
 
         static constexpr auto Kd = std::tuple_size_v<std::decay_t<coord_t>>;
 
-        using rng_engine_t = linear_congruential_generator<size_t>; //std::mt19937_64;
+        using rng_engine_t = lcg<size_t>;
 
     public:
         static constexpr bool PATH { false };

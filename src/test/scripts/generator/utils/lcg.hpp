@@ -14,7 +14,7 @@
 namespace test::generator::utils {
 
     template <typename T = uint32_t>
-    struct [[maybe_unused]] linear_congruential_generator {
+    struct [[maybe_unused]] lcg {
 
         static_assert(std::is_integral_v<T>, "Template parameter T must be an integral type");
 
@@ -34,7 +34,7 @@ namespace test::generator::utils {
             static_cast<result_type>(1U << 31U) :                   // ranqd1
             static_cast<result_type>(1ULL << 63ULL);                // MMIX
 
-        [[maybe_unused]] constexpr explicit linear_congruential_generator(const result_type& _seed = 0) noexcept :
+        [[maybe_unused]] constexpr explicit lcg(const result_type& _seed = 0) noexcept :
             state(_seed < 0 ? -_seed : _seed) {}
 
         [[maybe_unused]] constexpr void seed(const result_type& _seed) noexcept {

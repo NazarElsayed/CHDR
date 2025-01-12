@@ -28,17 +28,17 @@ namespace chdr {
 
         constexpr queue() = default;
 
-        [[maybe_unused, nodiscard]] constexpr bool empty() const { return c.empty(); }
+        [[maybe_unused, nodiscard]] constexpr bool empty() const noexcept { return c.empty(); }
 
-        [[maybe_unused, nodiscard]] constexpr size_t size() const { return c.size(); }
+        [[maybe_unused, nodiscard]] constexpr size_t size() const noexcept { return c.size(); }
 
-        [[maybe_unused, nodiscard]] constexpr T& front() { return top(); }
+        [[maybe_unused, nodiscard]] constexpr T& front() noexcept { return top(); }
 
-        [[maybe_unused, nodiscard]] constexpr const T& front() const { return top(); }
+        [[maybe_unused, nodiscard]] constexpr const T& front() const noexcept { return top(); }
 
-        [[maybe_unused, nodiscard]] constexpr T& top() { return c.front(); }
+        [[maybe_unused, nodiscard]] constexpr T& top() noexcept { return c.front(); }
 
-        [[maybe_unused, nodiscard]] constexpr const T& top() const { return c.front(); }
+        [[maybe_unused, nodiscard]] constexpr const T& top() const noexcept { return c.front(); }
 
         [[maybe_unused]] constexpr void push(const T& _value) { c.push(_value); }
 
