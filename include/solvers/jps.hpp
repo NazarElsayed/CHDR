@@ -14,13 +14,12 @@
 #include <type_traits>
 #include <utility>
 
+#include "../mazes/grid.hpp"
+#include "../types/append_only_allocator.hpp"
+#include "../types/existence_set.hpp"
+#include "../utils/intrinsics.hpp"
+#include "../utils/utils.hpp"
 #include "base/solver.hpp"
-#include "mazes/grid.hpp"
-#include "types/coord.hpp"
-#include "types/existence_set.hpp"
-#include "types/append_only_allocator.hpp"
-#include "utils/intrinsics.hpp"
-#include "utils/utils.hpp"
 
 namespace chdr::solvers {
 

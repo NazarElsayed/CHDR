@@ -11,8 +11,7 @@
 
 #include <cstddef>
 
-#include "utils/utils.hpp"
-#include "types/coord.hpp"
+#include "../utils/utils.hpp"
 
 namespace chdr {
 

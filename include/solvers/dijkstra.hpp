@@ -13,7 +13,6 @@
 #include <vector>
 
 #include "base/solver.hpp"
-#include "types/coord.hpp"
 
 namespace chdr::solvers {
 

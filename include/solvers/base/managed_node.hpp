@@ -11,7 +11,6 @@
 
 #include <cassert>
 #include <cstddef>
-#include <vector>
 
 #include "../../types/dynamic_pool_allocator.hpp"
 #include "../../utils/intrinsics.hpp"

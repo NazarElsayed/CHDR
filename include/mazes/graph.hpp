@@ -21,11 +21,10 @@
 #include <utility>
 #include <vector>
 
+#include "../types/stack.hpp"
+#include "../utils/intrinsics.hpp"
 #include "grid.hpp"
 #include "nodes/id_node.hpp"
-#include "types/dynamic_pool_allocator.hpp"
-#include "types/stack.hpp"
-#include "utils/intrinsics.hpp"
 
 namespace chdr::mazes {
 

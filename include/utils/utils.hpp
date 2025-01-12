@@ -16,8 +16,8 @@
 #include <type_traits>
 #include <vector>
 
-#include "types/existence_set.hpp"
-#include "utils/intrinsics.hpp"
+#include "../types/existence_set.hpp"
+#include "../utils/intrinsics.hpp"
 
 namespace chdr {
 

@@ -16,10 +16,9 @@
 #include <unordered_map>
 #include <vector>
 
+#include "../types/heap.hpp"
+#include "../utils/utils.hpp"
 #include "base/solver.hpp"
-#include "types/coord.hpp"
-#include "types/heap.hpp"
-#include "utils/utils.hpp"
 
 namespace chdr::solvers {
 

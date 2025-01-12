@@ -19,6 +19,8 @@
 #include <type_traits>
 #include <vector>
 
+#include "../utils/intrinsics.hpp"
+
 namespace chdr {
 
     template <typename T>

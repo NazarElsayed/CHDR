@@ -13,11 +13,10 @@
 #include <limits>
 #include <vector>
 
+#include "../types/stack.hpp"
+#include "../utils/intrinsics.hpp"
+#include "../utils/utils.hpp"
 #include "base/solver.hpp"
-#include "types/coord.hpp"
-#include "types/stack.hpp"
-#include "utils/intrinsics.hpp"
-#include "utils/utils.hpp"
 
 namespace chdr::solvers {
 

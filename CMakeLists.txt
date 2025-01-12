@@ -13,7 +13,7 @@ if (CHDR_VERSION_METADATA)
     set(CHDR_VERSION "${CHDR_VERSION_MAJOR}.${CHDR_VERSION_MINOR}.${CHDR_VERSION_PATCH}${CHDR_VERSION_METADATA}")
 endif ()
 
-configure_file(chdr_version.hpp.in ${PROJECT_SOURCE_DIR}/include/chdr_version.hpp)
+configure_file(chdr_version.hpp.in chdr_version.hpp)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -24,15 +24,15 @@ set(CMAKE_CXX_FLAGS_NOSANITIZERS "-O0                                   -Wall -W
 set(CMAKE_CXX_FLAGS_RELEASE      "${CMAKE_CXX_FLAGS_RELEASE} -Ofast -flto -march=native -mtune=native -funroll-loops -ftree-vectorize -ffast-math -fstrict-aliasing -fomit-frame-pointer -fno-rtti -DNDEBUG")
 
 add_library(LOUIERIKSSON_DEBUG_HPP INTERFACE test/external/debug.hpp) # LOUIERIKSSON::DEBUG
-add_library(                  CHDR INTERFACE        include/chdr.hpp) # CHDR
+add_library(                  CHDR INTERFACE                chdr.hpp) # CHDR
 
 # TEST:
 add_executable(Test test/main.cpp)
 
 target_include_directories(Test PRIVATE
-        include/
         test/external/
         test/include/
+        ${CMAKE_SOURCE_DIR}
 )
 
 target_precompile_headers(Test INTERFACE stdafx.hpp)

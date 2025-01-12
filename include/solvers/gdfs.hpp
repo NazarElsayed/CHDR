@@ -12,13 +12,12 @@
 #include <cstddef>
 #include <vector>
 
+#include "../types/existence_set.hpp"
+#include "../types/stack.hpp"
+#include "../utils/intrinsics.hpp"
+#include "../utils/utils.hpp"
+#include "base/managed_node.hpp"
 #include "base/solver.hpp"
-#include "solvers/base/managed_node.hpp"
-#include "types/coord.hpp"
-#include "types/existence_set.hpp"
-#include "types/stack.hpp"
-#include "utils/intrinsics.hpp"
-#include "utils/utils.hpp"
 
 namespace chdr::solvers {
 

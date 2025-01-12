@@ -15,10 +15,9 @@
 #include <utility>
 #include <vector>
 
-#include "../types/coord.hpp"
+#include "../utils/intrinsics.hpp"
 #include "../utils/utils.hpp"
 #include "nodes/weighted_node.hpp"
-#include "utils/intrinsics.hpp"
 
 namespace chdr::mazes {
 

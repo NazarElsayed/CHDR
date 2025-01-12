@@ -11,10 +11,10 @@
 
 #include <cstddef>
 
+#include "../types/existence_set.hpp"
+#include "../types/queue.hpp"
+#include "../utils/utils.hpp"
 #include "base/solver.hpp"
-#include "types/existence_set.hpp"
-#include "types/queue.hpp"
-#include "utils/utils.hpp"
 
 namespace chdr::solvers {
 

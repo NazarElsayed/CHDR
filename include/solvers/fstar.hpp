@@ -13,13 +13,12 @@
 #include <limits>
 #include <vector>
 
+#include "../types/append_only_allocator.hpp"
+#include "../types/existence_set.hpp"
+#include "../utils/intrinsics.hpp"
+#include "../utils/utils.hpp"
 #include "base/solver.hpp"
-#include "solvers/base/unmanaged_node.hpp"
-#include "types/coord.hpp"
-#include "types/existence_set.hpp"
-#include "types/append_only_allocator.hpp"
-#include "utils/intrinsics.hpp"
-#include "utils/utils.hpp"
+#include "base/unmanaged_node.hpp"
 
 namespace chdr::solvers {
 
