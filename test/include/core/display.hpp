@@ -182,7 +182,7 @@ namespace test {
                 ) {
 
                     const auto columns = _maze.size()[0U] + (even_width ? 1U : 2U);
-                    for (size_t j = 0U; i < columns; ++j) {
+                    for (size_t j = 0U; j < columns; ++j) {
                         std::cout << s_wall_str;
                     }
                     std::cout << s_line_brk;
