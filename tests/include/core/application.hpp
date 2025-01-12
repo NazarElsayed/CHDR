@@ -156,7 +156,7 @@ namespace test {
 		 * @return An integer error code (0 for successful execution)
 		 */
 		template<typename coord_t>
-		[[nodiscard]] static int main(const coord_t& _dimensions) {
+		[[nodiscard]] static int main(const coord_t& _dimensions) noexcept {
 
 			debug::log("application::main()", info);
 

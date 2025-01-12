@@ -20,7 +20,7 @@
  * @file main.cpp
  * @brief Global entry point.
  */
-int main([[maybe_unused]] const int _argc, [[maybe_unused]] const char* _argv[]) {
+int main([[maybe_unused]] const int _argc, [[maybe_unused]] const char* _argv[]) noexcept {
 
     int result = -1;
 
