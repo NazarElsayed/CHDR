@@ -31,10 +31,12 @@ namespace test::tests {
 
     struct solver final {
 
-        template <template <typename params_t> typename solver_t, typename params_t>
-        static void run(const params_t& _params) {
+        template <template <typename params_t> typename solver_t, typename params_t, typename... Args>
+        static void run(Args&&... args) {
 
             constexpr auto Kd = std::tuple_size_v<std::decay_t<typename params_t::coord_type>>;
+
+            const params_t _params { std::forward<Args>(args)... };
 
             /* TEST SAMPLES */
 #ifndef NDEBUG

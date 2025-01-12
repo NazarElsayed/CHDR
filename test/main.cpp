@@ -30,59 +30,61 @@ int main([[maybe_unused]] const int _argc, [[maybe_unused]] const char* _argv[])
     debug::log("main()", info);
 
     try {
-        using T = unsigned long;
+        using weight_t = char;
+        using scalar_t = uint32_t;
+        using  index_t = unsigned long;
 
         switch (_argc) {
             case 1U: {
                 break;
             }
             case 2U: {
-                result = test::application::main( chdr::coord<T, 1U> {
+                result = test::application::main<weight_t, scalar_t, index_t, chdr::coord<index_t, 1U>>({
                     std::stoul(_argv[1U])
                 });
                 break;
             }
             case 3U: {
-                result = test::application::main( chdr::coord<T, 2U> {
+                result = test::application::main<weight_t, scalar_t, index_t, chdr::coord<index_t, 2U>>({
                     std::stoul(_argv[1U]), std::stoul(_argv[2U])
                 });
                 break;
             }
             case 4U: {
-                result = test::application::main( chdr::coord<T, 3U> {
+                result = test::application::main<weight_t, scalar_t, index_t, chdr::coord<index_t, 3U>>( {
                     std::stoul(_argv[1U]), std::stoul(_argv[2U]), std::stoul(_argv[3U])
                 });
                 break;
             }
             case 5U: {
-                result = test::application::main( chdr::coord<T, 4U> {
+                result = test::application::main<weight_t, scalar_t, index_t, chdr::coord<index_t, 4U>>( {
                     std::stoul(_argv[1U]), std::stoul(_argv[2U]), std::stoul(_argv[3U]), std::stoul(_argv[4U])
                 });
                 break;
             }
             case 6U: {
-                result = test::application::main( chdr::coord<T, 5U> {
+                result = test::application::main<weight_t, scalar_t, index_t, chdr::coord<index_t, 5U>>( {
                     std::stoul(_argv[1U]), std::stoul(_argv[2U]), std::stoul(_argv[3U]), std::stoul(_argv[4U]),
                     std::stoul(_argv[5U])
                 });
                 break;
             }
             case 7U: {
-                result = test::application::main( chdr::coord<T, 6U> {
+                result = test::application::main<weight_t, scalar_t, index_t, chdr::coord<index_t, 6U>>( {
                     std::stoul(_argv[1U]), std::stoul(_argv[2U]), std::stoul(_argv[3U]), std::stoul(_argv[4U]),
                     std::stoul(_argv[5U]), std::stoul(_argv[6U])
                 });
                 break;
             }
             case 8U: {
-                result = test::application::main( chdr::coord<T, 7U> {
+                result = test::application::main<weight_t, scalar_t, index_t, chdr::coord<index_t, 7U>>( {
                     std::stoul(_argv[1U]), std::stoul(_argv[2U]), std::stoul(_argv[3U]), std::stoul(_argv[4U]),
                     std::stoul(_argv[5U]), std::stoul(_argv[6U]), std::stoul(_argv[7U])
                 });
                 break;
             }
             case 9U: {
-                result = test::application::main( chdr::coord<T, 8U> {
+                result = test::application::main<weight_t, scalar_t, index_t, chdr::coord<index_t, 8U>>( {
                     std::stoul(_argv[1U]), std::stoul(_argv[2U]), std::stoul(_argv[3U]), std::stoul(_argv[4U]),
                     std::stoul(_argv[5U]), std::stoul(_argv[6U]), std::stoul(_argv[7U]), std::stoul(_argv[8U])
                 });

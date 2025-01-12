@@ -156,7 +156,7 @@ namespace test {
 		 *
 		 * @return An integer error code (0 for successful execution)
 		 */
-		template<typename coord_t>
+		template<typename weight_t, typename scalar_t, typename index_t, typename coord_t>
 		[[nodiscard]] static int main(const coord_t& _dimensions) noexcept {
 
 			debug::log("application::main()", info);
@@ -191,16 +191,13 @@ namespace test {
 
 							try {
 
-								using weight_t = char;
-								using scalar_t = uint32_t;
-								using  index_t = typename coord_t::value_type;
+								/* GENERATE MAZE */
+								constexpr auto seed { 0U };
 
 								constexpr coord_t start {};
 								          coord_t end;
 
-								/* GENERATE MAZE */
-								constexpr auto seed { 0U };
-								const auto grid = generator::grid::generate<weight_t>(start, end, _dimensions, 0.0, 0.0, seed);
+								const auto grid = generator::grid::generate<weight_t>({}, end, _dimensions, 0.0, 0.0, seed);
 
 								const auto test = grid;
 								//const auto test = chdr::mazes::graph<index_t, scalar_t>(grid);
@@ -223,9 +220,7 @@ namespace test {
 									const     index_type memoryLimit = -1U;
 								};
 
-								params settings = { test, start, end, _dimensions, chdr::heuristics::manhattan_distance<scalar_t, coord_t> };
-
-                                tests::solver::run<chdr::solvers::astar>(settings);
+                                tests::solver::run<chdr::solvers::astar, params>(test, start, end, _dimensions, chdr::heuristics::manhattan_distance<scalar_t, coord_t>);
 							}
 							catch (const std::exception& e) {
 								debug::log(e, error);
