@@ -176,7 +176,7 @@ namespace chdr::solvers {
         }
 
         template <typename maze_t>
-        [[nodiscard]] static constexpr auto jump(const maze_t& _maze, const coord_t& _current, const coord_t& _previous, const coord_t& _end) {
+        [[nodiscard]] static constexpr std::pair<bool, coord_t> jump(const maze_t& _maze, const coord_t& _current, const coord_t& _previous, const coord_t& _end) {
             return jump(_maze, _current, get_direction(_previous, _current), _end);
         }
 
