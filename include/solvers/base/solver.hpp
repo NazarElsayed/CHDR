@@ -100,25 +100,19 @@ namespace chdr::solvers {
 #if __cplusplus >= 202003L
         constexpr
 #endif // __cplusplus >= 202003L
-        auto operator()(Args&&... _args) const noexcept {
+        auto operator()(Args&&... _args) const {
 
             using solver_t = Derived<params_t>;
 
-            try {
+            const params_t params { std::forward<Args>(_args)... };
 
-                const params_t params { std::forward<Args>(_args)... };
+            const auto s = utils::to_1d(params.start, params.size);
+            const auto e = utils::to_1d(params.end,   params.size);
 
-                const auto s = utils::to_1d(params.start, params.size);
-                const auto e = utils::to_1d(params.end,   params.size);
-
-                if (params.maze.contains(s) && params.maze.at(s).is_active() &&
-                    params.maze.contains(e) && params.maze.at(e).is_active()
-                ) {
-                    return s != e ? solver_t::execute(params) : std::vector<typename params_t::coord_type> { params.end };
-                }
-            }
-            catch (const std::exception& e) {
-                std::cerr << e.what() << "\n";
+            if (params.maze.contains(s) && params.maze.at(s).is_active() &&
+                params.maze.contains(e) && params.maze.at(e).is_active()
+            ) {
+                return s != e ? solver_t::execute(params) : std::vector<typename params_t::coord_type> { params.end };
             }
 
             return std::vector<typename params_t::coord_type>{};

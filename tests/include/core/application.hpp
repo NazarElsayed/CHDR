@@ -32,6 +32,23 @@ namespace test {
 		inline static std::atomic<bool> s_quit        { false }; // Is Application scheduled to quit?
 		inline static std::atomic<bool> s_initialised { false }; // Is Application initialised?
 
+		inline static std::unique_ptr<std::byte[]> s_contingency_block;			// NOLINT(*-avoid-c-arrays)
+
+		static void reinforce_contingent_memory() noexcept {
+			try {
+				if (s_contingency_block == nullptr) {
+					s_contingency_block = std::make_unique<std::byte[]>(16384U);	// NOLINT(*-avoid-c-arrays)
+				}
+			}
+			catch (...) {
+				/*
+				 * There may not be enough memory to print or do just about anything.
+				 * So allow the exception to fall through, and hope the failed allocation
+				 * is picked up by the critical new handler before the OS kills the app.
+				 */
+			}
+		}
+
 		/**
 		 * @brief Finalises the application.
 		 *
@@ -43,7 +60,7 @@ namespace test {
 
 			try {
 
-				debug::log("Application::finalise()", info);
+				debug::log("application::finalise()", info);
 
 				try {
 				}
@@ -62,7 +79,7 @@ namespace test {
 		 * Perform finalisation and then exit the application.
 		 *
 		 * @see debug::log(const std::string_view&, const LogType&, const bool&)
-		 * @see Application::finalise()
+		 * @see application::finalise()
 		 * @see std::exit()
 		 */
 		static void on_terminate() noexcept {
@@ -85,7 +102,7 @@ namespace test {
 						}
 					}
 
-					debug::log("onTerminate()! [REASON]: \"" + reason + "\"", critical);
+					debug::log("application::on_terminate()! [REASON]: \"" + reason + "\"", critical);
 				}
 				catch (...) {}
 
@@ -99,6 +116,28 @@ namespace test {
 			// ReSharper disable once CppDFAUnreachableCode
 		}
 
+		/**
+		 * @brief Custom handler for memory allocation failures.
+		 *
+		 * This function is invoked when the system is unable to allocate memory.
+		 * It logs the error and terminates the application gracefully.
+		 */
+		static void critical_new_handler() noexcept {
+
+			bool has_lifeline = s_contingency_block != nullptr;
+			s_contingency_block.reset();
+
+			try {
+				debug::log("application::critical_new_handler(): Memory allocation failure!", critical);
+			}
+			catch(...) {
+			}
+
+			if (!has_lifeline) {
+				on_terminate();
+			}
+		}
+		
 	public:
 
 		 application()                           = delete;
@@ -119,20 +158,24 @@ namespace test {
 		template<typename coord_t>
 		[[nodiscard]] static int main(const coord_t& _dimensions) {
 
-			debug::log("Application::main()", info);
+			debug::log("application::main()", info);
 
 			// Restrict main() to one instance.
 			if (s_initialised) {
-				debug::log("Attempted to call Application::main() while it is already running! Do you have multiple instances?", warning);
+				debug::log("Attempted to call application::main() while it is already running! Do you have multiple instances?", warning);
 			}
 			else {
-                s_quit        = false;
-                s_initialised =  true;
-
-				// Set custom termination behaviour:
-				std::set_terminate(&on_terminate);
 
 				try {
+
+					s_quit        = false;
+					s_initialised =  true;
+
+					reinforce_contingent_memory();
+
+					// Set custom termination behaviour:
+					std::set_terminate(on_terminate);
+					std::set_new_handler(critical_new_handler);
 
 					/* INIT */
 
@@ -153,12 +196,12 @@ namespace test {
 							catch (const std::exception& e) {
 								debug::log(e, error);
 							}
-
 						}
 						catch (const std::exception& e) {
 							debug::log(e, critical);
 						}
 
+						reinforce_contingent_memory();
                         quit();
 					}
 				}
@@ -180,12 +223,12 @@ namespace test {
 		 *
 		 * This function is responsible for quitting the application.
 		 *
-		 * @see Application::s_Quit
+		 * @see application::s_Quit
 		 * @see debug::log(const std::string_view&, const LogType&, const bool&)
 		 */
 		static void quit() noexcept {
 
-			debug::log("Application::quit()", info);
+			debug::log("application::quit()", info);
 
             s_quit = true;
 		}
