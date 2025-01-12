@@ -23,15 +23,10 @@ set(CMAKE_CXX_FLAGS_DEBUG        "-O0 -fsanitize=address,leak,undefined -Wall -W
 set(CMAKE_CXX_FLAGS_NOSANITIZERS "-O0                                   -Wall -Wextra -fno-omit-frame-pointer -fno-rtti -g")
 set(CMAKE_CXX_FLAGS_RELEASE      "${CMAKE_CXX_FLAGS_RELEASE} -Ofast -flto -march=native -mtune=native -funroll-loops -ftree-vectorize -ffast-math -fstrict-aliasing -fomit-frame-pointer -fno-rtti -DNDEBUG")
 
-# LOUIERIKSSON::DEBUG:
-add_library(LOUIERIKSSON_DEBUG_HPP INTERFACE test/external/debug.hpp)
-
-# CHDR:
-add_library(CHDR INTERFACE include/chdr.hpp)
+add_library(LOUIERIKSSON_DEBUG_HPP INTERFACE test/external/debug.hpp) # LOUIERIKSSON::DEBUG
+add_library(                  CHDR INTERFACE        include/chdr.hpp) # CHDR
 
 # TEST:
-
-## ADD EXECUTABLE:
 add_executable(Test test/main.cpp)
 
 target_include_directories(Test PRIVATE
