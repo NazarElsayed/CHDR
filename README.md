@@ -36,8 +36,6 @@ CHDR requires a C++ environment (version 17 or above) with support for the stand
 | Enhanced Iterative-Deepening A* (IDA*+)                  | Completed ✔️  |
 | Enhanced Iterative-Deepening B* (IDB*+)                  | Completed ✔️  |
 | Enhanced Iterative-Deepening Depth-First Search (IDDFS+) | Completed ✔️  |
-| Enhanced Simple Memory Bounded A-Star (SMA*+)            |  Planned 📝   |
-| Enhanced Simple Memory Bounded Graveyard Search (SMG*+)  |  Planned 📝   |
 | Flood Fill                                               | Completed ✔️  |
 | Fringe Search (F*)                                       | Completed ✔️  |
 | Graveyard Breadth-First Search (GBFS)                    | Completed ✔️  |
@@ -57,7 +55,9 @@ CHDR requires a C++ environment (version 17 or above) with support for the stand
 | Fields    | Completed ✔️ |
 | Graphs    | Completed ✔️ |
 | Grids     | Completed ✔️ |
-| Recursive |  Planned 📝  |
+| Tree      |  Planned 📝  |
+| Mesh      |  Planned 📝  |
+| Hierarchy |  Planned 📝  |
 
 
 #### Post-Processing
@@ -116,7 +116,5 @@ At present CHDR does not offer compatibility with languages other than C++. We p
 Each programming language has its unique characteristics and paradigms. With this in mind our strategy for supporting a specific language would be determined by its compatibility with C++ and the performance efficiency it offers. The support may be facilitated through language wrappers (interfaces to the library's compiled code) or ports (rewriting parts or all of the library in the target language), whichever is more suited. 
 
 ### References
-
-Lovinger J. and Zhang X., 2017 Enhanced simplified memory-bounded a star (SMA*+). EPiC Series in Computing, 50, 202–212. Available at: https://doi.org/10.29007/v7zc. [Accessed 10 Aug. 2024].
 
 Reinefeld, A. and Marsland, T. A., 1994. Enhanced iterative-deepening search. IEEE Transactions on Pattern Analysis and Machine Intelligence, 16 (7), 701–710. Available at https://doi.org/10.1109/34.297950. [Accessed 3 Oct. 2024].

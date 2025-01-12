@@ -17,7 +17,6 @@
 #include "include/mazes/grid.hpp"
 #include "include/mazes/nodes/id_node.hpp"
 #include "include/mazes/nodes/weighted_node.hpp"
-
 #include "include/solvers/astar.hpp"
 #include "include/solvers/bfs.hpp"
 #include "include/solvers/bstar.hpp"
@@ -26,7 +25,6 @@
 #include "include/solvers/eidastar.hpp"
 #include "include/solvers/eidbstar.hpp"
 #include "include/solvers/eiddfs.hpp"
-#include "include/solvers/esmgstar.hpp"
 #include "include/solvers/floodfill.hpp"
 #include "include/solvers/fstar.hpp"
 #include "include/solvers/gbfs.hpp"
@@ -39,7 +37,6 @@
 #include "include/solvers/jps.hpp"
 #include "include/solvers/base/bnode.hpp"
 #include "include/solvers/base/solver.hpp"
-
 #include "include/types/append_only_allocator.hpp"
 #include "include/types/circular_queue.hpp"
 #include "include/types/coord.hpp"
@@ -49,7 +46,6 @@
 #include "include/types/queue.hpp"
 #include "include/types/stack.hpp"
 #include "include/types/stack_allocator.hpp"
-
 #include "include/utils/heuristics.hpp"
 #include "include/utils/intrinsics.hpp"
 #include "include/utils/utils.hpp"
