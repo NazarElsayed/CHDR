@@ -119,7 +119,7 @@ namespace test {
 		 * @return An integer error code (0 for successful execution)
 		 */
 		template<typename coord_t>
-		static int main(const coord_t& _dimensions) {
+		[[nodiscard]] static int main(const coord_t& _dimensions) {
 
 			debug::log("Application::main()", info);
 

@@ -176,7 +176,7 @@ namespace chdr {
                     }
                 }
             }
-            catch ([[maybe_unused]] const std::exception& _e) {
+            catch ([[maybe_unused]] const std::exception& e) {
                 free = {};
                    c = {};
             }
