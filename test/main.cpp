@@ -16,11 +16,14 @@
 
 #include "core/application.hpp"
 
+template <typename coord_t>
+static constexpr int execute(const std::string_view& _solver, const coord_t& _size);
+
 /**
  * @file main.cpp
  * @brief Global entry point.
  */
-int main([[maybe_unused]] const int _argc, [[maybe_unused]] const char* _argv[]) noexcept {
+int main(int _argc, const char* const _argv[]) noexcept {
 
     int result = -1;
 
@@ -29,74 +32,14 @@ int main([[maybe_unused]] const int _argc, [[maybe_unused]] const char* _argv[])
     debug::log("Licensed under CC BY-NC-ND 4.0");
     debug::log("main()", info);
 
-    try {
-        using weight_t = char;
-        using scalar_t = uint32_t;
-        using  index_t = unsigned long;
+    using index_t = unsigned long;
 
-        switch (_argc) {
-            case 1U: {
-                break;
-            }
-            case 2U: {
-                result = test::application::main<weight_t, scalar_t, index_t, chdr::coord<index_t, 1U>>({
-                    std::stoul(_argv[1U])
-                });
-                break;
-            }
-            case 3U: {
-                result = test::application::main<weight_t, scalar_t, index_t, chdr::coord<index_t, 2U>>({
-                    std::stoul(_argv[1U]), std::stoul(_argv[2U])
-                });
-                break;
-            }
-            case 4U: {
-                result = test::application::main<weight_t, scalar_t, index_t, chdr::coord<index_t, 3U>>( {
-                    std::stoul(_argv[1U]), std::stoul(_argv[2U]), std::stoul(_argv[3U])
-                });
-                break;
-            }
-            case 5U: {
-                result = test::application::main<weight_t, scalar_t, index_t, chdr::coord<index_t, 4U>>( {
-                    std::stoul(_argv[1U]), std::stoul(_argv[2U]), std::stoul(_argv[3U]), std::stoul(_argv[4U])
-                });
-                break;
-            }
-            case 6U: {
-                result = test::application::main<weight_t, scalar_t, index_t, chdr::coord<index_t, 5U>>( {
-                    std::stoul(_argv[1U]), std::stoul(_argv[2U]), std::stoul(_argv[3U]), std::stoul(_argv[4U]),
-                    std::stoul(_argv[5U])
-                });
-                break;
-            }
-            case 7U: {
-                result = test::application::main<weight_t, scalar_t, index_t, chdr::coord<index_t, 6U>>( {
-                    std::stoul(_argv[1U]), std::stoul(_argv[2U]), std::stoul(_argv[3U]), std::stoul(_argv[4U]),
-                    std::stoul(_argv[5U]), std::stoul(_argv[6U])
-                });
-                break;
-            }
-            case 8U: {
-                result = test::application::main<weight_t, scalar_t, index_t, chdr::coord<index_t, 7U>>( {
-                    std::stoul(_argv[1U]), std::stoul(_argv[2U]), std::stoul(_argv[3U]), std::stoul(_argv[4U]),
-                    std::stoul(_argv[5U]), std::stoul(_argv[6U]), std::stoul(_argv[7U])
-                });
-                break;
-            }
-            case 9U: {
-                result = test::application::main<weight_t, scalar_t, index_t, chdr::coord<index_t, 8U>>( {
-                    std::stoul(_argv[1U]), std::stoul(_argv[2U]), std::stoul(_argv[3U]), std::stoul(_argv[4U]),
-                    std::stoul(_argv[5U]), std::stoul(_argv[6U]), std::stoul(_argv[7U]), std::stoul(_argv[8U])
-                });
-                break;
-            }
-            default: {
-                throw std::runtime_error("ERROR: Invalid Dimensionality! Please use between 2 and 8 arguments.");
-            }
-        }
-    }
-    catch (const std::exception& e) {
-        debug::log(e);
+         if (_argc == 3U) { result = test::application::main( { _argv[1U] }, chdr::coord<index_t, 1U> { std::stoul(_argv[2U]) }); }
+    else if (_argc == 4U) { result = test::application::main( { _argv[1U] }, chdr::coord<index_t, 2U> { std::stoul(_argv[2U]), std::stoul(_argv[3U]) }); }
+    else if (_argc == 5U) { result = test::application::main( { _argv[1U] }, chdr::coord<index_t, 3U> { std::stoul(_argv[2U]), std::stoul(_argv[3U]), std::stoul(_argv[4U]) }); }
+    else if (_argc == 6U) { result = test::application::main( { _argv[1U] }, chdr::coord<index_t, 4U> { std::stoul(_argv[2U]), std::stoul(_argv[3U]), std::stoul(_argv[4U]), std::stoul(_argv[5U]) }); }
+    else {
+        debug::log("ERROR: Invalid Dimensionality! Please use between 1 and 4 arguments.", error);
     }
 
     return result;

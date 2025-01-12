@@ -67,7 +67,7 @@ namespace chdr::solvers {
         template <typename open_set_t>
         [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, const params_t& _params) {
 
-            using neighbours_t = decltype(_params.maze.get_neighbours());
+            using neighbours_t = decltype(_params.maze.get_neighbours(std::declval<index_t>()));
 
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);

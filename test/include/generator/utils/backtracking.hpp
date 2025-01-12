@@ -54,7 +54,7 @@ namespace test::generator::utils {
         }
 
         template <size_t Index>
-        constexpr static void compute_single_axis(const coord_t& _coord, const coord_t& _size, std::pair<bool, coord_t>& negOutput, std::pair<bool, coord_t>& posOutput) noexcept {
+        static constexpr void compute_single_axis(const coord_t& _coord, const coord_t& _size, std::pair<bool, coord_t>& negOutput, std::pair<bool, coord_t>& posOutput) noexcept {
 
             constexpr size_t step(1U);
 
@@ -68,7 +68,7 @@ namespace test::generator::utils {
         }
 
         template <size_t... Indices>
-        constexpr static auto compute_axis_neighbours(const coord_t& _coord, const coord_t& _size, std::index_sequence<Indices...>) {
+        static constexpr auto compute_axis_neighbours(const coord_t& _coord, const coord_t& _size, std::index_sequence<Indices...>) {
 
             std::array<std::pair<bool, coord_t>, Kd * 2U> result;
             (compute_single_axis<Indices>(_coord, _size, result[Indices], result[Kd + Indices]), ...);

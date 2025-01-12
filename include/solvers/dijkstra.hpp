@@ -34,7 +34,9 @@ namespace chdr::solvers {
 
             (void)_params;
 
-            throw std::runtime_error("Djikstra::solve(const Mazes::Grid<Kd, weight_t>& _maze, const coord_t& _start, const coord_t& _end, scalar_t (*_h)(const coord_t&, const coord_t&), size_t _capacity = 0U): Not implemented!");
+            std::cerr << __PRETTY_FUNCTION__ << "Not implemented!\n";
+
+            return std::vector<coord_t>{};
         }
 
     };
