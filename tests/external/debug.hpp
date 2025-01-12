@@ -218,25 +218,25 @@ namespace {
 		static constexpr void ansi(const std::string_view& _message, const log_type& _type, const bool& _makeInline) {
 			
 			/* ANSI TEXT COLORS */
-			#define ANSI_RESET   "\033[0m"
-			#define ANSI_BLACK   "\033[30m"
-			#define ANSI_RED     "\033[31m"
-			#define ANSI_GREEN   "\033[32m"
-			#define ANSI_YELLOW  "\033[33m"
-			#define ANSI_BLUE    "\033[34m"
-			#define ANSI_MAGENTA "\033[35m"
-			#define ANSI_CYAN    "\033[36m"
-			#define ANSI_WHITE   "\033[37m"
+			constexpr auto ANSI_RESET   = "\033[0m";
+			constexpr auto ANSI_BLACK   = "\033[30m";
+			constexpr auto ANSI_RED     = "\033[31m";
+			constexpr auto ANSI_GREEN   = "\033[32m";
+			constexpr auto ANSI_YELLOW  = "\033[33m";
+			constexpr auto ANSI_BLUE    = "\033[34m";
+			constexpr auto ANSI_MAGENTA = "\033[35m";
+			constexpr auto ANSI_CYAN    = "\033[36m";
+			constexpr auto ANSI_WHITE   = "\033[37m";
 			
 			/* ANSI BACKGROUND COLORS */
-			#define ANSI_BG_BLACK   "\033[40m"
-			#define ANSI_BG_RED     "\033[41m"
-			#define ANSI_BG_GREEN   "\033[42m"
-			#define ANSI_BG_YELLOW  "\033[43m"
-			#define ANSI_BG_BLUE    "\033[44m"
-			#define ANSI_BG_MAGENTA "\033[45m"
-			#define ANSI_BG_CYAN    "\033[46m"
-			#define ANSI_BG_WHITE   "\033[47m"
+			constexpr auto ANSI_BG_BLACK   = "\033[40m";
+			constexpr auto ANSI_BG_RED     = "\033[41m";
+			constexpr auto ANSI_BG_GREEN   = "\033[42m";
+			constexpr auto ANSI_BG_YELLOW  = "\033[43m";
+			constexpr auto ANSI_BG_BLUE    = "\033[44m";
+			constexpr auto ANSI_BG_MAGENTA = "\033[45m";
+			constexpr auto ANSI_BG_CYAN    = "\033[46m";
+			constexpr auto ANSI_BG_WHITE   = "\033[47m";
 			
 			switch (_type) {
 				
@@ -322,25 +322,6 @@ namespace {
 					break;
 				}
 			}
-			
-			#undef ANSI_RESET
-			#undef ANSI_BLACK
-			#undef ANSI_RED
-			#undef ANSI_GREEN
-			#undef ANSI_YELLOW
-			#undef ANSI_BLUE
-			#undef ANSI_MAGENTA
-			#undef ANSI_CYAN
-			#undef ANSI_WHITE
-			
-			#undef ANSI_BG_BLACK
-			#undef ANSI_BG_RED
-			#undef ANSI_BG_GREEN
-			#undef ANSI_BG_YELLOW
-			#undef ANSI_BG_BLUE
-			#undef ANSI_BG_MAGENTA
-			#undef ANSI_BG_CYAN
-			#undef ANSI_BG_WHITE
 		}
 
 #elif _WIN32
@@ -354,15 +335,15 @@ namespace {
 
 		static void win32(const std::string_view& _message, const log_type& _type, const bool& _makeInline) {
 
-#define FOREGROUND_BLACK   0x0
-#define FOREGROUND_CYAN	   0x3
-#define FOREGROUND_RED     0x4
-#define FOREGROUND_MAGENTA 0x5
-#define FOREGROUND_YELLOW  0x6
-#define FOREGROUND_WHITE   0x7
-#define BACKGROUND_BLACK   0x00
-#define BACKGROUND_MAGENTA 0x50
-#define BACKGROUND_WHITE   0x70
+            constexpr auto FOREGROUND_BLACK   = 0x0;
+            constexpr auto FOREGROUND_CYAN    = 0x3;
+            constexpr auto FOREGROUND_RED     = 0x4;
+            constexpr auto FOREGROUND_MAGENTA = 0x5;
+            constexpr auto FOREGROUND_YELLOW  = 0x6;
+            constexpr auto FOREGROUND_WHITE   = 0x7;
+            constexpr auto BACKGROUND_BLACK   = 0x00;
+            constexpr auto BACKGROUND_MAGENTA = 0x50;
+            constexpr auto BACKGROUND_WHITE   = 0x70;
 
 			SetConsoleOutputCP(CP_UTF8);
 
@@ -488,17 +469,6 @@ namespace {
 				
 				throw e;
 			}
-
-#undef FOREGROUND_BLACK
-#undef FOREGROUND_CYAN
-#undef FOREGROUND_RED
-#undef FOREGROUND_MAGENTA
-#undef FOREGROUND_YELLOW
-#undef FOREGROUND_WHITE
-#undef BACKGROUND_BLACK
-#undef BACKGROUND_MAGENTA
-#undef BACKGROUND_WHITE
-
 		}
 
 #endif
@@ -747,14 +717,14 @@ namespace {
 	#if __linux__ || __APPLE__
 				
 				// Capture stack frames:
-				std::vector<void*> array(static_cast<size_t>(_frames));
+				std::vector<void*> array(_frames);
 				const auto frames = backtrace(array.data(), static_cast<int>(_frames));
 				
 				// Convert addresses into an array of human-readable strings
 				const std::unique_ptr<char*, void(*)(void*)> strings(backtrace_symbols(array.data(), frames), std::free);
 
 				result.reserve(frames + 1);
-				for (int i = 0; i < frames; ++i) {
+				for (auto i = 0; i < frames; ++i) {
 				    result.emplace_back(strings.get()[i]);
 				}
 				

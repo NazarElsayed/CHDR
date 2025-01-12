@@ -77,5 +77,7 @@
     <option name="/Default/CodeInspection/Highlighting/InspectionSeverities/=CppEnforceCVQualifiersOrder/@EntryIndexRemoved" />
     <option name="/Default/CodeInspection/Highlighting/InspectionSeverities/=CppDFAUnreachableFunctionCall/@EntryIndexRemoved" />
     <option name="/Default/CodeInspection/Highlighting/InspectionSeverities/=CppInconsistentNaming/@EntryIndexRemoved" />
+    <option name="/Default/CodeInspection/Highlighting/InspectionSeverities/=CppUseAssociativeContains/@EntryIndexedValue" value="DO_NOT_SHOW" type="string" />
+    <option name="/Default/CodeInspection/Highlighting/InspectionSeverities/=CppUseAssociativeContains/@EntryIndexRemoved" />
   </component>
 </project>

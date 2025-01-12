@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="CHDR &amp; Test Source" pattern="file[Pathfinding]:include//*||file[Pathfinding]:tests//*||file:chdr.hpp||file:chdr_version.hpp" />
+</component>

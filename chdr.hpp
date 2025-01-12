@@ -19,8 +19,6 @@
 #include "include/mazes/nodes/weighted_node.hpp"
 
 #include "include/solvers/astar.hpp"
-#include "include/solvers/base/bnode.hpp"
-#include "include/solvers/base/solver.hpp"
 #include "include/solvers/bfs.hpp"
 #include "include/solvers/bstar.hpp"
 #include "include/solvers/dfs.hpp"
@@ -39,6 +37,8 @@
 #include "include/solvers/idbstar.hpp"
 #include "include/solvers/iddfs.hpp"
 #include "include/solvers/jps.hpp"
+#include "include/solvers/base/bnode.hpp"
+#include "include/solvers/base/solver.hpp"
 
 #include "include/types/append_only_allocator.hpp"
 #include "include/types/circular_queue.hpp"
