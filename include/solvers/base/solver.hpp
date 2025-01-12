@@ -74,7 +74,7 @@ namespace chdr::solvers {
 
             if constexpr (is_graph<decltype(_params.maze)>::value) {
 
-                return static_cast<typename params_t::index_type>(
+                return static_cast<size_t>(
                     _params.capacity != 0U ?
                         _params.capacity :
                         std::max(_params.maze.count() / 10U, static_cast<size_t>(1U))
@@ -84,8 +84,8 @@ namespace chdr::solvers {
                 return std::max(
                     _params.capacity,
                     std::max(
-                        static_cast<typename params_t::index_type>(utils::to_1d(_params.start, _params.size)),
-                        static_cast<typename params_t::index_type>(utils::to_1d(_params.end,   _params.size))
+                        static_cast<size_t>(utils::to_1d(_params.start, _params.size)),
+                        static_cast<size_t>(utils::to_1d(_params.end,   _params.size))
                     )
                 );
             }

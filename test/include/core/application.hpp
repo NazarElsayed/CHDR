@@ -156,8 +156,8 @@ namespace test {
 		 *
 		 * @return An integer error code (0 for successful execution)
 		 */
-		template<typename coord_t>
-		[[nodiscard]] static int main(std::string_view _solver, const coord_t& _size) noexcept {
+		template <template <typename params_t> typename solver_t, typename params_t, typename... Args>
+		[[nodiscard]] static int main(const params_t& _params) noexcept {
 
 			debug::log("application::main()", info);
 
@@ -190,63 +190,7 @@ namespace test {
 						try {
 
 							try {
-
-								using weight_t = char;
-								using scalar_t = uint32_t;
-								using  index_t = uint32_t;
-
-								/* GENERATE MAZE */
-								constexpr auto seed { 0U };
-
-								constexpr coord_t start {};
-								          coord_t end;
-
-								const auto grid = generator::grid::generate<weight_t>({}, end, _size, 0.0, 0.0, seed);
-
-								const auto test = grid;
-								//const auto test = chdr::mazes::graph<index_t, scalar_t>(grid);
-								//const auto test = generator::graph::generate<weight_t, index_t, coord_t, scalar_t>(start, end, size, seed);
-
-								struct params {
-
-							        using weight_type = weight_t;
-							        using scalar_type = scalar_t;
-							        using  index_type =  index_t;
-							        using  coord_type =  coord_t;
-
-							        const decltype(test) maze;
-							        const     coord_type start;
-							        const     coord_type end;
-							        const     coord_type size;
-							                 scalar_type (*h)(const coord_type&, const coord_type&) noexcept;
-							        const    scalar_type weight      =  1U;
-							        const     index_type capacity    =  0U;
-							        const     index_type memoryLimit = -1U;
-							    };
-
-								const params args { test, start, end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t> };
-
-							         if (_solver == "astar"    ) { tests::solver::run<chdr::solvers::    astar, params>(args); }
-							    else if (_solver == "bfs"      ) { tests::solver::run<chdr::solvers::      bfs, params>(args); }
-							    else if (_solver == "bstar"    ) { tests::solver::run<chdr::solvers::    bstar, params>(args); }
-							    else if (_solver == "dfs"      ) { tests::solver::run<chdr::solvers::      dfs, params>(args); }
-							    else if (_solver == "dijkstra" ) { tests::solver::run<chdr::solvers:: dijkstra, params>(args); }
-							    else if (_solver == "eidastar" ) { tests::solver::run<chdr::solvers:: eidastar, params>(args); }
-							    else if (_solver == "eidbstar" ) { tests::solver::run<chdr::solvers:: eidbstar, params>(args); }
-							    else if (_solver == "eiddfs"   ) { tests::solver::run<chdr::solvers::   eiddfs, params>(args); }
-							    else if (_solver == "floodfill") { tests::solver::run<chdr::solvers::floodfill, params>(args); }
-							    else if (_solver == "fstar"    ) { tests::solver::run<chdr::solvers::    fstar, params>(args); }
-							    else if (_solver == "gbfs"     ) { tests::solver::run<chdr::solvers::     gbfs, params>(args); }
-							    else if (_solver == "gdfs"     ) { tests::solver::run<chdr::solvers::     gdfs, params>(args); }
-							    else if (_solver == "gjps"     ) { tests::solver::run<chdr::solvers::     gjps, params>(args); }
-							    else if (_solver == "gstar"    ) { tests::solver::run<chdr::solvers::    gstar, params>(args); }
-							    else if (_solver == "idastar"  ) { tests::solver::run<chdr::solvers::  idastar, params>(args); }
-							    else if (_solver == "idbstar"  ) { tests::solver::run<chdr::solvers::  idbstar, params>(args); }
-							    else if (_solver == "iddfs"    ) { tests::solver::run<chdr::solvers::    iddfs, params>(args); }
-							    else if (_solver == "jps"      ) { tests::solver::run<chdr::solvers::      jps, params>(args); }
-							    else {
-							        debug::log("ERROR: Unknown solver " + std::string(_solver) + "!", error);
-							    }
+								tests::solver::run<solver_t, params_t>(_params);
 							}
 							catch (const std::exception& e) {
 								debug::log(e, error);

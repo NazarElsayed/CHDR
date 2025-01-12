@@ -274,7 +274,7 @@ namespace chdr {
 			return result;
 		}
 
-        [[nodiscard]] static std::string to_string(const long double& _duration) {
+        [[nodiscard]] static std::string to_string(const long double& _duration, const double& _scale = std::numeric_limits<double>::epsilon()) {
 
             static std::array<std::string, 4U> units = { "s", "ms", "µs", "ns" };
 
@@ -286,7 +286,7 @@ namespace chdr {
                 ++i;
             }
 
-            return trim_trailing_zeros(std::to_string(result)) + units[i];
+            return trim_trailing_zeros(std::to_string(floor(result / _scale + 0.5) * _scale)) + units[i];
         }
 
 		[[nodiscard]] static std::string trim_trailing_zeros(std::string _str) {

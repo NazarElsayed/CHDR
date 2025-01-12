@@ -24,31 +24,31 @@ set(CMAKE_CXX_FLAGS_NOSANITIZERS "-O0                                   -Wall -W
 set(CMAKE_CXX_FLAGS_RELEASE      "${CMAKE_CXX_FLAGS_RELEASE} -Ofast -flto -march=native -mtune=native -funroll-loops -ftree-vectorize -ffast-math -fstrict-aliasing -fomit-frame-pointer -fno-rtti -DNDEBUG")
 
 add_library(LOUIERIKSSON_DEBUG_HPP INTERFACE test/external/debug.hpp) # LOUIERIKSSON::DEBUG
-add_library(                  CHDR INTERFACE                chdr.hpp) # CHDR
+add_library(               libchdr INTERFACE                chdr.hpp) # libchdr
 
 # TEST:
-add_executable(Test test/main.cpp)
+add_executable(chdr test/main.cpp)
 
-target_include_directories(Test PRIVATE
+target_include_directories(chdr PRIVATE
         test/external/
         test/include/
         ${CMAKE_SOURCE_DIR}
 )
 
-target_precompile_headers(Test INTERFACE stdafx.hpp)
+target_precompile_headers(chdr INTERFACE stdafx.hpp)
 
 ## LINK OPTIONS:
 if (UNIX)
     if (CMAKE_BUILD_TYPE STREQUAL "Release")
-        target_link_options(Test PRIVATE -flto=auto -Wl,--strip-all -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
+        target_link_options(chdr PRIVATE -flto=auto -Wl,--strip-all -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
     else ()
-        target_link_options(Test PRIVATE -flto=auto -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
+        target_link_options(chdr PRIVATE -flto=auto -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
     endif ()
 else()
-    target_link_options(Test PRIVATE -flto=auto)
+    target_link_options(chdr PRIVATE -flto=auto)
 endif (UNIX)
 
-target_link_libraries(Test INTERFACE
+target_link_libraries(chdr INTERFACE
         LOUIERIKSSON_DEBUG_HPP
-        CHDR
+        libchdr
 )
