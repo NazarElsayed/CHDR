@@ -13,17 +13,15 @@ if (CHDR_VERSION_METADATA)
     set(CHDR_VERSION "${CHDR_VERSION_MAJOR}.${CHDR_VERSION_MINOR}.${CHDR_VERSION_PATCH}${CHDR_VERSION_METADATA}")
 endif ()
 
+configure_file(chdr_version.hpp.in ${PROJECT_SOURCE_DIR}/include/chdr_version.hpp)
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-configure_file(chdr_version.hpp.in ${PROJECT_SOURCE_DIR}/include/chdr_version.hpp)
-
 # DIFFERENT BUILD MODES:
-set(CMAKE_CXX_FLAGS_DEBUG "-O0 -fsanitize=address,leak,undefined -Wall -Wextra -fno-omit-frame-pointer -fno-rtti -g")
-
-set(CMAKE_CXX_FLAGS_NOSANITIZERS "-O0 -Wall -Wextra -fno-omit-frame-pointer -fno-rtti -g")
-
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast -flto -march=native -mtune=native -funroll-loops -ftree-vectorize -ffast-math -fstrict-aliasing -fomit-frame-pointer -fno-rtti -DNDEBUG")
+set(CMAKE_CXX_FLAGS_DEBUG        "-O0 -fsanitize=address,leak,undefined -Wall -Wextra -fno-omit-frame-pointer -fno-rtti -g")
+set(CMAKE_CXX_FLAGS_NOSANITIZERS "-O0                                   -Wall -Wextra -fno-omit-frame-pointer -fno-rtti -g")
+set(CMAKE_CXX_FLAGS_RELEASE      "${CMAKE_CXX_FLAGS_RELEASE} -Ofast -flto -march=native -mtune=native -funroll-loops -ftree-vectorize -ffast-math -fstrict-aliasing -fomit-frame-pointer -fno-rtti -DNDEBUG")
 
 # LOUIERIKSSON::DEBUG:
 add_library(LOUIERIKSSON_DEBUG_HPP INTERFACE test/external/debug.hpp)
@@ -31,28 +29,18 @@ add_library(LOUIERIKSSON_DEBUG_HPP INTERFACE test/external/debug.hpp)
 # CHDR:
 add_library(CHDR INTERFACE include/chdr.hpp)
 
-target_precompile_headers(CHDR INTERFACE stdafx.hpp)
-
 # TEST:
 
 ## ADD EXECUTABLE:
-add_executable(Test
-        test/main.cpp
-
-        test/include/core/application.hpp
-        test/include/core/display.hpp
-        test/include/generator/graph.hpp
-        test/include/generator/grid.hpp
-        test/include/generator/utils/backtracking.hpp
-        test/include/generator/utils/lcg.hpp
-        test/include/units/astar.hpp
-)
+add_executable(Test test/main.cpp)
 
 target_include_directories(Test PRIVATE
         include/
         test/external/
         test/include/
 )
+
+target_precompile_headers(Test INTERFACE stdafx.hpp)
 
 ## LINK OPTIONS:
 if (UNIX)
