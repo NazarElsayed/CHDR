@@ -218,25 +218,25 @@ namespace {
 		static constexpr void ansi(const std::string_view& _message, const log_type& _type, const bool& _makeInline) {
 			
 			/* ANSI TEXT COLORS */
-			constexpr auto ANSI_RESET   = "\033[0m";
-			constexpr auto ANSI_BLACK   = "\033[30m";
-			constexpr auto ANSI_RED     = "\033[31m";
-			constexpr auto ANSI_GREEN   = "\033[32m";
-			constexpr auto ANSI_YELLOW  = "\033[33m";
-			constexpr auto ANSI_BLUE    = "\033[34m";
-			constexpr auto ANSI_MAGENTA = "\033[35m";
-			constexpr auto ANSI_CYAN    = "\033[36m";
-			constexpr auto ANSI_WHITE   = "\033[37m";
+			constexpr auto ANSI_RESET   [[maybe_unused]] = "\033[0m";
+			constexpr auto ANSI_BLACK   [[maybe_unused]] = "\033[30m";
+			constexpr auto ANSI_RED     [[maybe_unused]] = "\033[31m";
+			constexpr auto ANSI_GREEN   [[maybe_unused]] = "\033[32m";
+			constexpr auto ANSI_YELLOW  [[maybe_unused]] = "\033[33m";
+			constexpr auto ANSI_BLUE    [[maybe_unused]] = "\033[34m";
+			constexpr auto ANSI_MAGENTA [[maybe_unused]] = "\033[35m";
+			constexpr auto ANSI_CYAN    [[maybe_unused]] = "\033[36m";
+			constexpr auto ANSI_WHITE   [[maybe_unused]] = "\033[37m";
 			
 			/* ANSI BACKGROUND COLORS */
-			constexpr auto ANSI_BG_BLACK   = "\033[40m";
-			constexpr auto ANSI_BG_RED     = "\033[41m";
-			constexpr auto ANSI_BG_GREEN   = "\033[42m";
-			constexpr auto ANSI_BG_YELLOW  = "\033[43m";
-			constexpr auto ANSI_BG_BLUE    = "\033[44m";
-			constexpr auto ANSI_BG_MAGENTA = "\033[45m";
-			constexpr auto ANSI_BG_CYAN    = "\033[46m";
-			constexpr auto ANSI_BG_WHITE   = "\033[47m";
+			constexpr auto ANSI_BG_BLACK   [[maybe_unused]] = "\033[40m";
+			constexpr auto ANSI_BG_RED     [[maybe_unused]] = "\033[41m";
+			constexpr auto ANSI_BG_GREEN   [[maybe_unused]] = "\033[42m";
+			constexpr auto ANSI_BG_YELLOW  [[maybe_unused]] = "\033[43m";
+			constexpr auto ANSI_BG_BLUE    [[maybe_unused]] = "\033[44m";
+			constexpr auto ANSI_BG_MAGENTA [[maybe_unused]] = "\033[45m";
+			constexpr auto ANSI_BG_CYAN    [[maybe_unused]] = "\033[46m";
+			constexpr auto ANSI_BG_WHITE   [[maybe_unused]] = "\033[47m";
 			
 			switch (_type) {
 				
@@ -335,15 +335,15 @@ namespace {
 
 		static void win32(const std::string_view& _message, const log_type& _type, const bool& _makeInline) {
 
-            constexpr auto FOREGROUND_BLACK   = 0x0;
-            constexpr auto FOREGROUND_CYAN    = 0x3;
-            constexpr auto FOREGROUND_RED     = 0x4;
-            constexpr auto FOREGROUND_MAGENTA = 0x5;
-            constexpr auto FOREGROUND_YELLOW  = 0x6;
-            constexpr auto FOREGROUND_WHITE   = 0x7;
-            constexpr auto BACKGROUND_BLACK   = 0x00;
-            constexpr auto BACKGROUND_MAGENTA = 0x50;
-            constexpr auto BACKGROUND_WHITE   = 0x70;
+            constexpr auto FOREGROUND_BLACK   [[maybe_unused]] = 0x0;
+            constexpr auto FOREGROUND_CYAN    [[maybe_unused]] = 0x3;
+            constexpr auto FOREGROUND_RED     [[maybe_unused]] = 0x4;
+            constexpr auto FOREGROUND_MAGENTA [[maybe_unused]] = 0x5;
+            constexpr auto FOREGROUND_YELLOW  [[maybe_unused]] = 0x6;
+            constexpr auto FOREGROUND_WHITE   [[maybe_unused]] = 0x7;
+            constexpr auto BACKGROUND_BLACK   [[maybe_unused]] = 0x00;
+            constexpr auto BACKGROUND_MAGENTA [[maybe_unused]] = 0x50;
+            constexpr auto BACKGROUND_WHITE   [[maybe_unused]] = 0x70;
 
 			SetConsoleOutputCP(CP_UTF8);
 
