@@ -38,7 +38,7 @@ namespace test {
     public:
 
         template<typename weight_t, typename coord_t>
-        static constexpr void draw_maze(const coord_t& _start, const coord_t& _end, const coord_t& _size,  const chdr::mazes::grid<coord_t, weight_t>& _maze) {
+        static constexpr void draw_maze(const coord_t& _start, const coord_t& _end, const chdr::mazes::grid<coord_t, weight_t>& _maze) {
 
             static_assert(std::is_integral_v<weight_t>, "Maze type must be an integral type.");
 
@@ -46,14 +46,14 @@ namespace test {
             SetConsoleOutputCP(CP_UTF8);
 #endif
 
-            const auto s = chdr::utils::to_1d(_start, _size);
-            const auto e = chdr::utils::to_1d(_end, _size);
+            const auto s = chdr::utils::to_1d(_start, _maze.size());
+            const auto e = chdr::utils::to_1d(_end,   _maze.size());
 
-            const bool even_width = _size[0U] % 2U == 0U;
+            const bool even_width = _maze.size()[0U] % 2U == 0U;
 
             // Add an upper boundary:
             {
-                const auto columns = _size[0U] + (even_width ? 1U : 2U);
+                const auto columns = _maze.size()[0U] + (even_width ? 1U : 2U);
 
                 for (size_t i = 0U; i < columns; ++i) {
                     std::cout << s_wall_str;
@@ -64,7 +64,7 @@ namespace test {
             const auto& nodes = _maze.nodes();
             for (size_t i = 0U; i < nodes.size(); ++i) {
 
-                if (i % _size[0U] == 0U) { std::cout << s_wall_str; }
+                if (i % _maze.size()[0U] == 0U) { std::cout << s_wall_str; }
 
                 if      (i == s) { std::cout << s_start_str; }
                 else if (i == e) { std::cout << s_end_str; }
@@ -79,7 +79,7 @@ namespace test {
                     }
 
                     // Handle end of line:
-                    if ([[maybe_unused]] const bool end_of_line = (_maze.s_rank == 1U && i == _size[0U] - 1U) || (i + 1U) % _size[0U] == 0U) {
+                    if ([[maybe_unused]] const bool end_of_line = (_maze.s_rank == 1U && i == _maze.size()[0U] - 1U) || (i + 1U) % _maze.size()[0U] == 0U) {
                         if (!even_width) {
                             std::cout << s_wall_str;
                         }
@@ -90,11 +90,11 @@ namespace test {
 
             // Handle the addition of a lower boundary:
             {
-                if (const bool even_height = _maze.s_rank > 1U && _size[1U] % 2U == 0U;
+                if (const bool even_height = _maze.s_rank > 1U && _maze.size()[1U] % 2U == 0U;
                     !even_height
                 ) {
 
-                    const auto columns = _size[0U] + (even_width ? 1U : 2U);
+                    const auto columns = _maze.size()[0U] + (even_width ? 1U : 2U);
                     for (size_t i = 0U; i < columns; ++i) {
                         std::cout << s_wall_str;
                     }
@@ -104,12 +104,16 @@ namespace test {
         }
 
         template<typename weight_t, typename coord_t>
-        static constexpr void draw_maze(const coord_t& _start, const coord_t& _end, const coord_t& _size,  const chdr::mazes::grid<coord_t, weight_t>& _maze, const std::vector<coord_t>& _path) {
+        static constexpr void draw_maze(const coord_t& _start, const coord_t& _end, const chdr::mazes::grid<coord_t, weight_t>& _maze, const std::vector<coord_t>& _path) {
 
             static_assert(std::is_integral_v<weight_t>, "Maze type must be an integral type.");
 
-            const auto s = chdr::utils::to_1d(_start, _size);
-            const auto e = chdr::utils::to_1d(_end, _size);
+#ifdef _WIN32
+            SetConsoleOutputCP(CP_UTF8);
+#endif
+
+            const auto s = chdr::utils::to_1d(_start, _maze.size());
+            const auto e = chdr::utils::to_1d(_end,   _maze.size());
 
             chdr::existence_set path_set(_path.size());
 
@@ -117,11 +121,11 @@ namespace test {
                 path_set.push(chdr::utils::to_1d(item, _maze.size()));
             }
 
-            const bool even_width = _size[0U] % 2U == 0U;
+            const bool even_width = _maze.size()[0U] % 2U == 0U;
 
             // Add an upper boundary:
             {
-                const auto columns = _size[0U] + (even_width ? 1U : 2U);
+                const auto columns = _maze.size()[0U] + (even_width ? 1U : 2U);
 
                 for (size_t i = 0U; i < columns; ++i) {
                     std::cout << s_wall_str;
@@ -132,7 +136,7 @@ namespace test {
             size_t i = 0U;
             for (auto node : _maze) {
 
-                if (i % _size[0U] == 0U) { std::cout << s_wall_str; }
+                if (i % _maze.size()[0U] == 0U) { std::cout << s_wall_str; }
 
                 if      (i == s) { std::cout << s_start_str; }
                 else if (i == e) { std::cout << s_end_str; }
@@ -161,7 +165,7 @@ namespace test {
                     }
 
                     // Handle end of line:
-                    if ([[maybe_unused]] const bool end_of_line = (_maze.s_rank == 1U && i == _size[0U] - 1U) || (i + 1U) % _size[0U] == 0U) {
+                    if ([[maybe_unused]] const bool end_of_line = (_maze.s_rank == 1U && i == _maze.size()[0U] - 1U) || (i + 1U) % _maze.size()[0U] == 0U) {
                         if (!even_width) {
                             std::cout << s_wall_str;
                         }
@@ -173,11 +177,11 @@ namespace test {
 
             // Handle the addition of a lower boundary:
             {
-                if (const bool even_height = _maze.s_rank > 1U && _size[1U] % 2U == 0U;
+                if (const bool even_height = _maze.s_rank > 1U && _maze.size()[1U] % 2U == 0U;
                     !even_height
                 ) {
 
-                    const auto columns = _size[0U] + (even_width ? 1U : 2U);
+                    const auto columns = _maze.size()[0U] + (even_width ? 1U : 2U);
                     for (size_t j = 0U; i < columns; ++j) {
                         std::cout << s_wall_str;
                     }

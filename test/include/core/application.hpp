@@ -9,13 +9,14 @@
 #ifndef TEST_APPLICATION_HPP
 #define TEST_APPLICATION_HPP
 
+#include <chdr.hpp>
 #include <debug.hpp>
 
 #include <atomic>
 #include <cstdlib>
 #include <string>
 
-#include "../units/astar.hpp"
+#include "../units/solver.hpp"
 
 namespace test {
 
@@ -188,20 +189,54 @@ namespace test {
 
 						try {
 
-							/* Put tests here */
-
 							try {
-                                tests::astar::run<char>(_dimensions);
+
+								using weight_t = char;
+								using scalar_t = uint32_t;
+								using  index_t = typename coord_t::value_type;
+
+								constexpr coord_t start {};
+								          coord_t end;
+
+								/* GENERATE MAZE */
+								constexpr auto seed { 0U };
+								const auto grid = generator::grid::generate<weight_t>(start, end, _dimensions, 0.0, 0.0, seed);
+
+								const auto test = grid;
+								//const auto test = chdr::mazes::graph<index_t, scalar_t>(grid);
+								//const auto test = generator::graph::generate<weight_t, index_t, coord_t, scalar_t>(start, end, size, seed);
+
+								struct params {
+
+									using weight_type [[maybe_unused]] = weight_t;
+									using scalar_type                  = scalar_t;
+									using  index_type                  =  index_t;
+									using  coord_type                  =  coord_t;
+
+									const decltype(test) maze;
+									const     coord_type start;
+									const     coord_type end;
+									const     coord_type size;
+									         scalar_type (*h)(const coord_type&, const coord_type&) noexcept;
+									const    scalar_type weight      =  1U;
+									const     index_type capacity    =  0U;
+									const     index_type memoryLimit = -1U;
+								};
+
+								params settings = { test, start, end, _dimensions, chdr::heuristics::manhattan_distance<scalar_t, coord_t> };
+
+                                tests::solver::run<chdr::solvers::astar>(settings);
 							}
 							catch (const std::exception& e) {
 								debug::log(e, error);
 							}
+
+							reinforce_contingent_memory();
 						}
 						catch (const std::exception& e) {
 							debug::log(e, critical);
 						}
 
-						reinforce_contingent_memory();
                         quit();
 					}
 				}

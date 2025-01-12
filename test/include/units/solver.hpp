@@ -9,8 +9,6 @@
 #ifndef TEST_ASTAR_HPP
 #define TEST_ASTAR_HPP
 
-#include <chdr.hpp>
-
 #include <debug.hpp>
 
 #include <chrono>
@@ -31,16 +29,12 @@
 
 namespace test::tests {
 
-    class astar final {
+    struct solver final {
 
-    private:
+        template <template <typename params_t> typename solver_t, typename params_t>
+        static void run(const params_t& _params) {
 
-    public:
-
-        template <typename weight_t, typename coord_t, typename scalar_t = uint32_t, typename index_t = uint32_t>
-        static void run(const coord_t& _dimensions) {
-
-            constexpr auto Kd = std::tuple_size_v<std::decay_t<coord_t>>;
+            constexpr auto Kd = std::tuple_size_v<std::decay_t<typename params_t::coord_type>>;
 
             /* TEST SAMPLES */
 #ifndef NDEBUG
@@ -48,19 +42,7 @@ namespace test::tests {
 #else //!NDEBUG
             constexpr size_t base_samples = 100000000UL;
 #endif //!NDEBUG
-            const size_t test_samples = std::max(base_samples / chdr::utils::product<size_t>(_dimensions), static_cast<size_t>(1U));
-
-            const     coord_t size = _dimensions;
-            constexpr coord_t start {};
-                      coord_t end;
-
-            /* GENERATE MAZE */
-            constexpr auto seed { 0U };
-            const auto grid = generator::grid::generate<weight_t>(start, end, size, 0.0, 0.0, seed);
-
-            const auto test = grid;
-            //const auto test = chdr::mazes::graph<index_t, scalar_t>(grid);
-            //const auto test = generator::graph::generate<weight_t, index_t, coord_t, scalar_t>(start, end, size, seed);
+            const size_t test_samples = std::max(base_samples / _params.maze.count(), static_cast<size_t>(1U));
 
             /* CAPTURE SYSTEM NOISE */
             auto noise_floor_min = std::numeric_limits<long double>::max();
@@ -78,34 +60,14 @@ namespace test::tests {
 
             /* TEST ALGORITHM */
             debug::log("(A*):");
-            std::vector<coord_t> path;
+            std::vector<typename params_t::coord_type> path;
 
             auto result = std::numeric_limits<long double>::max();
             for (size_t i = 0U; i < test_samples; ++i) {
 
                 const auto sw_start = std::chrono::high_resolution_clock::now();
 
-                {
-                    struct params {
-
-                        using weight_type [[maybe_unused]] = weight_t;
-                        using scalar_type                  = scalar_t;
-                        using  index_type                  =  index_t;
-                        using  coord_type                  =  coord_t;
-
-                        const decltype(test) maze;
-                        const  coord_type    start;
-                        const  coord_type    end;
-                        const  coord_type    size;
-                              scalar_type    (*h)(const coord_type&, const coord_type&) noexcept;
-                        const scalar_type    weight      =  1U;
-                        const  index_type    capacity    =  0U;
-                        const  index_type    memoryLimit = -1U;
-                    };
-
-                    const auto solver = chdr::solvers::make_solver<chdr::solvers::astar, params>();
-                    path = solver(test, start, end, size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>);
-                }
+                path = chdr::solvers::solve<solver_t, params_t>(_params);
 
                 result = std::min(
                     result,
@@ -115,13 +77,13 @@ namespace test::tests {
                 );
             }
 
-            if (std::is_same_v<std::decay_t<decltype(test)>, chdr::mazes::grid<coord_t, weight_t>> &&
-                size[0U] <= 100U &&
-                size[1U] <= 100U &&
-                      Kd >    0U &&
-                      Kd <    3U
+            if (std::is_base_of_v<chdr::mazes::grid<typename params_t::coord_type, typename params_t::weight_type>, std::decay_t<decltype(_params.maze)>> &&
+                _params.maze.size()[0U] <= 100U &&
+                _params.maze.size()[1U] <= 100U &&
+                Kd > 0U &&
+                Kd < 3U
             ) {
-                display::draw_maze(start, end, size, grid, path);
+                display::draw_maze(_params.start, _params.end, _params.maze, path);
             }
 
             debug::log("\t" + std::string(!path.empty() ? "[SOLVED]" : "[IMPOSSIBLE]") +
