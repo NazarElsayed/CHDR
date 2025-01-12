@@ -11,7 +11,7 @@
 
 // NOLINTBEGIN(*-include-cleaner)
 
-#include "CHDR_Version.hpp"
+#include "chdr_version.hpp"
 
 #include "mazes/graph.hpp"
 #include "mazes/grid.hpp"

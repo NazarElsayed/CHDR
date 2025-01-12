@@ -4,39 +4,6 @@
 # Licensed under CC BY-NC-ND 4.0
 # https://creativecommons.org/licenses/by-nc-nd/4.0/
 
-# Prerequisites
-*.d
-
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
-
 # Doxygen File
 Doxyfile
 
@@ -58,5 +25,5 @@ Doxyfile
 /cmake-build-release-intel/
 /cmake-build-release-intel/**
 
-#WHITELIST /src
-!/src/**
+#WHITELIST /include
+!/include/**

@@ -15,6 +15,7 @@
 
 #include <algorithm>
 #include <random>
+#include <vector>
 
 #include "utils/lcg.hpp"
 

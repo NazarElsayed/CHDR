@@ -18,13 +18,14 @@
 #include <cstdint>
 #include <limits>
 #include <string>
+#include <vector>
 
-#include "../core/display.hpp"
+#include "core/display.hpp"
 
 // ReSharper disable CppUnusedIncludeDirective
 
-#include "../generator/graph.hpp"   // NOLINT(*-include-cleaner)
-#include "../generator/grid.hpp"    // NOLINT(*-include-cleaner)
+#include "generator/graph.hpp"   // NOLINT(*-include-cleaner)
+#include "generator/grid.hpp"    // NOLINT(*-include-cleaner)
 
 // ReSharper restore CppUnusedIncludeDirective
 
