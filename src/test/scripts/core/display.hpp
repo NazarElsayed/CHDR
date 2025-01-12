@@ -38,16 +38,13 @@ namespace test {
     public:
 
         template<typename weight_t, typename coord_t>
-        static constexpr void draw_maze(const coord_t& _start, const coord_t& _end,
-                                        const coord_t& _size,  const chdr::mazes::grid<coord_t, weight_t>& _maze) {
+        static constexpr void draw_maze(const coord_t& _start, const coord_t& _end, const coord_t& _size,  const chdr::mazes::grid<coord_t, weight_t>& _maze) {
 
             static_assert(std::is_integral_v<weight_t>, "Maze type must be an integral type.");
 
 #ifdef _WIN32
             SetConsoleOutputCP(CP_UTF8);
 #endif
-
-            constexpr auto Kd = _maze.s_rank;
 
             const auto s = chdr::utils::to_1d(_start, _size);
             const auto e = chdr::utils::to_1d(_end, _size);
@@ -82,7 +79,7 @@ namespace test {
                     }
 
                     // Handle end of line:
-                    if ([[maybe_unused]] const bool end_of_line = (Kd == 1U && i == _size[0U] - 1U) || (i + 1U) % _size[0U] == 0U) {
+                    if ([[maybe_unused]] const bool end_of_line = (_maze.s_rank == 1U && i == _size[0U] - 1U) || (i + 1U) % _size[0U] == 0U) {
                         if (!even_width) {
                             std::cout << s_wall_str;
                         }
@@ -93,7 +90,7 @@ namespace test {
 
             // Handle the addition of a lower boundary:
             {
-                if (const bool even_height = Kd > 1U && _size[1U] % 2U == 0U;
+                if (const bool even_height = _maze.s_rank > 1U && _size[1U] % 2U == 0U;
                     !even_height
                 ) {
 
@@ -107,16 +104,12 @@ namespace test {
         }
 
         template<typename weight_t, typename coord_t>
-        static constexpr void draw_maze(const coord_t& _start, const coord_t& _end,
-                                        const coord_t& _size,  const chdr::mazes::grid<coord_t, weight_t>& _maze,
-                                        const std::vector<coord_t>& _path) {
+        static constexpr void draw_maze(const coord_t& _start, const coord_t& _end, const coord_t& _size,  const chdr::mazes::grid<coord_t, weight_t>& _maze, const std::vector<coord_t>& _path) {
 
             static_assert(std::is_integral_v<weight_t>, "Maze type must be an integral type.");
 
             const auto s = chdr::utils::to_1d(_start, _size);
             const auto e = chdr::utils::to_1d(_end, _size);
-
-            constexpr auto Kd = _maze.s_rank;
 
             chdr::existence_set path_set(_path.size());
 
@@ -168,7 +161,7 @@ namespace test {
                     }
 
                     // Handle end of line:
-                    if ([[maybe_unused]] const bool end_of_line = (Kd == 1U && i == _size[0U] - 1U) || (i + 1U) % _size[0U] == 0U) {
+                    if ([[maybe_unused]] const bool end_of_line = (_maze.s_rank == 1U && i == _size[0U] - 1U) || (i + 1U) % _size[0U] == 0U) {
                         if (!even_width) {
                             std::cout << s_wall_str;
                         }
@@ -180,7 +173,7 @@ namespace test {
 
             // Handle the addition of a lower boundary:
             {
-                if (const bool even_height = Kd > 1U && _size[1U] % 2U == 0U;
+                if (const bool even_height = _maze.s_rank > 1U && _size[1U] % 2U == 0U;
                     !even_height
                 ) {
 
