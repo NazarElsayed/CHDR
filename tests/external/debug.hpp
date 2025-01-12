@@ -499,7 +499,7 @@ namespace {
 		};
 		
 		/** Metadata about the previous log. */
-		inline static meta s_last_log = { 0U, -1U, false };
+		inline static meta s_last_log { 0U, -1U, false };
 
 		static void log_internal(const std::string_view& _message, const log_type& _type, const bool& _makeInline) {
 
