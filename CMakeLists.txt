@@ -44,6 +44,8 @@ if (UNIX)
     else ()
         target_link_options(Test PRIVATE -flto=auto -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
     endif ()
+else()
+    target_link_options(Test PRIVATE -flto=auto)
 endif (UNIX)
 
 target_link_libraries(Test INTERFACE
