@@ -156,7 +156,7 @@ namespace test {
 		 *
 		 * @return An integer error code (0 for successful execution)
 		 */
-		template <template <typename params_t> typename solver_t, typename params_t, typename... Args>
+		template <template <typename params_t> typename solver_t, typename params_t>
 		[[nodiscard]] static int main(const params_t& _params) noexcept {
 
 			debug::log("application::main()", info);
