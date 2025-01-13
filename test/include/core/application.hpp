@@ -215,7 +215,7 @@ namespace test {
 				debug::log("Application Terminated Normally.", info);
 			}
 
-			return 0;
+			return EXIT_SUCCESS;
 		}
 
 		/**

@@ -32,11 +32,11 @@ namespace test::tests {
     struct solver final {
 
         template <template <typename params_t> typename solver_t, typename params_t, typename... Args>
-        static void run(Args&&... args) {
+        static void run(Args&&... _args) {
 
             constexpr auto Kd = std::tuple_size_v<std::decay_t<typename params_t::coord_type>>;
 
-            const params_t _params { std::forward<Args>(args)... };
+            const params_t _params { std::forward<Args>(_args)... };
 
             /* TEST SAMPLES */
 #ifndef NDEBUG
@@ -61,7 +61,7 @@ namespace test::tests {
             }
 
             /* TEST ALGORITHM */
-            debug::log("(A*):");
+            debug::log("(Solver):");
             std::vector<typename params_t::coord_type> path;
 
             auto result = std::numeric_limits<long double>::max();
