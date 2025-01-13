@@ -7,10 +7,11 @@
  */
 
 #include <chdr.hpp>
-
 #include <debug.hpp>
 
+#include <iostream>
 #include <string>
+#include <string_view>
 
 #include "core/application.hpp"
 
@@ -18,7 +19,7 @@ namespace test {
 
 	class cli final {
 
-		static constexpr void help() {
+		static void help() {
 
 		    std::cout << "Usage: chdr <command> [arguments]\n"
 		              << "\nCommands:\n"
@@ -50,12 +51,12 @@ namespace test {
 		              << "  chdr astar 10 10\n"
 		              << "  chdr astar 10 10 10\n"
 		              << "  chdr astar 10 10 10 10\n"
-		              << "\nNote: The dimensions must be integers representing coordinates.\n" << std::flush;
+		              << "\nNote: The dimensions must be integers representing coordinates.\n";
 
 		}
 
 		template <typename coord_t>
-		static constexpr int deduce_solver(const std::string_view& _solver, const coord_t& _size) {
+		static int deduce_solver(const std::string_view& _solver, const coord_t& _size) {
 
 			int result = EXIT_FAILURE;
 
@@ -114,13 +115,12 @@ namespace test {
 		    else if (_solver == "jps"      ) { result = test::application::main<chdr::solvers::      jps, params>(args); }
 		    else {
 		        debug::log("ERROR: Unknown solver \"" + std::string(_solver) + "\"!", error);
-    			help();
 		    }
 
 			return result;
 		}
 
-		static constexpr int deduce_coord(const int& _argc, const char* const _argv[]) {
+		static int deduce_coord(const int& _argc, const char* const _argv[]) {
 
 			int result = EXIT_FAILURE;
 
@@ -132,7 +132,6 @@ namespace test {
 			else if (_argc == 6U) { result = deduce_solver( { _argv[1U] }, chdr::coord<index_t, 4U> { std::stoul(_argv[2U]), std::stoul(_argv[3U]), std::stoul(_argv[4U]), std::stoul(_argv[5U]) }); }
 			else {
 				debug::log("ERROR: Invalid Dimensionality!", error);
-				help();
 			}
 
 			return result;
@@ -140,8 +139,15 @@ namespace test {
 
 	public:
 
-		static constexpr int execute(const int& _argc, const char* const _argv[]) {
-			return deduce_coord(_argc, _argv);
+		static int execute(const int& _argc, const char* const _argv[]) {
+
+			const auto result = deduce_coord(_argc, _argv);
+
+			if (result != EXIT_SUCCESS) {
+				help();
+			}
+
+			return result;
 		}
 	};
 
