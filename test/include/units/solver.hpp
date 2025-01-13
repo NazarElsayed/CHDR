@@ -6,8 +6,8 @@
  * https://creativecommons.org/licenses/by-nc-nd/4.0/
  */
 
-#ifndef TEST_ASTAR_HPP
-#define TEST_ASTAR_HPP
+#ifndef TEST_SOLVER_HPP
+#define TEST_SOLVER_HPP
 
 #include <debug.hpp>
 
@@ -27,7 +27,7 @@
 
 // ReSharper restore CppUnusedIncludeDirective
 
-namespace test::tests {
+namespace test {
 
     struct solver final {
 
@@ -94,6 +94,6 @@ namespace test::tests {
         }
     };
 
-} //test::tests
+} //test::solver
 
 #endif //TEST_ASTAR_HPP

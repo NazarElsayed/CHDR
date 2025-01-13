@@ -190,7 +190,7 @@ namespace test {
 						try {
 
 							try {
-								tests::solver::run<solver_t, params_t>(_params);
+								solver::run<solver_t, params_t>(_params);
 							}
 							catch (const std::exception& e) {
 								debug::log(e, error);

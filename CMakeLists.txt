@@ -24,7 +24,7 @@ set(CMAKE_CXX_FLAGS_NOSANITIZERS "-O0                                   -Wall -W
 set(CMAKE_CXX_FLAGS_RELEASE      "${CMAKE_CXX_FLAGS_RELEASE} -Ofast -flto -march=native -mtune=native -funroll-loops -ftree-vectorize -ffast-math -fstrict-aliasing -fomit-frame-pointer -fno-rtti -DNDEBUG")
 
 add_library(libdebug INTERFACE test/external/debug.hpp)
-add_library(libchdr INTERFACE                 chdr.hpp)
+add_library(libchdr  INTERFACE                chdr.hpp)
 
 # TEST:
 add_executable(chdr test/main.cpp)
