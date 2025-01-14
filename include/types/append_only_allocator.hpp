@@ -29,11 +29,11 @@ namespace chdr {
         size_t block_width;
         size_t index;
 
-        std::forward_list<block_t> c;
+        std::vector<block_t> c;
 
         constexpr void expand() {
 
-            c.emplace_front(std::make_unique<T[]>(block_width)); // NOLINT(*-avoid-c-arrays)
+            c.emplace_back(std::make_unique<T[]>(block_width)); // NOLINT(*-avoid-c-arrays)
             index = 0U;
 
             block_width = std::min(block_width * 2U, max_block_width);
@@ -82,7 +82,7 @@ namespace chdr {
                 expand();
             }
 
-            return &c.front().get()[index++];
+            return &c.back().get()[index++];
         }
 
         static constexpr void deallocate([[maybe_unused]] T* _p, [[maybe_unused]] const uintptr_t& _n) noexcept {

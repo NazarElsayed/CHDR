@@ -35,7 +35,7 @@ namespace chdr {
         size_t initial_block_width;
         size_t block_width;
 
-        std::list<block_t> c;
+        std::vector<block_t> c;
         std::vector<T*> free;
 
         constexpr void expand(T* const _new_block, const size_t& _skip_first) { // NOLINT(*-unused-parameters)
@@ -112,7 +112,7 @@ namespace chdr {
                 c                   = std::move(other.c);
                 free                = std::move(other.free);
 
-                // Reset the other allocator to its initial state
+                // Reset the other allocator to its initial state.
                 other.reset();
             }
             return *this;
@@ -145,7 +145,7 @@ namespace chdr {
             T* result;
 
             if (free.empty()) {
-                expand(result = &c.emplace_front(block_t(block_width))[0U], 1U);
+                expand(result = &c.emplace_back(block_t(block_width))[0U], 1U);
             }
             else {
                 result = free.back();
