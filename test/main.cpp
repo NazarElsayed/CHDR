@@ -55,8 +55,8 @@ namespace test {
 		              << "  iddfs      Iterative-Deepening Depth-First Search\n"
 		              << "  jps        Jump-Point Search\n"
 				      << "\nMaze Format:\n"
-					  << "  bit        A*\n"
-					  << "  byte       Breadth-First Search\n"
+					  << "  bit        Search space is represented using 1-bit values.\n"
+					  << "  byte       Search space is represented using 4-bit values.\n"
 		              << "\nExample:\n"
 		              << "  chdr astar 10\n"
 		              << "  chdr astar 10 10\n"
@@ -85,7 +85,7 @@ namespace test {
 			constexpr coord_t start {};
 			          coord_t end;
 
-			const auto grid = test::generator::grid::generate<weight_t>({}, end, _size, 0.0, 0.0, seed);
+			const auto grid = generator::grid::generate<weight_t>({}, end, _size, 0.0, 0.0, seed);
 
 			const auto test = grid;
 			//const auto test = chdr::mazes::graph<index_t, scalar_t>(grid);
