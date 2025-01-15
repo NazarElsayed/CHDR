@@ -31,6 +31,8 @@ namespace test::generator::utils {
 
     private:
 
+        static constexpr size_t null_v = static_cast<size_t>(-1U);
+
         static constexpr bool valid_dimensionality(const coord_t& _size) {
             return std::all_of(_size.begin(), _size.end(), [](const auto _item) { return _item != 0U; });
         }
@@ -178,7 +180,7 @@ namespace test::generator::utils {
 #if defined(__cpp_constexpr_dynamic_alloc) && (__cpp_constexpr_dynamic_alloc >= 201907L)
         constexpr
 #endif // defined(__cpp_constexpr_dynamic_alloc) && (__cpp_constexpr_dynamic_alloc >= 201907L)
-        auto generate(const coord_t& _start, coord_t& _end, const coord_t& _size, const double& _loops = 0.0, const double& _obstacles = 0.0, const size_t& _seed = -1U) {
+        auto generate(const coord_t& _start, coord_t& _end, const coord_t& _size, const double& _loops = 0.0, const double& _obstacles = 0.0, const size_t& _seed = null_v) {
 
             /*
              * 1. Choose a starting point in the field.
@@ -194,8 +196,6 @@ namespace test::generator::utils {
              *
              * (Buck, 2010)
              */
-
-            constexpr size_t null_v = -1U;
 
             // Attempt to allocate the desired amount of space in memory.
             const auto product = chdr::utils::product<size_t>(_size);
@@ -214,7 +214,7 @@ namespace test::generator::utils {
                  */
                 if (valid_dimensionality(_size)) {
 
-                    const auto seed = _seed == null_v ? time(nullptr) : _seed;
+                    const auto seed = _seed == null_v ? static_cast<size_t>(time(nullptr)) : _seed;
                     rng_engine_t rng(seed);
 
                     debug::log("\tBacktracking Algorithm \t(Seed " + std::to_string(seed) + ")");

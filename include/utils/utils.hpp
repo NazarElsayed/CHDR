@@ -228,7 +228,7 @@ namespace chdr {
 			return (_a < _b) ? _b : _a;
 		}
 
-        [[nodiscard]] static std::string to_string(const long double& _duration, const double& _scale = std::numeric_limits<double>::epsilon()) {
+        [[nodiscard]] static std::string to_string(const long double& _duration, const long double& _scale = std::numeric_limits<long double>::epsilon()) {
 
             static std::array<std::string, 4U> units = { "s", "ms", "µs", "ns" };
 
@@ -240,7 +240,11 @@ namespace chdr {
                 ++i;
             }
 
-            return trim_trailing_zeros(std::to_string(floor(result / _scale + 0.5) * _scale)) + units[i];
+            return trim_trailing_zeros(
+	            std::to_string(
+		            std::floor(result / _scale + static_cast<long double>(0.5)) * _scale
+	            )
+            ) + units[i];
         }
 
 		[[nodiscard]] static std::string trim_trailing_zeros(std::string _str) {

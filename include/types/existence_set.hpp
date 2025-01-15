@@ -43,8 +43,8 @@ namespace chdr {
 
         static_assert(
             std::is_same_v<alignment_type, lowest_memory_usage> ||
-            std::is_same_v<alignment_type, high_performance>    ||
-            "AlignmentType must be one of the following: "
+            std::is_same_v<alignment_type, high_performance>,
+            "alignment_type must be one of the following: "
             "lowest_memory_usage, high_performance"
         );
 

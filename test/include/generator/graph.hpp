@@ -25,8 +25,10 @@ namespace test::generator {
 
 	    using rng_engine_t = utils::lcg<size_t>;
 
+	    static constexpr size_t null_v = static_cast<size_t>(-1U);
+
         template <typename weight_t, typename index_t, typename coord_t, typename scalar_t>
-        static auto generate(const coord_t& _start, coord_t& _end, const coord_t& _size, const size_t& _seed = -1U) {
+        static auto generate(const coord_t& _start, coord_t& _end, const coord_t& _size, const size_t& _seed = null_v) {
 
 			static_assert(std::is_integral_v<weight_t>, "Type weight_t must be an integral type.");
 
@@ -40,8 +42,6 @@ namespace test::generator {
             debug::log("\tRandom Spanning Tree\t (Seed " + std::to_string(_seed) + ")");
 
             chdr::mazes::graph<index_t, scalar_t> result;
-
-            constexpr size_t null_v = -1U;
 
             const auto seed = _seed == null_v ? std::random_device().operator()() : _seed;
             rng_engine_t rng(seed);

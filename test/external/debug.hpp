@@ -155,18 +155,15 @@ namespace {
 		
 		static constexpr const char* to_string(const log_type& _type) noexcept {
 
-			const auto* result = "UNKNOWN";
-			
 			switch (_type) {
-				case critical: { result = "CRITICAL"; break; }
-				case error:    { result = "ERROR";    break; }
-				case warning:  { result = "WARNING";  break; }
-				case info:     { result = "INFO";     break; }
-				case debug:    { result = "DEBUG";    break; }
-				case trace:    { result = "TRACE";    break; }
+				case critical: { return "CRITICAL";}
+				case error:    { return "ERROR";   }
+				case warning:  { return "WARNING"; }
+				case info:     { return "INFO";    }
+				case debug:    { return "DEBUG";   }
+				case trace:    { return "TRACE";   }
+				default:       { return "UNKNOWN"; }
 			}
-			
-			return result;
 		}
 		
 		static void multiplatform(const std::string_view& _message, const log_type& _type, const bool& _makeInline) {
@@ -499,7 +496,7 @@ namespace {
 		};
 		
 		/** Metadata about the previous log. */
-		inline static meta s_last_log { 0U, -1U, false };
+		inline static meta s_last_log { 0U, static_cast<size_t>(-1U), false };
 
 		static void log_internal(const std::string_view& _message, const log_type& _type, const bool& _makeInline) {
 
@@ -718,13 +715,13 @@ namespace {
 				
 				// Capture stack frames:
 				std::vector<void*> array(_frames);
-				const auto frames = backtrace(array.data(), static_cast<int>(_frames));
+				const auto frames = static_cast<size_t>(backtrace(array.data(), static_cast<int>(_frames)));
 				
 				// Convert addresses into an array of human-readable strings
-				const std::unique_ptr<char*, void(*)(void*)> strings(backtrace_symbols(array.data(), frames), std::free);
+				const std::unique_ptr<char*, void(*)(void*)> strings(backtrace_symbols(array.data(), static_cast<int>(frames)), std::free);
 
-				result.reserve(frames + 1);
-				for (auto i = 0; i < frames; ++i) {
+				result.reserve(frames + 1U);
+				for (size_t i = 0U; i < frames; ++i) {
 				    result.emplace_back(strings.get()[i]);
 				}
 				

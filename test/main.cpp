@@ -104,7 +104,7 @@ namespace test {
 		                 scalar_type  (*h)(const coord_type&, const coord_type&) noexcept;
 		        const    scalar_type  weight      =  1U;
 		        const         size_t  capacity    =  0U;
-		        const         size_t  memoryLimit = -1U;
+		        const         size_t  memoryLimit = static_cast<size_t>(-1U);
 		    };
 
 			const params args { test, start, end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t> };
@@ -139,7 +139,7 @@ namespace test {
 
 			int result = EXIT_FAILURE;
 
-			if (_argc != 0U && static_cast<size_t>(_argc - 1U) >= MAZE_FORMAT) {
+			if (_argc > 0 && static_cast<size_t>(_argc) > MAZE_FORMAT) {
 
 				std::string maze_format { _argv[MAZE_FORMAT] };
 
@@ -163,10 +163,10 @@ namespace test {
 
 			using index_t = unsigned long;
 
-			     if ((_argc - 1U) == X) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 1U> { std::stoul(_argv[X]) }); }
-			else if ((_argc - 1U) == Y) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 2U> { std::stoul(_argv[X]), std::stoul(_argv[Y]) }); }
-			else if ((_argc - 1U) == Z) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 3U> { std::stoul(_argv[X]), std::stoul(_argv[Y]), std::stoul(_argv[Z]) }); }
-			else if ((_argc - 1U) == W) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 4U> { std::stoul(_argv[X]), std::stoul(_argv[Y]), std::stoul(_argv[Z]), std::stoul(_argv[W]) }); }
+			     if (static_cast<size_t>(_argc - 1) == X) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 1U> { std::stoul(_argv[X]) }); }
+			else if (static_cast<size_t>(_argc - 1) == Y) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 2U> { std::stoul(_argv[X]), std::stoul(_argv[Y]) }); }
+			else if (static_cast<size_t>(_argc - 1) == Z) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 3U> { std::stoul(_argv[X]), std::stoul(_argv[Y]), std::stoul(_argv[Z]) }); }
+			else if (static_cast<size_t>(_argc - 1) == W) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 4U> { std::stoul(_argv[X]), std::stoul(_argv[Y]), std::stoul(_argv[Z]), std::stoul(_argv[W]) }); }
 			else {
 				debug::log("ERROR: Invalid Dimensionality!", error);
 			}

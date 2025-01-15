@@ -15,13 +15,15 @@ endif ()
 
 configure_file(chdr_version.hpp.in chdr_version.hpp)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+set(SUPER_PEDANTIC "-pedantic -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Woverloaded-virtual -Wnull-dereference -Wdouble-promotion -Wvla -Wformat=2 -Wmissing-declarations -Wsuggest-override -Wstrict-overflow=5 -Wuninitialized -Wswitch-enum -Wswitch-default -Wcast-qual -Wwrite-strings -Wpointer-arith -Wfloat-equal")
+
 # DIFFERENT BUILD MODES:
-set(CMAKE_CXX_FLAGS_DEBUG        "-O0 -fsanitize=address,leak,undefined -Wall -Wextra -fno-omit-frame-pointer -fno-rtti -g")
-set(CMAKE_CXX_FLAGS_NOSANITIZERS "-O0                                   -Wall -Wextra -fno-omit-frame-pointer -fno-rtti -g")
-set(CMAKE_CXX_FLAGS_RELEASE      "${CMAKE_CXX_FLAGS_RELEASE} -Ofast -flto -march=native -mtune=native -funroll-loops -ftree-vectorize -ffast-math -fstrict-aliasing -fomit-frame-pointer -fno-rtti -DNDEBUG")
+set(CMAKE_CXX_FLAGS_DEBUG        "${SUPER_PEDANTIC} -Werror -O0 -fsanitize=address,leak,undefined -fno-omit-frame-pointer -fno-rtti -g")
+set(CMAKE_CXX_FLAGS_NOSANITIZERS "${SUPER_PEDANTIC} -Werror -O0                                   -fno-omit-frame-pointer -fno-rtti -g")
+set(CMAKE_CXX_FLAGS_RELEASE      "${CMAKE_CXX_FLAGS_RELEASE} ${SUPER_PEDANTIC} -Werror -Ofast -flto -march=native -mtune=native -funroll-loops -ftree-vectorize -ffast-math -fstrict-aliasing -fomit-frame-pointer -fno-rtti -DNDEBUG")
 
 add_library(libdebug INTERFACE test/external/debug.hpp)
 add_library(libchdr  INTERFACE                chdr.hpp)

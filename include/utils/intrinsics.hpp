@@ -81,13 +81,15 @@ namespace chdr {
 #ifdef _MSC_VER
 #pragma optimize("", off)
 #elif defined(__INTEL_COMPILER) || defined(__INTEL_LLVM_COMPILER)
-#pragma optimize("", off)
+#pragma clang optimize off
 #elif defined(__clang__)
 #pragma clang optimize off
 #elif defined(__GNUC__)
 #pragma GCC push_options
 #pragma GCC optimize ("O0")
 #endif
+
+    void malloc_consolidate(const size_t& _malloc);
 
     [[maybe_unused]]
     void malloc_consolidate(const size_t& _malloc = 2048U) {
@@ -111,7 +113,7 @@ namespace chdr {
 #ifdef _MSC_VER
 #pragma optimize("", on)
 #elif defined(__INTEL_COMPILER) || defined(__INTEL_LLVM_COMPILER)
-#pragma optimize("", on)
+#pragma clang optimize on
 #elif defined(__clang__)
 #pragma clang optimize on
 #elif defined(__GNUC__)

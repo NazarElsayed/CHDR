@@ -33,7 +33,7 @@ namespace chdr::solvers {
         using    scalar_t = typename params_t::scalar_type;
         using    weight_t = typename params_t::weight_type;
         using     coord_t = typename params_t:: coord_type;
-        using direction_t = char;
+        using direction_t = unsigned char;
         using  rotation_t = std::array<direction_t, 8U>;
         using    solver_t = solver<gjps, params_t>;
 
@@ -105,7 +105,7 @@ namespace chdr::solvers {
 
             coord_t dir;
             for (size_t i = 0U; i < Kd; ++i) {
-                dir[i] = static_cast<index_t>(utils::sign<signed>(static_cast<signed>(_to[i]) - static_cast<signed>(_from[i])) + 1U);
+                dir[i] = static_cast<index_t>(utils::sign<signed>(static_cast<signed>(_to[i]) - static_cast<signed>(_from[i])) + 1);
             }
 
             direction_t result{};
@@ -113,7 +113,7 @@ namespace chdr::solvers {
                  if (dir[0U] == 2U && dir[1U] == 0U) { result = 7U; }
             else if (dir[0U] == 0U && dir[1U] == 2U) { result = 8U; }
             else {
-                result = utils::to_1d(dir, { Kd });
+                result = static_cast<direction_t>(utils::to_1d(dir, { Kd }));
             }
 
             return result;
@@ -141,7 +141,7 @@ namespace chdr::solvers {
             }
             else {
 
-                const auto& map = s_lookup[_direction];
+                const auto& map = s_lookup[static_cast<size_t>(_direction)];
 
                 if (is_straight(_direction)) { // STRAIGHT:
 
@@ -189,7 +189,7 @@ namespace chdr::solvers {
             else { // SEARCH FOR SOLUTION...
 
                 const auto& neighbours = _maze.template get_neighbours<true>(_current);
-                const auto& map = s_lookup[_direction];
+                const auto& map = s_lookup[static_cast<size_t>(_direction)];
 
                 const auto check_forced = [&neighbours, &map](const size_t& _a, const size_t& _b) ALWAYS_INLINE {
                     return neighbours[map[_a]].first && !neighbours[map[_b]].first;
