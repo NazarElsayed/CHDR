@@ -10,7 +10,6 @@
 #include <debug.hpp>
 
 #include <iostream>
-#include <string>
 #include <string_view>
 
 #include "core/application.hpp"
@@ -20,7 +19,7 @@ namespace test {
 	class cli final {
 
 		static constexpr size_t SOLVER             = 1U;
-		static constexpr size_t MAZE_FORMAT        = 2U;
+		static constexpr size_t MAZE_WEIGHT        = 2U;
 		//static constexpr size_t CLOSED_COMPRESSION = 3U;
 		static constexpr size_t X                  = 3U;
 		static constexpr size_t Y                  = 4U;
@@ -31,10 +30,10 @@ namespace test {
 
 		    std::cout << "Usage: chdr <command> [arguments]\n"
 		              << "\nCommands:\n"
-		              << "  <solver> <maze_format> <x>              Process with 1-dimensional coordinate.\n"
-		              << "  <solver> <maze_format> <x> <y>          Process with 2-dimensional coordinates.\n"
-		              << "  <solver> <maze_format> <x> <y> <z>      Process with 3-dimensional coordinates.\n"
-		              << "  <solver> <maze_format> <x> <y> <z> <w>  Process with 4-dimensional coordinates.\n"
+		              << "  <solver> <maze_weight_type> <x>              Process with 1-dimensional coordinate.\n"
+		              << "  <solver> <maze_weight_type> <x> <y>          Process with 2-dimensional coordinates.\n"
+		              << "  <solver> <maze_weight_type> <x> <y> <z>      Process with 3-dimensional coordinates.\n"
+		              << "  <solver> <maze_weight_type> <x> <y> <z> <w>  Process with 4-dimensional coordinates.\n"
 			          << "\nSolvers:\n"
 		              << "  astar      A*\n"
 		              << "  bfs        Breadth-First Search\n"
@@ -54,9 +53,9 @@ namespace test {
 		              << "  idbstar    Iterative-Deepening Best-First Search\n"
 		              << "  iddfs      Iterative-Deepening Depth-First Search\n"
 		              << "  jps        Jump-Point Search\n"
-				      << "\nMaze Format:\n"
-					  << "  bit        Search space is represented using 1-bit values.\n"
-					  << "  byte       Search space is represented using 4-bit values.\n"
+				      << "\nMaze Weight Type:\n"
+					  << "  bit        Search space is represented with 1-bit values.\n"
+					  << "  byte       Search space is represented with 4-bit values.\n"
 		              << "\nExample:\n"
 		              << "  chdr astar 10\n"
 		              << "  chdr astar 10 10\n"
@@ -139,9 +138,9 @@ namespace test {
 
 			int result = EXIT_FAILURE;
 
-			if (_argc > 0 && static_cast<size_t>(_argc) > MAZE_FORMAT) {
+			if (_argc > 0 && static_cast<size_t>(_argc) > MAZE_WEIGHT) {
 
-				std::string maze_format { _argv[MAZE_FORMAT] };
+				const std::string maze_format { _argv[MAZE_WEIGHT] };
 
 				     if (maze_format == "bit"   ) { result = deduce_solver<bool>    ( { _argv[SOLVER] }, _coord); }
 				else if (maze_format == "byte"  ) { result = deduce_solver<char>    ( { _argv[SOLVER] }, _coord); }

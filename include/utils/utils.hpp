@@ -13,6 +13,7 @@
 #include <cmath>
 #include <cstddef>
 #include <limits>
+#include <string>
 #include <type_traits>
 
 // ReSharper disable once CppUnusedIncludeDirective
