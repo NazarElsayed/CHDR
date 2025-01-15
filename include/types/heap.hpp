@@ -34,11 +34,14 @@ namespace chdr {
             return static_cast<size_t>(&(_item) - &(c[1U]));
         }
 
-        constexpr void sort_up(const T& _item) {
+        constexpr void sort_up(const T& _item) noexcept {
 
             if (size() > 1U) {
 
                 auto i = index_of(_item);
+
+                assert(i < size() && "(Out of Bounds) Item does not exist in Heap.");
+
                 while (i > 1U) {
 
                     const auto p = i / Kd;
@@ -54,11 +57,14 @@ namespace chdr {
             }
         }
 
-        constexpr void sort_down(const T& _item) {
+        constexpr void sort_down(const T& _item) noexcept {
 
             if (size() > 1U) {
 
                 auto i = index_of(_item);
+
+                assert(i < size() && "(Out of Bounds) Item does not exist in Heap.");
+
                 while (i > 1U) {
 
                     const auto c0 =  i * Kd;
@@ -103,8 +109,40 @@ namespace chdr {
         inline static const auto dimension_v { Kd };
 
         heap(const size_t& _capacity = 0U) : c() {
-            c.reserve(_capacity + 1U);
-            c.emplace_back(); // Add uninitialised super element.
+            c.reserve(utils::min(_capacity, std::numeric_limits<size_t>::max() - 1U) + 1U);
+            c.emplace_back(T{}); // Add uninitialised super element.
+        }
+
+        explicit heap(const Container& _container) : comp() {
+
+            c.emplace_back(T{}); // Add uninitialised super element.
+            c.insert(
+                c.end(),
+                _container.begin(),
+                _container.end()
+            );
+
+            if (!empty()) {
+                for (size_t i = size() / Kd; i >= 1U; --i) {
+                    sort_down(c[i]);
+                }
+            }
+        }
+
+        explicit heap(Container&& _container) : c(std::move(_container)), comp() {
+
+            c.emplace_back(T{}); // Add uninitialised super element.
+            c.insert(
+                c.end(),
+                std::make_move_iterator(_container.begin()),
+                std::make_move_iterator(_container.end())
+            );
+
+            if (!empty()) {
+                for (size_t i = size() / Kd; i >= 1U; --i) {
+                    sort_down(c[i]);
+                }
+            }
         }
 
         [[maybe_unused, nodiscard]] constexpr bool empty() const noexcept { return size() == 0U;  }
@@ -113,17 +151,13 @@ namespace chdr {
 
         [[maybe_unused, nodiscard]] constexpr size_t capacity() const noexcept { return c.capacity(); }
 
-        [[maybe_unused, nodiscard]] constexpr T& front() { return top(); }
+        [[maybe_unused, nodiscard]] constexpr T& front() noexcept { return top(); }
 
-        [[maybe_unused, nodiscard]] constexpr const T& front() const { return top(); }
+        [[maybe_unused, nodiscard]] constexpr const T& front() const noexcept { return top(); }
 
-        [[maybe_unused, nodiscard]] constexpr T& top() {
+        [[maybe_unused, nodiscard]] constexpr T& top() noexcept {
 
-#ifndef NDEBUG
-            if (empty()) {
-                throw std::underflow_error("Heap is empty");
-            }
-#endif
+            assert(!empty() && "Heap is empty");
 
             if constexpr (std::is_pointer_v<T>) {
                 return reinterpret_cast<T&>(begin().base());
@@ -133,13 +167,9 @@ namespace chdr {
             }
         }
 
-        [[maybe_unused, nodiscard]] constexpr const T& top() const {
+        [[maybe_unused, nodiscard]] constexpr const T& top() const noexcept {
 
-#ifndef NDEBUG
-            if (empty()) {
-                throw std::underflow_error("Heap is empty");
-            }
-#endif
+            assert(!empty() && "Heap is empty");
 
             if constexpr (std::is_pointer_v<T>) {
                 return reinterpret_cast<T&>(begin().base());
@@ -149,13 +179,9 @@ namespace chdr {
             }
         }
 
-        [[maybe_unused, nodiscard]] constexpr const T& back() const {
+        [[maybe_unused, nodiscard]] constexpr const T& back() const noexcept {
 
-#ifndef NDEBUG
-            if (empty()) {
-                throw std::underflow_error("Heap is empty");
-            }
-#endif
+            assert(!empty() && "Heap is empty");
 
             if constexpr (std::is_pointer_v<T>) {
                 return reinterpret_cast<T&>(end().base());
@@ -165,13 +191,9 @@ namespace chdr {
             }
         }
 
-        [[maybe_unused, nodiscard]] constexpr T& back() {
+        [[maybe_unused, nodiscard]] constexpr T& back() noexcept {
 
-#ifndef NDEBUG
-            if (empty()) {
-                throw std::underflow_error("Heap is empty");
-            }
-#endif
+            assert(!empty() && "Heap is empty");
 
             if constexpr (std::is_pointer_v<T>) {
                 return reinterpret_cast<T&>(end().base());
@@ -220,15 +242,14 @@ namespace chdr {
             c.emplace_back(std::forward<Args>(_args)...);
         }
 
-        [[maybe_unused]] constexpr void erase(const T& _item) {
+        [[maybe_unused]] constexpr void erase(const T& _item) noexcept {
 
-#ifndef NDEBUG
-            if (empty()) {
-                throw std::underflow_error("Heap is empty");
-            }
-#endif
+            assert(!empty() && "Heap is empty");
 
             auto i = index_of(_item);
+
+            assert(i < size() && "(Out of Bounds) Item does not exist in Heap.");
+
             if (i < size()) {
 
                 if (i == size() - 1U) {
@@ -250,15 +271,11 @@ namespace chdr {
                     }
                 }
             }
-            else {
-
-    #ifndef NDEBUG
-                throw std::runtime_error("Heap::remove(const T& _item): (Out of Bounds) Item does not exist in Heap.");
-    #endif
-            }
         }
 
-        [[maybe_unused, nodiscard]] constexpr T dequeue() {
+        [[maybe_unused, nodiscard]] constexpr T dequeue() noexcept {
+
+            assert(!empty() && "Heap is empty");
 
             T result;
 
@@ -271,16 +288,15 @@ namespace chdr {
                 }
                 c.pop_back();
             }
-            else {
-                throw std::underflow_error("Heap is empty");
-            }
 
             sort_down(c[1U]);
 
             return result;
         }
 
-        [[maybe_unused]] constexpr void pop() {
+        [[maybe_unused]] constexpr void pop() noexcept {
+
+            assert(!empty() && "Heap is empty");
 
             if (!empty()) {
                 if (size() > 0U) {
@@ -288,29 +304,26 @@ namespace chdr {
                 }
                 c.pop_back();
             }
-#ifndef NDEBUG
-            else {
-                throw std::underflow_error("Heap is empty");
-            }
-#endif //!NDEBUG
 
             sort_down(c[1U]);
         }
 
-        [[maybe_unused]] constexpr void pop_back() {
+        [[maybe_unused]] constexpr void pop_back() noexcept {
+
+            assert(!empty() && "Heap is empty");
 
             if (!empty()) {
                 c.pop_back();
             }
-#ifndef NDEBUG
-            else {
-                throw std::underflow_error("Heap is empty");
-            }
-#endif //!NDEBUG
         }
 
-        [[maybe_unused]] constexpr void reheapify(const T& _item) {
-            sort_up(c[index_of(_item)]);
+        [[maybe_unused]] constexpr void reheapify(const T& _item) noexcept {
+
+            const auto& i = index_of(_item);
+
+            if (i < size()) {
+                sort_up(c[i]);
+            }
         }
 
         [[maybe_unused, nodiscard]] constexpr bool contains(T& _item) noexcept {
@@ -319,6 +332,9 @@ namespace chdr {
 
             if (result) {
                 const auto& i = index_of(_item);
+
+                assert(i < size() && "(Out of Bounds) Item does not exist in Heap.");
+
                 result = i < c.size() && _item == c[i];
             }
 
@@ -336,11 +352,11 @@ namespace chdr {
             }
         }
 
-        [[maybe_unused]] constexpr void clear() {
-            c.erase(begin(), end());
+        [[maybe_unused]] constexpr void clear() noexcept {
+            c.clear();
         }
 
-        [[maybe_unused]] constexpr void shrink_to_fit() {
+        [[maybe_unused]] constexpr void shrink_to_fit() noexcept {
             c.shrink_to_fit();
         }
 

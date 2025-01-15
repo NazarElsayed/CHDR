@@ -95,6 +95,7 @@ namespace test {
 		        using scalar_type [[maybe_unused]] = scalar_t;
 		        using  index_type [[maybe_unused]] =  index_t;
 		        using  coord_type [[maybe_unused]] =  coord_t;
+				using  alloc_type [[maybe_unused]] = typename std::allocator<void>;
 
 		        const decltype(test)& maze;
 		        const     coord_type  start;
