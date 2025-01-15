@@ -265,7 +265,7 @@ namespace chdr::solvers {
                                 constexpr scalar_t nDistance{1};
 
                                 if (!_closed.contains(n)) {
-                                    utils::preallocate_emplace(_closed, n, _capacity, _params.maze.count());
+                                    solver_utils::preallocate_emplace(_closed, n, _capacity, _params.maze.count());
 
                                     if (curr_ptr == nullptr) {
                                         node::alloc.construct(curr_ptr = node::alloc.allocate(1U), std::move(curr)); // Note: 'current' is now moved!
@@ -288,7 +288,7 @@ namespace chdr::solvers {
                         _open   = {};
                         _closed = {};
 
-                        const auto result = utils::rbacktrack(curr, _params.size, curr.m_gScore);
+                        const auto result = solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);
 
                         node::alloc.reset();
 

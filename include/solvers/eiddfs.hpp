@@ -92,7 +92,7 @@ namespace chdr::solvers {
                         if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
 
                             if (!_closed.contains(n.index)) {
-                                utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());
+                                solver_utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());
 
                                 _open.emplace_back(n.index, curr.m_depth + 1U);
 
@@ -103,7 +103,7 @@ namespace chdr::solvers {
 
                                     stack = {};
 
-                                    const auto result = utils::ibacktrack(_open, _params.size);
+                                    const auto result = solver_utils::ibacktrack(_open, _params.size);
 
                                     _open = {};
 

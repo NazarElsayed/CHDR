@@ -44,7 +44,7 @@ namespace test {
 #else //!NDEBUG
             constexpr size_t base_samples = 100000000UL;
 #endif //!NDEBUG
-            const size_t test_samples = std::max(base_samples / _params.maze.count(), static_cast<size_t>(1U));
+            const size_t test_samples = chdr::utils::max(base_samples / _params.maze.count(), static_cast<size_t>(1U));
 
             /* CAPTURE SYSTEM NOISE */
             auto noise_floor_min = std::numeric_limits<long double>::max();
@@ -52,7 +52,7 @@ namespace test {
 
                 const auto sw_start = std::chrono::high_resolution_clock::now();
 
-                noise_floor_min = std::min(
+                noise_floor_min = chdr::utils::min(
                     noise_floor_min,
                     std::chrono::duration_cast<std::chrono::duration<long double>>(
                         std::chrono::high_resolution_clock::now() - sw_start
@@ -71,7 +71,7 @@ namespace test {
 
                 path = chdr::solvers::solve<solver_t, params_t>(_params);
 
-                result = std::min(
+                result = chdr::utils::min(
                     result,
                     std::chrono::duration_cast<std::chrono::duration<long double>>(
                         std::chrono::high_resolution_clock::now() - sw_start
@@ -89,7 +89,7 @@ namespace test {
             }
 
             debug::log("\t" + std::string(!path.empty() ? "[SOLVED]" : "[IMPOSSIBLE]") +
-                "\t(<= ~" + chdr::utils::to_string(std::max(result - noise_floor_min, std::numeric_limits<long double>::epsilon())) + ") / "
+                "\t(<= ~" + chdr::utils::to_string(chdr::utils::max(result - noise_floor_min, std::numeric_limits<long double>::epsilon())) + ") / "
                   "(<= ~" + chdr::utils::to_string((result - noise_floor_min) / static_cast<long double>(path.size() > 1U ? path.size() + 1U : path.size()), 0.2) + "/n)");
         }
     };

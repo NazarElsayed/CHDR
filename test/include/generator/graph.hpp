@@ -90,7 +90,7 @@ namespace test::generator {
 
                     size_t rand = (rng() % (includeDiagonals ? chdr::utils::powui(static_cast<size_t>(3U), Kd) - 1U : Kd * 2U));
 
-                    branchFactor = std::max(rand, static_cast<size_t>(2U));
+                    branchFactor = chdr::utils::max(rand, static_cast<size_t>(2U));
 
                     // Add the branches:
                     for (size_t i = 1U, j = 0U; j < branchFactor; ++j, ++i) {

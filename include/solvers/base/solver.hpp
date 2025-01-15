@@ -10,8 +10,11 @@
 #define CHDR_SOLVER_HPP
 
 #include <cstddef>
-#include <exception>
 #include <type_traits>
+#include <vector>
+
+#include "../../types/existence_set.hpp"
+#include "../../utils/intrinsics.hpp"
 
 namespace chdr::solvers {
 
@@ -77,13 +80,13 @@ namespace chdr::solvers {
                 return static_cast<size_t>(
                     _params.capacity != 0U ?
                         _params.capacity :
-                        std::max(_params.maze.count() / 10U, static_cast<size_t>(1U))
+                        utils::max(_params.maze.count() / 10U, static_cast<size_t>(1U))
                 );
             }
             else {
-                return std::max(
+                return utils::max(
                     _params.capacity,
-                    std::max(
+                    utils::max(
                         static_cast<size_t>(utils::to_1d(_params.start, _params.size)),
                         static_cast<size_t>(utils::to_1d(_params.end,   _params.size))
                     )
@@ -125,6 +128,65 @@ namespace chdr::solvers {
         }
     };
 
+    struct solver_utils final {
+
+        template <typename T, typename collection_t>
+        static constexpr void preallocate_emplace(collection_t& _collection, const T& _value, const size_t& _increment, const size_t& _max_increment = std::numeric_limits<size_t>::max()) {
+
+            if constexpr (std::is_same_v<collection_t, existence_set<>>) {
+                _collection.allocate(_value, _increment, _max_increment);
+            }
+
+            _collection.emplace(_value);
+        }
+
+        template<typename node_t, typename coord_t>
+        static constexpr auto rbacktrack(const node_t& _node, const coord_t& _size) {
+
+            std::vector<coord_t> result;
+
+            {
+                size_t depth = 0U;
+                for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent), ++depth) {}
+
+                result.resize(depth);
+            }
+
+            size_t i = 0U;
+            for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent), ++i) {
+                result[(result.size() - 1U) - i] = utils::to_nd(t->m_index, _size);
+            }
+
+            return result;
+        }
+
+        template<typename node_t, typename coord_t>
+        static constexpr auto rbacktrack(const node_t& _node, const coord_t& _size, const size_t& _depth) {
+
+            std::vector<coord_t> result(_depth);
+
+            size_t i = 0U;
+            for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent), ++i) {
+                result[(result.size() - 1U) - i] = utils::to_nd(t->m_index, _size);
+            }
+
+            return result;
+        }
+
+        template <typename open_set_t, typename coord_t>
+        [[nodiscard]] static constexpr auto ibacktrack(const open_set_t& _open, const coord_t& _size) {
+
+            std::vector<coord_t> result;
+            result.reserve(_open.size());
+
+            for (auto it = _open.rbegin(); it != _open.rend(); ++it) {
+                result.emplace_back(utils::to_nd(it->m_index, _size));
+            }
+
+            return result;
+        }
+    };
+
     template <template <typename params_t> typename Derived, typename params_t>
     [[nodiscard]] static
 #if __cplusplus >= 2023L
@@ -160,6 +222,7 @@ namespace chdr::solvers {
     auto solve(const params_t& _params) {
         return solver<Derived, params_t>()(_params);
     }
+
 } //chdr::solvers
 
 #endif //CHDR_SOLVER_HPP

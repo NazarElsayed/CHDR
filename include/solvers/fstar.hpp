@@ -90,7 +90,7 @@ namespace chdr::solvers {
 
                                 // Check if node is not already visited:
                                 if (!_closed.contains(n.index)) {
-                                    utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());
+                                    solver_utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());
 
                                     const auto g = curr.m_gScore + n.distance;
                                     const auto f = g + (_params.h(n.coord, _params.end) * _params.weight);
@@ -115,7 +115,7 @@ namespace chdr::solvers {
                                         );
                                     }
                                     else {
-                                        next_threshold = std::min(next_threshold, f);
+                                        next_threshold = utils::min(next_threshold, f);
                                     }
                                 }
                             }
@@ -127,7 +127,7 @@ namespace chdr::solvers {
                         _next   = {};
                         _closed = {};
 
-                        const auto result = utils::rbacktrack(curr, _params.size, curr.m_gScore);
+                        const auto result = solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);
 
                         _open = {};
 

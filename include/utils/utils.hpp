@@ -14,9 +14,7 @@
 #include <cstddef>
 #include <limits>
 #include <type_traits>
-#include <vector>
 
-#include "../types/existence_set.hpp"
 #include "../utils/intrinsics.hpp"
 
 namespace chdr {
@@ -218,60 +216,16 @@ namespace chdr {
 			}
 		}
 
-		template <typename T, typename collection_t>
-		static constexpr void preallocate_emplace(collection_t& _collection, const T& _value, const size_t& _increment, const size_t& _max_increment = std::numeric_limits<size_t>::max()) {
-
-			if constexpr (std::is_same_v<collection_t, existence_set<>>) {
-				_collection.allocate(_value, _increment, _max_increment);
-			}
-
-			_collection.emplace(_value);
+		template <typename T>
+		static constexpr const T& min(const T& _a, const T& _b) noexcept {
+			static_assert(std::is_invocable_r_v<bool, decltype(std::less<>()), T, T>, "Type T must support the less-than operator.");
+			return (_a < _b) ? _a : _b;
 		}
 
-		template<typename node_t, typename coord_t>
-		static constexpr auto rbacktrack(const node_t& _node, const coord_t& _size) {
-
-			std::vector<coord_t> result;
-
-			{
-				size_t depth = 0U;
-				for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent), ++depth) {}
-
-				result.resize(depth);
-			}
-
-			size_t i = 0U;
-			for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent), ++i) {
-				result[(result.size() - 1U) - i] = utils::to_nd(t->m_index, _size);
-			}
-
-			return result;
-		}
-
-		template<typename node_t, typename coord_t>
-		static constexpr auto rbacktrack(const node_t& _node, const coord_t& _size, const size_t& _depth) {
-
-			std::vector<coord_t> result(_depth);
-
-			size_t i = 0U;
-			for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent), ++i) {
-				result[(result.size() - 1U) - i] = utils::to_nd(t->m_index, _size);
-			}
-
-			return result;
-		}
-
-		template <typename open_set_t, typename coord_t>
-		[[nodiscard]] static constexpr auto ibacktrack(const open_set_t& _open, const coord_t& _size) {
-
-			std::vector<coord_t> result;
-			result.reserve(_open.size());
-
-			for (auto it = _open.rbegin(); it != _open.rend(); ++it) {
-				result.emplace_back(utils::to_nd(it->m_index, _size));
-			}
-
-			return result;
+		template <typename T>
+		static constexpr const T& max(const T& _a, const T& _b) noexcept {
+			static_assert(std::is_invocable_r_v<bool, decltype(std::less<>()), T, T>, "Type T must support the less-than operator.");
+			return (_a < _b) ? _b : _a;
 		}
 
         [[nodiscard]] static std::string to_string(const long double& _duration, const double& _scale = std::numeric_limits<double>::epsilon()) {

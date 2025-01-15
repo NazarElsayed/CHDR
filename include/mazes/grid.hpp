@@ -9,6 +9,7 @@
 #ifndef CHDR_GRID_HPP
 #define CHDR_GRID_HPP
 
+#include <algorithm>
 #include <array>
 #include <cassert>
 #include <cstddef>

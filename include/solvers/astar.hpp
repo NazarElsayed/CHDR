@@ -86,7 +86,7 @@ namespace chdr::solvers {
 
                             // Check if node is not already visited:
                             if (!_closed.contains(n.index)) {
-                                utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());
+                                solver_utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());
 
                                 if (curr_ptr == nullptr) {
                                     _alloc.construct(curr_ptr = _alloc.allocate(1U), std::move(curr)); // Note: 'current' is now moved!
@@ -106,7 +106,7 @@ namespace chdr::solvers {
                     _open   = {};
                     _closed = {};
 
-                    return utils::rbacktrack(curr, _params.size, curr.m_gScore);
+                    return solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);
                 }
             }
 

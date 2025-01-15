@@ -15,6 +15,8 @@
 #include <type_traits>
 #include <vector>
 
+#include "../utils/utils.hpp"
+
 namespace chdr {
 
     struct lowest_memory_usage {}; /** @brief Each item is represented by 1 bit in memory. */
@@ -101,7 +103,7 @@ namespace chdr {
             size_t autoCapacity = _capacity;
 
             if (autoCapacity < 1U) {
-                autoCapacity = std::max<size_t>(_items.size(), 1U);
+                autoCapacity = utils::max<size_t>(_items.size(), 1U);
             }
 
             reserve(autoCapacity);
@@ -119,7 +121,7 @@ namespace chdr {
          */
         constexpr void allocate(const size_t& _hash, const size_t& _increment, const size_t& _max_increment = std::numeric_limits<size_t>::max()) {
             if (capacity() <= _hash) {
-                reserve(std::min(capacity() + _increment, _max_increment));
+                reserve(utils::min(capacity() + _increment, _max_increment));
             }
         }
 

@@ -54,7 +54,7 @@ namespace chdr::solvers {
 
                                 // Check if node is not already visited:
                                 if (!_closed.contains(n.index)) {
-                                    utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());
+                                    solver_utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());
 
                                     _open.emplace(n.index);
                                 }

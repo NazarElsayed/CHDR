@@ -63,7 +63,6 @@ namespace test {
 		              << "  chdr astar 10 10 10\n"
 		              << "  chdr astar 10 10 10 10\n"
 		              << "\nNote: The dimensions must be integers representing coordinates.\n";
-
 		}
 
 		template <template <typename params_t> typename solver_t, typename params_t>
@@ -164,10 +163,10 @@ namespace test {
 
 			using index_t = unsigned long;
 
-			     if (_argc - 1U == X) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 1U> { std::stoul(_argv[X]) }); }
-			else if (_argc - 1U == Y) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 2U> { std::stoul(_argv[X]), std::stoul(_argv[Y]) }); }
-			else if (_argc - 1U == Z) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 3U> { std::stoul(_argv[X]), std::stoul(_argv[Y]), std::stoul(_argv[Z]) }); }
-			else if (_argc - 1U == W) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 4U> { std::stoul(_argv[X]), std::stoul(_argv[Y]), std::stoul(_argv[Z]), std::stoul(_argv[W]) }); }
+			     if ((_argc - 1U) == X) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 1U> { std::stoul(_argv[X]) }); }
+			else if ((_argc - 1U) == Y) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 2U> { std::stoul(_argv[X]), std::stoul(_argv[Y]) }); }
+			else if ((_argc - 1U) == Z) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 3U> { std::stoul(_argv[X]), std::stoul(_argv[Y]), std::stoul(_argv[Z]) }); }
+			else if ((_argc - 1U) == W) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 4U> { std::stoul(_argv[X]), std::stoul(_argv[Y]), std::stoul(_argv[Z]), std::stoul(_argv[W]) }); }
 			else {
 				debug::log("ERROR: Invalid Dimensionality!", error);
 			}

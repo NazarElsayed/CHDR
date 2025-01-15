@@ -174,7 +174,7 @@ namespace chdr::mazes {
                 for (size_t i = 0U; i < numThreads; ++i) {
 
                     const index_t start = i * chunkSize;
-                    const index_t end   = std::min(start + chunkSize, static_cast<index_t>(count));
+                    const index_t end   = utils::min(start + chunkSize, static_cast<index_t>(count));
 
                     futures.push_back(std::async(std::launch::async, worker, start, end));
                 }

@@ -102,7 +102,7 @@ namespace chdr::solvers {
 
                                     stack = {};
 
-                                    const auto result = utils::ibacktrack(_open, _params.size);
+                                    const auto result = solver_utils::ibacktrack(_open, _params.size);
 
                                     _open = {};
 

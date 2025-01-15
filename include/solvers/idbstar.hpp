@@ -111,7 +111,7 @@ namespace chdr::solvers {
 
                                 stack = {};
 
-                                const auto result = utils::ibacktrack(_open, _params.size);
+                                const auto result = solver_utils::ibacktrack(_open, _params.size);
 
                                 _open = {};
 
@@ -121,7 +121,7 @@ namespace chdr::solvers {
                     }
                 }
                 else {
-                    min = std::min(min, curr.m_hScore);
+                    min = utils::min(min, curr.m_hScore);
 
                     _open.pop_back();
                     stack.pop();
