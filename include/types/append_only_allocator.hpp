@@ -17,7 +17,7 @@
 namespace chdr {
 
     template <typename T>
-    class append_only_allocator final {
+    class forward_allocator final {
 
     private:
 
@@ -45,31 +45,31 @@ namespace chdr {
 
         using value_type [[maybe_unused]] = T;
 
-        constexpr append_only_allocator() noexcept :
+        constexpr forward_allocator() noexcept :
             block_width(initial_block_width),
             index(block_width / 2U) {}
 
-        ~append_only_allocator() = default;
+        ~forward_allocator() = default;
 
         template <typename U>
-        constexpr append_only_allocator([[maybe_unused]] const append_only_allocator<U>& _other) noexcept :
+        constexpr forward_allocator([[maybe_unused]] const forward_allocator<U>& _other) noexcept :
             block_width(initial_block_width),
             index(block_width / 2U) {}
 
         template <typename Alloc>
-        constexpr append_only_allocator(const append_only_allocator& _other, [[maybe_unused]] const Alloc& _custom_allocator) noexcept :
+        constexpr forward_allocator(const forward_allocator& _other, [[maybe_unused]] const Alloc& _custom_allocator) noexcept :
             block_width(_other.block_width),
             index(_other.index) {}
 
-        constexpr append_only_allocator(append_only_allocator& _other) noexcept :
+        constexpr forward_allocator(forward_allocator& _other) noexcept :
             block_width(_other.block_width),
             index(_other.index) {}
 
-        constexpr append_only_allocator(const append_only_allocator& _other) noexcept :
+        constexpr forward_allocator(const forward_allocator& _other) noexcept :
             block_width(_other.block_width),
             index(_other.index) {}
 
-        constexpr append_only_allocator& operator=(const append_only_allocator& _other) noexcept {
+        constexpr forward_allocator& operator=(const forward_allocator& _other) noexcept {
 
             if (this != &_other) {
                 block_width = _other.block_width;
@@ -79,7 +79,7 @@ namespace chdr {
             return *this;
         }
 
-        constexpr append_only_allocator& operator=(append_only_allocator&& _other) noexcept {
+        constexpr forward_allocator& operator=(forward_allocator&& _other) noexcept {
 
             if (this != &_other) {
                 block_width = _other.block_width;
@@ -144,12 +144,12 @@ namespace chdr {
             c.shrink_to_fit();
         }
 
-        constexpr bool operator==(const append_only_allocator& _other) const noexcept { return    this == &_other; }
-        constexpr bool operator!=(const append_only_allocator& _other) const noexcept { return !(*this == _other); } // NOLINT(*-simplify)
+        constexpr bool operator==(const forward_allocator& _other) const noexcept { return    this == &_other; }
+        constexpr bool operator!=(const forward_allocator& _other) const noexcept { return !(*this == _other); } // NOLINT(*-simplify)
 
         template <typename U>
         struct rebind {
-            using other = append_only_allocator<U>;
+            using other = forward_allocator<U>;
         };
 
         template <typename U, typename Alloc>

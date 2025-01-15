@@ -89,25 +89,29 @@ namespace test {
 			//const auto test = chdr::mazes::graph<index_t, scalar_t>(grid);
 			//const auto test = generator::graph::generate<weight_t, index_t, coord_t, scalar_t>(start, end, size, seed);
 
+			auto allocator = std::allocator<void>();
+
 			struct params {
 
 		        using weight_type [[maybe_unused]] = weight_t;
 		        using scalar_type [[maybe_unused]] = scalar_t;
 		        using  index_type [[maybe_unused]] =  index_t;
 		        using  coord_type [[maybe_unused]] =  coord_t;
-				using  alloc_type [[maybe_unused]] = typename std::allocator<void>;
 
 		        const decltype(test)& maze;
 		        const     coord_type  start;
 		        const     coord_type  end;
 		        const     coord_type  size;
 		                 scalar_type  (*h)(const coord_type&, const coord_type&) noexcept;
+				 decltype(allocator)& alloc;
+
 		        const    scalar_type  weight      =  1U;
 		        const         size_t  capacity    =  0U;
 		        const         size_t  memoryLimit = static_cast<size_t>(-1U);
+
 		    };
 
-			const params args { test, start, end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t> };
+			const params args { test, start, end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, allocator };
 
 		         if (_solver == "astar"    ) { result = execute<chdr::solvers::    astar, params>(args); }
 		    else if (_solver == "bfs"      ) { result = execute<chdr::solvers::      bfs, params>(args); }

@@ -16,15 +16,14 @@
 #include <cstdint>
 #include <limits>
 #include <string>
+#include <type_traits>
 #include <vector>
 
 #include "core/display.hpp"
 
 // ReSharper disable CppUnusedIncludeDirective
-
 #include "generator/graph.hpp"   // NOLINT(*-include-cleaner)
 #include "generator/grid.hpp"    // NOLINT(*-include-cleaner)
-
 // ReSharper restore CppUnusedIncludeDirective
 
 namespace test {
@@ -69,7 +68,10 @@ namespace test {
 
                 const auto sw_start = std::chrono::high_resolution_clock::now();
 
-                path = chdr::solvers::solve<solver_t, params_t>(_params);
+                /* EXECUTE SOLVE */
+                {
+                    path = chdr::solvers::solve<solver_t, params_t>(_params);
+                }
 
                 result = chdr::utils::min(
                     result,
@@ -96,4 +98,4 @@ namespace test {
 
 } //test::solver
 
-#endif //TEST_ASTAR_HPP
+#endif //TEST_SOLVER_HPP

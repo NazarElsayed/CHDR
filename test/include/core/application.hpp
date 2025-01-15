@@ -22,7 +22,7 @@ namespace test {
 
 	/**
 	 * @class application
-	 * @brief Represents the application.
+	 * @brief Represents the application context.
 	 *
 	 * The application class is responsible for managing the main execution flow of the program and handling the termination of the application.
 	 */
@@ -35,10 +35,20 @@ namespace test {
 
 		inline static std::unique_ptr<std::byte[]> s_contingency_block;			// NOLINT(*-avoid-c-arrays)
 
+		/**
+		 * @brief Reinforces the contingent memory block.
+		 *
+		 * Ensures that a contingency memory block is allocated for critical low-memory scenarios.
+		 * This method makes an effort to allocate a fallback memory buffer to support
+		 * continued minimal functionality when memory resources are severely constrained.
+		 */
 		static void reinforce_contingent_memory() noexcept {
 			try {
 				if (s_contingency_block == nullptr) {
-					s_contingency_block = std::make_unique<std::byte[]>(16384U);	// NOLINT(*-avoid-c-arrays)
+
+					static constexpr auto contingency_block_size = 16384U;
+
+					s_contingency_block = std::make_unique<std::byte[]>(contingency_block_size);	// NOLINT(*-avoid-c-arrays)
 				}
 			}
 			catch (...) {
@@ -121,7 +131,8 @@ namespace test {
 		 * @brief Custom handler for memory allocation failures.
 		 *
 		 * This function is invoked when the system is unable to allocate memory.
-		 * It logs the error and terminates the application gracefully.
+		 *
+		 * If available, it allows execution to continue on contingency memory, otherwise the application terminates gracefully.
 		 */
 		static void critical_new_handler() noexcept {
 
@@ -129,7 +140,7 @@ namespace test {
 			s_contingency_block.reset();
 
 			try {
-				debug::log("application::critical_new_handler(): Memory allocation failure!", critical);
+				debug::log("application::critical_new_handler(): CHDR was unable to allocate memory. Is there enough system memory to perform the solve?", critical);
 			}
 			catch(...) {
 			}
@@ -172,11 +183,11 @@ namespace test {
 					s_quit        = false;
 					s_initialised =  true;
 
-					reinforce_contingent_memory();
-
 					// Set custom termination behaviour:
 					std::set_terminate(on_terminate);
 					std::set_new_handler(critical_new_handler);
+
+					reinforce_contingent_memory();
 
 					/* INIT */
 
@@ -219,11 +230,11 @@ namespace test {
 		}
 
 		/**
-		 * @brief quit function.
+		 * @brief Quit function.
 		 *
 		 * This function is responsible for quitting the application.
 		 *
-		 * @see application::s_Quit
+		 * @see application::s_quit
 		 * @see debug::log(const std::string_view&, const LogType&, const bool&)
 		 */
 		static void quit() noexcept {

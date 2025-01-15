@@ -165,7 +165,7 @@ namespace chdr::solvers {
             }
             catch ([[maybe_unused]] const std::exception& e) {} // NOLINT(*-empty-catch)
 
-            append_only_allocator<node> alloc;
+            forward_allocator<node> alloc;
 
             return solve_internal(open, next, closed, alloc, capacity, _params);
         }

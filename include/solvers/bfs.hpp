@@ -95,7 +95,7 @@ namespace chdr::solvers {
 
             queue<node> open;
 
-            append_only_allocator<node> alloc;
+            forward_allocator<node> alloc;
 
             return solve_internal(open, closed, alloc, capacity, _params);
         }
