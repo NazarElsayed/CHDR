@@ -11,7 +11,6 @@
 #ifndef CHDR_DYNAMIC_POOL_ALLOCATOR_HPP
 #define CHDR_DYNAMIC_POOL_ALLOCATOR_HPP
 
-#include <cmath>
 #include <cstddef>
 #include <cstdint>
 #include <exception>
@@ -93,26 +92,27 @@ namespace chdr {
             c                  (_other.c),
             free               (_other.free) {}
 
-        constexpr dynamic_pool_allocator& operator=(dynamic_pool_allocator& other) noexcept {
+        constexpr dynamic_pool_allocator& operator=(dynamic_pool_allocator& _other) noexcept {
 
-            if (this != &other) {
-                initial_block_width = other.initial_block_width;
-                block_width         = other.block_width;
-                c                   = other.c;
-                free                = other.free;
+            if (this != &_other) {
+                initial_block_width = _other.initial_block_width;
+                block_width         = _other.block_width;
+                c                   = _other.c;
+                free                = _other.free;
             }
             return *this;
         }
 
-        constexpr dynamic_pool_allocator& operator=(dynamic_pool_allocator&& other) noexcept {
-            if (this != &other) {
-                initial_block_width = other.initial_block_width;
-                block_width         = other.block_width;
-                c                   = std::move(other.c);
-                free                = std::move(other.free);
+        constexpr dynamic_pool_allocator& operator=(dynamic_pool_allocator&& _other) noexcept {
+
+            if (this != &_other) {
+                initial_block_width = _other.initial_block_width;
+                block_width         = _other.block_width;
+                c                   = std::move(_other.c);
+                free                = std::move(_other.free);
 
                 // Reset the other allocator to its initial state.
-                other.reset();
+                _other.reset();
             }
             return *this;
         }

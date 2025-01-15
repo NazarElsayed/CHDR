@@ -9,10 +9,9 @@
 #ifndef CHDR_APPEND_ONLY_ALLOCATOR_HPP
 #define CHDR_APPEND_ONLY_ALLOCATOR_HPP
 
-#include <cmath>
 #include <cstddef>
+#include <cstdint>
 #include <memory>
-#include <stdexcept>
 #include <type_traits>
 
 namespace chdr {

@@ -23,12 +23,24 @@ namespace chdr {
 
 	private:
 
-		template <typename T, typename coord_t>
-		[[nodiscard]] static constexpr T product_helper(const coord_t& _array, const size_t& _index = 0U) {
+		template <typename T>
+		[[nodiscard]] static constexpr T overflow_safe_multiply(const T& _a, const T& _b) noexcept {
 
+			static_assert(std::is_arithmetic_v<T>, "T must be an arithmetic type.");
+
+			constexpr auto max = std::numeric_limits<T>::max();
+
+			return LIKELY(_b == 0 || _a <= max / _b) ? _a * _b : max; // Alternatively, throw
+		}
+
+		template <typename T, typename coord_t>
+		[[nodiscard]] static constexpr T product_helper(const coord_t& _array, const size_t& _index = 0U) noexcept {
+			
+			static_assert(std::is_arithmetic_v<T> && std::is_trivially_constructible_v<T>, "T must be a trivially constructible arithmetic type.");
+			
 			constexpr auto Kd = std::tuple_size_v<std::decay_t<coord_t>>;
 
-			return (_index < Kd) ? _array[_index] * product_helper<T>(_array, _index + 1U) : T{1};
+			return (_index < Kd) ? overflow_safe_multiply<T>(product_helper<T>(_array, _index + 1U), _array[_index]) : T{1};
 		}
 
 	public:
@@ -148,11 +160,14 @@ namespace chdr {
 			constexpr auto  one_v = static_cast<T>(1);
 
 			if constexpr (std::is_signed_v<T>) {
+				static_assert(std::is_invocable_r_v<bool, decltype(std::less<>()), T, T>, "Type T must support the less-than operator.");
 				static_assert(!std::is_same_v<return_t, bool> && "return_t cannot be bool if T is signed.");
 
 				return static_cast<return_t>(zero_v < _val) - (_val < zero_v);
 			}
 			else {
+				static_assert(std::is_invocable_r_v<bool, decltype(std::equal_to<>()), T, T>, "Type T must support the equality operator.");
+
 				return static_cast<return_t>(_val == zero_v ? zero_v : one_v);
 			}
 		}
@@ -160,8 +175,8 @@ namespace chdr {
 		template <typename T>
 		static constexpr T powui(T _base, T _exp) noexcept {
 
-			static_assert(std::is_integral_v<T>, "powui only supports integral types.");
-			static_assert(std::is_unsigned_v<T>, "powui requires an unsigned integral.");
+			static_assert(std::is_unsigned_v<T> && std::is_integral_v<T> && std::is_arithmetic_v<T>,
+			              "powui requires an unsigned integral supporting arithmetic operations.");
 
 			T result { 1U };
 
@@ -179,7 +194,7 @@ namespace chdr {
 		template <typename T>
 		static constexpr T abs(const T& _value) noexcept {
 
-			static_assert(std::is_arithmetic_v<T>, "abs only supports arithmetic types.");
+			static_assert(std::is_arithmetic_v<T>, "Type T must be arithmetic.");
 
 			return std::is_unsigned_v<T> || _value >= 0 ? _value : -_value;
 		}
@@ -187,23 +202,23 @@ namespace chdr {
 		template <typename T>
 		static constexpr T sqrt(const T& _value) noexcept {
 
-			static_assert(std::is_arithmetic_v<T>, "Input must be an arithmetic type.");
+			static_assert(std::is_arithmetic_v<T>, "Type T must be arithmetic.");
 
 			if (LIKELY(!__builtin_is_constant_evaluated())) {
 				return static_cast<T>(std::sqrt(_value));
 			}
 			else {
 
-				if (_value >= T(0)) {
+				if (_value >= static_cast<T>(0)) {
 
-					if (_value != T(0) && _value != T(1)) {
+					if (_value != static_cast<T>(0) && _value != static_cast<T>(1)) {
 
 						T x    { _value };
 						T last {    0   };
 
 						while (x != last) {
 							last = x;
-							x    = (x + _value / x) / T(2);
+							x    = (x + _value / x) / static_cast<T>(2);
 						}
 
 						return x;

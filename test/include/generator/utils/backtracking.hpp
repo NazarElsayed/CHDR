@@ -200,8 +200,6 @@ namespace test::generator::utils {
             // Attempt to allocate the desired amount of space in memory.
             const auto product = chdr::utils::product<size_t>(_size);
 
-            // TODO: Ensure that product does not overflow!
-
             std::vector<bool> result;
 
             try {
