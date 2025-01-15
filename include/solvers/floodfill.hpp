@@ -10,6 +10,7 @@
 #define CHDR_FLOODFILL_HPP
 
 #include <cstddef>
+#include <vector>
 
 #include "../types/existence_set.hpp"
 #include "../types/queue.hpp"

@@ -13,6 +13,9 @@
 
 #include "../utils/utils.hpp"
 
+// ReSharper disable once CppUnusedIncludeDirective
+#include "../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
+
 namespace chdr {
 
 	struct heuristics {
@@ -74,7 +77,6 @@ namespace chdr {
             return result;
         }
 
-
         /**
          * @brief Computes the Chebyshev distance between two nodes.
          *
@@ -84,6 +86,7 @@ namespace chdr {
          */
         template <typename scalar_t, typename coord_t>
         [[maybe_unused, nodiscard]] static constexpr auto chebyshev_distance(const coord_t& _a, const coord_t& _b) noexcept {
+
 	        constexpr auto Kd = std::tuple_size_v<std::decay_t<coord_t>>;
 
 	        scalar_t result{0};
@@ -92,7 +95,6 @@ namespace chdr {
 	        for (size_t i = 0U; i < Kd; ++i) {
 
 		        const auto val = static_cast<scalar_t>(utils::abs(static_cast<signed>(_b[i]) - static_cast<signed>(_a[i])));
-
 	        	if (val > result) {
 			        result = val;
 		        }
@@ -118,11 +120,10 @@ namespace chdr {
 	        IVDEP
 	        for (size_t i = 0U; i < Kd; ++i) {
 
-	        	const auto num   = static_cast<scalar_t>(utils::abs(static_cast<signed>(_b[i]) - static_cast<signed>(_a[i])));
-		        const auto denom = static_cast<scalar_t>(utils::abs(_a[i]) + utils::abs(_b[i]));
+	        	if (const auto denominator = static_cast<scalar_t>(utils::abs(_a[i]) + utils::abs(_b[i])); denominator != 0) {
+	        		const auto   numerator = static_cast<scalar_t>(utils::abs(static_cast<signed>(_b[i]) - static_cast<signed>(_a[i])));
 
-	        	if (denom != 0) {
-			        result += num / denom;
+			        result += numerator / denominator;
 		        }
 	        }
 

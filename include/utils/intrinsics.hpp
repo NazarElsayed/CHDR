@@ -12,6 +12,9 @@
 #include <cstddef>
 #include <cstdlib>
 
+/* ReSharper disable CppUnusedIncludeDirective */
+// NOLINTBEGIN(*-include-cleaner)
+
 #if defined(__AVX512__)
     #include <immintrin.h>
 #elif defined(__AVX2__)
@@ -33,6 +36,9 @@
 #elif defined(__MMX__)
     #include <mmintrin.h>
 #endif
+
+// NOLINTEND(*-include-cleaner)
+/* ReSharper enable CppUnusedIncludeDirective */
 
 namespace chdr {
 
@@ -89,22 +95,18 @@ namespace chdr {
 #pragma GCC optimize ("O0")
 #endif
 
-    void malloc_consolidate(const size_t& _malloc);
-
-    [[maybe_unused]]
-    void malloc_consolidate(const size_t& _malloc = 2048U) {
-
-        /*
-         * Code designed to purposefully trigger heap defragmentation by the internal memory allocator.
-         * Please note that calling this function should generally be avoided unless for good reason.
-         *
-         * An explanation:
-         *     1: Attempts to allocate a block of memory (by default 2KB), which is hopefully enough to force heap consolidation.
-         *     2: Frees the allocated block since it is no longer needed.
-         *     ~: Memory barrier between the malloc and free to discourage optimisation and force synchronisation.
-         *        (cont.) Preprocessor blocks around the function to prevent optimisation by a variety of compilers.
-         */
-
+    /**
+     * @brief Function to purposefully trigger heap defragmentation by the internal memory allocator.
+     * @note Calling this function should generally be avoided unless you know what you are doing.
+     *
+     * @details
+     * Details:
+     * - Attempts to allocate a block of memory (by default 2048 bytes), which is 'hopefully enough' to force heap consolidation.
+     * - Frees the allocated block since it is no longer needed.
+     * - Includes a memory barrier between the malloc and free to discourage optimisation and force synchronisation.
+     * - Uses preprocessor blocks around the function to prevent optimisation by a variety of compilers.
+     */
+    [[maybe_unused]] inline void malloc_consolidate(const size_t& _malloc = 2048U) {
         void* tmp = malloc(_malloc);
         asm volatile("" ::: "memory");
         free(tmp);

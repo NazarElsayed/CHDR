@@ -32,12 +32,10 @@ namespace chdr {
 
         [[maybe_unused, nodiscard]] constexpr size_t size() const noexcept { return c.size(); }
 
-        [[maybe_unused, nodiscard]] constexpr T& front() noexcept { return top(); }
-
+        [[maybe_unused, nodiscard]] constexpr       T& front()       noexcept { return top(); }
         [[maybe_unused, nodiscard]] constexpr const T& front() const noexcept { return top(); }
 
-        [[maybe_unused, nodiscard]] constexpr T& top() noexcept { return c.front(); }
-
+        [[maybe_unused, nodiscard]] constexpr       T& top()       noexcept { return c.front(); }
         [[maybe_unused, nodiscard]] constexpr const T& top() const noexcept { return c.front(); }
 
         [[maybe_unused]] constexpr void push(const T& _value) { c.push(_value); }
@@ -56,9 +54,9 @@ namespace chdr {
             std::swap(c, empty);
         }
 
-        using               iterator_t = typename std::vector<T>::iterator;
-        using         const_iterator_t = typename std::vector<T>::const_iterator;
-        using       reverse_iterator_t = typename std::vector<T>::reverse_iterator;
+        using               iterator_t = typename std::vector<T>::              iterator;
+        using         const_iterator_t = typename std::vector<T>::        const_iterator;
+        using       reverse_iterator_t = typename std::vector<T>::      reverse_iterator;
         using const_reverse_iterator_t = typename std::vector<T>::const_reverse_iterator;
 
         [[maybe_unused, nodiscard]] constexpr       iterator_t  begin()       noexcept { return c.begin();  }

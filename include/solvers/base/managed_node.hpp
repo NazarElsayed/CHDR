@@ -1,5 +1,5 @@
 /*
-* Computational Helper for Direction and Routing (CHDR)
+ * Computational Helper for Direction and Routing (CHDR)
  * Copyright (c) 2024 by Nazar Elsayed & Louis Eriksson
  *
  * Licensed under CC BY-NC-ND 4.0
@@ -10,11 +10,12 @@
 #define CHDR_MANAGEDNODE_HPP
 
 #include <cassert>
-#include <cstddef>
 
 #include "../../types/dynamic_pool_allocator.hpp"
-#include "../../utils/intrinsics.hpp"
 #include "bnode.hpp"
+
+// ReSharper disable once CppUnusedIncludeDirective
+#include "../../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
 
 namespace chdr::solvers {
 

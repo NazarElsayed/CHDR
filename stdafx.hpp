@@ -9,6 +9,7 @@
 #ifndef CHDR_STDAFX_HPP
 #define CHDR_STDAFX_HPP
 
+/* ReSharper disable CppUnusedIncludeDirective */
 // NOLINTBEGIN(*-include-cleaner)
 
 #include "include/utils/intrinsics.hpp"
@@ -18,7 +19,7 @@
 #include <cassert>
 #include <cmath>
 #include <cstddef>
-#include <cstdint>
+#include <cstdlib>
 #include <exception>
 #include <forward_list>
 #include <functional>
@@ -39,5 +40,6 @@
 #include <vector>
 
 // NOLINTEND(*-include-cleaner)
+/* ReSharper enable CppUnusedIncludeDirective */
 
 #endif //CHDR_STDAFX_HPP

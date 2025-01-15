@@ -22,7 +22,7 @@
 #include <vector>
 
 #include "../types/stack.hpp"
-#include "../utils/intrinsics.hpp"
+#include "../utils/utils.hpp"
 #include "grid.hpp"
 #include "nodes/id_node.hpp"
 
@@ -41,7 +41,7 @@ namespace chdr::mazes {
 
     public:
 
-        [[maybe_unused]] constexpr graph() {}
+        [[maybe_unused]] constexpr graph() noexcept = default;
 
         [[maybe_unused]] constexpr graph(const std::initializer_list<std::initializer_list<edge_t>>& _adjacencyList) {
 
@@ -166,7 +166,7 @@ namespace chdr::mazes {
 
                 // Create a thread pool to execute the work in parallel:
                 const size_t count      = _grid.count();
-                const size_t numThreads = std::clamp(std::thread::hardware_concurrency(), 1U, 6U);
+                const size_t numThreads = utils::clamp(std::thread::hardware_concurrency(), 1U, 6U);
 
                 const auto chunkSize = static_cast<index_t>((count + numThreads - 1U) / numThreads);
 
@@ -309,7 +309,7 @@ namespace chdr::mazes {
             return at(_id);
         }
 
-        using       iterator_t = typename adjacency_set_t::iterator;
+        using       iterator_t = typename adjacency_set_t::      iterator;
         using const_iterator_t = typename adjacency_set_t::const_iterator;
 
         [[maybe_unused, nodiscard]]       iterator_t  begin()       noexcept { return m_entries.begin();  }

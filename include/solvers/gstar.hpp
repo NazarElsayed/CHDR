@@ -14,7 +14,6 @@
 #include "../solvers/base/managed_node.hpp"
 #include "../types/existence_set.hpp"
 #include "../types/heap.hpp"
-#include "../utils/intrinsics.hpp"
 #include "../utils/utils.hpp"
 #include "base/solver.hpp"
 

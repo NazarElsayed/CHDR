@@ -9,7 +9,6 @@
 #ifndef CHDR_EXISTENCE_SET_HPP
 #define CHDR_EXISTENCE_SET_HPP
 
-#include <algorithm>
 #include <cstddef>
 #include <initializer_list>
 #include <type_traits>
@@ -81,7 +80,7 @@ namespace chdr {
 
     public:
 
-        [[maybe_unused]] constexpr existence_set() noexcept {}
+        [[maybe_unused]] constexpr existence_set() noexcept = default;
 
         /**
          * @brief Initialise set.
@@ -236,9 +235,9 @@ namespace chdr {
          */
         [[maybe_unused, nodiscard]] constexpr auto capacity() const noexcept { return m_bits.capacity(); }
 
-        using               iterator_t = typename std::vector<alignment_type>::iterator;
-        using         const_iterator_t = typename std::vector<alignment_type>::const_iterator;
-        using       reverse_iterator_t = typename std::vector<alignment_type>::reverse_iterator;
+        using               iterator_t = typename std::vector<alignment_type>::              iterator;
+        using         const_iterator_t = typename std::vector<alignment_type>::        const_iterator;
+        using       reverse_iterator_t = typename std::vector<alignment_type>::      reverse_iterator;
         using const_reverse_iterator_t = typename std::vector<alignment_type>::const_reverse_iterator;
 
         [[maybe_unused, nodiscard]] constexpr       iterator_t  begin()       noexcept { return m_bits.begin();  }

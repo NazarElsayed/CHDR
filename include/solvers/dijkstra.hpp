@@ -9,7 +9,6 @@
 #ifndef CHDR_DIJKSTRA_HPP
 #define CHDR_DIJKSTRA_HPP
 
-#include <cstddef>
 #include <vector>
 
 #include "base/solver.hpp"

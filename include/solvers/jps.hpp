@@ -17,7 +17,6 @@
 #include "../mazes/grid.hpp"
 #include "../types/append_only_allocator.hpp"
 #include "../types/existence_set.hpp"
-#include "../utils/intrinsics.hpp"
 #include "../utils/utils.hpp"
 #include "base/solver.hpp"
 

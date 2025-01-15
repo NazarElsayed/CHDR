@@ -355,9 +355,9 @@ namespace chdr {
             return c[_index + 1U];
         }
 
-        using               iterator_t = typename std::vector<T>::iterator;
-        using         const_iterator_t = typename std::vector<T>::const_iterator;
-        using       reverse_iterator_t = typename std::vector<T>::reverse_iterator;
+        using               iterator_t = typename std::vector<T>::              iterator;
+        using         const_iterator_t = typename std::vector<T>::        const_iterator;
+        using       reverse_iterator_t = typename std::vector<T>::      reverse_iterator;
         using const_reverse_iterator_t = typename std::vector<T>::const_reverse_iterator;
 
         [[maybe_unused, nodiscard]] constexpr       iterator_t  begin()       noexcept { return c.begin()  + 1U; }

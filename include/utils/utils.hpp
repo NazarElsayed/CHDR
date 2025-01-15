@@ -15,7 +15,8 @@
 #include <limits>
 #include <type_traits>
 
-#include "../utils/intrinsics.hpp"
+// ReSharper disable once CppUnusedIncludeDirective
+#include "../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
 
 namespace chdr {
 
@@ -124,31 +125,31 @@ namespace chdr {
 
 			T result{};
 
-            if constexpr (Kd == 1U) {
-				result = _indices[0U];
-			}
-			else if constexpr (Kd == 2U) {
-				result = (_indices[1U] * _sizes[0U]) + _indices[0U];
-			}
-			else if constexpr (Kd == 3U) {
-				result = (_indices[2U] * (_sizes[1U]  * _sizes[0U])) +
-						 (_indices[1U] *  _sizes[0U]) +
-						  _indices[0U];
-			}
-			else if constexpr (Kd == 4U) {
-				result = (_indices[3U] * (_sizes[2U]  * _sizes[1U]   * _sizes[0U])) +
-						 (_indices[2U] * (_sizes[1U]  * _sizes[0U])) +
-						 (_indices[1U] *  _sizes[0U]) +
-						  _indices[0U];
-			}
-			else if constexpr (Kd > 4U) {
-				result = 0;
+        if constexpr (Kd == 1U) {
+        	result = _indices[0U];
+        }
+        else if constexpr (Kd == 2U) {
+        	result = (_indices[1U] * _sizes[0U]) + _indices[0U];
+        }
+        else if constexpr (Kd == 3U) {
+        	result = (_indices[2U] * (_sizes[1U]  * _sizes[0U])) +
+        			 (_indices[1U] *  _sizes[0U]) +
+        			  _indices[0U];
+        }
+        else if constexpr (Kd == 4U) {
+        	result = (_indices[3U] * (_sizes[2U]  * _sizes[1U]   * _sizes[0U])) +
+        			 (_indices[2U] * (_sizes[1U]  * _sizes[0U])) +
+        			 (_indices[1U] *  _sizes[0U]) +
+        			  _indices[0U];
+        }
+        else if constexpr (Kd > 4U) {
+        	result = 0;
 
-				IVDEP
-				for (size_t i = Kd; i != 0U; --i) {
-					result = (result * _sizes[i - 1UL]) + _indices[i - 1UL];
-				}
-			}
+        	IVDEP
+        	for (size_t i = Kd; i != 0U; --i) {
+        		result = (result * _sizes[i - 1UL]) + _indices[i - 1UL];
+        	}
+        }
 
 			return result;
 		}
@@ -204,10 +205,7 @@ namespace chdr {
 
 			static_assert(std::is_arithmetic_v<T>, "Type T must be arithmetic.");
 
-			if (LIKELY(!__builtin_is_constant_evaluated())) {
-				return static_cast<T>(std::sqrt(_value));
-			}
-			else {
+			if (__builtin_is_constant_evaluated()) {
 
 				if (_value >= static_cast<T>(0)) {
 
@@ -229,6 +227,9 @@ namespace chdr {
 
 				return std::numeric_limits<T>::quiet_NaN();
 			}
+			else {
+				return static_cast<T>(std::sqrt(_value));
+			}
 		}
 
 		template <typename T>
@@ -243,6 +244,18 @@ namespace chdr {
 			return (_a < _b) ? _b : _a;
 		}
 
+		template <typename T>
+		static constexpr const T& clamp(const T& _value, const T& _min, const T& _max) noexcept {
+			static_assert(std::is_invocable_r_v<bool, decltype(std::less<>()), T, T>, "Type T must support the less-than operator.");
+
+			if (_value >= _min) {
+				return _value < _max ? _value : _max;
+			}
+			else {
+				return _min;
+			}
+		}
+		
         [[nodiscard]] static std::string to_string(const long double& _duration, const long double& _scale = std::numeric_limits<long double>::epsilon()) {
 
             static std::array<std::string, 4U> units = { "s", "ms", "µs", "ns" };

@@ -1,6 +1,14 @@
-#define CHDR_VERSION         "@CHDR_VERSION@"
-#define CHDR_VERSION_MAJOR    @CHDR_VERSION_MAJOR@
-#define CHDR_VERSION_MINOR    @CHDR_VERSION_MINOR@
-#define CHDR_VERSION_PATCH    @CHDR_VERSION_PATCH@
-#define CHDR_VERSION_TWEAK    @CHDR_VERSION_TWEAK@
-#define CHDR_VERSION_METADATA @CHDR_VERSION_METADATA
+/*
+ * Computational Helper for Direction and Routing (CHDR)
+ * Copyright (c) 2024 by Nazar Elsayed & Louis Eriksson
+ *
+ * Licensed under CC BY-NC-ND 4.0
+ * https://creativecommons.org/licenses/by-nc-nd/4.0/
+ */
+
+#define CHDR_VERSION          "@CHDR_VERSION@"
+#define CHDR_VERSION_MAJOR     @CHDR_VERSION_MAJOR@
+#define CHDR_VERSION_MINOR     @CHDR_VERSION_MINOR@
+#define CHDR_VERSION_PATCH     @CHDR_VERSION_PATCH@
+#define CHDR_VERSION_TWEAK    "@CHDR_VERSION_TWEAK@"
+#define CHDR_VERSION_METADATA "@CHDR_VERSION_METADATA@"

@@ -14,7 +14,6 @@
 #include <vector>
 
 #include "../types/stack.hpp"
-#include "../utils/intrinsics.hpp"
 #include "../utils/utils.hpp"
 #include "base/solver.hpp"
 
@@ -118,7 +117,10 @@ namespace chdr::solvers {
                             }
                             else { // SOLUTION REACHED ...
 
+                                // ReSharper disable CppDFAUnusedValue
+                                              stack = {};
                                 transposition_table = {};
+                                // ReSharper enable CppDFAUnusedValue
 
                                 const auto result = solver_utils::ibacktrack(_open, _params.size);
 
@@ -137,9 +139,12 @@ namespace chdr::solvers {
                 }
             }
 
-                          _open = {};
+            // ReSharper disable CppDFAUnusedValue
                           stack = {};
             transposition_table = {};
+            // ReSharper enable CppDFAUnusedValue
+
+            _open = {};
 
             return std::vector<coord_t>{};
         }

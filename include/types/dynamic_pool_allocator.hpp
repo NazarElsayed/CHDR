@@ -14,10 +14,12 @@
 #include <cstddef>
 #include <cstdint>
 #include <exception>
+#include <memory>
 #include <type_traits>
 #include <vector>
 
-#include "../utils/intrinsics.hpp"
+// ReSharper disable once CppUnusedIncludeDirective
+#include "../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
 
 namespace chdr {
 
@@ -92,7 +94,7 @@ namespace chdr {
             c                  (_other.c),
             free               (_other.free) {}
 
-        constexpr dynamic_pool_allocator& operator=(dynamic_pool_allocator& _other) noexcept {
+        constexpr dynamic_pool_allocator& operator=(const dynamic_pool_allocator& _other) noexcept {
 
             if (this != &_other) {
                 initial_block_width = _other.initial_block_width;

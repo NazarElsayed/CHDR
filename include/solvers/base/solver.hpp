@@ -14,7 +14,9 @@
 #include <vector>
 
 #include "../../types/existence_set.hpp"
-#include "../../utils/intrinsics.hpp"
+
+// ReSharper disable once CppUnusedIncludeDirective
+#include "../../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
 
 namespace chdr::solvers {
 

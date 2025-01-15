@@ -14,7 +14,6 @@
 #include <vector>
 
 #include "../types/stack.hpp"
-#include "../utils/intrinsics.hpp"
 #include "../utils/utils.hpp"
 #include "base/solver.hpp"
 
@@ -101,6 +100,7 @@ namespace chdr::solvers {
                                 }
                                 else { // SOLUTION REACHED ...
 
+                                    // ReSharper disable once CppDFAUnusedValue
                                     stack = {};
 
                                     const auto result = solver_utils::ibacktrack(_open, _params.size);
@@ -120,12 +120,13 @@ namespace chdr::solvers {
                 }
 
                 _open.erase(_open.begin() + 1U, _open.end());
-                stack.clear();
+                  stack.clear();
                 _closed.clear();
             }
 
-            _open = {};
+            // ReSharper disable once CppDFAUnusedValue
             stack = {};
+            _open = {};
 
             return std::vector<coord_t>{};
         }

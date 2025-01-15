@@ -8,12 +8,17 @@ cmake_minimum_required(VERSION ${CMAKE_VERSION})
 
 project(CHDR VERSION 0.1.0 LANGUAGES CXX)
 
-set(CHDR_VERSION_METADATA "-alpha")
-if (CHDR_VERSION_METADATA)
-    set(CHDR_VERSION "${CHDR_VERSION_MAJOR}.${CHDR_VERSION_MINOR}.${CHDR_VERSION_PATCH}${CHDR_VERSION_METADATA}")
+set(CHDR_VERSION_TWEAK "alpha")
+if (CHDR_VERSION_TWEAK)
+    set(CHDR_VERSION "${CHDR_VERSION_MAJOR}.${CHDR_VERSION_MINOR}.${CHDR_VERSION_PATCH}-${CHDR_VERSION_TWEAK}")
 endif ()
 
-configure_file(chdr_version.hpp.in chdr_version.hpp)
+set(CHDR_VERSION_METADATA "${CMAKE_SYSTEM_PROCESSOR}-${CMAKE_SYSTEM_NAME}")
+if (CHDR_VERSION_METADATA)
+    set(CHDR_VERSION "${CHDR_VERSION}+${CHDR_VERSION_METADATA}")
+endif ()
+
+configure_file(chdr_version.hpp.in ${CMAKE_CURRENT_SOURCE_DIR}/chdr_version.hpp)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -34,7 +39,7 @@ add_executable(chdr test/main.cpp)
 target_include_directories(chdr PRIVATE
         test/external/
         test/include/
-        ${CMAKE_SOURCE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 target_precompile_headers(chdr INTERFACE stdafx.hpp)

@@ -16,7 +16,6 @@
 #include <utility>
 #include <vector>
 
-#include "../utils/intrinsics.hpp"
 #include "../utils/utils.hpp"
 #include "nodes/weighted_node.hpp"
 
@@ -119,9 +118,9 @@ namespace chdr::mazes {
 
         [[nodiscard]] constexpr auto& operator[](const size_t& _id) const noexcept { return at(_id); }
 
-        using               iterator_t = typename std::vector<weight_t>::iterator;
-        using         const_iterator_t = typename std::vector<weight_t>::const_iterator;
-        using       reverse_iterator_t = typename std::vector<weight_t>::reverse_iterator;
+        using               iterator_t = typename std::vector<weight_t>::              iterator;
+        using         const_iterator_t = typename std::vector<weight_t>::        const_iterator;
+        using       reverse_iterator_t = typename std::vector<weight_t>::      reverse_iterator;
         using const_reverse_iterator_t = typename std::vector<weight_t>::const_reverse_iterator;
 
         [[maybe_unused, nodiscard]]       iterator_t  begin()       noexcept { return m_nodes.begin();  }
@@ -199,7 +198,6 @@ namespace chdr::mazes {
 
     /**
      * Specialization of grid for weight_t = bool
-     * @tparam s_rank Dimensionality of the grid.
      */
     template <typename coord_t>
     class grid<coord_t, bool> final {

@@ -26,7 +26,7 @@ namespace chdr::mazes {
 
         constexpr id_node(const index_t& _id) noexcept : m_id(_id) {}
 
-        [[maybe_unused, nodiscard]] bool is_active() const noexcept {
+        [[maybe_unused, nodiscard]] constexpr static bool is_active() noexcept {
             return true;
         }
 

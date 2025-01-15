@@ -16,7 +16,6 @@
 
 #include "../mazes/grid.hpp"
 #include "../types/existence_set.hpp"
-#include "../utils/intrinsics.hpp"
 #include "../utils/utils.hpp"
 #include "base/solver.hpp"
 

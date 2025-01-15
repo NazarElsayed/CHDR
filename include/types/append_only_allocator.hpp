@@ -1,5 +1,5 @@
 /*
-* Computational Helper for Direction and Routing (CHDR)
+ * Computational Helper for Direction and Routing (CHDR)
  * Copyright (c) 2024 by Nazar Elsayed & Louis Eriksson
  *
  * Licensed under CC BY-NC-ND 4.0
@@ -68,6 +68,29 @@ namespace chdr {
         constexpr append_only_allocator(const append_only_allocator& _other) noexcept :
             block_width(_other.block_width),
             index(_other.index) {}
+
+        constexpr append_only_allocator& operator=(const append_only_allocator& _other) noexcept {
+
+            if (this != &_other) {
+                block_width = _other.block_width;
+                index       = _other.index;
+                c           = _other.c;
+            }
+            return *this;
+        }
+
+        constexpr append_only_allocator& operator=(append_only_allocator&& _other) noexcept {
+
+            if (this != &_other) {
+                block_width = _other.block_width;
+                index       = _other.index;
+                c           = std::move(_other.c);
+
+                // Reset the other allocator to its initial state.
+                _other.reset();
+            }
+            return *this;
+        }
 
         void construct(T* _p, const T& _val) {
             static_assert(std::is_copy_constructible_v<T>, "T must be copy constructible.");
