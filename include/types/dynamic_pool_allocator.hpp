@@ -66,7 +66,7 @@ namespace chdr {
             initial_block_width(utils::min(_capacity, max_block_width)),
             block_width(initial_block_width)
         {
-            assert(_capacity != 0U && "Capacity cannot be zero.");
+            assert(_capacity >= 2U && "Capacity must be at least 2.");
         }
 
         template <typename U>

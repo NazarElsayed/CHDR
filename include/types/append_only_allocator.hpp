@@ -26,6 +26,8 @@ namespace chdr {
 
         static constexpr size_t     max_block_width { 65536U / sizeof(T*) };
         static constexpr size_t initial_block_width { utils::min(static_cast<size_t>(64U), max_block_width) };
+
+        static_assert(initial_block_width >= 2, "initial_block_width must be at least 2.");
         
         size_t block_width;
         size_t index;
@@ -44,14 +46,9 @@ namespace chdr {
 
         using value_type [[maybe_unused]] = T;
 
-        constexpr append_only_allocator(const size_t& _capacity = initial_block_width) :
-            block_width(utils::min(_capacity, max_block_width)),
-            index(block_width / 2U)
-        {
-            if (_capacity == 0U) {
-                throw std::invalid_argument("Capacity cannot be zero.");
-            }
-        }
+        constexpr append_only_allocator() noexcept :
+            block_width(initial_block_width),
+            index(block_width / 2U) {}
 
         ~append_only_allocator() = default;
 
