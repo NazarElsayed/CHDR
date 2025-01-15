@@ -110,12 +110,12 @@ namespace chdr {
 
         heap(const size_t& _capacity = 0U) : c() {
             c.reserve(utils::min(_capacity, std::numeric_limits<size_t>::max() - 1U) + 1U);
-            c.emplace_back(T{}); // Add uninitialised super element.
+            c.emplace_back(); // Add uninitialised super element.
         }
 
         explicit heap(const Container& _container) : comp() {
 
-            c.emplace_back(T{}); // Add uninitialised super element.
+            c.emplace_back(); // Add uninitialised super element.
             c.insert(
                 c.end(),
                 _container.begin(),
@@ -131,7 +131,7 @@ namespace chdr {
 
         explicit heap(Container&& _container) : c(std::move(_container)), comp() {
 
-            c.emplace_back(T{}); // Add uninitialised super element.
+            c.emplace_back(); // Add uninitialised super element.
             c.insert(
                 c.end(),
                 std::make_move_iterator(_container.begin()),
@@ -362,6 +362,15 @@ namespace chdr {
 
         [[maybe_unused, nodiscard]] constexpr const T& at(const size_t& _index) const {
             return c.at(_index + 1U);
+        }
+
+        /**
+         * @brief Wipes the heap, leaving it in an invalid state.
+         *
+         * @remarks Do not use this function unless you know what you are doing.
+         */
+        [[maybe_unused]] constexpr void wipe() {
+            c = {};
         }
 
 #ifndef HEAP_SUPPRESS_EXCEPTION_WARNING

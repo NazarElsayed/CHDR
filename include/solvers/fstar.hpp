@@ -122,7 +122,6 @@ namespace chdr::solvers {
                     }
                     else { // SOLUTION REACHED ...
 
-                        // Release:
                         _next   = {};
                         _closed = {};
 

@@ -103,8 +103,9 @@ namespace chdr::solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    // Release:
-                    _open   = {};
+                    if constexpr (std::is_same_v<open_set_t, heap<node>>) {
+                        _open.wipe();
+                    }
                     _closed = {};
 
                     const auto result = solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);
@@ -115,8 +116,9 @@ namespace chdr::solvers {
                 }
             }
 
-            // Release:
-            _open   = {};
+            if constexpr (std::is_same_v<open_set_t, heap<node>>) {
+                _open.wipe();
+            }
             _closed = {};
             node::alloc.reset();
 

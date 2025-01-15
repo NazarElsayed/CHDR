@@ -9,6 +9,7 @@
 #ifndef CHDR_ASTAR_HPP
 #define CHDR_ASTAR_HPP
 
+#include <cstring>
 #include <cstddef>
 #include <vector>
 
@@ -102,14 +103,18 @@ namespace chdr::solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    _open   = {};
+                    if constexpr (std::is_same_v<open_set_t, heap<node>>) {
+                        _open.wipe();
+                    }
                     _closed = {};
 
                     return solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);
                 }
             }
 
-            _open   = {};
+            if constexpr (std::is_same_v<open_set_t, heap<node>>) {
+                _open.wipe();
+            }
             _closed = {};
 
             return std::vector<coord_t>{};

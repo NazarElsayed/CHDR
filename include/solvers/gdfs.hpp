@@ -76,7 +76,6 @@ namespace chdr::solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    // Release:
                     _open   = {};
                     _closed = {};
 
@@ -88,7 +87,6 @@ namespace chdr::solvers {
                 }
             }
 
-            // Release:
             _open   = {};
             _closed = {};
             node::alloc.reset();
