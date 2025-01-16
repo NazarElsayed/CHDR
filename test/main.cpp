@@ -83,7 +83,7 @@ namespace test {
 			constexpr coord_t start {};
 			          coord_t end;
 
-			const auto grid = generator::grid::generate<weight_t>({}, end, _size, 0.0, 0.0, seed);
+			const auto grid = generator::grid::generate<weight_t>(start, end, _size, 0.0, 0.0, seed);
 
 			const auto test = grid;
 			//const auto test = chdr::mazes::graph<index_t, scalar_t>(grid);

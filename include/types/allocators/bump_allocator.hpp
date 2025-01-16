@@ -28,7 +28,7 @@ namespace chdr {
         using block_t = memory_block<T>;
 
         static constexpr size_t     max_block_width { 65536U / sizeof(T*) };
-        static constexpr size_t initial_block_width { utils::min(static_cast<size_t>(16U), max_block_width) };
+        static constexpr size_t initial_block_width { utils::min(static_cast<size_t>(32U), max_block_width) };
 
         static_assert(initial_block_width >= 2U, "initial_block_width must be at least 1.");
 

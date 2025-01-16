@@ -64,7 +64,7 @@ namespace chdr {
         using value_type [[maybe_unused]] = T;
 
         explicit constexpr pool_allocator() noexcept :
-            initial_block_width(utils::min(static_cast<size_t>(16U), max_block_width)),
+            initial_block_width(utils::min(static_cast<size_t>(32U), max_block_width)),
             block_width        (initial_block_width) {}
 
         explicit constexpr pool_allocator(const size_t& _capacity) noexcept :
