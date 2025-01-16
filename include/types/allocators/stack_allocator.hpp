@@ -14,6 +14,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
+#include <stdexcept>
 #include <type_traits>
 
 // ReSharper disable once CppUnusedIncludeDirective

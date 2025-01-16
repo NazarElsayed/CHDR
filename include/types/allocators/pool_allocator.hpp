@@ -14,8 +14,8 @@
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
-#include <exception>
 #include <memory>
+#include <stdexcept>
 #include <type_traits>
 #include <vector>
 
@@ -41,7 +41,7 @@ namespace chdr {
         std::vector<block_t> c;
         std::vector<T*> free;
 
-        constexpr const auto& expand(const block_t& _new_block, const size_t& _skip_first) {
+        constexpr const auto& expand(const block_t& _new_block, const size_t& _skip_first = 0U) {
 
             assert(_new_block.m_size > _skip_first && "Underflow detected: _new_block.m_size must be greater than _skip_first.");
 

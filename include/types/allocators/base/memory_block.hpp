@@ -12,7 +12,6 @@
 #include <cassert>
 #include <cstddef>
 #include <cstdlib>
-#include <exception>
 
 #include "../../../utils/intrinsics.hpp"
 
@@ -23,10 +22,12 @@ struct memory_block final {
     size_t m_size;
 
     memory_block(const size_t& _size) :
-        m_data(static_cast<T*>(std::malloc(_size * sizeof(T)))),
+        m_data(static_cast<T*>(std::aligned_alloc(alignof(T), ((_size * sizeof(T)) + alignof(T) - 1U) / alignof(T) * alignof(T)))),
         m_size(_size)
     {
-        if (m_data == nullptr) { throw std::bad_alloc(); }
+        if (m_data == nullptr) {
+            throw std::bad_alloc();
+        }
     }
 
     ~memory_block() noexcept {
