@@ -52,7 +52,7 @@ namespace chdr::solvers {
 
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
-                    node* RESTRICT curr_ptr = nullptr;
+                    node* RESTRICT curr_ptr(nullptr);
 
                     for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
 

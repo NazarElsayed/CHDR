@@ -251,7 +251,7 @@ namespace chdr::solvers {
 
                     if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
-                        node* RESTRICT curr_ptr = nullptr;
+                        node* RESTRICT curr_ptr(nullptr);
 
                         const auto coord = utils::to_nd(curr.m_index, _params.size);
 
@@ -287,6 +287,9 @@ namespace chdr::solvers {
                         if constexpr (std::is_same_v<open_set_t, heap<node>>) {
                             _open.wipe();
                         }
+                        else {
+                            _open = {};
+                        }
                         _closed = {};
 
                         const auto result = solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);
@@ -300,6 +303,9 @@ namespace chdr::solvers {
 
             if constexpr (std::is_same_v<open_set_t, heap<node>>) {
                 _open.wipe();
+            }
+            else {
+                _open = {};
             }
             _closed = {};
             node::alloc.reset();

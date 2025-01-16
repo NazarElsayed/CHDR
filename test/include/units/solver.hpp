@@ -45,6 +45,8 @@ namespace test {
 #endif //!NDEBUG
             const size_t test_samples = chdr::utils::max(base_samples / _params.maze.count(), static_cast<size_t>(1U));
 
+            std::this_thread::sleep_for(std::chrono::milliseconds(10U));
+
             /* CAPTURE SYSTEM NOISE */
             auto noise_floor_min = std::numeric_limits<long double>::max();
             for (size_t i = 0U; i < test_samples; ++i) {
@@ -58,6 +60,8 @@ namespace test {
                     ).count()
                 );
             }
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(10U));
 
             /* TEST ALGORITHM */
             debug::log("(Solver):");

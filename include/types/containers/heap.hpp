@@ -370,7 +370,7 @@ namespace chdr {
          * @remarks Do not use this function unless you know what you are doing.
          */
         [[maybe_unused]] constexpr void wipe() {
-            c = {};
+            c = std::move(decltype(c){});
         }
 
 #ifndef HEAP_SUPPRESS_EXCEPTION_WARNING
