@@ -12,7 +12,7 @@
 #include <cstddef>
 #include <vector>
 
-#include "../types/allocators/block_allocator.hpp"
+#include "../types/allocators/bump_allocator.hpp"
 #include "../types/containers/existence_set.hpp"
 #include "../types/containers/stack.hpp"
 #include "../utils/utils.hpp"
@@ -95,7 +95,7 @@ namespace chdr::solvers {
 
             stack<node> open;
 
-            block_allocator<node> alloc;
+            bump_allocator<node> alloc;
 
             return solve_internal(open, closed, alloc, capacity, _params);
         }

@@ -6,28 +6,29 @@
  * https://creativecommons.org/licenses/by-nc-nd/4.0/
  */
 
-#ifndef CHDR_APPEND_ONLY_ALLOCATOR_HPP
-#define CHDR_APPEND_ONLY_ALLOCATOR_HPP
+#ifndef CHDR_BUMP_ALLOCATOR_HPP
+#define CHDR_BUMP_ALLOCATOR_HPP
 
+#include <cassert>
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
 #include <memory>
 #include <type_traits>
 
-#include "base/raw_block.hpp"
+#include "base/memory_block.hpp"
 
 namespace chdr {
 
     template <typename T>
-    class block_allocator final {
+    class bump_allocator final {
 
     private:
 
-        using block_t = raw_block<T>;
+        using block_t = memory_block<T>;
 
         static constexpr size_t     max_block_width { 65536U / sizeof(T*) };
-        static constexpr size_t initial_block_width { utils::min(static_cast<size_t>(32U), max_block_width) };
+        static constexpr size_t initial_block_width { utils::min(static_cast<size_t>(16U), max_block_width) };
 
         static_assert(initial_block_width >= 2U, "initial_block_width must be at least 1.");
 
@@ -48,22 +49,22 @@ namespace chdr {
 
         using value_type [[maybe_unused]] = T;
 
-        constexpr block_allocator() noexcept :
+        constexpr bump_allocator() noexcept :
             block_width(initial_block_width),
             block_index(0U),
             block_write(0U) {}
 
         template <typename U>
-        constexpr block_allocator([[maybe_unused]] const block_allocator<U>& _other) noexcept :
+        constexpr bump_allocator([[maybe_unused]] const bump_allocator<U>& _other) noexcept :
             block_width(initial_block_width),
             block_index(0U),
             block_write(0U) {}
 
-        constexpr block_allocator(const block_allocator& ) noexcept = default;
-        constexpr block_allocator(      block_allocator&&) noexcept = default;
+        constexpr bump_allocator(const bump_allocator& ) noexcept = default;
+        constexpr bump_allocator(      bump_allocator&&) noexcept = default;
 
-        constexpr block_allocator& operator=(      block_allocator&&) noexcept = default;
-        constexpr block_allocator& operator=(const block_allocator& ) noexcept = default;
+        constexpr bump_allocator& operator=(      bump_allocator&&) noexcept = default;
+        constexpr bump_allocator& operator=(const bump_allocator& ) noexcept = default;
 
         void construct(T* _p, const T& _val) {
             static_assert(std::is_copy_constructible_v<T>, "T must be copy constructible.");
@@ -102,8 +103,29 @@ namespace chdr {
             return &c[block_index].get()[block_write++];
         }
 
-        static constexpr void deallocate([[maybe_unused]] T* _p, [[maybe_unused]] const uintptr_t& _n) noexcept {
-            static_assert(true, "Allocator is append-only.");
+        constexpr void deallocate([[maybe_unused]] T* _p, [[maybe_unused]] const uintptr_t& _n) {
+
+            assert(_p != nullptr && "Attempt to deallocate a null pointer.");
+
+            /*
+             * If _p is within the bounds of the current block,
+             * move the head back to allow overwriting.
+             */
+
+            T* block_ptr = c[block_index].get();
+
+            if (_p >= block_ptr && _p < block_ptr + c[block_index].m_size) {
+                
+                if (_p == block_ptr + block_write - 1U) {
+                    --block_write;
+                }
+                else {
+                    throw std::invalid_argument("Deallocation must originate from the head of the current write block.");
+                }
+            }
+            else {
+                throw std::out_of_range("Deallocation must take place within the most recently allocated memory block.");
+            }
         }
 
         void release() noexcept {
@@ -119,12 +141,12 @@ namespace chdr {
             c.shrink_to_fit();
         }
 
-        constexpr bool operator == (const block_allocator& _other) const noexcept { return    this == &_other; }
-        constexpr bool operator != (const block_allocator& _other) const noexcept { return !(*this == _other); }
+        constexpr bool operator == (const bump_allocator& _other) const noexcept { return    this == &_other; }
+        constexpr bool operator != (const bump_allocator& _other) const noexcept { return !(*this == _other); }
 
         template <typename U>
         struct rebind {
-            using other = block_allocator<U>;
+            using other = bump_allocator<U>;
         };
 
         template <typename U, typename Alloc>
@@ -140,4 +162,4 @@ namespace chdr {
 
 } //chdr
 
-#endif // CHDR_APPEND_ONLY_ALLOCATOR_HPP
+#endif // CHDR_BUMP_ALLOCATOR_HPP

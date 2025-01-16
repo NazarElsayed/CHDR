@@ -15,7 +15,7 @@
 #include <utility>
 
 #include "../mazes/grid.hpp"
-#include "../types/allocators/block_allocator.hpp"
+#include "../types/allocators/bump_allocator.hpp"
 #include "../types/containers/existence_set.hpp"
 #include "../utils/utils.hpp"
 #include "base/solver.hpp"
@@ -313,7 +313,7 @@ namespace chdr::solvers {
             }
             catch ([[maybe_unused]] const std::exception& e) {} // NOLINT(*-empty-catch)
 
-            block_allocator<node> alloc;
+            bump_allocator<node> alloc;
 
             return solve_internal(open, closed, alloc, capacity, _params);
         }

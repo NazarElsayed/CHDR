@@ -11,6 +11,7 @@
 #ifndef CHDR_DYNAMIC_POOL_ALLOCATOR_HPP
 #define CHDR_DYNAMIC_POOL_ALLOCATOR_HPP
 
+#include <cassert>
 #include <cstddef>
 #include <cstdint>
 #include <exception>
@@ -18,7 +19,7 @@
 #include <type_traits>
 #include <vector>
 
-#include "base/raw_block.hpp"
+#include "base/memory_block.hpp"
 
 // ReSharper disable once CppUnusedIncludeDirective
 #include "../../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
@@ -26,11 +27,11 @@
 namespace chdr {
 
     template <typename T>
-    class dynamic_pool_allocator {
+    class pool_allocator {
     
     private:
 
-        using block_t = raw_block<T>;
+        using block_t = memory_block<T>;
 
         static constexpr size_t max_block_width { 65536U / sizeof(T*) };
 
@@ -40,43 +41,45 @@ namespace chdr {
         std::vector<block_t> c;
         std::vector<T*> free;
 
-        constexpr void expand(T* const _new_block, const size_t& _skip_first) { // NOLINT(*-unused-parameters)
+        constexpr void expand(const block_t& _new_block, const size_t& _skip_first) {
 
-            free.resize(free.size() + (block_width - _skip_first), {});
+            const auto count = _new_block.m_size - _skip_first;
+
+            assert(count != 0 && "Count must not be 0.");
+            
+            free.reserve(free.size() + count);
 
             IVDEP
-            for (size_t i = 0U; i != block_width - _skip_first; ++i) {
-                free[i] = &_new_block[block_width - _skip_first - i];
+            for (size_t i = 0U; i != count; ++i) {
+                free.emplace_back(_new_block.get() + _skip_first + i);
             }
-
-            block_width = utils::min(block_width * 2U, max_block_width);
         }
         
     public:
 
         using value_type [[maybe_unused]] = T;
 
-        explicit constexpr dynamic_pool_allocator() noexcept :
+        explicit constexpr pool_allocator() noexcept :
             initial_block_width(utils::min(static_cast<size_t>(16U), max_block_width)),
-                    block_width(initial_block_width) {}
+            block_width        (initial_block_width) {}
 
-        explicit constexpr dynamic_pool_allocator(const size_t& _capacity) noexcept :
+        explicit constexpr pool_allocator(const size_t& _capacity) noexcept :
             initial_block_width(utils::min(_capacity, max_block_width)),
-                    block_width(initial_block_width)
+            block_width        (initial_block_width)
         {
             assert(_capacity >= 2U && "Capacity must be at least 2.");
         }
 
         template <typename U>
-        constexpr dynamic_pool_allocator([[maybe_unused]] const dynamic_pool_allocator<U>& _other) noexcept :
+        constexpr pool_allocator([[maybe_unused]] const pool_allocator<U>& _other) noexcept :
             initial_block_width(utils::min(static_cast<size_t>(16U), max_block_width)),
-                    block_width(initial_block_width) {}
+            block_width        (initial_block_width) {}
 
-        constexpr dynamic_pool_allocator(const dynamic_pool_allocator& _other) noexcept = default;
-        constexpr dynamic_pool_allocator(      dynamic_pool_allocator& _other) noexcept = default;
+        constexpr pool_allocator(const pool_allocator& _other) noexcept = default;
+        constexpr pool_allocator(      pool_allocator& _other) noexcept = default;
 
-        constexpr dynamic_pool_allocator& operator=(const dynamic_pool_allocator&  _other) noexcept = default;
-        constexpr dynamic_pool_allocator& operator=(      dynamic_pool_allocator&& _other) noexcept {
+        constexpr pool_allocator& operator=(const pool_allocator&  _other) noexcept = default;
+        constexpr pool_allocator& operator=(      pool_allocator&& _other) noexcept {
 
             if (this != &_other) {
                 initial_block_width = _other.initial_block_width;
@@ -112,29 +115,55 @@ namespace chdr {
         [[nodiscard]] T* allocate([[maybe_unused]] const uintptr_t& _n) {
 
             assert(_n != 0U && "Tried to allocate 0 objects.");
-            assert(_n == 1U && "Does not support batch allocation.");
 
             T* result;
 
-            if (free.empty()) {
-                expand(result = c.emplace_back(block_t(block_width)).get(), 1U);
+            if (_n == 1U) {
+
+                if (free.empty()) {
+                    expand(c.emplace_back(block_width), 1U);
+                    result = c.back().get();
+
+                    block_width = utils::min(block_width * 2U, max_block_width);
+                }
+                else {
+                    result = free.back();
+                    free.pop_back();
+                }
             }
             else {
-                result = free.back();
-                free.pop_back();
+                expand(c.emplace_back(_n), 1U);
+                result = c.back().get();
             }
 
             return result;
         }
 
-        void deallocate(T* _p, [[maybe_unused]] const uintptr_t& _n) noexcept {
+        void deallocate(T* _p, [[maybe_unused]] const uintptr_t& _n) {
 
             assert(_p != nullptr && "Attempt to deallocate a null pointer.");
 
             assert(_n != 0U && "Tried to allocate 0 objects.");
             assert(_n == 1U && "Does not support batch deallocation.");
 
-            free.emplace_back(_p);
+            if (_n == 1U) {
+                free.emplace_back(_p);
+            }
+            else {
+
+                if (_p != nullptr && _n <= std::numeric_limits<size_t>::max() / sizeof(T)) {
+
+                    free.reserve(free.size() + _n);
+
+                    IVDEP
+                    for (size_t i = 0U; i < _n; ++i) {
+                        free.emplace_back(_p + i);
+                    }
+                }
+                else {
+                    throw std::underflow_error("Requested deallocation precedes bounds (too large).");
+                }
+            }
         }
 
         void release() noexcept {
@@ -145,7 +174,10 @@ namespace chdr {
 
             try {
                 for (auto& block : c) {
+
                     free.reserve(free.size() + block.m_size);
+
+                    IVDEP
                     for (size_t i = 0U; i < block.m_size; ++i) {
                         free.emplace_back(block.get() + i);
                     }
@@ -169,12 +201,12 @@ namespace chdr {
             c.shrink_to_fit();
         }
 
-        constexpr bool operator == (const dynamic_pool_allocator& _other) const noexcept { return    this == &_other; }
-        constexpr bool operator != (const dynamic_pool_allocator& _other) const noexcept { return !(*this == _other); } // NOLINT(*-simplify)
+        constexpr bool operator == (const pool_allocator& _other) const noexcept { return    this == &_other; }
+        constexpr bool operator != (const pool_allocator& _other) const noexcept { return !(*this == _other); } // NOLINT(*-simplify)
 
         template <typename U>
         struct rebind {
-            using other = dynamic_pool_allocator<U>;
+            using other = pool_allocator<U>;
         };
 
         template <typename U, typename Alloc>

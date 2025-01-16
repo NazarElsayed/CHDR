@@ -35,7 +35,7 @@ add_library(libchdr  INTERFACE                chdr.hpp)
 
 # TEST:
 add_executable(chdr test/main.cpp
-        include/types/allocators/base/raw_block.hpp)
+        include/types/allocators/base/memory_block.hpp)
 
 target_include_directories(chdr PRIVATE
         test/external/

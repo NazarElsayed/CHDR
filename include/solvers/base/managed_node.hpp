@@ -11,7 +11,7 @@
 
 #include <cassert>
 
-#include "../../types/allocators/dynamic_pool_allocator.hpp"
+#include "../../types/allocators/pool_allocator.hpp"
 #include "bnode.hpp"
 
 // ReSharper disable once CppUnusedIncludeDirective
@@ -23,7 +23,7 @@ namespace chdr::solvers {
     struct managed_node : bnode<index_t> {
 
         using  node_t = std::conditional_t<std::is_void_v<derived>, managed_node<index_t>, derived>;
-        using alloc_t = dynamic_pool_allocator<node_t>;
+        using alloc_t = pool_allocator<node_t>;
 
         inline static alloc_t alloc{};
 

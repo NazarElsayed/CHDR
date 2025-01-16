@@ -55,11 +55,9 @@ namespace chdr {
 
             if (_p >= reinterpret_cast<T*>(data.data()) && _p < reinterpret_cast<T*>(data.data() + data.size())) {
 
-#ifndef NDEBUG
                 if (data_ptr < _n) {
-                    throw std::runtime_error("Deallocate called with too large n");
+                    throw std::underflow_error("Requested deallocation precedes bounds (too large).");
                 }
-#endif //NDEBUG
 
                 data_ptr -= _n;
             }
