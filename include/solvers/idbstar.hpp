@@ -13,7 +13,7 @@
 #include <limits>
 #include <vector>
 
-#include "../types/stack.hpp"
+#include "../types/containers/stack.hpp"
 #include "../utils/utils.hpp"
 #include "base/solver.hpp"
 

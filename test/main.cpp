@@ -113,25 +113,25 @@ namespace test {
 
 			const params args { test, start, end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, allocator };
 
-		         if (_solver == "astar"    ) { result = execute<chdr::solvers::    astar, params>(args); }
-		    else if (_solver == "bfs"      ) { result = execute<chdr::solvers::      bfs, params>(args); }
-		    else if (_solver == "bstar"    ) { result = execute<chdr::solvers::    bstar, params>(args); }
-		    else if (_solver == "dfs"      ) { result = execute<chdr::solvers::      dfs, params>(args); }
-		    else if (_solver == "dijkstra" ) { result = execute<chdr::solvers:: dijkstra, params>(args); }
-		    else if (_solver == "eidastar" ) { result = execute<chdr::solvers:: eidastar, params>(args); }
-		    else if (_solver == "eidbstar" ) { result = execute<chdr::solvers:: eidbstar, params>(args); }
-		    else if (_solver == "eiddfs"   ) { result = execute<chdr::solvers::   eiddfs, params>(args); }
-		    else if (_solver == "floodfill") { result = execute<chdr::solvers::floodfill, params>(args); }
-		    else if (_solver == "fstar"    ) { result = execute<chdr::solvers::    fstar, params>(args); }
-		    else if (_solver == "gbfs"     ) { result = execute<chdr::solvers::     gbfs, params>(args); }
-		    else if (_solver == "gdfs"     ) { result = execute<chdr::solvers::     gdfs, params>(args); }
-		    else if (_solver == "gjps"     ) { result = execute<chdr::solvers::     gjps, params>(args); }
-		    else if (_solver == "gstar"    ) { result = execute<chdr::solvers::    gstar, params>(args); }
-		    else if (_solver == "idastar"  ) { result = execute<chdr::solvers::  idastar, params>(args); }
-		    else if (_solver == "idbstar"  ) { result = execute<chdr::solvers::  idbstar, params>(args); }
-		    else if (_solver == "iddfs"    ) { result = execute<chdr::solvers::    iddfs, params>(args); }
-		    else if (_solver == "jps"      ) { result = execute<chdr::solvers::      jps, params>(args); }
-		    else {
+                 if (_solver == "astar"    ) { result = execute<chdr::solvers::    astar, params>(args); }
+            else if (_solver == "bfs"      ) { result = execute<chdr::solvers::      bfs, params>(args); }
+            else if (_solver == "bstar"    ) { result = execute<chdr::solvers::    bstar, params>(args); }
+            else if (_solver == "dfs"      ) { result = execute<chdr::solvers::      dfs, params>(args); }
+            else if (_solver == "dijkstra" ) { result = execute<chdr::solvers:: dijkstra, params>(args); }
+            else if (_solver == "eidastar" ) { result = execute<chdr::solvers:: eidastar, params>(args); }
+            else if (_solver == "eidbstar" ) { result = execute<chdr::solvers:: eidbstar, params>(args); }
+            else if (_solver == "eiddfs"   ) { result = execute<chdr::solvers::   eiddfs, params>(args); }
+            else if (_solver == "floodfill") { result = execute<chdr::solvers::floodfill, params>(args); }
+            else if (_solver == "fstar"    ) { result = execute<chdr::solvers::    fstar, params>(args); }
+            else if (_solver == "gbfs"     ) { result = execute<chdr::solvers::     gbfs, params>(args); }
+            else if (_solver == "gdfs"     ) { result = execute<chdr::solvers::     gdfs, params>(args); }
+            else if (_solver == "gjps"     ) { result = execute<chdr::solvers::     gjps, params>(args); }
+            else if (_solver == "gstar"    ) { result = execute<chdr::solvers::    gstar, params>(args); }
+            else if (_solver == "idastar"  ) { result = execute<chdr::solvers::  idastar, params>(args); }
+            else if (_solver == "idbstar"  ) { result = execute<chdr::solvers::  idbstar, params>(args); }
+            else if (_solver == "iddfs"    ) { result = execute<chdr::solvers::    iddfs, params>(args); }
+            else if (_solver == "jps"      ) { result = execute<chdr::solvers::      jps, params>(args); }
+            else {
 		        debug::log("ERROR: Unknown solver \"" + std::string(_solver) + "\"!", error);
 		    }
 

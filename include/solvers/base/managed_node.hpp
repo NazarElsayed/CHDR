@@ -11,7 +11,7 @@
 
 #include <cassert>
 
-#include "../../types/dynamic_pool_allocator.hpp"
+#include "../../types/allocators/dynamic_pool_allocator.hpp"
 #include "bnode.hpp"
 
 // ReSharper disable once CppUnusedIncludeDirective

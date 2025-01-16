@@ -13,9 +13,9 @@
 #include <cstddef>
 #include <vector>
 
-#include "../types/append_only_allocator.hpp"
-#include "../types/existence_set.hpp"
-#include "../types/heap.hpp"
+#include "../types/allocators/block_allocator.hpp"
+#include "../types/containers/existence_set.hpp"
+#include "../types/containers/heap.hpp"
 #include "../utils/utils.hpp"
 #include "base/solver.hpp"
 #include "base/unmanaged_node.hpp"
@@ -133,7 +133,7 @@ namespace chdr::solvers {
             }
             catch ([[maybe_unused]] const std::exception& e) {} // NOLINT(*-empty-catch)
 
-            forward_allocator<node> alloc;
+            block_allocator<node> alloc;
 
             return solve_internal(open, closed, alloc, capacity, _params);
         }

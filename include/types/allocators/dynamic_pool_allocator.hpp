@@ -18,8 +18,10 @@
 #include <type_traits>
 #include <vector>
 
+#include "base/raw_block.hpp"
+
 // ReSharper disable once CppUnusedIncludeDirective
-#include "../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
+#include "../../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
 
 namespace chdr {
 
@@ -28,7 +30,7 @@ namespace chdr {
     
     private:
 
-        using block_t = std::vector<T>;
+        using block_t = raw_block<T>;
 
         static constexpr size_t max_block_width { 65536U / sizeof(T*) };
 
@@ -56,16 +58,11 @@ namespace chdr {
 
         explicit constexpr dynamic_pool_allocator() noexcept :
             initial_block_width(utils::min(static_cast<size_t>(16U), max_block_width)),
-            block_width        (initial_block_width) {}
-
-        ~dynamic_pool_allocator() noexcept {
-            free = {};
-               c = {};
-        }
+                    block_width(initial_block_width) {}
 
         explicit constexpr dynamic_pool_allocator(const size_t& _capacity) noexcept :
             initial_block_width(utils::min(_capacity, max_block_width)),
-            block_width(initial_block_width)
+                    block_width(initial_block_width)
         {
             assert(_capacity >= 2U && "Capacity must be at least 2.");
         }
@@ -73,39 +70,13 @@ namespace chdr {
         template <typename U>
         constexpr dynamic_pool_allocator([[maybe_unused]] const dynamic_pool_allocator<U>& _other) noexcept :
             initial_block_width(utils::min(static_cast<size_t>(16U), max_block_width)),
-            block_width        (initial_block_width) {}
+                    block_width(initial_block_width) {}
 
-        template <typename Alloc>
-        constexpr dynamic_pool_allocator(const dynamic_pool_allocator& _other, const Alloc& _custom_allocator) noexcept :
-            initial_block_width(_other.initial_block_width),
-            block_width        (_other.block_width),
-            c                  (_other.c.begin(), _other.c.end(), _custom_allocator),
-            free               (_other.free) {}
+        constexpr dynamic_pool_allocator(const dynamic_pool_allocator& _other) noexcept = default;
+        constexpr dynamic_pool_allocator(      dynamic_pool_allocator& _other) noexcept = default;
 
-        constexpr dynamic_pool_allocator(dynamic_pool_allocator& _other) noexcept :
-            initial_block_width(_other.initial_block_width),
-            block_width        (_other.block_width),
-            c                  (_other.c),
-            free               (_other.free) {}
-
-        constexpr dynamic_pool_allocator(const dynamic_pool_allocator& _other) noexcept :
-            initial_block_width(_other.initial_block_width),
-            block_width        (_other.block_width),
-            c                  (_other.c),
-            free               (_other.free) {}
-
-        constexpr dynamic_pool_allocator& operator=(const dynamic_pool_allocator& _other) noexcept {
-
-            if (this != &_other) {
-                initial_block_width = _other.initial_block_width;
-                block_width         = _other.block_width;
-                c                   = _other.c;
-                free                = _other.free;
-            }
-            return *this;
-        }
-
-        constexpr dynamic_pool_allocator& operator=(dynamic_pool_allocator&& _other) noexcept {
+        constexpr dynamic_pool_allocator& operator=(const dynamic_pool_allocator&  _other) noexcept = default;
+        constexpr dynamic_pool_allocator& operator=(      dynamic_pool_allocator&& _other) noexcept {
 
             if (this != &_other) {
                 initial_block_width = _other.initial_block_width;
@@ -146,7 +117,7 @@ namespace chdr {
             T* result;
 
             if (free.empty()) {
-                expand(result = &c.emplace_back(block_t(block_width))[0U], 1U);
+                expand(result = c.emplace_back(block_t(block_width)).get(), 1U);
             }
             else {
                 result = free.back();
@@ -174,14 +145,17 @@ namespace chdr {
 
             try {
                 for (auto& block : c) {
-                    for (auto& item : block) {
-                        free.emplace_back(&item);
+                    free.reserve(free.size() + block.m_size);
+                    for (size_t i = 0U; i < block.m_size; ++i) {
+                        free.emplace_back(block.get() + i);
                     }
                 }
             }
             catch ([[maybe_unused]] const std::exception& e) {
                 free = {};
-                   c = {};
+
+                c.clear();
+                c.shrink_to_fit();
             }
         }
 
@@ -190,11 +164,13 @@ namespace chdr {
             block_width = initial_block_width;
 
             free = {};
-               c = {};
+
+            c.clear();
+            c.shrink_to_fit();
         }
 
-        constexpr bool operator==(const dynamic_pool_allocator& _other) const noexcept { return    this == &_other; }
-        constexpr bool operator!=(const dynamic_pool_allocator& _other) const noexcept { return !(*this == _other); } // NOLINT(*-simplify)
+        constexpr bool operator == (const dynamic_pool_allocator& _other) const noexcept { return    this == &_other; }
+        constexpr bool operator != (const dynamic_pool_allocator& _other) const noexcept { return !(*this == _other); } // NOLINT(*-simplify)
 
         template <typename U>
         struct rebind {

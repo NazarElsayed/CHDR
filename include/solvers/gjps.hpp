@@ -15,7 +15,7 @@
 #include <utility>
 
 #include "../mazes/grid.hpp"
-#include "../types/existence_set.hpp"
+#include "../types/containers/existence_set.hpp"
 #include "../utils/utils.hpp"
 #include "base/solver.hpp"
 

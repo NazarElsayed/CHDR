@@ -21,7 +21,7 @@
 #include <utility>
 #include <vector>
 
-#include "../types/stack.hpp"
+#include "../types/containers/stack.hpp"
 #include "../utils/utils.hpp"
 #include "grid.hpp"
 #include "nodes/id_node.hpp"

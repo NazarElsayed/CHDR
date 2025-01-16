@@ -33,7 +33,7 @@ namespace test {
 		inline static std::atomic<bool> s_quit        { false }; // Is Application scheduled to quit?
 		inline static std::atomic<bool> s_initialised { false }; // Is Application initialised?
 
-		inline static std::unique_ptr<std::byte[]> s_contingency_block;			// NOLINT(*-avoid-c-arrays)
+		inline static std::unique_ptr<std::byte[]> s_contingency_block;	// NOLINT(*-avoid-c-arrays)
 
 		/**
 		 * @brief Reinforces the contingent memory block.

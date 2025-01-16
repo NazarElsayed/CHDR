@@ -13,7 +13,7 @@
 #include <type_traits>
 #include <vector>
 
-#include "../../types/existence_set.hpp"
+#include "../../types/containers/existence_set.hpp"
 
 // ReSharper disable once CppUnusedIncludeDirective
 #include "../../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)

@@ -12,8 +12,8 @@
 #include <cstddef>
 #include <vector>
 
-#include "../types/existence_set.hpp"
-#include "../types/stack.hpp"
+#include "../types/containers/existence_set.hpp"
+#include "../types/containers/stack.hpp"
 #include "../utils/utils.hpp"
 #include "base/managed_node.hpp"
 #include "base/solver.hpp"

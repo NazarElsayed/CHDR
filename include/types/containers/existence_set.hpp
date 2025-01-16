@@ -14,7 +14,7 @@
 #include <type_traits>
 #include <vector>
 
-#include "../utils/utils.hpp"
+#include "../../utils/utils.hpp"
 
 namespace chdr {
 
@@ -81,6 +81,8 @@ namespace chdr {
     public:
 
         [[maybe_unused]] constexpr existence_set() noexcept = default;
+
+        //[[maybe_unused]] constexpr existence_set(allocator_type& _alloc) noexcept : m_bits(_alloc) {};
 
         /**
          * @brief Initialise set.

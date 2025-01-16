@@ -12,9 +12,9 @@
 #include <cstddef>
 #include <vector>
 
-#include "../types/append_only_allocator.hpp"
-#include "../types/existence_set.hpp"
-#include "../types/queue.hpp"
+#include "../types/allocators/block_allocator.hpp"
+#include "../types/containers/existence_set.hpp"
+#include "../types/containers/queue.hpp"
 #include "../utils/utils.hpp"
 #include "base/solver.hpp"
 #include "base/unmanaged_node.hpp"
@@ -95,7 +95,7 @@ namespace chdr::solvers {
 
             queue<node> open;
 
-            forward_allocator<node> alloc;
+            block_allocator<node> alloc;
 
             return solve_internal(open, closed, alloc, capacity, _params);
         }
