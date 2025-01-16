@@ -82,8 +82,6 @@ namespace chdr {
 
         [[maybe_unused]] constexpr existence_set() noexcept = default;
 
-        //[[maybe_unused]] constexpr existence_set(allocator_type& _alloc) noexcept : m_bits(_alloc) {};
-
         /**
          * @brief Initialise set.
          * @param[in] _capacity Initial capacity of the set. Must be larger than 0.

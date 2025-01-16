@@ -30,12 +30,10 @@ namespace test {
 
     struct solver final {
 
-        template <template <typename params_t> typename solver_t, typename params_t, typename... Args>
-        static void run(Args&&... _args) {
+        template <template <typename params_t> typename solver_t, typename params_t>
+        static void run(const params_t& _params) {
 
             constexpr auto Kd = std::tuple_size_v<std::decay_t<typename params_t::coord_type>>;
-
-            const params_t _params { std::forward<Args>(_args)... };
 
             /* TEST SAMPLES */
 #ifndef NDEBUG
@@ -44,8 +42,6 @@ namespace test {
             constexpr size_t base_samples = 100000000UL;
 #endif //!NDEBUG
             const size_t test_samples = chdr::utils::max(base_samples / _params.maze.count(), static_cast<size_t>(1U));
-
-            std::this_thread::sleep_for(std::chrono::milliseconds(10U));
 
             /* CAPTURE SYSTEM NOISE */
             auto noise_floor_min = std::numeric_limits<long double>::max();
@@ -60,8 +56,6 @@ namespace test {
                     ).count()
                 );
             }
-
-            std::this_thread::sleep_for(std::chrono::milliseconds(10U));
 
             /* TEST ALGORITHM */
             debug::log("(Solver):");
