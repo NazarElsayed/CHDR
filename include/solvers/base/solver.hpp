@@ -38,12 +38,12 @@ namespace chdr::solvers {
         };
 
         template <typename maze_neighbour_t>
-        static constexpr node_data get_data(const maze_neighbour_t& _n, const params_t& _params) noexcept {
+        static constexpr node_data get_data(maze_neighbour_t& _n, const params_t& _params) noexcept {
 
             if constexpr (is_graph<decltype(_params.maze)>::value) {
 
                 // _params.maze is a graph...
-                const auto& [nIndex, nDistance] = _n;
+                const auto& [nIndex, nDistance] = std::move(_n);
 
                 constexpr bool nActive = true;
                 auto nCoord = utils::to_nd(nIndex, _params.size);
@@ -58,7 +58,7 @@ namespace chdr::solvers {
             else {
 
                 // _params.maze is a grid...
-                const auto& [nActive, nCoord] = _n;
+                const auto& [nActive, nCoord] = std::move(_n);
 
                 const auto nIndex = static_cast<typename params_t::index_type>(
                     nActive ? utils::to_1d(nCoord, _params.size) : typename params_t::index_type{}
