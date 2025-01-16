@@ -137,8 +137,7 @@ namespace chdr {
             block_width = initial_block_width;
             block_write = 0U;
             block_index = 0U;
-            c.clear();
-            c.shrink_to_fit();
+            c = std::move(decltype(c){});
         }
 
         constexpr bool operator == (const bump_allocator& _other) const noexcept { return    this == &_other; }
