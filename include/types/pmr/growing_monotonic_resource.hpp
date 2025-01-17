@@ -47,21 +47,21 @@ namespace chdr {
 
     protected:
 
-        void* do_allocate(const size_t _size, const size_t _alignment) override {
+        [[nodiscard]] void* do_allocate(const size_t _size, const size_t _alignment) override {
 
-            // Ensure alignment:
-            char*  current     = blocks[m_active_block_index].get() + m_block_write;
-            size_t remaining   = block_sizes[m_active_block_index]  - m_block_write;
-            void*  aligned_ptr = std::align(_alignment, _size, reinterpret_cast<void*&>(current), remaining);
+            // Ensure alignment and calculate aligned pointer:
+            auto* aligned_ptr = reinterpret_cast<char*>(
+                (reinterpret_cast<uintptr_t>(blocks[m_active_block_index].get() + m_block_write) + _alignment - 1U) & ~(_alignment - 1U)
+            );
 
-            // Handle insufficient space in the current block:
-            if (aligned_ptr == nullptr) {
+            // If insufficient space in the current block, expand and retry allocation:
+            if (aligned_ptr + _size > blocks[m_active_block_index].get() + block_sizes[m_active_block_index]) {
                 expand(_size + _alignment);
                 return do_allocate(_size, _alignment);
             }
 
-            // Update the write position and return the pointer:
-            m_block_write = static_cast<size_t>(current + _size - blocks[m_active_block_index].get());
+            // Update write position and return the aligned pointer:
+            m_block_write += static_cast<size_t>(aligned_ptr + _size - (blocks[m_active_block_index].get() + m_block_write));
             return aligned_ptr;
         }
 
@@ -69,7 +69,7 @@ namespace chdr {
             // No-op, as memory within a monotonic resource is not individually freed.
         }
 
-        bool do_is_equal(const memory_resource& _other) const noexcept override {
+        [[nodiscard]] bool do_is_equal(const memory_resource& _other) const noexcept override {
             return this == &_other;
         }
 

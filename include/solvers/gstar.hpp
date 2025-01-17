@@ -86,7 +86,7 @@ namespace chdr::solvers {
                                 solver_utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());
 
                                 if (curr_ptr == nullptr) {
-                                    curr_ptr = new (node::pmr.allocate(sizeof(node), alignof(node))) node(std::move(curr));
+                                    curr_ptr = new (_params.pool_pmr->allocate(sizeof(node), alignof(node))) node(std::move(curr));
                                 }
 
                                 _open.emplace_nosort(n.index, curr_ptr->m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight, curr_ptr);
@@ -95,7 +95,7 @@ namespace chdr::solvers {
                     }
 
                     if (curr_ptr == nullptr) {
-                        curr.expunge();
+                        curr.expunge(_params.pool_pmr);
                     }
                     else {
                         _open.reheapify(_open.back());
@@ -111,11 +111,7 @@ namespace chdr::solvers {
                     }
                     _closed = {};
 
-                    const auto result = solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);
-
-                    node::pmr.reset();
-
-                    return result;
+                    return solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);
                 }
             }
 
@@ -126,7 +122,6 @@ namespace chdr::solvers {
                 _open = {};
             }
             _closed = {};
-            node::pmr.reset();
 
             return std::vector<coord_t>{};
         }
@@ -135,10 +130,10 @@ namespace chdr::solvers {
 
             const auto capacity = solver_t::determine_capacity(_params);
 
-            existence_set closed(_params.memory_resource);
+            existence_set closed(_params.monotonic_pmr);
             closed.reserve(capacity);
 
-            heap<node> open(_params.memory_resource);
+            heap<node> open(_params.monotonic_pmr);
             try {
                 open.reserve(capacity / 8U);
             }

@@ -97,7 +97,7 @@ namespace chdr::solvers {
                                     if (f <= min_threshold) {
 
                                         if (curr_ptr == nullptr) {
-                                            curr_ptr = new (_params.memory_resource->allocate(sizeof(node), alignof(node))) node(std::move(curr));
+                                            curr_ptr = new (_params.monotonic_pmr->allocate(sizeof(node), alignof(node))) node(std::move(curr));
                                         }
 
                                         /* SORTED INSERTION */
@@ -150,16 +150,16 @@ namespace chdr::solvers {
 
             const auto capacity = solver_t::determine_capacity(_params);
 
-            existence_set closed(_params.memory_resource);
+            existence_set closed(_params.monotonic_pmr);
             closed.reserve(capacity);
 
-            std::pmr::vector<node> open(_params.memory_resource);
+            std::pmr::vector<node> open(_params.monotonic_pmr);
             try {
                 open.reserve(capacity / 8U);
             }
             catch (...) {} // NOLINT(*-empty-catch)
 
-            std::pmr::vector<node> next(_params.memory_resource);
+            std::pmr::vector<node> next(_params.monotonic_pmr);
             try {
                 open.reserve(capacity / 8U);
             }

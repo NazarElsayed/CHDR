@@ -62,7 +62,7 @@ namespace chdr::solvers {
                                 solver_utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());
 
                                 if (curr_ptr == nullptr) {
-                                    curr_ptr = new (node::pmr.allocate(sizeof(node), alignof(node))) node(std::move(curr));
+                                    curr_ptr = new (_params.pool_pmr->allocate(sizeof(node), alignof(node))) node(std::move(curr));
                                 }
 
                                 _open.emplace(n.index, curr_ptr);
@@ -71,7 +71,7 @@ namespace chdr::solvers {
                     }
 
                     if (curr_ptr == nullptr) {
-                        curr.expunge();
+                        curr.expunge(_params.pool_pmr);
                     }
                 }
                 else { // SOLUTION REACHED ...
@@ -79,17 +79,12 @@ namespace chdr::solvers {
                     _open   = {};
                     _closed = {};
 
-                    const auto result = solver_utils::rbacktrack(curr, _params.size);
-
-                    node::pmr.reset();
-
-                    return result;
+                    return solver_utils::rbacktrack(curr, _params.size);
                 }
             }
 
             _open   = {};
             _closed = {};
-            node::pmr.reset();
 
             return std::vector<coord_t>{};
         }
@@ -98,7 +93,7 @@ namespace chdr::solvers {
 
             const auto capacity = solver_t::determine_capacity(_params);
 
-            existence_set closed(_params.memory_resource);
+            existence_set closed(_params.monotonic_pmr);
             closed.reserve(capacity);
 
             stack<node> open;

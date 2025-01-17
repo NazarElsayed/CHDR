@@ -23,9 +23,6 @@ namespace chdr::solvers {
     struct managed_node : bnode<index_t> {
 
         using node_t = std::conditional_t<std::is_void_v<derived>, managed_node<index_t>, derived>;
-        using  pmr_t = pool_memory_resource;
-
-        inline static pmr_t pmr{};
 
         managed_node* RESTRICT m_parent;
         unsigned char m_successors;
@@ -60,8 +57,6 @@ namespace chdr::solvers {
         managed_node& operator=(const managed_node& _other) noexcept {
 
             if (this != &_other) {
-                expunge();
-
                 bnode<index_t>::operator=(_other.m_index);
 
                 m_parent     = _other.m_parent;
@@ -79,11 +74,9 @@ namespace chdr::solvers {
             _other.m_successors = 0U;
         }
 
-        constexpr managed_node& operator=(managed_node&& _other) noexcept {
+        constexpr managed_node& operator = (managed_node&& _other) noexcept {
 
             if (this != &_other) {
-                expunge();
-
                 bnode<index_t>::operator=(std::move(_other.m_index));
 
                 m_parent     = _other.m_parent;
@@ -96,7 +89,8 @@ namespace chdr::solvers {
             return *this;
         }
 
-        void expunge() noexcept {
+        template <typename pmr_t>
+        void expunge(pmr_t* _pmr) noexcept {
 
             while (m_parent != nullptr) {
                 decr();
@@ -107,7 +101,7 @@ namespace chdr::solvers {
                 
                 auto* const RESTRICT d = m_parent;
                 m_parent = m_parent->m_parent;
-                pmr.deallocate(d, sizeof(managed_node), alignof(managed_node));
+                _pmr->deallocate(d, sizeof(managed_node), alignof(managed_node));
             }
         }
 
@@ -125,7 +119,7 @@ namespace chdr::solvers {
             ++m_parent->m_successors;
         }
 
-        [[nodiscard]] friend constexpr bool operator <(const managed_node& _a, const managed_node& _b) noexcept {
+        [[nodiscard]] friend constexpr bool operator < (const managed_node& _a, const managed_node& _b) noexcept {
             return _a.m_fScore == _b.m_fScore ?
                    _a.m_gScore >  _b.m_gScore :
                    _a.m_fScore >  _b.m_fScore;

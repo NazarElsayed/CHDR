@@ -135,10 +135,10 @@ namespace chdr::solvers {
 
             const auto capacity = solver_t::determine_capacity(_params);
 
-            existence_set closed(_params.memory_resource);
+            existence_set closed(_params.monotonic_pmr);
             closed.reserve(capacity);
 
-            std::pmr::vector<node> open(_params.memory_resource);
+            std::pmr::vector<node> open(_params.monotonic_pmr);
             try {
                 open.reserve(capacity / 8U);
             }

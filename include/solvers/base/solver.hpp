@@ -125,8 +125,8 @@ namespace chdr::solvers {
             ) {
                 auto result = s != e ? solver_t::execute(_params) : std::vector<typename params_t::coord_type> { _params.end };
                 
-                if constexpr (std::is_invocable_v<decltype(&std::remove_reference_t<decltype(*_params.memory_resource)>::release), decltype(*_params.memory_resource)>) {
-                    _params.memory_resource->release();
+                if constexpr (std::is_invocable_v<decltype(&std::remove_reference_t<decltype(*_params.monotonic_pmr)>::release), decltype(*_params.monotonic_pmr)>) {
+                    _params.monotonic_pmr->release();
                 }
 
                 return result;

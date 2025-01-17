@@ -55,7 +55,7 @@ namespace chdr {
             free.reserve(free.size() + num_chunks);
 
             IVDEP
-            for (size_t i = 0; i < num_chunks - 1U; ++i) {
+            for (size_t i = 0U; i < num_chunks - 1U; ++i) {
                 free.emplace_back(reinterpret_cast<void*>(aligned_base + (i * aligned_chunk_size)));
             }
 
@@ -65,7 +65,7 @@ namespace chdr {
 
     protected:
 
-        void* do_allocate(const size_t _size, const size_t _alignment) override {
+        [[nodiscard]] void* do_allocate(const size_t _size, const size_t _alignment) override {
             assert(_size > 0U && "Allocation size must be greater than zero.");
 
             // Check if there are any free chunks available:
