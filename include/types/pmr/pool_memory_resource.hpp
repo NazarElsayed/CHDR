@@ -44,6 +44,7 @@ namespace chdr {
             // Allocate memory:
             const size_t allocate_size = utils::max(block_width, aligned_chunk_size);
             blocks.emplace_back(std::make_unique<char[]>(allocate_size));
+            block_sizes.emplace_back(allocate_size);
             char* new_block = blocks.back().get();
 
             // Pre-align the base pointer of the new block.
