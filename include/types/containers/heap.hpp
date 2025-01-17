@@ -13,20 +13,20 @@
 
 #include <cstddef>
 #include <functional>
+#include <memory_resource>
 #include <stdexcept> // NOLINT(*-include-cleaner)
 #include <vector>
 
 namespace chdr {
 
-    template<typename T, typename Compare = std::less<T>, typename Container = std::vector<T>, size_t Kd = 2U>
+    template <typename T, typename Compare = std::less<T>, typename Container = std::pmr::vector<T>, size_t Kd = 2U>
     class heap {
 
         static_assert(Kd >= 2U, "Template parameter D must be greater than or equal to 2.");
 
     protected:
-
         Container c;
-        Compare comp;
+        Compare   comp;
 
     private:
 
@@ -37,13 +37,11 @@ namespace chdr {
         constexpr void sort_up(const T& _item) noexcept {
 
             if (size() > 1U) {
-
                 auto i = index_of(_item);
 
                 assert(i < size() && "(Out of Bounds) Item does not exist in Heap.");
 
                 while (i > 1U) {
-
                     const auto p = i / Kd;
 
                     if (p > 0U && comp(c[p], c[i])) {
@@ -60,25 +58,21 @@ namespace chdr {
         constexpr void sort_down(const T& _item) noexcept {
 
             if (size() > 1U) {
-
                 auto i = index_of(_item);
 
                 assert(i < size() && "(Out of Bounds) Item does not exist in Heap.");
 
                 while (i > 1U) {
-
-                    const auto c0 =  i * Kd;
+                    const auto c0 = i * Kd;
                     const auto cn = c0 + (Kd - 1U);
 
                     if (cn < c.size()) {
-
                         size_t min{};
 
                         if constexpr (Kd == 2U) {
                             min = (cn < c.size() && comp(c[c0], c[cn])) ? cn : c0;
                         }
                         else {
-
                             min = i;
 
                             IVDEP
@@ -106,14 +100,19 @@ namespace chdr {
 
     public:
 
-        inline static const auto dimension_v { Kd };
+        static constexpr auto dimension_v { Kd };
 
-        heap(const size_t& _capacity = 0U) : c() {
+        heap(std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {
+            c.reserve(1U);
+            c.emplace_back(); // Add uninitialised super element.
+        }
+
+        heap(const size_t& _capacity, std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {
             c.reserve(utils::min(_capacity, std::numeric_limits<size_t>::max() - 1U) + 1U);
             c.emplace_back(); // Add uninitialised super element.
         }
 
-        explicit heap(const Container& _container) : comp() {
+        explicit heap(const Container& _container) : c(_container.get_allocator().resource()), comp() {
 
             c.emplace_back(); // Add uninitialised super element.
             c.insert(
@@ -145,14 +144,13 @@ namespace chdr {
             }
         }
 
-        [[maybe_unused, nodiscard]] constexpr bool empty() const noexcept { return size() == 0U;  }
+        [[maybe_unused, nodiscard]] constexpr bool empty() const noexcept { return size() == 0U; }
 
         [[maybe_unused, nodiscard]] constexpr size_t size() const noexcept { return c.size() - 1U; }
 
         [[maybe_unused, nodiscard]] constexpr size_t capacity() const noexcept { return c.capacity(); }
 
-        [[maybe_unused, nodiscard]] constexpr T& front() noexcept { return top(); }
-
+        [[maybe_unused, nodiscard]] constexpr       T& front()       noexcept { return top(); }
         [[maybe_unused, nodiscard]] constexpr const T& front() const noexcept { return top(); }
 
         [[maybe_unused, nodiscard]] constexpr T& top() noexcept {
@@ -229,18 +227,12 @@ namespace chdr {
         template <class... Args>
         [[maybe_unused]] constexpr void enqueue_nosort(Args&&... _args) { emplace_nosort(std::forward<Args>(_args)...); }
 
-        [[maybe_unused]] constexpr void push_nosort(const T& _item) {
-            c.push_back(_item);
-        }
+        [[maybe_unused]] constexpr void push_nosort(const T& _item) { c.push_back(_item); }
 
-        [[maybe_unused]] constexpr void push_nosort(T&& _item) {
-            c.push_back(std::move(_item));
-        }
+        [[maybe_unused]] constexpr void push_nosort(T&& _item) { c.push_back(std::move(_item)); }
 
         template <class... Args>
-        [[maybe_unused]] constexpr void emplace_nosort(Args&&... _args) {
-            c.emplace_back(std::forward<Args>(_args)...);
-        }
+        [[maybe_unused]] constexpr void emplace_nosort(Args&&... _args) { c.emplace_back(std::forward<Args>(_args)...); }
 
         [[maybe_unused]] constexpr void erase(const T& _item) noexcept {
 
@@ -259,28 +251,20 @@ namespace chdr {
                     c[i] = std::move(c.back());
                     c.pop_back();
 
+                    // Restore heap property:
                     if (size() > 1U) {
-
-                        // Restore heap property:
-                        if (i > 1U && comp(c[i], c[i / Kd])) {
-                            sort_up(c[i]);
-                        }
-                        else {
-                            sort_down(c[i]);
-                        }
+                        reheapify(c);
                     }
                 }
             }
         }
 
         [[maybe_unused, nodiscard]] constexpr T dequeue() noexcept {
-
             assert(!empty() && "Heap is empty");
 
             T result;
 
             if (!empty()) {
-
                 result(std::move(top()));
 
                 if (size() > 0U) {
@@ -321,8 +305,11 @@ namespace chdr {
 
             const auto& i = index_of(_item);
 
-            if (i < size()) {
+            if (i > 1U && comp(c[i], c[i / Kd])) {
                 sort_up(c[i]);
+            }
+            else {
+                sort_down(c[i]);
             }
         }
 
@@ -352,13 +339,9 @@ namespace chdr {
             }
         }
 
-        [[maybe_unused]] constexpr void clear() noexcept {
-            c.clear();
-        }
+        [[maybe_unused]] constexpr void clear() noexcept { c.clear(); }
 
-        [[maybe_unused]] constexpr void shrink_to_fit() noexcept {
-            c.shrink_to_fit();
-        }
+        [[maybe_unused]] constexpr void shrink_to_fit() noexcept { c.shrink_to_fit(); }
 
         [[maybe_unused, nodiscard]] constexpr const T& at(const size_t& _index) const {
             return c.at(_index + 1U);
@@ -374,7 +357,8 @@ namespace chdr {
                 c = std::move(decltype(c){});
             }
             catch (...) {
-                c.clear(); c.shrink_to_fit();
+                c.clear();
+                c.shrink_to_fit();
             }
         }
 
@@ -385,29 +369,27 @@ namespace chdr {
             return c[_index + 1U];
         }
 
-        using               iterator_t = typename std::vector<T>::              iterator;
-        using         const_iterator_t = typename std::vector<T>::        const_iterator;
-        using       reverse_iterator_t = typename std::vector<T>::      reverse_iterator;
-        using const_reverse_iterator_t = typename std::vector<T>::const_reverse_iterator;
+        using iterator_t               = typename Container::              iterator;
+        using const_iterator_t         = typename Container::        const_iterator;
+        using reverse_iterator_t       = typename Container::      reverse_iterator;
+        using const_reverse_iterator_t = typename Container::const_reverse_iterator;
 
-        [[maybe_unused, nodiscard]] constexpr       iterator_t  begin()       noexcept { return c.begin()  + 1U; }
-        [[maybe_unused, nodiscard]] constexpr const_iterator_t  begin() const noexcept { return c.begin()  + 1U; }
+        [[maybe_unused, nodiscard]] constexpr iterator_t        begin()       noexcept { return c.begin() + 1U; }
+        [[maybe_unused, nodiscard]] constexpr const_iterator_t  begin() const noexcept { return c.begin() + 1U; }
         [[maybe_unused, nodiscard]] constexpr const_iterator_t cbegin() const noexcept { return c.cbegin() + 1U; }
 
-        [[maybe_unused, nodiscard]] constexpr       iterator_t  end()       noexcept { return c.end();  }
-        [[maybe_unused, nodiscard]] constexpr const_iterator_t  end() const noexcept { return c.end();  }
+        [[maybe_unused, nodiscard]] constexpr iterator_t        end()       noexcept { return c.end(); }
+        [[maybe_unused, nodiscard]] constexpr const_iterator_t  end() const noexcept { return c.end(); }
         [[maybe_unused, nodiscard]] constexpr const_iterator_t cend() const noexcept { return c.cend(); }
 
-        [[maybe_unused, nodiscard]] constexpr       reverse_iterator_t  rbegin()       noexcept { return c.rbegin();  }
-        [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t  rbegin() const noexcept { return c.rbegin();  }
+        [[maybe_unused, nodiscard]] constexpr reverse_iterator_t        rbegin()       noexcept { return c.rbegin(); }
+        [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t  rbegin() const noexcept { return c.rbegin(); }
         [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t crbegin() const noexcept { return c.crbegin(); }
 
-        [[maybe_unused, nodiscard]] constexpr       reverse_iterator_t  rend()       noexcept { return c.rend();  }
-        [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t  rend() const noexcept { return c.rend();  }
+        [[maybe_unused, nodiscard]] constexpr reverse_iterator_t        rend()       noexcept { return c.rend(); }
+        [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t  rend() const noexcept { return c.rend(); }
         [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t crend() const noexcept { return c.crend(); }
-
     };
-
 } //chdr
 
 #endif

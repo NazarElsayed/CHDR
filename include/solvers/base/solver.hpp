@@ -123,7 +123,13 @@ namespace chdr::solvers {
             if (_params.maze.contains(s) && _params.maze.at(s).is_active() &&
                 _params.maze.contains(e) && _params.maze.at(e).is_active()
             ) {
-                return s != e ? solver_t::execute(_params) : std::vector<typename params_t::coord_type> { _params.end };
+                auto result = s != e ? solver_t::execute(_params) : std::vector<typename params_t::coord_type> { _params.end };
+                
+                if constexpr (std::is_invocable_v<decltype(&std::remove_reference_t<decltype(*_params.memory_resource)>::release), decltype(*_params.memory_resource)>) {
+                    _params.memory_resource->release();
+                }
+
+                return result;
             }
 
             return std::vector<typename params_t::coord_type>{};

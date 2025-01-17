@@ -13,7 +13,7 @@
 #include <limits>
 #include <vector>
 
-#include "../types/allocators/bump_allocator.hpp"
+#include "../types/pmr/growing_monotonic_resource.hpp"
 #include "../types/containers/existence_set.hpp"
 #include "../utils/utils.hpp"
 #include "base/solver.hpp"
@@ -61,16 +61,16 @@ namespace chdr::solvers {
             }
         };
 
-        template <typename open_set_t, typename closed_set_t, typename alloc_t>
-        [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, open_set_t& _next, closed_set_t& _closed, alloc_t& _alloc, const size_t& _capacity, const params_t& _params) {
+        template <typename open_set_t, typename closed_set_t>
+        [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, open_set_t& _next, closed_set_t& _closed, const size_t& _capacity, const params_t& _params) {
 
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
             auto min_threshold = _params.h(_params.start, _params.end) * _params.weight;
 
-               _open.emplace_back(s, static_cast<scalar_t>(0), min_threshold);
-             _closed.emplace(s);
+              _open.emplace_back(s, static_cast<scalar_t>(0), min_threshold);
+            _closed.emplace(s);
 
             // Main loop:
             while (!_open.empty()) {
@@ -97,7 +97,7 @@ namespace chdr::solvers {
                                     if (f <= min_threshold) {
 
                                         if (curr_ptr == nullptr) {
-                                            _alloc.construct(curr_ptr = _alloc.allocate(1U), std::move(curr)); // Note: 'current' is now moved!
+                                            curr_ptr = new (_params.memory_resource->allocate(sizeof(node), alignof(node))) node(std::move(curr));
                                         }
 
                                         /* SORTED INSERTION */
@@ -150,24 +150,22 @@ namespace chdr::solvers {
 
             const auto capacity = solver_t::determine_capacity(_params);
 
-            existence_set closed;
+            existence_set closed(_params.memory_resource);
             closed.reserve(capacity);
 
-            std::vector<node> open;
+            std::pmr::vector<node> open(_params.memory_resource);
             try {
                 open.reserve(capacity / 8U);
             }
-            catch ([[maybe_unused]] const std::exception& e) {} // NOLINT(*-empty-catch)
+            catch (...) {} // NOLINT(*-empty-catch)
 
-            std::vector<node> next;
+            std::pmr::vector<node> next(_params.memory_resource);
             try {
                 open.reserve(capacity / 8U);
             }
-            catch ([[maybe_unused]] const std::exception& e) {} // NOLINT(*-empty-catch)
+            catch (...) {} // NOLINT(*-empty-catch)
 
-            bump_allocator<node> alloc;
-
-            return solve_internal(open, next, closed, alloc, capacity, _params);
+            return solve_internal(open, next, closed, capacity, _params);
         }
     };
 

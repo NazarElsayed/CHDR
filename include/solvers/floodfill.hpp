@@ -36,8 +36,8 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
-               _open.emplace(s);
-             _closed.emplace(s);
+              _open.emplace(s);
+            _closed.emplace(s);
 
             // Main loop:
             while (!_open.empty()) {
@@ -95,7 +95,7 @@ namespace chdr::solvers {
 
                     const auto capacity = solver_t::determine_capacity(_params);
 
-                    existence_set closed;
+                    existence_set closed(_params.memory_resource);
                     closed.reserve(capacity);
 
                     queue<index_t> open;

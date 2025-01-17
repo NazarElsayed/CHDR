@@ -36,9 +36,9 @@ namespace chdr {
 
     private:
 
-        static constexpr size_t ALIGNMENT { utils::max(alignof(T), CACHE_LINE_SIZE) };
+        static constexpr size_t s_alignment { utils::max(alignof(T), CACHE_LINE_SIZE) };
 
-        size_t m_size;
+        size_t      m_size;
         T* RESTRICT m_data;
 
         static void* aligned_allocate(const size_t& _alignment, const size_t& _size) {
@@ -74,7 +74,7 @@ namespace chdr {
 
         [[maybe_unused, nodiscard]] arena(const size_t& _size) :
             m_size(_size),
-            m_data(static_cast<T*>(aligned_allocate(ALIGNMENT, (_size * sizeof(T) + ALIGNMENT - 1U) & ~(ALIGNMENT - 1U)))) {}
+            m_data(static_cast<T*>(aligned_allocate(s_alignment, (_size * sizeof(T) + s_alignment - 1U) & ~(s_alignment - 1U)))) {}
 
         [[maybe_unused]] ~arena() noexcept {
             aligned_deallocate(m_data);

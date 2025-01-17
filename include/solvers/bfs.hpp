@@ -12,7 +12,7 @@
 #include <cstddef>
 #include <vector>
 
-#include "../types/allocators/bump_allocator.hpp"
+#include "../types/pmr/growing_monotonic_resource.hpp"
 #include "../types/containers/existence_set.hpp"
 #include "../types/containers/queue.hpp"
 #include "../utils/utils.hpp"
@@ -35,14 +35,14 @@ namespace chdr::solvers {
 
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
-        template <typename open_set_t, typename closed_set_t, typename alloc_t>
-        [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, alloc_t& _alloc, const size_t& _capacity, const params_t& _params) {
+        template <typename open_set_t, typename closed_set_t>
+        [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, const size_t& _capacity, const params_t& _params) {
 
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
-               _open.emplace(s);
-             _closed.emplace(s);
+              _open.emplace(s);
+            _closed.emplace(s);
 
             // Main loop:
             while (!_open.empty()) {
@@ -63,7 +63,7 @@ namespace chdr::solvers {
                                 solver_utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());
 
                                 if (curr_ptr == nullptr) {
-                                    _alloc.construct(curr_ptr = _alloc.allocate(1U), std::move(curr)); // Note: 'current' is now moved!
+                                    curr_ptr = new (_params.memory_resource->allocate(sizeof(node), alignof(node))) node(std::move(curr));
                                 }
 
                                 _open.emplace(n.index, curr_ptr);
@@ -90,14 +90,12 @@ namespace chdr::solvers {
 
             const auto capacity = solver_t::determine_capacity(_params);
 
-            existence_set closed;
+            existence_set closed(_params.memory_resource);
             closed.reserve(capacity);
 
             queue<node> open;
 
-            bump_allocator<node> alloc;
-
-            return solve_internal(open, closed, alloc, capacity, _params);
+            return solve_internal(open, closed, capacity, _params);
         }
     };
 

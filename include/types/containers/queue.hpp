@@ -20,13 +20,13 @@ namespace chdr {
 
     private:
 
-        using queue_t = std::queue<T>;
+        using queue_t = std::pmr::deque<T>;
 
         queue_t c;
 
     public:
 
-        constexpr queue() = default;
+        constexpr queue(std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {}
 
         [[maybe_unused, nodiscard]] constexpr bool empty() const noexcept { return c.empty(); }
 
@@ -44,10 +44,10 @@ namespace chdr {
 
         template <typename... Args>
         [[maybe_unused]] constexpr void emplace(Args&&... _args) {
-            c.emplace(std::forward<Args>(_args)...);
+            c.emplace_back(std::forward<Args>(_args)...);
         }
         
-        [[maybe_unused]] constexpr void pop() { c.pop(); }
+        [[maybe_unused]] constexpr void pop() { c.pop_back(); }
 
         [[maybe_unused]] constexpr void clear() {
             queue_t empty;

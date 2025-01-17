@@ -10,35 +10,31 @@
 #define STACK_HPP
 
 #include <cstddef>
-#include <stack>
+#include <memory_resource>
 #include <vector>
 
 namespace chdr {
 
-    template <typename T, typename Container = std::vector<T>>
+    template <typename T>
     class stack {
 
     private:
 
-        using stack_t = std::stack<T, Container>;
+        using stack_t = std::pmr::vector<T>;
 
         stack_t c;
 
     public:
 
-        constexpr stack() = default;
+        constexpr stack([[maybe_unused]] std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {}
 
-        constexpr stack(const size_t& _capacity) {
-
-            Container sequence;
-            sequence.reserve(_capacity);
-
-            c = stack_t(std::move(sequence));
+        constexpr stack(const size_t& _capacity, [[maybe_unused]] std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {
+            c.reserve(_capacity);
         }
 
-        constexpr stack(const Container& _sequence) : c(_sequence) {}
+        constexpr stack(const stack_t& _sequence) : c(_sequence) {}
 
-        constexpr stack(Container&& _sequence) : c(std::move(_sequence)) {}
+        constexpr stack(stack_t&& _sequence) : c(std::move(_sequence)) {}
 
         [[maybe_unused, nodiscard]] constexpr bool empty() const noexcept { return c.empty(); }
 
@@ -47,8 +43,8 @@ namespace chdr {
         [[maybe_unused, nodiscard]] constexpr       T& front()       noexcept { return top(); }
         [[maybe_unused, nodiscard]] constexpr const T& front() const noexcept { return top(); }
 
-        [[maybe_unused, nodiscard]] constexpr       T& top()       noexcept { return c.top(); }
-        [[maybe_unused, nodiscard]] constexpr const T& top() const noexcept { return c.top(); }
+        [[maybe_unused, nodiscard]] constexpr       T& top()       noexcept { return c.back(); }
+        [[maybe_unused, nodiscard]] constexpr const T& top() const noexcept { return c.back(); }
 
         [[maybe_unused]] constexpr void push(const T& _value) { c.push(_value); }
 
@@ -56,10 +52,10 @@ namespace chdr {
 
         template <typename... Args>
         [[maybe_unused]] constexpr void emplace(Args&&... _args) {
-            c.emplace(std::forward<Args>(_args)...);
+            c.emplace_back(std::forward<Args>(_args)...);
         }
 
-        [[maybe_unused]] constexpr void pop() { c.pop(); }
+        [[maybe_unused]] constexpr void pop() { c.pop_back(); }
 
         [[maybe_unused]] constexpr void clear() {
             stack_t empty;

@@ -135,14 +135,14 @@ namespace chdr::solvers {
 
             const auto capacity = solver_t::determine_capacity(_params);
 
-            existence_set closed;
+            existence_set closed(_params.memory_resource);
             closed.reserve(capacity);
 
-            std::vector<node> open;
+            std::pmr::vector<node> open(_params.memory_resource);
             try {
                 open.reserve(capacity / 8U);
             }
-            catch ([[maybe_unused]] const std::exception& e) {} // NOLINT(*-empty-catch)
+            catch (...) {} // NOLINT(*-empty-catch)
 
             return solve_internal(open, closed, capacity, _params);
         }

@@ -89,7 +89,7 @@ namespace test {
 			//const auto test = chdr::mazes::graph<index_t, scalar_t>(grid);
 			//const auto test = generator::graph::generate<weight_t, index_t, coord_t, scalar_t>(start, end, size, seed);
 
-			auto allocator = std::allocator<void>();
+			auto pmr = chdr::growing_monotonic_resource();
 
 			struct params {
 
@@ -103,7 +103,8 @@ namespace test {
 		        const     coord_type  end;
 		        const     coord_type  size;
 		                 scalar_type  (*h)(const coord_type&, const coord_type&) noexcept;
-				 decltype(allocator)& alloc;
+
+				decltype(pmr)* memory_resource;
 
 		        const    scalar_type  weight      =  1U;
 		        const         size_t  capacity    =  0U;
@@ -111,7 +112,7 @@ namespace test {
 
 		    };
 
-			const params args { test, start, end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, allocator };
+			const params args { test, start, end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &pmr };
 
                  if (_solver == "astar"    ) { result = execute<chdr::solvers::    astar, params>(args); }
             else if (_solver == "bfs"      ) { result = execute<chdr::solvers::      bfs, params>(args); }
@@ -211,7 +212,7 @@ int main(const int _argc, const char* const _argv[]) noexcept {
 
 		result = test::cli::main(_argc, _argv);
 	}
-	catch(...) { /* ignored */ }
+	catch(...) {} //NOLINT(*-empty-catch)
 
 	return result;
 }

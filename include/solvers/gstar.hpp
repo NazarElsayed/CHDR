@@ -64,8 +64,8 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
-               _open.emplace_nosort(s, static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
-             _closed.emplace(s);
+              _open.emplace_nosort(s, static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
+            _closed.emplace(s);
 
             // Main loop:
             while (!_open.empty()) {
@@ -135,14 +135,14 @@ namespace chdr::solvers {
 
             const auto capacity = solver_t::determine_capacity(_params);
 
-            existence_set<high_performance> closed;
+            existence_set closed(_params.memory_resource);
             closed.reserve(capacity);
 
-            heap<node> open;
+            heap<node> open(_params.memory_resource);
             try {
                 open.reserve(capacity / 8U);
             }
-            catch ([[maybe_unused]] const std::exception& e) {} // NOLINT(*-empty-catch)
+            catch (...) {} // NOLINT(*-empty-catch)
 
             return solve_internal(open, closed, capacity, _params);
         }
