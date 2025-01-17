@@ -11,7 +11,7 @@
 
 #include <cassert>
 
-#include "../../types/allocators/pool_allocator.hpp"
+#include "../../types/pmr/pool_memory_resource.hpp"
 #include "bnode.hpp"
 
 // ReSharper disable once CppUnusedIncludeDirective
@@ -22,10 +22,10 @@ namespace chdr::solvers {
     template <typename index_t, typename derived = void>
     struct managed_node : bnode<index_t> {
 
-        using  node_t = std::conditional_t<std::is_void_v<derived>, managed_node<index_t>, derived>;
-        using alloc_t = pool_allocator<node_t>;
+        using node_t = std::conditional_t<std::is_void_v<derived>, managed_node<index_t>, derived>;
+        using  pmr_t = pool_memory_resource;
 
-        inline static alloc_t alloc{};
+        inline static pmr_t pmr{};
 
         managed_node* RESTRICT m_parent;
         unsigned char m_successors;
@@ -105,9 +105,9 @@ namespace chdr::solvers {
                     break;
                 }
                 
-                auto* const RESTRICT temp = m_parent;
+                auto* const RESTRICT d = m_parent;
                 m_parent = m_parent->m_parent;
-                alloc.deallocate(static_cast<typename alloc_t::value_type*>(temp), 1U);
+                pmr.deallocate(d, sizeof(managed_node), alignof(managed_node));
             }
         }
 
@@ -127,8 +127,8 @@ namespace chdr::solvers {
 
         [[nodiscard]] friend constexpr bool operator <(const managed_node& _a, const managed_node& _b) noexcept {
             return _a.m_fScore == _b.m_fScore ?
-                   _a.m_gScore > _b.m_gScore :
-                   _a.m_fScore > _b.m_fScore;
+                   _a.m_gScore >  _b.m_gScore :
+                   _a.m_fScore >  _b.m_fScore;
         }
     };
 

@@ -18,15 +18,15 @@ namespace chdr {
 
     class growing_monotonic_resource : public std::pmr::memory_resource {
 
-        static constexpr size_t s_initial_block_size {  1024U };
+        static constexpr size_t s_initial_block_size {  2048U };
         static constexpr size_t     s_max_block_size { 65536U };
 
         size_t m_current_block_size;    // Size of the current block.
         size_t m_block_write;           // Current write position in the active block.
         size_t m_active_block_index;    // Index of the current active block.
 
-        std::vector<std::unique_ptr<char[]>> blocks;    // List of allocated blocks.
-        std::vector<size_t> block_sizes;                // Sizes of the allocated blocks.
+        std::vector<std::unique_ptr<char[]>> blocks; // NOLINT(*-avoid-c-arrays)
+        std::vector<size_t> block_sizes;
 
         void expand(const size_t& _size) {
 
@@ -37,7 +37,7 @@ namespace chdr {
             else {
                 // Otherwise, allocate a fresh block:
                 m_current_block_size = utils::max(s_initial_block_size, utils::max(utils::min(m_current_block_size * 2U, s_max_block_size), _size));
-                blocks.emplace_back(std::make_unique<char[]>(m_current_block_size));
+                blocks.emplace_back(std::make_unique<char[]>(m_current_block_size)); // NOLINT(*-avoid-c-arrays)
                 block_sizes.push_back(m_current_block_size);
                 m_active_block_index = blocks.size() - 1U;
             }
@@ -50,9 +50,9 @@ namespace chdr {
         void* do_allocate(const size_t _size, const size_t _alignment) override {
 
             // Ensure alignment:
-            char* current     = blocks[m_active_block_index].get() + m_block_write;
-            size_t remaining  = block_sizes[m_active_block_index]  - m_block_write;
-            void* aligned_ptr = std::align(_alignment, _size, reinterpret_cast<void*&>(current), remaining);
+            char*  current     = blocks[m_active_block_index].get() + m_block_write;
+            size_t remaining   = block_sizes[m_active_block_index]  - m_block_write;
+            void*  aligned_ptr = std::align(_alignment, _size, reinterpret_cast<void*&>(current), remaining);
 
             // Handle insufficient space in the current block:
             if (aligned_ptr == nullptr) {
@@ -65,7 +65,7 @@ namespace chdr {
             return aligned_ptr;
         }
 
-        void do_deallocate(void*, const size_t, size_t) override {
+        void do_deallocate(void* /*__p*/, const size_t /*__bytes*/, size_t /*__alignment*/) override {
             // No-op, as memory within a monotonic resource is not individually freed.
         }
 
@@ -74,7 +74,9 @@ namespace chdr {
         }
 
     public:
-        growing_monotonic_resource() : m_current_block_size(s_initial_block_size),
+
+        growing_monotonic_resource() :
+            m_current_block_size(s_initial_block_size),
             m_block_write       (0U),
             m_active_block_index(0U)
         {
@@ -85,6 +87,7 @@ namespace chdr {
          * @brief Resets the memory resource to reuse all previously allocated memory.
          */
         void release() {
+
             // Reset the index to the first block and prepare to overwrite.
             m_active_block_index = 0U;
             m_block_write        = 0U;
@@ -95,14 +98,15 @@ namespace chdr {
          */
         void reset() {
 
-            // Clear all existing blocks and their sizes.
-                 blocks.clear();
-            block_sizes.clear();
-
             // Reset block size, write position, and block index to initial values
             m_current_block_size = s_initial_block_size;
             m_active_block_index = 0U;
             m_block_write        = 0U;
+
+            // Clear all existing blocks and their sizes.
+            decltype(blocks) temp{};
+            blocks      = std::move(temp);
+            block_sizes = {};
 
             // Allocate a fresh initial block.
             expand(s_initial_block_size);

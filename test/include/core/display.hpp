@@ -103,8 +103,8 @@ namespace test {
             }
         }
 
-        template<typename weight_t, typename coord_t>
-        static constexpr void draw_maze(const coord_t& _start, const coord_t& _end, const chdr::mazes::grid<coord_t, weight_t>& _maze, const std::vector<coord_t>& _path) {
+        template<typename weight_t, typename coord_t, typename path_t>
+        static constexpr void draw_maze(const coord_t& _start, const coord_t& _end, const chdr::mazes::grid<coord_t, weight_t>& _maze, const path_t& _path) {
 
             static_assert(std::is_integral_v<weight_t>, "Maze type must be an integral type.");
 

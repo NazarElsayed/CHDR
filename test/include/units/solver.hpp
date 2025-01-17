@@ -13,11 +13,9 @@
 
 #include <chrono>
 #include <cstddef>
-#include <cstdint>
 #include <limits>
 #include <string>
 #include <type_traits>
-#include <vector>
 
 #include "core/display.hpp"
 
@@ -59,7 +57,7 @@ namespace test {
 
             /* TEST ALGORITHM */
             debug::log("(Solver):");
-            std::vector<typename params_t::coord_type> path;
+            decltype(chdr::solvers::solve<solver_t, params_t>(_params)) path;
 
             auto result = std::numeric_limits<long double>::max();
             for (size_t i = 0U; i < test_samples; ++i) {
@@ -68,7 +66,7 @@ namespace test {
 
                 /* EXECUTE SOLVE */
                 {
-                    path = chdr::solvers::solve<solver_t, params_t>(_params);
+                    path = std::move(chdr::solvers::solve<solver_t, params_t>(_params));
                 }
 
                 result = chdr::utils::min(

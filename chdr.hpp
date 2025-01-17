@@ -38,7 +38,7 @@
 #include "include/solvers/iddfs.hpp"
 #include "include/solvers/jps.hpp"
 #include "include/types/pmr/growing_monotonic_resource.hpp"
-#include "include/types/allocators/pool_allocator.hpp"
+#include "include/types/pmr/pool_memory_resource.hpp"
 #include "include/types/base/coord.hpp"
 #include "include/types/containers/existence_set.hpp"
 #include "include/types/containers/heap.hpp"
