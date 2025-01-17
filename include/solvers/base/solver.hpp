@@ -128,6 +128,9 @@ namespace chdr::solvers {
                 if constexpr (std::is_invocable_v<decltype(&std::remove_reference_t<decltype(*_params.monotonic_pmr)>::release), decltype(*_params.monotonic_pmr)>) {
                     _params.monotonic_pmr->release();
                 }
+                if constexpr (std::is_invocable_v<decltype(&std::remove_reference_t<decltype(*_params.pool_pmr)>::release), decltype(*_params.pool_pmr)>) {
+                    _params.pool_pmr->release();
+                }
 
                 return result;
             }
