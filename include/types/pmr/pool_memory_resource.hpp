@@ -41,7 +41,7 @@ namespace chdr {
             // Compute the properly aligned block size for this chunk.
             const size_t aligned_chunk_size = (_size + _alignment - 1U) & ~(_alignment - 1U);
 
-            // Allocate memory as usual:
+            // Allocate memory:
             const size_t allocate_size = utils::max(block_width, aligned_chunk_size);
             blocks.emplace_back(std::make_unique<char[]>(allocate_size));
             char* new_block = blocks.back().get();
