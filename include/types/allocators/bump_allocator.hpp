@@ -16,7 +16,7 @@
 #include <memory>
 #include <type_traits>
 
-#include "base/memory_block.hpp"
+#include "base/arena.hpp"
 
 namespace chdr {
 
@@ -25,7 +25,7 @@ namespace chdr {
 
     private:
 
-        using block_t = memory_block<T>;
+        using block_t = arena<T>;
 
         static constexpr size_t     max_block_width { 65536U / sizeof(T*) };
         static constexpr size_t initial_block_width { utils::min(static_cast<size_t>(32U), max_block_width) };
@@ -90,7 +90,7 @@ namespace chdr {
             assert(_n != 0U && "Tried to allocate 0 objects.");
             assert(_n == 1U && "Does not support batch allocation.");
 
-            if (c.empty() || block_write >= c[block_index].m_size) {
+            if (c.empty() || block_write >= c[block_index].size()) {
                 if (c.empty() || block_index + 1U >= c.size()) {
                     expand();
                 }

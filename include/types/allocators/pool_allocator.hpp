@@ -15,11 +15,10 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
-#include <stdexcept>
 #include <type_traits>
 #include <vector>
 
-#include "base/memory_block.hpp"
+#include "base/arena.hpp"
 
 // ReSharper disable once CppUnusedIncludeDirective
 #include "../../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
@@ -31,21 +30,22 @@ namespace chdr {
 
     private:
 
-        using block_t = memory_block<T>;
+        using block_t = arena<T>;
 
-        static constexpr size_t max_block_width { 65536U / sizeof(T*) };
+        static constexpr size_t     max_block_width { 65536U / sizeof(T*) };
+        static constexpr size_t default_block_width { utils::min(static_cast<size_t>(32U), max_block_width) };
 
         size_t initial_block_width;
         size_t block_width;
 
-        std::vector<block_t> c;
-        std::vector<T*> free;
+        std::vector<block_t> pool;
+        std::vector<T*>      free;
 
         constexpr const auto& expand(const block_t& _new_block, const size_t& _skip_first = 0U) {
 
-            assert(_new_block.m_size > _skip_first && "Underflow detected: _new_block.m_size must be greater than _skip_first.");
+            assert(_new_block.size() > _skip_first && "Underflow detected: _new_block.size() must be greater than _skip_first.");
 
-            const auto count = _new_block.m_size - _skip_first;
+            const auto count = _new_block.size() - _skip_first;
 
             assert(count != 0U && "Count must not be 0.");
 
@@ -64,7 +64,7 @@ namespace chdr {
         using value_type [[maybe_unused]] = T;
 
         explicit constexpr pool_allocator() noexcept :
-            initial_block_width(utils::min(static_cast<size_t>(32U), max_block_width)),
+            initial_block_width(default_block_width),
             block_width        (initial_block_width) {}
 
         explicit constexpr pool_allocator(const size_t& _capacity) noexcept :
@@ -76,26 +76,14 @@ namespace chdr {
 
         template <typename U>
         constexpr pool_allocator([[maybe_unused]] const pool_allocator<U>& _other) noexcept :
-            initial_block_width(utils::min(static_cast<size_t>(16U), max_block_width)),
+            initial_block_width(default_block_width),
             block_width        (initial_block_width) {}
 
         constexpr pool_allocator(const pool_allocator& _other) noexcept = default;
         constexpr pool_allocator(      pool_allocator& _other) noexcept = default;
 
         constexpr pool_allocator& operator=(const pool_allocator&  _other) noexcept = default;
-        constexpr pool_allocator& operator=(      pool_allocator&& _other) noexcept {
-
-            if (this != &_other) {
-                initial_block_width = _other.initial_block_width;
-                block_width         = _other.block_width;
-                c                   = std::move(_other.c);
-                free                = std::move(_other.free);
-
-                // Reset the other allocator to its initial state.
-                _other.reset();
-            }
-            return *this;
-        }
+        constexpr pool_allocator& operator=(      pool_allocator&& _other) noexcept = default;
         
         void construct(T* _p, const T& _val) {
             static_assert(std::is_copy_constructible_v<T>, "T must be copy constructible.");
@@ -120,25 +108,23 @@ namespace chdr {
 
             assert(_n != 0U && "Tried to allocate 0 objects.");
 
-            T* result;
-
             if (_n == 1U) {
 
-                if (free.empty()) {
-                    result = expand(c.emplace_back(block_width), 1U).get();
+                T* result;
 
+                if (free.empty()) {
+                    result = expand(pool.emplace_back(block_width), 1U).get();
                     block_width = utils::min(block_width * 2U, max_block_width);
                 }
                 else {
                     result = free.back();
                     free.pop_back();
                 }
-            }
-            else {
-                return expand(c.emplace_back(_n), 1U).get();
+
+                return result;
             }
 
-            return result;
+            return expand(pool.emplace_back(_n), 1U).get();
         }
 
         void deallocate(T* _p, [[maybe_unused]] const uintptr_t& _n) {
@@ -152,18 +138,11 @@ namespace chdr {
                 free.emplace_back(_p);
             }
             else {
+                free.reserve(free.size() + _n);
 
-                if (_p != nullptr && _n <= std::numeric_limits<size_t>::max() / sizeof(T)) {
-
-                    free.reserve(free.size() + _n);
-
-                    IVDEP
-                    for (size_t i = 0U; i < _n; ++i) {
-                        free.emplace_back(_p + i);
-                    }
-                }
-                else {
-                    throw std::underflow_error("Requested deallocation precedes bounds (too large).");
+                IVDEP
+                for (size_t i = 0U; i != _n; ++i) {
+                    free.emplace_back(_p + i);
                 }
             }
         }
@@ -175,19 +154,25 @@ namespace chdr {
             free.clear();
 
             try {
-                for (auto& block : c) {
+                for (const auto& block : pool) {
 
                     free.reserve(free.size() + block.m_size);
 
                     IVDEP
-                    for (size_t i = 0U; i < block.m_size; ++i) {
+                    for (size_t i = 0U; i != block.m_size; ++i) {
                         free.emplace_back(block.get() + i);
                     }
                 }
             }
-            catch ([[maybe_unused]] const std::exception& e) {
-                free = {};
-                c    = std::move(decltype(c){});
+            catch (...) {
+                try {
+                    free = std::move(decltype(free){});
+                    pool = std::move(decltype(pool){});
+                }
+                catch (...) {
+                    free.clear(); free.shrink_to_fit();
+                    pool.clear(); pool.shrink_to_fit();
+                }
             }
         }
 
@@ -195,8 +180,14 @@ namespace chdr {
 
             block_width = initial_block_width;
 
-            free = {};
-            c    = std::move(decltype(c){});
+            try {
+                free = std::move(decltype(free){});
+                pool = std::move(decltype(pool){});
+            }
+            catch (...) {
+                free.clear(); free.shrink_to_fit();
+                pool.clear(); pool.shrink_to_fit();
+            }
         }
 
         constexpr bool operator == (const pool_allocator& _other) const noexcept { return    this == &_other; }

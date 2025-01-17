@@ -369,8 +369,13 @@ namespace chdr {
          *
          * @remarks Do not use this function unless you know what you are doing.
          */
-        [[maybe_unused]] constexpr void wipe() {
-            c = std::move(decltype(c){});
+        [[maybe_unused]] constexpr void wipe() noexcept {
+            try {
+                c = std::move(decltype(c){});
+            }
+            catch (...) {
+                c.clear(); c.shrink_to_fit();
+            }
         }
 
 #ifndef HEAP_SUPPRESS_EXCEPTION_WARNING

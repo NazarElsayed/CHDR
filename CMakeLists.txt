@@ -30,6 +30,12 @@ set(CMAKE_CXX_FLAGS_DEBUG        "${SUPER_PEDANTIC} -Werror -O0 -fsanitize=addre
 set(CMAKE_CXX_FLAGS_NOSANITIZERS "${SUPER_PEDANTIC} -Werror -O0                                   -fno-omit-frame-pointer -fno-rtti -g")
 set(CMAKE_CXX_FLAGS_RELEASE      "${CMAKE_CXX_FLAGS_RELEASE} ${SUPER_PEDANTIC} -Werror -Ofast -flto -march=native -mtune=native -funroll-loops -ftree-vectorize -ffast-math -fstrict-aliasing -fomit-frame-pointer -fno-rtti -DNDEBUG")
 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    string(APPEND CMAKE_CXX_FLAGS_DEBUG        " -Wno-interference-size")
+    string(APPEND CMAKE_CXX_FLAGS_NOSANITIZERS " -Wno-interference-size")
+    string(APPEND CMAKE_CXX_FLAGS_RELEASE      " -Wno-interference-size")
+endif ()
+
 add_library(libdebug INTERFACE test/external/debug.hpp)
 add_library(libchdr  INTERFACE                chdr.hpp)
 
