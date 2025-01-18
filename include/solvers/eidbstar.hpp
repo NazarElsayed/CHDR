@@ -121,6 +121,9 @@ namespace chdr::solvers {
                                 stack.emplace(_open.back(), _.bound, _params);
                             }
                             else { // SOLUTION REACHED ...
+
+                                transposition_table = {};
+
                                 return solver_utils::ibacktrack(_open, _params.size);
                             }
                         }

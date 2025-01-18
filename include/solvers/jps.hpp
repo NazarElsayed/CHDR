@@ -283,6 +283,10 @@ namespace chdr::solvers {
                         }
                     }
                     else { // SOLUTION REACHED ...
+
+                        _open   = {};
+                        _closed = {};
+
                         return solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);
                     }
                 }

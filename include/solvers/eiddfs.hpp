@@ -105,6 +105,9 @@ namespace chdr::solvers {
                                     stack.emplace(_open.back(), _params);
                                 }
                                 else { // SOLUTION REACHED ...
+
+                                    _closed = {};
+
                                     return solver_utils::ibacktrack(_open, _params.size);
                                 }
                             }

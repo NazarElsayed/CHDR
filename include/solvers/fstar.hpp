@@ -125,6 +125,10 @@ namespace chdr::solvers {
                         }
                     }
                     else { // SOLUTION REACHED ...
+
+                        _next   = std::move(open_set_t());
+                        _closed = {};
+
                         return solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);
                     }
                 }

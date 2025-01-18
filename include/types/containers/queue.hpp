@@ -47,7 +47,7 @@ namespace chdr {
             c.emplace_back(std::forward<Args>(_args)...);
         }
         
-        [[maybe_unused]] constexpr void pop() { c.pop_back(); }
+        [[maybe_unused]] constexpr void pop() { c.pop_front(); }
 
         [[maybe_unused]] constexpr void clear() {
             queue_t empty;
