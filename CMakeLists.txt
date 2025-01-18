@@ -8,19 +8,7 @@ cmake_minimum_required(VERSION ${CMAKE_VERSION})
 
 project(CHDR VERSION 0.1.0 LANGUAGES CXX)
 
-set(CHDR_VERSION_TWEAK "alpha")
-if (CHDR_VERSION_TWEAK)
-    set(CHDR_VERSION "${CHDR_VERSION_MAJOR}.${CHDR_VERSION_MINOR}.${CHDR_VERSION_PATCH}-${CHDR_VERSION_TWEAK}")
-endif ()
-
-set(CHDR_VERSION_METADATA "${CMAKE_SYSTEM_PROCESSOR}-${CMAKE_SYSTEM_NAME}")
-if (CHDR_VERSION_METADATA)
-    set(CHDR_VERSION "${CHDR_VERSION}+${CHDR_VERSION_METADATA}")
-endif ()
-
-configure_file(chdr_version.hpp.in ${CMAKE_CURRENT_SOURCE_DIR}/chdr_version.hpp)
-
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(SUPER_PEDANTIC "-pedantic -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Woverloaded-virtual -Wnull-dereference -Wdouble-promotion -Wvla -Wformat=2 -Wmissing-declarations -Wsuggest-override -Wstrict-overflow=5 -Wuninitialized -Wswitch-enum -Wswitch-default -Wcast-qual -Wwrite-strings -Wpointer-arith -Wfloat-equal -Wc++20-extensions")
@@ -28,7 +16,22 @@ set(SUPER_PEDANTIC "-pedantic -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Wn
 # DIFFERENT BUILD MODES:
 set(CMAKE_CXX_FLAGS_DEBUG        "${SUPER_PEDANTIC} -Werror -O0 -fsanitize=address,leak,undefined -fno-omit-frame-pointer -fno-rtti -g")
 set(CMAKE_CXX_FLAGS_NOSANITIZERS "${SUPER_PEDANTIC} -Werror -O0                                   -fno-omit-frame-pointer -fno-rtti -g")
-set(CMAKE_CXX_FLAGS_RELEASE      "${CMAKE_CXX_FLAGS_RELEASE} ${SUPER_PEDANTIC} -Werror -Ofast -flto -march=native -mtune=native -funroll-loops -ftree-vectorize -ffast-math -fstrict-aliasing -fomit-frame-pointer -fno-rtti -DNDEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${SUPER_PEDANTIC} -Werror -O2 -flto -march=native -mtune=native -funroll-loops -ftree-vectorize -fstrict-aliasing -fomit-frame-pointer -fno-rtti -fprefetch-loop-arrays -DNDEBUG")
+
+set(CHDR_VERSION_TWEAK "alpha")
+if (CHDR_VERSION_TWEAK)
+    set(CHDR_VERSION "${CHDR_VERSION_MAJOR}.${CHDR_VERSION_MINOR}.${CHDR_VERSION_PATCH}-${CHDR_VERSION_TWEAK}")
+endif ()
+
+set(CHDR_VERSION_METADATA "${CMAKE_SYSTEM_PROCESSOR}-${CMAKE_SYSTEM_NAME}")
+if (CMAKE_CXX_FLAGS_RELEASE MATCHES "-march=native|-mtune=native|-mcpu=native")
+    set(CHDR_VERSION_METADATA "${CHDR_VERSION_METADATA}-native")
+endif ()
+if (CHDR_VERSION_METADATA)
+    set(CHDR_VERSION "${CHDR_VERSION}+${CHDR_VERSION_METADATA}")
+endif ()
+
+configure_file(chdr_version.hpp.in ${CMAKE_CURRENT_SOURCE_DIR}/chdr_version.hpp)
 
 add_library(libdebug INTERFACE test/external/debug.hpp)
 add_library(libchdr  INTERFACE                chdr.hpp)

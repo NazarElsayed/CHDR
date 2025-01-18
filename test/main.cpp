@@ -78,7 +78,7 @@ namespace test {
 			using  index_t = uint32_t;
 
 			/* GENERATE MAZE */
-			constexpr auto seed { 0U };
+			constexpr size_t seed { 0U };
 
 			constexpr coord_t start {};
 			          coord_t end;

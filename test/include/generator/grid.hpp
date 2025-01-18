@@ -10,7 +10,6 @@
 #define TEST_GRID_HPP
 
 #include <chdr.hpp>
-
 #include <debug.hpp>
 
 #include "utils/backtracking.hpp"
@@ -43,18 +42,14 @@ namespace test::generator {
 			}
 			else {
 
-				std::vector<weight_t> nodes;
-				nodes.reserve(maze.size());
+				std::vector<weight_t> nodes(maze.size());
+				std::transform(maze.begin(), maze.end(), nodes.begin(), [](const auto& _node) {
+					return _node == backtracking_t::WALL ?
+						       std::numeric_limits<weight_t>::max() :
+						       std::numeric_limits<weight_t>::lowest();
+				});
 
-				for (const auto& node : maze) {
-					nodes.emplace_back(
-						node == backtracking_t::WALL ?
-						std::numeric_limits<weight_t>::max() :
-						std::numeric_limits<weight_t>::lowest()
-					);
-				}
-
-				return chdr::mazes::grid<coord_t, weight_t>(_size, nodes);
+				return chdr::mazes::grid<coord_t, weight_t>(_size, std::move(nodes));
 			}
 		}
 	};
