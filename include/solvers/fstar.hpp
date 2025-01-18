@@ -13,7 +13,6 @@
 #include <limits>
 #include <vector>
 
-#include "../types/pmr/growing_monotonic_resource.hpp"
 #include "../types/containers/existence_set.hpp"
 #include "../utils/utils.hpp"
 #include "base/solver.hpp"
@@ -100,18 +99,23 @@ namespace chdr::solvers {
                                             curr_ptr = new (_params.monotonic_pmr->allocate(sizeof(node), alignof(node))) node(std::move(curr));
                                         }
 
-                                        /* SORTED INSERTION */
+                                        if constexpr (params_t::lazy_sorting::value) {
+                                            _next.emplace_back(n.index, g, f, curr_ptr);
+                                        }
+                                        else {
 
-                                        const auto new_node = node(n.index, g, f, curr_ptr);
+                                            /* SORTED INSERTION */
+                                            const auto new_node = node(n.index, g, f, curr_ptr);
 
-                                        _next.insert(
-                                            std::partition_point(
-                                                _next.begin(),
-                                                _next.end(),
-                                                [&new_node](const node& _other) ALWAYS_INLINE { return _other < new_node; }
-                                            ),
-                                            new_node
-                                        );
+                                            _next.insert(
+                                                std::partition_point(
+                                                    _next.begin(),
+                                                    _next.end(),
+                                                    [&new_node](const node& _other) ALWAYS_INLINE { return _other < new_node; }
+                                                ),
+                                                new_node
+                                            );
+                                        }
                                     }
                                     else {
                                         next_threshold = utils::min(next_threshold, f);

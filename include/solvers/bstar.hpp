@@ -12,7 +12,6 @@
 #include <cstddef>
 #include <vector>
 
-#include "../types/pmr/growing_monotonic_resource.hpp"
 #include "../types/containers/existence_set.hpp"
 #include "../types/containers/heap.hpp"
 #include "../utils/utils.hpp"
@@ -87,7 +86,12 @@ namespace chdr::solvers {
                                     curr_ptr = new (_params.monotonic_pmr->allocate(sizeof(node), alignof(node))) node(std::move(curr));
                                 }
 
-                                _open.emplace(n.index, _params.h(n.coord, _params.end), curr_ptr);
+                                if constexpr (params_t::lazy_sorting::value) {
+                                    _open.emplace_nosort(n.index, _params.h(n.coord, _params.end), curr_ptr);
+                                }
+                                else {
+                                    _open.emplace(n.index, _params.h(n.coord, _params.end), curr_ptr);
+                                }
                             }
                         }
                     }

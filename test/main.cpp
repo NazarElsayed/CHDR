@@ -9,6 +9,8 @@
 #include <chdr.hpp>
 #include <debug.hpp>
 
+#include <cstddef>
+#include <cstdint>
 #include <iostream>
 #include <string_view>
 
@@ -85,19 +87,21 @@ namespace test {
 
 			const auto grid = generator::grid::generate<weight_t>(start, end, _size, 0.0, 0.0, seed);
 
-			const auto test = grid;
+			const auto& test = grid;
 			//const auto test = chdr::mazes::graph<index_t, scalar_t>(grid);
 			//const auto test = generator::graph::generate<weight_t, index_t, coord_t, scalar_t>(start, end, size, seed);
 
-			auto monotonic = chdr::growing_monotonic_resource();
-			auto    pooled = chdr::pool_memory_resource();
+			auto monotonic = chdr::monotonic_pool();
+			auto polytonic = chdr::polytonic_pool();
 
 			struct params {
 
-		        using weight_type [[maybe_unused]] = weight_t;
-		        using scalar_type [[maybe_unused]] = scalar_t;
-		        using  index_type [[maybe_unused]] =  index_t;
-		        using  coord_type [[maybe_unused]] =  coord_t;
+		        using  weight_type [[maybe_unused]] = weight_t;
+		        using  scalar_type [[maybe_unused]] = scalar_t;
+		        using   index_type [[maybe_unused]] =  index_t;
+		        using   coord_type [[maybe_unused]] =  coord_t;
+
+				using lazy_sorting [[maybe_unused]] = std::true_type;
 
 		        const decltype(test)& maze;
 		        const     coord_type  start;
@@ -106,15 +110,14 @@ namespace test {
 		                 scalar_type  (*h)(const coord_type&, const coord_type&) noexcept;
 
 				decltype(monotonic)* monotonic_pmr;
-				decltype(   pooled)*      pool_pmr;
+				decltype(polytonic)* polytonic_pmr;
 
-		        const    scalar_type  weight      =  1U;
-		        const         size_t  capacity    =  0U;
-		        const         size_t  memoryLimit = static_cast<size_t>(-1U);
+		        const scalar_type  weight       = 1U;
+		        const      size_t  capacity     = 0U;
+		        const      size_t  memoryLimit  = static_cast<size_t>(-1U);
+			};
 
-		    };
-
-			const params args { test, start, end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &pooled };
+			const params args { test, start, end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &polytonic };
 
                  if (_solver == "astar"    ) { result = execute<chdr::solvers::    astar, params>(args); }
             else if (_solver == "bfs"      ) { result = execute<chdr::solvers::      bfs, params>(args); }

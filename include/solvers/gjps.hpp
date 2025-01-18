@@ -269,16 +269,21 @@ namespace chdr::solvers {
                                     solver_utils::preallocate_emplace(_closed, n, _capacity, _params.maze.count());
 
                                     if (curr_ptr == nullptr) {
-                                        curr_ptr = new (_params.pool_pmr->allocate(sizeof(node), alignof(node))) node(std::move(curr));
+                                        curr_ptr = new (_params.polytonic_pmr->allocate(sizeof(node), alignof(node))) node(std::move(curr));
                                     }
 
-                                    _open.emplace(n, get_direction(coord, nCoord), curr_ptr->m_gScore + nDistance, _params.h(nCoord, _params.end) * _params.weight, curr_ptr);
+                                    if constexpr (params_t::lazy_sorting::value) {
+                                        _open.emplace_nosort(n, get_direction(coord, nCoord), curr_ptr->m_gScore + nDistance, _params.h(nCoord, _params.end) * _params.weight, curr_ptr);
+                                    }
+                                    else {
+                                        _open.emplace(n, get_direction(coord, nCoord), curr_ptr->m_gScore + nDistance, _params.h(nCoord, _params.end) * _params.weight, curr_ptr);
+                                    }
                                 }
                             }
                         }
 
                         if (curr_ptr == nullptr) {
-                            curr.expunge(_params.pool_pmr);
+                            curr.expunge(_params.polytonic_pmr);
                         }
                     }
                     else { // SOLUTION REACHED ...

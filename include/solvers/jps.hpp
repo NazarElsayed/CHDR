@@ -15,7 +15,6 @@
 #include <utility>
 
 #include "../mazes/grid.hpp"
-#include "../types/pmr/growing_monotonic_resource.hpp"
 #include "../types/containers/existence_set.hpp"
 #include "../utils/utils.hpp"
 #include "base/solver.hpp"
@@ -273,7 +272,12 @@ namespace chdr::solvers {
                                         curr_ptr = new (_params.monotonic_pmr->allocate(sizeof(node), alignof(node))) node(std::move(curr));
                                     }
 
-                                    _open.emplace(n, get_direction(coord, nCoord), curr_ptr->m_gScore + nDistance, _params.h(nCoord, _params.end) * _params.weight, curr_ptr);
+                                    if constexpr (params_t::lazy_sorting::value) {
+                                        _open.emplace_nosort(n, get_direction(coord, nCoord), curr_ptr->m_gScore + nDistance, _params.h(nCoord, _params.end) * _params.weight, curr_ptr);
+                                    }
+                                    else {
+                                        _open.emplace(n, get_direction(coord, nCoord), curr_ptr->m_gScore + nDistance, _params.h(nCoord, _params.end) * _params.weight, curr_ptr);
+                                    }
                                 }
                             }
                         }

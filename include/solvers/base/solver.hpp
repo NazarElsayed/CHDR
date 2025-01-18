@@ -126,8 +126,8 @@ namespace chdr::solvers {
                 if constexpr (std::is_invocable_v<decltype(&std::remove_reference_t<decltype(*_params.monotonic_pmr)>::reset), decltype(*_params.monotonic_pmr)>) {
                     (_params.monotonic_pmr)->reset();
                 }
-                if constexpr (std::is_invocable_v<decltype(&std::remove_reference_t<decltype(*_params.pool_pmr)>::reset), decltype(*_params.pool_pmr)>) {
-                    (_params.pool_pmr)->reset();
+                if constexpr (std::is_invocable_v<decltype(&std::remove_reference_t<decltype(*_params.polytonic_pmr)>::reset), decltype(*_params.polytonic_pmr)>) {
+                    (_params.polytonic_pmr)->reset();
                 }
 
                 return result;

@@ -34,23 +34,27 @@ namespace chdr {
             return static_cast<size_t>(&(_item) - &(c[1U]));
         }
 
+    public:
+
         constexpr void sort_up(const T& _item) noexcept {
+            
+            if (size() <= 1U) {
+                return;
+            }
 
-            if (size() > 1U) {
-                auto i = index_of(_item);
+            auto i = index_of(_item);
 
-                assert(i < size() && "(Out of Bounds) Item does not exist in Heap.");
+            assert(i < size() && "(Out of Bounds) Item does not exist in Heap.");
 
-                while (i > 1U) {
-                    const auto p = i / Kd;
+            while (i > 1U) {
+                const auto p = i / Kd;
 
-                    if (p > 0U && comp(c[p], c[i])) {
-                        std::swap(c[i], c[p]);
-                        i = p;
-                    }
-                    else {
-                        break;
-                    }
+                if (comp(c[p], c[i])) {
+                    std::swap(c[i], c[p]);
+                    i = p;
+                }
+                else {
+                    break;
                 }
             }
         }
@@ -75,7 +79,6 @@ namespace chdr {
                         else {
                             min = i;
 
-                            IVDEP
                             for (auto j = c0; j <= cn && j < c.size(); ++j) {
                                 if (comp(c[min], c[j])) {
                                     min = j;
@@ -97,8 +100,6 @@ namespace chdr {
                 }
             }
         }
-
-    public:
 
         static constexpr auto dimension_v { Kd };
 

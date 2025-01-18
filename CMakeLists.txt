@@ -12,7 +12,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 if (DEFINED SUPER_PEDANTIC)
-    message(WARNING "SUPER_PEDANTIC enabled. Build system may catch warnings as errors.")
+    message(WARNING "WARNING: SUPER_PEDANTIC enabled. Build system may catch warnings as errors.")
 
     set(WARNINGS "-pedantic -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Woverloaded-virtual -Wnull-dereference -Wdouble-promotion -Wvla -Wformat=2 -Wmissing-declarations -Wsuggest-override -Wstrict-overflow=5 -Wuninitialized -Wswitch-enum -Wswitch-default -Wcast-qual -Wwrite-strings -Wpointer-arith -Wfloat-equal -Wc++20-extensions -Werror")
 else()
@@ -20,8 +20,8 @@ else()
 endif()
 
 # DIFFERENT BUILD MODES:
-set(CMAKE_CXX_FLAGS_DEBUG        "${WARNINGS} -O0 -fsanitize=address,leak,undefined -fno-omit-frame-pointer -fno-rtti -g")
-set(CMAKE_CXX_FLAGS_NOSANITIZERS "${WARNINGS} -O0                                   -fno-omit-frame-pointer -fno-rtti -g")
+set(CMAKE_CXX_FLAGS_DEBUG        "${WARNINGS} -O1 -fsanitize=address,leak,undefined -fno-omit-frame-pointer -fno-rtti -g")
+set(CMAKE_CXX_FLAGS_NOSANITIZERS "${WARNINGS} -O1                                   -fno-omit-frame-pointer -fno-rtti -g")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${WARNINGS} -O2 -flto -march=native -mtune=native -funroll-loops -ftree-vectorize -fstrict-aliasing -fomit-frame-pointer -fno-rtti -DNDEBUG")
 
 set(CHDR_VERSION_TWEAK "alpha")

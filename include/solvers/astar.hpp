@@ -9,11 +9,9 @@
 #ifndef CHDR_ASTAR_HPP
 #define CHDR_ASTAR_HPP
 
-#include <cstring>
 #include <cstddef>
 #include <vector>
 
-#include "../types/pmr/growing_monotonic_resource.hpp"
 #include "../types/containers/existence_set.hpp"
 #include "../types/containers/heap.hpp"
 #include "../utils/utils.hpp"
@@ -92,7 +90,12 @@ namespace chdr::solvers {
                                     curr_ptr = new (_params.monotonic_pmr->allocate(sizeof(node), alignof(node))) node(std::move(curr));
                                 }
 
-                                _open.emplace(n.index, curr_ptr->m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight, curr_ptr);
+                                if constexpr (params_t::lazy_sorting::value) {
+                                    _open.emplace_nosort(n.index, curr_ptr->m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight, curr_ptr);
+                                }
+                                else {
+                                    _open.emplace(n.index, curr_ptr->m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight, curr_ptr);
+                                }
                             }
                         }
                     }

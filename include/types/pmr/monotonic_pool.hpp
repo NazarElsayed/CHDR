@@ -16,7 +16,7 @@
 
 namespace chdr {
 
-    class growing_monotonic_resource : public std::pmr::memory_resource {
+    class monotonic_pool : public std::pmr::memory_resource {
 
         static constexpr size_t s_initial_block_size {  2048U };
         static constexpr size_t     s_max_block_size { 65536U };
@@ -66,7 +66,7 @@ namespace chdr {
         }
 
         void do_deallocate(void* /*__p*/, const size_t /*__bytes*/, size_t /*__alignment*/) override {
-            // No-op, as memory within a monotonic resource is not individually freed.
+            // No-op.
         }
 
         [[nodiscard]] bool do_is_equal(const memory_resource& _other) const noexcept override {
@@ -75,7 +75,7 @@ namespace chdr {
 
     public:
 
-        growing_monotonic_resource() :
+        monotonic_pool() :
             m_current_block_size(s_initial_block_size),
             m_block_write       (0U),
             m_active_block_index(0U)
@@ -85,11 +85,10 @@ namespace chdr {
 
         size_t allocated() {
 
-            size_t result = 0U;
+            size_t result { 0U };
 
-            IVDEP
-            for (size_t i = 0U; i < block_sizes.size(); ++i) {
-                result += block_sizes[i];
+            for (auto& size : block_sizes) {
+                result += size;
             }
 
             return result;

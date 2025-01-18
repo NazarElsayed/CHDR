@@ -8,8 +8,8 @@
 
 // ReSharper disable CppInconsistentNaming
 
-#ifndef CHDR_POOL_MEMORY_RESOURCE_HPP
-#define CHDR_POOL_MEMORY_RESOURCE_HPP
+#ifndef CHDR_POLYTONIC_POOL_HPP
+#define CHDR_POLYTONIC_POOL_HPP
 
 #include <cassert>
 #include <cstddef>
@@ -22,7 +22,7 @@
 
 namespace chdr {
 
-    class pool_memory_resource : public std::pmr::memory_resource {
+    class polytonic_pool : public std::pmr::memory_resource {
 
     private:
 
@@ -39,19 +39,19 @@ namespace chdr {
         void* expand(const size_t& _size, const size_t& _alignment) {
 
             // Compute the properly aligned block size for this chunk.
-            const size_t aligned_chunk_size = (_size + _alignment - 1U) & ~(_alignment - 1U);
+            const auto aligned_chunk_size = (_size + _alignment - 1U) & ~(_alignment - 1U);
 
             // Allocate memory:
-            const size_t allocate_size = utils::max(block_width, aligned_chunk_size);
+            const auto allocate_size = utils::max(block_width, aligned_chunk_size);
             blocks.emplace_back(std::make_unique<char[]>(allocate_size)); // NOLINT(*-avoid-c-arrays)
             block_sizes.emplace_back(allocate_size);
-            char* new_block = blocks.back().get();
+            auto* new_block = blocks.back().get();
 
             // Pre-align the base pointer of the new block.
-            const uintptr_t aligned_base = (reinterpret_cast<uintptr_t>(new_block) + _alignment - 1U) & ~(_alignment - 1U);
+            const auto aligned_base = (reinterpret_cast<uintptr_t>(new_block) + _alignment - 1U) & ~(_alignment - 1U);
 
             // Divide the block into aligned chunks:
-            const size_t num_chunks = (allocate_size - (aligned_base - reinterpret_cast<uintptr_t>(new_block))) / aligned_chunk_size;
+            const auto num_chunks = (allocate_size - (aligned_base - reinterpret_cast<uintptr_t>(new_block))) / aligned_chunk_size;
 
             free.reserve(free.size() + num_chunks - 1U);
 
@@ -71,7 +71,7 @@ namespace chdr {
 
             // Check for available free chunks:
             if (!free.empty()) {
-                void* chunk = free.back();
+                auto* chunk = free.back();
                 free.pop_back();
                 return chunk; // All chunks are pre-aligned.
             }
@@ -91,11 +91,11 @@ namespace chdr {
 
     public:
 
-        explicit pool_memory_resource() noexcept :
+        explicit polytonic_pool() noexcept :
             initial_block_width(default_block_width),
                     block_width(initial_block_width) {}
 
-        explicit pool_memory_resource(const size_t& _capacity) noexcept :
+        explicit polytonic_pool(const size_t& _capacity) noexcept :
             initial_block_width(utils::min(_capacity, max_block_width)),
                     block_width(initial_block_width)
         {
@@ -104,11 +104,10 @@ namespace chdr {
 
         size_t allocated() {
 
-            size_t result = 0U;
+            size_t result { 0U };
 
-            IVDEP
-            for (size_t i = 0U; i < block_sizes.size(); ++i) {
-                result += block_sizes[i];
+            for (auto& size : block_sizes) {
+                result += size;
             }
 
             return result;
@@ -124,13 +123,13 @@ namespace chdr {
                 // Reuse memory from existing blocks to repopulate `free`:
                 for (size_t i = 0U; i < blocks.size(); ++i) {
 
-                    char*        block      = blocks[i].get();
-                    const size_t block_size = block_sizes[i];
+                    auto*      block      = blocks[i].get();
+                    const auto block_size = block_sizes[i];
 
                     // Divide the block into chunks; all chunks are guaranteed aligned.
-                    const size_t chunk_size = block_size / block_width;
+                    const auto chunk_size = block_size / block_width;
 
-                    const size_t current_size = free.size();
+                    const auto current_size = free.size();
                     free.resize(current_size + chunk_size);
 
                     IVDEP
@@ -140,9 +139,7 @@ namespace chdr {
                 }
             }
             catch (...) {
-                decltype(blocks) temp{};
-                blocks = std::move(temp);
-
+                     blocks.clear();
                 block_sizes.clear();
                        free.clear();
             }
@@ -161,4 +158,4 @@ namespace chdr {
 
 } //chdr
 
-#endif //CHDR_POOL_MEMORY_RESOURCE_HPP
+#endif //CHDR_POLYTONIC_POOL_HPP

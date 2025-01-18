@@ -11,7 +11,7 @@
 
 #include <cassert>
 
-#include "../../types/pmr/pool_memory_resource.hpp"
+#include "../../types/pmr/polytonic_pool.hpp"
 #include "bnode.hpp"
 
 // ReSharper disable once CppUnusedIncludeDirective

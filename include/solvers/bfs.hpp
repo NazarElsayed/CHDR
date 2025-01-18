@@ -12,7 +12,6 @@
 #include <cstddef>
 #include <vector>
 
-#include "../types/pmr/growing_monotonic_resource.hpp"
 #include "../types/containers/existence_set.hpp"
 #include "../types/containers/queue.hpp"
 #include "../utils/utils.hpp"

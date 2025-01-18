@@ -149,19 +149,15 @@ namespace chdr::mazes {
 
         template<size_t... Indices>
         [[nodiscard]] constexpr auto compute_diagonal_neighbours(const coord_t& _id, std::index_sequence<Indices...>) const noexcept { // NOLINT(*-named-parameter)
-
-            neighbours_t result;
+            neighbours_t result{};
             (compute_single_diagonal<Indices>(_id, result[Indices]), ...);
-
             return result;
         }
 
         template<size_t... Indices>
         [[nodiscard]] constexpr auto compute_axis_neighbours(const coord_t& _id, std::index_sequence<Indices...>) const noexcept { // NOLINT(*-named-parameter)
-
-            neighbours_t result;
+            neighbours_t result{};
             (compute_single_axis<Indices>(_id, result[Indices], result[s_rank + Indices]), ...);
-
             return result;
         }
 
@@ -322,14 +318,14 @@ namespace chdr::mazes {
 
         template <size_t... Indices>
         [[nodiscard]] constexpr auto compute_diagonal_neighbours(const coord_t& _id, std::index_sequence<Indices...>) const noexcept {
-            neighbours_t result;
+            neighbours_t result{};
             (compute_single_diagonal<Indices>(_id, result[Indices]), ...);
             return result;
         }
 
         template <size_t... Indices>
         [[nodiscard]] constexpr auto compute_axis_neighbours(const coord_t& _id, std::index_sequence<Indices...>) const noexcept {
-            neighbours_t result;
+            neighbours_t result{};
             (compute_single_axis<Indices>(_id, result[Indices], result[s_rank + Indices]), ...);
             return result;
         }
