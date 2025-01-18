@@ -100,7 +100,7 @@ namespace chdr::solvers {
                     }
 
                     if (curr_ptr == nullptr) {
-                        curr.expunge(_params.polytonic_pmr);
+                        curr.expunge(_params.pool_pmr);
                     }
                 }
                 else { // SOLUTION REACHED ...
