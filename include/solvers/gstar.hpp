@@ -89,16 +89,13 @@ namespace chdr::solvers {
                                     curr_ptr = new (_params.pool_pmr->allocate(sizeof(node), alignof(node))) node(std::move(curr));
                                 }
 
-                                _open.emplace_nosort(n.index, curr_ptr->m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight, curr_ptr);
+                                _open.emplace(n.index, curr_ptr->m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight, curr_ptr);
                             }
                         }
                     }
 
                     if (curr_ptr == nullptr) {
                         curr.expunge(_params.pool_pmr);
-                    }
-                    else {
-                        _open.reheapify(_open.back());
                     }
                 }
                 else { // SOLUTION REACHED ...

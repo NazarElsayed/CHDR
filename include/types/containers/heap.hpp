@@ -253,7 +253,13 @@ namespace chdr {
 
                     // Restore heap property:
                     if (size() > 1U) {
-                        reheapify(c);
+
+                        if (i > 1U && comp(c[i], c[i / Kd])) {
+                            sort_up(c[i]);
+                        }
+                        else {
+                            sort_down(c[i]);
+                        }
                     }
                 }
             }
@@ -298,18 +304,6 @@ namespace chdr {
 
             if (!empty()) {
                 c.pop_back();
-            }
-        }
-
-        [[maybe_unused]] constexpr void reheapify(const T& _item) noexcept {
-
-            const auto& i = index_of(_item);
-
-            if (i > 1U && comp(c[i], c[i / Kd])) {
-                sort_up(c[i]);
-            }
-            else {
-                sort_down(c[i]);
             }
         }
 
