@@ -34,14 +34,15 @@ namespace chdr::mazes {
 
         static constexpr auto s_neighbour_count { utils::powui(static_cast<size_t>(3U), s_rank) - 1U };
 
-        using neighbours_t = std::array<std::pair<bool, coord_t>, s_neighbour_count>;
-
         coord_t m_size;
         size_t m_count;
 
         std::vector<weight_t> m_nodes;
 
     public:
+
+        using  neighbour_t = std::pair<bool, coord_t>;
+        using neighbours_t = std::array<neighbour_t, s_neighbour_count>;
 
         constexpr grid(const coord_t& _size) :
             m_size(_size),
@@ -165,30 +166,28 @@ namespace chdr::mazes {
         }
 
         template<size_t Index>
-        constexpr void compute_single_diagonal(const coord_t& _id, std::pair<bool, coord_t>& _output) const noexcept {
+        constexpr void compute_single_diagonal(const coord_t& _id, neighbour_t& _output) const noexcept {
 
             constexpr  size_t sampleIndex = (Index >= s_neighbour_count / 2U) ? (Index + 1U) : Index;
             constexpr coord_t direction   = utils::to_nd(sampleIndex, coord_t { 3U });
 
             bool    oob    = false;
-            coord_t nCoord = _id;
+            coord_t coord = _id;
 
-            IVDEP
             for (size_t j = 0U; j < s_rank; ++j) {
-
-                nCoord[j] += (direction[j] - 1U);
-                      oob |= (nCoord[j] >= m_size[j]);
+                coord[j] += (direction[j] - 1U);
+                oob |= (coord[j] >= m_size[j]);
 
                 if constexpr (s_rank > 4U) {
                     if (oob) { break; }
                 }
             }
 
-            _output = { !oob && at(nCoord).is_active(), nCoord };
+            _output = { !oob && at(coord).is_active(), coord };
         }
 
         template<size_t Index>
-        constexpr void compute_single_axis(const coord_t& _id, std::pair<bool, coord_t>& _negative, std::pair<bool, coord_t>& _positive) const noexcept {
+        constexpr void compute_single_axis(const coord_t& _id, neighbour_t& _negative, neighbour_t& _positive) const noexcept {
 
             coord_t nCoord = _id; // Negative
             coord_t pCoord = _id; // Positive
@@ -215,14 +214,15 @@ namespace chdr::mazes {
 
         static constexpr auto s_neighbour_count{utils::powui(static_cast<size_t>(3U), s_rank) - 1U};
 
-        using neighbours_t = std::array<std::pair<bool, coord_t>, s_neighbour_count>;
-
         coord_t m_size;
         size_t  m_count;
 
         std::vector<bool> m_nodes;
 
     public:
+
+        using  neighbour_t = std::pair<bool,  coord_t>;
+        using neighbours_t = std::array<neighbour_t, s_neighbour_count>;
 
         constexpr grid(const coord_t& _size) :
             m_size(_size),
@@ -335,28 +335,28 @@ namespace chdr::mazes {
         }
 
         template <size_t Index>
-        constexpr void compute_single_diagonal(const coord_t& _id, std::pair<bool, coord_t>& _output) const noexcept {
+        constexpr void compute_single_diagonal(const coord_t& _id, neighbour_t& _output) const noexcept {
 
-            constexpr size_t  sampleIndex = (Index >= s_neighbour_count / 2U) ? (Index + 1U) : Index;
+            constexpr  size_t sampleIndex = (Index >= s_neighbour_count / 2U) ? (Index + 1U) : Index;
             constexpr coord_t direction   = utils::to_nd(sampleIndex, coord_t { 3U });
 
             bool    oob    = false;
-            coord_t nCoord = _id;
+            coord_t coord = _id;
 
             for (size_t j = 0U; j < s_rank; ++j) {
-                nCoord[j] += (direction[j] - 1U);
-                oob |= (nCoord[j] >= m_size[j]);
+                coord[j] += (direction[j] - 1U);
+                     oob |= (coord[j] >= m_size[j]);
 
                 if constexpr (s_rank > 4U) {
                     if (oob) { break; }
                 }
             }
 
-            _output = { !oob && at(nCoord).is_active(), nCoord };
+            _output = { !oob && at(coord).is_active(), coord };
         }
 
         template <size_t Index>
-        constexpr void compute_single_axis(const coord_t& _id, std::pair<bool, coord_t>& _negative, std::pair<bool, coord_t>& _positive) const noexcept {
+        constexpr void compute_single_axis(const coord_t& _id, neighbour_t& _negative, neighbour_t& _positive) const noexcept {
 
             coord_t nCoord = _id; // Negative
             coord_t pCoord = _id; // Positive

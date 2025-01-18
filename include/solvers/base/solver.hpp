@@ -14,6 +14,7 @@
 #include <vector>
 
 #include "../../types/containers/existence_set.hpp"
+#include "../../utils/utils.hpp"
 
 // ReSharper disable once CppUnusedIncludeDirective
 #include "../../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
@@ -32,9 +33,9 @@ namespace chdr::solvers {
 
             const bool active;
 
-            const typename params_t:: coord_type coord;
-            const typename params_t:: index_type index;
-            const typename params_t::scalar_type distance;
+            const typename params_t:: index_type  index;
+            const typename params_t:: coord_type& coord;
+            const typename params_t::scalar_type  distance;
         };
 
         template <typename maze_neighbour_t>
@@ -45,13 +46,10 @@ namespace chdr::solvers {
                 // _params.maze is a graph...
                 const auto& [nIndex, nDistance](_n);
 
-                constexpr bool nActive = true;
-                auto nCoord = utils::to_nd(nIndex, _params.size);
-
                 return {
-                    nActive,
-                    nCoord,
+                    true,
                     nIndex,
+                    utils::to_nd(nIndex, _params.size),
                     nDistance
                 };
             }
@@ -68,8 +66,8 @@ namespace chdr::solvers {
 
                 return {
                     nActive,
-                    nCoord,
                     nIndex,
+                    nCoord,
                     nDistance
                 };
             }

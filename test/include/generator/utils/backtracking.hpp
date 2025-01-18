@@ -31,6 +31,8 @@ namespace test::generator::utils {
 
     private:
 
+        using  neighbour_t = std::pair<bool, coord_t>;
+
         static constexpr size_t null_v = static_cast<size_t>(-1U);
 
         static constexpr bool valid_dimensionality(const coord_t& _size) {
@@ -56,23 +58,23 @@ namespace test::generator::utils {
         }
 
         template <size_t Index>
-        static constexpr void compute_single_axis(const coord_t& _coord, const coord_t& _size, std::pair<bool, coord_t>& negOutput, std::pair<bool, coord_t>& posOutput) noexcept {
+        static constexpr void compute_single_axis(const coord_t& _coord, const coord_t& _size, neighbour_t& _negOutput, neighbour_t& _posOutput) noexcept {
 
             constexpr size_t step(1U);
 
             coord_t dir{};
 
             dir[Index] = step;
-            negOutput = { _coord[Index] < _size[Index] - step, dir };
+            _negOutput = { _coord[Index] < _size[Index] - step, dir };
 
             dir[Index] = -step;
-            posOutput = { _coord[Index] >= step, dir };
+            _posOutput = { _coord[Index] >= step, dir };
         }
 
         template <size_t... Indices>
         static constexpr auto compute_axis_neighbours(const coord_t& _coord, const coord_t& _size, std::index_sequence<Indices...>) {
 
-            std::array<std::pair<bool, coord_t>, Kd * 2U> result;
+            std::array<neighbour_t, Kd * 2U> result;
             (compute_single_axis<Indices>(_coord, _size, result[Indices], result[Kd + Indices]), ...);
 
             return result;

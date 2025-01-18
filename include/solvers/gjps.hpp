@@ -28,13 +28,15 @@ namespace chdr::solvers {
 
     private:
 
-        using     index_t = typename params_t:: index_type;
-        using    scalar_t = typename params_t::scalar_type;
-        using    weight_t = typename params_t::weight_type;
-        using     coord_t = typename params_t:: coord_type;
-        using direction_t = unsigned char;
-        using  rotation_t = std::array<direction_t, 8U>;
-        using    solver_t = solver<gjps, params_t>;
+        using      index_t = typename params_t:: index_type;
+        using     scalar_t = typename params_t::scalar_type;
+        using     weight_t = typename params_t::weight_type;
+        using      coord_t = typename params_t:: coord_type;
+        using  direction_t = unsigned char;
+        using   rotation_t = std::array<direction_t, 8U>;
+        using     solver_t = solver<gjps, params_t>;
+        using  neighbour_t = typename std::remove_cvref_t<decltype(params_t::maze)>::neighbour_t;
+        using neighbours_t = typename std::remove_cvref_t<decltype(params_t::maze)>::neighbours_t;
 
         static constexpr auto Kd = std::tuple_size_v<std::decay_t<typename params_t::coord_type>>;
 
@@ -119,7 +121,7 @@ namespace chdr::solvers {
         }
 
         template <typename maze_t>
-        [[nodiscard]] static constexpr std::array<std::pair<bool, coord_t>, 8U> go_find_jump_points(const maze_t& _maze, const coord_t& _current, const direction_t _direction, const coord_t& _end) {
+        [[nodiscard]] static constexpr neighbours_t go_find_jump_points(const maze_t& _maze, const coord_t& _current, const direction_t _direction, const coord_t& _end) {
 
             constexpr auto null_v = std::make_pair(false, coord_t{});
 
@@ -175,12 +177,12 @@ namespace chdr::solvers {
         }
 
         template <typename maze_t>
-        [[nodiscard]] static constexpr std::pair<bool, coord_t> jump(const maze_t& _maze, const coord_t& _current, const coord_t& _previous, const coord_t& _end) {
+        [[nodiscard]] static constexpr neighbour_t jump(const maze_t& _maze, const coord_t& _current, const coord_t& _previous, const coord_t& _end) {
             return jump(_maze, _current, get_direction(_previous, _current), _end);
         }
 
         template <typename maze_t>
-        [[nodiscard]] static constexpr std::pair<bool, coord_t> jump(const maze_t& _maze, const coord_t& _current, const direction_t& _direction, const coord_t& _end) {
+        [[nodiscard]] static constexpr neighbour_t jump(const maze_t& _maze, const coord_t& _current, const direction_t& _direction, const coord_t& _end) {
 
             if (UNLIKELY(_current == _end)) { // SOLUTION REACHED...
                 return { true, _current };
