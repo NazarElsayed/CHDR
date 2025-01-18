@@ -34,17 +34,22 @@ namespace chdr::mazes {
     private:
 
         using          edge_t = std::pair<index_t, scalar_t>;
-        using    neighbours_t = std::vector<edge_t>;
-        using adjacency_set_t = std::unordered_map<index_t, neighbours_t>;
+        using    neighbours_t = std::pmr::vector<edge_t>;
+        using adjacency_set_t = std::pmr::unordered_map<index_t, neighbours_t>;
+
+        std::pmr::unsynchronized_pool_resource memory_resource;
 
         adjacency_set_t m_entries;
 
     public:
 
-        [[maybe_unused]] constexpr graph() noexcept = default;
+        using neighbour_t = edge_t;
+
+        [[maybe_unused]] constexpr graph() noexcept : m_entries(&memory_resource) {}
+
         ~graph() noexcept = default;
 
-        [[maybe_unused]] constexpr graph(const std::initializer_list<std::initializer_list<edge_t>>& _adjacencyList) {
+        [[maybe_unused]] constexpr graph(const std::initializer_list<std::initializer_list<edge_t>>& _adjacencyList) : m_entries(&memory_resource) {
 
             index_t index{0};
 
@@ -63,7 +68,7 @@ namespace chdr::mazes {
 #if defined(__cpp_constexpr_dynamic_alloc) && (__cpp_constexpr_dynamic_alloc >= 201907L)
         constexpr
 #endif // defined(__cpp_constexpr_dynamic_alloc) && (__cpp_constexpr_dynamic_alloc >= 201907L)
-        explicit graph(const grid<coord_t, weight_t>& _grid) {
+        explicit graph(const grid<coord_t, weight_t>& _grid) : m_entries(&memory_resource) {
 
             const auto size = _grid.size();
 
@@ -127,7 +132,7 @@ namespace chdr::mazes {
 
                                             if (local_closed.find(currIdx) == local_closed.end()) {
 
-                                                local_closed.insert(currIdx);
+                                                 local_closed.insert(currIdx);
                                                 global_closed.insert(currIdx);
 
                                                 for (const auto& n3 : _grid.get_neighbours(currIdx)) {
