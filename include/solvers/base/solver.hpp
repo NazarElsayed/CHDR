@@ -38,7 +38,8 @@ namespace chdr::solvers {
             const typename params_t::scalar_type  distance;
         };
 
-        [[nodiscard]] constexpr solver() noexcept {}
+        [[nodiscard]] constexpr solver() noexcept = default;
+        ~solver() = default;
 
         solver           (const solver& ) = delete;
         solver           (const solver&&) = delete;
@@ -146,6 +147,13 @@ namespace chdr::solvers {
 
     struct solver_utils final {
 
+         solver_utils()                                = delete;
+         solver_utils           (const solver_utils& ) = delete;
+         solver_utils           (const solver_utils&&) = delete;
+         solver_utils& operator=(const solver_utils& ) = delete;
+         solver_utils& operator=(const solver_utils&&) = delete;
+        ~solver_utils()                                = delete;
+
         template <typename T, typename collection_t>
         static constexpr void preallocate_emplace(collection_t& _collection, const T& _value, const size_t& _increment, const size_t& _max_increment = std::numeric_limits<size_t>::max()) {
 
@@ -204,11 +212,7 @@ namespace chdr::solvers {
     };
 
     template <template <typename params_t> typename Derived, typename params_t>
-    [[nodiscard]] static
-#if __cplusplus >= 2023L
-    constexpr
-#endif // __cplusplus >= 2023L
-    auto make_solver() {
+    [[nodiscard]] static constexpr auto make_solver() {
         return solver<Derived, params_t>();
     }
 

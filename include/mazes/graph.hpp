@@ -42,6 +42,7 @@ namespace chdr::mazes {
     public:
 
         [[maybe_unused]] constexpr graph() noexcept = default;
+        ~graph() noexcept = default;
 
         [[maybe_unused]] constexpr graph(const std::initializer_list<std::initializer_list<edge_t>>& _adjacencyList) {
 

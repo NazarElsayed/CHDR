@@ -35,8 +35,9 @@ namespace chdr::solvers {
         [[nodiscard]] constexpr managed_node() noexcept : // NOLINT(*-pro-type-member-init, *-use-equals-default)
             m_parent(nullptr),
             m_successors(0U) {}
+        ~managed_node() noexcept = default;
 
-        [[nodiscard]] constexpr managed_node(const index_t _index, managed_node* RESTRICT const _parent = nullptr) noexcept : bnode<index_t>(_index),
+        [[nodiscard]] constexpr managed_node(const index_t& _index, managed_node* RESTRICT const _parent = nullptr) noexcept : bnode<index_t>(_index),
             m_parent(_parent),
             m_successors(0U)
         {

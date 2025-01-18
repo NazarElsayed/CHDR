@@ -25,6 +25,7 @@ namespace chdr::mazes {
     public:
 
         [[nodiscard]] constexpr id_node(const index_t& _id) noexcept : m_id(_id) {}
+        ~id_node() noexcept = default;
 
         [[nodiscard]] id_node           (const id_node&) = delete;
                       id_node& operator=(const id_node&) = delete;

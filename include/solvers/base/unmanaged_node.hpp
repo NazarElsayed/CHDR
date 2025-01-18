@@ -28,6 +28,7 @@ namespace chdr::solvers {
          */
         // ReSharper disable once CppPossiblyUninitializedMember
         [[nodiscard]] constexpr unmanaged_node() noexcept {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
+        ~unmanaged_node() noexcept = default;
 
         constexpr unmanaged_node           (const unmanaged_node&) = delete;
         constexpr unmanaged_node& operator=(const unmanaged_node&) = delete;
@@ -39,7 +40,7 @@ namespace chdr::solvers {
 #endif
         unmanaged_node& operator=(unmanaged_node&&) noexcept = default;
 
-        [[nodiscard]] constexpr unmanaged_node(const index_t _index, const unmanaged_node* RESTRICT const _parent = nullptr) noexcept : bnode<index_t>(_index),
+        [[nodiscard]] constexpr unmanaged_node(const index_t& _index, const unmanaged_node* RESTRICT const _parent = nullptr) noexcept : bnode<index_t>(_index),
             m_parent(std::move(_parent)) {}
     };
 }

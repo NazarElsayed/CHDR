@@ -230,6 +230,8 @@ namespace chdr::mazes {
         using  neighbour_t = std::pair<bool,  coord_t>;
         using neighbours_t = std::array<neighbour_t, s_neighbour_count>;
 
+        ~grid() noexcept = default;
+
         constexpr grid(const coord_t& _size) :
             m_size(_size),
             m_count(utils::product<size_t>(m_size)),

@@ -26,8 +26,8 @@ namespace chdr::solvers {
 
     private:
 
-        using  index_t = typename params_t:: index_type;
-        using  coord_t = typename params_t:: coord_type;
+        using  index_t = typename params_t::index_type;
+        using  coord_t = typename params_t::coord_type;
         using solver_t = solver<eiddfs, params_t>;
 
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
