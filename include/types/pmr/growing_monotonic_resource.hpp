@@ -6,8 +6,8 @@
  * https://creativecommons.org/licenses/by-nc-nd/4.0/
  */
 
-#ifndef CHDR_BUMP_ALLOCATOR_HPP
-#define CHDR_BUMP_ALLOCATOR_HPP
+#ifndef CHDR_GROWING_MONOTONIC_RESOURCE_HPP
+#define CHDR_GROWING_MONOTONIC_RESOURCE_HPP
 
 #include <cassert>
 #include <cstddef>
@@ -83,6 +83,18 @@ namespace chdr {
             expand(s_initial_block_size); // Allocate first block.
         }
 
+        size_t allocated() {
+
+            size_t result = 0U;
+
+            IVDEP
+            for (size_t i = 0U; i < block_sizes.size(); ++i) {
+                result += block_sizes[i];
+            }
+
+            return result;
+        }
+
         /**
          * @brief Resets the memory resource to reuse all previously allocated memory.
          */
@@ -115,4 +127,4 @@ namespace chdr {
 
 } //chdr
 
-#endif // CHDR_BUMP_ALLOCATOR_HPP
+#endif // CHDR_GROWING_MONOTONIC_RESOURCE_HPP

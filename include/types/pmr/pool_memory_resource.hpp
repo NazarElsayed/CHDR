@@ -8,8 +8,8 @@
 
 // ReSharper disable CppInconsistentNaming
 
-#ifndef CHDR_DYNAMIC_POOL_MEMORY_RESOURCE_HPP
-#define CHDR_DYNAMIC_POOL_MEMORY_RESOURCE_HPP
+#ifndef CHDR_POOL_MEMORY_RESOURCE_HPP
+#define CHDR_POOL_MEMORY_RESOURCE_HPP
 
 #include <cassert>
 #include <cstddef>
@@ -32,7 +32,7 @@ namespace chdr {
         size_t initial_block_width;
         size_t block_width;
 
-        std::vector<std::unique_ptr<char[]>> blocks;
+        std::vector<std::unique_ptr<char[]>> blocks; // NOLINT(*-avoid-c-arrays)
         std::vector<size_t>                  block_sizes;
         std::vector<void*>                   free;
 
@@ -43,7 +43,7 @@ namespace chdr {
 
             // Allocate memory:
             const size_t allocate_size = utils::max(block_width, aligned_chunk_size);
-            blocks.emplace_back(std::make_unique<char[]>(allocate_size));
+            blocks.emplace_back(std::make_unique<char[]>(allocate_size)); // NOLINT(*-avoid-c-arrays)
             block_sizes.emplace_back(allocate_size);
             char* new_block = blocks.back().get();
 
@@ -53,10 +53,10 @@ namespace chdr {
             // Divide the block into aligned chunks:
             const size_t num_chunks = (allocate_size - (aligned_base - reinterpret_cast<uintptr_t>(new_block))) / aligned_chunk_size;
 
-            free.reserve(free.size() + num_chunks);
+            free.reserve(free.size() + num_chunks - 1U);
 
             IVDEP
-            for (size_t i = 0U; i < num_chunks - 1U; ++i) {
+            for (size_t i = 0U; i != num_chunks - 1U; ++i) {
                 free.emplace_back(reinterpret_cast<void*>(aligned_base + (i * aligned_chunk_size)));
             }
 
@@ -69,14 +69,14 @@ namespace chdr {
         [[nodiscard]] void* do_allocate(const size_t _size, const size_t _alignment) override {
             assert(_size > 0U && "Allocation size must be greater than zero.");
 
-            // Check if there are any free chunks available:
+            // Check for available free chunks:
             if (!free.empty()) {
                 void* chunk = free.back();
                 free.pop_back();
                 return chunk; // All chunks are pre-aligned.
             }
 
-            // Expand the pool otherwise.
+            // Expand pool otherwise.
             return expand(_size, _alignment);
         }
 
@@ -96,12 +96,24 @@ namespace chdr {
                     block_width(initial_block_width) {}
 
         explicit pool_memory_resource(const size_t& _capacity) noexcept :
-            initial_block_width(std::min(_capacity, max_block_width)),
+            initial_block_width(utils::min(_capacity, max_block_width)),
                     block_width(initial_block_width)
         {
             assert(_capacity >= 2U && "Capacity must be at least 2.");
         }
 
+        size_t allocated() {
+
+            size_t result = 0U;
+
+            IVDEP
+            for (size_t i = 0U; i < block_sizes.size(); ++i) {
+                result += block_sizes[i];
+            }
+
+            return result;
+        }
+        
         void release() noexcept {
 
             block_width = initial_block_width;
@@ -118,11 +130,12 @@ namespace chdr {
                     // Divide the block into chunks; all chunks are guaranteed aligned.
                     const size_t chunk_size = block_size / block_width;
 
-                    free.reserve(free.size() + chunk_size);
+                    const size_t current_size = free.size();
+                    free.resize(current_size + chunk_size);
 
                     IVDEP
                     for (size_t j = 0U; j < chunk_size; ++j) {
-                        free.emplace_back(block + j * block_width);
+                        free[j + current_size] = block + j * block_width;
                     }
                 }
             }
@@ -148,4 +161,4 @@ namespace chdr {
 
 } //chdr
 
-#endif //CHDR_DYNAMIC_POOL_MEMORY_RESOURCE_HPP
+#endif //CHDR_POOL_MEMORY_RESOURCE_HPP

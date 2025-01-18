@@ -10,12 +10,22 @@
 #include <ctime>
 #include <memory>
 
-#ifdef __clang__
+#if defined(__GNUC__)
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+
+#elif defined(__clang__)
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunknown-pragmas"
 
-#pragma clang diagnostic push
-#endif //ifdef __clang__
+#elif defined(_MSC_VER)
+
+#pragma warning(push)
+#pragma warning(disable : 4068) // Disable unknown pragma warnings
+
+#endif
 
 #ifdef __JETBRAINS_IDE__
 #pragma ide diagnostic ignored "performance-avoid-endl"
@@ -56,8 +66,6 @@
  *   details, see the Creative Commons Zero 1.0 Universal license at
  *   https://creativecommons.org/publicdomain/zero/1.0/
  */
-#pragma region Debugging assertions and traps
-
 #if !defined(PSNIP_NDEBUG) && defined(NDEBUG) && !defined(PSNIP_DEBUG)
 #  define PSNIP_NDEBUG 1
 #endif
@@ -126,8 +134,6 @@
 #else
 #  define psnip_dbg_assert(expr)
 #endif
-
-#pragma endregion Debugging assertions and traps
 
 namespace {
 	
