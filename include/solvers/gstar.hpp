@@ -99,26 +99,9 @@ namespace chdr::solvers {
                     }
                 }
                 else { // SOLUTION REACHED ...
-
-                    if constexpr (std::is_same_v<open_set_t, heap<node>>) {
-                        _open.wipe();
-                    }
-                    else {
-                        _open = {};
-                    }
-                    _closed = {};
-
                     return solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);
                 }
             }
-
-            if constexpr (std::is_same_v<open_set_t, heap<node>>) {
-                _open.wipe();
-            }
-            else {
-                _open = {};
-            }
-            _closed = {};
 
             return std::vector<coord_t>{};
         }

@@ -75,16 +75,9 @@ namespace chdr::solvers {
                     }
                 }
                 else { // SOLUTION REACHED ...
-
-                    _open   = {};
-                    _closed = {};
-
                     return solver_utils::rbacktrack(curr, _params.size);
                 }
             }
-
-            _open   = {};
-            _closed = {};
 
             return std::vector<coord_t>{};
         }

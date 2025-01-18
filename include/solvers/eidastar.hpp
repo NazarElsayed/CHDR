@@ -121,16 +121,7 @@ namespace chdr::solvers {
                             }
                             else { // SOLUTION REACHED ...
 
-                                // ReSharper disable CppDFAUnusedValue
-                                stack               = {};
-                                transposition_table = {};
-                                // ReSharper enable CppDFAUnusedValue
-
-                                const auto result = solver_utils::ibacktrack(_open, _params.size);
-
-                                _open = {};
-
-                                return result;
+                                return solver_utils::ibacktrack(_open, _params.size);
                             }
                         }
                     }
@@ -142,13 +133,6 @@ namespace chdr::solvers {
                     stack.pop();
                 }
             }
-
-            // ReSharper disable CppDFAUnusedValue
-                          stack = {};
-            transposition_table = {};
-            // ReSharper enable CppDFAUnusedValue
-
-            _open = {};
 
             return std::vector<coord_t>{};
         }

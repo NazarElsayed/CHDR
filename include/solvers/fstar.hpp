@@ -121,15 +121,7 @@ namespace chdr::solvers {
                         }
                     }
                     else { // SOLUTION REACHED ...
-
-                        _next   = {};
-                        _closed = {};
-
-                        const auto result = solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);
-
-                        _open = {};
-
-                        return result;
+                        return solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);
                     }
                 }
 
@@ -138,10 +130,6 @@ namespace chdr::solvers {
 
                 min_threshold = next_threshold;
             }
-
-            _open   = {};
-            _next   = {};
-            _closed = {};
 
             return std::vector<coord_t>{};
         }

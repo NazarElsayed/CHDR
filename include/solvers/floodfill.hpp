@@ -63,17 +63,10 @@ namespace chdr::solvers {
                         }
                     }
                     else { // SOLUTION REACHED ...
-
-                        _open   = {};
-                        _closed = {};
-
                         return true;
                     }
                 }
             }
-
-            _open   = {};
-            _closed = {};
 
             return false;
         }

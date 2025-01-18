@@ -99,15 +99,7 @@ namespace chdr::solvers {
                                     stack.emplace(_open.back(), _params);
                                 }
                                 else { // SOLUTION REACHED ...
-
-                                    // ReSharper disable once CppDFAUnusedValue
-                                    stack = {};
-
-                                    const auto result = solver_utils::ibacktrack(_open, _params.size);
-
-                                    _open = {};
-
-                                    return result;
+                                    return solver_utils::ibacktrack(_open, _params.size);
                                 }
                             }
                         }
@@ -123,10 +115,6 @@ namespace chdr::solvers {
                   stack.clear();
                 _closed.clear();
             }
-
-            // ReSharper disable once CppDFAUnusedValue
-            stack = {};
-            _open = {};
 
             return std::vector<coord_t>{};
         }

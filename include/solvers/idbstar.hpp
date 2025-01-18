@@ -58,7 +58,7 @@ namespace chdr::solvers {
         template <typename neighbours_t>
         struct state {
 
-            node curr;
+            node     curr;
             scalar_t bound;
 
             neighbours_t neighbours;
@@ -107,15 +107,7 @@ namespace chdr::solvers {
                                 stack.emplace(_open.back(), _.bound, _params);
                             }
                             else { // SOLUTION REACHED ...
-
-                                // ReSharper disable once CppDFAUnusedValue
-                                stack = {};
-
-                                const auto result = solver_utils::ibacktrack(_open, _params.size);
-
-                                _open = {};
-
-                                return result;
+                                return solver_utils::ibacktrack(_open, _params.size);
                             }
                         }
                     }
@@ -127,10 +119,6 @@ namespace chdr::solvers {
                     stack.pop();
                 }
             }
-
-            // ReSharper disable once CppDFAUnusedValue
-            stack = {};
-            _open = {};
 
             return std::vector<coord_t>{};
         }
