@@ -352,7 +352,11 @@ namespace chdr {
          *
          * @remarks Do not use this function unless you know what you are doing.
          */
-        [[maybe_unused]] constexpr void wipe() noexcept {
+        [[maybe_unused]]
+#if __cplusplus >= 202002L
+        constexpr
+#endif
+        void wipe() noexcept {
             try {
                 c = std::move(decltype(c){});
             }
@@ -360,6 +364,8 @@ namespace chdr {
                 c.clear();
                 c.shrink_to_fit();
             }
+            c.clear();
+            c.shrink_to_fit();
         }
 
 #ifndef HEAP_SUPPRESS_EXCEPTION_WARNING
