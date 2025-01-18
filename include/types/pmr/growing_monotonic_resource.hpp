@@ -98,7 +98,7 @@ namespace chdr {
         /**
          * @brief Resets the memory resource to reuse all previously allocated memory.
          */
-        void release() {
+        void reset() {
 
             // Reset the index to the first block and prepare to overwrite.
             m_active_block_index = 0U;
@@ -108,7 +108,7 @@ namespace chdr {
         /**
          * @brief Resets fully by clearing all blocks and starting fresh.
          */
-        void reset() {
+        void release() {
 
             // Reset block size, write position, and block index to initial values
             m_current_block_size = s_initial_block_size;

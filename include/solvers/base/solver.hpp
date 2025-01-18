@@ -43,7 +43,7 @@ namespace chdr::solvers {
             if constexpr (is_graph<decltype(_params.maze)>::value) {
 
                 // _params.maze is a graph...
-                const auto& [nIndex, nDistance] = std::move(_n);
+                const auto& [nIndex, nDistance](_n);
 
                 constexpr bool nActive = true;
                 auto nCoord = utils::to_nd(nIndex, _params.size);
@@ -58,7 +58,7 @@ namespace chdr::solvers {
             else {
 
                 // _params.maze is a grid...
-                const auto& [nActive, nCoord] = std::move(_n);
+                const auto& [nActive, nCoord](_n);
 
                 const auto nIndex = static_cast<typename params_t::index_type>(
                     nActive ? utils::to_1d(nCoord, _params.size) : typename params_t::index_type{}
@@ -125,11 +125,11 @@ namespace chdr::solvers {
             ) {
                 auto result = s != e ? solver_t::execute(_params) : std::vector<typename params_t::coord_type> { _params.end };
                 
-                if constexpr (std::is_invocable_v<decltype(&std::remove_reference_t<decltype(*_params.monotonic_pmr)>::release), decltype(*_params.monotonic_pmr)>) {
-                    _params.monotonic_pmr->release();
+                if constexpr (std::is_invocable_v<decltype(&std::remove_reference_t<decltype(*_params.monotonic_pmr)>::reset), decltype(*_params.monotonic_pmr)>) {
+                    (_params.monotonic_pmr)->reset();
                 }
-                if constexpr (std::is_invocable_v<decltype(&std::remove_reference_t<decltype(*_params.pool_pmr)>::release), decltype(*_params.pool_pmr)>) {
-                    _params.pool_pmr->release();
+                if constexpr (std::is_invocable_v<decltype(&std::remove_reference_t<decltype(*_params.pool_pmr)>::reset), decltype(*_params.pool_pmr)>) {
+                    (_params.pool_pmr)->reset();
                 }
 
                 return result;

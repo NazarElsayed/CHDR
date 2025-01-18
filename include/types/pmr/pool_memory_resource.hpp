@@ -114,7 +114,7 @@ namespace chdr {
             return result;
         }
         
-        void release() noexcept {
+        void reset() noexcept {
 
             block_width = initial_block_width;
 
@@ -148,7 +148,7 @@ namespace chdr {
             }
         }
 
-        void reset() noexcept {
+        void release() noexcept {
 
             block_width = initial_block_width;
 
