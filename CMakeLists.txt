@@ -16,7 +16,7 @@ set(SUPER_PEDANTIC "-pedantic -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Wn
 # DIFFERENT BUILD MODES:
 set(CMAKE_CXX_FLAGS_DEBUG        "${SUPER_PEDANTIC} -Werror -O0 -fsanitize=address,leak,undefined -fno-omit-frame-pointer -fno-rtti -g")
 set(CMAKE_CXX_FLAGS_NOSANITIZERS "${SUPER_PEDANTIC} -Werror -O0                                   -fno-omit-frame-pointer -fno-rtti -g")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${SUPER_PEDANTIC} -Werror -O2 -flto -march=native -mtune=native -funroll-loops -ftree-vectorize -fstrict-aliasing -fomit-frame-pointer -fno-rtti -fprefetch-loop-arrays -DNDEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${SUPER_PEDANTIC} -Werror -O2 -flto -march=native -mtune=native -funroll-loops -ftree-vectorize -fstrict-aliasing -fomit-frame-pointer -fno-rtti -DNDEBUG")
 
 set(CHDR_VERSION_TWEAK "alpha")
 if (CHDR_VERSION_TWEAK)
@@ -24,9 +24,11 @@ if (CHDR_VERSION_TWEAK)
 endif ()
 
 set(CHDR_VERSION_METADATA "${CMAKE_SYSTEM_PROCESSOR}-${CMAKE_SYSTEM_NAME}")
+
 if (CMAKE_CXX_FLAGS_RELEASE MATCHES "-march=native|-mtune=native|-mcpu=native")
     set(CHDR_VERSION_METADATA "${CHDR_VERSION_METADATA}-native")
 endif ()
+
 if (CHDR_VERSION_METADATA)
     set(CHDR_VERSION "${CHDR_VERSION}+${CHDR_VERSION_METADATA}")
 endif ()
