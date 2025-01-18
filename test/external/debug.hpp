@@ -576,6 +576,14 @@ namespace {
 		}
 
 	public:
+
+		 debug()                         = delete;
+		 debug           (const debug& ) = delete;
+		 debug           (const debug&&) = delete;
+		 debug& operator=(const debug& ) = delete;
+		 debug& operator=(const debug&&) = delete;
+		~debug()                         = delete;
+
 		
 		struct thread_id final {
 		

@@ -28,6 +28,8 @@ namespace chdr {
         std::vector<std::unique_ptr<char[]>> blocks; // NOLINT(*-avoid-c-arrays)
         std::vector<size_t> block_sizes;
 
+        
+        
         void expand(const size_t& _size) {
 
             // If there are available preallocated blocks, overwrite them:
@@ -83,6 +85,16 @@ namespace chdr {
             expand(s_initial_block_size); // Allocate first block.
         }
 
+        constexpr monotonic_pool           (const monotonic_pool&) = delete;
+        constexpr monotonic_pool& operator=(const monotonic_pool&) = delete;
+
+        [[nodiscard]] constexpr monotonic_pool(monotonic_pool&&) noexcept = default;
+
+#if __cplusplus > 202302L
+        constexpr
+#endif
+        monotonic_pool& operator=(monotonic_pool&&) noexcept = default;
+        
         size_t allocated() {
 
             size_t result { 0U };

@@ -38,6 +38,13 @@ namespace chdr::solvers {
             const typename params_t::scalar_type  distance;
         };
 
+        [[nodiscard]] constexpr solver() noexcept {}
+
+        solver           (const solver& ) = delete;
+        solver           (const solver&&) = delete;
+        solver& operator=(const solver& ) = delete;
+        solver& operator=(const solver&&) = delete;
+
         template <typename maze_neighbour_t>
         static constexpr node_data get_data(maze_neighbour_t& _n, const params_t& _params) noexcept {
 

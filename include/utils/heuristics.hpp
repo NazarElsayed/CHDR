@@ -20,6 +20,13 @@ namespace chdr {
 
 	struct heuristics {
 
+		 heuristics()                              = delete;
+		 heuristics           (const heuristics& ) = delete;
+		 heuristics           (const heuristics&&) = delete;
+		 heuristics& operator=(const heuristics& ) = delete;
+		 heuristics& operator=(const heuristics&&) = delete;
+		~heuristics()                              = delete;
+		
         /**
          * @brief Computes the Euclidean distance between two nodes.
          *

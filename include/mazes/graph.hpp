@@ -187,6 +187,16 @@ namespace chdr::mazes {
             }
         }
 
+        [[nodiscard]] constexpr graph           (const graph&) = delete;
+                      constexpr graph& operator=(const graph&) = delete;
+
+        [[nodiscard]] constexpr graph(graph&&) noexcept = default;
+
+#if __cplusplus > 202302L
+        constexpr
+#endif
+        graph& operator=(graph&&) noexcept = default;
+
         [[nodiscard]] constexpr const auto& at(const index_t& _id) const {
 
             assert(contains(_id) && "Error: The node with the specified ID does not exist in the graph.");

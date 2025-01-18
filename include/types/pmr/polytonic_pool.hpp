@@ -102,6 +102,16 @@ namespace chdr {
             assert(_capacity >= 2U && "Capacity must be at least 2.");
         }
 
+        constexpr polytonic_pool           (const polytonic_pool&) = delete;
+        constexpr polytonic_pool& operator=(const polytonic_pool&) = delete;
+
+        [[nodiscard]] constexpr polytonic_pool(polytonic_pool&&) noexcept = default;
+
+#if __cplusplus > 202302L
+        constexpr
+#endif
+        polytonic_pool& operator=(polytonic_pool&&) noexcept = default;
+
         size_t allocated() {
 
             size_t result { 0U };

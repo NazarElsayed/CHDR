@@ -26,6 +26,18 @@ namespace chdr::solvers {
 
         constexpr bnode(const index_t& _index) noexcept : m_index(_index) {}
 
+        constexpr ~bnode() noexcept = default;
+
+        constexpr bnode           (const bnode&) noexcept = default;
+        constexpr bnode& operator=(const bnode&) noexcept = default;
+
+        [[nodiscard]] constexpr bnode(bnode&&) noexcept = default;
+
+#if __cplusplus > 202302L
+        constexpr
+#endif
+        bnode& operator=(bnode&&) noexcept = default;
+
         [[nodiscard]] friend constexpr bool operator == (const bnode& _a, const bnode& _b) noexcept { return _a.m_index == _b.m_index; }
 
     };

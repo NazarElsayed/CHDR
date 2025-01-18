@@ -47,6 +47,13 @@ namespace chdr {
 
 	public:
 
+		 utils()                         = delete;
+		 utils           (const utils& ) = delete;
+		 utils           (const utils&&) = delete;
+		 utils& operator=(const utils& ) = delete;
+		 utils& operator=(const utils&&) = delete;
+		~utils()                         = delete;
+
 		template <typename T, typename coord_t>
 		[[nodiscard]] static constexpr T product(const coord_t& _array) noexcept {
 			return product_helper<T>(_array);

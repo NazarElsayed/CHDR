@@ -27,9 +27,19 @@ namespace chdr::solvers {
          * This constructor creates a node with uninitialized members.
          */
         // ReSharper disable once CppPossiblyUninitializedMember
-        constexpr unmanaged_node() noexcept {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
+        [[nodiscard]] constexpr unmanaged_node() noexcept {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-        [[nodiscard]] constexpr unmanaged_node(const index_t& _index, const unmanaged_node* RESTRICT const _parent = nullptr) noexcept : bnode<index_t>(_index),
+        constexpr unmanaged_node           (const unmanaged_node&) = delete;
+        constexpr unmanaged_node& operator=(const unmanaged_node&) = delete;
+
+        [[nodiscard]] constexpr unmanaged_node(unmanaged_node&&) noexcept = default;
+
+#if __cplusplus > 202302L
+        constexpr
+#endif
+        unmanaged_node& operator=(unmanaged_node&&) noexcept = default;
+
+        [[nodiscard]] constexpr unmanaged_node(const index_t _index, const unmanaged_node* RESTRICT const _parent = nullptr) noexcept : bnode<index_t>(_index),
             m_parent(std::move(_parent)) {}
     };
 }

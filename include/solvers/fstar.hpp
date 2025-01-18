@@ -76,7 +76,7 @@ namespace chdr::solvers {
 
                 auto next_threshold = std::numeric_limits<scalar_t>::max();
 
-                for (const auto& curr : _open) {
+                for (auto& curr : _open) {
 
                     if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 

@@ -53,14 +53,20 @@ namespace chdr::solvers {
         };
 
         template <typename neighbours_t>
-        struct state {
+        struct state final {
 
             neighbours_t neighbours;
             index_t      neighbours_idx;
 
-            state(const node& _curr, const params_t& _params) :
+            [[nodiscard]] state(const node& _curr, const params_t& _params) :
                 neighbours(_params.maze.get_neighbours(_curr.m_index)),
                 neighbours_idx(0U) {}
+
+            state           (const state&) = delete;
+            state& operator=(const state&) = delete;
+
+            [[nodiscard]] state(state&&) noexcept = default;
+            state& operator=   (state&&) noexcept = default;
         };
 
         template <typename open_set_t, typename closed_set_t>

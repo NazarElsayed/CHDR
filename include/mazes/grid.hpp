@@ -59,6 +59,16 @@ namespace chdr::mazes {
             m_count(utils::product<size_t>(m_size)),
             m_nodes(_nodes) {}
 
+        constexpr grid           (const grid&) = delete;
+        constexpr grid& operator=(const grid&) = delete;
+
+        [[nodiscard]] constexpr grid(grid&&) noexcept = default;
+
+#if __cplusplus > 202302L
+        constexpr
+#endif
+        grid& operator=(grid&&) noexcept = default;
+
         [[nodiscard]] constexpr const std::vector<weighted_node<weight_t>>& nodes() const noexcept { return m_nodes; }
 
         constexpr void nodes(const std::vector<weighted_node<weight_t>>& _value) noexcept {  m_nodes = _value; }
@@ -229,6 +239,16 @@ namespace chdr::mazes {
             m_size(_size),
             m_count(utils::product<size_t>(m_size)),
             m_nodes(_nodes) {}
+
+        constexpr grid           (const grid&) = delete;
+        constexpr grid& operator=(const grid&) = delete;
+
+        [[nodiscard]] constexpr grid(grid&&) noexcept = default;
+
+#if __cplusplus > 202302L
+        constexpr
+#endif
+        grid& operator=(grid&&) noexcept = default;
 
         [[nodiscard]] constexpr const std::vector<bool>& nodes() const noexcept { return m_nodes; }
 

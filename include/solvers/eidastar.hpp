@@ -59,7 +59,7 @@ namespace chdr::solvers {
         };
 
         template <typename neighbours_t>
-        struct state {
+        struct state final {
 
             node curr;
             scalar_t bound;
@@ -67,11 +67,17 @@ namespace chdr::solvers {
             neighbours_t neighbours;
             index_t      neighbours_idx;
 
-            state(const node& _curr, const scalar_t& _bound, const params_t& _params) :
+            [[nodiscard]] state(node& _curr, const scalar_t& _bound, const params_t& _params) :
                 curr(_curr),
                 bound(_bound),
                 neighbours(_params.maze.get_neighbours(curr.m_index)),
                 neighbours_idx(0U) {}
+
+            state           (const state&) = delete;
+            state& operator=(const state&) = delete;
+
+            [[nodiscard]] state(state&&) noexcept = default;
+            state& operator=   (state&&) noexcept = default;
         };
 
         using transposition_table_t = std::unordered_map<index_t, scalar_t>;
@@ -120,7 +126,6 @@ namespace chdr::solvers {
                                 stack.emplace(_open.back(), _.bound, _params);
                             }
                             else { // SOLUTION REACHED ...
-
                                 return solver_utils::ibacktrack(_open, _params.size);
                             }
                         }

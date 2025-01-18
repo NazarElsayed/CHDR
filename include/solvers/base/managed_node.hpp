@@ -36,7 +36,7 @@ namespace chdr::solvers {
             m_parent(nullptr),
             m_successors(0U) {}
 
-        [[nodiscard]] constexpr managed_node(const index_t& _index, managed_node* RESTRICT const _parent = nullptr) noexcept : bnode<index_t>(_index),
+        [[nodiscard]] constexpr managed_node(const index_t _index, managed_node* RESTRICT const _parent = nullptr) noexcept : bnode<index_t>(_index),
             m_parent(_parent),
             m_successors(0U)
         {
@@ -45,49 +45,15 @@ namespace chdr::solvers {
             }
         }
 
-        [[nodiscard]] constexpr managed_node(const managed_node& _other) noexcept : bnode<index_t>(_other.m_index),
-            m_parent(_other.m_parent),
-            m_successors(0U)
-        {
-            if (m_parent != nullptr) {
-                incr();
-            }
-        }
+        constexpr managed_node           (const managed_node&) = delete;
+        constexpr managed_node& operator=(const managed_node&) = delete;
 
-        managed_node& operator=(const managed_node& _other) noexcept {
+        [[nodiscard]] constexpr managed_node(managed_node&&) noexcept = default;
 
-            if (this != &_other) {
-                bnode<index_t>::operator=(_other.m_index);
-
-                m_parent     = _other.m_parent;
-                m_successors = _other.m_successors;
-            }
-
-            return *this;
-        }
-
-        [[nodiscard]] constexpr managed_node(managed_node&& _other) noexcept : bnode<index_t>(std::move(_other.m_index)),
-            m_parent(_other.m_parent),
-            m_successors(_other.m_successors)
-        {
-            _other.m_parent     = nullptr;
-            _other.m_successors = 0U;
-        }
-
-        constexpr managed_node& operator = (managed_node&& _other) noexcept {
-
-            if (this != &_other) {
-                bnode<index_t>::operator=(std::move(_other.m_index));
-
-                m_parent     = _other.m_parent;
-                m_successors = _other.m_successors;
-
-                _other.m_parent     = nullptr;
-                _other.m_successors = 0U;
-            }
-
-            return *this;
-        }
+#if __cplusplus > 202302L
+        constexpr
+#endif
+        managed_node& operator=(managed_node&&) noexcept = default;
 
         template <typename pmr_t>
         void expunge(pmr_t* _pmr) noexcept {

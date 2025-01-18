@@ -24,19 +24,23 @@ namespace chdr::mazes {
 
     public:
 
-        constexpr id_node(const index_t& _id) noexcept : m_id(_id) {}
+        [[nodiscard]] constexpr id_node(const index_t& _id) noexcept : m_id(_id) {}
 
-        [[maybe_unused, nodiscard]] constexpr static bool is_active() noexcept {
-            return true;
-        }
+        [[nodiscard]] id_node           (const id_node&) = delete;
+                      id_node& operator=(const id_node&) = delete;
 
-        [[maybe_unused, nodiscard]] constexpr const index_t& id() const noexcept {
-            return m_id;
-        }
+        [[nodiscard]] constexpr id_node(id_node&&) noexcept = default;
 
-        [[maybe_unused]] constexpr void id(const index_t& _id) noexcept {
-            m_id = _id;
-        }
+#if __cplusplus > 202302L
+        constexpr
+#endif
+        id_node& operator=(id_node&&) noexcept = default;
+        
+        [[maybe_unused, nodiscard]] constexpr static bool is_active() noexcept { return true; }
+
+        [[maybe_unused, nodiscard]] constexpr const index_t& id() const noexcept { return m_id; }
+
+        [[maybe_unused]] constexpr void id(const index_t& _id) noexcept { m_id = _id; }
     };
 
 } //chdr::mazes
