@@ -28,8 +28,6 @@ namespace chdr {
         std::vector<std::unique_ptr<char[]>> blocks; // NOLINT(*-avoid-c-arrays)
         std::vector<size_t> block_sizes;
 
-        
-        
         void expand(const size_t& _size) {
 
             // If there are available preallocated blocks, overwrite them:

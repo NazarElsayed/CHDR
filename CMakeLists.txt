@@ -20,8 +20,8 @@ else()
 endif()
 
 # DIFFERENT BUILD MODES:
-set(CMAKE_CXX_FLAGS_DEBUG        "${WARNINGS} -O1 -fsanitize=address,leak,undefined -fno-omit-frame-pointer -fno-rtti -g")
-set(CMAKE_CXX_FLAGS_NOSANITIZERS "${WARNINGS} -O1                                   -fno-omit-frame-pointer -fno-rtti -g")
+set(CMAKE_CXX_FLAGS_DEBUG        "${WARNINGS} -O0 -fsanitize=address,leak,undefined -fno-omit-frame-pointer -fno-rtti -g")
+set(CMAKE_CXX_FLAGS_NOSANITIZERS "${WARNINGS} -O0                                   -fno-omit-frame-pointer -fno-rtti -g")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${WARNINGS} -O2 -flto -march=native -mtune=native -funroll-loops -ftree-vectorize -fstrict-aliasing -fomit-frame-pointer -fno-rtti -DNDEBUG")
 
 set(CHDR_VERSION_TWEAK "alpha")

@@ -111,7 +111,7 @@ namespace chdr::solvers {
             existence_set closed(_params.monotonic_pmr);
             closed.reserve(capacity);
 
-            heap<node> open(_params.monotonic_pmr);
+            heap<node> open(_params.polytonic_pmr);
             try {
                 open.reserve(capacity / 8U);
             }

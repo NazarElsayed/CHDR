@@ -91,7 +91,7 @@ namespace chdr::solvers {
                     existence_set closed(_params.monotonic_pmr);
                     closed.reserve(capacity);
 
-                    queue<index_t> open;
+                    queue<index_t> open(_params.polytonic_pmr);
 
                     success = solve_internal(open, closed, capacity, _params);
                 }

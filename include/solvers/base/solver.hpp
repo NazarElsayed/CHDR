@@ -27,6 +27,21 @@ namespace chdr::solvers {
     public:
 
         template <typename T>
+        struct resettable final {
+
+        private:
+            template <typename U>
+            static constexpr auto has_method(int) -> decltype(&U::reset, std::true_type{});
+
+            template <typename>
+            static constexpr std::false_type has_method(...);
+
+        public:
+            static constexpr bool value = decltype(has_method<T>(0))::value;
+
+        };
+
+        template <typename T>
         struct is_graph : std::is_same<std::decay_t<T>, mazes::graph<typename params_t::index_type, typename params_t::scalar_type>>{};
 
         struct node_data {
@@ -131,11 +146,14 @@ namespace chdr::solvers {
             ) {
                 auto result = s != e ? solver_t::execute(_params) : std::vector<typename params_t::coord_type> { _params.end };
                 
-                if constexpr (std::is_invocable_v<decltype(&std::remove_reference_t<decltype(*_params.monotonic_pmr)>::reset), decltype(*_params.monotonic_pmr)>) {
-                    (_params.monotonic_pmr)->reset();
+                if constexpr (resettable<std::remove_reference_t<decltype(*_params.monotonic_pmr)>>::value) {
+                    if (_params.monotonic_pmr != nullptr) { _params.monotonic_pmr->reset();}
                 }
-                if constexpr (std::is_invocable_v<decltype(&std::remove_reference_t<decltype(*_params.polytonic_pmr)>::reset), decltype(*_params.polytonic_pmr)>) {
-                    (_params.polytonic_pmr)->reset();
+                if constexpr (resettable<std::remove_reference_t<decltype(*_params.polytonic_pmr)>>::value) {
+                    if (_params.polytonic_pmr != nullptr) { _params.polytonic_pmr->reset(); }
+                }
+                if constexpr (resettable<std::remove_reference_t<decltype(*_params.pool_pmr)>>::value) {
+                    if (_params.pool_pmr      != nullptr) { _params.pool_pmr->reset(); }
                 }
 
                 return result;
