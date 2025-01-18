@@ -66,9 +66,9 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
-            auto min_threshold = _params.h(_params.start, _params.end) * _params.weight;
+            auto max_threshold = _params.h(_params.start, _params.end) * _params.weight;
 
-              _open.emplace_back(s, static_cast<scalar_t>(0), min_threshold);
+              _open.emplace_back(s, static_cast<scalar_t>(0), max_threshold);
             _closed.emplace(s);
 
             // Main loop:
@@ -86,14 +86,15 @@ namespace chdr::solvers {
 
                             if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
 
-                                // Check if node is not already visited:
-                                if (!_closed.contains(n.index)) {
-                                    solver_utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());
+                                const auto g = curr.m_gScore + n.distance;
+                                const auto f = g + (_params.h(n.coord, _params.end) * _params.weight);
 
-                                    const auto g = curr.m_gScore + n.distance;
-                                    const auto f = g + (_params.h(n.coord, _params.end) * _params.weight);
+                                if (f <= max_threshold) {
 
-                                    if (f <= min_threshold) {
+                                    // Check if node is not already visited:
+                                    if (!_closed.contains(n.index)) {
+
+                                        solver_utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());
 
                                         if (curr_ptr == nullptr) {
                                             curr_ptr = new (_params.monotonic_pmr->allocate(sizeof(node), alignof(node))) node(std::move(curr));
@@ -105,21 +106,24 @@ namespace chdr::solvers {
                                         else {
 
                                             /* SORTED INSERTION */
-                                            const auto new_node = node(n.index, g, f, curr_ptr);
-
                                             _next.insert(
                                                 std::partition_point(
                                                     _next.begin(),
                                                     _next.end(),
-                                                    [&new_node](const node& _other) ALWAYS_INLINE { return _other < new_node; }
+                                                    [&f, &g](const node& _other) ALWAYS_INLINE {
+                                                        return f == _other.m_fScore ?
+                                                               g >  _other.m_gScore :
+                                                               f >  _other.m_fScore;
+                                                    }
                                                 ),
-                                                new_node
+                                                node (n.index, g, f, curr_ptr)
                                             );
                                         }
                                     }
-                                    else {
-                                        next_threshold = utils::min(next_threshold, f);
-                                    }
+                                }
+                                else {
+                                    next_threshold = utils::min(next_threshold, f);
+                                    break;
                                 }
                             }
                         }
@@ -133,10 +137,12 @@ namespace chdr::solvers {
                     }
                 }
 
-                std::swap(_open, _next);
-                _next.clear();
+                if (!_next.empty()) {
+                    std::swap(_open, _next);
+                    _next.clear();
+                }
 
-                min_threshold = next_threshold;
+                max_threshold = next_threshold;
             }
 
             return std::vector<coord_t>{};
@@ -155,7 +161,7 @@ namespace chdr::solvers {
             }
             catch (...) {} // NOLINT(*-empty-catch)
 
-            std::pmr::vector<node> next(_params.monotonic_pmr);
+            std::pmr::vector<node> next(_params.polytonic_pmr);
             try {
                 open.reserve(capacity / 8U);
             }

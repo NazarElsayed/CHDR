@@ -75,8 +75,8 @@ namespace chdr::solvers {
 
         [[maybe_unused, nodiscard]] static auto execute(const params_t& _params) {
 
-            const auto s = utils::to_1d(_params.start, _params.size);
-            const auto e = utils::to_1d(_params.end,   _params.size);
+            const auto s = static_cast<index_t>(utils::to_1d(_params.start, _params.size));
+            const auto e = static_cast<index_t>(utils::to_1d(_params.end,   _params.size));
 
             if (_params.maze.contains(s) && _params.maze.at(s).is_active() &&
                 _params.maze.contains(e) && _params.maze.at(e).is_active()

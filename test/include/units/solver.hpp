@@ -77,13 +77,14 @@ namespace test {
                 );
             }
 
-            if (std::is_base_of_v<chdr::mazes::grid<typename params_t::coord_type, typename params_t::weight_type>, std::decay_t<decltype(_params.maze)>> &&
-                _params.maze.size()[0U] <= 100U &&
-                _params.maze.size()[1U] <= 100U &&
-                Kd > 0U &&
-                Kd < 3U
-            ) {
-                display::draw_maze(_params.start, _params.end, _params.maze, path);
+            if constexpr (std::is_base_of_v<chdr::mazes::grid<typename params_t::coord_type, typename params_t::weight_type>, std::decay_t<decltype(_params.maze)>>) {
+                if (_params.maze.size()[0U] <= 100U &&
+                    _params.maze.size()[1U] <= 100U &&
+                    Kd > 0U &&
+                    Kd < 3U
+                ) {
+                    display::draw_maze(_params.start, _params.end, _params.maze, path);
+                }
             }
 
             debug::log("\t" + std::string(!path.empty() ? "[SOLVED]" : "[IMPOSSIBLE]") +

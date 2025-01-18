@@ -115,7 +115,7 @@ namespace chdr::mazes {
 
                                     if (const auto& [nActive1, nCoord1] = n1; nActive1) {
 
-                                        const auto nIdx1 = utils::to_1d(nCoord1, size);
+                                        const auto nIdx1 = static_cast<index_t>(utils::to_1d(nCoord1, size));
 
                                         local_closed.clear();
                                         stack.emplace(std::make_pair(nIdx1, static_cast<scalar_t>(1)));
@@ -134,7 +134,7 @@ namespace chdr::mazes {
 
                                                     if (const auto& [sActive3, sCoord3] = n3; sActive3) {
 
-                                                        const auto s = utils::to_1d(sCoord3, size);
+                                                        const auto s = static_cast<index_t>(utils::to_1d(sCoord3, size));
 
                                                         if (global_closed.find(s) == global_closed.end()) {
 
@@ -174,7 +174,7 @@ namespace chdr::mazes {
                 std::vector<std::future<void>> futures;
                 for (size_t i = 0U; i < numThreads; ++i) {
 
-                    const index_t start = i * chunkSize;
+                    const index_t start = static_cast<index_t>(i) * chunkSize;
                     const index_t end   = utils::min(start + chunkSize, static_cast<index_t>(count));
 
                     futures.push_back(std::async(std::launch::async, worker, start, end));

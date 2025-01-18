@@ -48,9 +48,9 @@ namespace chdr::solvers {
 
             const bool active;
 
-            const typename params_t:: index_type  index;
-            const typename params_t:: coord_type& coord;
-            const typename params_t::scalar_type  distance;
+            const typename params_t:: index_type index;
+            const typename params_t:: coord_type coord;
+            const typename params_t::scalar_type distance;
         };
 
         [[nodiscard]] constexpr solver() noexcept = default;
@@ -138,8 +138,8 @@ namespace chdr::solvers {
 
             using solver_t = Derived<params_t>;
 
-            const auto s = utils::to_1d(_params.start, _params.size);
-            const auto e = utils::to_1d(_params.end,   _params.size);
+            const auto s = static_cast<typename params_t::index_type>(utils::to_1d(_params.start, _params.size));
+            const auto e = static_cast<typename params_t::index_type>(utils::to_1d(_params.end,   _params.size));
 
             if (_params.maze.contains(s) && _params.maze.at(s).is_active() &&
                 _params.maze.contains(e) && _params.maze.at(e).is_active()
