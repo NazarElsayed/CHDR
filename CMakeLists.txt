@@ -18,6 +18,7 @@ execute_process(
         RESULT_VARIABLE IS_GIT_REPO
         OUTPUT_QUIET
 )
+
 if (IS_GIT_REPO EQUAL 0)
     message(STATUS "STATUS: SUCCESS detecting local Git repository.")
 
@@ -82,7 +83,8 @@ if (NOT GIT_BRANCH OR GIT_BRANCH MATCHES "^(master|main)$")
     set(CHDR_VERSION_TWEAK "dev")
     set(CHDR_VERSION_METADATA ${GIT_COMMIT_HASH})
 else ()
-    set(CHDR_VERSION_TWEAK ${GIT_BRANCH})
+    string(REGEX REPLACE "[^a-zA-Z0-9\\-]" "_" GIT_BRANCH_SANITIZED ${GIT_BRANCH})
+    set(CHDR_VERSION_TWEAK ${GIT_BRANCH_SANITIZED})
 endif ()
 
 if (CHDR_VERSION_TWEAK)
