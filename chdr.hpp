@@ -9,9 +9,15 @@
 #ifndef CHDR_COMMON_HPP
 #define CHDR_COMMON_HPP
 
-// NOLINTBEGIN(*-include-cleaner)
+#define CHDR_VERSION          "0.1.0-alpha"
+#define CHDR_VERSION_MAJOR     0
+#define CHDR_VERSION_MINOR     1
+#define CHDR_VERSION_PATCH     0
+#define CHDR_VERSION_TWEAK    "alpha"
+#define CHDR_VERSION_METADATA ""
 
-#include "chdr_version.hpp"
+/* ReSharper enable CppUnusedIncludeDirective */
+// NOLINTBEGIN(*-include-cleaner)
 
 #include "include/mazes/graph.hpp"
 #include "include/mazes/grid.hpp"
@@ -19,7 +25,9 @@
 #include "include/mazes/nodes/weighted_node.hpp"
 #include "include/solvers/astar.hpp"
 #include "include/solvers/base/bnode.hpp"
+#include "include/solvers/base/managed_node.hpp"
 #include "include/solvers/base/solver.hpp"
+#include "include/solvers/base/unmanaged_node.hpp"
 #include "include/solvers/bfs.hpp"
 #include "include/solvers/bstar.hpp"
 #include "include/solvers/dfs.hpp"
@@ -49,5 +57,6 @@
 #include "include/utils/utils.hpp"
 
 // NOLINTEND(*-include-cleaner)
+/* ReSharper disable CppUnusedIncludeDirective */
 
 #endif //CHDR_COMMON_HPP

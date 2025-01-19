@@ -11,13 +11,14 @@ project(CHDR VERSION 0.1.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+set(WARNINGS_BASE "-Wall -Wextra -Wpedantic -Wconversion -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Woverloaded-virtual -Wnull-dereference -Wdouble-promotion -Wvla -Wformat=2 -Wmissing-declarations -Wsuggest-override -Wstrict-overflow=5 -Wuninitialized -Wswitch-enum -Wswitch-default -Wcast-qual -Wwrite-strings -Wpointer-arith -Wfloat-equal -Wc++20-extensions")
+
 if (DEFINED SUPER_PEDANTIC)
     message(WARNING "WARNING: SUPER_PEDANTIC enabled. Build system may catch warnings as errors.")
-
-    set(WARNINGS "-pedantic -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Woverloaded-virtual -Wnull-dereference -Wdouble-promotion -Wvla -Wformat=2 -Wmissing-declarations -Wsuggest-override -Wstrict-overflow=5 -Wuninitialized -Wswitch-enum -Wswitch-default -Wcast-qual -Wwrite-strings -Wpointer-arith -Wfloat-equal -Wc++20-extensions -Werror")
-else()
-    set(WARNINGS "-Wall -Wextra -Wpedantic -Wconversion -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Woverloaded-virtual -Wnull-dereference -Wdouble-promotion -Wvla -Wformat=2 -Wmissing-declarations -Wsuggest-override -Wstrict-overflow=5 -Wuninitialized -Wswitch-enum -Wswitch-default -Wcast-qual -Wwrite-strings -Wpointer-arith -Wfloat-equal -Wc++20-extensions")
-endif()
+    set(WARNINGS "${WARNINGS_BASE} -pedantic -Werror")
+else ()
+    set(WARNINGS "${WARNINGS_BASE}")
+endif ()
 
 # DIFFERENT BUILD MODES:
 set(CMAKE_CXX_FLAGS_DEBUG        "${WARNINGS} -O0 -fsanitize=address,leak,undefined -fno-omit-frame-pointer -fno-rtti -g")
@@ -29,18 +30,21 @@ if (CHDR_VERSION_TWEAK)
     set(CHDR_VERSION "${CHDR_VERSION_MAJOR}.${CHDR_VERSION_MINOR}.${CHDR_VERSION_PATCH}-${CHDR_VERSION_TWEAK}")
 endif ()
 
-set(CHDR_VERSION_METADATA "${CMAKE_SYSTEM_PROCESSOR}-${CMAKE_SYSTEM_NAME}")
-
-if (CMAKE_CXX_FLAGS_RELEASE MATCHES "-march=native|-mtune=native|-mcpu=native")
-    set(CHDR_VERSION_METADATA "${CHDR_VERSION_METADATA}-native")
-endif ()
-
 if (CHDR_VERSION_METADATA)
     set(CHDR_VERSION "${CHDR_VERSION}+${CHDR_VERSION_METADATA}")
 endif ()
 
-configure_file(chdr_version.hpp.in ${CMAKE_CURRENT_SOURCE_DIR}/chdr_version.hpp)
+# GENERATE "chdr.hpp":
+file(GLOB_RECURSE HEADER_FILES "${CMAKE_SOURCE_DIR}/include/*.hpp")
+set(INCLUDE_HEADERS "")
+foreach (HEADER ${HEADER_FILES})
+    file(RELATIVE_PATH RELATIVE_HEADER "${CMAKE_SOURCE_DIR}" "${HEADER}")
+    set(INCLUDE_HEADERS "${INCLUDE_HEADERS}#include \"${RELATIVE_HEADER}\"\n")
+endforeach ()
 
+configure_file(chdr.hpp.in ${CMAKE_SOURCE_DIR}/chdr.hpp)
+
+# DEFINE LIBRARIES:
 add_library(libdebug INTERFACE test/external/debug.hpp)
 add_library(libchdr  INTERFACE                chdr.hpp)
 
