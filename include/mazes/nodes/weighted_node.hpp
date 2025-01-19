@@ -9,6 +9,7 @@
 #ifndef CHDR_WEIGHTED_NODE_HPP
 #define CHDR_WEIGHTED_NODE_HPP
 
+#include <limits>
 #include <type_traits>
 
 namespace chdr::mazes {

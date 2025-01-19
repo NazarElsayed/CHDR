@@ -2,11 +2,11 @@
 
 ## Table of Contents
 
-- [About](#About)
-- [Instructions](#Instructions)
-- [Dependencies](#Dependencies)
-- [Roadmap](#Roadmap)
-- [References](#References)
+- [About](###About)
+- [Instructions](###Instructions)
+- [Dependencies](###Dependencies)
+- [Roadmap](###Roadmap)
+- [References](###References)
 
 ### About
 

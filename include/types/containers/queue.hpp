@@ -12,6 +12,7 @@
 #include <cstddef>
 #include <queue>
 #include <vector>
+#include <memory_resource>
 
 namespace chdr {
 

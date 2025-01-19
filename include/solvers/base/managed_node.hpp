@@ -11,8 +11,8 @@
 
 #include <cassert>
 
-#include "../../types/pmr/polytonic_pool.hpp"
 #include "bnode.hpp"
+#include "../../types/pmr/polytonic_pool.hpp"
 
 // ReSharper disable once CppUnusedIncludeDirective
 #include "../../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)

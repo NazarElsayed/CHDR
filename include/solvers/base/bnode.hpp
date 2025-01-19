@@ -23,7 +23,7 @@ namespace chdr::solvers {
          */
         // ReSharper disable once CppPossiblyUninitializedMember
         constexpr bnode() noexcept {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
-        constexpr ~bnode() noexcept = default;
+        ~bnode() noexcept = default;
 
         constexpr bnode(const index_t& _index) noexcept : m_index(_index) {}
 

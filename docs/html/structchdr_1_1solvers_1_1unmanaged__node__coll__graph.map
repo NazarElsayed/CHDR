@@ -1,0 +1,9 @@
+<map id="chdr::solvers::unmanaged_node&lt; index_t &gt;" name="chdr::solvers::unmanaged_node&lt; index_t &gt;">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,197,177,237"/>
+<area shape="rect" id="Node000002" href="$structchdr_1_1solvers_1_1bnode.html" title=" " alt="" coords="16,5,156,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,59,93,197,88,197,84,59"/>
+<area shape="rect" id="Node000003" href="$structchdr_1_1solvers_1_1unmanaged__node.html" title=" " alt="" coords="108,95,280,135"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="122,52,172,92,169,97,119,56"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="167,146,112,199,109,195,163,142"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="295,107,307,114,298,122,281,125,280,119,296,117,301,115,292,111"/>
+</map>

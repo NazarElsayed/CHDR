@@ -15,6 +15,7 @@
 
 #include "../types/containers/stack.hpp"
 #include "../utils/utils.hpp"
+#include "base/bnode.hpp"
 #include "base/solver.hpp"
 
 namespace chdr::solvers {

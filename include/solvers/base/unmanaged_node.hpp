@@ -9,6 +9,8 @@
 #ifndef CHDR_UNMANAGEDNODE_HPP
 #define CHDR_UNMANAGEDNODE_HPP
 
+#include <memory>
+
 #include "bnode.hpp"
 
 // ReSharper disable once CppUnusedIncludeDirective

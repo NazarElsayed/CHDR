@@ -19,6 +19,7 @@
 #include <vector>
 
 #include "../../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
+#include "../../utils/utils.hpp"
 
 namespace chdr {
 

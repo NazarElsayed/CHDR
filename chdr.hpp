@@ -9,12 +9,12 @@
 #ifndef CHDR_COMMON_HPP
 #define CHDR_COMMON_HPP
 
-#define CHDR_VERSION          "0.1.0-dev+36d343d"
+#define CHDR_VERSION          "0.1.0-dev+9727287"
 #define CHDR_VERSION_MAJOR     0
 #define CHDR_VERSION_MINOR     1
 #define CHDR_VERSION_PATCH     0
 #define CHDR_VERSION_TWEAK    "dev"
-#define CHDR_VERSION_METADATA "36d343d"
+#define CHDR_VERSION_METADATA "9727287"
 
 /* ReSharper enable CppUnusedIncludeDirective */
 // NOLINTBEGIN(*-include-cleaner)

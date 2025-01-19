@@ -11,6 +11,14 @@ project(CHDR VERSION 0.0.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+# Run Doxygen in the background to generate documentation:
+message(NOTICE "NOTICE: Generating documentation with Doxygen:")
+execute_process(
+        COMMAND doxygen ${CMAKE_SOURCE_DIR}/Doxyfile
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        RESULT_VARIABLE DOXYGEN_RESULT
+)
+
 message(NOTICE "NOTICE: Checking for local Git repository:")
 execute_process(
         COMMAND git rev-parse --is-inside-work-tree
@@ -123,7 +131,7 @@ endif ()
 # DIFFERENT BUILD MODES:
 set(CMAKE_CXX_FLAGS_DEBUG        "${WARNINGS} -O0 -fsanitize=address,leak,undefined -fno-omit-frame-pointer -fno-rtti -g")
 set(CMAKE_CXX_FLAGS_NOSANITIZERS "${WARNINGS} -O0                                   -fno-omit-frame-pointer -fno-rtti -g")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${WARNINGS} -O2 -flto -march=native -mtune=native -funroll-loops -ftree-vectorize -fstrict-aliasing -fomit-frame-pointer -fno-rtti -DNDEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${WARNINGS} -Ofast -flto -march=native -mtune=native -funroll-loops -ftree-vectorize -fstrict-aliasing -fomit-frame-pointer -fno-rtti -DNDEBUG")
 
 # DEFINE LIBRARIES:
 add_library(libdebug INTERFACE test/external/debug.hpp)

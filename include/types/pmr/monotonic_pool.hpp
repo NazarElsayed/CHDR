@@ -14,6 +14,8 @@
 #include <memory>
 #include <vector>
 
+#include "../../utils/utils.hpp"
+
 namespace chdr {
 
     class monotonic_pool : public std::pmr::memory_resource {
