@@ -6,9 +6,14 @@
  * https://creativecommons.org/licenses/by-nc-nd/4.0/
  */
 
+#ifndef CHDR_VERSION_HPP
+#define CHDR_VERSION_HPP
+
 #define CHDR_VERSION          "@CHDR_VERSION@"
 #define CHDR_VERSION_MAJOR     @CHDR_VERSION_MAJOR@
 #define CHDR_VERSION_MINOR     @CHDR_VERSION_MINOR@
 #define CHDR_VERSION_PATCH     @CHDR_VERSION_PATCH@
 #define CHDR_VERSION_TWEAK    "@CHDR_VERSION_TWEAK@"
 #define CHDR_VERSION_METADATA "@CHDR_VERSION_METADATA@"
+
+#endif //CHDR_VERSION_HPP
