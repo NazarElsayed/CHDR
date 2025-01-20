@@ -25,7 +25,23 @@
 var NAVTREE =
 [
   [ "CHDR", "index.html", [
-    [ "CHDR 0.1.0", "index.html", "index" ],
+    [ "Introduction", "index.html", "index" ],
+    [ "Manual", "d4/d9c/page-manual.html", [
+      [ "Installation", "d4/d9c/page-manual.html#installation", [
+        [ "Example CMake", "d4/d9c/page-manual.html#example-cmake", null ]
+      ] ],
+      [ "Dependencies", "d4/d9c/page-manual.html#dependencies", null ],
+      [ "Compatibility", "d4/d9c/page-manual.html#compatibility", [
+        [ "Other Languages", "d4/d9c/page-manual.html#other-languages", null ]
+      ] ]
+    ] ],
+    [ "Roadmap", "db/dcd/page-roadmap.html", [
+      [ "Solvers", "db/dcd/page-roadmap.html#solvers", null ],
+      [ "Maze Types", "db/dcd/page-roadmap.html#maze-types", null ],
+      [ "Post-Processing", "db/dcd/page-roadmap.html#post-processing", null ],
+      [ "Eikonal Solvers", "db/dcd/page-roadmap.html#eikonal-solvers", null ],
+      [ "Computational", "db/dcd/page-roadmap.html#computational", null ]
+    ] ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],

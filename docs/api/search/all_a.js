@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['languages_0',['Other Languages',['../index.html#other-languages',1,'']]],
-  ['license_1',['License',['../index.html#license',1,'']]]
+  ['post_20processing_0',['Post-Processing',['../db/dcd/page-roadmap.html#post-processing',1,'']]],
+  ['processing_1',['Post-Processing',['../db/dcd/page-roadmap.html#post-processing',1,'']]],
+  ['push_2',['push',['../d6/db9/classchdr_1_1existence__set.html#ad3ecd9cdc998f0b52ee61f9161e76dee',1,'chdr::existence_set']]]
 ];

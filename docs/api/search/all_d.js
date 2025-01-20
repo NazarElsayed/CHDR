@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['post_20processing_0',['Post-Processing',['../index.html#post-processing',1,'']]],
-  ['processing_1',['Post-Processing',['../index.html#post-processing',1,'']]],
-  ['push_2',['push',['../d6/db9/classchdr_1_1existence__set.html#ad3ecd9cdc998f0b52ee61f9161e76dee',1,'chdr::existence_set']]]
+  ['table_20of_20contents_0',['Table of Contents',['../index.html#table-of-contents',1,'']]],
+  ['trim_1',['trim',['../d6/db9/classchdr_1_1existence__set.html#a2bdf63c7301b91b3a5ce84ec1ac12106',1,'chdr::existence_set']]],
+  ['types_2',['Maze Types',['../db/dcd/page-roadmap.html#maze-types',1,'']]]
 ];

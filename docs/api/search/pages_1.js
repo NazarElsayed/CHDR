@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['1_200_0',['CHDR 0.1.0',['../index.html',1,'']]]
+  ['manual_0',['Manual',['../d4/d9c/page-manual.html',1,'']]]
 ];

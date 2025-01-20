@@ -946,8 +946,7 @@ WARN_LOGFILE           =
 INPUT                  = chdr.hpp \
                          include/ \
                          README.md \
-                         /home/ubuntu/Projects/Personal/CHDR/docs/manual/ \
-                         /home/ubuntu/Projects/Personal/CHDR/docs/manual.html
+                         docs/manual/
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['routing_0',['CHDR: Computational Helper for Direction and Routing',['../index.html',1,'']]]
+  ['manual_0',['Manual',['../d4/d9c/page-manual.html',1,'']]]
 ];
