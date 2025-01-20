@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION ${CMAKE_VERSION})
 
 project(CHDR VERSION 0.0.0 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 message(NOTICE "NOTICE: Checking for local Git repository:")
@@ -128,7 +128,7 @@ endif ()
 # DIFFERENT BUILD MODES:
 set(CMAKE_CXX_FLAGS_DEBUG        "${WARNINGS} -O0 -fsanitize=address,leak,undefined -fno-omit-frame-pointer -fno-rtti -g")
 set(CMAKE_CXX_FLAGS_NOSANITIZERS "${WARNINGS} -O0                                   -fno-omit-frame-pointer -fno-rtti -g")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${WARNINGS} -O2 -flto -march=native -mtune=native -funroll-loops -ftree-vectorize -fstrict-aliasing -fomit-frame-pointer -fno-rtti -DNDEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${WARNINGS} -Ofast -march=native -mtune=native -funroll-loops -ftree-vectorize -ffast-math -fstrict-aliasing -fomit-frame-pointer -fno-rtti -DNDEBUG")
 
 # DEFINE LIBRARIES:
 add_library(libdebug INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/test/external/debug.hpp)
@@ -154,9 +154,9 @@ target_precompile_headers(chdr INTERFACE stdafx.hpp)
 ## LINK OPTIONS:
 if (UNIX)
     if (CMAKE_BUILD_TYPE STREQUAL "Release")
-        target_link_options(chdr PRIVATE -flto=auto -Wl,--strip-all -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
+        target_link_options(chdr PRIVATE -Wl,--strip-all -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
     else ()
-        target_link_options(chdr PRIVATE -flto=auto -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
+        target_link_options(chdr PRIVATE -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
     endif ()
 endif (UNIX)
 
