@@ -50,6 +50,8 @@ namespace chdr {
 #define PREFETCH(P, I) ((void)))
 #define RESTRICT restrict
 #define ALWAYS_INLINE __forceinline
+#define HOT
+#define COLD __declspec(noinline)
 #elif defined(__INTEL_COMPILER) || defined(__INTEL_LLVM_COMPILER)
 #define IVDEP _Pragma("ivdep")
 #define VECTOR_ALWAYS _Pragma("vector always")
@@ -58,6 +60,8 @@ namespace chdr {
 #define PREFETCH(P, I) _mm_prefetch(reinterpret_cast<const char*>(P), I)
 #define RESTRICT __restrict__
 #define ALWAYS_INLINE __attribute__((always_inline))
+#define HOT __attribute__((hot))
+#define COLD __attribute__((cold))
 #elif defined(__clang__)
 #define IVDEP _Pragma("clang loop vectorize(enable)")
 #define VECTOR_ALWAYS
@@ -66,6 +70,8 @@ namespace chdr {
 #define PREFETCH(P, I) _mm_prefetch(reinterpret_cast<const char*>(P), I)
 #define RESTRICT __restrict__
 #define ALWAYS_INLINE __attribute__((always_inline))
+#define HOT __attribute__((hot))
+#define COLD __attribute__((cold))
 #elif defined(__GNUC__)
 #define IVDEP _Pragma("GCC ivdep")
 #define VECTOR_ALWAYS
@@ -74,6 +80,8 @@ namespace chdr {
 #define PREFETCH(P, I) _mm_prefetch(reinterpret_cast<const char*>(P), I)
 #define RESTRICT __restrict__
 #define ALWAYS_INLINE __attribute__((always_inline))
+#define HOT __attribute__((hot))
+#define COLD __attribute__((cold))
 #else
 #define IVDEP
 #define VECTOR_ALWAYS
@@ -82,6 +90,8 @@ namespace chdr {
 #define PREFETCH(P, I) ((void)))
 #define RESTRICT
 #define ALWAYS_INLINE
+#define HOT
+#define COLD
 #endif
 
 #ifdef _MSC_VER
