@@ -1,4 +1,4 @@
-# Introduction {#page-introduction}
+# Introduction
 
 <h1>CHDR 0.1.0</h1>
 
@@ -6,9 +6,8 @@ CHDR is a C++ library offering a comprehensive cross-platform solution for pathf
 
 ## Table of Contents
 
-- [Background](@ref page-introduction)
-- [Manual](@ref page-manual)
-- [Roadmap](@ref page-roadmap)
+- [Manual](docs/manual/manual.md)
+- [Roadmap](docs/manual/roadmap.md)
 - [License](#license)
 - [References](#references)
 

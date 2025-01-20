@@ -1,4 +1,4 @@
-# Manual {#page-manual}
+# Manual
 
 ## Installation
 

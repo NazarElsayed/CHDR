@@ -26,21 +26,21 @@ var NAVTREE =
 [
   [ "CHDR", "index.html", [
     [ "Introduction", "index.html", "index" ],
-    [ "Manual", "d4/d9c/page-manual.html", [
-      [ "Installation", "d4/d9c/page-manual.html#installation", [
-        [ "Example CMake", "d4/d9c/page-manual.html#example-cmake", null ]
+    [ "Manual", "d4/d21/md_docs_2manual_2manual.html", [
+      [ "Installation", "d4/d21/md_docs_2manual_2manual.html#installation", [
+        [ "Example CMake", "d4/d21/md_docs_2manual_2manual.html#example-cmake", null ]
       ] ],
-      [ "Dependencies", "d4/d9c/page-manual.html#dependencies", null ],
-      [ "Compatibility", "d4/d9c/page-manual.html#compatibility", [
-        [ "Other Languages", "d4/d9c/page-manual.html#other-languages", null ]
+      [ "Dependencies", "d4/d21/md_docs_2manual_2manual.html#dependencies", null ],
+      [ "Compatibility", "d4/d21/md_docs_2manual_2manual.html#compatibility", [
+        [ "Other Languages", "d4/d21/md_docs_2manual_2manual.html#other-languages", null ]
       ] ]
     ] ],
-    [ "Roadmap", "db/dcd/page-roadmap.html", [
-      [ "Solvers", "db/dcd/page-roadmap.html#solvers", null ],
-      [ "Maze Types", "db/dcd/page-roadmap.html#maze-types", null ],
-      [ "Post-Processing", "db/dcd/page-roadmap.html#post-processing", null ],
-      [ "Eikonal Solvers", "db/dcd/page-roadmap.html#eikonal-solvers", null ],
-      [ "Computational", "db/dcd/page-roadmap.html#computational", null ]
+    [ "Roadmap", "d5/da1/md_docs_2manual_2roadmap.html", [
+      [ "Solvers", "d5/da1/md_docs_2manual_2roadmap.html#solvers", null ],
+      [ "Maze Types", "d5/da1/md_docs_2manual_2roadmap.html#maze-types", null ],
+      [ "Post-Processing", "d5/da1/md_docs_2manual_2roadmap.html#post-processing", null ],
+      [ "Eikonal Solvers", "d5/da1/md_docs_2manual_2roadmap.html#eikonal-solvers", null ],
+      [ "Computational", "d5/da1/md_docs_2manual_2roadmap.html#computational", null ]
     ] ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
