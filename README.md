@@ -16,13 +16,19 @@ A comprehensive solution for pathfinding in K-dimensions.
 
 ## Background
 
-The CHDR project aims to be the world's fastest and most efficient pathfinding library.
+The CHDR project aims to be the fastest and most efficient pathfinding library available.
 
-CHDR is a comprehensive pathfinding solution offering a simple API with ultra-low latency, low memory usage, and high-throughput implementations of many state-of-the-art algorithms commonly used in Robotics, Game Development, GNSS Navigation, Artificial Intelligence, and other high-performance computing applications.
+CHDR provides a user-friendly API with ultra-low latency, minimal memory usage,
+and high-performance implementations of cutting-edge algorithms widely used in Robotics,
+Game Development, GNSS Navigation, Artificial Intelligence, and other high-performance applications.
 
-CHDR is designed for compatibility across a wide range of platforms, compilers, and toolchains. It is provided as a standalone, templated C++17 header-only library with a loosely-coupled and modular architecture that stringently adheres to standards. As a result, CHDR compiles under very pedantic conditions and passes our tests with both Valgrind and Google's Sanitizers.
+Its flexible design ensures compatibility across numerous platforms, compilers, and toolchains.
+Offered as a lightweight, header-only C++17 library with a modular, standards-compliant architecture,
+CHDR compiles seamlessly under strict conditions and has passed rigorous testing with tools like Valgrind and Google's Sanitizers.
 
-CHDR avoids compromising between usability and performance, utilising metaprogramming as a technique for providing compile-time processing and type agnosticism, while supporting routing in 1D, 2D, 3D, 4D, and higher-dimensionality spaces.
+By leveraging advanced metaprogramming techniques, CHDR strikes the perfect balance between usability and performance.
+It supports efficient routing in 1D, 2D, 3D, 4D, and even higher-dimensional spaces,
+making it an ideal choice for developers seeking fast and reliable pathfinding solutions.
 
 
 ## Usage
