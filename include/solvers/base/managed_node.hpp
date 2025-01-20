@@ -37,7 +37,7 @@ namespace chdr::solvers {
             m_successors(0U) {}
         ~managed_node() noexcept = default;
 
-        [[nodiscard]] constexpr managed_node(const index_t& _index, managed_node* RESTRICT const _parent = nullptr) noexcept : bnode<index_t>(_index),
+        [[nodiscard]] HOT constexpr managed_node(const index_t& _index, managed_node* RESTRICT const _parent = nullptr) noexcept : bnode<index_t>(_index),
             m_parent(_parent),
             m_successors(0U)
         {
@@ -49,7 +49,7 @@ namespace chdr::solvers {
         constexpr managed_node           (const managed_node&) = delete;
         constexpr managed_node& operator=(const managed_node&) = delete;
 
-        [[nodiscard]] constexpr managed_node(managed_node&&) noexcept = default;
+        [[nodiscard]] HOT constexpr managed_node(managed_node&&) noexcept = default;
 
 #if __cplusplus > 202302L
         constexpr
@@ -57,7 +57,7 @@ namespace chdr::solvers {
         managed_node& operator=(managed_node&&) noexcept = default;
 
         template <typename pmr_t>
-        void expunge(pmr_t* _pmr) noexcept {
+        HOT void expunge(pmr_t* _pmr) noexcept {
 
             while (m_parent != nullptr) {
                 decr();
@@ -86,7 +86,7 @@ namespace chdr::solvers {
             ++m_parent->m_successors;
         }
 
-        [[nodiscard]] friend constexpr bool operator < (const managed_node& _a, const managed_node& _b) noexcept {
+        [[nodiscard]] HOT friend constexpr bool operator < (const managed_node& _a, const managed_node& _b) noexcept {
             return _a.m_fScore == _b.m_fScore ?
                    _a.m_gScore >  _b.m_gScore :
                    _a.m_fScore >  _b.m_fScore;

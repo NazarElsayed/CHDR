@@ -201,7 +201,7 @@ namespace chdr {
 		}
 
 		template <typename T>
-		static constexpr T abs(const T& _value) noexcept {
+		HOT static constexpr T abs(const T& _value) noexcept {
 
 			static_assert(std::is_arithmetic_v<T>, "Type T must be arithmetic.");
 
@@ -209,7 +209,7 @@ namespace chdr {
 		}
 
 		template <typename T>
-		static constexpr T sqrt(const T& _value) noexcept {
+		HOT static constexpr T sqrt(const T& _value) noexcept {
 
 			static_assert(std::is_arithmetic_v<T>, "Type T must be arithmetic.");
 
@@ -241,19 +241,19 @@ namespace chdr {
 		}
 
 		template <typename T>
-		static constexpr const T& min(const T& _a, const T& _b) noexcept {
+		HOT static constexpr const T& min(const T& _a, const T& _b) noexcept {
 			static_assert(std::is_invocable_r_v<bool, decltype(std::less<>()), T, T>, "Type T must support the less-than operator.");
 			return (_a < _b) ? _a : _b;
 		}
 
 		template <typename T>
-		static constexpr const T& max(const T& _a, const T& _b) noexcept {
+		HOT static constexpr const T& max(const T& _a, const T& _b) noexcept {
 			static_assert(std::is_invocable_r_v<bool, decltype(std::less<>()), T, T>, "Type T must support the less-than operator.");
 			return (_a < _b) ? _b : _a;
 		}
 
 		template <typename T>
-		static constexpr const T& clamp(const T& _value, const T& _min, const T& _max) noexcept {
+		HOT static constexpr const T& clamp(const T& _value, const T& _min, const T& _max) noexcept {
 			static_assert(std::is_invocable_r_v<bool, decltype(std::less<>()), T, T>, "Type T must support the less-than operator.");
 
 			if (_value >= _min) {

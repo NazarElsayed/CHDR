@@ -78,7 +78,7 @@ namespace chdr::mazes {
         [[nodiscard]] constexpr size_t count() const noexcept { return m_count; }
 
         template<bool IncludeDiagonals = false>
-        [[nodiscard]] constexpr auto get_neighbours(const coord_t& _id) const noexcept {
+        [[nodiscard]] HOT constexpr auto get_neighbours(const coord_t& _id) const noexcept {
 
             if constexpr (IncludeDiagonals) {
                 return compute_diagonal_neighbours(_id, std::make_index_sequence<s_neighbour_count>{});
@@ -89,13 +89,13 @@ namespace chdr::mazes {
         }
 
         template<bool IncludeDiagonals = false>
-        [[nodiscard]] constexpr auto get_neighbours(const size_t& _id) const noexcept {
+        [[nodiscard]] HOT constexpr auto get_neighbours(const size_t& _id) const noexcept {
             return get_neighbours<IncludeDiagonals>(utils::to_nd(_id, size()));
         }
 
         [[nodiscard]] constexpr const auto& at(const coord_t& _id) const { return at(utils::to_1d(_id, m_size)); }
 
-        [[nodiscard]] constexpr const auto& at(const size_t& _id) const {
+        [[nodiscard]] HOT constexpr const auto& at(const size_t& _id) const {
             assert(contains(_id) && "Out of bounds access.");
             return reinterpret_cast<const weighted_node<weight_t>&>(m_nodes[_id]);
         }
@@ -132,7 +132,7 @@ namespace chdr::mazes {
             return count == 2U;
         }
 
-        [[nodiscard]] constexpr auto& operator[](const size_t& _id) const noexcept { return at(_id); }
+        [[nodiscard]] HOT constexpr auto& operator[](const size_t& _id) const noexcept { return at(_id); }
 
         using               iterator_t = typename std::vector<weight_t>::              iterator;
         using         const_iterator_t = typename std::vector<weight_t>::        const_iterator;
@@ -261,7 +261,7 @@ namespace chdr::mazes {
         [[nodiscard]] constexpr size_t count() const noexcept { return m_count; }
 
         template <bool IncludeDiagonals = false>
-        [[nodiscard]] constexpr auto get_neighbours(const coord_t& _id) const noexcept {
+        [[nodiscard]] HOT constexpr auto get_neighbours(const coord_t& _id) const noexcept {
 
             if constexpr (IncludeDiagonals) {
                 return compute_diagonal_neighbours(_id, std::make_index_sequence<s_neighbour_count>{});
@@ -272,13 +272,13 @@ namespace chdr::mazes {
         }
 
         template <bool IncludeDiagonals = false>
-        [[nodiscard]] constexpr auto get_neighbours(const size_t& _id) const noexcept {
+        [[nodiscard]] HOT constexpr auto get_neighbours(const size_t& _id) const noexcept {
             return get_neighbours<IncludeDiagonals>(utils::to_nd(_id, size()));
         }
 
         [[nodiscard]] constexpr auto at(const coord_t& _id) const { return at(utils::to_1d(_id, m_size)); }
 
-        [[nodiscard]] constexpr weighted_node<bool> at(const size_t& _id) const {
+        [[nodiscard]] HOT constexpr weighted_node<bool> at(const size_t& _id) const {
             assert(contains(_id) && "Out of bounds access.");
             return { m_nodes[_id] };
         }
@@ -313,7 +313,7 @@ namespace chdr::mazes {
             return count == 2U;
         }
 
-        [[nodiscard]] constexpr auto& operator[](const size_t& _id) const noexcept { return m_nodes[_id]; }
+        [[nodiscard]] HOT constexpr auto& operator[](const size_t& _id) const noexcept { return m_nodes[_id]; }
 
         using               iterator_t = std::vector<bool>::              iterator;
         using         const_iterator_t = std::vector<bool>::        const_iterator;

@@ -29,26 +29,26 @@ namespace chdr {
 
         constexpr queue(std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {}
 
-        [[maybe_unused, nodiscard]] constexpr bool empty() const noexcept { return c.empty(); }
+        [[maybe_unused, nodiscard]] HOT constexpr bool empty() const noexcept { return c.empty(); }
 
         [[maybe_unused, nodiscard]] constexpr size_t size() const noexcept { return c.size(); }
 
-        [[maybe_unused, nodiscard]] constexpr       T& front()       noexcept { return top(); }
-        [[maybe_unused, nodiscard]] constexpr const T& front() const noexcept { return top(); }
+        [[maybe_unused, nodiscard]] HOT constexpr       T& front()       noexcept { return top(); }
+        [[maybe_unused, nodiscard]] HOT constexpr const T& front() const noexcept { return top(); }
 
-        [[maybe_unused, nodiscard]] constexpr       T& top()       noexcept { return c.front(); }
-        [[maybe_unused, nodiscard]] constexpr const T& top() const noexcept { return c.front(); }
+        [[maybe_unused, nodiscard]] HOT constexpr       T& top()       noexcept { return c.front(); }
+        [[maybe_unused, nodiscard]] HOT constexpr const T& top() const noexcept { return c.front(); }
 
-        [[maybe_unused]] constexpr void push(const T& _value) { c.push(_value); }
+        [[maybe_unused]] HOT constexpr void push(const T& _value) { c.push(_value); }
 
-        [[maybe_unused]] constexpr void push(T&& _value) { c.push(std::move(_value)); }
+        [[maybe_unused]] HOT constexpr void push(T&& _value) { c.push(std::move(_value)); }
 
         template <typename... Args>
-        [[maybe_unused]] constexpr void emplace(Args&&... _args) {
+        [[maybe_unused]] HOT constexpr void emplace(Args&&... _args) {
             c.emplace_back(std::forward<Args>(_args)...);
         }
         
-        [[maybe_unused]] constexpr void pop() { c.pop_front(); }
+        [[maybe_unused]] HOT constexpr void pop() { c.pop_front(); }
 
         [[maybe_unused]] constexpr void clear() {
             queue_t empty;

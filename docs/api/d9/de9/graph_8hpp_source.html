@@ -406,12 +406,12 @@ $(document).ready(function(){initNavTree('d9/de9/graph_8hpp_source.html','../../
 <div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>            }</div>
 <div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>        }</div>
 <div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span> </div>
-<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>        [[maybe_unused, nodiscard]] <span class="keyword">constexpr</span> <span class="keyword">const</span> neighbours_t&amp; get_neighbours(<span class="keyword">const</span> index_t&amp; _id)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>        [[maybe_unused, nodiscard]] HOT <span class="keyword">constexpr</span> <span class="keyword">const</span> neighbours_t&amp; get_neighbours(<span class="keyword">const</span> index_t&amp; _id)<span class="keyword"> const </span>{</div>
 <div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>            assert(contains(_id) &amp;&amp; <span class="stringliteral">&quot;Node with the specified ID does not exist in the graph.&quot;</span>);</div>
 <div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>            <span class="keywordflow">return</span> m_entries.find(_id)-&gt;second;</div>
 <div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>        }</div>
 <div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span> </div>
-<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>        [[maybe_unused, nodiscard]] <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> contains(<span class="keyword">const</span> index_t&amp; _id) <span class="keyword">const</span> <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>        [[maybe_unused, nodiscard]] HOT <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> contains(<span class="keyword">const</span> index_t&amp; _id) <span class="keyword">const</span> <span class="keyword">noexcept</span> {</div>
 <div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>            <span class="keywordflow">return</span> m_entries.find(_id) != m_entries.end();</div>
 <div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>        }</div>
 <div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span> </div>
@@ -423,7 +423,7 @@ $(document).ready(function(){initNavTree('d9/de9/graph_8hpp_source.html','../../
 <div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>            m_entries.clear();</div>
 <div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>        }</div>
 <div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span> </div>
-<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>        [[nodiscard]] <span class="keyword">constexpr</span> <span class="keyword">const</span> id_node&lt;index_t&gt;&amp; operator[](<span class="keyword">const</span> <span class="keywordtype">size_t</span>&amp; _id) <span class="keyword">const</span> <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>        [[nodiscard]] HOT <span class="keyword">constexpr</span> <span class="keyword">const</span> id_node&lt;index_t&gt;&amp; operator[](<span class="keyword">const</span> <span class="keywordtype">size_t</span>&amp; _id) <span class="keyword">const</span> <span class="keyword">noexcept</span> {</div>
 <div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>            <span class="keywordflow">return</span> at(_id);</div>
 <div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>        }</div>
 <div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span> </div>

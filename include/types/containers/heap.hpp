@@ -30,13 +30,13 @@ namespace chdr {
 
     private:
 
-        [[nodiscard]] constexpr size_t index_of(const T& _item) const noexcept {
+        [[nodiscard]] HOT constexpr size_t index_of(const T& _item) const noexcept {
             return static_cast<size_t>(&(_item) - &(c[1U]));
         }
 
     public:
 
-        constexpr void sort_up(const T& _item) noexcept {
+        HOT constexpr void sort_up(const T& _item) noexcept {
             
             if (size() <= 1U) {
                 return;
@@ -59,7 +59,7 @@ namespace chdr {
             }
         }
 
-        constexpr void sort_down(const T& _item) noexcept {
+        HOT constexpr void sort_down(const T& _item) noexcept {
 
             if (size() > 1U) {
                 auto i = index_of(_item);
@@ -145,28 +145,16 @@ namespace chdr {
             }
         }
 
-        [[maybe_unused, nodiscard]] constexpr bool empty() const noexcept { return size() == 0U; }
+        [[maybe_unused, nodiscard]] HOT constexpr bool empty() const noexcept { return size() == 0U; }
 
         [[maybe_unused, nodiscard]] constexpr size_t size() const noexcept { return c.size() - 1U; }
 
         [[maybe_unused, nodiscard]] constexpr size_t capacity() const noexcept { return c.capacity(); }
 
-        [[maybe_unused, nodiscard]] constexpr       T& front()       noexcept { return top(); }
-        [[maybe_unused, nodiscard]] constexpr const T& front() const noexcept { return top(); }
+        [[maybe_unused, nodiscard]] HOT constexpr       T& front()       noexcept { return top(); }
+        [[maybe_unused, nodiscard]] HOT constexpr const T& front() const noexcept { return top(); }
 
-        [[maybe_unused, nodiscard]] constexpr T& top() noexcept {
-
-            assert(!empty() && "Heap is empty");
-
-            if constexpr (std::is_pointer_v<T>) {
-                return reinterpret_cast<T&>(begin().base());
-            }
-            else {
-                return *begin();
-            }
-        }
-
-        [[maybe_unused, nodiscard]] constexpr const T& top() const noexcept {
+        [[maybe_unused, nodiscard]] HOT constexpr T& top() noexcept {
 
             assert(!empty() && "Heap is empty");
 
@@ -178,7 +166,19 @@ namespace chdr {
             }
         }
 
-        [[maybe_unused, nodiscard]] constexpr const T& back() const noexcept {
+        [[maybe_unused, nodiscard]] HOT constexpr const T& top() const noexcept {
+
+            assert(!empty() && "Heap is empty");
+
+            if constexpr (std::is_pointer_v<T>) {
+                return reinterpret_cast<T&>(begin().base());
+            }
+            else {
+                return *begin();
+            }
+        }
+
+        [[maybe_unused, nodiscard]] HOT constexpr const T& back() const noexcept {
 
             assert(!empty() && "Heap is empty");
 
@@ -190,7 +190,7 @@ namespace chdr {
             }
         }
 
-        [[maybe_unused, nodiscard]] constexpr T& back() noexcept {
+        [[maybe_unused, nodiscard]] HOT constexpr T& back() noexcept {
 
             assert(!empty() && "Heap is empty");
 
@@ -202,38 +202,38 @@ namespace chdr {
             }
         }
 
-        [[maybe_unused]] constexpr void enqueue(const T& _item) { push(_item); }
+        [[maybe_unused]] HOT constexpr void enqueue(const T& _item) { push(_item); }
 
         template <class... Args>
-        [[maybe_unused]] constexpr void enqueue(Args&&... _args) { emplace(std::forward<Args>(_args)...); }
+        [[maybe_unused]] HOT constexpr void enqueue(Args&&... _args) { emplace(std::forward<Args>(_args)...); }
 
-        [[maybe_unused]] constexpr void push(const T& _item) {
+        [[maybe_unused]] HOT constexpr void push(const T& _item) {
             c.push_back(_item);
             sort_up(c.back());
         }
 
-        [[maybe_unused]] constexpr void push(T&& _item) {
+        [[maybe_unused]] HOT constexpr void push(T&& _item) {
             c.push_back(std::move(_item));
             sort_up(c.back());
         }
 
         template <class... Args>
-        [[maybe_unused]] constexpr void emplace(Args&&... _args) {
+        [[maybe_unused]] HOT constexpr void emplace(Args&&... _args) {
             c.emplace_back(std::forward<Args>(_args)...);
             sort_up(c.back());
         }
 
-        [[maybe_unused]] constexpr void enqueue_nosort(const T& _item) { push_nosort(_item); }
+        [[maybe_unused]] HOT constexpr void enqueue_nosort(const T& _item) { push_nosort(_item); }
 
         template <class... Args>
-        [[maybe_unused]] constexpr void enqueue_nosort(Args&&... _args) { emplace_nosort(std::forward<Args>(_args)...); }
+        [[maybe_unused]] HOT constexpr void enqueue_nosort(Args&&... _args) { emplace_nosort(std::forward<Args>(_args)...); }
 
-        [[maybe_unused]] constexpr void push_nosort(const T& _item) { c.push_back(_item); }
+        [[maybe_unused]] HOT constexpr void push_nosort(const T& _item) { c.push_back(_item); }
 
-        [[maybe_unused]] constexpr void push_nosort(T&& _item) { c.push_back(std::move(_item)); }
+        [[maybe_unused]] HOT constexpr void push_nosort(T&& _item) { c.push_back(std::move(_item)); }
 
         template <class... Args>
-        [[maybe_unused]] constexpr void emplace_nosort(Args&&... _args) { c.emplace_back(std::forward<Args>(_args)...); }
+        [[maybe_unused]] HOT constexpr void emplace_nosort(Args&&... _args) { c.emplace_back(std::forward<Args>(_args)...); }
 
         [[maybe_unused]] constexpr void erase(const T& _item) noexcept {
 
@@ -285,7 +285,7 @@ namespace chdr {
             return result;
         }
 
-        [[maybe_unused]] constexpr void pop() noexcept {
+        [[maybe_unused]] HOT constexpr void pop() noexcept {
 
             assert(!empty() && "Heap is empty");
 
@@ -299,7 +299,7 @@ namespace chdr {
             sort_down(c[1U]);
         }
 
-        [[maybe_unused]] constexpr void pop_back() noexcept {
+        [[maybe_unused]] HOT constexpr void pop_back() noexcept {
 
             assert(!empty() && "Heap is empty");
 

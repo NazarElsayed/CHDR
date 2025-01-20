@@ -67,7 +67,7 @@ namespace chdr {
 
     protected:
 
-        [[nodiscard]] void* do_allocate(const size_t _size, const size_t _alignment) override {
+        [[nodiscard]] HOT void* do_allocate(const size_t _size, const size_t _alignment) override {
             assert(_size > 0U && "Allocation size must be greater than zero.");
 
             // Check for available free chunks:
@@ -81,7 +81,7 @@ namespace chdr {
             return expand(_size, _alignment);
         }
 
-        void do_deallocate(void* _p, size_t, size_t) override {
+        HOT void do_deallocate(void* _p, size_t, size_t) override {
             assert(_p != nullptr && "Cannot deallocate null pointer.");
             free.push_back(_p);
         }

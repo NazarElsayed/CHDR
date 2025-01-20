@@ -132,14 +132,14 @@ $(document).ready(function(){initNavTree('d0/def/unmanaged__node_8hpp_source.htm
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        constexpr unmanaged_node           (const unmanaged_node&amp;) = delete;</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        constexpr unmanaged_node&amp; operator=(const unmanaged_node&amp;) = delete;</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        [[nodiscard]] constexpr unmanaged_node(unmanaged_node&amp;&amp;) noexcept = default;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        [[nodiscard]] HOT constexpr unmanaged_node(unmanaged_node&amp;&amp;) noexcept = default;</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#if __cplusplus &gt; 202302L</span></div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        <span class="keyword">constexpr</span></div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        unmanaged_node&amp; operator=(unmanaged_node&amp;&amp;) noexcept = default;</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        [[nodiscard]] constexpr unmanaged_node(const index_t&amp; _index, const unmanaged_node* RESTRICT const _parent = <span class="keywordtype">nullptr</span>) noexcept : bnode&lt;index_t&gt;(_index),</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        [[nodiscard]] HOT constexpr unmanaged_node(const index_t&amp; _index, const unmanaged_node* RESTRICT const _parent = <span class="keywordtype">nullptr</span>) noexcept : bnode&lt;index_t&gt;(_index),</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            m_parent(std::move(_parent)) {}</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    };</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>}</div>

@@ -173,7 +173,7 @@ namespace chdr::solvers {
         ~solver_utils()                                = delete;
 
         template <typename T, typename collection_t>
-        static constexpr void preallocate_emplace(collection_t& _collection, const T& _value, const size_t& _increment, const size_t& _max_increment = std::numeric_limits<size_t>::max()) {
+        HOT static constexpr void preallocate_emplace(collection_t& _collection, const T& _value, const size_t& _increment, const size_t& _max_increment = std::numeric_limits<size_t>::max()) {
 
             if constexpr (std::is_same_v<collection_t, existence_set<>>) {
                 _collection.allocate(_value, _increment, _max_increment);

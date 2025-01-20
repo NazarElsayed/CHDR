@@ -147,7 +147,7 @@ $(document).ready(function(){initNavTree('dd/d67/eidbstar_8hpp_source.html','../
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            [[nodiscard]] <span class="keyword">constexpr</span> node(<span class="keyword">const</span> index_t&amp; _index, <span class="keyword">const</span> scalar_t&amp; _hScore) noexcept : bnode&lt;index_t&gt;(_index),</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>                m_hScore(_hScore) {}</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>            [[nodiscard]] <span class="keyword">friend</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> operator &lt; (<span class="keyword">const</span> node&amp; _a, <span class="keyword">const</span> node&amp; _b) <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>            [[nodiscard]] HOT <span class="keyword">friend</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> operator &lt; (<span class="keyword">const</span> node&amp; _a, <span class="keyword">const</span> node&amp; _b) <span class="keyword">noexcept</span> {</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>                <span class="keywordflow">return</span> _a.m_hScore &gt; _b.m_hScore;</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>            }</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        };</div>
@@ -177,7 +177,7 @@ $(document).ready(function(){initNavTree('dd/d67/eidbstar_8hpp_source.html','../
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        using transposition_table_t = std::unordered_map&lt;index_t, scalar_t&gt;;</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        template &lt;typename open_set_t&gt;</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        [[nodiscard]] static constexpr auto solve_internal(open_set_t&amp; _open, const params_t&amp; _params) {</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        [[nodiscard]] HOT static constexpr auto solve_internal(open_set_t&amp; _open, const params_t&amp; _params) {</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>            <span class="keyword">using </span>neighbours_t = <span class="keyword">decltype</span>(_params.maze.get_neighbours(std::declval&lt;index_t&gt;()));</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>

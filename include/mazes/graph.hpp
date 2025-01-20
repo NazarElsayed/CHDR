@@ -304,12 +304,12 @@ namespace chdr::mazes {
             }
         }
 
-        [[maybe_unused, nodiscard]] constexpr const neighbours_t& get_neighbours(const index_t& _id) const {
+        [[maybe_unused, nodiscard]] HOT constexpr const neighbours_t& get_neighbours(const index_t& _id) const {
             assert(contains(_id) && "Node with the specified ID does not exist in the graph.");
             return m_entries.find(_id)->second;
         }
 
-        [[maybe_unused, nodiscard]] constexpr bool contains(const index_t& _id) const noexcept {
+        [[maybe_unused, nodiscard]] HOT constexpr bool contains(const index_t& _id) const noexcept {
             return m_entries.find(_id) != m_entries.end();
         }
 
@@ -321,7 +321,7 @@ namespace chdr::mazes {
             m_entries.clear();
         }
 
-        [[nodiscard]] constexpr const id_node<index_t>& operator[](const size_t& _id) const noexcept {
+        [[nodiscard]] HOT constexpr const id_node<index_t>& operator[](const size_t& _id) const noexcept {
             return at(_id);
         }
 

@@ -25,12 +25,12 @@ namespace chdr::solvers {
         constexpr bnode() noexcept {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
         ~bnode() noexcept = default;
 
-        constexpr bnode(const index_t& _index) noexcept : m_index(_index) {}
+        HOT constexpr bnode(const index_t& _index) noexcept : m_index(_index) {}
 
         constexpr bnode           (const bnode&) noexcept = default;
         constexpr bnode& operator=(const bnode&) noexcept = default;
 
-        [[nodiscard]] constexpr bnode(bnode&&) noexcept = default;
+        [[nodiscard]] HOT constexpr bnode(bnode&&) noexcept = default;
 
 #if __cplusplus > 202302L
         constexpr

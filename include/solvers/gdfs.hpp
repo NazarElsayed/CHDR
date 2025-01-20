@@ -35,7 +35,7 @@ namespace chdr::solvers {
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
         template <typename open_set_t, typename closed_set_t>
-        [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, const size_t& _capacity, const params_t& _params) {
+        [[nodiscard]] HOT static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, const size_t& _capacity, const params_t& _params) {
 
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);

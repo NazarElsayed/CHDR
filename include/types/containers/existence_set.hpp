@@ -122,7 +122,7 @@ namespace chdr {
          * @param[in] _increment Size of bucket to be considered for memory allocation.
          * @param[in] _max_increment (optional) Maximum limit for the memory allocation.
          */
-        constexpr void allocate(const size_t& _hash, const size_t& _increment, const size_t& _max_increment = std::numeric_limits<size_t>::max()) {
+        HOT constexpr void allocate(const size_t& _hash, const size_t& _increment, const size_t& _max_increment = std::numeric_limits<size_t>::max()) {
             if (capacity() <= _hash) {
                 reserve(utils::min(capacity() + _increment, _max_increment));
             }
@@ -132,7 +132,7 @@ namespace chdr {
          * @brief Add a hash to the set.
          * @param[in] _hash The hash value to be added.
          */
-        constexpr void push(const size_t& _hash) {
+        HOT constexpr void push(const size_t& _hash) {
             enable(_hash);
         }
 
@@ -141,7 +141,7 @@ namespace chdr {
          * @param[in] _hash The hash value to be added.
          */
         template <typename T>
-        constexpr void emplace(T&& _hash) {
+        HOT constexpr void emplace(T&& _hash) {
 
             static_assert(std::is_integral_v<std::decay_t<T>>, "Hash must be an integral type");
 
@@ -165,7 +165,7 @@ namespace chdr {
          * @param[in] _hash The hash value to check.
          * @return True if the hash exists in the set, false otherwise.
          */
-        [[maybe_unused, nodiscard]] constexpr bool contains(const size_t& _hash) const noexcept {
+        [[maybe_unused, nodiscard]] HOT constexpr bool contains(const size_t& _hash) const noexcept {
             return _hash < size() && static_cast<bool>(c[_hash]);
         }
 

@@ -35,7 +35,7 @@ namespace chdr {
          * @return The Euclidean distance between _a and _b.
          */
 	    template <typename scalar_t, typename coord_t>
-        [[maybe_unused, nodiscard]] static constexpr auto euclidean_distance(const coord_t& _a, const coord_t& _b) noexcept {
+        [[maybe_unused, nodiscard]] HOT static constexpr auto euclidean_distance(const coord_t& _a, const coord_t& _b) noexcept {
             return static_cast<scalar_t>(sqrt(sqr_euclidean_distance(_a, _b)));
         }
 
@@ -47,7 +47,7 @@ namespace chdr {
          * @return The squared Euclidean distance between _a and _b.
          */
 	    template <typename scalar_t, typename coord_t>
-        [[maybe_unused, nodiscard]] static constexpr auto sqr_euclidean_distance(const coord_t& _a, const coord_t& _b) noexcept {
+        [[maybe_unused, nodiscard]] HOT static constexpr auto sqr_euclidean_distance(const coord_t& _a, const coord_t& _b) noexcept {
 
 	        constexpr auto Kd = std::tuple_size_v<std::decay_t<coord_t>>;
 
@@ -70,7 +70,7 @@ namespace chdr {
           * @return The Manhattan distance between _a and _b.
           */
 	    template <typename scalar_t, typename coord_t>
-        [[maybe_unused, nodiscard]] static constexpr auto manhattan_distance(const coord_t& _a, const coord_t& _b) noexcept {
+        [[maybe_unused, nodiscard]] HOT static constexpr auto manhattan_distance(const coord_t& _a, const coord_t& _b) noexcept {
 
 	        constexpr auto Kd = std::tuple_size_v<std::decay_t<coord_t>>;
 
@@ -92,7 +92,7 @@ namespace chdr {
          * @return The Chebyshev distance between _a and _b.
          */
         template <typename scalar_t, typename coord_t>
-        [[maybe_unused, nodiscard]] static constexpr auto chebyshev_distance(const coord_t& _a, const coord_t& _b) noexcept {
+        [[maybe_unused, nodiscard]] HOT static constexpr auto chebyshev_distance(const coord_t& _a, const coord_t& _b) noexcept {
 
 	        constexpr auto Kd = std::tuple_size_v<std::decay_t<coord_t>>;
 
@@ -118,7 +118,7 @@ namespace chdr {
          * @return The Canberra distance between _a and _b.
          */
         template <typename scalar_t, typename coord_t>
-        [[maybe_unused, nodiscard]] static constexpr auto canberra_distance(const coord_t& _a, const coord_t& _b) noexcept {
+        [[maybe_unused, nodiscard]] HOT static constexpr auto canberra_distance(const coord_t& _a, const coord_t& _b) noexcept {
 
 	    	constexpr auto Kd = std::tuple_size_v<std::decay_t<coord_t>>;
 
@@ -145,7 +145,7 @@ namespace chdr {
          * @return The Cosine distance (1 - Cosine similarity) between _a and _b.
          */
         template <typename scalar_t, typename coord_t>
-        [[maybe_unused, nodiscard]] static constexpr auto cosine_distance(const coord_t& _a, const coord_t& _b) noexcept {
+        [[maybe_unused, nodiscard]] HOT static constexpr auto cosine_distance(const coord_t& _a, const coord_t& _b) noexcept {
 
 	    	constexpr auto Kd = std::tuple_size_v<std::decay_t<coord_t>>;
 

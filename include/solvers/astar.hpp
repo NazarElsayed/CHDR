@@ -46,13 +46,13 @@ namespace chdr::solvers {
              * This constructor creates a node with uninitialized members.
              */
             // ReSharper disable once CppPossiblyUninitializedMember
-            [[nodiscard]] constexpr node() noexcept : unmanaged_node<index_t>() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
+            [[nodiscard]] HOT constexpr node() noexcept : unmanaged_node<index_t>() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] constexpr node(const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore, const unmanaged_node<index_t>* RESTRICT const _parent = nullptr) noexcept : unmanaged_node<index_t>(_index, _parent),
+            [[nodiscard]] HOT constexpr node(const index_t& _index, const scalar_t& _gScore, const scalar_t& _hScore, const unmanaged_node<index_t>* RESTRICT const _parent = nullptr) noexcept : unmanaged_node<index_t>(_index, _parent),
                 m_gScore(_gScore),
                 m_fScore(_gScore + _hScore) {}
 
-            [[nodiscard]] friend constexpr bool operator < (const node& _a, const node& _b) noexcept {
+            [[nodiscard]] HOT friend constexpr bool operator < (const node& _a, const node& _b) noexcept {
                 return _a.m_fScore == _b.m_fScore ?
                        _a.m_gScore >  _b.m_gScore :
                        _a.m_fScore >  _b.m_fScore;
@@ -60,7 +60,7 @@ namespace chdr::solvers {
         };
 
         template <typename open_set_t, typename closed_set_t>
-        [[nodiscard]] __attribute__((hot)) static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, const size_t& _capacity, const params_t& _params) {
+        [[nodiscard]] HOT static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, const size_t& _capacity, const params_t& _params) {
 
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);

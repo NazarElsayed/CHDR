@@ -51,7 +51,7 @@ namespace chdr::solvers {
             [[nodiscard]] constexpr node(const index_t& _index, const scalar_t& _hScore) noexcept : bnode<index_t>(_index),
                 m_hScore(_hScore) {}
 
-            [[nodiscard]] friend constexpr bool operator < (const node& _a, const node& _b) noexcept {
+            [[nodiscard]] HOT friend constexpr bool operator < (const node& _a, const node& _b) noexcept {
                 return _a.m_hScore > _b.m_hScore;
             }
         };
@@ -79,7 +79,7 @@ namespace chdr::solvers {
         };
 
         template <typename open_set_t>
-        [[nodiscard]] static constexpr auto solve_internal(open_set_t& _open, const params_t& _params) {
+        [[nodiscard]] HOT static constexpr auto solve_internal(open_set_t& _open, const params_t& _params) {
 
             using neighbours_t = decltype(_params.maze.get_neighbours(std::declval<index_t>()));
 

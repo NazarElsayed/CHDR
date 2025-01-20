@@ -41,7 +41,7 @@ namespace chdr::mazes {
 #endif
         weighted_node& operator=(weighted_node&&) noexcept = default;
         
-        [[nodiscard]] constexpr bool is_active() const noexcept {
+        [[nodiscard]] HOT constexpr bool is_active() const noexcept {
             return m_value != std::numeric_limits<weight_t>::max();
         }
 

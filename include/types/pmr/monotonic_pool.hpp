@@ -49,7 +49,7 @@ namespace chdr {
 
     protected:
 
-        [[nodiscard]] void* do_allocate(const size_t _size, const size_t _alignment) override {
+        [[nodiscard]] HOT void* do_allocate(const size_t _size, const size_t _alignment) override {
 
             // Ensure alignment and calculate aligned pointer:
             auto* aligned_ptr = reinterpret_cast<char*>(
