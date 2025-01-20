@@ -26,13 +26,13 @@ var NAVTREE =
 [
   [ "CHDR", "index.html", [
     [ "Introduction", "index.html", "index" ],
-    [ "Manual", "d4/d21/md_docs_2manual_2manual.html", [
-      [ "Installation", "d4/d21/md_docs_2manual_2manual.html#installation", [
-        [ "Example CMake", "d4/d21/md_docs_2manual_2manual.html#example-cmake", null ]
+    [ "Getting Started", "da/dc4/md_docs_2manual_2getting__started.html", [
+      [ "Installation", "da/dc4/md_docs_2manual_2getting__started.html#installation", [
+        [ "Example CMake", "da/dc4/md_docs_2manual_2getting__started.html#example-cmake", null ]
       ] ],
-      [ "Dependencies", "d4/d21/md_docs_2manual_2manual.html#dependencies", null ],
-      [ "Compatibility", "d4/d21/md_docs_2manual_2manual.html#compatibility", [
-        [ "Other Languages", "d4/d21/md_docs_2manual_2manual.html#other-languages", null ]
+      [ "Dependencies", "da/dc4/md_docs_2manual_2getting__started.html#dependencies", null ],
+      [ "Compatibility", "da/dc4/md_docs_2manual_2getting__started.html#compatibility", [
+        [ "Other Languages", "da/dc4/md_docs_2manual_2getting__started.html#other-languages", null ]
       ] ]
     ] ],
     [ "Roadmap", "d5/da1/md_docs_2manual_2roadmap.html", [

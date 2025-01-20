@@ -1,4 +1,4 @@
-# Manual
+# Getting Started
 
 ## Installation
 

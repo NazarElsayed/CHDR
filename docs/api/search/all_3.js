@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['dependencies_0',['Dependencies',['../d4/d21/md_docs_2manual_2manual.html#dependencies',1,'']]]
+  ['dependencies_0',['Dependencies',['../da/dc4/md_docs_2manual_2getting__started.html#dependencies',1,'']]]
 ];

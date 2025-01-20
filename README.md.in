@@ -8,7 +8,7 @@ A comprehensive solution for pathfinding in K-dimensions.
 ## Table of Contents
 
 - [Background](#background)
-- [Manual](docs/manual/manual.md)
+- [Manual](docs/manual/getting_started.md)
 - [Roadmap](docs/manual/roadmap.md)
 - [License](#license)
 - [References](#references)
@@ -34,7 +34,7 @@ making it an ideal choice for developers seeking fast and reliable pathfinding s
 ## Usage
 
 For full guides, example implementations, and step-by-step tutorials on how to use the library effectively, please refer to
-the [manual](docs/manual/manual.md).
+the [manual](docs/manual/getting_started.md).
 
 
 ## Contributing
