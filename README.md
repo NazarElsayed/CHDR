@@ -22,7 +22,7 @@ CHDR is a comprehensive pathfinding solution offering a simple API with ultra-lo
 
 CHDR is designed for compatibility across a wide range of platforms, compilers, and toolchains. It is provided as a standalone, templated C++17 header-only library with a loosely-coupled and modular architecture that stringently adheres to standards. As a result, CHDR compiles under very pedantic conditions and passes our tests with both Valgrind and Google's Sanitizers.
 
-CHDR avoids compromising between usability and performance, utilising metaprogramming as a technique for resolving expensive code paths at compile time. It offers a robust and scalable design with support for routing in 1D, 2D, 3D, 4D, and higher-dimensionality spaces, alongside additional constructs for post-processing resulting paths.
+CHDR avoids compromising between usability and performance, utilising metaprogramming as a technique for providing compile-time processing and polymorphism, while supporting routing in 1D, 2D, 3D, 4D, and higher-dimensionality spaces.
 
 
 ## Usage
@@ -33,7 +33,7 @@ the [manual](docs/manual/manual.md).
 
 ## Contributing
 
-Contributions to CHDR are highly appreciated! If you encounter any issues or have suggestions for improvements, feel free to post them in the project's issue tracker. Your feedback helps us make CHDR better for the entire community. At this time, please note that derivative works or modifications to the library are not permitted under the current license agreement. Refer to the [license](#license) section for more information.
+If you encounter any issues or have suggestions for improvements, feel free to post them in the project's issue tracker. Your feedback helps us make CHDR better for the entire community. At this time, please note that derivative works or modifications to the library are not permitted under the current license agreement. Refer to the [license](#license) section for more information.
 
 
 ## License
