@@ -66,7 +66,7 @@ namespace test {
 
                 /* EXECUTE SOLVE */
                 {
-                    path = std::move(chdr::solvers::solve<solver_t, params_t>(_params));
+                    path = chdr::solvers::solve<solver_t, params_t>(_params);
                 }
 
                 result = chdr::utils::min(

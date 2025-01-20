@@ -84,8 +84,10 @@ var NAVTREEINDEX0 =
 "functions_func.html":[3,2,1],
 "index.html":[],
 "index.html":[0],
-"index.html#license":[0,1],
-"index.html#references":[0,2],
+"index.html#background":[0,1],
+"index.html#license":[0,3],
+"index.html#references":[0,4],
 "index.html#table-of-contents":[0,0],
+"index.html#usage":[0,2],
 "pages.html":[]
 };
