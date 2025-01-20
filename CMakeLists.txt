@@ -11,14 +11,6 @@ project(CHDR VERSION 0.0.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Run Doxygen in the background to generate documentation:
-message(NOTICE "NOTICE: Generating documentation with Doxygen:")
-execute_process(
-        COMMAND doxygen ${CMAKE_SOURCE_DIR}/Doxyfile
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        RESULT_VARIABLE DOXYGEN_RESULT
-)
-
 message(NOTICE "NOTICE: Checking for local Git repository:")
 execute_process(
         COMMAND git rev-parse --is-inside-work-tree
@@ -100,7 +92,9 @@ if (CHDR_VERSION_TWEAK)
 endif ()
 
 if (CHDR_VERSION_METADATA)
-    set(CHDR_VERSION "${CHDR_VERSION}+${CHDR_VERSION_METADATA}")
+    set(CHDR_VERSION_FULL "${CHDR_VERSION}+${CHDR_VERSION_METADATA}")
+else ()
+    set(CHDR_VERSION_FULL "${CHDR_VERSION}")
 endif ()
 
 message(STATUS "STATUS: CHDR_VERSION determined as \"${CHDR_VERSION}\"")
@@ -117,6 +111,9 @@ endforeach ()
 
 configure_file(chdr.hpp.in ${CMAKE_SOURCE_DIR}/chdr.hpp)
 
+message(NOTICE "Generating README.md")
+configure_file(README.md.in ${CMAKE_SOURCE_DIR}/README.md)
+
 message(NOTICE "NOTICE: Building test application:")
 
 set(WARNINGS_BASE "-Wall -Wextra -Wpedantic -Wconversion -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Woverloaded-virtual -Wnull-dereference -Wdouble-promotion -Wvla -Wformat=2 -Wmissing-declarations -Wsuggest-override -Wstrict-overflow=5 -Wuninitialized -Wswitch-enum -Wswitch-default -Wcast-qual -Wwrite-strings -Wpointer-arith -Wfloat-equal -Wc++20-extensions")
@@ -131,19 +128,25 @@ endif ()
 # DIFFERENT BUILD MODES:
 set(CMAKE_CXX_FLAGS_DEBUG        "${WARNINGS} -O0 -fsanitize=address,leak,undefined -fno-omit-frame-pointer -fno-rtti -g")
 set(CMAKE_CXX_FLAGS_NOSANITIZERS "${WARNINGS} -O0                                   -fno-omit-frame-pointer -fno-rtti -g")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${WARNINGS} -Ofast -flto -march=native -mtune=native -funroll-loops -ftree-vectorize -fstrict-aliasing -fomit-frame-pointer -fno-rtti -DNDEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${WARNINGS} -O2 -flto -march=native -mtune=native -funroll-loops -ftree-vectorize -fstrict-aliasing -fomit-frame-pointer -fno-rtti -DNDEBUG")
 
 # DEFINE LIBRARIES:
-add_library(libdebug INTERFACE test/external/debug.hpp)
-add_library(libchdr  INTERFACE                chdr.hpp)
+add_library(libdebug INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/test/external/debug.hpp)
+target_include_directories(libdebug INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/test/external)
+
+add_library(libchdr INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/chdr.hpp)
+target_include_directories(libchdr INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 # TEST:
 add_executable(chdr test/main.cpp)
 
 target_include_directories(chdr PRIVATE
-        test/external/
-        test/include/
-        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/include
+)
+
+target_link_libraries(chdr PRIVATE
+        libchdr
+        libdebug
 )
 
 target_precompile_headers(chdr INTERFACE stdafx.hpp)
@@ -157,7 +160,12 @@ if (UNIX)
     endif ()
 endif (UNIX)
 
-target_link_libraries(chdr INTERFACE
-        libchdr
-        libdebug
+# Run Doxygen in the background to generate documentation:
+message(NOTICE "NOTICE: Generating documentation with Doxygen:")
+message(STATUS "Generating Doxyfile...")
+configure_file(Doxyfile.in ${CMAKE_SOURCE_DIR}/Doxyfile)
+execute_process(
+    COMMAND doxygen ${CMAKE_SOURCE_DIR}/Doxyfile
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    RESULT_VARIABLE DOXYGEN_RESULT
 )

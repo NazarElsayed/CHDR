@@ -19,8 +19,8 @@
 
 namespace chdr {
 
-    struct lowest_memory_usage {}; /** @brief Each item is represented by 1 bit in memory. */
-    struct    high_performance {}; /** @brief Each item is represented by 8 bits in memory. */
+    struct lowest_memory_usage {}; /** @brief One bit represents each item in memory.*/
+    struct    high_performance {}; /** @brief Eight bits represent each item in memory.*/
 
     template<typename>
     struct alignment {};
@@ -34,9 +34,7 @@ namespace chdr {
      * @tparam alignment_type The alignment type used by the set.
      *
      * @see lowest_memory_usage
-     * @see low_memory_usage
-     * @see balanced
-     * @see highest_performance
+     * @see high_performance
      */
     template <typename alignment_type = high_performance>
     class existence_set {
