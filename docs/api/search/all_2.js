@@ -6,5 +6,6 @@ var searchData=
   ['compatibility_3',['Compatibility',['../d4/d21/md_docs_2manual_2manual.html#compatibility',1,'']]],
   ['computational_4',['Computational',['../d5/da1/md_docs_2manual_2roadmap.html#computational',1,'']]],
   ['contains_5',['contains',['../d6/db9/classchdr_1_1existence__set.html#add825ef3b85746aa06deb858435b02bf',1,'chdr::existence_set']]],
-  ['contents_6',['Table of Contents',['../index.html#table-of-contents',1,'']]]
+  ['contents_6',['Table of Contents',['../index.html#table-of-contents',1,'']]],
+  ['contributing_7',['Contributing',['../index.html#contributing',1,'']]]
 ];
