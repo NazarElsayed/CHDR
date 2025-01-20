@@ -22,7 +22,7 @@ CHDR is a comprehensive pathfinding solution offering a simple API with ultra-lo
 
 CHDR is designed for compatibility across a wide range of platforms, compilers, and toolchains. It is provided as a standalone, templated C++17 header-only library with a loosely-coupled and modular architecture that stringently adheres to standards. As a result, CHDR compiles under very pedantic conditions and passes our tests with both Valgrind and Google's Sanitizers.
 
-CHDR avoids compromising between usability and performance, utilising metaprogramming as a technique for providing compile-time processing and polymorphism, while supporting routing in 1D, 2D, 3D, 4D, and higher-dimensionality spaces.
+CHDR avoids compromising between usability and performance, utilising metaprogramming as a technique for providing compile-time processing and type agnosticism, while supporting routing in 1D, 2D, 3D, 4D, and higher-dimensionality spaces.
 
 
 ## Usage
