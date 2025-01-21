@@ -191,7 +191,7 @@ namespace chdr {
          *
          * @see existence_set::capacity()
          */
-        [[maybe_unused]] constexpr void reserve(const size_t& _newCapacity) { c.reserve(_newCapacity); }
+        [[maybe_unused]] HOT constexpr void reserve(const size_t& _newCapacity) { c.reserve(_newCapacity); }
 
         /**
          * @brief resize the existence_set.

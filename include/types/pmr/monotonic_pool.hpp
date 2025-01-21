@@ -30,7 +30,7 @@ namespace chdr {
         std::vector<std::unique_ptr<char[]>> blocks; // NOLINT(*-avoid-c-arrays)
         std::vector<size_t> block_sizes;
 
-        void expand(const size_t& _size) {
+        HOT void expand(const size_t& _size) {
 
             // If there are available preallocated blocks, overwrite them:
             if (m_active_block_index + 1U < blocks.size()) {
@@ -67,7 +67,7 @@ namespace chdr {
             return aligned_ptr;
         }
 
-        void do_deallocate(void* /*__p*/, const size_t /*__bytes*/, size_t /*__alignment*/) override {
+        HOT void do_deallocate(void* /*__p*/, const size_t /*__bytes*/, size_t /*__alignment*/) override {
             // No-op.
         }
 

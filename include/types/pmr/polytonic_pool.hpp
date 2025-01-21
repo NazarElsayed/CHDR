@@ -37,7 +37,7 @@ namespace chdr {
         std::vector<size_t>                  block_sizes;
         std::vector<void*>                   free;
 
-        void* expand(const size_t& _size, const size_t& _alignment) {
+        HOT void* expand(const size_t& _size, const size_t& _alignment) {
 
             // Compute the properly aligned block size for this chunk.
             const auto aligned_chunk_size = (_size + _alignment - 1U) & ~(_alignment - 1U);
@@ -124,7 +124,7 @@ namespace chdr {
             return result;
         }
         
-        void reset() noexcept {
+        HOT void reset() noexcept {
 
             block_width = initial_block_width;
 
