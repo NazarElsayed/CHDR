@@ -348,7 +348,7 @@ $(document).ready(function(){initNavTree('d9/de6/jps_8hpp_source.html','../../')
 <div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>                _closed.emplace(s);</div>
 <div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span> </div>
 <div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>                <span class="comment">// Main loop:</span></div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>                <span class="keywordflow">while</span> (!_open.empty()) {</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>                <span class="keywordflow">while</span> (LIKELY(!_open.empty())) {</div>
 <div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span> </div>
 <div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>                    <span class="keyword">auto</span> curr(std::move(_open.top()));</div>
 <div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>                    _open.pop();</div>

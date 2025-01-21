@@ -166,7 +166,7 @@ $(document).ready(function(){initNavTree('dc/da9/astar_8hpp_source.html','../../
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>            _closed.emplace(s);</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>            <span class="comment">// Main loop:</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>            <span class="keywordflow">while</span> (!_open.empty()) {</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>            <span class="keywordflow">while</span> (LIKELY(!_open.empty())) {</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>                <span class="keyword">auto</span> curr(std::move(_open.top()));</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>                _open.pop();</div>
@@ -222,7 +222,7 @@ $(document).ready(function(){initNavTree('dc/da9/astar_8hpp_source.html','../../
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>            existence_set closed(_params.monotonic_pmr);</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>            closed.reserve(capacity);</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>            heap&lt;node&gt; open(_params.polytonic_pmr);</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>            heap&lt;node&gt; open(_params.monotonic_pmr);</div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>            <span class="keywordflow">try</span> {</div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>                open.reserve(capacity / 8U);</div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>            }</div>

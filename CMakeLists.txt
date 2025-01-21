@@ -125,10 +125,18 @@ else ()
     set(WARNINGS "${WARNINGS_BASE}")
 endif ()
 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always")
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcolor-diagnostics")
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /FC")
+endif()
+
 # DIFFERENT BUILD MODES:
-set(CMAKE_CXX_FLAGS_DEBUG        "${WARNINGS} -O0 -fsanitize=address,leak,undefined -fno-omit-frame-pointer -fno-rtti -g")
-set(CMAKE_CXX_FLAGS_NOSANITIZERS "${WARNINGS} -O0                                   -fno-omit-frame-pointer -fno-rtti -g")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${WARNINGS} -Ofast -march=native -mtune=native -funroll-loops -ftree-vectorize -ffast-math -fstrict-aliasing -freorder-blocks-and-partition -ffunction-sections -fdata-sections -fomit-frame-pointer -fno-rtti -DNDEBUG")
+set(CMAKE_CXX_FLAGS_DEBUG        "${WARNINGS} -O0 -fsanitize=address,leak,undefined -fno-inline -fno-strict-aliasing -fno-omit-frame-pointer -fno-rtti -g")
+set(CMAKE_CXX_FLAGS_NOSANITIZERS "${WARNINGS} -O3                                   -fno-inline -fno-strict-aliasing -fno-omit-frame-pointer -fno-rtti -fno-verbose-asm -flto -g -gdwarf-5")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${WARNINGS} -Ofast -march=native -mtune=native -funroll-loops -ftree-vectorize -ffast-math -fstrict-aliasing -freorder-blocks-and-partition -fdata-sections -ffunction-sections -fomit-frame-pointer -fno-rtti -DNDEBUG")
 
 # DEFINE LIBRARIES:
 add_library(libdebug INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/test/external/debug.hpp)

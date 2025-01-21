@@ -40,7 +40,7 @@ namespace chdr::solvers {
             _closed.emplace(s);
 
             // Main loop:
-            while (!_open.empty()) {
+            while (LIKELY(!_open.empty())) {
 
                 for (size_t i = 0U; i < _open.size(); ++i) {
 

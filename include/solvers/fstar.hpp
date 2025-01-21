@@ -72,7 +72,7 @@ namespace chdr::solvers {
             _closed.emplace(s);
 
             // Main loop:
-            while (!_open.empty()) {
+            while (LIKELY(!_open.empty())) {
 
                 auto next_threshold = std::numeric_limits<scalar_t>::max();
 

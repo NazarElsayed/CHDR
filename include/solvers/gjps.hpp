@@ -246,7 +246,7 @@ namespace chdr::solvers {
                 _closed.emplace(s);
 
                 // Main loop:
-                while (!_open.empty()) {
+                while (LIKELY(!_open.empty())) {
 
                     auto curr(std::move(_open.top()));
                     _open.pop();

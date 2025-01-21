@@ -139,7 +139,7 @@ $(document).ready(function(){initNavTree('db/d56/polytonic__pool_8hpp_source.htm
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        std::vector&lt;size_t&gt;                  block_sizes;</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        std::vector&lt;void*&gt;                   free;</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        <span class="keywordtype">void</span>* expand(<span class="keyword">const</span> <span class="keywordtype">size_t</span>&amp; _size, <span class="keyword">const</span> <span class="keywordtype">size_t</span>&amp; _alignment) {</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        HOT <span class="keywordtype">void</span>* expand(<span class="keyword">const</span> <span class="keywordtype">size_t</span>&amp; _size, <span class="keyword">const</span> <span class="keywordtype">size_t</span>&amp; _alignment) {</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>            <span class="comment">// Compute the properly aligned block size for this chunk.</span></div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>            <span class="keyword">const</span> <span class="keyword">auto</span> aligned_chunk_size = (_size + _alignment - 1U) &amp; ~(_alignment - 1U);</div>
@@ -226,7 +226,7 @@ $(document).ready(function(){initNavTree('db/d56/polytonic__pool_8hpp_source.htm
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>            <span class="keywordflow">return</span> result;</div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        }</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        </div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        <span class="keywordtype">void</span> reset() noexcept {</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        HOT <span class="keywordtype">void</span> reset() noexcept {</div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>            block_width = initial_block_width;</div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>

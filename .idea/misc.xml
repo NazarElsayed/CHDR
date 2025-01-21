@@ -11,11 +11,13 @@
     </sourceRoots>
     <libraryRoots>
       <file path="$PROJECT_DIR$/external/doxygen-awesome-css" />
+      <file path="$PROJECT_DIR$/test/external" />
     </libraryRoots>
     <excludeRoots>
       <file path="$PROJECT_DIR$/.vale-styles" />
       <file path="$PROJECT_DIR$/cmake-build-release-intel" />
       <file path="$PROJECT_DIR$/docs" />
+      <file path="$PROJECT_DIR$/external" />
     </excludeRoots>
   </component>
   <component name="WestSettings">{}</component>

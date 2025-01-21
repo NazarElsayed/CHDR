@@ -165,7 +165,7 @@ $(document).ready(function(){initNavTree('d1/def/gstar_8hpp_source.html','../../
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>            _closed.emplace(s);</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>            <span class="comment">// Main loop:</span></div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>            <span class="keywordflow">while</span> (!_open.empty()) {</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>            <span class="keywordflow">while</span> (LIKELY(!_open.empty())) {</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>                <span class="keyword">auto</span> curr(std::move(_open.top()));</div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>                _open.pop();</div>

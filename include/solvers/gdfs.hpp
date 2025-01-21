@@ -44,7 +44,7 @@ namespace chdr::solvers {
             _closed.emplace(s);
 
             // Main loop:
-            while (!_open.empty()) { // SEARCH FOR SOLUTION...
+            while (LIKELY(!_open.empty())) { // SEARCH FOR SOLUTION...
 
                 auto curr(std::move(_open.front()));
                 _open.pop();

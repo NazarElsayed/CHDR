@@ -169,7 +169,7 @@ $(document).ready(function(){initNavTree('d1/d5a/fstar_8hpp_source.html','../../
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>            _closed.emplace(s);</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>            <span class="comment">// Main loop:</span></div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>            <span class="keywordflow">while</span> (!_open.empty()) {</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>            <span class="keywordflow">while</span> (LIKELY(!_open.empty())) {</div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>                <span class="keyword">auto</span> next_threshold = std::numeric_limits&lt;scalar_t&gt;::max();</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
