@@ -172,7 +172,7 @@ namespace {
 			}
 		}
 		
-		static void multiplatform(const std::string_view& _message, const log_type& _type, const bool& _makeInline) {
+		static void multiplatform(const std::string_view& _message, const log_type& _type, bool _makeInline) {
 	
 #ifdef __linux__
 			try {
@@ -204,7 +204,7 @@ namespace {
 		
 		}
 		
-		static void fallback(const std::string_view& _message, const log_type& _type, const bool& _makeInline) {
+		static void fallback(const std::string_view& _message, const log_type& _type, bool _makeInline) {
 			
 			std::cout << to_string(_type) << ": " << _message;
 			
@@ -218,7 +218,7 @@ namespace {
 		
 #if __linux__ | __APPLE__
 		
-		static constexpr void ansi(const std::string_view& _message, const log_type& _type, const bool& _makeInline) {
+		static constexpr void ansi(const std::string_view& _message, const log_type& _type, bool _makeInline) {
 			
 			/* ANSI TEXT COLORS */
 			constexpr auto ANSI_RESET   [[maybe_unused]] = "\033[0m";
@@ -336,7 +336,7 @@ namespace {
 		    }
 		}
 
-		static void win32(const std::string_view& _message, const log_type& _type, const bool& _makeInline) {
+		static void win32(const std::string_view& _message, const log_type& _type, bool _makeInline) {
 
             constexpr auto FOREGROUND_BLACK   [[maybe_unused]] = 0x0;
             constexpr auto FOREGROUND_CYAN    [[maybe_unused]] = 0x3;
@@ -504,7 +504,7 @@ namespace {
 		/** Metadata about the previous log. */
 		inline static meta s_last_log { 0U, static_cast<size_t>(-1U), false };
 
-		static void log_internal(const std::string_view& _message, const log_type& _type, const bool& _makeInline) {
+		static void log_internal(const std::string_view& _message, const log_type& _type, bool _makeInline) {
 
 			const std::lock_guard guard(s_lock);
 
@@ -629,7 +629,7 @@ namespace {
 		 * @param[in] _makeInline (optional) A flag indicating if the log message should be displayed inline.
 		 */
 		template <typename T>
-        [[maybe_unused]] static void asrt(const bool& _condition, const T& _message, const log_type& _type = log_type::debug, const bool& _makeInline = false) noexcept {
+        [[maybe_unused]] static void asrt(bool _condition, const T& _message, const log_type& _type = log_type::debug, bool _makeInline = false) noexcept {
 			
 			if (!_condition) {
 				log(_message, _type, _makeInline);
@@ -697,7 +697,7 @@ namespace {
 		 * @param[in] _makeInline (optional) Specifies whether the log message should be displayed inline (default is `false`).
 		 */
 		template <typename T>
-		static void log(const T& _message, const log_type& _type = log_type::debug, const bool& _makeInline = false) noexcept {
+		static void log(const T& _message, const log_type& _type = log_type::debug, bool _makeInline = false) noexcept {
 
 			if constexpr (
 				std::is_same_v<std::decay_t<T>, std::string>      ||
@@ -719,7 +719,7 @@ namespace {
 			}
         }
 
-		[[maybe_unused, nodiscard]] static std::vector<std::string> stack_trace(const size_t& _frames) {
+		[[maybe_unused, nodiscard]] static std::vector<std::string> stack_trace(size_t _frames) {
 
 			std::vector<std::string> result;
 			

@@ -49,7 +49,7 @@ namespace chdr::solvers {
             // ReSharper disable once CppPossiblyUninitializedMember
             [[nodiscard]] constexpr node() noexcept : unmanaged_node<index_t>() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] constexpr node(const index_t& _index, const scalar_t& _gScore, const scalar_t& _fScore, const unmanaged_node<index_t>* RESTRICT const _parent = nullptr) noexcept : unmanaged_node<index_t>(_index, _parent),
+            [[nodiscard]] constexpr node(index_t _index, scalar_t _gScore, scalar_t _fScore, const unmanaged_node<index_t>* RESTRICT const _parent = nullptr) noexcept : unmanaged_node<index_t>(_index, _parent),
                 m_gScore(_gScore),
                 m_fScore(_fScore) {}
 
@@ -61,7 +61,7 @@ namespace chdr::solvers {
         };
 
         template <typename open_set_t, typename closed_set_t>
-        [[nodiscard]] HOT static constexpr auto solve_internal(open_set_t& _open, open_set_t& _next, closed_set_t& _closed, const size_t& _capacity, const params_t& _params) {
+        [[nodiscard]] HOT static constexpr auto solve_internal(open_set_t& _open, open_set_t& _next, closed_set_t& _closed, size_t _capacity, const params_t& _params) {
 
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);

@@ -36,7 +36,7 @@ namespace chdr {
 		}
 
 		template <typename T, typename coord_t>
-		[[nodiscard]] static constexpr T product_helper(const coord_t& _array, const size_t& _index = 0U) noexcept {
+		[[nodiscard]] static constexpr T product_helper(const coord_t& _array, size_t _index = 0U) noexcept {
 			
 			static_assert(std::is_arithmetic_v<T> && std::is_trivially_constructible_v<T>, "T must be a trivially constructible arithmetic type.");
 			
@@ -264,7 +264,7 @@ namespace chdr {
 			}
 		}
 		
-        [[nodiscard]] static std::string to_string(const long double& _duration, const long double& _scale = std::numeric_limits<long double>::epsilon()) {
+        [[nodiscard]] static std::string to_string(long double _duration, long double _scale = std::numeric_limits<long double>::epsilon()) {
 
             static std::array<std::string, 4U> units = { "s", "ms", "µs", "ns" };
 

@@ -42,7 +42,7 @@ namespace chdr::solvers {
 #endif
         unmanaged_node& operator=(unmanaged_node&&) noexcept = default;
 
-        [[nodiscard]] HOT constexpr unmanaged_node(const index_t& _index, const unmanaged_node* RESTRICT const _parent = nullptr) noexcept : bnode<index_t>(_index),
+        [[nodiscard]] HOT constexpr unmanaged_node(index_t _index, const unmanaged_node* RESTRICT const _parent = nullptr) noexcept : bnode<index_t>(_index),
             m_parent(std::move(_parent)) {}
     };
 }

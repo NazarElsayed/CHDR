@@ -1,0 +1,272 @@
+\doxysection{solver.\+hpp}
+\hypertarget{solver_8hpp_source}{}\label{solver_8hpp_source}\index{solver.hpp@{solver.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Computational\ Helper\ for\ Direction\ and\ Routing\ (CHDR)}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *\ Copyright\ (c)\ 2024\ by\ Nazar\ Elsayed\ \&\ Louis\ Eriksson}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ Licensed\ under\ CC\ BY-\/NC-\/ND\ 4.0}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ https://creativecommons.org/licenses/by-\/nc-\/nd/4.0/}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifndef\ CHDR\_SOLVER\_HPP}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ CHDR\_SOLVER\_HPP}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <cstddef>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <type\_traits>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}../../types/containers/existence\_set.hpp"{}}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}../../utils/utils.hpp"{}}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ ReSharper\ disable\ once\ CppUnusedIncludeDirective}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}../../utils/intrinsics.hpp"{}}\ \textcolor{comment}{//\ NOLINT(*-\/include-\/cleaner)}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{namespace\ }chdr::solvers\ \{}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ params\_t>\ \textcolor{keyword}{typename}\ Derived,\ \textcolor{keyword}{typename}\ params\_t>}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{class\ }solver\ final\ \{}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }resettable\ final\ \{}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ has\_method(\textcolor{keywordtype}{int})\ -\/>\ \textcolor{keyword}{decltype}(\&U::reset,\ std::true\_type\{\});}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}>}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ std::false\_type\ has\_method(...);}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{bool}\ value\ =\ \textcolor{keyword}{decltype}(has\_method<T>(0))::value;}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }is\_graph\ :\ std::is\_same<std::decay\_t<T>,\ mazes::graph<typename\ params\_t::index\_type,\ typename\ params\_t::scalar\_type>>\{\};}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }node\_data\ \{}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ active;}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{typename}\ params\_t::\ index\_type\ index;}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{typename}\ params\_t::\ coord\_type\ coord;}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{typename}\ params\_t::scalar\_type\ distance;}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{constexpr}\ solver()\ noexcept\ =\ default;}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \string~solver()\ =\ default;}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ solver\ \ \ \ \ \ \ \ \ \ \ (const\ solver\&\ )\ =\ delete;}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ solver\ \ \ \ \ \ \ \ \ \ \ (const\ solver\&\&)\ =\ delete;}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ solver\&\ operator=(const\ solver\&\ )\ =\ delete;}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ solver\&\ operator=(const\ solver\&\&)\ =\ delete;}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ template\ <typename\ maze\_neighbour\_t>}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ static\ constexpr\ node\_data\ get\_data(maze\_neighbour\_t\&\ \_n,\ const\ params\_t\&\ \_params)\ noexcept\ \{}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (is\_graph<\textcolor{keyword}{decltype}(\_params.maze)>::value)\ \{}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \_params.maze\ is\ a\ graph...}}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ [nIndex,\ nDistance](\_n);}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{true},}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nIndex,}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ utils::to\_nd(nIndex,\ \_params.size),}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nDistance}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \_params.maze\ is\ a\ grid...}}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ [nActive,\ nCoord](\_n);}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ nIndex\ =\ \textcolor{keyword}{static\_cast<}typename\ params\_t::index\_type\textcolor{keyword}{>}(}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nActive\ ?\ utils::to\_1d(nCoord,\ \_params.size)\ :\ typename\ params\_t::index\_type\{\}}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ nDistance\ =\ \textcolor{keyword}{static\_cast<}typename\ params\_t::scalar\_type\textcolor{keyword}{>}(1);}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nActive,}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nIndex,}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nCoord,}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nDistance}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ determine\_capacity(\textcolor{keyword}{const}\ params\_t\&\ \_params)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (is\_graph<\textcolor{keyword}{decltype}(\_params.maze)>::value)\ \{}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_params.capacity\ !=\ 0U\ ?}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_params.capacity\ :}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ utils::max(\_params.maze.count()\ /\ 10U,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(1U))}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ utils::max(}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_params.capacity,}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ utils::max(}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(utils::to\_1d(\_params.start,\ \_params.size)),}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(utils::to\_1d(\_params.end,\ \ \ \_params.size))}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ operator()()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ operator()(params\_t\ \{\});}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}...\ Args>}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#if\ \_\_cplusplus\ >=\ 202003L}}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \_\_cplusplus\ >=\ 202003L}}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ operator()(Args\&\&...\ \_args)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ operator()(\{\ std::forward<Args>(\_args)...\ \});}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]}
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\#if\ \_\_cplusplus\ >=\ 202003L}}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}}
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \_\_cplusplus\ >=\ 202003L}}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ operator()(\textcolor{keyword}{const}\ params\_t\&\ \_params)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }solver\_t\ =\ Derived<params\_t>;}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ s\ =\ \textcolor{keyword}{static\_cast<}typename\ params\_t::index\_type\textcolor{keyword}{>}(utils::to\_1d(\_params.start,\ \_params.size));}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ e\ =\ \textcolor{keyword}{static\_cast<}typename\ params\_t::index\_type\textcolor{keyword}{>}(utils::to\_1d(\_params.end,\ \ \ \_params.size));}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\_params.maze.contains(s)\ \&\&\ \_params.maze.at(s).is\_active()\ \&\&}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_params.maze.contains(e)\ \&\&\ \_params.maze.at(e).is\_active()}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ )\ \{}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ result\ =\ s\ !=\ e\ ?\ solver\_t::execute(\_params)\ :\ std::vector<typename\ params\_t::coord\_type>\ \{\ \_params.end\ \};}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (resettable<std::remove\_reference\_t<\textcolor{keyword}{decltype}(*\_params.monotonic\_pmr)>>::value)\ \{}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\_params.monotonic\_pmr\ !=\ \textcolor{keyword}{nullptr})\ \{\ \_params.monotonic\_pmr-\/>reset();\}}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (resettable<std::remove\_reference\_t<\textcolor{keyword}{decltype}(*\_params.polytonic\_pmr)>>::value)\ \{}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\_params.polytonic\_pmr\ !=\ \textcolor{keyword}{nullptr})\ \{\ \_params.polytonic\_pmr-\/>reset();\ \}}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (resettable<std::remove\_reference\_t<\textcolor{keyword}{decltype}(*\_params.pool\_pmr)>>::value)\ \{}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\_params.pool\_pmr\ \ \ \ \ \ !=\ \textcolor{keyword}{nullptr})\ \{\ \_params.pool\_pmr-\/>reset();\ \}}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::vector<typename\ params\_t::coord\_type>\{\};}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00164\ \ \ \ \ \};}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{keyword}{struct\ }solver\_utils\ final\ \{}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ solver\_utils()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ solver\_utils\ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{const}\ solver\_utils\&\ )\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \ solver\_utils\ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{const}\ solver\_utils\&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \ solver\_utils\&\ operator=(\textcolor{keyword}{const}\ solver\_utils\&\ )\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \ solver\_utils\&\ operator=(\textcolor{keyword}{const}\ solver\_utils\&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \string~solver\_utils()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ collection\_t>}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ HOT\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ preallocate\_emplace(collection\_t\&\ \_collection,\ \textcolor{keyword}{const}\ T\&\ \_value,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_increment,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_max\_increment\ =\ std::numeric\_limits<size\_t>::max())\ \{}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (std::is\_same\_v<collection\_t,\ existence\_set<>>)\ \{}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_collection.allocate(\_value,\ \_increment,\ \_max\_increment);}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \ \ \ \ \_collection.emplace(\_value);}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ node\_t,\ \textcolor{keyword}{typename}\ coord\_t>}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ rbacktrack(\textcolor{keyword}{const}\ node\_t\&\ \_node,\ \textcolor{keyword}{const}\ coord\_t\&\ \_size)\ \{}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<coord\_t>\ result;}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ depth\ =\ 0U;}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}*\ RESTRICT\ t\ =\ \&\_node;\ t-\/>m\_parent\ !=\ \textcolor{keyword}{nullptr};\ t\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keyword}{const\ }node\_t*\textcolor{keyword}{>}(t-\/>m\_parent),\ ++depth)\ \{\}}
+\DoxyCodeLine{00193\ }
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result.resize(depth);}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ i\ =\ 0U;}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}*\ RESTRICT\ t\ =\ \&\_node;\ t-\/>m\_parent\ !=\ \textcolor{keyword}{nullptr};\ t\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keyword}{const\ }node\_t*\textcolor{keyword}{>}(t-\/>m\_parent),\ ++i)\ \{}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result[(result.size()\ -\/\ 1U)\ -\/\ i]\ =\ utils::to\_nd(t-\/>m\_index,\ \_size);}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ node\_t,\ \textcolor{keyword}{typename}\ coord\_t>}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ rbacktrack(\textcolor{keyword}{const}\ node\_t\&\ \_node,\ \textcolor{keyword}{const}\ coord\_t\&\ \_size,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_depth)\ \{}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<coord\_t>\ result(\_depth);}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ i\ =\ 0U;}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}*\ RESTRICT\ t\ =\ \&\_node;\ t-\/>m\_parent\ !=\ \textcolor{keyword}{nullptr};\ t\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keyword}{const\ }node\_t*\textcolor{keyword}{>}(t-\/>m\_parent),\ ++i)\ \{}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result[(result.size()\ -\/\ 1U)\ -\/\ i]\ =\ utils::to\_nd(t-\/>m\_index,\ \_size);}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ open\_set\_t,\ \textcolor{keyword}{typename}\ coord\_t>}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ ibacktrack(\textcolor{keyword}{const}\ open\_set\_t\&\ \_open,\ \textcolor{keyword}{const}\ coord\_t\&\ \_size)\ \{}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<coord\_t>\ result;}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \ \ result.reserve(\_open.size());}
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ it\ =\ \_open.rbegin();\ it\ !=\ \_open.rend();\ ++it)\ \{}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result.emplace\_back(utils::to\_nd(it-\/>m\_index,\ \_size));}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00227\ }
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00230\ \ \ \ \ \};}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ params\_t>\ \textcolor{keyword}{typename}\ Derived,\ \textcolor{keyword}{typename}\ params\_t>}
+\DoxyCodeLine{00233\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ make\_solver()\ \{}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ solver<Derived,\ params\_t>();}
+\DoxyCodeLine{00235\ \ \ \ \ \}}
+\DoxyCodeLine{00236\ }
+\DoxyCodeLine{00237\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ params\_t>\ \textcolor{keyword}{typename}\ Derived,\ \textcolor{keyword}{typename}\ params\_t>}
+\DoxyCodeLine{00238\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}}
+\DoxyCodeLine{00239\ \textcolor{preprocessor}{\#if\ \_\_cplusplus\ >=\ 2023L}}
+\DoxyCodeLine{00240\ \ \ \ \ \textcolor{keyword}{constexpr}}
+\DoxyCodeLine{00241\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \_\_cplusplus\ >=\ 2023L}}
+\DoxyCodeLine{00242\ \ \ \ \ \textcolor{keyword}{auto}\ solve()\ \{}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ solver<Derived,\ params\_t>()();}
+\DoxyCodeLine{00244\ \ \ \ \ \}}
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ params\_t>\ \textcolor{keyword}{typename}\ Derived,\ \textcolor{keyword}{typename}\ params\_t,\ \textcolor{keyword}{typename}...\ Args>}
+\DoxyCodeLine{00247\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}}
+\DoxyCodeLine{00248\ \textcolor{preprocessor}{\#if\ \_\_cplusplus\ >=\ 2023L}}
+\DoxyCodeLine{00249\ \ \ \ \ \textcolor{keyword}{constexpr}}
+\DoxyCodeLine{00250\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \_\_cplusplus\ >=\ 2023L}}
+\DoxyCodeLine{00251\ \ \ \ \ \textcolor{keyword}{auto}\ solve(Args\&\&...\ \_args)\ \{}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ solver<Derived,\ params\_t>()(std::forward<Args>(\_args)...);}
+\DoxyCodeLine{00253\ \ \ \ \ \}}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00255\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ params\_t>\ \textcolor{keyword}{typename}\ Derived,\ \textcolor{keyword}{typename}\ params\_t>}
+\DoxyCodeLine{00256\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}}
+\DoxyCodeLine{00257\ \textcolor{preprocessor}{\ \ \ \ \#if\ \_\_cplusplus\ >=\ 2023L}}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}}
+\DoxyCodeLine{00259\ \textcolor{preprocessor}{\ \ \ \ \#endif\ }\textcolor{comment}{//\ \_\_cplusplus\ >=\ 2023L}}
+\DoxyCodeLine{00260\ \ \ \ \ \textcolor{keyword}{auto}\ solve(\textcolor{keyword}{const}\ params\_t\&\ \_params)\ \{}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ solver<Derived,\ params\_t>()(\_params);}
+\DoxyCodeLine{00262\ \ \ \ \ \}}
+\DoxyCodeLine{00263\ }
+\DoxyCodeLine{00264\ \}\ \textcolor{comment}{//chdr::solvers}}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//CHDR\_SOLVER\_HPP}}
+
+\end{DoxyCode}

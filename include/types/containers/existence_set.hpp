@@ -56,7 +56,7 @@ namespace chdr {
 
         std::pmr::vector<boolean_t> c;
 
-        constexpr void enable(const size_t& _hash) {
+        constexpr void enable(size_t _hash) {
 
             if (_hash >= c.size()) {
                 resize(_hash + 1U);
@@ -74,7 +74,7 @@ namespace chdr {
 #endif
         }
 
-        constexpr void disable(const size_t& _hash) noexcept {
+        constexpr void disable(size_t _hash) noexcept {
 
             if (_hash < c.size()) {
                 c[_hash] = static_cast<boolean_t>(false);
@@ -101,7 +101,7 @@ namespace chdr {
          * @param[in] _capacity Initial capacity of the set. Must be larger than 0.
          * @param[in, out] _resource (optional) Custom memory resource.
          */
-        [[maybe_unused]] constexpr explicit existence_set(const size_t& _capacity, std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {
+        [[maybe_unused]] constexpr explicit existence_set(size_t _capacity, std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {
             reserve(_capacity);
         }
 
@@ -130,7 +130,7 @@ namespace chdr {
          * @param[in] _increment Size of bucket to be considered for memory allocation.
          * @param[in] _max_increment (optional) Maximum limit for the memory allocation.
          */
-        HOT constexpr void allocate(const size_t& _hash, const size_t& _increment, const size_t& _max_increment = std::numeric_limits<size_t>::max()) {
+        HOT constexpr void allocate(size_t _hash, size_t _increment, size_t _max_increment = std::numeric_limits<size_t>::max()) {
             if (capacity() <= _hash) {
                 reserve(utils::min(capacity() + _increment, _max_increment));
             }
@@ -140,7 +140,7 @@ namespace chdr {
          * @brief Add a hash to the set.
          * @param[in] _hash The hash value to be added.
          */
-        HOT constexpr void push(const size_t& _hash) {
+        HOT constexpr void push(size_t _hash) {
             enable(_hash);
         }
 
@@ -164,7 +164,7 @@ namespace chdr {
          * @see set::prune()
          * @see set::clear()
          */
-        [[maybe_unused]] constexpr void erase(const size_t& _hash) noexcept {
+        [[maybe_unused]] constexpr void erase(size_t _hash) noexcept {
             disable(_hash);
         }
 
@@ -173,7 +173,7 @@ namespace chdr {
          * @param[in] _hash The hash value to check.
          * @return True if the hash exists in the set, false otherwise.
          */
-        [[maybe_unused, nodiscard]] HOT constexpr bool contains(const size_t& _hash) const noexcept {
+        [[maybe_unused, nodiscard]] HOT constexpr bool contains(size_t _hash) const noexcept {
             return _hash < size() && static_cast<bool>(c[_hash]);
         }
 
@@ -199,7 +199,7 @@ namespace chdr {
          *
          * @see existence_set::capacity()
          */
-        [[maybe_unused]] HOT constexpr void reserve(const size_t& _newCapacity) { c.reserve(_newCapacity); }
+        [[maybe_unused]] HOT constexpr void reserve(size_t _newCapacity) { c.reserve(_newCapacity); }
 
         /**
          * @brief resize the existence_set.
@@ -211,11 +211,11 @@ namespace chdr {
          * @note If the new size is smaller than the current size, the elements at the end will be removed.
          * If the new size is greater than the current size, the new elements will be filled with the specified value.
          *
-         * @see existence_set::reserve(const size_t&)
+         * @see existence_set::reserve(size_t)
          * @see existence_set::prune()
          * @see existence_set::clear()
          */
-        [[maybe_unused]] constexpr void resize(const size_t& _newSize, const boolean_t& _newValue = static_cast<boolean_t>(false)) {
+        [[maybe_unused]] constexpr void resize(size_t _newSize, const boolean_t& _newValue = static_cast<boolean_t>(false)) {
             c.resize(_newSize, _newValue);
         }
 

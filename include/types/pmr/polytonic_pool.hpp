@@ -37,7 +37,7 @@ namespace chdr {
         std::vector<size_t>                  block_sizes;
         std::vector<void*>                   free;
 
-        HOT void* expand(const size_t& _size, const size_t& _alignment) {
+        HOT void* expand(size_t _size, size_t _alignment) {
 
             // Compute the properly aligned block size for this chunk.
             const auto aligned_chunk_size = (_size + _alignment - 1U) & ~(_alignment - 1U);
@@ -96,7 +96,7 @@ namespace chdr {
             initial_block_width(default_block_width),
                     block_width(initial_block_width) {}
 
-        explicit polytonic_pool(const size_t& _capacity) noexcept :
+        explicit polytonic_pool(size_t _capacity) noexcept :
             initial_block_width(utils::min(_capacity, max_block_width)),
                     block_width(initial_block_width)
         {

@@ -1,0 +1,166 @@
+\doxysection{existence\+\_\+set.\+hpp}
+\hypertarget{existence__set_8hpp_source}{}\label{existence__set_8hpp_source}\index{existence\_set.hpp@{existence\_set.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Computational\ Helper\ for\ Direction\ and\ Routing\ (CHDR)}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *\ Copyright\ (c)\ 2024\ by\ Nazar\ Elsayed\ \&\ Louis\ Eriksson}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ Licensed\ under\ CC\ BY-\/NC-\/ND\ 4.0}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ https://creativecommons.org/licenses/by-\/nc-\/nd/4.0/}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifndef\ CHDR\_EXISTENCE\_SET\_HPP}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ CHDR\_EXISTENCE\_SET\_HPP}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <cstddef>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <initializer\_list>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <memory\_resource>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <type\_traits>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}../../utils/utils.hpp"{}}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{namespace\ }chdr\ \{}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structchdr_1_1lowest__memory__usage}{lowest\_memory\_usage}}\ final\ \{\};}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structchdr_1_1high__performance}{high\_performance}}\ final\ \{\};}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}>}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{struct\ }alignment\ \{\};}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{template}<>\ \textcolor{keyword}{struct\ }alignment<lowest\_memory\_usage>\ final\ \{\ \textcolor{keyword}{using\ }type\_t\ [[maybe\_unused]]\ =\ bool;\ \};}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{template}<>\ \textcolor{keyword}{struct\ }alignment<high\_performance>\ \ \ \ final\ \{\ \textcolor{keyword}{using\ }type\_t\ [[maybe\_unused]]\ =\ char;\ \};}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ alignment\_type\ =\ high\_performance>}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classchdr_1_1existence__set}{existence\_set}}\ \{}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ std::is\_same\_v<alignment\_type,\ lowest\_memory\_usage>\ ||}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ std::is\_same\_v<alignment\_type,\ high\_performance>,}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}alignment\_type\ must\ be\ one\ of\ the\ following:\ "{}}}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}lowest\_memory\_usage,\ high\_performance"{}}}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }boolean\_t\ =\ \textcolor{keyword}{typename}\ alignment<alignment\_type>::type\_t;}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ std::pmr::vector<boolean\_t>\ c;}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ enable(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_hash)\ \{}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\_hash\ >=\ c.size())\ \{}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classchdr_1_1existence__set_a139ca7a5699ee541db7d8e18f142452c_a139ca7a5699ee541db7d8e18f142452c}{resize}}(\_hash\ +\ 1U);}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#if\ defined(GCC)}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#pragma\ GCC\ diagnostic\ push}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#pragma\ GCC\ diagnostic\ ignored\ "{}-\/Wstringop-\/overflow"{}}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ c[\_hash]\ =\ \textcolor{keyword}{static\_cast<}boolean\_t\textcolor{keyword}{>}(\textcolor{keyword}{true});}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#if\ defined(GCC)}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#pragma\ GCC\ diagnostic\ pop}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ disable(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_hash)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\_hash\ <\ c.size())\ \{}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c[\_hash]\ =\ \textcolor{keyword}{static\_cast<}boolean\_t\textcolor{keyword}{>}(\textcolor{keyword}{false});}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ \textcolor{keyword}{constexpr}\ \mbox{\hyperlink{classchdr_1_1existence__set_a7f042ea76afb9ba960dda0c06ac70bd9_a7f042ea76afb9ba960dda0c06ac70bd9}{existence\_set}}(std::pmr::memory\_resource*\ \_resource\ =\ std::pmr::get\_default\_resource())\ noexcept\ :\ c(\_resource)\ \{\}}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{classchdr_1_1existence__set_a2ee238013bf66f341b7ec49abdcc0677_a2ee238013bf66f341b7ec49abdcc0677}{existence\_set}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_capacity,\ std::pmr::memory\_resource*\ \_resource\ =\ std::pmr::get\_default\_resource())\ :\ c(\_resource)\ \{}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classchdr_1_1existence__set_a393ebde6c084724200ae22328dc3d2e4_a393ebde6c084724200ae22328dc3d2e4}{reserve}}(\_capacity);}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ \textcolor{keyword}{constexpr}\ \mbox{\hyperlink{classchdr_1_1existence__set_aa9162530ba952dee5be2d0dfdeacfc85_aa9162530ba952dee5be2d0dfdeacfc85}{existence\_set}}(\textcolor{keyword}{const}\ std::initializer\_list<size\_t>\&\ \_items,\ std::pmr::memory\_resource*\ \_resource\ =\ std::pmr::get\_default\_resource())\ \{}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classchdr_1_1existence__set_a393ebde6c084724200ae22328dc3d2e4_a393ebde6c084724200ae22328dc3d2e4}{reserve}}(\_items.size());}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ item\ :\ \_items)\ \{}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classchdr_1_1existence__set_aa71d722bb24f1773903b2627354e82a0_aa71d722bb24f1773903b2627354e82a0}{push}}(item);}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classchdr_1_1existence__set_afa3aeb0b93cffe9972e14f4dbe6523e5_afa3aeb0b93cffe9972e14f4dbe6523e5}{allocate}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_hash,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_increment,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_max\_increment\ =\ std::numeric\_limits<size\_t>::max())\ \{}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classchdr_1_1existence__set_a04c626906f05290c1b7e2ee1eff9f630_a04c626906f05290c1b7e2ee1eff9f630}{capacity}}()\ <=\ \_hash)\ \{}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classchdr_1_1existence__set_a393ebde6c084724200ae22328dc3d2e4_a393ebde6c084724200ae22328dc3d2e4}{reserve}}(utils::min(\mbox{\hyperlink{classchdr_1_1existence__set_a04c626906f05290c1b7e2ee1eff9f630_a04c626906f05290c1b7e2ee1eff9f630}{capacity}}()\ +\ \_increment,\ \_max\_increment));}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classchdr_1_1existence__set_aa71d722bb24f1773903b2627354e82a0_aa71d722bb24f1773903b2627354e82a0}{push}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_hash)\ \{}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ \ \ enable(\_hash);}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classchdr_1_1existence__set_a7644ab88f3815acf67821a9e649858bf_a7644ab88f3815acf67821a9e649858bf}{emplace}}(T\&\&\ \_hash)\ \{}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_integral\_v<std::decay\_t<T>>,\ \textcolor{stringliteral}{"{}Hash\ must\ be\ an\ integral\ type"{}});}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ enable(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(std::forward<T>(\_hash)));}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classchdr_1_1existence__set_a4bf3e2fed512a048a4b9f7d8a3ba2b2e_a4bf3e2fed512a048a4b9f7d8a3ba2b2e}{erase}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_hash)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ disable(\_hash);}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classchdr_1_1existence__set_a146b2f1dce8681ce04d1ceae403df1cb_a146b2f1dce8681ce04d1ceae403df1cb}{contains}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_hash)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_hash\ <\ size()\ \&\&\ static\_cast<bool>(c[\_hash]);}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classchdr_1_1existence__set_a1421a0ea5aa875fc564c3309ae513763_a1421a0ea5aa875fc564c3309ae513763}{trim}}()\ \{}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ c.rbegin();}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (it\ !=\ c.rend()\ \&\&\ !\textcolor{keyword}{static\_cast<}boolean\_t\textcolor{keyword}{>}(*it))\ \{}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++it;}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ c.erase(it.base(),\ c.end());}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00193\ }
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classchdr_1_1existence__set_a393ebde6c084724200ae22328dc3d2e4_a393ebde6c084724200ae22328dc3d2e4}{reserve}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_newCapacity)\ \{\ c.reserve(\_newCapacity);\ \}}
+\DoxyCodeLine{00203\ }
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classchdr_1_1existence__set_a139ca7a5699ee541db7d8e18f142452c_a139ca7a5699ee541db7d8e18f142452c}{resize}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_newSize,\ \textcolor{keyword}{const}\ boolean\_t\&\ \_newValue\ =\ \textcolor{keyword}{static\_cast<}boolean\_t\textcolor{keyword}{>}(\textcolor{keyword}{false}))\ \{}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \ \ \ \ c.resize(\_newSize,\ \_newValue);}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classchdr_1_1existence__set_a96d391a5b8907ff5b9adf72774583f90_a96d391a5b8907ff5b9adf72774583f90}{clear}}()\ noexcept\ \{\ c.clear();\ \}}
+\DoxyCodeLine{00227\ }
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classchdr_1_1existence__set_a686f8cfcb07e2c875e58185f5b9cabd6_a686f8cfcb07e2c875e58185f5b9cabd6}{shrink\_to\_fit}}()\ \{\ c.shrink\_to\_fit();\ \}}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classchdr_1_1existence__set_a545aa7b6f77b13ccee4052087e9ac6a9_a545aa7b6f77b13ccee4052087e9ac6a9}{size}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ c.size();\ \}}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classchdr_1_1existence__set_a04c626906f05290c1b7e2ee1eff9f630_a04c626906f05290c1b7e2ee1eff9f630}{capacity}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ c.capacity();\ \}}
+\DoxyCodeLine{00249\ }
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }iterator\_t\ =\ \textcolor{keyword}{typename}\ std::vector<alignment\_type>::\ \ \ \ \ \ \ \ \ \ \ \ \ \ iterator;}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ \ \ \ \ \ \ \ \ }const\_iterator\_t\ =\ \textcolor{keyword}{typename}\ std::vector<alignment\_type>::\ \ \ \ \ \ \ \ const\_iterator;}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ \ \ \ \ \ \ }reverse\_iterator\_t\ =\ \textcolor{keyword}{typename}\ std::vector<alignment\_type>::\ \ \ \ \ \ reverse\_iterator;}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }const\_reverse\_iterator\_t\ =\ \textcolor{keyword}{typename}\ std::vector<alignment\_type>::const\_reverse\_iterator;}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ \ \ \ \ \ \ iterator\_t\ \ begin()\ \ \ \ \ \ \ noexcept\ \{\ \textcolor{keywordflow}{return}\ c.begin();\ \ \}}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ const\_iterator\_t\ \ begin()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ c.begin();\ \ \}}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ const\_iterator\_t\ cbegin()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ c.cbegin();\ \}}
+\DoxyCodeLine{00258\ }
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ \ \ \ \ \ \ iterator\_t\ \ end()\ \ \ \ \ \ \ noexcept\ \{\ \textcolor{keywordflow}{return}\ c.end();\ \ \}}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ const\_iterator\_t\ \ end()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ c.end();\ \ \}}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ const\_iterator\_t\ cend()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ c.cend();\ \}}
+\DoxyCodeLine{00262\ }
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ \ \ \ \ \ \ reverse\_iterator\_t\ \ rbegin()\ \ \ \ \ \ \ noexcept\ \{\ \textcolor{keywordflow}{return}\ c.rbegin();\ \ \}}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ const\_reverse\_iterator\_t\ \ rbegin()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ c.rbegin();\ \ \}}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ const\_reverse\_iterator\_t\ crbegin()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ c.crbegin();\ \}}
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ \ \ \ \ \ \ reverse\_iterator\_t\ \ rend()\ \ \ \ \ \ \ noexcept\ \{\ \textcolor{keywordflow}{return}\ c.rend();\ \ \}}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ const\_reverse\_iterator\_t\ \ rend()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ c.rend();\ \ \}}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ const\_reverse\_iterator\_t\ crend()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ c.crend();\ \}}
+\DoxyCodeLine{00270\ \ \ \ \ \};}
+\DoxyCodeLine{00271\ }
+\DoxyCodeLine{00272\ \}\ \textcolor{comment}{//chdr}}
+\DoxyCodeLine{00273\ }
+\DoxyCodeLine{00274\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//CHDR\_EXISTENCE\_SET\_HPP}}
+
+\end{DoxyCode}

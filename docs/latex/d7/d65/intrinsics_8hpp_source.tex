@@ -1,0 +1,132 @@
+\doxysection{intrinsics.\+hpp}
+\hypertarget{intrinsics_8hpp_source}{}\label{intrinsics_8hpp_source}\index{intrinsics.hpp@{intrinsics.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Computational\ Helper\ for\ Direction\ and\ Routing\ (CHDR)}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *\ Copyright\ (c)\ 2024\ by\ Nazar\ Elsayed\ \&\ Louis\ Eriksson}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ Licensed\ under\ CC\ BY-\/NC-\/ND\ 4.0}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ https://creativecommons.org/licenses/by-\/nc-\/nd/4.0/}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifndef\ CHDR\_INTRINSICS\_HPP}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ CHDR\_INTRINSICS\_HPP}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <cstddef>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <cstdlib>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{comment}{/*\ ReSharper\ disable\ CppUnusedIncludeDirective\ */}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ NOLINTBEGIN(*-\/include-\/cleaner)}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#if\ defined(\_\_AVX512\_\_)}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\ \ \ \ \#include\ <immintrin.h>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#elif\ defined(\_\_AVX2\_\_)}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\ \ \ \ \#include\ <immintrin.h>}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#elif\ defined(\_\_AVX\_\_)}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\ \ \ \ \#include\ <immintrin.h>}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#elif\ defined(\_\_SSE4\_2\_\_)}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\ \ \ \ \#include\ <nmmintrin.h>}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#elif\ defined(\_\_SSE4\_1\_\_)}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\ \ \ \ \#include\ <smmintrin.h>}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#elif\ defined(\_\_SSSE3\_\_)}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\ \ \ \ \#include\ <tmmintrin.h>}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#elif\ defined(\_\_SSE3\_\_)}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\ \ \ \ \#include\ <pmmintrin.h>}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#elif\ defined(\_\_SSE2\_\_)}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\ \ \ \ \#include\ <emmintrin.h>}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#elif\ defined(\_\_SSE\_\_)}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\ \ \ \ \#include\ <xmmintrin.h>}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#elif\ defined(\_\_MMX\_\_)}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\ \ \ \ \#include\ <mmintrin.h>}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{comment}{//\ NOLINTEND(*-\/include-\/cleaner)}}
+\DoxyCodeLine{00041\ \textcolor{comment}{/*\ ReSharper\ enable\ CppUnusedIncludeDirective\ */}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{keyword}{namespace\ }chdr\ \{}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#ifdef\ \_MSC\_VER}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#define\ IVDEP\ \_\_pragma(loop(ivdep))}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#define\ VECTOR\_ALWAYS}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ LIKELY(x)\ \ \ (x)}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#define\ UNLIKELY(x)\ (x)}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#define\ PREFETCH(P,\ I)\ ((void)))}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#define\ RESTRICT\ restrict}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#define\ ALWAYS\_INLINE\ \_\_forceinline}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#define\ HOT}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#define\ COLD\ \_\_declspec(noinline)}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#elif\ defined(\_\_INTEL\_COMPILER)\ ||\ defined(\_\_INTEL\_LLVM\_COMPILER)}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#define\ IVDEP\ \_Pragma("{}ivdep"{})}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#define\ VECTOR\_ALWAYS\ \_Pragma("{}vector\ always"{})}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#define\ LIKELY(x)\ \ \ \_\_builtin\_expect(!!(x),\ 1)}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#define\ UNLIKELY(x)\ \_\_builtin\_expect(!!(x),\ 0)}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#define\ PREFETCH(P,\ I)\ \_mm\_prefetch(reinterpret\_cast<const\ char*>(P),\ I)}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#define\ RESTRICT\ \_\_restrict\_\_}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#define\ ALWAYS\_INLINE\ \_\_attribute\_\_((always\_inline))}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#define\ HOT\ \_\_attribute\_\_((hot))}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#define\ COLD\ \_\_attribute\_\_((cold))}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#elif\ defined(\_\_clang\_\_)}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#define\ IVDEP\ \_Pragma("{}clang\ loop\ vectorize(enable)"{})}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#define\ VECTOR\_ALWAYS}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#define\ LIKELY(x)\ \ \ \_\_builtin\_expect(!!(x),\ 1)}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#define\ UNLIKELY(x)\ \_\_builtin\_expect(!!(x),\ 0)}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#define\ PREFETCH(P,\ I)\ \_mm\_prefetch(reinterpret\_cast<const\ char*>(P),\ I)}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#define\ RESTRICT\ \_\_restrict\_\_}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#define\ ALWAYS\_INLINE\ \_\_attribute\_\_((always\_inline))}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#define\ HOT\ \_\_attribute\_\_((hot))}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#define\ COLD\ \_\_attribute\_\_((cold))}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#elif\ defined(\_\_GNUC\_\_)}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#define\ IVDEP\ \_Pragma("{}GCC\ ivdep"{})}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#define\ VECTOR\_ALWAYS}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#define\ LIKELY(x)\ \ \ \_\_builtin\_expect(!!(x),\ 1)}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#define\ UNLIKELY(x)\ \_\_builtin\_expect(!!(x),\ 0)}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#define\ PREFETCH(P,\ I)\ \_mm\_prefetch(reinterpret\_cast<const\ char*>(P),\ I)}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#define\ RESTRICT\ \_\_restrict\_\_}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#define\ ALWAYS\_INLINE\ \_\_attribute\_\_((always\_inline))}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#define\ HOT\ \_\_attribute\_\_((hot))}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#define\ COLD\ \_\_attribute\_\_((cold))}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#define\ IVDEP}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#define\ VECTOR\_ALWAYS}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#define\ LIKELY(x)\ \ \ (x)}}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#define\ UNLIKELY(x)\ (x)}}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#define\ PREFETCH(P,\ I)\ ((void)))}}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#define\ RESTRICT}}
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\#define\ ALWAYS\_INLINE}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#define\ HOT}}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#define\ COLD}}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#ifdef\ \_MSC\_VER}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#pragma\ optimize("{}"{},\ off)}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#elif\ defined(\_\_INTEL\_COMPILER)\ ||\ defined(\_\_INTEL\_LLVM\_COMPILER)}}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#pragma\ clang\ optimize\ off}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#elif\ defined(\_\_clang\_\_)}}
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\#pragma\ clang\ optimize\ off}}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#elif\ defined(\_\_GNUC\_\_)}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#pragma\ GCC\ push\_options}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#pragma\ GCC\ optimize\ ("{}O0"{})}}
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00119\ \ \ \ \ [[maybe\_unused]]\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ malloc\_consolidate(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_malloc\ =\ 2048U)\ \{}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}*\ tmp\ =\ malloc(\_malloc);}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \textcolor{keyword}{asm}\ \textcolor{keyword}{volatile}(\textcolor{stringliteral}{"{}"{}}\ :::\ \textcolor{stringliteral}{"{}memory"{}});}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ free(tmp);}
+\DoxyCodeLine{00123\ \ \ \ \ \}}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\#ifdef\ \_MSC\_VER}}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#pragma\ optimize("{}"{},\ on)}}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\#elif\ defined(\_\_INTEL\_COMPILER)\ ||\ defined(\_\_INTEL\_LLVM\_COMPILER)}}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#pragma\ clang\ optimize\ on}}
+\DoxyCodeLine{00129\ \textcolor{preprocessor}{\#elif\ defined(\_\_clang\_\_)}}
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\#pragma\ clang\ optimize\ on}}
+\DoxyCodeLine{00131\ \textcolor{preprocessor}{\#elif\ defined(\_\_GNUC\_\_)}}
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\#pragma\ GCC\ pop\_options}}
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \}\ \textcolor{comment}{//chdr}}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//CHDR\_INTRINSICS\_HPP}}
+
+\end{DoxyCode}

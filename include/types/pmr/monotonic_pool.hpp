@@ -34,7 +34,7 @@ namespace chdr {
 
         std::vector<block> blocks;
 
-        HOT void expand(const size_t& _size) {
+        HOT void expand(size_t _size) {
 
             // If there are available preallocated blocks, overwrite them:
             if (m_active_block_index + 1U < blocks.size()) {

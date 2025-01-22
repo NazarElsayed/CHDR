@@ -53,7 +53,7 @@ namespace chdr::solvers {
             // ReSharper disable once CppPossiblyUninitializedMember
             [[nodiscard]] constexpr node() noexcept : unmanaged_node<index_t>() {} // NOLINT(*-use-equals-default)
 
-            [[nodiscard]] constexpr node(const index_t& _index, const direction_t& _direction, const scalar_t& _gScore, const scalar_t& _hScore, const node* RESTRICT const _parent = nullptr) noexcept : unmanaged_node<index_t>(_index, _parent),
+            [[nodiscard]] constexpr node(index_t _index, const direction_t& _direction, scalar_t _gScore, scalar_t _hScore, const node* RESTRICT const _parent = nullptr) noexcept : unmanaged_node<index_t>(_index, _parent),
                 m_gScore(_gScore),
                 m_fScore(_gScore + _hScore),
                 m_direction(_direction) {}
@@ -192,7 +192,7 @@ namespace chdr::solvers {
                 const auto& neighbours = _maze.template get_neighbours<true>(_current);
                 const auto& map = s_lookup[static_cast<size_t>(_direction)];
 
-                const auto check_forced = [&neighbours, &map](const size_t& _a, const size_t& _b) ALWAYS_INLINE {
+                const auto check_forced = [&neighbours, &map](size_t _a, size_t _b) ALWAYS_INLINE {
                     return neighbours[map[_a]].first && !neighbours[map[_b]].first;
                 };
 
@@ -232,7 +232,7 @@ namespace chdr::solvers {
         }
 
         template <typename open_set_t, typename closed_set_t>
-        [[nodiscard]] HOT static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, const size_t& _capacity, const params_t& _params) {
+        [[nodiscard]] HOT static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, size_t _capacity, const params_t& _params) {
 
             static_assert(std::is_base_of_v<mazes::grid<coord_t, weight_t>, std::remove_cv_t<std::remove_reference_t<decltype(_params.maze)>>>,
                           "JPS only supports grid mazes.");

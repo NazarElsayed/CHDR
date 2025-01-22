@@ -1,0 +1,146 @@
+\doxysection{heuristics.\+hpp}
+\hypertarget{heuristics_8hpp_source}{}\label{heuristics_8hpp_source}\index{heuristics.hpp@{heuristics.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Computational\ Helper\ for\ Direction\ and\ Routing\ (CHDR)}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *\ Copyright\ (c)\ 2024\ by\ Nazar\ Elsayed\ \&\ Louis\ Eriksson}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ Licensed\ under\ CC\ BY-\/NC-\/ND\ 4.0}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ https://creativecommons.org/licenses/by-\/nc-\/nd/4.0/}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifndef\ CHDR\_HEURISTICS\_HPP}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ CHDR\_HEURISTICS\_HPP}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <cstddef>}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}../utils/utils.hpp"{}}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ ReSharper\ disable\ once\ CppUnusedIncludeDirective}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}../utils/intrinsics.hpp"{}}\ \textcolor{comment}{//\ NOLINT(*-\/include-\/cleaner)}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{keyword}{namespace\ }chdr\ \{}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{struct\ }heuristics\ \{}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ heuristics()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ heuristics\ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{const}\ heuristics\&\ )\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \ heuristics\ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{const}\ heuristics\&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ heuristics\&\ operator=(\textcolor{keyword}{const}\ heuristics\&\ )\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ heuristics\&\ operator=(\textcolor{keyword}{const}\ heuristics\&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \string~heuristics()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ scalar\_t,\ \textcolor{keyword}{typename}\ coord\_t>}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ HOT\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ euclidean\_distance(\textcolor{keyword}{const}\ coord\_t\&\ \_a,\ \textcolor{keyword}{const}\ coord\_t\&\ \_b)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}scalar\_t\textcolor{keyword}{>}(sqrt(sqr\_euclidean\_distance(\_a,\ \_b)));}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00043\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ @brief\ Computes\ the\ squared\ Euclidean\ distance\ between\ two\ nodes.}}
+\DoxyCodeLine{00044\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *}}
+\DoxyCodeLine{00045\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ @param\ \_a\ The\ first\ node.}}
+\DoxyCodeLine{00046\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ @param\ \_b\ The\ second\ node.}}
+\DoxyCodeLine{00047\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ @return\ The\ squared\ Euclidean\ distance\ between\ \_a\ and\ \_b.}}
+\DoxyCodeLine{00048\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ scalar\_t,\ \textcolor{keyword}{typename}\ coord\_t>}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ HOT\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ sqr\_euclidean\_distance(\textcolor{keyword}{const}\ coord\_t\&\ \_a,\ \textcolor{keyword}{const}\ coord\_t\&\ \_b)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ Kd\ =\ std::tuple\_size\_v<std::decay\_t<coord\_t>>;}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ scalar\_t\ result\{0\};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ IVDEP}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0U;\ i\ <\ Kd;\ ++i)\ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ val\ =\ \textcolor{keyword}{static\_cast<}scalar\_t\textcolor{keyword}{>}(utils::abs(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{signed}\textcolor{keyword}{>}(\_b[i])\ -\/\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{signed}\textcolor{keyword}{>}(\_a[i])));}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result\ +=\ val\ *\ val;}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ scalar\_t,\ \textcolor{keyword}{typename}\ coord\_t>}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ HOT\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ manhattan\_distance(\textcolor{keyword}{const}\ coord\_t\&\ \_a,\ \textcolor{keyword}{const}\ coord\_t\&\ \_b)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ Kd\ =\ std::tuple\_size\_v<std::decay\_t<coord\_t>>;}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ scalar\_t\ result\{0\};}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ IVDEP}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0U;\ i\ <\ Kd;\ ++i)\ \{}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result\ +=\ \textcolor{keyword}{static\_cast<}scalar\_t\textcolor{keyword}{>}(utils::abs(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{signed}\textcolor{keyword}{>}(\_b[i])\ -\/\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{signed}\textcolor{keyword}{>}(\_a[i])));}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ scalar\_t,\ \textcolor{keyword}{typename}\ coord\_t>}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ HOT\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ chebyshev\_distance(\textcolor{keyword}{const}\ coord\_t\&\ \_a,\ \textcolor{keyword}{const}\ coord\_t\&\ \_b)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ Kd\ =\ std::tuple\_size\_v<std::decay\_t<coord\_t>>;}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ scalar\_t\ result\{0\};}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ IVDEP}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0U;\ i\ <\ Kd;\ ++i)\ \{}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ val\ =\ \textcolor{keyword}{static\_cast<}scalar\_t\textcolor{keyword}{>}(utils::abs(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{signed}\textcolor{keyword}{>}(\_b[i])\ -\/\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{signed}\textcolor{keyword}{>}(\_a[i])));}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (val\ >\ result)\ \{}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result\ =\ val;}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ scalar\_t,\ \textcolor{keyword}{typename}\ coord\_t>}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ HOT\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ canberra\_distance(\textcolor{keyword}{const}\ coord\_t\&\ \_a,\ \textcolor{keyword}{const}\ coord\_t\&\ \_b)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ Kd\ =\ std::tuple\_size\_v<std::decay\_t<coord\_t>>;}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ scalar\_t\ result\{0\};}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ IVDEP}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0U;\ i\ <\ Kd;\ ++i)\ \{}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ denominator\ =\ \textcolor{keyword}{static\_cast<}scalar\_t\textcolor{keyword}{>}(utils::abs(\_a[i])\ +\ utils::abs(\_b[i]));\ denominator\ !=\ 0)\ \{}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \ \ numerator\ =\ \textcolor{keyword}{static\_cast<}scalar\_t\textcolor{keyword}{>}(utils::abs(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{signed}\textcolor{keyword}{>}(\_b[i])\ -\/\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{signed}\textcolor{keyword}{>}(\_a[i])));}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result\ +=\ numerator\ /\ denominator;}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ scalar\_t,\ \textcolor{keyword}{typename}\ coord\_t>}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ HOT\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ cosine\_distance(\textcolor{keyword}{const}\ coord\_t\&\ \_a,\ \textcolor{keyword}{const}\ coord\_t\&\ \_b)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ Kd\ =\ std::tuple\_size\_v<std::decay\_t<coord\_t>>;}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ \ \ scalar\_t\ dot\_product\ \{0\};}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \ \ \ \ scalar\_t\ norm\_a\ \ \ \ \ \ \{0\};}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ scalar\_t\ norm\_b\ \ \ \ \ \ \{0\};}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ IVDEP}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ i\ <\ Kd;\ ++i)\ \{}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ scalar\_t\ val\_a\ =\ \textcolor{keyword}{static\_cast<}scalar\_t\textcolor{keyword}{>}(\_a[i]);}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ scalar\_t\ val\_b\ =\ \textcolor{keyword}{static\_cast<}scalar\_t\textcolor{keyword}{>}(\_b[i]);}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dot\_product\ +=\ val\_a\ *\ val\_b;}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ norm\_a\ \ \ \ \ \ +=\ val\_a\ *\ val\_a;}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ norm\_b\ \ \ \ \ \ +=\ val\_b\ *\ val\_b;}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ norm\_product\ =\ utils::sqrt(norm\_a)\ *\ utils::sqrt(norm\_b);}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (norm\_product\ >\ 0)\ ?\ (1\ -\/\ (dot\_product\ /\ norm\_product))\ :\ \textcolor{keyword}{static\_cast<}scalar\_t\textcolor{keyword}{>}(1);}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00171\ \ \ \ \ \};}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \}\ \textcolor{comment}{//chdr}}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//CHDR\_UTILS\_HPP}}
+
+\end{DoxyCode}

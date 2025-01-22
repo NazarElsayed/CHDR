@@ -1,0 +1,51 @@
+\doxysection{unmanaged\+\_\+node.\+hpp}
+\hypertarget{unmanaged__node_8hpp_source}{}\label{unmanaged__node_8hpp_source}\index{unmanaged\_node.hpp@{unmanaged\_node.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Computational\ Helper\ for\ Direction\ and\ Routing\ (CHDR)}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *\ Copyright\ (c)\ 2024\ by\ Nazar\ Elsayed\ \&\ Louis\ Eriksson}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ Licensed\ under\ CC\ BY-\/NC-\/ND\ 4.0}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ https://creativecommons.org/licenses/by-\/nc-\/nd/4.0/}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifndef\ CHDR\_UNMANAGEDNODE\_HPP}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ CHDR\_UNMANAGEDNODE\_HPP}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}bnode.hpp"{}}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ ReSharper\ disable\ once\ CppUnusedIncludeDirective}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}../../utils/intrinsics.hpp"{}}\ \textcolor{comment}{//\ NOLINT(*-\/include-\/cleaner)}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{keyword}{namespace\ }chdr::solvers\ \{}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ index\_t>}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keyword}{struct\ }unmanaged\_node\ :\ bnode<index\_t>\ \{}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ unmanaged\_node*\ RESTRICT\ m\_parent;}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ReSharper\ disable\ once\ CppPossiblyUninitializedMember}}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{constexpr}\ unmanaged\_node()\ noexcept\ \{\}\ \textcolor{comment}{//\ NOLINT(*-\/pro-\/type-\/member-\/init,\ *-\/use-\/equals-\/default)}}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \string~unmanaged\_node()\ noexcept\ =\ default;}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ constexpr\ unmanaged\_node\ \ \ \ \ \ \ \ \ \ \ (const\ unmanaged\_node\&)\ =\ delete;}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ constexpr\ unmanaged\_node\&\ operator=(const\ unmanaged\_node\&)\ =\ delete;}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ [[nodiscard]]\ HOT\ constexpr\ unmanaged\_node(unmanaged\_node\&\&)\ noexcept\ =\ default;}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#if\ \_\_cplusplus\ >\ 202302L}}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ unmanaged\_node\&\ operator=(unmanaged\_node\&\&)\ noexcept\ =\ default;}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ [[nodiscard]]\ HOT\ constexpr\ unmanaged\_node(const\ index\_t\&\ \_index,\ const\ unmanaged\_node*\ RESTRICT\ const\ \_parent\ =\ \textcolor{keywordtype}{nullptr})\ noexcept\ :\ bnode<index\_t>(\_index),}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ m\_parent(std::move(\_parent))\ \{\}}
+\DoxyCodeLine{00047\ \ \ \ \ \};}
+\DoxyCodeLine{00048\ \}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//CHDR\_UNMANAGEDNODE\_HPP}}
+
+\end{DoxyCode}

@@ -25,7 +25,7 @@ namespace chdr::solvers {
         constexpr bnode() noexcept {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
         ~bnode() noexcept = default;
 
-        HOT constexpr bnode(const index_t& _index) noexcept : m_index(_index) {}
+        HOT constexpr bnode(index_t _index) noexcept : m_index(_index) {}
 
         constexpr bnode           (const bnode&) noexcept = default;
         constexpr bnode& operator=(const bnode&) noexcept = default;

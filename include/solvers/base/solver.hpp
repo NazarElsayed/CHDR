@@ -173,7 +173,7 @@ namespace chdr::solvers {
         ~solver_utils()                                = delete;
 
         template <typename T, typename collection_t>
-        HOT static constexpr void preallocate_emplace(collection_t& _collection, const T& _value, const size_t& _increment, const size_t& _max_increment = std::numeric_limits<size_t>::max()) {
+        HOT static constexpr void preallocate_emplace(collection_t& _collection, const T& _value, size_t _increment, size_t _max_increment = std::numeric_limits<size_t>::max()) {
 
             if constexpr (std::is_same_v<collection_t, existence_set<>>) {
                 _collection.allocate(_value, _increment, _max_increment);
@@ -203,7 +203,7 @@ namespace chdr::solvers {
         }
 
         template<typename node_t, typename coord_t>
-        static constexpr auto rbacktrack(const node_t& _node, const coord_t& _size, const size_t& _depth) {
+        static constexpr auto rbacktrack(const node_t& _node, const coord_t& _size, size_t _depth) {
 
             std::vector<coord_t> result(_depth);
 

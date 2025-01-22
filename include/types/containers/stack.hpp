@@ -30,7 +30,7 @@ namespace chdr {
 
         constexpr stack([[maybe_unused]] std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {}
 
-        constexpr stack(const size_t& _capacity, [[maybe_unused]] std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {
+        constexpr stack(size_t _capacity, [[maybe_unused]] std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {
             c.reserve(_capacity);
         }
 

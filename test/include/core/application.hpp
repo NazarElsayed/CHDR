@@ -89,7 +89,7 @@ namespace test {
 		 *
 		 * Perform finalisation and then exit the application.
 		 *
-		 * @see debug::log(const std::string_view&, const LogType&, const bool&)
+		 * @see debug::log(const std::string_view&, const LogType&, bool)
 		 * @see application::finalise()
 		 * @see std::exit()
 		 */
@@ -235,7 +235,7 @@ namespace test {
 		 * This function is responsible for quitting the application.
 		 *
 		 * @see application::s_quit
-		 * @see debug::log(const std::string_view&, const LogType&, const bool&)
+		 * @see debug::log(const std::string_view&, const LogType&, bool)
 		 */
 		static void quit() noexcept {
 

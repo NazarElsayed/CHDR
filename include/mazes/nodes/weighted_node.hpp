@@ -29,7 +29,7 @@ namespace chdr::mazes {
         [[nodiscard]] constexpr weighted_node() = delete;
         ~weighted_node() noexcept = default;
 
-        [[nodiscard]] constexpr weighted_node(const weight_t& _value) noexcept : m_value(_value) {}
+        [[nodiscard]] constexpr weighted_node(weight_t _value) noexcept : m_value(_value) {}
 
         [[nodiscard]] constexpr weighted_node           (const weighted_node&) noexcept = default;
                       constexpr weighted_node& operator=(const weighted_node&) noexcept = default;
@@ -45,8 +45,8 @@ namespace chdr::mazes {
             return m_value != std::numeric_limits<weight_t>::max();
         }
 
-        [[nodiscard]] constexpr const weight_t& value() const noexcept { return m_value; }
-        constexpr void value(const weight_t& _value) noexcept { m_value = _value; }
+        [[nodiscard]] constexpr weight_t value() const noexcept { return m_value; }
+        constexpr void value(weight_t _value) noexcept { m_value = _value; }
     };
 
 } //chdr::mazes

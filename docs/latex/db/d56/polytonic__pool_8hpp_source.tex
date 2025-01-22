@@ -1,0 +1,178 @@
+\doxysection{polytonic\+\_\+pool.\+hpp}
+\hypertarget{polytonic__pool_8hpp_source}{}\label{polytonic__pool_8hpp_source}\index{polytonic\_pool.hpp@{polytonic\_pool.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Computational\ Helper\ for\ Direction\ and\ Routing\ (CHDR)}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *\ Copyright\ (c)\ 2024\ by\ Nazar\ Elsayed\ \&\ Louis\ Eriksson}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ Licensed\ under\ CC\ BY-\/NC-\/ND\ 4.0}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ https://creativecommons.org/licenses/by-\/nc-\/nd/4.0/}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ ReSharper\ disable\ CppInconsistentNaming}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ CHDR\_POLYTONIC\_POOL\_HPP}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ CHDR\_POLYTONIC\_POOL\_HPP}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <cassert>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <cstddef>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <utility>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}../../utils/intrinsics.hpp"{}}\ \textcolor{comment}{//\ NOLINT(*-\/include-\/cleaner)}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ "{}../../utils/utils.hpp"{}}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{keyword}{namespace\ }chdr\ \{}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{class\ }polytonic\_pool\ :\ \textcolor{keyword}{public}\ std::pmr::memory\_resource\ \{}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ default\_block\_width\ \{\ \ 2048U\ \};}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ \ \ \ \ max\_block\_width\ \{\ 65536U\ \};}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ initial\_block\_width;}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ block\_width;}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ std::vector<std::unique\_ptr<char[]>>\ blocks;\ \textcolor{comment}{//\ NOLINT(*-\/avoid-\/c-\/arrays)}}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ std::vector<size\_t>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ block\_sizes;}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ std::vector<void*>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ free;}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ HOT\ \textcolor{keywordtype}{void}*\ expand(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_size,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_alignment)\ \{}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Compute\ the\ properly\ aligned\ block\ size\ for\ this\ chunk.}}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ aligned\_chunk\_size\ =\ (\_size\ +\ \_alignment\ -\/\ 1U)\ \&\ \string~(\_alignment\ -\/\ 1U);}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Allocate\ memory:}}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ allocate\_size\ =\ utils::max(block\_width,\ aligned\_chunk\_size);}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ blocks.emplace\_back(std::make\_unique<\textcolor{keywordtype}{char}[]>(allocate\_size));\ \textcolor{comment}{//\ NOLINT(*-\/avoid-\/c-\/arrays)}}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ block\_sizes.emplace\_back(allocate\_size);}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}*\ new\_block\ =\ blocks.back().get();}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Pre-\/align\ the\ base\ pointer\ of\ the\ new\ block.}}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ aligned\_base\ =\ (\textcolor{keyword}{reinterpret\_cast<}uintptr\_t\textcolor{keyword}{>}(new\_block)\ +\ \_alignment\ -\/\ 1U)\ \&\ \string~(\_alignment\ -\/\ 1U);}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Divide\ the\ block\ into\ aligned\ chunks:}}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ num\_chunks\ =\ (allocate\_size\ -\/\ (aligned\_base\ -\/\ \textcolor{keyword}{reinterpret\_cast<}uintptr\_t\textcolor{keyword}{>}(new\_block)))\ /\ aligned\_chunk\_size;}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ free.reserve(free.size()\ +\ num\_chunks\ -\/\ 1U);}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ IVDEP}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0U;\ i\ !=\ num\_chunks\ -\/\ 1U;\ ++i)\ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ free.emplace\_back(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{void}*\textcolor{keyword}{>}(aligned\_base\ +\ (i\ *\ aligned\_chunk\_size)));}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ block\_width\ =\ utils::min(block\_width\ *\ 2U,\ max\_block\_width);}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{void}*\textcolor{keyword}{>}(aligned\_base\ +\ ((num\_chunks\ -\/\ 1U)\ *\ aligned\_chunk\_size));}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ [[nodiscard]]\ HOT\ \textcolor{keywordtype}{void}*\ do\_allocate(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ \_size,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ \_alignment)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ assert(\_size\ >\ 0U\ \&\&\ \textcolor{stringliteral}{"{}Allocation\ size\ must\ be\ greater\ than\ zero."{}});}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Check\ for\ available\ free\ chunks:}}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!free.empty())\ \{}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}*\ chunk\ =\ free.back();}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ free.pop\_back();}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ chunk;\ \textcolor{comment}{//\ All\ chunks\ are\ pre-\/aligned.}}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Expand\ pool\ otherwise.}}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ expand(\_size,\ \_alignment);}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ HOT\ \textcolor{keywordtype}{void}\ do\_deallocate(\textcolor{keywordtype}{void}*\ \_p,\ \textcolor{keywordtype}{size\_t},\ \textcolor{keywordtype}{size\_t})\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ assert(\_p\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ \textcolor{stringliteral}{"{}Cannot\ deallocate\ null\ pointer."{}});}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ free.push\_back(\_p);}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ do\_is\_equal(\textcolor{keyword}{const}\ memory\_resource\&\ \_other)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \textcolor{keyword}{override}\ \{}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{this}\ ==\ \&\_other;}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \textcolor{keyword}{explicit}\ polytonic\_pool()\ noexcept\ :}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ initial\_block\_width(default\_block\_width),}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ block\_width(initial\_block\_width)\ \{\}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keyword}{explicit}\ polytonic\_pool(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_capacity)\ noexcept\ :}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ initial\_block\_width(utils::min(\_capacity,\ max\_block\_width)),}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ block\_width(initial\_block\_width)}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ assert(\_capacity\ >=\ 2U\ \&\&\ \textcolor{stringliteral}{"{}Capacity\ must\ be\ at\ least\ 2."{}});}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ polytonic\_pool\ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{const}\ polytonic\_pool\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ polytonic\_pool\&\ operator=(\textcolor{keyword}{const}\ polytonic\_pool\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{constexpr}\ polytonic\_pool(polytonic\_pool\&\&)\ noexcept\ =\ default;}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\#if\ \_\_cplusplus\ >\ 202302L}}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}}
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ polytonic\_pool\&\ operator=(polytonic\_pool\&\&)\ noexcept\ =\ default;}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ allocated()\ \{}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ result\ \{\ 0U\ \};}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ size\ :\ block\_sizes)\ \{}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result\ +=\ size;}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ HOT\ \textcolor{keywordtype}{void}\ reset()\ noexcept\ \{}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ block\_width\ =\ initial\_block\_width;}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}\ \{}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ free.clear();}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Reuse\ memory\ from\ existing\ blocks\ to\ repopulate\ \`{}free`:}}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0U;\ i\ <\ blocks.size();\ ++i)\ \{}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}*\ \ \ \ \ \ block\ \ \ \ \ \ =\ blocks[i].get();}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ block\_size\ =\ block\_sizes[i];}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Divide\ the\ block\ into\ chunks;\ all\ chunks\ are\ guaranteed\ aligned.}}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ chunk\_size\ =\ block\_size\ /\ block\_width;}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ current\_size\ =\ free.size();}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ free.resize(current\_size\ +\ chunk\_size);}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ IVDEP}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ j\ =\ 0U;\ j\ <\ chunk\_size;\ ++j)\ \{}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ free[j\ +\ current\_size]\ =\ block\ +\ j\ *\ block\_width;}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{catch}\ (...)\ \{}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ blocks.clear();}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ block\_sizes.clear();}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ free.clear();}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ release()\ noexcept\ \{}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \ \ \ \ block\_width\ =\ initial\_block\_width;}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{decltype}(blocks)\ temp\{\};}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \ \ \ \ blocks\ \ \ \ \ \ =\ std::move(temp);}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ block\_sizes\ =\ \{\};}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \ \ free\ \ \ \ \ \ \ \ =\ \{\};}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00168\ \ \ \ \ \};}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \}\ \textcolor{comment}{//chdr}}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//CHDR\_POLYTONIC\_POOL\_HPP}}
+
+\end{DoxyCode}

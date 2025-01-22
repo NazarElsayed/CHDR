@@ -45,7 +45,7 @@ namespace chdr::solvers {
             // ReSharper disable once CppPossiblyUninitializedMember
             [[nodiscard]] constexpr node() noexcept : bnode<index_t>() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] constexpr node(const index_t& _index, const index_t& _depth) noexcept : bnode<index_t>(_index),
+            [[nodiscard]] constexpr node(index_t _index, index_t _depth) noexcept : bnode<index_t>(_index),
                 m_depth(_depth) {}
 
             [[nodiscard]] HOT friend constexpr bool operator < (const node& _a, const node& _b) noexcept {

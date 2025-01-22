@@ -96,7 +96,7 @@ namespace chdr::mazes {
 
                 std::mutex mtx;
 
-                const auto worker = [&](const index_t& _start, const index_t& _end) ALWAYS_INLINE {
+                const auto worker = [&](index_t _start, index_t _end) ALWAYS_INLINE {
 
                     stack<edge_t> stack;
 
@@ -203,21 +203,21 @@ namespace chdr::mazes {
 #endif
         graph& operator=(graph&&) noexcept = default;
 
-        [[nodiscard]] constexpr const auto& at(const index_t& _id) const {
+        [[nodiscard]] constexpr const auto& at(index_t _id) const {
 
             assert(contains(_id) && "Error: The node with the specified ID does not exist in the graph.");
             return reinterpret_cast<const id_node<index_t>&>(_id);
         }
 
-        constexpr void add(const index_t& _from_id) {
+        constexpr void add(index_t _from_id) {
             m_entries.insert_or_assign(_from_id, neighbours_t{});
         }
 
-        constexpr void add(const index_t& _from_id, const edge_t& _edge) {
+        constexpr void add(index_t _from_id, const edge_t& _edge) {
             m_entries[_from_id].emplace_back(_edge);
         }
 
-        [[maybe_unused]] constexpr void remove(const index_t& _from_id, const edge_t& _edge) noexcept {
+        [[maybe_unused]] constexpr void remove(index_t _from_id, const edge_t& _edge) noexcept {
 
             if (contains(_from_id)) {
 
@@ -304,12 +304,12 @@ namespace chdr::mazes {
             }
         }
 
-        [[maybe_unused, nodiscard]] HOT constexpr const neighbours_t& get_neighbours(const index_t& _id) const {
+        [[maybe_unused, nodiscard]] HOT constexpr const neighbours_t& get_neighbours(index_t _id) const {
             assert(contains(_id) && "Node with the specified ID does not exist in the graph.");
             return m_entries.find(_id)->second;
         }
 
-        [[maybe_unused, nodiscard]] HOT constexpr bool contains(const index_t& _id) const noexcept {
+        [[maybe_unused, nodiscard]] HOT constexpr bool contains(index_t _id) const noexcept {
             return m_entries.find(_id) != m_entries.end();
         }
 
@@ -321,7 +321,7 @@ namespace chdr::mazes {
             m_entries.clear();
         }
 
-        [[nodiscard]] HOT constexpr const id_node<index_t>& operator[](const size_t& _id) const noexcept {
+        [[nodiscard]] HOT constexpr const id_node<index_t>& operator[](size_t _id) const noexcept {
             return at(_id);
         }
 

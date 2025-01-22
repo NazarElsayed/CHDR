@@ -1,0 +1,397 @@
+\doxysection{heap.\+hpp}
+\hypertarget{heap_8hpp_source}{}\label{heap_8hpp_source}\index{heap.hpp@{heap.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Computational\ Helper\ for\ Direction\ and\ Routing\ (CHDR)}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *\ Copyright\ (c)\ 2024\ by\ Nazar\ Elsayed\ \&\ Louis\ Eriksson}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ Licensed\ under\ CC\ BY-\/NC-\/ND\ 4.0}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ https://creativecommons.org/licenses/by-\/nc-\/nd/4.0/}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifndef\ CHDR\_HEAP\_HPP}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ CHDR\_HEAP\_HPP}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ HEAP\_SUPPRESS\_EXCEPTION\_WARNING\ }\textcolor{comment}{//\ Uncomment\ if\ you\ wish\ to\ remove\ the\ warning\ about\ possible\ unhandled\ exceptions.}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <cstddef>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <functional>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <memory\_resource>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <stdexcept>}\ \textcolor{comment}{//\ NOLINT(*-\/include-\/cleaner)}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{namespace\ }chdr\ \{}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ Compare\ =\ std::less<T>,\ \textcolor{keyword}{typename}\ Container\ =\ std::pmr::vector<T>,\ \textcolor{keywordtype}{size\_t}\ Kd\ =\ 2U>}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{class\ }heap\ \{}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(Kd\ >=\ 2U,\ \textcolor{stringliteral}{"{}Template\ parameter\ D\ must\ be\ greater\ than\ or\ equal\ to\ 2."{}});}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ Container\ c;}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ Compare\ \ \ comp;}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ [[nodiscard]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ index\_of(\textcolor{keyword}{const}\ T\&\ \_item)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(\&(\_item)\ -\/\ \&(c[1U]));}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ sort\_up(\textcolor{keyword}{const}\ T\&\ \_item)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (size()\ <=\ 1U)\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ i\ =\ index\_of(\_item);}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ assert(i\ <\ size()\ \&\&\ \textcolor{stringliteral}{"{}(Out\ of\ Bounds)\ Item\ does\ not\ exist\ in\ Heap."{}});}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (i\ >\ 1U)\ \{}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ p\ =\ i\ /\ Kd;}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (comp(c[p],\ c[i]))\ \{}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::swap(c[i],\ c[p]);}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i\ =\ p;}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ sort\_down(\textcolor{keyword}{const}\ T\&\ \_item)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (size()\ >\ 1U)\ \{}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ i\ =\ index\_of(\_item);}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ assert(i\ <\ size()\ \&\&\ \textcolor{stringliteral}{"{}(Out\ of\ Bounds)\ Item\ does\ not\ exist\ in\ Heap."{}});}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (i\ >\ 1U)\ \{}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ c0\ =\ i\ *\ Kd;}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ cn\ =\ c0\ +\ (Kd\ -\/\ 1U);}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cn\ <\ c.size())\ \{}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ min\{\};}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (Kd\ ==\ 2U)\ \{}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ min\ =\ (cn\ <\ c.size()\ \&\&\ comp(c[c0],\ c[cn]))\ ?\ cn\ :\ c0;}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ min\ =\ i;}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ j\ =\ c0;\ j\ <=\ cn\ \&\&\ j\ <\ c.size();\ ++j)\ \{}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (comp(c[min],\ c[j]))\ \{}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ min\ =\ j;}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (comp(c[i],\ c[min]))\ \{}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::swap(c[i],\ c[min]);}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i\ =\ min;}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ dimension\_v\ \{\ Kd\ \};}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ heap(std::pmr::memory\_resource*\ \_resource\ =\ std::pmr::get\_default\_resource())\ :\ c(\_resource)\ \{}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ c.reserve(1U);}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ c.emplace\_back();\ \textcolor{comment}{//\ Add\ uninitialised\ super\ element.}}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ heap(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_capacity,\ std::pmr::memory\_resource*\ \_resource\ =\ std::pmr::get\_default\_resource())\ :\ c(\_resource)\ \{}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ c.reserve(utils::min(\_capacity,\ std::numeric\_limits<size\_t>::max()\ -\/\ 1U)\ +\ 1U);}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ c.emplace\_back();\ \textcolor{comment}{//\ Add\ uninitialised\ super\ element.}}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \textcolor{keyword}{explicit}\ heap(\textcolor{keyword}{const}\ Container\&\ \_container)\ :\ c(\_container.get\_allocator().resource()),\ comp()\ \{}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ c.emplace\_back();\ \textcolor{comment}{//\ Add\ uninitialised\ super\ element.}}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ c.insert(}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c.end(),}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_container.begin(),}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_container.end()}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!empty())\ \{}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ size()\ /\ Kd;\ i\ >=\ 1U;\ -\/-\/i)\ \{}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sort\_down(c[i]);}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \textcolor{keyword}{explicit}\ heap(Container\&\&\ \_container)\ :\ c(std::move(\_container)),\ comp()\ \{}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ c.emplace\_back();\ \textcolor{comment}{//\ Add\ uninitialised\ super\ element.}}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ c.insert(}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c.end(),}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::make\_move\_iterator(\_container.begin()),}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::make\_move\_iterator(\_container.end())}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!empty())\ \{}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ size()\ /\ Kd;\ i\ >=\ 1U;\ -\/-\/i)\ \{}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sort\_down(c[i]);}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{bool}\ empty()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ size()\ ==\ 0U;\ \}}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ size()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ c.size()\ -\/\ 1U;\ \}}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ capacity()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ c.capacity();\ \}}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ HOT\ \textcolor{keyword}{constexpr}\ \ \ \ \ \ \ T\&\ front()\ \ \ \ \ \ \ noexcept\ \{\ \textcolor{keywordflow}{return}\ top();\ \}}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{const}\ T\&\ front()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ top();\ \}}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ HOT\ \textcolor{keyword}{constexpr}\ T\&\ top()\ noexcept\ \{}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ assert(!empty()\ \&\&\ \textcolor{stringliteral}{"{}Heap\ is\ empty"{}});}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (std::is\_pointer\_v<T>)\ \{}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{reinterpret\_cast<}T\&\textcolor{keyword}{>}(begin().base());}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *begin();}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{const}\ T\&\ top()\ const\ noexcept\ \{}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \ \ \ \ assert(!empty()\ \&\&\ \textcolor{stringliteral}{"{}Heap\ is\ empty"{}});}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (std::is\_pointer\_v<T>)\ \{}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{reinterpret\_cast<}T\&\textcolor{keyword}{>}(begin().base());}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *begin();}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{const}\ T\&\ back()\ const\ noexcept\ \{}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ assert(!empty()\ \&\&\ \textcolor{stringliteral}{"{}Heap\ is\ empty"{}});}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (std::is\_pointer\_v<T>)\ \{}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{reinterpret\_cast<}T\&\textcolor{keyword}{>}(end().base());}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *end();}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00192\ }
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ HOT\ \textcolor{keyword}{constexpr}\ T\&\ back()\ noexcept\ \{}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ assert(!empty()\ \&\&\ \textcolor{stringliteral}{"{}Heap\ is\ empty"{}});}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (std::is\_pointer\_v<T>)\ \{}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{reinterpret\_cast<}T\&\textcolor{keyword}{>}(end().base());}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *end();}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ enqueue(\textcolor{keyword}{const}\ T\&\ \_item)\ \{\ push(\_item);\ \}}
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}...\ Args>}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ enqueue(Args\&\&...\ \_args)\ \{\ emplace(std::forward<Args>(\_args)...);\ \}}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ push(\textcolor{keyword}{const}\ T\&\ \_item)\ \{}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ c.push\_back(\_item);}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ sort\_up(c.back());}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ push(T\&\&\ \_item)\ \{}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ c.push\_back(std::move(\_item));}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \ \ \ \ sort\_up(c.back());}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}...\ Args>}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ emplace(Args\&\&...\ \_args)\ \{}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \ \ c.emplace\_back(std::forward<Args>(\_args)...);}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \ \ \ \ sort\_up(c.back());}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ enqueue\_nosort(\textcolor{keyword}{const}\ T\&\ \_item)\ \{\ push\_nosort(\_item);\ \}}
+\DoxyCodeLine{00227\ }
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}...\ Args>}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ enqueue\_nosort(Args\&\&...\ \_args)\ \{\ emplace\_nosort(std::forward<Args>(\_args)...);\ \}}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ push\_nosort(\textcolor{keyword}{const}\ T\&\ \_item)\ \{\ c.push\_back(\_item);\ \}}
+\DoxyCodeLine{00232\ }
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ push\_nosort(T\&\&\ \_item)\ \{\ c.push\_back(std::move(\_item));\ \}}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}...\ Args>}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ emplace\_nosort(Args\&\&...\ \_args)\ \{\ c.emplace\_back(std::forward<Args>(\_args)...);\ \}}
+\DoxyCodeLine{00237\ }
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ erase(\textcolor{keyword}{const}\ T\&\ \_item)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00239\ }
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \ \ \ \ assert(!empty()\ \&\&\ \textcolor{stringliteral}{"{}Heap\ is\ empty"{}});}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ i\ =\ index\_of(\_item);}
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \ \ \ \ assert(i\ <\ size()\ \&\&\ \textcolor{stringliteral}{"{}(Out\ of\ Bounds)\ Item\ does\ not\ exist\ in\ Heap."{}});}
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\ <\ size())\ \{}
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\ ==\ size()\ -\/\ 1U)\ \{}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c.pop\_back();\ \textcolor{comment}{//\ If\ the\ item\ to\ remove\ is\ the\ last\ item,\ just\ remove\ it.}}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c[i]\ =\ std::move(c.back());}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c.pop\_back();}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Restore\ heap\ property:}}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (size()\ >\ 1U)\ \{}
+\DoxyCodeLine{00257\ }
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\ >\ 1U\ \&\&\ comp(c[i],\ c[i\ /\ Kd]))\ \{}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sort\_up(c[i]);}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sort\_down(c[i]);}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00268\ }
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ T\ dequeue()\ noexcept\ \{}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \ \ \ \ assert(!empty()\ \&\&\ \textcolor{stringliteral}{"{}Heap\ is\ empty"{}});}
+\DoxyCodeLine{00271\ }
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ \ \ \ \ T\ result;}
+\DoxyCodeLine{00273\ }
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!empty())\ \{}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result(std::move(top()));}
+\DoxyCodeLine{00276\ }
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (size()\ >\ 0U)\ \{}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c[1U]\ =\ std::move(c.back());}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c.pop\_back();}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00282\ }
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \ \ \ \ sort\_down(c[1U]);}
+\DoxyCodeLine{00284\ }
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00287\ }
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ pop()\ noexcept\ \{}
+\DoxyCodeLine{00289\ }
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ \ \ \ \ assert(!empty()\ \&\&\ \textcolor{stringliteral}{"{}Heap\ is\ empty"{}});}
+\DoxyCodeLine{00291\ }
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!empty())\ \{}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (size()\ >\ 0U)\ \{}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c[1U]\ =\ std::move(c.back());}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c.pop\_back();}
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00298\ }
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \ \ \ \ sort\_down(c[1U]);}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00301\ }
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ pop\_back()\ noexcept\ \{}
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ \ \ \ \ assert(!empty()\ \&\&\ \textcolor{stringliteral}{"{}Heap\ is\ empty"{}});}
+\DoxyCodeLine{00305\ }
+\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!empty())\ \{}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c.pop\_back();}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00310\ }
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{bool}\ contains(T\&\ \_item)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00312\ }
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ result\ =\ !empty();}
+\DoxyCodeLine{00314\ }
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (result)\ \{}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ i\ =\ index\_of(\_item);}
+\DoxyCodeLine{00317\ }
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ assert(i\ <\ size()\ \&\&\ \textcolor{stringliteral}{"{}(Out\ of\ Bounds)\ Item\ does\ not\ exist\ in\ Heap."{}});}
+\DoxyCodeLine{00319\ }
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result\ =\ i\ <\ c.size()\ \&\&\ \_item\ ==\ c[i];}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00322\ }
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00325\ }
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ reserve(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_capacity)\ \{}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \ \ \ \ c.reserve(\_capacity);}
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00329\ }
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ swap(heap\&\ \_other)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{this}\ !=\ \&\_other)\ \{}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::swap(c,\ \ \ \ \_other.c);}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::swap(comp,\ \_other.comp);}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00336\ }
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ clear()\ noexcept\ \{\ c.clear();\ \}}
+\DoxyCodeLine{00338\ }
+\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ shrink\_to\_fit()\ noexcept\ \{\ c.shrink\_to\_fit();\ \}}
+\DoxyCodeLine{00340\ }
+\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{const}\ T\&\ at(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_index)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ c.at(\_index\ +\ 1U);}
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00344\ }
+\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ [[maybe\_unused]]}
+\DoxyCodeLine{00351\ \textcolor{preprocessor}{\#if\ \_\_cplusplus\ >=\ 202002L}}
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}}
+\DoxyCodeLine{00353\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00354\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ wipe()\ noexcept\ \{}
+\DoxyCodeLine{00355\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}\ \{}
+\DoxyCodeLine{00356\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c\ =\ std::move(\textcolor{keyword}{decltype}(c)\{\});}
+\DoxyCodeLine{00357\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00358\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{catch}\ (...)\ \{}
+\DoxyCodeLine{00359\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c.clear();}
+\DoxyCodeLine{00360\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c.shrink\_to\_fit();}
+\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00362\ \ \ \ \ \ \ \ \ \ \ \ \ c.clear();}
+\DoxyCodeLine{00363\ \ \ \ \ \ \ \ \ \ \ \ \ c.shrink\_to\_fit();}
+\DoxyCodeLine{00364\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00365\ }
+\DoxyCodeLine{00366\ \textcolor{preprocessor}{\#ifndef\ HEAP\_SUPPRESS\_EXCEPTION\_WARNING}}
+\DoxyCodeLine{00367\ \ \ \ \ \ \ \ \ [[deprecated(\textcolor{stringliteral}{"{}This\ function\ does\ not\ perform\ bounds\ checking.\(\backslash\)nSuppress\ this\ warning\ by\ defining\ \(\backslash\)"{}HEAP\_SUPPRESS\_UNSAFE\_WARNING\(\backslash\)"{}."{}})]]}
+\DoxyCodeLine{00368\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00369\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{const}\ T\&\ operator[](\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_index)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00370\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ c[\_index\ +\ 1U];}
+\DoxyCodeLine{00371\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00372\ }
+\DoxyCodeLine{00373\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }iterator\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{typename}\ Container::\ \ \ \ \ \ \ \ \ \ \ \ \ \ iterator;}
+\DoxyCodeLine{00374\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }const\_iterator\_t\ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{typename}\ Container::\ \ \ \ \ \ \ \ const\_iterator;}
+\DoxyCodeLine{00375\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }reverse\_iterator\_t\ \ \ \ \ \ \ =\ \textcolor{keyword}{typename}\ Container::\ \ \ \ \ \ reverse\_iterator;}
+\DoxyCodeLine{00376\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }const\_reverse\_iterator\_t\ =\ \textcolor{keyword}{typename}\ Container::const\_reverse\_iterator;}
+\DoxyCodeLine{00377\ }
+\DoxyCodeLine{00378\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ iterator\_t\ \ \ \ \ \ \ \ begin()\ \ \ \ \ \ \ noexcept\ \{\ \textcolor{keywordflow}{return}\ c.begin()\ +\ 1U;\ \}}
+\DoxyCodeLine{00379\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ const\_iterator\_t\ \ begin()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ c.begin()\ +\ 1U;\ \}}
+\DoxyCodeLine{00380\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ const\_iterator\_t\ cbegin()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ c.cbegin()\ +\ 1U;\ \}}
+\DoxyCodeLine{00381\ }
+\DoxyCodeLine{00382\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ iterator\_t\ \ \ \ \ \ \ \ end()\ \ \ \ \ \ \ noexcept\ \{\ \textcolor{keywordflow}{return}\ c.end();\ \}}
+\DoxyCodeLine{00383\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ const\_iterator\_t\ \ end()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ c.end();\ \}}
+\DoxyCodeLine{00384\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ const\_iterator\_t\ cend()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ c.cend();\ \}}
+\DoxyCodeLine{00385\ }
+\DoxyCodeLine{00386\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ reverse\_iterator\_t\ \ \ \ \ \ \ \ rbegin()\ \ \ \ \ \ \ noexcept\ \{\ \textcolor{keywordflow}{return}\ c.rbegin();\ \}}
+\DoxyCodeLine{00387\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ const\_reverse\_iterator\_t\ \ rbegin()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ c.rbegin();\ \}}
+\DoxyCodeLine{00388\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ const\_reverse\_iterator\_t\ crbegin()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ c.crbegin();\ \}}
+\DoxyCodeLine{00389\ }
+\DoxyCodeLine{00390\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ reverse\_iterator\_t\ \ \ \ \ \ \ \ rend()\ \ \ \ \ \ \ noexcept\ \{\ \textcolor{keywordflow}{return}\ c.rend();\ \}}
+\DoxyCodeLine{00391\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ const\_reverse\_iterator\_t\ \ rend()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ c.rend();\ \}}
+\DoxyCodeLine{00392\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ const\_reverse\_iterator\_t\ crend()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ c.crend();\ \}}
+\DoxyCodeLine{00393\ \ \ \ \ \};}
+\DoxyCodeLine{00394\ \}\ \textcolor{comment}{//chdr}}
+\DoxyCodeLine{00395\ }
+\DoxyCodeLine{00396\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

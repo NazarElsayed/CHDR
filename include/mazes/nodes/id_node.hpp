@@ -24,7 +24,7 @@ namespace chdr::mazes {
 
     public:
 
-        [[nodiscard]] constexpr id_node(const index_t& _id) noexcept : m_id(_id) {}
+        [[nodiscard]] constexpr id_node(index_t _id) noexcept : m_id(_id) {}
         ~id_node() noexcept = default;
 
         [[nodiscard]] id_node           (const id_node&) = delete;
@@ -39,9 +39,9 @@ namespace chdr::mazes {
         
         [[maybe_unused, nodiscard]] constexpr static bool is_active() noexcept { return true; }
 
-        [[maybe_unused, nodiscard]] constexpr const index_t& id() const noexcept { return m_id; }
+        [[maybe_unused, nodiscard]] constexpr index_t id() const noexcept { return m_id; }
 
-        [[maybe_unused]] constexpr void id(const index_t& _id) noexcept { m_id = _id; }
+        [[maybe_unused]] constexpr void id(index_t _id) noexcept { m_id = _id; }
     };
 
 } //chdr::mazes

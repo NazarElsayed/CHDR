@@ -49,7 +49,7 @@ namespace chdr::solvers {
             // ReSharper disable once CppPossiblyUninitializedMember
             [[nodiscard]] constexpr node() noexcept : bnode<index_t>() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] constexpr node(const index_t& _index, const scalar_t& _gScore, const scalar_t& _fScore) noexcept : bnode<index_t>(_index),
+            [[nodiscard]] constexpr node(index_t _index, scalar_t _gScore, scalar_t _fScore) noexcept : bnode<index_t>(_index),
                 m_gScore(_gScore),
                 m_fScore(_fScore) {}
 
@@ -69,7 +69,7 @@ namespace chdr::solvers {
             neighbours_t neighbours;
             size_t       neighbours_idx;
 
-            [[nodiscard]] state(const node& _curr, const scalar_t& _bound, const params_t& _params) :
+            [[nodiscard]] state(const node& _curr, scalar_t _bound, const params_t& _params) :
                 curr(_curr),
                 bound(_bound),
                 neighbours(_params.maze.get_neighbours(curr.m_index)),

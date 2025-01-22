@@ -28,7 +28,7 @@ namespace test::generator {
 	    static constexpr size_t null_v = static_cast<size_t>(-1U);
 
         template <typename weight_t, typename index_t, typename coord_t, typename scalar_t>
-        static auto generate(const coord_t& _start, coord_t& _end, const coord_t& _size, const size_t& _seed = null_v) {
+        static auto generate(const coord_t& _start, coord_t& _end, const coord_t& _size, size_t _seed = null_v) {
 
 			static_assert(std::is_integral_v<weight_t>, "Type weight_t must be an integral type.");
 

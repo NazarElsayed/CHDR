@@ -147,7 +147,7 @@ namespace test {
 		}
 
 		template <typename coord_t>
-		static int deduce_weight(const int& _argc, const char* const _argv[], const coord_t& _coord) {
+		static int deduce_weight(int _argc, const char* const _argv[], const coord_t& _coord) {
 
 			int result = EXIT_FAILURE;
 
@@ -169,7 +169,7 @@ namespace test {
 			return result;
 		}
 
-		static int deduce_coord(const int& _argc, const char* const _argv[]) {
+		static int deduce_coord(int _argc, const char* const _argv[]) {
 
 			int result = EXIT_FAILURE;
 

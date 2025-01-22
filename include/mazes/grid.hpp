@@ -89,24 +89,24 @@ namespace chdr::mazes {
         }
 
         template<bool IncludeDiagonals = false>
-        [[nodiscard]] HOT constexpr auto get_neighbours(const size_t& _id) const noexcept {
+        [[nodiscard]] HOT constexpr auto get_neighbours(size_t _id) const noexcept {
             return get_neighbours<IncludeDiagonals>(utils::to_nd(_id, size()));
         }
 
         [[nodiscard]] constexpr const auto& at(const coord_t& _id) const { return at(utils::to_1d(_id, m_size)); }
 
-        [[nodiscard]] HOT constexpr const auto& at(const size_t& _id) const {
+        [[nodiscard]] HOT constexpr const auto& at(size_t _id) const {
             assert(contains(_id) && "Out of bounds access.");
             return reinterpret_cast<const weighted_node<weight_t>&>(m_nodes[_id]);
         }
 
         [[nodiscard]] constexpr bool contains(const coord_t& _id) const noexcept {
-            return std::all_of(0U, s_rank, [&](const size_t& _i) noexcept { return _id[_i] < m_size[_i]; });
+            return std::all_of(0U, s_rank, [&](size_t _i) noexcept { return _id[_i] < m_size[_i]; });
         }
 
-        [[nodiscard]] constexpr bool contains(const size_t& _id) const noexcept { return _id < count(); }
+        [[nodiscard]] constexpr bool contains(size_t _id) const noexcept { return _id < count(); }
 
-        [[nodiscard]] constexpr bool is_transitory(const size_t& _index) const noexcept {
+        [[nodiscard]] constexpr bool is_transitory(size_t _index) const noexcept {
 
             size_t count = 0U;
 
@@ -132,7 +132,7 @@ namespace chdr::mazes {
             return count == 2U;
         }
 
-        [[nodiscard]] HOT constexpr auto& operator[](const size_t& _id) const noexcept { return at(_id); }
+        [[nodiscard]] HOT constexpr auto& operator[](size_t _id) const noexcept { return at(_id); }
 
         using               iterator_t = typename std::vector<weight_t>::              iterator;
         using         const_iterator_t = typename std::vector<weight_t>::        const_iterator;
@@ -272,24 +272,24 @@ namespace chdr::mazes {
         }
 
         template <bool IncludeDiagonals = false>
-        [[nodiscard]] HOT constexpr auto get_neighbours(const size_t& _id) const noexcept {
+        [[nodiscard]] HOT constexpr auto get_neighbours(size_t _id) const noexcept {
             return get_neighbours<IncludeDiagonals>(utils::to_nd(_id, size()));
         }
 
         [[nodiscard]] constexpr auto at(const coord_t& _id) const { return at(utils::to_1d(_id, m_size)); }
 
-        [[nodiscard]] HOT constexpr weighted_node<bool> at(const size_t& _id) const {
+        [[nodiscard]] HOT constexpr weighted_node<bool> at(size_t _id) const {
             assert(contains(_id) && "Out of bounds access.");
             return { m_nodes[_id] };
         }
 
         [[nodiscard]] constexpr bool contains(const coord_t& _id) const noexcept {
-            return std::all_of(0U, s_rank, [&](const size_t& _i) noexcept { return _id[_i] < m_size[_i]; });
+            return std::all_of(0U, s_rank, [&](size_t _i) noexcept { return _id[_i] < m_size[_i]; });
         }
 
-        [[nodiscard]] constexpr bool contains(const size_t& _id) const noexcept { return _id < count(); }
+        [[nodiscard]] constexpr bool contains(size_t _id) const noexcept { return _id < count(); }
 
-        [[nodiscard]] constexpr bool is_transitory(const size_t& _index) const noexcept {
+        [[nodiscard]] constexpr bool is_transitory(size_t _index) const noexcept {
             size_t count = 0U;
 
             for (const auto& [nActive, nCoord] : get_neighbours(_index)) {
@@ -313,7 +313,7 @@ namespace chdr::mazes {
             return count == 2U;
         }
 
-        [[nodiscard]] HOT constexpr auto& operator[](const size_t& _id) const noexcept { return m_nodes[_id]; }
+        [[nodiscard]] HOT constexpr auto& operator[](size_t _id) const noexcept { return m_nodes[_id]; }
 
         using               iterator_t = std::vector<bool>::              iterator;
         using         const_iterator_t = std::vector<bool>::        const_iterator;

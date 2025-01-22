@@ -108,7 +108,7 @@ namespace chdr {
             c.emplace_back(); // Add uninitialised super element.
         }
 
-        heap(const size_t& _capacity, std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {
+        heap(size_t _capacity, std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {
             c.reserve(utils::min(_capacity, std::numeric_limits<size_t>::max() - 1U) + 1U);
             c.emplace_back(); // Add uninitialised super element.
         }
@@ -323,7 +323,7 @@ namespace chdr {
             return result;
         }
 
-        [[maybe_unused]] constexpr void reserve(const size_t& _capacity) {
+        [[maybe_unused]] constexpr void reserve(size_t _capacity) {
             c.reserve(_capacity);
         }
 
@@ -338,7 +338,7 @@ namespace chdr {
 
         [[maybe_unused]] constexpr void shrink_to_fit() noexcept { c.shrink_to_fit(); }
 
-        [[maybe_unused, nodiscard]] constexpr const T& at(const size_t& _index) const {
+        [[maybe_unused, nodiscard]] constexpr const T& at(size_t _index) const {
             return c.at(_index + 1U);
         }
 
@@ -366,7 +366,7 @@ namespace chdr {
 #ifndef HEAP_SUPPRESS_EXCEPTION_WARNING
         [[deprecated("This function does not perform bounds checking.\nSuppress this warning by defining \"HEAP_SUPPRESS_UNSAFE_WARNING\".")]]
 #endif
-        [[maybe_unused, nodiscard]] constexpr const T& operator[](const size_t& _index) const noexcept {
+        [[maybe_unused, nodiscard]] constexpr const T& operator[](size_t _index) const noexcept {
             return c[_index + 1U];
         }
 

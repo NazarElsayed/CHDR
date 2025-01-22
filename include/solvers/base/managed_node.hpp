@@ -37,7 +37,7 @@ namespace chdr::solvers {
             m_successors(0U) {}
         ~managed_node() noexcept = default;
 
-        [[nodiscard]] HOT constexpr managed_node(const index_t& _index, managed_node* RESTRICT const _parent = nullptr) noexcept : bnode<index_t>(_index),
+        [[nodiscard]] HOT constexpr managed_node(index_t _index, managed_node* RESTRICT const _parent = nullptr) noexcept : bnode<index_t>(_index),
             m_parent(_parent),
             m_successors(0U)
         {

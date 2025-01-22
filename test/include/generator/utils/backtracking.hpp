@@ -182,7 +182,7 @@ namespace test::generator::utils {
 #if defined(__cpp_constexpr_dynamic_alloc) && (__cpp_constexpr_dynamic_alloc >= 201907L)
         constexpr
 #endif // defined(__cpp_constexpr_dynamic_alloc) && (__cpp_constexpr_dynamic_alloc >= 201907L)
-        auto generate(const coord_t& _start, coord_t& _end, const coord_t& _size, const double& _loops = 0.0, const double& _obstacles = 0.0, const size_t& _seed = null_v) {
+        auto generate(const coord_t& _start, coord_t& _end, const coord_t& _size, double _loops = 0.0, double _obstacles = 0.0, size_t _seed = null_v) {
 
             /*
              * 1. Choose a starting point in the field.

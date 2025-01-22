@@ -116,7 +116,7 @@ namespace chdr {
      * - Includes a memory barrier between the malloc and free to discourage optimisation and force synchronisation.
      * - Uses preprocessor blocks around the function to prevent optimisation by a variety of compilers.
      */
-    [[maybe_unused]] inline void malloc_consolidate(const size_t& _malloc = 2048U) {
+    [[maybe_unused]] inline void malloc_consolidate(size_t _malloc = 2048U) {
         void* tmp = malloc(_malloc);
         asm volatile("" ::: "memory");
         free(tmp);
