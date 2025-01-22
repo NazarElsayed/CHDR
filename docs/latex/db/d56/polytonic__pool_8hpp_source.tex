@@ -41,7 +41,7 @@
 \DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ std::vector<size\_t>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ block\_sizes;}
 \DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ std::vector<void*>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ free;}
 \DoxyCodeLine{00039\ }
-\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ HOT\ \textcolor{keywordtype}{void}*\ expand(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_size,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_alignment)\ \{}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ HOT\ \textcolor{keywordtype}{void}*\ expand(\textcolor{keywordtype}{size\_t}\ \_size,\ \textcolor{keywordtype}{size\_t}\ \_alignment)\ \{}
 \DoxyCodeLine{00041\ }
 \DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Compute\ the\ properly\ aligned\ block\ size\ for\ this\ chunk.}}
 \DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ aligned\_chunk\_size\ =\ (\_size\ +\ \_alignment\ -\/\ 1U)\ \&\ \string~(\_alignment\ -\/\ 1U);}
@@ -100,7 +100,7 @@
 \DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ initial\_block\_width(default\_block\_width),}
 \DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ block\_width(initial\_block\_width)\ \{\}}
 \DoxyCodeLine{00098\ }
-\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keyword}{explicit}\ polytonic\_pool(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_capacity)\ noexcept\ :}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keyword}{explicit}\ polytonic\_pool(\textcolor{keywordtype}{size\_t}\ \_capacity)\ noexcept\ :}
 \DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ initial\_block\_width(utils::min(\_capacity,\ max\_block\_width)),}
 \DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ block\_width(initial\_block\_width)}
 \DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \{}

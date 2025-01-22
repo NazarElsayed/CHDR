@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CHDR: chdr::existence_set::trim</title>
+<title>CHDR: chdr::existence_set::allocate</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -78,7 +78,7 @@ $(function() {
    <td valign="top">
       <div class="navtab">
         <table>
-          <tr><td class="navtab"><a class="navtab" href="../../d6/db9/classchdr_1_1existence__set_a048652adbdcafb2bde8b8157c12b76c3.html#a048652adbdcafb2bde8b8157c12b76c3">allocate</a></td></tr>
+          <tr><td class="navtabHL"><a class="navtab" href="../../d6/db9/classchdr_1_1existence__set_a048652adbdcafb2bde8b8157c12b76c3.html#a048652adbdcafb2bde8b8157c12b76c3">allocate</a></td></tr>
           <tr><td class="navtab"><a class="navtab" href="../../d6/db9/classchdr_1_1existence__set_a04c626906f05290c1b7e2ee1eff9f630.html#a04c626906f05290c1b7e2ee1eff9f630">capacity</a></td></tr>
           <tr><td class="navtab"><a class="navtab" href="../../d6/db9/classchdr_1_1existence__set_a96d391a5b8907ff5b9adf72774583f90.html#a96d391a5b8907ff5b9adf72774583f90">clear</a></td></tr>
           <tr><td class="navtab"><a class="navtab" href="../../d6/db9/classchdr_1_1existence__set_a1320a33234edbfb6d5152f4d48b3aa48.html#a1320a33234edbfb6d5152f4d48b3aa48">contains</a></td></tr>
@@ -92,13 +92,13 @@ $(function() {
           <tr><td class="navtab"><a class="navtab" href="../../d6/db9/classchdr_1_1existence__set_ac2c34870338936e064133f05283b57e0.html#ac2c34870338936e064133f05283b57e0">resize</a></td></tr>
           <tr><td class="navtab"><a class="navtab" href="../../d6/db9/classchdr_1_1existence__set_a686f8cfcb07e2c875e58185f5b9cabd6.html#a686f8cfcb07e2c875e58185f5b9cabd6">shrink_to_fit</a></td></tr>
           <tr><td class="navtab"><a class="navtab" href="../../d6/db9/classchdr_1_1existence__set_a545aa7b6f77b13ccee4052087e9ac6a9.html#a545aa7b6f77b13ccee4052087e9ac6a9">size</a></td></tr>
-          <tr><td class="navtabHL"><a class="navtab" href="../../d6/db9/classchdr_1_1existence__set_a1421a0ea5aa875fc564c3309ae513763.html#a1421a0ea5aa875fc564c3309ae513763">trim</a></td></tr>
+          <tr><td class="navtab"><a class="navtab" href="../../d6/db9/classchdr_1_1existence__set_a1421a0ea5aa875fc564c3309ae513763.html#a1421a0ea5aa875fc564c3309ae513763">trim</a></td></tr>
         </table>
       </div>
    </td>
    <td valign="top" class="mempage">
-<a id="a1421a0ea5aa875fc564c3309ae513763" name="a1421a0ea5aa875fc564c3309ae513763"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1421a0ea5aa875fc564c3309ae513763">&#9670;&#160;</a></span>trim()</h2>
+<a id="a048652adbdcafb2bde8b8157c12b76c3" name="a048652adbdcafb2bde8b8157c12b76c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a048652adbdcafb2bde8b8157c12b76c3">&#9670;&#160;</a></span>allocate()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -109,10 +109,27 @@ template&lt;typename alignment_type  = high_performance&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr void trim </td>
+          <td class="memname">HOT constexpr void allocate </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>_hash</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>_increment</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>_max_increment</em> = <code>std::numeric_limits&lt;size_t&gt;::max()</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -122,8 +139,15 @@ template&lt;typename alignment_type  = high_performance&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>trim the set by removing trailing false values. </p>
-<dl class="section see"><dt>See also</dt><dd>set::clear() </dd></dl>
+<p>Preallocates memory based on the hash and bucket size. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">_hash</td><td>The value for which memory needs to be preallocated. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">_increment</td><td>Size of bucket to be considered for memory allocation. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">_max_increment</td><td>(optional) Maximum limit for the memory allocation. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

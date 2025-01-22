@@ -120,7 +120,7 @@ $(document).ready(function() { init_codefold(1); });
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        std::vector&lt;size_t&gt;                  block_sizes;</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        std::vector&lt;void*&gt;                   free;</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        HOT <span class="keywordtype">void</span>* expand(<span class="keyword">const</span> <span class="keywordtype">size_t</span>&amp; _size, <span class="keyword">const</span> <span class="keywordtype">size_t</span>&amp; _alignment) {</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        HOT <span class="keywordtype">void</span>* expand(<span class="keywordtype">size_t</span> _size, <span class="keywordtype">size_t</span> _alignment) {</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>            <span class="comment">// Compute the properly aligned block size for this chunk.</span></div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>            <span class="keyword">const</span> <span class="keyword">auto</span> aligned_chunk_size = (_size + _alignment - 1U) &amp; ~(_alignment - 1U);</div>
@@ -179,7 +179,7 @@ $(document).ready(function() { init_codefold(1); });
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>            initial_block_width(default_block_width),</div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>                    block_width(initial_block_width) {}</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        <span class="keyword">explicit</span> polytonic_pool(<span class="keyword">const</span> <span class="keywordtype">size_t</span>&amp; _capacity) noexcept :</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        <span class="keyword">explicit</span> polytonic_pool(<span class="keywordtype">size_t</span> _capacity) noexcept :</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>            initial_block_width(utils::min(_capacity, max_block_width)),</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>                    block_width(initial_block_width)</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        {</div>

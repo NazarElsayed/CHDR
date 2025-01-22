@@ -177,7 +177,7 @@
 \DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \string~solver\_utils()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{delete};}
 \DoxyCodeLine{00174\ }
 \DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ collection\_t>}
-\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ HOT\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ preallocate\_emplace(collection\_t\&\ \_collection,\ \textcolor{keyword}{const}\ T\&\ \_value,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_increment,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_max\_increment\ =\ std::numeric\_limits<size\_t>::max())\ \{}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ HOT\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ preallocate\_emplace(collection\_t\&\ \_collection,\ \textcolor{keyword}{const}\ T\&\ \_value,\ \textcolor{keywordtype}{size\_t}\ \_increment,\ \textcolor{keywordtype}{size\_t}\ \_max\_increment\ =\ std::numeric\_limits<size\_t>::max())\ \{}
 \DoxyCodeLine{00177\ }
 \DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (std::is\_same\_v<collection\_t,\ existence\_set<>>)\ \{}
 \DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_collection.allocate(\_value,\ \_increment,\ \_max\_increment);}
@@ -207,7 +207,7 @@
 \DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00204\ }
 \DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ node\_t,\ \textcolor{keyword}{typename}\ coord\_t>}
-\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ rbacktrack(\textcolor{keyword}{const}\ node\_t\&\ \_node,\ \textcolor{keyword}{const}\ coord\_t\&\ \_size,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_depth)\ \{}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ rbacktrack(\textcolor{keyword}{const}\ node\_t\&\ \_node,\ \textcolor{keyword}{const}\ coord\_t\&\ \_size,\ \textcolor{keywordtype}{size\_t}\ \_depth)\ \{}
 \DoxyCodeLine{00207\ }
 \DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<coord\_t>\ result(\_depth);}
 \DoxyCodeLine{00209\ }

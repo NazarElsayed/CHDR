@@ -103,7 +103,7 @@ $(document).ready(function() { init_codefold(1); });
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        <span class="keyword">constexpr</span> bnode() noexcept {} <span class="comment">// NOLINT(*-pro-type-member-init, *-use-equals-default)</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        ~bnode() noexcept = default;</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        HOT constexpr bnode(const index_t&amp; _index) noexcept : m_index(_index) {}</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        HOT constexpr bnode(index_t _index) noexcept : m_index(_index) {}</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        <span class="keyword">constexpr</span> bnode           (<span class="keyword">const</span> bnode&amp;) <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        <span class="keyword">constexpr</span> bnode&amp; operator=(<span class="keyword">const</span> bnode&amp;) <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>

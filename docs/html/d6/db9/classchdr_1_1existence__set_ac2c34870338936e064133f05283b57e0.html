@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CHDR: chdr::existence_set::trim</title>
+<title>CHDR: chdr::existence_set::resize</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -89,16 +89,16 @@ $(function() {
           <tr><td class="navtab"><a class="navtab" href="../../d6/db9/classchdr_1_1existence__set_aa9162530ba952dee5be2d0dfdeacfc85.html#aa9162530ba952dee5be2d0dfdeacfc85">existence_set</a></td></tr>
           <tr><td class="navtab"><a class="navtab" href="../../d6/db9/classchdr_1_1existence__set_ada082685870b72698a4789e6e1642141.html#ada082685870b72698a4789e6e1642141">push</a></td></tr>
           <tr><td class="navtab"><a class="navtab" href="../../d6/db9/classchdr_1_1existence__set_adbe1cda7d239484f8b2d51804864ca76.html#adbe1cda7d239484f8b2d51804864ca76">reserve</a></td></tr>
-          <tr><td class="navtab"><a class="navtab" href="../../d6/db9/classchdr_1_1existence__set_ac2c34870338936e064133f05283b57e0.html#ac2c34870338936e064133f05283b57e0">resize</a></td></tr>
+          <tr><td class="navtabHL"><a class="navtab" href="../../d6/db9/classchdr_1_1existence__set_ac2c34870338936e064133f05283b57e0.html#ac2c34870338936e064133f05283b57e0">resize</a></td></tr>
           <tr><td class="navtab"><a class="navtab" href="../../d6/db9/classchdr_1_1existence__set_a686f8cfcb07e2c875e58185f5b9cabd6.html#a686f8cfcb07e2c875e58185f5b9cabd6">shrink_to_fit</a></td></tr>
           <tr><td class="navtab"><a class="navtab" href="../../d6/db9/classchdr_1_1existence__set_a545aa7b6f77b13ccee4052087e9ac6a9.html#a545aa7b6f77b13ccee4052087e9ac6a9">size</a></td></tr>
-          <tr><td class="navtabHL"><a class="navtab" href="../../d6/db9/classchdr_1_1existence__set_a1421a0ea5aa875fc564c3309ae513763.html#a1421a0ea5aa875fc564c3309ae513763">trim</a></td></tr>
+          <tr><td class="navtab"><a class="navtab" href="../../d6/db9/classchdr_1_1existence__set_a1421a0ea5aa875fc564c3309ae513763.html#a1421a0ea5aa875fc564c3309ae513763">trim</a></td></tr>
         </table>
       </div>
    </td>
    <td valign="top" class="mempage">
-<a id="a1421a0ea5aa875fc564c3309ae513763" name="a1421a0ea5aa875fc564c3309ae513763"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1421a0ea5aa875fc564c3309ae513763">&#9670;&#160;</a></span>trim()</h2>
+<a id="ac2c34870338936e064133f05283b57e0" name="ac2c34870338936e064133f05283b57e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac2c34870338936e064133f05283b57e0">&#9670;&#160;</a></span>resize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -109,10 +109,21 @@ template&lt;typename alignment_type  = high_performance&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr void trim </td>
+          <td class="memname">constexpr void resize </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>_newSize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">boolean_t&#160;</td>
+          <td class="paramname"><em>_newValue</em> = <code>{&#160;false&#160;}</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -122,8 +133,21 @@ template&lt;typename alignment_type  = high_performance&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>trim the set by removing trailing false values. </p>
-<dl class="section see"><dt>See also</dt><dd>set::clear() </dd></dl>
+<p>resize the <a class="el" href="../../d6/db9/classchdr_1_1existence__set.html">existence_set</a>. </p>
+<p>This method resizes the <a class="el" href="../../d6/db9/classchdr_1_1existence__set.html">existence_set</a> by calling the resize method on the internal vector.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">_newSize</td><td>The new size to resize the set to. </td></tr>
+    <tr><td class="paramname">_newValue</td><td>The optional value to fill the new elements with. (default is false). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>If the new size is smaller than the current size, the elements at the end will be removed. If the new size is greater than the current size, the new elements will be filled with the specified value.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="../../d6/db9/classchdr_1_1existence__set_adbe1cda7d239484f8b2d51804864ca76.html#adbe1cda7d239484f8b2d51804864ca76" title="Reserves memory for the existence_set.">existence_set::reserve(size_t)</a> </dd>
+<dd>
+existence_set::prune() </dd>
+<dd>
+<a class="el" href="../../d6/db9/classchdr_1_1existence__set_a96d391a5b8907ff5b9adf72774583f90.html#a96d391a5b8907ff5b9adf72774583f90" title="clear the content of the set.">existence_set::clear()</a> </dd></dl>
 
 </div>
 </div>

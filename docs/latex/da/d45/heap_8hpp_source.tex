@@ -112,7 +112,7 @@
 \DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ c.emplace\_back();\ \textcolor{comment}{//\ Add\ uninitialised\ super\ element.}}
 \DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00110\ }
-\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ heap(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_capacity,\ std::pmr::memory\_resource*\ \_resource\ =\ std::pmr::get\_default\_resource())\ :\ c(\_resource)\ \{}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ heap(\textcolor{keywordtype}{size\_t}\ \_capacity,\ std::pmr::memory\_resource*\ \_resource\ =\ std::pmr::get\_default\_resource())\ :\ c(\_resource)\ \{}
 \DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ c.reserve(utils::min(\_capacity,\ std::numeric\_limits<size\_t>::max()\ -\/\ 1U)\ +\ 1U);}
 \DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ c.emplace\_back();\ \textcolor{comment}{//\ Add\ uninitialised\ super\ element.}}
 \DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \}}
@@ -327,7 +327,7 @@
 \DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
 \DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00325\ }
-\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ reserve(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_capacity)\ \{}
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ reserve(\textcolor{keywordtype}{size\_t}\ \_capacity)\ \{}
 \DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \ \ \ \ c.reserve(\_capacity);}
 \DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00329\ }
@@ -342,7 +342,7 @@
 \DoxyCodeLine{00338\ }
 \DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ shrink\_to\_fit()\ noexcept\ \{\ c.shrink\_to\_fit();\ \}}
 \DoxyCodeLine{00340\ }
-\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{const}\ T\&\ at(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_index)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{const}\ T\&\ at(\textcolor{keywordtype}{size\_t}\ \_index)\textcolor{keyword}{\ const\ }\{}
 \DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ c.at(\_index\ +\ 1U);}
 \DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00344\ }
@@ -365,7 +365,7 @@
 \DoxyCodeLine{00366\ \textcolor{preprocessor}{\#ifndef\ HEAP\_SUPPRESS\_EXCEPTION\_WARNING}}
 \DoxyCodeLine{00367\ \ \ \ \ \ \ \ \ [[deprecated(\textcolor{stringliteral}{"{}This\ function\ does\ not\ perform\ bounds\ checking.\(\backslash\)nSuppress\ this\ warning\ by\ defining\ \(\backslash\)"{}HEAP\_SUPPRESS\_UNSAFE\_WARNING\(\backslash\)"{}."{}})]]}
 \DoxyCodeLine{00368\ \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{00369\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{const}\ T\&\ operator[](\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_index)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00369\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{const}\ T\&\ operator[](\textcolor{keywordtype}{size\_t}\ \_index)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{}
 \DoxyCodeLine{00370\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ c[\_index\ +\ 1U];}
 \DoxyCodeLine{00371\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00372\ }

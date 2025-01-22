@@ -22,30 +22,30 @@ A set allowing for efficient existence checks without needing to store the origi
 \item 
 constexpr \mbox{\hyperlink{classchdr_1_1existence__set_a7f042ea76afb9ba960dda0c06ac70bd9_a7f042ea76afb9ba960dda0c06ac70bd9}{existence\+\_\+set}} (std\+::pmr\+::memory\+\_\+resource \texorpdfstring{$\ast$}{*}\+\_\+resource=std\+::pmr\+::get\+\_\+default\+\_\+resource()) noexcept
 \begin{DoxyCompactList}\small\item\em Default Constructor. \end{DoxyCompactList}\item 
-constexpr \mbox{\hyperlink{classchdr_1_1existence__set_a2ee238013bf66f341b7ec49abdcc0677_a2ee238013bf66f341b7ec49abdcc0677}{existence\+\_\+set}} (const size\+\_\+t \&\+\_\+capacity, std\+::pmr\+::memory\+\_\+resource \texorpdfstring{$\ast$}{*}\+\_\+resource=std\+::pmr\+::get\+\_\+default\+\_\+resource())
+constexpr \mbox{\hyperlink{classchdr_1_1existence__set_ac7b04d9a2c0ada15f34972a4f94180c8_ac7b04d9a2c0ada15f34972a4f94180c8}{existence\+\_\+set}} (size\+\_\+t \+\_\+capacity, std\+::pmr\+::memory\+\_\+resource \texorpdfstring{$\ast$}{*}\+\_\+resource=std\+::pmr\+::get\+\_\+default\+\_\+resource())
 \begin{DoxyCompactList}\small\item\em Constructor with a predefined capacity. \end{DoxyCompactList}\item 
 constexpr \mbox{\hyperlink{classchdr_1_1existence__set_aa9162530ba952dee5be2d0dfdeacfc85_aa9162530ba952dee5be2d0dfdeacfc85}{existence\+\_\+set}} (const std\+::initializer\+\_\+list$<$ size\+\_\+t $>$ \&\+\_\+items, std\+::pmr\+::memory\+\_\+resource \texorpdfstring{$\ast$}{*}\+\_\+resource=std\+::pmr\+::get\+\_\+default\+\_\+resource())
 \begin{DoxyCompactList}\small\item\em Constructor with a collection of items. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Methods}
 \begin{DoxyCompactItemize}
 \item 
-HOT constexpr void \mbox{\hyperlink{classchdr_1_1existence__set_afa3aeb0b93cffe9972e14f4dbe6523e5_afa3aeb0b93cffe9972e14f4dbe6523e5}{allocate}} (const size\+\_\+t \&\+\_\+hash, const size\+\_\+t \&\+\_\+increment, const size\+\_\+t \&\+\_\+max\+\_\+increment=std\+::numeric\+\_\+limits$<$ size\+\_\+t $>$\+::max())
+HOT constexpr void \mbox{\hyperlink{classchdr_1_1existence__set_a048652adbdcafb2bde8b8157c12b76c3_a048652adbdcafb2bde8b8157c12b76c3}{allocate}} (size\+\_\+t \+\_\+hash, size\+\_\+t \+\_\+increment, size\+\_\+t \+\_\+max\+\_\+increment=std\+::numeric\+\_\+limits$<$ size\+\_\+t $>$\+::max())
 \begin{DoxyCompactList}\small\item\em Preallocates memory based on the hash and bucket size. \end{DoxyCompactList}\item 
 constexpr auto \mbox{\hyperlink{classchdr_1_1existence__set_a04c626906f05290c1b7e2ee1eff9f630_a04c626906f05290c1b7e2ee1eff9f630}{capacity}} () const noexcept
 \begin{DoxyCompactList}\small\item\em Get the capacity of the set. \end{DoxyCompactList}\item 
 constexpr void \mbox{\hyperlink{classchdr_1_1existence__set_a96d391a5b8907ff5b9adf72774583f90_a96d391a5b8907ff5b9adf72774583f90}{clear}} () noexcept
 \begin{DoxyCompactList}\small\item\em clear the content of the set. \end{DoxyCompactList}\item 
-HOT constexpr bool \mbox{\hyperlink{classchdr_1_1existence__set_a146b2f1dce8681ce04d1ceae403df1cb_a146b2f1dce8681ce04d1ceae403df1cb}{contains}} (const size\+\_\+t \&\+\_\+hash) const noexcept
+HOT constexpr bool \mbox{\hyperlink{classchdr_1_1existence__set_a1320a33234edbfb6d5152f4d48b3aa48_a1320a33234edbfb6d5152f4d48b3aa48}{contains}} (size\+\_\+t \+\_\+hash) const noexcept
 \begin{DoxyCompactList}\small\item\em Check if the given hash exists in the set. \end{DoxyCompactList}\item 
 {\footnotesize template$<$typename T $>$ }\\HOT constexpr void \mbox{\hyperlink{classchdr_1_1existence__set_a7644ab88f3815acf67821a9e649858bf_a7644ab88f3815acf67821a9e649858bf}{emplace}} (T \&\&\+\_\+hash)
 \begin{DoxyCompactList}\small\item\em Add a hash to the set. \end{DoxyCompactList}\item 
-constexpr void \mbox{\hyperlink{classchdr_1_1existence__set_a4bf3e2fed512a048a4b9f7d8a3ba2b2e_a4bf3e2fed512a048a4b9f7d8a3ba2b2e}{erase}} (const size\+\_\+t \&\+\_\+hash) noexcept
+constexpr void \mbox{\hyperlink{classchdr_1_1existence__set_a9575e44ec2318176b8cd547188e1b096_a9575e44ec2318176b8cd547188e1b096}{erase}} (size\+\_\+t \+\_\+hash) noexcept
 \begin{DoxyCompactList}\small\item\em remove a hash from the set. \end{DoxyCompactList}\item 
-HOT constexpr void \mbox{\hyperlink{classchdr_1_1existence__set_aa71d722bb24f1773903b2627354e82a0_aa71d722bb24f1773903b2627354e82a0}{push}} (const size\+\_\+t \&\+\_\+hash)
+HOT constexpr void \mbox{\hyperlink{classchdr_1_1existence__set_ada082685870b72698a4789e6e1642141_ada082685870b72698a4789e6e1642141}{push}} (size\+\_\+t \+\_\+hash)
 \begin{DoxyCompactList}\small\item\em Add a hash to the set. \end{DoxyCompactList}\item 
-HOT constexpr void \mbox{\hyperlink{classchdr_1_1existence__set_a393ebde6c084724200ae22328dc3d2e4_a393ebde6c084724200ae22328dc3d2e4}{reserve}} (const size\+\_\+t \&\+\_\+new\+Capacity)
+HOT constexpr void \mbox{\hyperlink{classchdr_1_1existence__set_adbe1cda7d239484f8b2d51804864ca76_adbe1cda7d239484f8b2d51804864ca76}{reserve}} (size\+\_\+t \+\_\+new\+Capacity)
 \begin{DoxyCompactList}\small\item\em Reserves memory for the \doxylink{classchdr_1_1existence__set}{existence\+\_\+set}. \end{DoxyCompactList}\item 
-constexpr void \mbox{\hyperlink{classchdr_1_1existence__set_a139ca7a5699ee541db7d8e18f142452c_a139ca7a5699ee541db7d8e18f142452c}{resize}} (const size\+\_\+t \&\+\_\+new\+Size, const boolean\+\_\+t \&\+\_\+new\+Value=static\+\_\+cast$<$ boolean\+\_\+t $>$(false))
+constexpr void \mbox{\hyperlink{classchdr_1_1existence__set_ac2c34870338936e064133f05283b57e0_ac2c34870338936e064133f05283b57e0}{resize}} (size\+\_\+t \+\_\+new\+Size, boolean\+\_\+t \+\_\+new\+Value=\{ false \})
 \begin{DoxyCompactList}\small\item\em resize the \doxylink{classchdr_1_1existence__set}{existence\+\_\+set}. \end{DoxyCompactList}\item 
 constexpr void \mbox{\hyperlink{classchdr_1_1existence__set_a686f8cfcb07e2c875e58185f5b9cabd6_a686f8cfcb07e2c875e58185f5b9cabd6}{shrink\+\_\+to\+\_\+fit}} ()
 \begin{DoxyCompactList}\small\item\em Trims unused elements from the end of the set. \end{DoxyCompactList}\item 
@@ -72,12 +72,12 @@ Initialises the set. A custom polymorphic memory resource can be optionally prov
 \mbox{\texttt{ in,out}}  & {\em \+\_\+resource} & (optional) Custom memory resource. \\
 \hline
 \end{DoxyParams}
-\Hypertarget{classchdr_1_1existence__set_a2ee238013bf66f341b7ec49abdcc0677_a2ee238013bf66f341b7ec49abdcc0677}\label{classchdr_1_1existence__set_a2ee238013bf66f341b7ec49abdcc0677_a2ee238013bf66f341b7ec49abdcc0677} 
+\Hypertarget{classchdr_1_1existence__set_ac7b04d9a2c0ada15f34972a4f94180c8_ac7b04d9a2c0ada15f34972a4f94180c8}\label{classchdr_1_1existence__set_ac7b04d9a2c0ada15f34972a4f94180c8_ac7b04d9a2c0ada15f34972a4f94180c8} 
 \index{existence\_set$<$ alignment\_type $>$@{existence\_set$<$ alignment\_type $>$}!existence\_set@{existence\_set}}
 \index{existence\_set@{existence\_set}!existence\_set$<$ alignment\_type $>$@{existence\_set$<$ alignment\_type $>$}}
 \doxysubsubsection{\texorpdfstring{existence\_set()}{existence\_set()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
 {\footnotesize\ttfamily template$<$typename alignment\+\_\+type  = high\+\_\+performance$>$ \\
-constexpr \mbox{\hyperlink{classchdr_1_1existence__set}{existence\+\_\+set}} (\begin{DoxyParamCaption}\item[{const size\+\_\+t \&}]{\+\_\+capacity,  }\item[{std\+::pmr\+::memory\+\_\+resource \texorpdfstring{$\ast$}{*}}]{\+\_\+resource = {\ttfamily std\+:\+:pmr\+:\+:get\+\_\+default\+\_\+resource()} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}, {\ttfamily [constexpr]}}
+constexpr \mbox{\hyperlink{classchdr_1_1existence__set}{existence\+\_\+set}} (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{\+\_\+capacity,  }\item[{std\+::pmr\+::memory\+\_\+resource \texorpdfstring{$\ast$}{*}}]{\+\_\+resource = {\ttfamily std\+:\+:pmr\+:\+:get\+\_\+default\+\_\+resource()} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}, {\ttfamily [constexpr]}}
 
 
 
@@ -114,12 +114,12 @@ Please note\+: Duplicate entries will be merged into single entries.
 
 
 \doxysubsection{Methods}
-\Hypertarget{classchdr_1_1existence__set_afa3aeb0b93cffe9972e14f4dbe6523e5_afa3aeb0b93cffe9972e14f4dbe6523e5}\label{classchdr_1_1existence__set_afa3aeb0b93cffe9972e14f4dbe6523e5_afa3aeb0b93cffe9972e14f4dbe6523e5} 
+\Hypertarget{classchdr_1_1existence__set_a048652adbdcafb2bde8b8157c12b76c3_a048652adbdcafb2bde8b8157c12b76c3}\label{classchdr_1_1existence__set_a048652adbdcafb2bde8b8157c12b76c3_a048652adbdcafb2bde8b8157c12b76c3} 
 \index{existence\_set$<$ alignment\_type $>$@{existence\_set$<$ alignment\_type $>$}!allocate@{allocate}}
 \index{allocate@{allocate}!existence\_set$<$ alignment\_type $>$@{existence\_set$<$ alignment\_type $>$}}
 \doxysubsubsection{\texorpdfstring{allocate()}{allocate()}}
 {\footnotesize\ttfamily template$<$typename alignment\+\_\+type  = high\+\_\+performance$>$ \\
-HOT constexpr void allocate (\begin{DoxyParamCaption}\item[{const size\+\_\+t \&}]{\+\_\+hash,  }\item[{const size\+\_\+t \&}]{\+\_\+increment,  }\item[{const size\+\_\+t \&}]{\+\_\+max\+\_\+increment = {\ttfamily std\+:\+:numeric\+\_\+limits$<$size\+\_\+t$>$\+:\+:max()} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+HOT constexpr void allocate (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{\+\_\+hash,  }\item[{size\+\_\+t}]{\+\_\+increment,  }\item[{size\+\_\+t}]{\+\_\+max\+\_\+increment = {\ttfamily std\+:\+:numeric\+\_\+limits$<$size\+\_\+t$>$\+:\+:max()} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
 
 
 
@@ -161,12 +161,12 @@ constexpr void clear (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{
 
 clear the content of the set. 
 
-remove all elements from the set. \Hypertarget{classchdr_1_1existence__set_a146b2f1dce8681ce04d1ceae403df1cb_a146b2f1dce8681ce04d1ceae403df1cb}\label{classchdr_1_1existence__set_a146b2f1dce8681ce04d1ceae403df1cb_a146b2f1dce8681ce04d1ceae403df1cb} 
+remove all elements from the set. \Hypertarget{classchdr_1_1existence__set_a1320a33234edbfb6d5152f4d48b3aa48_a1320a33234edbfb6d5152f4d48b3aa48}\label{classchdr_1_1existence__set_a1320a33234edbfb6d5152f4d48b3aa48_a1320a33234edbfb6d5152f4d48b3aa48} 
 \index{existence\_set$<$ alignment\_type $>$@{existence\_set$<$ alignment\_type $>$}!contains@{contains}}
 \index{contains@{contains}!existence\_set$<$ alignment\_type $>$@{existence\_set$<$ alignment\_type $>$}}
 \doxysubsubsection{\texorpdfstring{contains()}{contains()}}
 {\footnotesize\ttfamily template$<$typename alignment\+\_\+type  = high\+\_\+performance$>$ \\
-HOT constexpr bool contains (\begin{DoxyParamCaption}\item[{const size\+\_\+t \&}]{\+\_\+hash }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+HOT constexpr bool contains (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{\+\_\+hash }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
 
 
 
@@ -197,12 +197,12 @@ Add a hash to the set.
 \mbox{\texttt{ in}}  & {\em \+\_\+hash} & The hash value to be added. \\
 \hline
 \end{DoxyParams}
-\Hypertarget{classchdr_1_1existence__set_a4bf3e2fed512a048a4b9f7d8a3ba2b2e_a4bf3e2fed512a048a4b9f7d8a3ba2b2e}\label{classchdr_1_1existence__set_a4bf3e2fed512a048a4b9f7d8a3ba2b2e_a4bf3e2fed512a048a4b9f7d8a3ba2b2e} 
+\Hypertarget{classchdr_1_1existence__set_a9575e44ec2318176b8cd547188e1b096_a9575e44ec2318176b8cd547188e1b096}\label{classchdr_1_1existence__set_a9575e44ec2318176b8cd547188e1b096_a9575e44ec2318176b8cd547188e1b096} 
 \index{existence\_set$<$ alignment\_type $>$@{existence\_set$<$ alignment\_type $>$}!erase@{erase}}
 \index{erase@{erase}!existence\_set$<$ alignment\_type $>$@{existence\_set$<$ alignment\_type $>$}}
 \doxysubsubsection{\texorpdfstring{erase()}{erase()}}
 {\footnotesize\ttfamily template$<$typename alignment\+\_\+type  = high\+\_\+performance$>$ \\
-constexpr void erase (\begin{DoxyParamCaption}\item[{const size\+\_\+t \&}]{\+\_\+hash }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+constexpr void erase (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{\+\_\+hash }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
 
 
 
@@ -221,12 +221,12 @@ set\+::prune()
 
 set\+::clear() 
 \end{DoxySeeAlso}
-\Hypertarget{classchdr_1_1existence__set_aa71d722bb24f1773903b2627354e82a0_aa71d722bb24f1773903b2627354e82a0}\label{classchdr_1_1existence__set_aa71d722bb24f1773903b2627354e82a0_aa71d722bb24f1773903b2627354e82a0} 
+\Hypertarget{classchdr_1_1existence__set_ada082685870b72698a4789e6e1642141_ada082685870b72698a4789e6e1642141}\label{classchdr_1_1existence__set_ada082685870b72698a4789e6e1642141_ada082685870b72698a4789e6e1642141} 
 \index{existence\_set$<$ alignment\_type $>$@{existence\_set$<$ alignment\_type $>$}!push@{push}}
 \index{push@{push}!existence\_set$<$ alignment\_type $>$@{existence\_set$<$ alignment\_type $>$}}
 \doxysubsubsection{\texorpdfstring{push()}{push()}}
 {\footnotesize\ttfamily template$<$typename alignment\+\_\+type  = high\+\_\+performance$>$ \\
-HOT constexpr void push (\begin{DoxyParamCaption}\item[{const size\+\_\+t \&}]{\+\_\+hash }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+HOT constexpr void push (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{\+\_\+hash }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
 
 
 
@@ -237,12 +237,12 @@ Add a hash to the set.
 \mbox{\texttt{ in}}  & {\em \+\_\+hash} & The hash value to be added. \\
 \hline
 \end{DoxyParams}
-\Hypertarget{classchdr_1_1existence__set_a393ebde6c084724200ae22328dc3d2e4_a393ebde6c084724200ae22328dc3d2e4}\label{classchdr_1_1existence__set_a393ebde6c084724200ae22328dc3d2e4_a393ebde6c084724200ae22328dc3d2e4} 
+\Hypertarget{classchdr_1_1existence__set_adbe1cda7d239484f8b2d51804864ca76_adbe1cda7d239484f8b2d51804864ca76}\label{classchdr_1_1existence__set_adbe1cda7d239484f8b2d51804864ca76_adbe1cda7d239484f8b2d51804864ca76} 
 \index{existence\_set$<$ alignment\_type $>$@{existence\_set$<$ alignment\_type $>$}!reserve@{reserve}}
 \index{reserve@{reserve}!existence\_set$<$ alignment\_type $>$@{existence\_set$<$ alignment\_type $>$}}
 \doxysubsubsection{\texorpdfstring{reserve()}{reserve()}}
 {\footnotesize\ttfamily template$<$typename alignment\+\_\+type  = high\+\_\+performance$>$ \\
-HOT constexpr void reserve (\begin{DoxyParamCaption}\item[{const size\+\_\+t \&}]{\+\_\+new\+Capacity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+HOT constexpr void reserve (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{\+\_\+new\+Capacity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
 
 
 
@@ -259,12 +259,12 @@ This method does not resize the set, only reserves memory for future elements.
 \begin{DoxySeeAlso}{See also}
 \doxylink{classchdr_1_1existence__set_a04c626906f05290c1b7e2ee1eff9f630_a04c626906f05290c1b7e2ee1eff9f630}{existence\+\_\+set\+::capacity()} 
 \end{DoxySeeAlso}
-\Hypertarget{classchdr_1_1existence__set_a139ca7a5699ee541db7d8e18f142452c_a139ca7a5699ee541db7d8e18f142452c}\label{classchdr_1_1existence__set_a139ca7a5699ee541db7d8e18f142452c_a139ca7a5699ee541db7d8e18f142452c} 
+\Hypertarget{classchdr_1_1existence__set_ac2c34870338936e064133f05283b57e0_ac2c34870338936e064133f05283b57e0}\label{classchdr_1_1existence__set_ac2c34870338936e064133f05283b57e0_ac2c34870338936e064133f05283b57e0} 
 \index{existence\_set$<$ alignment\_type $>$@{existence\_set$<$ alignment\_type $>$}!resize@{resize}}
 \index{resize@{resize}!existence\_set$<$ alignment\_type $>$@{existence\_set$<$ alignment\_type $>$}}
 \doxysubsubsection{\texorpdfstring{resize()}{resize()}}
 {\footnotesize\ttfamily template$<$typename alignment\+\_\+type  = high\+\_\+performance$>$ \\
-constexpr void resize (\begin{DoxyParamCaption}\item[{const size\+\_\+t \&}]{\+\_\+new\+Size,  }\item[{const boolean\+\_\+t \&}]{\+\_\+new\+Value = {\ttfamily static\+\_\+cast$<$boolean\+\_\+t$>$(false)} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+constexpr void resize (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{\+\_\+new\+Size,  }\item[{boolean\+\_\+t}]{\+\_\+new\+Value = {\ttfamily \{~false~\}} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
 
 
 
@@ -283,7 +283,7 @@ This method resizes the \doxylink{classchdr_1_1existence__set}{existence\+\_\+se
 If the new size is smaller than the current size, the elements at the end will be removed. If the new size is greater than the current size, the new elements will be filled with the specified value.
 \end{DoxyNote}
 \begin{DoxySeeAlso}{See also}
-\doxylink{classchdr_1_1existence__set_a393ebde6c084724200ae22328dc3d2e4_a393ebde6c084724200ae22328dc3d2e4}{existence\+\_\+set\+::reserve(const size\+\_\+t\&)} 
+\doxylink{classchdr_1_1existence__set_adbe1cda7d239484f8b2d51804864ca76_adbe1cda7d239484f8b2d51804864ca76}{existence\+\_\+set\+::reserve(size\+\_\+t)} 
 
 existence\+\_\+set\+::prune() 
 

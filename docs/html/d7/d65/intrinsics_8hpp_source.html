@@ -188,7 +188,7 @@ $(document).ready(function() { init_codefold(1); });
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="preprocessor">#pragma GCC optimize (&quot;O0&quot;)</span></div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    [[maybe_unused]] <span class="keyword">inline</span> <span class="keywordtype">void</span> malloc_consolidate(<span class="keyword">const</span> <span class="keywordtype">size_t</span>&amp; _malloc = 2048U) {</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    [[maybe_unused]] <span class="keyword">inline</span> <span class="keywordtype">void</span> malloc_consolidate(<span class="keywordtype">size_t</span> _malloc = 2048U) {</div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        <span class="keywordtype">void</span>* tmp = malloc(_malloc);</div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        <span class="keyword">asm</span> <span class="keyword">volatile</span>(<span class="stringliteral">&quot;&quot;</span> ::: <span class="stringliteral">&quot;memory&quot;</span>);</div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        free(tmp);</div>

@@ -107,7 +107,7 @@ $(document).ready(function() { init_codefold(1); });
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        [[nodiscard]] <span class="keyword">constexpr</span> id_node(<span class="keyword">const</span> index_t&amp; _id) noexcept : m_id(_id) {}</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        [[nodiscard]] <span class="keyword">constexpr</span> id_node(index_t _id) noexcept : m_id(_id) {}</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        ~id_node() noexcept = default;</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        [[nodiscard]] id_node           (const id_node&amp;) = delete;</div>
@@ -122,9 +122,9 @@ $(document).ready(function() { init_codefold(1); });
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        </div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        [[maybe_unused, nodiscard]] constexpr static <span class="keywordtype">bool</span> is_active() noexcept { <span class="keywordflow">return</span> <span class="keyword">true</span>; }</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        [[maybe_unused, nodiscard]] <span class="keyword">constexpr</span> <span class="keyword">const</span> index_t&amp; id() const noexcept { <span class="keywordflow">return</span> m_id; }</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        [[maybe_unused, nodiscard]] <span class="keyword">constexpr</span> index_t id() const noexcept { <span class="keywordflow">return</span> m_id; }</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        [[maybe_unused]] <span class="keyword">constexpr</span> <span class="keywordtype">void</span> id(<span class="keyword">const</span> index_t&amp; _id) <span class="keyword">noexcept</span> { m_id = _id; }</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        [[maybe_unused]] <span class="keyword">constexpr</span> <span class="keywordtype">void</span> id(index_t _id) <span class="keyword">noexcept</span> { m_id = _id; }</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    };</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>} <span class="comment">//chdr::mazes</span></div>

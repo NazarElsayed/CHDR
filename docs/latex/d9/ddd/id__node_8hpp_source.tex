@@ -28,7 +28,7 @@
 \DoxyCodeLine{00024\ }
 \DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{public}:}
 \DoxyCodeLine{00026\ }
-\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{constexpr}\ id\_node(\textcolor{keyword}{const}\ index\_t\&\ \_id)\ noexcept\ :\ m\_id(\_id)\ \{\}}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{constexpr}\ id\_node(index\_t\ \_id)\ noexcept\ :\ m\_id(\_id)\ \{\}}
 \DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \string~id\_node()\ noexcept\ =\ default;}
 \DoxyCodeLine{00029\ }
 \DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ [[nodiscard]]\ id\_node\ \ \ \ \ \ \ \ \ \ \ (const\ id\_node\&)\ =\ delete;}
@@ -43,9 +43,9 @@
 \DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ }
 \DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ constexpr\ static\ \textcolor{keywordtype}{bool}\ is\_active()\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};\ \}}
 \DoxyCodeLine{00041\ }
-\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{const}\ index\_t\&\ id()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ m\_id;\ \}}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ \textcolor{keyword}{constexpr}\ index\_t\ id()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ m\_id;\ \}}
 \DoxyCodeLine{00043\ }
-\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ id(\textcolor{keyword}{const}\ index\_t\&\ \_id)\ \textcolor{keyword}{noexcept}\ \{\ m\_id\ =\ \_id;\ \}}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ id(index\_t\ \_id)\ \textcolor{keyword}{noexcept}\ \{\ m\_id\ =\ \_id;\ \}}
 \DoxyCodeLine{00045\ \ \ \ \ \};}
 \DoxyCodeLine{00046\ }
 \DoxyCodeLine{00047\ \}\ \textcolor{comment}{//chdr::mazes}}

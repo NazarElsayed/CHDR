@@ -47,7 +47,7 @@
 \DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ReSharper\ disable\ once\ CppPossiblyUninitializedMember}}
 \DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ [[nodiscard]]\ HOT\ \textcolor{keyword}{constexpr}\ node()\ noexcept\ :\ unmanaged\_node<index\_t>()\ \{\}\ \textcolor{comment}{//\ NOLINT(*-\/pro-\/type-\/member-\/init,\ *-\/use-\/equals-\/default)}}
 \DoxyCodeLine{00050\ }
-\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ [[nodiscard]]\ HOT\ \textcolor{keyword}{constexpr}\ node(\textcolor{keyword}{const}\ index\_t\&\ \_index,\ \textcolor{keyword}{const}\ scalar\_t\&\ \_gScore,\ \textcolor{keyword}{const}\ scalar\_t\&\ \_hScore,\ \textcolor{keyword}{const}\ unmanaged\_node<index\_t>*\ RESTRICT\ \textcolor{keyword}{const}\ \_parent\ =\ \textcolor{keyword}{nullptr})\ noexcept\ :\ unmanaged\_node<index\_t>(\_index,\ \_parent),}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ [[nodiscard]]\ HOT\ \textcolor{keyword}{constexpr}\ node(index\_t\ \_index,\ scalar\_t\ \_gScore,\ scalar\_t\ \_hScore,\ \textcolor{keyword}{const}\ unmanaged\_node<index\_t>*\ RESTRICT\ \textcolor{keyword}{const}\ \_parent\ =\ \textcolor{keyword}{nullptr})\ noexcept\ :\ unmanaged\_node<index\_t>(\_index,\ \_parent),}
 \DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_gScore(\_gScore),}
 \DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_fScore(\_gScore\ +\ \_hScore)\ \{\}}
 \DoxyCodeLine{00054\ }
@@ -59,7 +59,7 @@
 \DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \};}
 \DoxyCodeLine{00061\ }
 \DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ open\_set\_t,\ \textcolor{keyword}{typename}\ closed\_set\_t>}
-\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ [[nodiscard]]\ HOT\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ solve\_internal(open\_set\_t\&\ \_open,\ closed\_set\_t\&\ \_closed,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_capacity,\ \textcolor{keyword}{const}\ params\_t\&\ \_params)\ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ [[nodiscard]]\ HOT\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ solve\_internal(open\_set\_t\&\ \_open,\ closed\_set\_t\&\ \_closed,\ \textcolor{keywordtype}{size\_t}\ \_capacity,\ \textcolor{keyword}{const}\ params\_t\&\ \_params)\ \{}
 \DoxyCodeLine{00064\ }
 \DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ s\ =\ utils::to\_1d(\_params.start,\ \_params.size);}
 \DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ e\ =\ utils::to\_1d(\_params.end,\ \ \ \_params.size);}

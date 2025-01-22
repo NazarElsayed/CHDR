@@ -40,7 +40,7 @@
 \DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00037\ }
 \DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ coord\_t>}
-\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ T\ product\_helper(\textcolor{keyword}{const}\ coord\_t\&\ \_array,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_index\ =\ 0U)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ T\ product\_helper(\textcolor{keyword}{const}\ coord\_t\&\ \_array,\ \textcolor{keywordtype}{size\_t}\ \_index\ =\ 0U)\ \textcolor{keyword}{noexcept}\ \{}
 \DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ }
 \DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_arithmetic\_v<T>\ \&\&\ std::is\_trivially\_constructible\_v<T>,\ \textcolor{stringliteral}{"{}T\ must\ be\ a\ trivially\ constructible\ arithmetic\ type."{}});}
 \DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ }
@@ -268,7 +268,7 @@
 \DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ }
-\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::string\ to\_string(\textcolor{keyword}{const}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\&\ \_duration,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\&\ \_scale\ =\ std::numeric\_limits<long\ double>::epsilon())\ \{}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::string\ to\_string(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ \_duration,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ \_scale\ =\ std::numeric\_limits<long\ double>::epsilon())\ \{}
 \DoxyCodeLine{00268\ }
 \DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ std::array<std::string,\ 4U>\ units\ =\ \{\ \textcolor{stringliteral}{"{}s"{}},\ \textcolor{stringliteral}{"{}ms"{}},\ \textcolor{stringliteral}{"{}µs"{}},\ \textcolor{stringliteral}{"{}ns"{}}\ \};}
 \DoxyCodeLine{00270\ }

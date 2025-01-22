@@ -44,7 +44,7 @@
 \DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ReSharper\ disable\ once\ CppPossiblyUninitializedMember}}
 \DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{constexpr}\ node()\ noexcept\ :\ bnode<index\_t>()\ \{\}\ \textcolor{comment}{//\ NOLINT(*-\/pro-\/type-\/member-\/init,\ *-\/use-\/equals-\/default)}}
 \DoxyCodeLine{00047\ }
-\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{constexpr}\ node(\textcolor{keyword}{const}\ index\_t\&\ \_index,\ \textcolor{keyword}{const}\ index\_t\&\ \_depth)\ noexcept\ :\ bnode<index\_t>(\_index),}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{constexpr}\ node(index\_t\ \_index,\ index\_t\ \_depth)\ noexcept\ :\ bnode<index\_t>(\_index),}
 \DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_depth(\_depth)\ \{\}}
 \DoxyCodeLine{00050\ }
 \DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ [[nodiscard]]\ HOT\ \textcolor{keyword}{friend}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{bool}\ operator\ <\ (\textcolor{keyword}{const}\ node\&\ \_a,\ \textcolor{keyword}{const}\ node\&\ \_b)\ \textcolor{keyword}{noexcept}\ \{}
@@ -70,7 +70,7 @@
 \DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \};}
 \DoxyCodeLine{00072\ }
 \DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ template\ <typename\ open\_set\_t,\ typename\ closed\_set\_t>}
-\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ [[nodiscard]]\ HOT\ static\ constexpr\ auto\ solve\_internal(open\_set\_t\&\ \_open,\ closed\_set\_t\&\ \_closed,\ const\ \textcolor{keywordtype}{size\_t}\&\ \_capacity,\ const\ params\_t\&\ \_params)\ \{}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ [[nodiscard]]\ HOT\ static\ constexpr\ auto\ solve\_internal(open\_set\_t\&\ \_open,\ closed\_set\_t\&\ \_closed,\ \textcolor{keywordtype}{size\_t}\ \_capacity,\ const\ params\_t\&\ \_params)\ \{}
 \DoxyCodeLine{00075\ }
 \DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }neighbours\_t\ =\ \textcolor{keyword}{decltype}(\_params.maze.get\_neighbours(std::declval<index\_t>()));}
 \DoxyCodeLine{00077\ }

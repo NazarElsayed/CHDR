@@ -123,7 +123,7 @@ $(document).ready(function() { init_codefold(1); });
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>            <span class="comment">// ReSharper disable once CppPossiblyUninitializedMember</span></div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            [[nodiscard]] <span class="keyword">constexpr</span> node() noexcept : bnode&lt;index_t&gt;() {} <span class="comment">// NOLINT(*-pro-type-member-init, *-use-equals-default)</span></div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>            [[nodiscard]] <span class="keyword">constexpr</span> node(<span class="keyword">const</span> index_t&amp; _index, <span class="keyword">const</span> index_t&amp; _depth) noexcept : bnode&lt;index_t&gt;(_index),</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>            [[nodiscard]] <span class="keyword">constexpr</span> node(index_t _index, index_t _depth) noexcept : bnode&lt;index_t&gt;(_index),</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>                m_depth(_depth) {}</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            [[nodiscard]] HOT <span class="keyword">friend</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> operator &lt; (<span class="keyword">const</span> node&amp; _a, <span class="keyword">const</span> node&amp; _b) <span class="keyword">noexcept</span> {</div>

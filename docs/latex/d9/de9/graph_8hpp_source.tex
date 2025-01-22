@@ -100,7 +100,7 @@
 \DoxyCodeLine{00096\ }
 \DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::mutex\ mtx;}
 \DoxyCodeLine{00098\ }
-\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ worker\ =\ [\&](\textcolor{keyword}{const}\ index\_t\&\ \_start,\ \textcolor{keyword}{const}\ index\_t\&\ \_end)\ ALWAYS\_INLINE\ \{}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ worker\ =\ [\&](index\_t\ \_start,\ index\_t\ \_end)\ ALWAYS\_INLINE\ \{}
 \DoxyCodeLine{00100\ }
 \DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ stack<edge\_t>\ stack;}
 \DoxyCodeLine{00102\ }
@@ -207,21 +207,21 @@
 \DoxyCodeLine{00203\ \textcolor{preprocessor}{\#endif}}
 \DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ graph\&\ operator=(graph\&\&)\ noexcept\ =\ default;}
 \DoxyCodeLine{00205\ }
-\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ [[nodiscard]]\ constexpr\ const\ auto\&\ at(const\ index\_t\&\ \_id)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ [[nodiscard]]\ constexpr\ const\ auto\&\ at(index\_t\ \_id)\textcolor{keyword}{\ const\ }\{}
 \DoxyCodeLine{00207\ }
 \DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \ \ \ \ assert(contains(\_id)\ \&\&\ \textcolor{stringliteral}{"{}Error:\ The\ node\ with\ the\ specified\ ID\ does\ not\ exist\ in\ the\ graph."{}});}
 \DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }id\_node<index\_t>\&\textcolor{keyword}{>}(\_id);}
 \DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00211\ }
-\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ add(\textcolor{keyword}{const}\ index\_t\&\ \_from\_id)\ \{}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ add(index\_t\ \_from\_id)\ \{}
 \DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ m\_entries.insert\_or\_assign(\_from\_id,\ neighbours\_t\{\});}
 \DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00215\ }
-\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ add(\textcolor{keyword}{const}\ index\_t\&\ \_from\_id,\ \textcolor{keyword}{const}\ edge\_t\&\ \_edge)\ \{}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ add(index\_t\ \_from\_id,\ \textcolor{keyword}{const}\ edge\_t\&\ \_edge)\ \{}
 \DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \ \ \ \ m\_entries[\_from\_id].emplace\_back(\_edge);}
 \DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00219\ }
-\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ remove(\textcolor{keyword}{const}\ index\_t\&\ \_from\_id,\ \textcolor{keyword}{const}\ edge\_t\&\ \_edge)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ [[maybe\_unused]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ remove(index\_t\ \_from\_id,\ \textcolor{keyword}{const}\ edge\_t\&\ \_edge)\ \textcolor{keyword}{noexcept}\ \{}
 \DoxyCodeLine{00221\ }
 \DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (contains(\_from\_id))\ \{}
 \DoxyCodeLine{00223\ }
@@ -308,12 +308,12 @@
 \DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00306\ }
-\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{const}\ neighbours\_t\&\ get\_neighbours(\textcolor{keyword}{const}\ index\_t\&\ \_id)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{const}\ neighbours\_t\&\ get\_neighbours(index\_t\ \_id)\textcolor{keyword}{\ const\ }\{}
 \DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \ \ \ \ assert(contains(\_id)\ \&\&\ \textcolor{stringliteral}{"{}Node\ with\ the\ specified\ ID\ does\ not\ exist\ in\ the\ graph."{}});}
 \DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_entries.find(\_id)-\/>second;}
 \DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00311\ }
-\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{bool}\ contains(\textcolor{keyword}{const}\ index\_t\&\ \_id)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ [[maybe\_unused,\ nodiscard]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{bool}\ contains(index\_t\ \_id)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{}
 \DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_entries.find(\_id)\ !=\ m\_entries.end();}
 \DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00315\ }
@@ -325,7 +325,7 @@
 \DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \ \ \ \ m\_entries.clear();}
 \DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00323\ }
-\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ [[nodiscard]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{const}\ id\_node<index\_t>\&\ operator[](\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_id)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ [[nodiscard]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{const}\ id\_node<index\_t>\&\ operator[](\textcolor{keywordtype}{size\_t}\ \_id)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{}
 \DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ at(\_id);}
 \DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00327\ }

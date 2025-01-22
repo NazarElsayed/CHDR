@@ -126,7 +126,7 @@ $(document).ready(function() { init_codefold(1); });
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>            <span class="comment">// ReSharper disable once CppPossiblyUninitializedMember</span></div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>            [[nodiscard]] <span class="keyword">constexpr</span> node() noexcept : bnode&lt;index_t&gt;() {} <span class="comment">// NOLINT(*-pro-type-member-init, *-use-equals-default)</span></div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            [[nodiscard]] <span class="keyword">constexpr</span> node(<span class="keyword">const</span> index_t&amp; _index, <span class="keyword">const</span> scalar_t&amp; _hScore) noexcept : bnode&lt;index_t&gt;(_index),</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            [[nodiscard]] <span class="keyword">constexpr</span> node(index_t _index, scalar_t _hScore) noexcept : bnode&lt;index_t&gt;(_index),</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>                m_hScore(_hScore) {}</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>            [[nodiscard]] HOT <span class="keyword">friend</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> operator &lt; (<span class="keyword">const</span> node&amp; _a, <span class="keyword">const</span> node&amp; _b) <span class="keyword">noexcept</span> {</div>
@@ -143,7 +143,7 @@ $(document).ready(function() { init_codefold(1); });
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>            neighbours_t neighbours;</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>            <span class="keywordtype">size_t</span>       neighbours_idx;</div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>            [[nodiscard]] state(<span class="keyword">const</span> node&amp; _curr, <span class="keyword">const</span> scalar_t&amp; _bound, <span class="keyword">const</span> params_t&amp; _params) :</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>            [[nodiscard]] state(<span class="keyword">const</span> node&amp; _curr, scalar_t _bound, <span class="keyword">const</span> params_t&amp; _params) :</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>                curr(_curr),</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>                bound(_bound),</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>                neighbours(_params.maze.get_neighbours(curr.m_index)),</div>

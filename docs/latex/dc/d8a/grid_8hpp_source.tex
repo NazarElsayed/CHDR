@@ -93,24 +93,24 @@
 \DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00090\ }
 \DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keywordtype}{bool}\ IncludeDiagonals\ =\ false>}
-\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ [[nodiscard]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ get\_neighbours(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_id)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ [[nodiscard]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ get\_neighbours(\textcolor{keywordtype}{size\_t}\ \_id)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{}
 \DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ get\_neighbours<IncludeDiagonals>(utils::to\_nd(\_id,\ size()));}
 \DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00095\ }
 \DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ at(\textcolor{keyword}{const}\ coord\_t\&\ \_id)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ at(utils::to\_1d(\_id,\ m\_size));\ \}}
 \DoxyCodeLine{00097\ }
-\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ [[nodiscard]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ at(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_id)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ [[nodiscard]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ at(\textcolor{keywordtype}{size\_t}\ \_id)\textcolor{keyword}{\ const\ }\{}
 \DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ assert(contains(\_id)\ \&\&\ \textcolor{stringliteral}{"{}Out\ of\ bounds\ access."{}});}
 \DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }weighted\_node<weight\_t>\&\textcolor{keyword}{>}(m\_nodes[\_id]);}
 \DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00102\ }
 \DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{bool}\ contains(\textcolor{keyword}{const}\ coord\_t\&\ \_id)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{}
-\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::all\_of(0U,\ s\_rank,\ [\&](\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_i)\ \textcolor{keyword}{noexcept}\ \{\ \textcolor{keywordflow}{return}\ \_id[\_i]\ <\ m\_size[\_i];\ \});}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::all\_of(0U,\ s\_rank,\ [\&](\textcolor{keywordtype}{size\_t}\ \_i)\ \textcolor{keyword}{noexcept}\ \{\ \textcolor{keywordflow}{return}\ \_id[\_i]\ <\ m\_size[\_i];\ \});}
 \DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00106\ }
-\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{bool}\ contains(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_id)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{\ \textcolor{keywordflow}{return}\ \_id\ <\ count();\ \}}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{bool}\ contains(\textcolor{keywordtype}{size\_t}\ \_id)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{\ \textcolor{keywordflow}{return}\ \_id\ <\ count();\ \}}
 \DoxyCodeLine{00108\ }
-\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{bool}\ is\_transitory(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_index)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{bool}\ is\_transitory(\textcolor{keywordtype}{size\_t}\ \_index)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{}
 \DoxyCodeLine{00110\ }
 \DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ count\ =\ 0U;}
 \DoxyCodeLine{00112\ }
@@ -136,7 +136,7 @@
 \DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ count\ ==\ 2U;}
 \DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00134\ }
-\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ [[nodiscard]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\&\ operator[](\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_id)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{\ \textcolor{keywordflow}{return}\ at(\_id);\ \}}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ [[nodiscard]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\&\ operator[](\textcolor{keywordtype}{size\_t}\ \_id)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{\ \textcolor{keywordflow}{return}\ at(\_id);\ \}}
 \DoxyCodeLine{00136\ }
 \DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }iterator\_t\ =\ \textcolor{keyword}{typename}\ std::vector<weight\_t>::\ \ \ \ \ \ \ \ \ \ \ \ \ \ iterator;}
 \DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ \ \ \ \ \ \ \ \ }const\_iterator\_t\ =\ \textcolor{keyword}{typename}\ std::vector<weight\_t>::\ \ \ \ \ \ \ \ const\_iterator;}
@@ -273,24 +273,24 @@
 \DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00273\ }
 \DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{bool}\ IncludeDiagonals\ =\ false>}
-\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ [[nodiscard]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ get\_neighbours(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_id)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ [[nodiscard]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ get\_neighbours(\textcolor{keywordtype}{size\_t}\ \_id)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{}
 \DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ get\_neighbours<IncludeDiagonals>(utils::to\_nd(\_id,\ size()));}
 \DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00278\ }
 \DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ at(\textcolor{keyword}{const}\ coord\_t\&\ \_id)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ at(utils::to\_1d(\_id,\ m\_size));\ \}}
 \DoxyCodeLine{00280\ }
-\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ [[nodiscard]]\ HOT\ \textcolor{keyword}{constexpr}\ weighted\_node<bool>\ at(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_id)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ [[nodiscard]]\ HOT\ \textcolor{keyword}{constexpr}\ weighted\_node<bool>\ at(\textcolor{keywordtype}{size\_t}\ \_id)\textcolor{keyword}{\ const\ }\{}
 \DoxyCodeLine{00282\ \ \ \ \ \ \ \ \ \ \ \ \ assert(contains(\_id)\ \&\&\ \textcolor{stringliteral}{"{}Out\ of\ bounds\ access."{}});}
 \DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ m\_nodes[\_id]\ \};}
 \DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00285\ }
 \DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{bool}\ contains(\textcolor{keyword}{const}\ coord\_t\&\ \_id)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{}
-\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::all\_of(0U,\ s\_rank,\ [\&](\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_i)\ \textcolor{keyword}{noexcept}\ \{\ \textcolor{keywordflow}{return}\ \_id[\_i]\ <\ m\_size[\_i];\ \});}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::all\_of(0U,\ s\_rank,\ [\&](\textcolor{keywordtype}{size\_t}\ \_i)\ \textcolor{keyword}{noexcept}\ \{\ \textcolor{keywordflow}{return}\ \_id[\_i]\ <\ m\_size[\_i];\ \});}
 \DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00289\ }
-\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{bool}\ contains(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_id)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{\ \textcolor{keywordflow}{return}\ \_id\ <\ count();\ \}}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{bool}\ contains(\textcolor{keywordtype}{size\_t}\ \_id)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{\ \textcolor{keywordflow}{return}\ \_id\ <\ count();\ \}}
 \DoxyCodeLine{00291\ }
-\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{bool}\ is\_transitory(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_index)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{bool}\ is\_transitory(\textcolor{keywordtype}{size\_t}\ \_index)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{}
 \DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ count\ =\ 0U;}
 \DoxyCodeLine{00294\ }
 \DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ [nActive,\ nCoord]\ :\ get\_neighbours(\_index))\ \{}
@@ -314,7 +314,7 @@
 \DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ count\ ==\ 2U;}
 \DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00315\ }
-\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ [[nodiscard]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\&\ operator[](\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\&\ \_id)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{\ \textcolor{keywordflow}{return}\ m\_nodes[\_id];\ \}}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ [[nodiscard]]\ HOT\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\&\ operator[](\textcolor{keywordtype}{size\_t}\ \_id)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{\ \textcolor{keywordflow}{return}\ m\_nodes[\_id];\ \}}
 \DoxyCodeLine{00317\ }
 \DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }iterator\_t\ =\ std::vector<bool>::\ \ \ \ \ \ \ \ \ \ \ \ \ \ iterator;}
 \DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ \ \ \ \ \ \ \ \ }const\_iterator\_t\ =\ std::vector<bool>::\ \ \ \ \ \ \ \ const\_iterator;}

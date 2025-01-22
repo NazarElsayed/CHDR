@@ -33,7 +33,7 @@
 \DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{constexpr}\ weighted\_node()\ =\ \textcolor{keyword}{delete};}
 \DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \string~weighted\_node()\ noexcept\ =\ default;}
 \DoxyCodeLine{00031\ }
-\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ [[nodiscard]]\ constexpr\ weighted\_node(const\ weight\_t\&\ \_value)\ noexcept\ :\ m\_value(\_value)\ \{\}}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ [[nodiscard]]\ constexpr\ weighted\_node(weight\_t\ \_value)\ noexcept\ :\ m\_value(\_value)\ \{\}}
 \DoxyCodeLine{00033\ }
 \DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{constexpr}\ weighted\_node\ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{const}\ weighted\_node\&)\ \textcolor{keyword}{noexcept}\ =\ \textcolor{keywordflow}{default};}
 \DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ weighted\_node\&\ operator=(\textcolor{keyword}{const}\ weighted\_node\&)\ \textcolor{keyword}{noexcept}\ =\ \textcolor{keywordflow}{default};}
@@ -49,8 +49,8 @@
 \DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_value\ !=\ std::numeric\_limits<weight\_t>::max();}
 \DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00047\ }
-\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{const}\ weight\_t\&\ value()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ m\_value;\ \}}
-\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ value(\textcolor{keyword}{const}\ weight\_t\&\ \_value)\ \textcolor{keyword}{noexcept}\ \{\ m\_value\ =\ \_value;\ \}}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{constexpr}\ weight\_t\ value()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ m\_value;\ \}}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{void}\ value(weight\_t\ \_value)\ \textcolor{keyword}{noexcept}\ \{\ m\_value\ =\ \_value;\ \}}
 \DoxyCodeLine{00050\ \ \ \ \ \};}
 \DoxyCodeLine{00051\ }
 \DoxyCodeLine{00052\ \}\ \textcolor{comment}{//chdr::mazes}}

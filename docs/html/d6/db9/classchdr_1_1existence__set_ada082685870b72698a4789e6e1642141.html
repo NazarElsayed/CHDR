@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CHDR: chdr::existence_set::trim</title>
+<title>CHDR: chdr::existence_set::push</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -87,18 +87,18 @@ $(function() {
           <tr><td class="navtab"><a class="navtab" href="../../d6/db9/classchdr_1_1existence__set_a7f042ea76afb9ba960dda0c06ac70bd9.html#a7f042ea76afb9ba960dda0c06ac70bd9">existence_set</a></td></tr>
           <tr><td class="navtab"><a class="navtab" href="../../d6/db9/classchdr_1_1existence__set_ac7b04d9a2c0ada15f34972a4f94180c8.html#ac7b04d9a2c0ada15f34972a4f94180c8">existence_set</a></td></tr>
           <tr><td class="navtab"><a class="navtab" href="../../d6/db9/classchdr_1_1existence__set_aa9162530ba952dee5be2d0dfdeacfc85.html#aa9162530ba952dee5be2d0dfdeacfc85">existence_set</a></td></tr>
-          <tr><td class="navtab"><a class="navtab" href="../../d6/db9/classchdr_1_1existence__set_ada082685870b72698a4789e6e1642141.html#ada082685870b72698a4789e6e1642141">push</a></td></tr>
+          <tr><td class="navtabHL"><a class="navtab" href="../../d6/db9/classchdr_1_1existence__set_ada082685870b72698a4789e6e1642141.html#ada082685870b72698a4789e6e1642141">push</a></td></tr>
           <tr><td class="navtab"><a class="navtab" href="../../d6/db9/classchdr_1_1existence__set_adbe1cda7d239484f8b2d51804864ca76.html#adbe1cda7d239484f8b2d51804864ca76">reserve</a></td></tr>
           <tr><td class="navtab"><a class="navtab" href="../../d6/db9/classchdr_1_1existence__set_ac2c34870338936e064133f05283b57e0.html#ac2c34870338936e064133f05283b57e0">resize</a></td></tr>
           <tr><td class="navtab"><a class="navtab" href="../../d6/db9/classchdr_1_1existence__set_a686f8cfcb07e2c875e58185f5b9cabd6.html#a686f8cfcb07e2c875e58185f5b9cabd6">shrink_to_fit</a></td></tr>
           <tr><td class="navtab"><a class="navtab" href="../../d6/db9/classchdr_1_1existence__set_a545aa7b6f77b13ccee4052087e9ac6a9.html#a545aa7b6f77b13ccee4052087e9ac6a9">size</a></td></tr>
-          <tr><td class="navtabHL"><a class="navtab" href="../../d6/db9/classchdr_1_1existence__set_a1421a0ea5aa875fc564c3309ae513763.html#a1421a0ea5aa875fc564c3309ae513763">trim</a></td></tr>
+          <tr><td class="navtab"><a class="navtab" href="../../d6/db9/classchdr_1_1existence__set_a1421a0ea5aa875fc564c3309ae513763.html#a1421a0ea5aa875fc564c3309ae513763">trim</a></td></tr>
         </table>
       </div>
    </td>
    <td valign="top" class="mempage">
-<a id="a1421a0ea5aa875fc564c3309ae513763" name="a1421a0ea5aa875fc564c3309ae513763"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1421a0ea5aa875fc564c3309ae513763">&#9670;&#160;</a></span>trim()</h2>
+<a id="ada082685870b72698a4789e6e1642141" name="ada082685870b72698a4789e6e1642141"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ada082685870b72698a4789e6e1642141">&#9670;&#160;</a></span>push()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -109,9 +109,10 @@ template&lt;typename alignment_type  = high_performance&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr void trim </td>
+          <td class="memname">HOT constexpr void push </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>_hash</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -122,8 +123,13 @@ template&lt;typename alignment_type  = high_performance&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>trim the set by removing trailing false values. </p>
-<dl class="section see"><dt>See also</dt><dd>set::clear() </dd></dl>
+<p>Add a hash to the set. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">_hash</td><td>The hash value to be added. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
