@@ -113,7 +113,7 @@ namespace chdr {
          * @param[in] _items Items to construct the set using.
          * @param[in, out] _resource (optional) Custom memory resource.
          */
-        [[maybe_unused]] constexpr existence_set(const std::initializer_list<size_t>& _items, std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) {
+        [[maybe_unused]] constexpr existence_set(const std::initializer_list<size_t>& _items, std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {
             reserve(_items.size());
             for (const auto& item : _items) {
                 push(item);
@@ -215,7 +215,7 @@ namespace chdr {
          * @see existence_set::prune()
          * @see existence_set::clear()
          */
-        [[maybe_unused]] constexpr void resize(size_t _newSize, const boolean_t& _newValue = static_cast<boolean_t>(false)) {
+        [[maybe_unused]] constexpr void resize(size_t _newSize, boolean_t _newValue = { false }) {
             c.resize(_newSize, _newValue);
         }
 
