@@ -100,7 +100,7 @@ $(document).ready(function(){initNavTree('d6/db9/classchdr_1_1existence__set.htm
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename alignment_type = high_performance&gt;<br />
-class chdr::existence_set&lt; alignment_type &gt;</div><p>A set allowing for efficient existence checks without needing to store the original data in memory. </p>
+class chdr::existence_set&lt; alignment_type &gt;</div><p>A set allowing for efficient existence checks without needing to store the original data in memory.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">alignment_type</td><td>The alignment type used by the set.</td></tr>
@@ -111,25 +111,33 @@ class chdr::existence_set&lt; alignment_type &gt;</div><p>A set allowing for eff
 <dd>
 <a class="el" href="../../d9/df4/structchdr_1_1high__performance.html" title="Eight bits represent each item in memory.">high_performance</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d62/existence__set_8hpp_source.html#l00043">43</a> of file <a class="el" href="../../d8/d62/existence__set_8hpp_source.html">existence_set.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d62/existence__set_8hpp_source.html#l00044">44</a> of file <a class="el" href="../../d8/d62/existence__set_8hpp_source.html">existence_set.hpp</a>.</p>
 </div><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
-Methods</h2></td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader">Constructors</h2></td></tr>
 <tr class="memitem:a7f042ea76afb9ba960dda0c06ac70bd9" id="r_a7f042ea76afb9ba960dda0c06ac70bd9"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/db9/classchdr_1_1existence__set_a7f042ea76afb9ba960dda0c06ac70bd9.html#a7f042ea76afb9ba960dda0c06ac70bd9">existence_set</a> (std::pmr::memory_resource *_resource=std::pmr::get_default_resource()) noexcept</td></tr>
-<tr class="memdesc:a7f042ea76afb9ba960dda0c06ac70bd9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise set.  <br /></td></tr>
+<tr class="memdesc:a7f042ea76afb9ba960dda0c06ac70bd9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default Constructor.  <br /></td></tr>
 <tr class="separator:a7f042ea76afb9ba960dda0c06ac70bd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2ee238013bf66f341b7ec49abdcc0677" id="r_a2ee238013bf66f341b7ec49abdcc0677"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/db9/classchdr_1_1existence__set_a2ee238013bf66f341b7ec49abdcc0677.html#a2ee238013bf66f341b7ec49abdcc0677">existence_set</a> (const size_t &amp;_capacity, std::pmr::memory_resource *_resource=std::pmr::get_default_resource())</td></tr>
-<tr class="memdesc:a2ee238013bf66f341b7ec49abdcc0677"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise set.  <br /></td></tr>
+<tr class="memdesc:a2ee238013bf66f341b7ec49abdcc0677"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor with a predefined capacity.  <br /></td></tr>
 <tr class="separator:a2ee238013bf66f341b7ec49abdcc0677"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a79ba085953423ecb59d49a7f028c04a9" id="r_a79ba085953423ecb59d49a7f028c04a9"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/db9/classchdr_1_1existence__set_a79ba085953423ecb59d49a7f028c04a9.html#a79ba085953423ecb59d49a7f028c04a9">existence_set</a> (const std::initializer_list&lt; size_t &gt; &amp;_items, const size_t &amp;_capacity=0U)</td></tr>
-<tr class="memdesc:a79ba085953423ecb59d49a7f028c04a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise set using a collection of items.  <br /></td></tr>
-<tr class="separator:a79ba085953423ecb59d49a7f028c04a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9162530ba952dee5be2d0dfdeacfc85" id="r_aa9162530ba952dee5be2d0dfdeacfc85"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/db9/classchdr_1_1existence__set_aa9162530ba952dee5be2d0dfdeacfc85.html#aa9162530ba952dee5be2d0dfdeacfc85">existence_set</a> (const std::initializer_list&lt; size_t &gt; &amp;_items, std::pmr::memory_resource *_resource=std::pmr::get_default_resource())</td></tr>
+<tr class="memdesc:aa9162530ba952dee5be2d0dfdeacfc85"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor with a collection of items.  <br /></td></tr>
+<tr class="separator:aa9162530ba952dee5be2d0dfdeacfc85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Methods</h2></td></tr>
 <tr class="memitem:afa3aeb0b93cffe9972e14f4dbe6523e5" id="r_afa3aeb0b93cffe9972e14f4dbe6523e5"><td class="memItemLeft" align="right" valign="top">HOT constexpr void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/db9/classchdr_1_1existence__set_afa3aeb0b93cffe9972e14f4dbe6523e5.html#afa3aeb0b93cffe9972e14f4dbe6523e5">allocate</a> (const size_t &amp;_hash, const size_t &amp;_increment, const size_t &amp;_max_increment=std::numeric_limits&lt; size_t &gt;::max())</td></tr>
 <tr class="memdesc:afa3aeb0b93cffe9972e14f4dbe6523e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Preallocates memory based on the hash and bucket size.  <br /></td></tr>
 <tr class="separator:afa3aeb0b93cffe9972e14f4dbe6523e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa71d722bb24f1773903b2627354e82a0" id="r_aa71d722bb24f1773903b2627354e82a0"><td class="memItemLeft" align="right" valign="top">HOT constexpr void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/db9/classchdr_1_1existence__set_aa71d722bb24f1773903b2627354e82a0.html#aa71d722bb24f1773903b2627354e82a0">push</a> (const size_t &amp;_hash)</td></tr>
-<tr class="memdesc:aa71d722bb24f1773903b2627354e82a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a hash to the set.  <br /></td></tr>
-<tr class="separator:aa71d722bb24f1773903b2627354e82a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04c626906f05290c1b7e2ee1eff9f630" id="r_a04c626906f05290c1b7e2ee1eff9f630"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/db9/classchdr_1_1existence__set_a04c626906f05290c1b7e2ee1eff9f630.html#a04c626906f05290c1b7e2ee1eff9f630">capacity</a> () const noexcept</td></tr>
+<tr class="memdesc:a04c626906f05290c1b7e2ee1eff9f630"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the capacity of the set.  <br /></td></tr>
+<tr class="separator:a04c626906f05290c1b7e2ee1eff9f630"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96d391a5b8907ff5b9adf72774583f90" id="r_a96d391a5b8907ff5b9adf72774583f90"><td class="memItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/db9/classchdr_1_1existence__set_a96d391a5b8907ff5b9adf72774583f90.html#a96d391a5b8907ff5b9adf72774583f90">clear</a> () noexcept</td></tr>
+<tr class="memdesc:a96d391a5b8907ff5b9adf72774583f90"><td class="mdescLeft">&#160;</td><td class="mdescRight">clear the content of the set.  <br /></td></tr>
+<tr class="separator:a96d391a5b8907ff5b9adf72774583f90"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a146b2f1dce8681ce04d1ceae403df1cb" id="r_a146b2f1dce8681ce04d1ceae403df1cb"><td class="memItemLeft" align="right" valign="top">HOT constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/db9/classchdr_1_1existence__set_a146b2f1dce8681ce04d1ceae403df1cb.html#a146b2f1dce8681ce04d1ceae403df1cb">contains</a> (const size_t &amp;_hash) const noexcept</td></tr>
+<tr class="memdesc:a146b2f1dce8681ce04d1ceae403df1cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the given hash exists in the set.  <br /></td></tr>
+<tr class="separator:a146b2f1dce8681ce04d1ceae403df1cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7644ab88f3815acf67821a9e649858bf" id="r_a7644ab88f3815acf67821a9e649858bf"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a7644ab88f3815acf67821a9e649858bf"><td class="memTemplItemLeft" align="right" valign="top">HOT constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/db9/classchdr_1_1existence__set_a7644ab88f3815acf67821a9e649858bf.html#a7644ab88f3815acf67821a9e649858bf">emplace</a> (T &amp;&amp;_hash)</td></tr>
 <tr class="memdesc:a7644ab88f3815acf67821a9e649858bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a hash to the set.  <br /></td></tr>
@@ -137,30 +145,24 @@ Methods</h2></td></tr>
 <tr class="memitem:a4bf3e2fed512a048a4b9f7d8a3ba2b2e" id="r_a4bf3e2fed512a048a4b9f7d8a3ba2b2e"><td class="memItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/db9/classchdr_1_1existence__set_a4bf3e2fed512a048a4b9f7d8a3ba2b2e.html#a4bf3e2fed512a048a4b9f7d8a3ba2b2e">erase</a> (const size_t &amp;_hash) noexcept</td></tr>
 <tr class="memdesc:a4bf3e2fed512a048a4b9f7d8a3ba2b2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">remove a hash from the set.  <br /></td></tr>
 <tr class="separator:a4bf3e2fed512a048a4b9f7d8a3ba2b2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a146b2f1dce8681ce04d1ceae403df1cb" id="r_a146b2f1dce8681ce04d1ceae403df1cb"><td class="memItemLeft" align="right" valign="top">HOT constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/db9/classchdr_1_1existence__set_a146b2f1dce8681ce04d1ceae403df1cb.html#a146b2f1dce8681ce04d1ceae403df1cb">contains</a> (const size_t &amp;_hash) const noexcept</td></tr>
-<tr class="memdesc:a146b2f1dce8681ce04d1ceae403df1cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the given hash exists in the set.  <br /></td></tr>
-<tr class="separator:a146b2f1dce8681ce04d1ceae403df1cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1421a0ea5aa875fc564c3309ae513763" id="r_a1421a0ea5aa875fc564c3309ae513763"><td class="memItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/db9/classchdr_1_1existence__set_a1421a0ea5aa875fc564c3309ae513763.html#a1421a0ea5aa875fc564c3309ae513763">trim</a> ()</td></tr>
-<tr class="memdesc:a1421a0ea5aa875fc564c3309ae513763"><td class="mdescLeft">&#160;</td><td class="mdescRight">trim the set by removing trailing false values.  <br /></td></tr>
-<tr class="separator:a1421a0ea5aa875fc564c3309ae513763"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa71d722bb24f1773903b2627354e82a0" id="r_aa71d722bb24f1773903b2627354e82a0"><td class="memItemLeft" align="right" valign="top">HOT constexpr void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/db9/classchdr_1_1existence__set_aa71d722bb24f1773903b2627354e82a0.html#aa71d722bb24f1773903b2627354e82a0">push</a> (const size_t &amp;_hash)</td></tr>
+<tr class="memdesc:aa71d722bb24f1773903b2627354e82a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a hash to the set.  <br /></td></tr>
+<tr class="separator:aa71d722bb24f1773903b2627354e82a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a393ebde6c084724200ae22328dc3d2e4" id="r_a393ebde6c084724200ae22328dc3d2e4"><td class="memItemLeft" align="right" valign="top">HOT constexpr void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/db9/classchdr_1_1existence__set_a393ebde6c084724200ae22328dc3d2e4.html#a393ebde6c084724200ae22328dc3d2e4">reserve</a> (const size_t &amp;_newCapacity)</td></tr>
-<tr class="memdesc:a393ebde6c084724200ae22328dc3d2e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reserves memory for the <a class="el" href="../../d6/db9/classchdr_1_1existence__set.html" title="A set allowing for efficient existence checks without needing to store the original data in memory.">existence_set</a>.  <br /></td></tr>
+<tr class="memdesc:a393ebde6c084724200ae22328dc3d2e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reserves memory for the <a class="el" href="../../d6/db9/classchdr_1_1existence__set.html">existence_set</a>.  <br /></td></tr>
 <tr class="separator:a393ebde6c084724200ae22328dc3d2e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a139ca7a5699ee541db7d8e18f142452c" id="r_a139ca7a5699ee541db7d8e18f142452c"><td class="memItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/db9/classchdr_1_1existence__set_a139ca7a5699ee541db7d8e18f142452c.html#a139ca7a5699ee541db7d8e18f142452c">resize</a> (const size_t &amp;_newSize, const boolean_t &amp;_newValue=static_cast&lt; boolean_t &gt;(false))</td></tr>
-<tr class="memdesc:a139ca7a5699ee541db7d8e18f142452c"><td class="mdescLeft">&#160;</td><td class="mdescRight">resize the <a class="el" href="../../d6/db9/classchdr_1_1existence__set.html" title="A set allowing for efficient existence checks without needing to store the original data in memory.">existence_set</a>.  <br /></td></tr>
+<tr class="memdesc:a139ca7a5699ee541db7d8e18f142452c"><td class="mdescLeft">&#160;</td><td class="mdescRight">resize the <a class="el" href="../../d6/db9/classchdr_1_1existence__set.html">existence_set</a>.  <br /></td></tr>
 <tr class="separator:a139ca7a5699ee541db7d8e18f142452c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96d391a5b8907ff5b9adf72774583f90" id="r_a96d391a5b8907ff5b9adf72774583f90"><td class="memItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/db9/classchdr_1_1existence__set_a96d391a5b8907ff5b9adf72774583f90.html#a96d391a5b8907ff5b9adf72774583f90">clear</a> () noexcept</td></tr>
-<tr class="memdesc:a96d391a5b8907ff5b9adf72774583f90"><td class="mdescLeft">&#160;</td><td class="mdescRight">clear the content of the set.  <br /></td></tr>
-<tr class="separator:a96d391a5b8907ff5b9adf72774583f90"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a686f8cfcb07e2c875e58185f5b9cabd6" id="r_a686f8cfcb07e2c875e58185f5b9cabd6"><td class="memItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/db9/classchdr_1_1existence__set_a686f8cfcb07e2c875e58185f5b9cabd6.html#a686f8cfcb07e2c875e58185f5b9cabd6">shrink_to_fit</a> ()</td></tr>
 <tr class="memdesc:a686f8cfcb07e2c875e58185f5b9cabd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trims unused elements from the end of the set.  <br /></td></tr>
 <tr class="separator:a686f8cfcb07e2c875e58185f5b9cabd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a545aa7b6f77b13ccee4052087e9ac6a9" id="r_a545aa7b6f77b13ccee4052087e9ac6a9"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/db9/classchdr_1_1existence__set_a545aa7b6f77b13ccee4052087e9ac6a9.html#a545aa7b6f77b13ccee4052087e9ac6a9">size</a> () const noexcept</td></tr>
 <tr class="memdesc:a545aa7b6f77b13ccee4052087e9ac6a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the size of the set.  <br /></td></tr>
 <tr class="separator:a545aa7b6f77b13ccee4052087e9ac6a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a04c626906f05290c1b7e2ee1eff9f630" id="r_a04c626906f05290c1b7e2ee1eff9f630"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/db9/classchdr_1_1existence__set_a04c626906f05290c1b7e2ee1eff9f630.html#a04c626906f05290c1b7e2ee1eff9f630">capacity</a> () const noexcept</td></tr>
-<tr class="memdesc:a04c626906f05290c1b7e2ee1eff9f630"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the capacity of the set.  <br /></td></tr>
-<tr class="separator:a04c626906f05290c1b7e2ee1eff9f630"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1421a0ea5aa875fc564c3309ae513763" id="r_a1421a0ea5aa875fc564c3309ae513763"><td class="memItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/db9/classchdr_1_1existence__set_a1421a0ea5aa875fc564c3309ae513763.html#a1421a0ea5aa875fc564c3309ae513763">trim</a> ()</td></tr>
+<tr class="memdesc:a1421a0ea5aa875fc564c3309ae513763"><td class="mdescLeft">&#160;</td><td class="mdescRight">trim the set by removing trailing false values.  <br /></td></tr>
+<tr class="separator:a1421a0ea5aa875fc564c3309ae513763"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="../../d8/d62/existence__set_8hpp_source.html">existence_set.hpp</a></li>

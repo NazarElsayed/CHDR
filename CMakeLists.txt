@@ -116,6 +116,7 @@ configure_file(README.md.in ${CMAKE_SOURCE_DIR}/README.md)
 
 message(NOTICE "NOTICE: Building test application:")
 
+# EXTREME WARNINGS:
 set(WARNINGS_BASE "-Wall -Wextra -Wpedantic -Wconversion -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Woverloaded-virtual -Wnull-dereference -Wdouble-promotion -Wvla -Wformat=2 -Wmissing-declarations -Wsuggest-override -Wstrict-overflow=5 -Wuninitialized -Wswitch-enum -Wswitch-default -Wcast-qual -Wwrite-strings -Wpointer-arith -Wfloat-equal -Wc++20-extensions")
 
 if (DEFINED SUPER_PEDANTIC)
@@ -125,6 +126,7 @@ else ()
     set(WARNINGS "${WARNINGS_BASE}")
 endif ()
 
+# HIGHLIGHTING FOR COMPILER ERRORS:
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -freorder-blocks-and-partition")
@@ -169,10 +171,9 @@ if (UNIX)
     endif ()
 endif (UNIX)
 
-# Run Doxygen in the background to generate documentation:
 message(NOTICE "NOTICE: Generating documentation with Doxygen:")
-message(STATUS "Generating Doxyfile...")
 configure_file(Doxyfile.in ${CMAKE_SOURCE_DIR}/Doxyfile)
+message(STATUS "Generating Doxyfile...")
 execute_process(
     COMMAND doxygen ${CMAKE_SOURCE_DIR}/Doxyfile
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}

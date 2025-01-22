@@ -31,8 +31,9 @@ namespace chdr {
     template<> struct alignment<high_performance>    final { using type_t [[maybe_unused]] = char; };
 
     /**
+     * @nosubgrouping
      * @class existence_set
-     * @brief A set allowing for efficient existence checks without needing to store the original data in memory.
+     * @details A set allowing for efficient existence checks without needing to store the original data in memory.
      *
      * @tparam alignment_type The alignment type used by the set.
      *
@@ -83,41 +84,45 @@ namespace chdr {
     public:
 
         /**
-         * @brief Initialise set.
-         * @param[in] _resource (optional) Custom memory resource.
+         * @name Constructors
+         * @{
+         */
+
+        /**
+         * @brief Default Constructor.
+         * @details Initialises the set. A custom polymorphic memory resource can be optionally provided.
+         * @param[in, out] _resource (optional) Custom memory resource.
          */
         [[maybe_unused]] constexpr existence_set(std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) noexcept : c(_resource) {}
 
         /**
-         * @brief Initialise set.
+         * @brief Constructor with a predefined capacity.
+         * @details Initialises the set with a predefined capacity. A custom polymorphic memory resource can be optionally provided.
          * @param[in] _capacity Initial capacity of the set. Must be larger than 0.
-         * @param[in] _resource (optional) Custom memory resource.
+         * @param[in, out] _resource (optional) Custom memory resource.
          */
         [[maybe_unused]] constexpr explicit existence_set(const size_t& _capacity, std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {
             reserve(_capacity);
         }
 
         /**
-         * @brief Initialise set using a collection of items.
-         * @details Please note: Duplicate entries will be merged.
+         * @brief Constructor with a collection of items.
+         * @details Initialises the set with a predefined list of items. A custom polymorphic memory resource can be optionally provided.
+         * @note Please note: Duplicate entries will be merged into single entries.
          *
          * @param[in] _items Items to construct the set using.
-         * @param[in] _capacity Initial capacity of the set. If a value less than 1 is assigned, it will use the size of the provided collection.
+         * @param[in, out] _resource (optional) Custom memory resource.
          */
-        [[maybe_unused]] constexpr existence_set(const std::initializer_list<size_t>& _items, const size_t& _capacity = 0U) {
-
-            size_t autoCapacity = _capacity;
-
-            if (autoCapacity < 1U) {
-                autoCapacity = utils::max<size_t>(_items.size(), 1U);
-            }
-
-            reserve(autoCapacity);
-
+        [[maybe_unused]] constexpr existence_set(const std::initializer_list<size_t>& _items, std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) {
+            reserve(_items.size());
             for (const auto& item : _items) {
                 push(item);
             }
         }
+
+        /**
+         * @}
+         **/
 
         /**
          * @brief Preallocates memory based on the hash and bucket size.

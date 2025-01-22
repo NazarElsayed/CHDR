@@ -1,0 +1,5 @@
+<map id="chdr::existence_set::capacity" name="chdr::existence_set::capacity">
+<area shape="rect" id="Node000001" title="Get the capacity of the set." alt="" coords="189,5,325,45"/>
+<area shape="rect" id="Node000002" href="$d6/db9/classchdr_1_1existence__set_a9493c46ed733e97f2f7a5596da2f39db.html#a9493c46ed733e97f2f7a5596da2f39db" title="Preallocates memory based on the hash and bucket size." alt="" coords="5,5,141,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="175,28,141,28,141,23,175,23"/>
+</map>

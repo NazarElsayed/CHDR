@@ -1,0 +1,7 @@
+<map id="existence_set" name="existence_set">
+<area shape="rect" id="Node000001" title="Constructor with a collection of items." alt="" coords="5,31,108,56"/>
+<area shape="rect" id="Node000002" href="$d6/db9/classchdr_1_1existence__set_aa71d722bb24f1773903b2627354e82a0.html#aa71d722bb24f1773903b2627354e82a0" title="Add a hash to the set." alt="" coords="163,5,214,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,31,149,23,150,28,109,36"/>
+<area shape="rect" id="Node000003" href="$d6/db9/classchdr_1_1existence__set_a393ebde6c084724200ae22328dc3d2e4.html#a393ebde6c084724200ae22328dc3d2e4" title="Reserves memory for the existence_set." alt="" coords="156,55,221,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="108,50,143,56,142,62,108,55"/>
+</map>
