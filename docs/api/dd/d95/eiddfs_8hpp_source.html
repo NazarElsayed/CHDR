@@ -142,7 +142,7 @@ $(document).ready(function(){initNavTree('dd/d95/eiddfs_8hpp_source.html','../..
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>            <span class="comment">// ReSharper disable once CppPossiblyUninitializedMember</span></div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            [[nodiscard]] <span class="keyword">constexpr</span> node() noexcept : bnode&lt;index_t&gt;() {} <span class="comment">// NOLINT(*-pro-type-member-init, *-use-equals-default)</span></div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>            [[nodiscard]] <span class="keyword">constexpr</span> node(<span class="keyword">const</span> index_t&amp; _index, <span class="keyword">const</span> index_t&amp; _depth) noexcept : bnode&lt;index_t&gt;(_index),</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>            [[nodiscard]] <span class="keyword">constexpr</span> node(index_t _index, index_t _depth) noexcept : bnode&lt;index_t&gt;(_index),</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>                m_depth(_depth) {}</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            [[nodiscard]] HOT <span class="keyword">friend</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> operator &lt; (<span class="keyword">const</span> node&amp; _a, <span class="keyword">const</span> node&amp; _b) <span class="keyword">noexcept</span> {</div>
@@ -168,7 +168,7 @@ $(document).ready(function(){initNavTree('dd/d95/eiddfs_8hpp_source.html','../..
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        };</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        template &lt;typename open_set_t, typename closed_set_t&gt;</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        [[nodiscard]] HOT static constexpr auto solve_internal(open_set_t&amp; _open, closed_set_t&amp; _closed, const <span class="keywordtype">size_t</span>&amp; _capacity, const params_t&amp; _params) {</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        [[nodiscard]] HOT static constexpr auto solve_internal(open_set_t&amp; _open, closed_set_t&amp; _closed, <span class="keywordtype">size_t</span> _capacity, const params_t&amp; _params) {</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>            <span class="keyword">using </span>neighbours_t = <span class="keyword">decltype</span>(_params.maze.get_neighbours(std::declval&lt;index_t&gt;()));</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>

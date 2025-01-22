@@ -131,7 +131,7 @@ $(document).ready(function(){initNavTree('d1/d2d/weighted__node_8hpp_source.html
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        [[nodiscard]] <span class="keyword">constexpr</span> weighted_node() = <span class="keyword">delete</span>;</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        ~weighted_node() noexcept = default;</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        [[nodiscard]] constexpr weighted_node(const weight_t&amp; _value) noexcept : m_value(_value) {}</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        [[nodiscard]] constexpr weighted_node(weight_t _value) noexcept : m_value(_value) {}</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        [[nodiscard]] <span class="keyword">constexpr</span> weighted_node           (<span class="keyword">const</span> weighted_node&amp;) <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>                      <span class="keyword">constexpr</span> weighted_node&amp; operator=(<span class="keyword">const</span> weighted_node&amp;) <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
@@ -147,8 +147,8 @@ $(document).ready(function(){initNavTree('d1/d2d/weighted__node_8hpp_source.html
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>            <span class="keywordflow">return</span> m_value != std::numeric_limits&lt;weight_t&gt;::max();</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        }</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        [[nodiscard]] <span class="keyword">constexpr</span> <span class="keyword">const</span> weight_t&amp; value() const noexcept { <span class="keywordflow">return</span> m_value; }</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <span class="keyword">constexpr</span> <span class="keywordtype">void</span> value(<span class="keyword">const</span> weight_t&amp; _value) <span class="keyword">noexcept</span> { m_value = _value; }</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        [[nodiscard]] <span class="keyword">constexpr</span> weight_t value() const noexcept { <span class="keywordflow">return</span> m_value; }</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <span class="keyword">constexpr</span> <span class="keywordtype">void</span> value(weight_t _value) <span class="keyword">noexcept</span> { m_value = _value; }</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    };</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>} <span class="comment">//chdr::mazes</span></div>

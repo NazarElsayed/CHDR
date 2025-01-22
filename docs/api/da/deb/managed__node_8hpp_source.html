@@ -134,7 +134,7 @@ $(document).ready(function(){initNavTree('da/deb/managed__node_8hpp_source.html'
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>            m_successors(0U) {}</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        ~managed_node() noexcept = default;</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        [[nodiscard]] HOT constexpr managed_node(const index_t&amp; _index, managed_node* RESTRICT const _parent = <span class="keywordtype">nullptr</span>) noexcept : bnode&lt;index_t&gt;(_index),</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        [[nodiscard]] HOT constexpr managed_node(index_t _index, managed_node* RESTRICT const _parent = <span class="keywordtype">nullptr</span>) noexcept : bnode&lt;index_t&gt;(_index),</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>            m_parent(_parent),</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>            m_successors(0U)</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        {</div>
