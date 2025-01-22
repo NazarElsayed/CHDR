@@ -20,27 +20,31 @@ namespace chdr {
 
     class monotonic_pool : public std::pmr::memory_resource {
 
-        static constexpr size_t s_initial_block_size {  2048U };
+        static constexpr size_t s_initial_block_size {  4096U };
         static constexpr size_t     s_max_block_size { 65536U };
 
-        size_t m_current_block_size;    // Size of the current block.
-        size_t m_block_write;           // Current write position in the active block.
-        size_t m_active_block_index;    // Index of the current active block.
+        struct block {
+            std::unique_ptr<char[]> data;
+            size_t                  size;
+        };
 
-        std::vector<std::unique_ptr<char[]>> blocks; // NOLINT(*-avoid-c-arrays)
-        std::vector<size_t> block_sizes;
+        size_t m_current_block_size; // Size of the current block.
+        size_t m_block_write;        // Current write position in the active block.
+        size_t m_active_block_index; // Index of the current active block.
+
+        std::vector<block> blocks;
 
         HOT void expand(const size_t& _size) {
 
             // If there are available preallocated blocks, overwrite them:
             if (m_active_block_index + 1U < blocks.size()) {
-                m_current_block_size = block_sizes[++m_active_block_index];
+                m_current_block_size = blocks[++m_active_block_index].size;
             }
             else {
+
                 // Otherwise, allocate a fresh block:
                 m_current_block_size = utils::max(s_initial_block_size, utils::max(utils::min(m_current_block_size * 2U, s_max_block_size), _size));
-                blocks.emplace_back(std::make_unique<char[]>(m_current_block_size)); // NOLINT(*-avoid-c-arrays)
-                block_sizes.push_back(m_current_block_size);
+                blocks.emplace_back(std::make_unique<char[]>(m_current_block_size), m_current_block_size);
                 m_active_block_index = blocks.size() - 1U;
             }
 
@@ -53,17 +57,17 @@ namespace chdr {
 
             // Ensure alignment and calculate aligned pointer:
             auto* aligned_ptr = reinterpret_cast<char*>(
-                (reinterpret_cast<uintptr_t>(blocks[m_active_block_index].get() + m_block_write) + _alignment - 1U) & ~(_alignment - 1U)
+                (reinterpret_cast<uintptr_t>(blocks[m_active_block_index].data.get() + m_block_write) + _alignment - 1U) & ~(_alignment - 1U)
             );
 
             // If insufficient space in the current block, expand and retry allocation:
-            if (aligned_ptr + _size > blocks[m_active_block_index].get() + block_sizes[m_active_block_index]) {
+            if (aligned_ptr + _size > blocks[m_active_block_index].data.get() + blocks[m_active_block_index].size) {
                 expand(_size + _alignment);
                 return do_allocate(_size, _alignment);
             }
 
             // Update write position and return the aligned pointer:
-            m_block_write += static_cast<size_t>(aligned_ptr + _size - (blocks[m_active_block_index].get() + m_block_write));
+            m_block_write += static_cast<size_t>(aligned_ptr + _size - (blocks[m_active_block_index].data.get() + m_block_write));
             return aligned_ptr;
         }
 
@@ -76,17 +80,15 @@ namespace chdr {
         }
 
     public:
-
         monotonic_pool() :
             m_current_block_size(s_initial_block_size),
-            m_block_write       (0U),
-            m_active_block_index(0U)
-        {
+            m_block_write(0U),
+            m_active_block_index(0U) {
             expand(s_initial_block_size); // Allocate first block.
         }
 
-        constexpr monotonic_pool           (const monotonic_pool&) = delete;
-        constexpr monotonic_pool& operator=(const monotonic_pool&) = delete;
+        constexpr                 monotonic_pool(const monotonic_pool&) = delete;
+        constexpr monotonic_pool& operator=(const monotonic_pool&)      = delete;
 
         [[nodiscard]] constexpr monotonic_pool(monotonic_pool&&) noexcept = default;
 
@@ -94,13 +96,13 @@ namespace chdr {
         constexpr
 #endif
         monotonic_pool& operator=(monotonic_pool&&) noexcept = default;
-        
+
         size_t allocated() {
 
             size_t result { 0U };
 
-            for (auto& size : block_sizes) {
-                result += size;
+            for (auto& item : blocks) {
+                result += item.size;
             }
 
             return result;
@@ -128,8 +130,7 @@ namespace chdr {
 
             // Clear all existing blocks and their sizes.
             decltype(blocks) temp{};
-            blocks      = std::move(temp);
-            block_sizes = {};
+            blocks = std::move(temp);
 
             // Allocate a fresh initial block.
             expand(s_initial_block_size);

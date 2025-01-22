@@ -44,41 +44,64 @@
   </navindex>
 
   <!-- Layout definition for a class page -->
-<class>
-    <!-- General Overview Section -->
-    <briefdescription visible="yes" title="Overview"/> <!-- Class overview at the top -->
-    <inheritancegraph visible="$CLASS_GRAPH" title="Inheritance Diagram"/> <!-- Inheritance visible, like in Unity -->
-    <collaborationgraph visible="yes" title="Collaboration Diagram"/> <!-- Collaboration graph also at the top -->
-
-    <!-- Class Members Overview -->
-    <memberdecl title="Members Overview"> <!-- This groups summarized member sections near the top -->
-        <constructors title="Constructors"/> <!-- Constructors are prominent, listed early -->
-        <publicmethods title="Methods"/> <!-- Public methods summary -->
-        <properties title="Properties"/> <!-- Properties grouped separately -->
-        <signals title="Events"/> <!-- Signals renamed to 'Events' -->
-        <publicattributes title="Attributes"/> <!-- Attributes follow -->
-        <publicstaticattributes title="Static Attributes"/> <!-- Static attributes -->
+  <class>
+    <briefdescription visible="no"/>
+    <includes visible="$SHOW_HEADERFILE"/>
+    <detaileddescription title="Description"/>
+    <memberdecl>
+      <constructors title="Constructors" visible="yes"/>
+      <interfaces title="Interfaces"/>
+      <properties title="Properties"/>
+      <publictypes title="Types"/>
+      <publicmethods title="Methods"/>
+      <publicstaticmethods title="Static Methods"/>
+      <publicattributes title="Attributes"/>
+      <publicstaticattributes title=""/>
+      <events title="Events"/>
+      <services title="Services"/>
+      <publicslots title=""/>
+      <signals title="Signals"/>
+      <protectedtypes title=""/>
+      <protectedslots title=""/>
+      <protectedmethods title=""/>
+      <protectedstaticmethods title=""/>
+      <protectedattributes title=""/>
+      <protectedstaticattributes title=""/>
+      <packagetypes title=""/>
+      <packagemethods title=""/>
+      <packagestaticmethods title=""/>
+      <packageattributes title=""/>
+      <packagestaticattributes title=""/>
+      <privatetypes title=""/>
+      <privateslots title=""/>
+      <privatemethods title=""/>
+      <privatestaticmethods title=""/>
+      <privateattributes title=""/>
+      <privatestaticattributes title=""/>
+      <friends title="Friends"/>
+      <related title="" subtitle=""/>
+      <nestedclasses visible="yes" title=""/>
+      <membergroups visible="yes"/>
     </memberdecl>
-
-    <!-- Detailed Descriptions -->
-    <detaileddescription title="Detailed Description"/> <!-- Detailed class description -->
-
-    <!-- Member Definitions (Expanded Details for Each Member) -->
-    <memberdef title="Detailed Members">
-        <constructors title="Constructors"/> <!-- Full details for constructors -->
-        <functions title="Methods"/> <!-- Full details for functions -->
-        <properties title="Properties"/> <!-- Full details for properties -->
-        <signals title="Events"/> <!-- Full details for events -->
-        <variables title="Attributes"/> <!-- Full details for attributes -->
-        <typedefs title="Type Definitions"/> <!-- Typedefs as supporting info -->
-        <enums title="Enumerations"/> <!-- Enums if applicable -->
+    <memberdef>
+      <constructors title="Constructors"/>
+      <interfaces title="Interfaces"/>
+      <inlineclasses title="Classes"/>
+      <enums title=""/>
+      <services title=""/>
+      <functions title="Methods"/>
+      <variables title="Variables"/>
+      <properties title="Properties"/>
+      <events title="Events"/>
+      <typedefs title="Types"/>
+      <related title=""/>
     </memberdef>
-
-    <!-- Extras -->
-    <nestedclasses visible="yes" title="Nested Classes"/> <!-- Inline/nested classes -->
-    <usedfiles visible="$SHOW_USED_FILES" title="Included Files"/> <!-- Related files -->
-    <authorsection visible="yes" title="Author"/> <!-- Author information -->
-</class>
+    <allmemberslink visible="yes"/>
+    <usedfiles visible="$SHOW_USED_FILES"/>
+    <inheritancegraph visible="$CLASS_GRAPH"/>
+    <collaborationgraph visible="yes"/>
+    <authorsection visible="yes"/>
+  </class>
 
   <!-- Layout definition for a namespace page -->
   <namespace>

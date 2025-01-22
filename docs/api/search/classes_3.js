@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['high_5fperformance_0',['high_performance',['../d9/df4/structchdr_1_1high__performance.html',1,'chdr']]]
+  ['lowest_5fmemory_5fusage_0',['lowest_memory_usage',['../d2/d02/structchdr_1_1lowest__memory__usage.html',1,'chdr']]]
 ];

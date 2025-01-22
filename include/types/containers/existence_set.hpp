@@ -19,13 +19,16 @@
 
 namespace chdr {
 
-    struct lowest_memory_usage {}; /** @brief One bit represents each item in memory.*/
-    struct    high_performance {}; /** @brief Eight bits represent each item in memory.*/
+    /** @brief One bit represents each item in memory.*/
+    struct lowest_memory_usage final {};
+
+    /** @brief Eight bits represent each item in memory.*/
+    struct high_performance final {};
 
     template<typename>
     struct alignment {};
-    template<> struct alignment<lowest_memory_usage> { using type_t [[maybe_unused]] = bool; };
-    template<> struct alignment<high_performance>    { using type_t [[maybe_unused]] = char; };
+    template<> struct alignment<lowest_memory_usage> final { using type_t [[maybe_unused]] = bool; };
+    template<> struct alignment<high_performance>    final { using type_t [[maybe_unused]] = char; };
 
     /**
      * @class existence_set
