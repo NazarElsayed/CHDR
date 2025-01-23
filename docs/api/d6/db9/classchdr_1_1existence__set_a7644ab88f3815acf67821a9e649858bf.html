@@ -10,6 +10,9 @@
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
+<script type="text/javascript" src="../../doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript" src="../../doxygen-awesome-darkmode-toggle.js"></script>
+<script type="text/javascript" src="../../doxygen-awesome-fragment-copy-button.js"></script>
 <link href="../../navtree.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../resize.js"></script>
 <script type="text/javascript" src="../../navtreedata.js"></script>
@@ -20,6 +23,12 @@
 <link href="../../doxygen.css" rel="stylesheet" type="text/css" />
 <link href="../../doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="../../doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="../../doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">
+    DoxygenAwesomeParagraphLink.init()
+    DoxygenAwesomeFragmentCopyButton.init()
+    DoxygenAwesomeDarkModeToggle.init()
+</script>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -98,7 +107,7 @@ $(document).ready(function(){initNavTree('d6/db9/classchdr_1_1existence__set_a76
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename alignment_type  = high_performance&gt; </div>
+template&lt;typename layout_t  = high_performance&gt; </div>
 <div class="memtemplate">
 template&lt;typename T &gt; </div>
 <table class="mlabels">
@@ -120,15 +129,21 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Add a hash to the set. </p>
+<p>Adds a hash to the set using forward-construction semantics. </p>
+<p>This function ensures that the hash is enabled within the set, forwarding the provided value and validating its type at compile-time. </p><dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The type of the input value, which must be an integral type. </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">_hash</td><td>The hash value to be added. </td></tr>
+    <tr><td class="paramname">_hash</td><td>The hash value to add. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d62/existence__set_8hpp_source.html#l00152">152</a> of file <a class="el" href="../../d8/d62/existence__set_8hpp_source.html">existence_set.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d62/existence__set_8hpp_source.html#l00225">225</a> of file <a class="el" href="../../d8/d62/existence__set_8hpp_source.html">existence_set.hpp</a>.</p>
 
 </div>
 </div>

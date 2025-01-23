@@ -6,6 +6,6 @@ var annotated_dup =
       ] ],
       [ "existence_set", "d6/db9/classchdr_1_1existence__set.html", "d6/db9/classchdr_1_1existence__set" ],
       [ "high_performance", "d9/df4/structchdr_1_1high__performance.html", null ],
-      [ "lowest_memory_usage", "d2/d02/structchdr_1_1lowest__memory__usage.html", null ]
+      [ "low_memory_usage", "df/d17/structchdr_1_1low__memory__usage.html", null ]
     ] ]
 ];

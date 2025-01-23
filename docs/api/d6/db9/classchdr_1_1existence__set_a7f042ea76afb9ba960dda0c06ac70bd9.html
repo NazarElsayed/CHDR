@@ -10,6 +10,9 @@
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
+<script type="text/javascript" src="../../doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript" src="../../doxygen-awesome-darkmode-toggle.js"></script>
+<script type="text/javascript" src="../../doxygen-awesome-fragment-copy-button.js"></script>
 <link href="../../navtree.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../resize.js"></script>
 <script type="text/javascript" src="../../navtreedata.js"></script>
@@ -20,6 +23,12 @@
 <link href="../../doxygen.css" rel="stylesheet" type="text/css" />
 <link href="../../doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="../../doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="../../doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">
+    DoxygenAwesomeParagraphLink.init()
+    DoxygenAwesomeFragmentCopyButton.init()
+    DoxygenAwesomeDarkModeToggle.init()
+</script>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -98,7 +107,7 @@ $(document).ready(function(){initNavTree('d6/db9/classchdr_1_1existence__set_a7f
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename alignment_type  = high_performance&gt; </div>
+template&lt;typename layout_t  = high_performance&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -118,15 +127,16 @@ template&lt;typename alignment_type  = high_performance&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Default Constructor. </p>
-<p>Initialises the set. A custom polymorphic memory resource can be optionally provided. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Construct an <a class="el" href="../../d6/db9/classchdr_1_1existence__set.html" title="Represents a container for tracking the existence of elements.">existence_set</a>. </p>
+<dl class="section remark"><dt>Remarks</dt><dd>This constructor allows the <a class="el" href="../../d6/db9/classchdr_1_1existence__set.html" title="Represents a container for tracking the existence of elements.">existence_set</a> to allocate memory using a specified polymorphic memory resource. If no resource is provided, the default memory resource is used.</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">_resource</td><td>(optional) Custom memory resource. </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">_resource</td><td>(optional) A pointer to a std::pmr::memory_resource object that will be used for memory allocation. If not provided, the default memory resource is used. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d62/existence__set_8hpp_source.html#l00096">96</a> of file <a class="el" href="../../d8/d62/existence__set_8hpp_source.html">existence_set.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d62/existence__set_8hpp_source.html#l00141">141</a> of file <a class="el" href="../../d8/d62/existence__set_8hpp_source.html">existence_set.hpp</a>.</p>
 
 </div>
 </div>

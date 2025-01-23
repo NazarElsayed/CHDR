@@ -10,6 +10,9 @@
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
+<script type="text/javascript" src="../../doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript" src="../../doxygen-awesome-darkmode-toggle.js"></script>
+<script type="text/javascript" src="../../doxygen-awesome-fragment-copy-button.js"></script>
 <link href="../../navtree.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../resize.js"></script>
 <script type="text/javascript" src="../../navtreedata.js"></script>
@@ -20,6 +23,12 @@
 <link href="../../doxygen.css" rel="stylesheet" type="text/css" />
 <link href="../../doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="../../doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="../../doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">
+    DoxygenAwesomeParagraphLink.init()
+    DoxygenAwesomeFragmentCopyButton.init()
+    DoxygenAwesomeDarkModeToggle.init()
+</script>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -98,7 +107,7 @@ $(document).ready(function(){initNavTree('d6/db9/classchdr_1_1existence__set_a30
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename alignment_type  = high_performance&gt; </div>
+template&lt;typename layout_t  = high_performance&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -134,30 +143,24 @@ template&lt;typename alignment_type  = high_performance&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Preallocates memory based on the hash and bucket size. </p>
+<p>Allocates additional capacity to accommodate the hash, ensuring an increase in storage is within the specified limits. </p>
+<p>This function increases the capacity of the container when the current capacity is insufficient to include the specified hash value. The increment value specifies how much the capacity should be increased by. An optional maximum increment value can be provided to ensure the increase does not exceed this limit.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">_hash</td><td>The value for which memory needs to be preallocated. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">_increment</td><td>Size of bucket to be considered for memory allocation. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">_max_increment</td><td>(optional) Maximum limit for the memory allocation. </td></tr>
+    <tr><td class="paramname">_hash</td><td>The hash value that requires storage. If the current capacity is less than or equal to this value, reallocation occurs. </td></tr>
+    <tr><td class="paramname">_increment</td><td>The size by which the capacity is increased when reallocation occurs. </td></tr>
+    <tr><td class="paramname">_max_increment</td><td>(optional) The maximum allowable increment to the capacity during reallocation. Defaults to the largest possible size value. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d62/existence__set_8hpp_source.html#l00133">133</a> of file <a class="el" href="../../d8/d62/existence__set_8hpp_source.html">existence_set.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d62/existence__set_8hpp_source.html#l00203">203</a> of file <a class="el" href="../../d8/d62/existence__set_8hpp_source.html">existence_set.hpp</a>.</p>
 <div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><img src="../../d6/db9/classchdr_1_1existence__set_a30c34264336dae664d5b7942e3f16337_a30c34264336dae664d5b7942e3f16337_cgraph.png" border="0" usemap="#ad6/db9/classchdr_1_1existence__set_a30c34264336dae664d5b7942e3f16337_a30c34264336dae664d5b7942e3f16337_cgraph" alt=""/></div>
-<map name="ad6/db9/classchdr_1_1existence__set_a30c34264336dae664d5b7942e3f16337_a30c34264336dae664d5b7942e3f16337_cgraph" id="ad6/db9/classchdr_1_1existence__set_a30c34264336dae664d5b7942e3f16337_a30c34264336dae664d5b7942e3f16337_cgraph">
-<area shape="rect" title="Preallocates memory based on the hash and bucket size." alt="" coords="5,31,72,56"/>
-<area shape="rect" href="../../d6/db9/classchdr_1_1existence__set_a4effe75935975bcddf86d9efd85776ef.html#a4effe75935975bcddf86d9efd85776ef" title="Get the capacity of the set." alt="" coords="120,5,191,31"/>
-<area shape="poly" title=" " alt="" coords="72,34,106,26,107,31,73,39"/>
-<area shape="rect" href="../../d6/db9/classchdr_1_1existence__set_a91491abbbce77fb8114de182079ff261.html#a91491abbbce77fb8114de182079ff261" title="Reserves memory for the existence_set." alt="" coords="123,55,188,80"/>
-<area shape="poly" title=" " alt="" coords="73,48,110,55,108,60,72,53"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../d6/db9/classchdr_1_1existence__set_a30c34264336dae664d5b7942e3f16337_a30c34264336dae664d5b7942e3f16337_cgraph.svg" width="196" height="86"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>

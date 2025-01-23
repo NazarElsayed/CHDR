@@ -19,49 +19,83 @@
 
 namespace chdr {
 
-    /** @brief One bit represents each item in memory.*/
-    struct lowest_memory_usage final {};
+    /** @brief One bit represents each item. */
+    struct low_memory_usage final {};
 
-    /** @brief Eight bits represent each item in memory.*/
+    /** @brief One byte represents each item. */
     struct high_performance final {};
-
-    template<typename>
-    struct alignment {};
-    template<> struct alignment<lowest_memory_usage> final { using type_t [[maybe_unused]] = bool; };
-    template<> struct alignment<high_performance>    final { using type_t [[maybe_unused]] = char; };
 
     /**
      * @nosubgrouping
      * @class existence_set
-     * @details A set allowing for efficient existence checks without needing to store the original data in memory.
-     *
-     * @tparam alignment_type The alignment type used by the set.
-     *
-     * @see lowest_memory_usage
+     * @brief Represents a container for tracking the existence of elements.
+     * 
+     * @details The `existence_set` is a specialised data structure designed to efficiently track
+     *          the existence of elements without storing their original values. \n\n
+     *          It has constant lookup, insertion, and removal times, storing data in a dense,
+     *          contiguous memory layout that improves the cache locality of stored elements. \n\n
+     *          Due to its dense structure, the existence set experiences an increased worst-case
+     *          memory complexity. However, as it is non-owning, it often uses less memory in
+     *          monotonic situations than its sparse counterparts. \n\n
+     *          Memory efficiency and performance are customisable through specifying the number
+     *          of bits used with the provided template parameter.
+     * 
+     * @tparam layout_t Memory layout strategy for the set:
+     *                  - `low_memory_usage`: Minimises memory usage (One bit per item).
+     *                  - `high_performance`: Maximises performance with increased memory usage (One byte per item).
+     * 
+     * @note This class uses polymorphic memory resources (`std::pmr::memory_resource`)
+     *       to provide fine-grained control over memory allocation.
+     * 
+     * @see low_memory_usage
      * @see high_performance
      */
-    template <typename alignment_type = high_performance>
+    template <typename layout_t = high_performance>
     class existence_set {
 
+        // Validate the template parameter.
         static_assert(
-            std::is_same_v<alignment_type, lowest_memory_usage> ||
-            std::is_same_v<alignment_type, high_performance>,
-            "alignment_type must be one of the following: "
-            "lowest_memory_usage, high_performance"
+            std::is_same_v<layout_t, low_memory_usage> ||
+            std::is_same_v<layout_t, high_performance>,
+            "layout_t must be one of the following: low_memory_usage, high_performance"
         );
 
-    private:
+        /**
+         * @typedef boolean_t
+         * @brief Boolean type based on the specified layout_t.
+         * @details If the specified layout_t is `lowest_memory_usage`, the corresponding boolean type is `bool`.
+         *          Otherwise, for `high_performance`, the boolean type is `char`.
+         */
+        using boolean_t = std::conditional_t<std::is_same_v<layout_t, low_memory_usage>, bool, char>;
 
-        using boolean_t = typename alignment<alignment_type>::type_t;
-
+        /**
+         * @brief Storage for tracking existence.
+         * @details This structure tracks whether elements are present or absent 
+         *          without storing their actual values.
+         *
+         * @note Currently uses a polymorphic memory resource-enabled vector. 
+         *       Future versions may support other container types for added flexibility and constexpr support.
+         */
         std::pmr::vector<boolean_t> c;
 
+        /**
+         * @brief Enables a hash in the set.
+         * @details Marks a specific hash as present in the set.
+         * @note This operation resizes the set automatically if necessary.
+         * @param _hash The hash value to enable.
+         */
         constexpr void enable(size_t _hash) {
 
             if (_hash >= c.size()) {
                 resize(_hash + 1U);
             }
 
+            /*
+             * Suppress GCC-specific warnings about potential string overflow in this section of code.
+             *
+             * As 'boolean_t' can be a valid alias for 'char' type, linting tools occasionally
+             * misidentify this code as string manipulation.
+             */
 #if defined(GCC)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstringop-overflow"
@@ -74,8 +108,13 @@ namespace chdr {
 #endif
         }
 
+        /**
+         * @brief Disable a hash in the set.
+         * @details Marks a specific hash as absent in the set.
+         * @note This operation does not reduce the size of the set.
+         * @param _hash The hash value to 'turn off'.
+         */
         constexpr void disable(size_t _hash) noexcept {
-
             if (_hash < c.size()) {
                 c[_hash] = static_cast<boolean_t>(false);
             }
@@ -89,32 +128,53 @@ namespace chdr {
          */
 
         /**
-         * @brief Default Constructor.
-         * @details Initialises the set. A custom polymorphic memory resource can be optionally provided.
-         * @param[in, out] _resource (optional) Custom memory resource.
+         * @brief Construct an existence_set.
+         *
+         * @remarks This constructor allows the existence_set to allocate memory using a specified
+         *          polymorphic memory resource. If no resource is provided, the default memory
+         *          resource is used.
+         *
+         * @param [in, out] _resource (optional) A pointer to a std::pmr::memory_resource object
+         * that will be used for memory allocation. If not provided, the default memory
+         * resource is used.
          */
         [[maybe_unused]] constexpr existence_set(std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) noexcept : c(_resource) {}
 
         /**
-         * @brief Constructor with a predefined capacity.
-         * @details Initialises the set with a predefined capacity. A custom polymorphic memory resource can be optionally provided.
-         * @param[in] _capacity Initial capacity of the set. Must be larger than 0.
-         * @param[in, out] _resource (optional) Custom memory resource.
+         * @brief Constructs an existence_set with the specified capacity.
+         *
+         * @remarks This constructor allows the existence_set to allocate memory using a specified
+         *          polymorphic memory resource. If no resource is provided, the default memory
+         *          resource is used.
+         *
+         * @param _capacity The initial number of elements to reserve space for.
+         * @param [in, out] _resource (optional) A pointer to the memory resource to use for allocations.
+         *                      If no custom resource is provided, the default memory resource is used.
          */
         [[maybe_unused]] constexpr explicit existence_set(size_t _capacity, std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {
             reserve(_capacity);
         }
 
         /**
-         * @brief Constructor with a collection of items.
-         * @details Initialises the set with a predefined list of items. A custom polymorphic memory resource can be optionally provided.
-         * @note Please note: Duplicate entries will be merged into single entries.
+         * @brief Constructs an existence_set with initial items.
          *
-         * @param[in] _items Items to construct the set using.
-         * @param[in, out] _resource (optional) Custom memory resource.
+         * @details This constructor initialises the existence_set using a list of hashes.
+         *          Each hash is inserted into the existence set during initialisation.
+         *
+         * @note Duplicate hashes will be merged into single entries.
+         *
+         * @remarks This constructor allows the existence_set to allocate memory using a specified
+         *          polymorphic memory resource. If no resource is provided, the default memory
+         *          resource is used.
+         *
+         * @param [in] _items The items to initialise the existence_set with, given as an initializer list.
+         * @param [in, out] _resource (optional) Pointer to the memory resource to use for the internal memory management.
+         *                        Defaults to std::pmr::get_default_resource().
          */
         [[maybe_unused]] constexpr existence_set(const std::initializer_list<size_t>& _items, std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {
+
             reserve(_items.size());
+
             for (const auto& item : _items) {
                 push(item);
             }
@@ -122,13 +182,23 @@ namespace chdr {
 
         /**
          * @}
-         **/
+         */
 
         /**
-         * @brief Preallocates memory based on the hash and bucket size.
-         * @param[in] _hash The value for which memory needs to be preallocated.
-         * @param[in] _increment Size of bucket to be considered for memory allocation.
-         * @param[in] _max_increment (optional) Maximum limit for the memory allocation.
+         * @brief Allocates additional capacity to accommodate the hash, ensuring an increase
+         *        in storage is within the specified limits.
+         *
+         * @details This function increases the capacity of the container when the current capacity
+         *          is insufficient to include the specified hash value. The increment value specifies
+         *          how much the capacity should be increased by. An optional maximum increment
+         *          value can be provided to ensure the increase does not exceed this limit.
+         *
+         * @param _hash The hash value that requires storage. If the current capacity is
+         *              less than or equal to this value, reallocation occurs.
+         * @param _increment The size by which the capacity is increased when reallocation
+         *                   occurs.
+         * @param _max_increment (optional) The maximum allowable increment to the capacity
+         *                           during reallocation. Defaults to the largest possible size value.
          */
         HOT constexpr void allocate(size_t _hash, size_t _increment, size_t _max_increment = std::numeric_limits<size_t>::max()) {
             if (capacity() <= _hash) {
@@ -138,15 +208,18 @@ namespace chdr {
 
         /**
          * @brief Add a hash to the set.
-         * @param[in] _hash The hash value to be added.
+         * @param _hash The hash value to add.
          */
         HOT constexpr void push(size_t _hash) {
             enable(_hash);
         }
 
         /**
-         * @brief Add a hash to the set.
-         * @param[in] _hash The hash value to be added.
+         * @brief Adds a hash to the set using forward-construction semantics.
+         * @details This function ensures that the hash is enabled within the set, 
+         *          forwarding the provided value and validating its type at compile-time.
+         * @tparam T The type of the input value, which must be an integral type.
+         * @param _hash The hash value to add.
          */
         template <typename T>
         HOT constexpr void emplace(T&& _hash) {
@@ -157,12 +230,12 @@ namespace chdr {
         }
 
         /**
-         * @brief remove a hash from the set.
-         * @param[in] _hash The hash value to be removed.
-         * @note Please note that this function does not resize the set.
+         * @brief Remove a hash from the set.
+         * @param _hash The hash value to remove.
+         * @note This function does not resize the set.
          *
-         * @see set::prune()
-         * @see set::clear()
+         * @see existence_set::clear()
+         * @see existence_set::prune()
          */
         [[maybe_unused]] constexpr void erase(size_t _hash) noexcept {
             disable(_hash);
@@ -170,7 +243,7 @@ namespace chdr {
 
         /**
          * @brief Check if the given hash exists in the set.
-         * @param[in] _hash The hash value to check.
+         * @param _hash The hash value to check.
          * @return True if the hash exists in the set, false otherwise.
          */
         [[maybe_unused, nodiscard]] HOT constexpr bool contains(size_t _hash) const noexcept {
@@ -178,9 +251,13 @@ namespace chdr {
         }
 
         /**
-         * @brief trim the set by removing trailing false values.
+         * @brief Trim the set by removing trailing false values.
          *
-         * @see set::clear()
+         * @note Calling this function also trims the internal container of the set.
+         *
+         * @see existence_set::clear()
+         * @see existence_set::erase()
+         * @see existence_set::shrink_to_fit()
          */
         [[maybe_unused]] constexpr void trim() {
 
@@ -189,47 +266,70 @@ namespace chdr {
                 ++it;
             }
             c.erase(it.base(), c.end());
+            c.shrink_to_fit();
         }
 
         /**
-         * @brief Reserves memory for the existence_set.
+         * @brief Reserves memory for the set.
          *
-         * @param _newCapacity The new capacity to reserve.
+         * @param _new_capacity The new capacity to reserve.
          * @note This method does not resize the set, only reserves memory for future elements.
          *
          * @see existence_set::capacity()
+         * @see existence_set::resize()
          */
-        [[maybe_unused]] HOT constexpr void reserve(size_t _newCapacity) { c.reserve(_newCapacity); }
+        [[maybe_unused]] HOT constexpr void reserve(size_t _new_capacity) { c.reserve(_new_capacity); }
 
         /**
-         * @brief resize the existence_set.
+         * @brief Resize the existence_set.
          *
          * This method resizes the existence_set by calling the resize method on the internal vector.
          *
-         * @param _newSize The new size to resize the set to.
-         * @param _newValue The optional value to fill the new elements with. (default is false).
+         * @param _new_size The new size.
+         * @param _new_value (optional) The value to fill new elements with. (default is false).
          * @note If the new size is smaller than the current size, the elements at the end will be removed.
-         * If the new size is greater than the current size, the new elements will be filled with the specified value.
+         *       If the new size is greater than the current size, the new elements will be filled with the specified value.
          *
-         * @see existence_set::reserve(size_t)
-         * @see existence_set::prune()
          * @see existence_set::clear()
+         * @see existence_set::prune()
+         * @see existence_set::reserve()
          */
-        [[maybe_unused]] constexpr void resize(size_t _newSize, boolean_t _newValue = { false }) {
-            c.resize(_newSize, _newValue);
+        [[maybe_unused]] constexpr void resize(size_t _new_size, boolean_t _new_value = { false }) {
+            c.resize(_new_size, _new_value);
         }
 
         /**
-         * @brief clear the content of the set.
-         * @details remove all elements from the set.
+         * @brief Clears the content of the set.
+         * 
+         *
+         * @details This function clears all the elements in the existence set,
+         *          effectively making it empty. After calling this function,
+         *          the size of the set becomes zero.
+         *
+         * @note This does not change the capacity of the internal storage,
+         *       it only clears the contents.
+         *
+         * @see existence_set::capacity()
+         * @see existence_set::reserve()
+         * @see existence_set::resize()
+         * @see existence_set::shrink_to_fit()
+         * @see existence_set::size()
+         * @see existence_set::trim()
          */
         [[maybe_unused]] constexpr void clear() noexcept { c.clear(); }
 
         /**
-         * @brief Trims unused elements from the end of the set.
-         * @details Shrinks the internal container of the set to reduce the structure's overall memory footprint.
+         * @brief Trims the internal container of the set.
+         * @details Removes trailing unused elements from the internal container of the existence set.
+         *
+         * @see existence_set::trim()
          */
-        [[maybe_unused]] constexpr void shrink_to_fit() { c.shrink_to_fit(); }
+        [[maybe_unused]] constexpr void shrink_to_fit() noexcept {
+            try {
+                c.shrink_to_fit();
+            }
+            catch (...) {} // NOLINT(*-empty-catch)
+        }
 
         /**
          * @brief Get the size of the set.
@@ -247,10 +347,10 @@ namespace chdr {
          */
         [[maybe_unused, nodiscard]] constexpr auto capacity() const noexcept { return c.capacity(); }
 
-        using               iterator_t = typename std::vector<alignment_type>::              iterator;
-        using         const_iterator_t = typename std::vector<alignment_type>::        const_iterator;
-        using       reverse_iterator_t = typename std::vector<alignment_type>::      reverse_iterator;
-        using const_reverse_iterator_t = typename std::vector<alignment_type>::const_reverse_iterator;
+        using iterator_t               = typename std::vector<layout_t>::              iterator;
+        using const_iterator_t         = typename std::vector<layout_t>::        const_iterator;
+        using reverse_iterator_t       = typename std::vector<layout_t>::      reverse_iterator;
+        using const_reverse_iterator_t = typename std::vector<layout_t>::const_reverse_iterator;
 
         [[maybe_unused, nodiscard]] constexpr       iterator_t  begin()       noexcept { return c.begin();  }
         [[maybe_unused, nodiscard]] constexpr const_iterator_t  begin() const noexcept { return c.begin();  }
@@ -267,6 +367,7 @@ namespace chdr {
         [[maybe_unused, nodiscard]] constexpr       reverse_iterator_t  rend()       noexcept { return c.rend();  }
         [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t  rend() const noexcept { return c.rend();  }
         [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t crend() const noexcept { return c.crend(); }
+
     };
 
 } //chdr

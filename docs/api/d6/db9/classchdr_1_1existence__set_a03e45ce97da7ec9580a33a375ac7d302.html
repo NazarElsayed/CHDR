@@ -10,6 +10,9 @@
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
+<script type="text/javascript" src="../../doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript" src="../../doxygen-awesome-darkmode-toggle.js"></script>
+<script type="text/javascript" src="../../doxygen-awesome-fragment-copy-button.js"></script>
 <link href="../../navtree.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../resize.js"></script>
 <script type="text/javascript" src="../../navtreedata.js"></script>
@@ -20,6 +23,12 @@
 <link href="../../doxygen.css" rel="stylesheet" type="text/css" />
 <link href="../../doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="../../doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="../../doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">
+    DoxygenAwesomeParagraphLink.init()
+    DoxygenAwesomeFragmentCopyButton.init()
+    DoxygenAwesomeDarkModeToggle.init()
+</script>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -98,7 +107,7 @@ $(document).ready(function(){initNavTree('d6/db9/classchdr_1_1existence__set_a03
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename alignment_type  = high_performance&gt; </div>
+template&lt;typename layout_t  = high_performance&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -128,30 +137,25 @@ template&lt;typename alignment_type  = high_performance&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Constructor with a collection of items. </p>
-<p>Initialises the set with a predefined list of items. A custom polymorphic memory resource can be optionally provided. </p><dl class="section note"><dt>Note</dt><dd>Please note: Duplicate entries will be merged into single entries.</dd></dl>
+<p>Constructs an <a class="el" href="../../d6/db9/classchdr_1_1existence__set.html" title="Represents a container for tracking the existence of elements.">existence_set</a> with initial items. </p>
+<p>This constructor initialises the <a class="el" href="../../d6/db9/classchdr_1_1existence__set.html" title="Represents a container for tracking the existence of elements.">existence_set</a> using a list of hashes. Each hash is inserted into the existence set during initialisation.</p>
+<dl class="section note"><dt>Note</dt><dd>Duplicate hashes will be merged into single entries.</dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>This constructor allows the <a class="el" href="../../d6/db9/classchdr_1_1existence__set.html" title="Represents a container for tracking the existence of elements.">existence_set</a> to allocate memory using a specified polymorphic memory resource. If no resource is provided, the default memory resource is used.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">_items</td><td>Items to construct the set using. </td></tr>
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">_resource</td><td>(optional) Custom memory resource. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">_items</td><td>The items to initialise the <a class="el" href="../../d6/db9/classchdr_1_1existence__set.html" title="Represents a container for tracking the existence of elements.">existence_set</a> with, given as an initializer list. </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">_resource</td><td>(optional) Pointer to the memory resource to use for the internal memory management. Defaults to std::pmr::get_default_resource(). </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d62/existence__set_8hpp_source.html#l00116">116</a> of file <a class="el" href="../../d8/d62/existence__set_8hpp_source.html">existence_set.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d62/existence__set_8hpp_source.html#l00174">174</a> of file <a class="el" href="../../d8/d62/existence__set_8hpp_source.html">existence_set.hpp</a>.</p>
 <div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><img src="../../d6/db9/classchdr_1_1existence__set_a03e45ce97da7ec9580a33a375ac7d302_a03e45ce97da7ec9580a33a375ac7d302_cgraph.png" border="0" usemap="#ad6/db9/classchdr_1_1existence__set_a03e45ce97da7ec9580a33a375ac7d302_a03e45ce97da7ec9580a33a375ac7d302_cgraph" alt=""/></div>
-<map name="ad6/db9/classchdr_1_1existence__set_a03e45ce97da7ec9580a33a375ac7d302_a03e45ce97da7ec9580a33a375ac7d302_cgraph" id="ad6/db9/classchdr_1_1existence__set_a03e45ce97da7ec9580a33a375ac7d302_a03e45ce97da7ec9580a33a375ac7d302_cgraph">
-<area shape="rect" title="Constructor with a collection of items." alt="" coords="5,31,108,56"/>
-<area shape="rect" href="../../d6/db9/classchdr_1_1existence__set_a4846fe696d158cb562d6c4fa7778011a.html#a4846fe696d158cb562d6c4fa7778011a" title="Add a hash to the set." alt="" coords="163,5,214,31"/>
-<area shape="poly" title=" " alt="" coords="107,31,149,23,150,28,109,36"/>
-<area shape="rect" href="../../d6/db9/classchdr_1_1existence__set_a91491abbbce77fb8114de182079ff261.html#a91491abbbce77fb8114de182079ff261" title="Reserves memory for the existence_set." alt="" coords="156,55,221,80"/>
-<area shape="poly" title=" " alt="" coords="108,50,143,56,142,62,108,55"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../d6/db9/classchdr_1_1existence__set_a03e45ce97da7ec9580a33a375ac7d302_a03e45ce97da7ec9580a33a375ac7d302_cgraph.svg" width="227" height="86"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>

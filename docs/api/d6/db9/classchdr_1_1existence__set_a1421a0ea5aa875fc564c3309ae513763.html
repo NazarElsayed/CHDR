@@ -10,6 +10,9 @@
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
+<script type="text/javascript" src="../../doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript" src="../../doxygen-awesome-darkmode-toggle.js"></script>
+<script type="text/javascript" src="../../doxygen-awesome-fragment-copy-button.js"></script>
 <link href="../../navtree.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../resize.js"></script>
 <script type="text/javascript" src="../../navtreedata.js"></script>
@@ -20,6 +23,12 @@
 <link href="../../doxygen.css" rel="stylesheet" type="text/css" />
 <link href="../../doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="../../doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="../../doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">
+    DoxygenAwesomeParagraphLink.init()
+    DoxygenAwesomeFragmentCopyButton.init()
+    DoxygenAwesomeDarkModeToggle.init()
+</script>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -98,7 +107,7 @@ $(document).ready(function(){initNavTree('d6/db9/classchdr_1_1existence__set_a14
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename alignment_type  = high_performance&gt; </div>
+template&lt;typename layout_t  = high_performance&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -117,10 +126,15 @@ template&lt;typename alignment_type  = high_performance&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>trim the set by removing trailing false values. </p>
-<dl class="section see"><dt>See also</dt><dd>set::clear() </dd></dl>
+<p>Trim the set by removing trailing false values. </p>
+<dl class="section note"><dt>Note</dt><dd>Calling this function also trims the internal container of the set.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="../../d6/db9/classchdr_1_1existence__set_a96d391a5b8907ff5b9adf72774583f90.html#a96d391a5b8907ff5b9adf72774583f90" title="Clears the content of the set.">existence_set::clear()</a> </dd>
+<dd>
+<a class="el" href="../../d6/db9/classchdr_1_1existence__set_a9575e44ec2318176b8cd547188e1b096.html#a9575e44ec2318176b8cd547188e1b096" title="Remove a hash from the set.">existence_set::erase()</a> </dd>
+<dd>
+<a class="el" href="../../d6/db9/classchdr_1_1existence__set_a2f7a64afff0c9c79e40c9cf475f5c0de.html#a2f7a64afff0c9c79e40c9cf475f5c0de" title="Trims the internal container of the set.">existence_set::shrink_to_fit()</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d62/existence__set_8hpp_source.html#l00185">185</a> of file <a class="el" href="../../d8/d62/existence__set_8hpp_source.html">existence_set.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d62/existence__set_8hpp_source.html#l00262">262</a> of file <a class="el" href="../../d8/d62/existence__set_8hpp_source.html">existence_set.hpp</a>.</p>
 
 </div>
 </div>
