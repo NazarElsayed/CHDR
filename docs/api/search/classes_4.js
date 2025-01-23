@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['solver_0',['solver',['../d3/df4/classchdr_1_1solvers_1_1solver.html',1,'chdr::solvers']]]
+  ['low_5fmemory_5fusage_0',['low_memory_usage',['../df/d17/structchdr_1_1low__memory__usage.html',1,'chdr']]]
 ];

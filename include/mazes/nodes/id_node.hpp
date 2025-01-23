@@ -13,6 +13,15 @@
 
 namespace chdr::mazes {
 
+    /**
+     * @nosubgrouping
+     * @class id_node
+     * @brief Represents a node with a customisable identifier.
+     * @details The id_node class encapsulates an identifier of a user-defined integral type.
+     * @note The id_node class is equivalent to its stored identifier and can be reinterpreted as the identifier's type.
+     * @remarks The stored identifier does not need to be unique.
+     * @tparam index_t The type of the identifier. Must be an integral type.
+     */
     template <typename index_t>
     class id_node final {
 
@@ -24,7 +33,18 @@ namespace chdr::mazes {
 
     public:
 
+        /**
+         * @name Constructors
+         * @{
+         */
+
+        /**
+         * @brief Constructs an id_node instance with the specified identifier.
+         * @param _id The identifier to initialise the id_node with.
+         * @return An id_node instance containing the provided identifier.
+         */
         [[nodiscard]] constexpr id_node(index_t _id) noexcept : m_id(_id) {}
+
         ~id_node() noexcept = default;
 
         [[nodiscard]] id_node           (const id_node&) = delete;
@@ -32,15 +52,32 @@ namespace chdr::mazes {
 
         [[nodiscard]] constexpr id_node(id_node&&) noexcept = default;
 
+        /**
+         * @}
+         */
+
 #if __cplusplus > 202302L
         constexpr
 #endif
         id_node& operator=(id_node&&) noexcept = default;
         
+        /**
+         * @brief Whether the node is active or not.
+         * @warning For id_node instances, this always returns true.
+         * @return true
+         */
         [[maybe_unused, nodiscard]] constexpr static bool is_active() noexcept { return true; }
 
+        /**
+         * @brief Retrieves the identifier associated with the node.
+         * @return The identifier stored in the node.
+         */
         [[maybe_unused, nodiscard]] constexpr index_t id() const noexcept { return m_id; }
 
+        /**
+         * @brief Assigns a new identifier to the node.
+         * @param _id The new identifier to assign to the node.
+         */
         [[maybe_unused]] constexpr void id(index_t _id) noexcept { m_id = _id; }
     };
 
