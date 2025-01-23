@@ -29,7 +29,7 @@ namespace chdr {
      * @nosubgrouping
      * @class existence_set
      * @brief Represents a container for tracking the existence of elements.
-     * 
+     *
      * @details The `existence_set` is a specialised data structure designed to efficiently track
      *          the existence of elements without storing their original values. \n\n
      *          It has constant lookup, insertion, and removal times, storing data in a dense,
@@ -39,14 +39,14 @@ namespace chdr {
      *          monotonic situations than its sparse counterparts. \n\n
      *          Memory efficiency and performance are customisable through specifying the number
      *          of bits used with the provided template parameter.
-     * 
+     *
      * @tparam layout_t Memory layout strategy for the set:
      *                  - `low_memory_usage`: Minimises memory usage (One bit per item).
      *                  - `high_performance`: Maximises performance with increased memory usage (One byte per item).
-     * 
+     *
      * @note This class uses polymorphic memory resources (`std::pmr::memory_resource`)
      *       to provide fine-grained control over memory allocation.
-     * 
+     *
      * @see low_memory_usage
      * @see high_performance
      */
@@ -68,12 +68,13 @@ namespace chdr {
          */
         using boolean_t = std::conditional_t<std::is_same_v<layout_t, low_memory_usage>, bool, char>;
 
+    private:
         /**
          * @brief Storage for tracking existence.
-         * @details This structure tracks whether elements are present or absent 
+         * @details This structure tracks whether elements are present or absent
          *          without storing their actual values.
          *
-         * @note Currently uses a polymorphic memory resource-enabled vector. 
+         * @note Currently uses a polymorphic memory resource-enabled vector.
          *       Future versions may support other container types for added flexibility and constexpr support.
          */
         std::pmr::vector<boolean_t> c;
@@ -216,7 +217,7 @@ namespace chdr {
 
         /**
          * @brief Adds a hash to the set using forward-construction semantics.
-         * @details This function ensures that the hash is enabled within the set, 
+         * @details This function ensures that the hash is enabled within the set,
          *          forwarding the provided value and validating its type at compile-time.
          * @tparam T The type of the input value, which must be an integral type.
          * @param _hash The hash value to add.
@@ -300,7 +301,7 @@ namespace chdr {
 
         /**
          * @brief Clears the content of the set.
-         * 
+         *
          *
          * @details This function clears all the elements in the existence set,
          *          effectively making it empty. After calling this function,

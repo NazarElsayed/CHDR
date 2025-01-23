@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['const_5fiterator_5ft_0',['const_iterator_t',['../d6/db9/classchdr_1_1existence__set_a89eca424326e2beda46f713171c5657a.html#a89eca424326e2beda46f713171c5657a',1,'chdr::existence_set']]],
-  ['const_5freverse_5fiterator_5ft_1',['const_reverse_iterator_t',['../d6/db9/classchdr_1_1existence__set_a10e8be2f2b1f2d60072fc777b3e45d5b.html#a10e8be2f2b1f2d60072fc777b3e45d5b',1,'chdr::existence_set']]]
+  ['boolean_5ft_0',['boolean_t',['../d6/db9/classchdr_1_1existence__set_a64f894c9c210b32d13a7c7507886dde4.html#a64f894c9c210b32d13a7c7507886dde4',1,'chdr::existence_set']]]
 ];
