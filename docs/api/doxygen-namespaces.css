@@ -1,0 +1,18 @@
+/* Inspired by a modification by sdegrande, which no longer works. https://github.com/jothepro/doxygen-awesome-css/discussions/13#discussioncomment-2791094 */
+
+html.dark-mode body div#side-nav.ui-resizable.side-nav-resizable div#nav-tree div#nav-tree-contents ul li ul.children_ul li ul.children_ul li ul.children_ul li div.item span.label a.nolink::before {
+  content: "N ";
+  /* from .icon */
+  font-family: Arial, Helvetica;
+  font-weight: bold;
+  font-size: 12px;
+  height: 14px;
+  width: 16px;
+  display: inline-block;
+  background-color: #0081FA;
+  color: white;
+  text-align: center;
+  border-radius: 4px;
+  margin-left: 2px;
+  margin-right: 6px;
+}
