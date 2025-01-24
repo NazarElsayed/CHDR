@@ -21,12 +21,16 @@ namespace chdr {
     class monotonic_pool : public std::pmr::memory_resource {
 
         static constexpr size_t s_initial_block_size {  4096U };
-        static constexpr size_t     s_max_block_size { 65536U };
+        static constexpr size_t s_max_block_size     { 65536U };
+        static constexpr size_t s_stack_block_size   {  4096U };
 
         struct block {
             std::unique_ptr<char[]> data;
-            size_t                  size;
+            size_t size;
         };
+
+        alignas(std::max_align_t) char m_stack_block[s_stack_block_size]; // Fixed stack memory block
+        size_t m_stack_write{0U};                                        // Write pointer for stack block
 
         size_t m_current_block_size; // Size of the current block.
         size_t m_block_write;        // Current write position in the active block.
@@ -35,44 +39,54 @@ namespace chdr {
         std::vector<block> blocks;
 
         HOT void expand(size_t _size) {
-
-            // If there are available preallocated blocks, overwrite them:
             if (m_active_block_index + 1U < blocks.size()) {
+                // Reuse an existing block
                 m_current_block_size = blocks[++m_active_block_index].size;
-            }
-            else {
-
-                // Otherwise, allocate a fresh block:
-                m_current_block_size = utils::max(s_initial_block_size, utils::max(utils::min(m_current_block_size * 2U, s_max_block_size), _size));
+            } else {
+                // Allocate a new larger block
+                m_current_block_size = utils::max(
+                    s_initial_block_size,
+                    utils::max(utils::min(m_current_block_size * 2U, s_max_block_size), _size)
+                );
                 blocks.emplace_back(std::make_unique<char[]>(m_current_block_size), m_current_block_size);
                 m_active_block_index = blocks.size() - 1U;
             }
-
-            m_block_write = 0U; // Reset write head.
+            m_block_write = 0U; // Reset write head for the new block
         }
 
     protected:
-
         [[nodiscard]] HOT void* do_allocate(const size_t _size, const size_t _alignment) override {
+            // Try allocating from the stack block first
+            if (m_stack_write < s_stack_block_size) {
+                void* aligned_ptr = reinterpret_cast<void*>(
+                    (reinterpret_cast<uintptr_t>(m_stack_block + m_stack_write) + _alignment - 1U) & ~(_alignment - 1U)
+                );
 
-            // Ensure alignment and calculate aligned pointer:
+                size_t new_position = static_cast<size_t>(reinterpret_cast<char*>(aligned_ptr) - m_stack_block + _size);
+                if (new_position <= s_stack_block_size) {
+                    m_stack_write = new_position;
+                    return aligned_ptr;
+                }
+            }
+
+            // If stack block is exhausted, fall back to dynamic blocks
             auto* aligned_ptr = reinterpret_cast<char*>(
                 (reinterpret_cast<uintptr_t>(blocks[m_active_block_index].data.get() + m_block_write) + _alignment - 1U) & ~(_alignment - 1U)
             );
 
-            // If insufficient space in the current block, expand and retry allocation:
             if (aligned_ptr + _size > blocks[m_active_block_index].data.get() + blocks[m_active_block_index].size) {
+                // Expand if the current block cannot fit the allocation
                 expand(_size + _alignment);
                 return do_allocate(_size, _alignment);
             }
 
-            // Update write position and return the aligned pointer:
+            // Update write position and return the aligned pointer
             m_block_write += static_cast<size_t>(aligned_ptr + _size - (blocks[m_active_block_index].data.get() + m_block_write));
             return aligned_ptr;
         }
 
         HOT void do_deallocate(void* /*__p*/, const size_t /*__bytes*/, size_t /*__alignment*/) override {
-            // No-op.
+            // No-op: monotonic pools typically do not support deallocation
         }
 
         [[nodiscard]] bool do_is_equal(const memory_resource& _other) const noexcept override {
@@ -84,24 +98,26 @@ namespace chdr {
             m_current_block_size(s_initial_block_size),
             m_block_write(0U),
             m_active_block_index(0U) {
-            expand(s_initial_block_size); // Allocate first block.
+            expand(s_initial_block_size); // Allocate the first dynamic block
         }
 
-        constexpr                 monotonic_pool(const monotonic_pool&) = delete;
-        constexpr monotonic_pool& operator=(const monotonic_pool&)      = delete;
+        constexpr monotonic_pool(const monotonic_pool&) = delete;
+        constexpr monotonic_pool& operator=(const monotonic_pool&) = delete;
 
         [[nodiscard]] constexpr monotonic_pool(monotonic_pool&&) noexcept = default;
-
-#if __cplusplus > 202302L
+    #if __cplusplus > 202302L
         constexpr
-#endif
+    #endif
         monotonic_pool& operator=(monotonic_pool&&) noexcept = default;
 
-        size_t allocated() {
+        size_t allocated() const {
+            size_t result = 0U;
 
-            size_t result { 0U };
+            // Include stack usage
+            result += m_stack_write;
 
-            for (auto& item : blocks) {
+            // Include dynamic blocks
+            for (const auto& item : blocks) {
                 result += item.size;
             }
 
@@ -112,27 +128,23 @@ namespace chdr {
          * @brief Resets the memory resource to reuse all previously allocated memory.
          */
         void reset() {
-
-            // Reset the index to the first block and prepare to overwrite.
+            m_stack_write = 0U;       // Reset stack block
             m_active_block_index = 0U;
-            m_block_write        = 0U;
+            m_block_write = 0U;
         }
 
         /**
          * @brief Resets fully by clearing all blocks and starting fresh.
          */
         void release() {
-
-            // Reset block size, write position, and block index to initial values
+            m_stack_write = 0U;       // Reset stack block
             m_current_block_size = s_initial_block_size;
             m_active_block_index = 0U;
-            m_block_write        = 0U;
+            m_block_write = 0U;
 
-            // Clear all existing blocks and their sizes.
             decltype(blocks) temp{};
             blocks = std::move(temp);
 
-            // Allocate a fresh initial block.
             expand(s_initial_block_size);
         }
     };

@@ -27,7 +27,7 @@ namespace chdr {
 
     private:
 
-        static constexpr size_t default_block_width {  2048U };
+        static constexpr size_t default_block_width {  4096U };
         static constexpr size_t     max_block_width { 65536U };
 
         size_t initial_block_width;
