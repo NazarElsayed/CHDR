@@ -50,6 +50,16 @@ namespace chdr::solvers {
             [[nodiscard]] constexpr node(index_t _index, scalar_t _hScore, const unmanaged_node<index_t>* RESTRICT const _parent = nullptr) noexcept : unmanaged_node<index_t>(_index, _parent),
                 m_hScore(_hScore) {}
 
+            node           (const node&) = delete;
+            node& operator=(const node&) = delete;
+
+            [[nodiscard]] HOT constexpr node(node&& _other) noexcept = default;
+
+#if __cplusplus > 202302L
+            constexpr
+#endif
+            HOT node& operator=(node&& _other) noexcept = default;
+
             [[nodiscard]] HOT friend constexpr bool operator < (const node& _a, const node& _b) noexcept {
                 return _a.m_hScore > _b.m_hScore;
             }

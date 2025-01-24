@@ -295,7 +295,7 @@ $(document).ready(function(){initNavTree('d9/de9/graph_8hpp_source.html','../../
 <div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>                    <span class="keyword">const</span> index_t start = <span class="keyword">static_cast&lt;</span>index_t<span class="keyword">&gt;</span>(i) * chunkSize;</div>
 <div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>                    <span class="keyword">const</span> index_t end   = <a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_ac49e3cb9b2b007da03059d95020d8b49.html#ac49e3cb9b2b007da03059d95020d8b49">utils::min</a>(start + chunkSize, <span class="keyword">static_cast&lt;</span>index_t<span class="keyword">&gt;</span>(count));</div>
 <div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span> </div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>                    futures.push_back(std::async(std::launch::async, worker, start, end));</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>                    futures.emplace_back(std::async(std::launch::async, worker, start, end));</div>
 <div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>                }</div>
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span> </div>
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>                <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; fut : futures) {</div>

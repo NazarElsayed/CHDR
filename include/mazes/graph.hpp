@@ -182,7 +182,7 @@ namespace chdr::mazes {
                     const index_t start = static_cast<index_t>(i) * chunkSize;
                     const index_t end   = utils::min(start + chunkSize, static_cast<index_t>(count));
 
-                    futures.push_back(std::async(std::launch::async, worker, start, end));
+                    futures.emplace_back(std::async(std::launch::async, worker, start, end));
                 }
 
                 for (auto& fut : futures) {

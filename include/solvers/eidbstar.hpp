@@ -65,16 +65,20 @@ namespace chdr::solvers {
             index_t      neighbours_idx;
 
             [[nodiscard]] state(const node& _curr, scalar_t _bound, const params_t& _params) :
-                curr(_curr),
+                curr(_curr.m_index, _curr.m_hScore),
                 bound(_bound),
-                neighbours(_params.maze.get_neighbours(curr.m_index)),
+                neighbours(_params.maze.get_neighbours(_curr.m_index)),
                 neighbours_idx(0U) {}
 
             state           (const state&) = delete;
             state& operator=(const state&) = delete;
 
-            [[nodiscard]] state(state&&) noexcept = default;
-            state& operator=   (state&&) noexcept = default;
+            [[nodiscard]] HOT state(state&&) noexcept = default;
+
+#if __cplusplus > 202302L
+            constexpr
+#endif
+            state& operator=(state&&) noexcept = default;
         };
 
         using transposition_table_t = std::unordered_map<index_t, scalar_t>;

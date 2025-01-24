@@ -81,14 +81,14 @@ namespace chdr::solvers {
     template <template <typename params_t> typename solver_t, typename params_t>
     class solver final {
 
-        friend class solver_t<params_t>;
+        friend struct solver_t<params_t>;
 
     private:
 
         struct solver_utils final {
 
-            friend solver<solver_t, params_t>;
-            friend class solver_t<params_t>;
+            friend solver;
+            friend struct solver_t<params_t>;
 
         private:
 

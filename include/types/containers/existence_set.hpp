@@ -45,9 +45,9 @@ namespace chdr {
      * chdr::existence_set set;
      *
      * // Enable elements with hashes 1, 2, and 5.
-     * set.push(1);
-     * set.push(2);
-     * set.push(5);
+     * set.emplace(1);
+     * set.emplace(2);
+     * set.emplace(5);
      *
      * // Check if elements exist.
      * if (set.contains(1)) { // true

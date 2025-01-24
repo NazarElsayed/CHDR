@@ -58,6 +58,16 @@ namespace chdr::solvers {
                 m_fScore(_gScore + _hScore),
                 m_direction(_direction) {}
 
+            node           (const node&) = delete;
+            node& operator=(const node&) = delete;
+
+            [[nodiscard]] HOT constexpr node(node&& _other) noexcept = default;
+
+#if __cplusplus > 202302L
+            constexpr
+#endif
+            HOT node& operator=(node&& _other) noexcept = default;
+
             [[nodiscard]] HOT friend constexpr bool operator < (const node& _a, const node& _b) noexcept {
                 return _a.m_fScore == _b.m_fScore ?
                        _a.m_gScore >  _b.m_gScore :

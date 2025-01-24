@@ -66,8 +66,12 @@ namespace chdr::solvers {
             state           (const state&) = delete;
             state& operator=(const state&) = delete;
 
-            [[nodiscard]] state(state&&) noexcept = default;
-            state& operator=   (state&&) noexcept = default;
+            [[nodiscard]] HOT constexpr state(state&&) noexcept = default;
+
+#if __cplusplus > 202302L
+            constexpr
+#endif
+            state& operator=(state&&) noexcept = default;
         };
 
         template <typename open_set_t>
