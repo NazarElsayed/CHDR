@@ -168,7 +168,7 @@ $(document).ready(function(){initNavTree('da/dc2/floodfill_8hpp_source.html','..
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>                                <span class="comment">// Check if node is not already visited:</span></div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>                                <span class="keywordflow">if</span> (!_closed.contains(n.index)) {</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>                                    solver_utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>                                    solver_t::solver_utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>                                    _open.emplace(n.index);</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>                                }</div>
@@ -199,7 +199,7 @@ $(document).ready(function(){initNavTree('da/dc2/floodfill_8hpp_source.html','..
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>                <span class="keywordflow">if</span> (!success) {</div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>                    <span class="keyword">const</span> <span class="keyword">auto</span> capacity = solver_t::determine_capacity(_params);</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>                    <span class="keyword">const</span> <span class="keyword">auto</span> capacity = solver_t::solver_utils::determine_capacity(_params);</div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>                    existence_set closed(_params.monotonic_pmr);</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>                    closed.reserve(capacity);</div>

@@ -172,7 +172,7 @@ $(document).ready(function(){initNavTree('d3/dec/dfs_8hpp_source.html','../../')
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>                            <span class="comment">// Check if node is not already visited:</span></div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>                            <span class="keywordflow">if</span> (!_closed.contains(n.index)) {</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>                                solver_utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>                                solver_t::solver_utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>                                <span class="keywordflow">if</span> (curr_ptr == <span class="keyword">nullptr</span>) {</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>                                    curr_ptr = <span class="keyword">new</span> (_params.monotonic_pmr-&gt;allocate(<span class="keyword">sizeof</span>(node), <span class="keyword">alignof</span>(node))) node(std::move(curr));</div>
@@ -188,7 +188,7 @@ $(document).ready(function(){initNavTree('d3/dec/dfs_8hpp_source.html','../../')
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>                    _open   = {};</div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>                    _closed = {};</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>                    <span class="keywordflow">return</span> solver_utils::rbacktrack(curr, _params.size);</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>                    <span class="keywordflow">return</span> solver_t::solver_utils::rbacktrack(curr, _params.size);</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>                }</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            }</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
@@ -197,7 +197,7 @@ $(document).ready(function(){initNavTree('d3/dec/dfs_8hpp_source.html','../../')
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        [[maybe_unused, nodiscard]] <span class="keyword">static</span> <span class="keyword">auto</span> execute(<span class="keyword">const</span> params_t&amp; _params) {</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>            <span class="keyword">const</span> <span class="keyword">auto</span> capacity = solver_t::determine_capacity(_params);</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>            <span class="keyword">const</span> <span class="keyword">auto</span> capacity = solver_t::solver_utils::determine_capacity(_params);</div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>            existence_set closed(_params.monotonic_pmr);</div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>            closed.reserve(capacity);</div>

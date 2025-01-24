@@ -55,7 +55,7 @@ namespace chdr::solvers {
 
                                 // Check if node is not already visited:
                                 if (!_closed.contains(n.index)) {
-                                    solver_utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());
+                                    solver_t::solver_utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());
 
                                     _open.emplace(n.index);
                                 }
@@ -86,7 +86,7 @@ namespace chdr::solvers {
 
                 if (!success) {
 
-                    const auto capacity = solver_t::determine_capacity(_params);
+                    const auto capacity = solver_t::solver_utils::determine_capacity(_params);
 
                     existence_set closed(_params.monotonic_pmr);
                     closed.reserve(capacity);

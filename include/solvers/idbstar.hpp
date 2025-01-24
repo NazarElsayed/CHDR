@@ -114,7 +114,7 @@ namespace chdr::solvers {
                                 stack.emplace(_open.back(), _.bound, _params);
                             }
                             else { // SOLUTION REACHED ...
-                                return solver_utils::ibacktrack(_open, _params.size);
+                                return solver_t::solver_utils::ibacktrack(_open, _params.size);
                             }
                         }
                     }
@@ -132,7 +132,7 @@ namespace chdr::solvers {
 
         [[maybe_unused, nodiscard]] static auto execute(const params_t& _params) {
 
-            const auto capacity = solver_t::determine_capacity(_params);
+            const auto capacity = solver_t::solver_utils::determine_capacity(_params);
 
             std::pmr::vector<node> open(_params.polytonic_pmr);
             try {

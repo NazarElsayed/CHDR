@@ -206,7 +206,7 @@ $(document).ready(function(){initNavTree('dd/d95/eiddfs_8hpp_source.html','../..
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>                        <span class="keywordflow">if</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; n = solver_t::get_data(n_data, _params); n.active) {</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>                            <span class="keywordflow">if</span> (!_closed.contains(n.index)) {</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>                                solver_utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>                                solver_t::solver_utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>                                _open.emplace_back(n.index, curr.m_depth + 1U);</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
@@ -217,7 +217,7 @@ $(document).ready(function(){initNavTree('dd/d95/eiddfs_8hpp_source.html','../..
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>                                    _closed = {};</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>                                    <span class="keywordflow">return</span> solver_utils::ibacktrack(_open, _params.size);</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>                                    <span class="keywordflow">return</span> solver_t::solver_utils::ibacktrack(_open, _params.size);</div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>                                }</div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>                            }</div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>                        }</div>
@@ -239,7 +239,7 @@ $(document).ready(function(){initNavTree('dd/d95/eiddfs_8hpp_source.html','../..
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        [[maybe_unused, nodiscard]] <span class="keyword">static</span> <span class="keyword">auto</span> execute(<span class="keyword">const</span> params_t&amp; _params) {</div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>            <span class="keyword">const</span> <span class="keyword">auto</span> capacity = solver_t::determine_capacity(_params);</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>            <span class="keyword">const</span> <span class="keyword">auto</span> capacity = solver_t::solver_utils::determine_capacity(_params);</div>
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span> </div>
 <div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>            existence_set closed(_params.monotonic_pmr);</div>
 <div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>            closed.reserve(capacity);</div>

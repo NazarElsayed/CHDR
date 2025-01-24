@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['of_20contents_0',['Table of Contents',['../index.html#table-of-contents',1,'']]],
-  ['other_20languages_1',['Other Languages',['../da/dc4/md_docs_2manual_2getting__started.html#other-languages',1,'']]]
+  ['post_20processing_0',['Post-Processing',['../d5/da1/md_docs_2manual_2roadmap.html#post-processing',1,'']]],
+  ['processing_1',['Post-Processing',['../d5/da1/md_docs_2manual_2roadmap.html#post-processing',1,'']]],
+  ['push_2',['push',['../d6/db9/classchdr_1_1existence__set_a4846fe696d158cb562d6c4fa7778011a.html#a4846fe696d158cb562d6c4fa7778011a',1,'chdr::existence_set::push(size_t _hash)'],['../d6/db9/classchdr_1_1existence__set_ae89cffd80eaa580ee622de692fb9e23b.html#ae89cffd80eaa580ee622de692fb9e23b',1,'chdr::existence_set::push(const T &amp;_item)']]]
 ];

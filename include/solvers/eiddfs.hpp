@@ -98,7 +98,7 @@ namespace chdr::solvers {
                         if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
 
                             if (!_closed.contains(n.index)) {
-                                solver_utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());
+                                solver_t::solver_utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());
 
                                 _open.emplace_back(n.index, curr.m_depth + 1U);
 
@@ -109,7 +109,7 @@ namespace chdr::solvers {
 
                                     _closed = {};
 
-                                    return solver_utils::ibacktrack(_open, _params.size);
+                                    return solver_t::solver_utils::ibacktrack(_open, _params.size);
                                 }
                             }
                         }
@@ -131,7 +131,7 @@ namespace chdr::solvers {
 
         [[maybe_unused, nodiscard]] static auto execute(const params_t& _params) {
 
-            const auto capacity = solver_t::determine_capacity(_params);
+            const auto capacity = solver_t::solver_utils::determine_capacity(_params);
 
             existence_set closed(_params.monotonic_pmr);
             closed.reserve(capacity);

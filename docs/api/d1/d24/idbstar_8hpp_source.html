@@ -222,7 +222,7 @@ $(document).ready(function(){initNavTree('d1/d24/idbstar_8hpp_source.html','../.
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>                                stack.emplace(_open.back(), _.bound, _params);</div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>                            }</div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>                            <span class="keywordflow">else</span> { <span class="comment">// SOLUTION REACHED ...</span></div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>                                <span class="keywordflow">return</span> solver_utils::ibacktrack(_open, _params.size);</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>                                <span class="keywordflow">return</span> solver_t::solver_utils::ibacktrack(_open, _params.size);</div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>                            }</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>                        }</div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>                    }</div>
@@ -240,7 +240,7 @@ $(document).ready(function(){initNavTree('d1/d24/idbstar_8hpp_source.html','../.
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> </div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>        [[maybe_unused, nodiscard]] <span class="keyword">static</span> <span class="keyword">auto</span> execute(<span class="keyword">const</span> params_t&amp; _params) {</div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span> </div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>            <span class="keyword">const</span> <span class="keyword">auto</span> capacity = solver_t::determine_capacity(_params);</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>            <span class="keyword">const</span> <span class="keyword">auto</span> capacity = solver_t::solver_utils::determine_capacity(_params);</div>
 <div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span> </div>
 <div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>            std::pmr::vector&lt;node&gt; open(_params.polytonic_pmr);</div>
 <div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>            <span class="keywordflow">try</span> {</div>

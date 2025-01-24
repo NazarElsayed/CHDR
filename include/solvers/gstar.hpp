@@ -83,7 +83,7 @@ namespace chdr::solvers {
 
                             // Check if node is not already visited:
                             if (!_closed.contains(n.index)) {
-                                solver_utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());
+                                solver_t::solver_utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());
 
                                 if (curr_ptr == nullptr) {
                                     curr_ptr = new (_params.pool_pmr->allocate(sizeof(node), alignof(node))) node(std::move(curr));
@@ -113,7 +113,7 @@ namespace chdr::solvers {
                     }
                     _closed = {};
 
-                    return solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);
+                    return solver_t::solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);
                 }
             }
 
@@ -122,7 +122,7 @@ namespace chdr::solvers {
 
         [[maybe_unused, nodiscard]] static auto execute(const params_t& _params) {
 
-            const auto capacity = solver_t::determine_capacity(_params);
+            const auto capacity = solver_t::solver_utils::determine_capacity(_params);
 
             existence_set closed(_params.monotonic_pmr);
             closed.reserve(capacity);

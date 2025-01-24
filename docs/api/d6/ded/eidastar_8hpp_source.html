@@ -238,7 +238,7 @@ $(document).ready(function(){initNavTree('d6/ded/eidastar_8hpp_source.html','../
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>                                transposition_table = {};</div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> </div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>                                <span class="keywordflow">return</span> solver_utils::ibacktrack(_open, _params.size);</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>                                <span class="keywordflow">return</span> solver_t::solver_utils::ibacktrack(_open, _params.size);</div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>                            }</div>
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>                        }</div>
 <div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>                    }</div>
@@ -256,7 +256,7 @@ $(document).ready(function(){initNavTree('d6/ded/eidastar_8hpp_source.html','../
 <div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span> </div>
 <div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>        [[maybe_unused, nodiscard]] <span class="keyword">static</span> <span class="keyword">auto</span> execute(<span class="keyword">const</span> params_t&amp; _params) {</div>
 <div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span> </div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>            <span class="keyword">const</span> <span class="keyword">auto</span> capacity = solver_t::determine_capacity(_params);</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>            <span class="keyword">const</span> <span class="keyword">auto</span> capacity = solver_t::solver_utils::determine_capacity(_params);</div>
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span> </div>
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>            std::pmr::vector&lt;node&gt; open(_params.polytonic_pmr);</div>
 <div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>            <span class="keywordflow">try</span> {</div>

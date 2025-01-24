@@ -21,10 +21,105 @@
 
 namespace chdr::solvers {
 
+    /**
+     * @nosubgrouping
+     * @brief
+     * @tparam Derived
+     * @tparam params_t
+     */
     template <template <typename params_t> typename Derived, typename params_t>
     class solver final {
 
+        friend class Derived<params_t>;
+
     private:
+
+     struct solver_utils final {
+
+             solver_utils()                                = delete;
+             solver_utils           (const solver_utils& ) = delete;
+             solver_utils           (const solver_utils&&) = delete;
+             solver_utils& operator=(const solver_utils& ) = delete;
+             solver_utils& operator=(const solver_utils&&) = delete;
+            ~solver_utils()                                = delete;
+
+             static constexpr size_t determine_capacity(const params_t& _params) noexcept {
+
+                 if constexpr (is_graph<decltype(_params.maze)>::value) {
+
+                     return static_cast<size_t>(
+                         _params.capacity != 0U ?
+                             _params.capacity :
+                             utils::max(_params.maze.count() / 10U, static_cast<size_t>(1U))
+                     );
+                 }
+                 else {
+                     return utils::max(
+                         _params.capacity,
+                         utils::max(
+                             static_cast<size_t>(utils::to_1d(_params.start, _params.size)),
+                             static_cast<size_t>(utils::to_1d(_params.end,   _params.size))
+                         )
+                     );
+                 }
+             }
+
+            template <typename T, typename collection_t>
+            HOT static constexpr void preallocate_emplace(collection_t& _collection, const T& _value, size_t _increment, size_t _max_increment = std::numeric_limits<size_t>::max()) {
+
+                if constexpr (std::is_same_v<collection_t, existence_set<>>) {
+                    _collection.allocate(_value, _increment, _max_increment);
+                }
+
+                _collection.emplace(_value);
+            }
+
+            template<typename node_t, typename coord_t>
+            static constexpr auto rbacktrack(const node_t& _node, const coord_t& _size) {
+
+                std::vector<coord_t> result;
+
+                {
+                    size_t depth = 0U;
+                    for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent), ++depth) {}
+
+                    result.resize(depth);
+                }
+
+                size_t i = 0U;
+                for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent), ++i) {
+                    result[(result.size() - 1U) - i] = utils::to_nd(t->m_index, _size);
+                }
+
+                return result;
+            }
+
+            template<typename node_t, typename coord_t>
+            static constexpr auto rbacktrack(const node_t& _node, const coord_t& _size, size_t _depth) {
+
+                std::vector<coord_t> result(_depth);
+
+                size_t i = 0U;
+                for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent), ++i) {
+                    result[(result.size() - 1U) - i] = utils::to_nd(t->m_index, _size);
+                }
+
+                return result;
+            }
+
+            template <typename open_set_t, typename coord_t>
+            [[nodiscard]] static constexpr auto ibacktrack(const open_set_t& _open, const coord_t& _size) {
+
+                std::vector<coord_t> result;
+                result.reserve(_open.size());
+
+                for (auto it = _open.rbegin(); it != _open.rend(); ++it) {
+                    result.emplace_back(utils::to_nd(it->m_index, _size));
+                }
+
+                return result;
+            }
+        };
 
         /**
          * @struct is_graph
@@ -83,8 +178,6 @@ namespace chdr::solvers {
 
         };
 
-    public:
-
         /**
          * @struct node_data
          * @brief Represents data associated with a node from a search space in pathfinding algorithms.
@@ -94,35 +187,22 @@ namespace chdr::solvers {
          *          algorithms such as A* and its variants to store and process information related to
          *          graph traversal.
          *
-         * @note All member properties of this structure are immutable after initialisation.
-         *
-         * @property active Indicates whether the node is active and should be considered in the
-         *           computation logic.
-         *
-         * @property index The index of the node, typically representing its unique identifier within
-         *           the structure of the search space.
-         *
-         * @property coord The coordinates of the node in the search space, relevant for spatial algorithms.
-         *
-         * @property distance The computed distance metric (e.g., cost or heuristic) associated with
-         *           this node relative to its neighbours.
+         * @note All member fields of this structure are immutable after initialisation.
          */
         struct node_data {
 
+            /** @brief Indicates whether the node is active and should be considered in the computation logic. */
             const bool active;
 
+            /** @brief The index of the node, typically representing its unique identifier within the structure of the search space. */
             const typename params_t:: index_type index;
+
+            /** @brief The coordinates of the node in the search space, relevant for spatial algorithms. */
             const typename params_t:: coord_type coord;
+
+            /** @brief The computed distance metric (e.g., cost or heuristic) associated with this node relative to its neighbours. */
             const typename params_t::scalar_type distance;
         };
-
-        [[nodiscard]] constexpr solver() noexcept = default;
-        ~solver() = default;
-
-        solver           (const solver& ) = delete;
-        solver           (const solver&&) = delete;
-        solver& operator=(const solver& ) = delete;
-        solver& operator=(const solver&&) = delete;
 
         template <typename maze_neighbour_t>
         static constexpr node_data get_data(maze_neighbour_t& _n, const params_t& _params) noexcept {
@@ -159,26 +239,33 @@ namespace chdr::solvers {
             }
         }
 
-        static constexpr size_t determine_capacity(const params_t& _params) noexcept {
+        /**
+         * @name Constructors
+         * @{
+         */
 
-            if constexpr (is_graph<decltype(_params.maze)>::value) {
+        solver           (const solver& ) = delete;
+        solver           (const solver&&) = delete;
+        solver& operator=(const solver& ) = delete;
+        solver& operator=(const solver&&) = delete;
 
-                return static_cast<size_t>(
-                    _params.capacity != 0U ?
-                        _params.capacity :
-                        utils::max(_params.maze.count() / 10U, static_cast<size_t>(1U))
-                );
-            }
-            else {
-                return utils::max(
-                    _params.capacity,
-                    utils::max(
-                        static_cast<size_t>(utils::to_1d(_params.start, _params.size)),
-                        static_cast<size_t>(utils::to_1d(_params.end,   _params.size))
-                    )
-                );
-            }
-        }
+        /**
+         * @}
+         */
+
+    public:
+
+        /**
+         * @name Constructors
+         * @{
+         */
+
+        [[nodiscard]] constexpr solver() noexcept = default;
+        ~solver() = default;
+
+        /**
+         * @}
+         */
 
         [[maybe_unused, nodiscard]] constexpr auto operator()() const {
             return operator()(params_t {});
@@ -225,104 +312,6 @@ namespace chdr::solvers {
             return std::vector<typename params_t::coord_type>{};
         }
     };
-
-    struct solver_utils final {
-
-         solver_utils()                                = delete;
-         solver_utils           (const solver_utils& ) = delete;
-         solver_utils           (const solver_utils&&) = delete;
-         solver_utils& operator=(const solver_utils& ) = delete;
-         solver_utils& operator=(const solver_utils&&) = delete;
-        ~solver_utils()                                = delete;
-
-        template <typename T, typename collection_t>
-        HOT static constexpr void preallocate_emplace(collection_t& _collection, const T& _value, size_t _increment, size_t _max_increment = std::numeric_limits<size_t>::max()) {
-
-            if constexpr (std::is_same_v<collection_t, existence_set<>>) {
-                _collection.allocate(_value, _increment, _max_increment);
-            }
-
-            _collection.emplace(_value);
-        }
-
-        template<typename node_t, typename coord_t>
-        static constexpr auto rbacktrack(const node_t& _node, const coord_t& _size) {
-
-            std::vector<coord_t> result;
-
-            {
-                size_t depth = 0U;
-                for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent), ++depth) {}
-
-                result.resize(depth);
-            }
-
-            size_t i = 0U;
-            for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent), ++i) {
-                result[(result.size() - 1U) - i] = utils::to_nd(t->m_index, _size);
-            }
-
-            return result;
-        }
-
-        template<typename node_t, typename coord_t>
-        static constexpr auto rbacktrack(const node_t& _node, const coord_t& _size, size_t _depth) {
-
-            std::vector<coord_t> result(_depth);
-
-            size_t i = 0U;
-            for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent), ++i) {
-                result[(result.size() - 1U) - i] = utils::to_nd(t->m_index, _size);
-            }
-
-            return result;
-        }
-
-        template <typename open_set_t, typename coord_t>
-        [[nodiscard]] static constexpr auto ibacktrack(const open_set_t& _open, const coord_t& _size) {
-
-            std::vector<coord_t> result;
-            result.reserve(_open.size());
-
-            for (auto it = _open.rbegin(); it != _open.rend(); ++it) {
-                result.emplace_back(utils::to_nd(it->m_index, _size));
-            }
-
-            return result;
-        }
-    };
-
-    template <template <typename params_t> typename Derived, typename params_t>
-    [[nodiscard]] static constexpr auto make_solver() {
-        return solver<Derived, params_t>();
-    }
-
-    template <template <typename params_t> typename Derived, typename params_t>
-    [[nodiscard]] static
-#if __cplusplus >= 2023L
-    constexpr
-#endif // __cplusplus >= 2023L
-    auto solve() {
-        return solver<Derived, params_t>()();
-    }
-
-    template <template <typename params_t> typename Derived, typename params_t, typename... Args>
-    [[nodiscard]] static
-#if __cplusplus >= 2023L
-    constexpr
-#endif // __cplusplus >= 2023L
-    auto solve(Args&&... _args) {
-        return solver<Derived, params_t>()(std::forward<Args>(_args)...);
-    }
-
-    template <template <typename params_t> typename Derived, typename params_t>
-    [[nodiscard]] static
-    #if __cplusplus >= 2023L
-        constexpr
-    #endif // __cplusplus >= 2023L
-    auto solve(const params_t& _params) {
-        return solver<Derived, params_t>()(_params);
-    }
 
 } //chdr::solvers
 
