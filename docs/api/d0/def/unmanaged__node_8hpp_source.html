@@ -122,40 +122,49 @@ $(document).ready(function(){initNavTree('d0/def/unmanaged__node_8hpp_source.htm
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#ifndef CHDR_UNMANAGEDNODE_HPP</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#define CHDR_UNMANAGEDNODE_HPP</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;bnode.hpp&quot;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;bnode.hpp&quot;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment">// ReSharper disable once CppUnusedIncludeDirective</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &quot;../../utils/intrinsics.hpp&quot;</span> <span class="comment">// NOLINT(*-include-cleaner)</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment">// ReSharper disable once CppUnusedIncludeDirective</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;../../utils/intrinsics.hpp&quot;</span> <span class="comment">// NOLINT(*-include-cleaner)</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">namespace </span>chdr::solvers {</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">namespace </span>chdr::solvers {</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> index_t&gt;</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <span class="keyword">struct </span>unmanaged_node : bnode&lt;index_t&gt; {</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        <span class="keyword">const</span> unmanaged_node* RESTRICT m_parent;</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        <span class="comment">// ReSharper disable once CppPossiblyUninitializedMember</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        [[nodiscard]] <span class="keyword">constexpr</span> unmanaged_node() noexcept {} <span class="comment">// NOLINT(*-pro-type-member-init, *-use-equals-default)</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        ~unmanaged_node() noexcept = default;</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        constexpr unmanaged_node           (const unmanaged_node&amp;) = delete;</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        constexpr unmanaged_node&amp; operator=(const unmanaged_node&amp;) = delete;</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        [[nodiscard]] HOT constexpr unmanaged_node(unmanaged_node&amp;&amp;) noexcept = default;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#if __cplusplus &gt; 202302L</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        <span class="keyword">constexpr</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        unmanaged_node&amp; operator=(unmanaged_node&amp;&amp;) noexcept = default;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        [[nodiscard]] HOT constexpr unmanaged_node(index_t _index, const unmanaged_node* RESTRICT const _parent = <span class="keywordtype">nullptr</span>) noexcept : bnode&lt;index_t&gt;(_index),</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            m_parent(std::move(_parent)) {}</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    };</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>}</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_UNMANAGEDNODE_HPP</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> index_t&gt;</div>
+<div class="foldopen" id="foldopen00034" data-start="{" data-end="};">
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">   34</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">unmanaged_node</a> : <a class="code hl_struct" href="../../da/d98/structchdr_1_1solvers_1_1bnode.html">bnode</a>&lt;index_t&gt; {</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_aa9d49dfbf82823508c4ab2fe6619a2d4.html#aa9d49dfbf82823508c4ab2fe6619a2d4">   50</a></span>        <span class="keyword">const</span> <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">unmanaged_node</a>* RESTRICT <a class="code hl_variable" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_aa9d49dfbf82823508c4ab2fe6619a2d4.html#aa9d49dfbf82823508c4ab2fe6619a2d4">m_parent</a>;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="comment">// ReSharper disable once CppPossiblyUninitializedMember</span></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_a05f3d6d2c925a1809848253d4f8caf9e.html#a05f3d6d2c925a1809848253d4f8caf9e">   63</a></span>        [[nodiscard]] <span class="keyword">constexpr</span> <a class="code hl_function" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_a05f3d6d2c925a1809848253d4f8caf9e.html#a05f3d6d2c925a1809848253d4f8caf9e">unmanaged_node</a>() noexcept {} <span class="comment">// NOLINT(*-pro-type-member-init, *-use-equals-default)</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">~unmanaged_node</a>() noexcept = default;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        constexpr <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">unmanaged_node</a>           (const <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">unmanaged_node</a>&amp;) = delete;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        constexpr <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">unmanaged_node</a>&amp; operator=(const <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">unmanaged_node</a>&amp;) = delete;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        [[nodiscard]] HOT constexpr <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">unmanaged_node</a>(<a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">unmanaged_node</a>&amp;&amp;) noexcept = default;</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="preprocessor">#if __cplusplus &gt; 202302L</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        <span class="keyword">constexpr</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">unmanaged_node</a>&amp; operator=(<a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">unmanaged_node</a>&amp;&amp;) noexcept = default;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
+<div class="foldopen" id="foldopen00098" data-start="{" data-end="}">
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno"><a class="line" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_ac6f3473c2df4d3156ebc0e17ebbe63ff.html#ac6f3473c2df4d3156ebc0e17ebbe63ff">   98</a></span>        [[nodiscard]] HOT constexpr <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">unmanaged_node</a>(index_t _index, const <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">unmanaged_node</a>* RESTRICT const _parent = <span class="keywordtype">nullptr</span>) noexcept : <a class="code hl_struct" href="../../da/d98/structchdr_1_1solvers_1_1bnode.html">bnode</a>&lt;index_t&gt;(_index),</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>            <a class="code hl_variable" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_aa9d49dfbf82823508c4ab2fe6619a2d4.html#aa9d49dfbf82823508c4ab2fe6619a2d4">m_parent</a>(_parent) {}</div>
+</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    };</div>
+</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>}</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_UNMANAGEDNODE_HPP</span></div>
+<div class="ttc" id="astructchdr_1_1solvers_1_1bnode_html"><div class="ttname"><a href="../../da/d98/structchdr_1_1solvers_1_1bnode.html">chdr::solvers::bnode</a></div><div class="ttdoc">Base class for pathfinding nodes.</div><div class="ttdef"><b>Definition</b> <a href="../../dc/d3c/bnode_8hpp_source.html#l00027">bnode.hpp:27</a></div></div>
+<div class="ttc" id="astructchdr_1_1solvers_1_1unmanaged__node_a05f3d6d2c925a1809848253d4f8caf9e_html_a05f3d6d2c925a1809848253d4f8caf9e"><div class="ttname"><a href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_a05f3d6d2c925a1809848253d4f8caf9e.html#a05f3d6d2c925a1809848253d4f8caf9e">chdr::solvers::unmanaged_node::unmanaged_node</a></div><div class="ttdeci">unmanaged_node() noexcept</div><div class="ttdoc">Constructs an uninitialized node.</div><div class="ttdef"><b>Definition</b> <a href="../../d0/def/unmanaged__node_8hpp_source.html#l00063">unmanaged_node.hpp:63</a></div></div>
+<div class="ttc" id="astructchdr_1_1solvers_1_1unmanaged__node_aa9d49dfbf82823508c4ab2fe6619a2d4_html_aa9d49dfbf82823508c4ab2fe6619a2d4"><div class="ttname"><a href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_aa9d49dfbf82823508c4ab2fe6619a2d4.html#aa9d49dfbf82823508c4ab2fe6619a2d4">chdr::solvers::unmanaged_node::m_parent</a></div><div class="ttdeci">const unmanaged_node *restrict m_parent</div><div class="ttdoc">A pointer to the parent node in the hierarchical structure.</div><div class="ttdef"><b>Definition</b> <a href="../../d0/def/unmanaged__node_8hpp_source.html#l00050">unmanaged_node.hpp:50</a></div></div>
+<div class="ttc" id="astructchdr_1_1solvers_1_1unmanaged__node_html"><div class="ttname"><a href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">chdr::solvers::unmanaged_node</a></div><div class="ttdoc">A hierarchical node in a pathfinding context, requires manual memory management.</div><div class="ttdef"><b>Definition</b> <a href="../../d0/def/unmanaged__node_8hpp_source.html#l00034">unmanaged_node.hpp:34</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen -->

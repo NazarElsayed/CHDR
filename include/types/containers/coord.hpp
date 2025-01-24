@@ -14,7 +14,15 @@
 
 namespace chdr {
 
-    template<typename T, size_t Kd>
+    /**
+      * @brief A K-dimensional coordinate type.
+      *
+      * @details A type for representing points in a K-dimensional space using `std::array`.
+      *
+      * @tparam T Type of elements in the coordinate.
+      * @tparam Kd Dimensionality of the coordinate.
+      */
+    template <typename T, size_t Kd>
     using coord [[maybe_unused]] = std::array<T, Kd>;
 
 } //chdr

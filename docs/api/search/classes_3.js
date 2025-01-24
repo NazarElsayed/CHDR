@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['id_5fnode_0',['id_node',['../db/d4a/classchdr_1_1mazes_1_1id__node.html',1,'chdr::mazes']]]
+  ['high_5fperformance_0',['high_performance',['../d9/df4/structchdr_1_1high__performance.html',1,'chdr']]]
 ];

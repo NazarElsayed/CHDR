@@ -35,10 +35,32 @@ namespace chdr {
      *          It has constant lookup, insertion, and removal times, storing data in a dense,
      *          contiguous memory layout that improves the cache locality of stored elements. \n\n
      *          Due to its dense structure, the existence set experiences an increased worst-case
-     *          memory complexity. However, as it is non-owning, it often uses less memory in
-     *          monotonic situations than its sparse counterparts. \n\n
+     *          memory complexity. However, as it is non-owning, it often uses less memory than its
+     *          sparse counterparts when in monotonic situations. \n\n
      *          Memory efficiency and performance are customisable through specifying the number
      *          of bits used with the provided template parameter.
+     *
+     * @code
+     *
+     * // Construct the set:
+     * chdr::existence_set<high_performance> set;
+     *
+     * // Enable elements with hashes 1, 2, and 5.
+     * set.push(1);
+     * set.push(2);
+     * set.push(5);
+     *
+     * // Check if elements exist.
+     * if (set.contains(1)) { // true
+     *     // ...
+     * }
+     * if (set.contains(3)) { // false
+     *     // ...
+     * }
+     *
+     * // Disable an element.
+     * set.erase(2);
+     * @endcode
      *
      * @tparam layout_t Memory layout strategy for the set:
      *                  - `low_memory_usage`: Minimises memory usage (One bit per item).
@@ -46,6 +68,8 @@ namespace chdr {
      *
      * @note This class uses polymorphic memory resources (`std::pmr::memory_resource`)
      *       to provide fine-grained control over memory allocation.
+     *
+     * @remarks existence_set follows an STL-like design.
      *
      * @see low_memory_usage
      * @see high_performance
@@ -216,8 +240,23 @@ namespace chdr {
         }
 
         /**
+         * @brief Computes the hash of an object and inserts it into the set.
+         * @details This function constructs a hash from the provided object and enables it within the set.
+         * @tparam T The type of the input value, which must support std::hash.
+         * @param _item The item whose hash value to add.
+         */
+        template <typename T>
+        HOT constexpr void push(const T& _item) {
+
+            static_assert(std::is_same_v<decltype(std::hash<T>{}(std::declval<T>())), size_t>,
+                          "Type T must be supported by std::hash and return size_t");
+
+            enable(std::hash<T>{}(_item));
+        }
+
+        /**
          * @brief Adds a hash to the set using forward-construction semantics.
-         * @details This function ensures that the hash is enabled within the set,
+         * @details This function enables the hash within the set,
          *          forwarding the provided value and validating its type at compile-time.
          * @tparam T The type of the input value, which must be an integral type.
          * @param _hash The hash value to add.

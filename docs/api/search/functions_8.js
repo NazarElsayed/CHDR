@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['value_0',['value',['../db/dc4/structchdr_1_1mazes_1_1weighted__node_a9a9d24859a5366d0b48f6496ed3574b5.html#a9a9d24859a5366d0b48f6496ed3574b5',1,'chdr::mazes::weighted_node::value() const noexcept'],['../db/dc4/structchdr_1_1mazes_1_1weighted__node_a62fb7a2e242a85d1a1191b2ee9cb4e4e.html#a62fb7a2e242a85d1a1191b2ee9cb4e4e',1,'chdr::mazes::weighted_node::value(weight_t _value) noexcept']]]
+  ['reserve_0',['reserve',['../d6/db9/classchdr_1_1existence__set_aa66b014d5c0a1d4eb03fa4c8bac415c3.html#aa66b014d5c0a1d4eb03fa4c8bac415c3',1,'chdr::existence_set']]],
+  ['resize_1',['resize',['../d6/db9/classchdr_1_1existence__set_a5459f8b698f6b8416f56b3fe5edc8b30.html#a5459f8b698f6b8416f56b3fe5edc8b30',1,'chdr::existence_set']]]
 ];

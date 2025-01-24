@@ -455,53 +455,53 @@ $(document).ready(function(){initNavTree('da/d45/heap_8hpp_source.html','../../'
 <div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>            <span class="keywordflow">return</span> c.at(_index + 1U);</div>
 <div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>        }</div>
 <div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span> </div>
-<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>        [[maybe_unused]]</div>
-<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span><span class="preprocessor">#if __cplusplus &gt;= 202002L</span></div>
-<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>        <span class="keyword">constexpr</span></div>
-<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>        <span class="keywordtype">void</span> wipe() noexcept {</div>
-<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>            <span class="keywordflow">try</span> {</div>
-<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>                c = std::move(<span class="keyword">decltype</span>(c){});</div>
-<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>            }</div>
-<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>            <span class="keywordflow">catch</span> (...) {</div>
-<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>                c.clear();</div>
-<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>                c.shrink_to_fit();</div>
-<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>            }</div>
-<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>            c.clear();</div>
-<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>            c.shrink_to_fit();</div>
-<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>        }</div>
-<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span> </div>
-<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span><span class="preprocessor">#ifndef HEAP_SUPPRESS_EXCEPTION_WARNING</span></div>
-<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>        [[deprecated(<span class="stringliteral">&quot;This function does not perform bounds checking.\nSuppress this warning by defining \&quot;HEAP_SUPPRESS_UNSAFE_WARNING\&quot;.&quot;</span>)]]</div>
-<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>        [[maybe_unused, nodiscard]] <span class="keyword">constexpr</span> <span class="keyword">const</span> T&amp; operator[](<span class="keywordtype">size_t</span> _index) <span class="keyword">const</span> <span class="keyword">noexcept</span> {</div>
-<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>            <span class="keywordflow">return</span> c[_index + 1U];</div>
-<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>        }</div>
-<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span> </div>
-<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>        <span class="keyword">using </span>iterator_t               = <span class="keyword">typename</span> Container::              iterator;</div>
-<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>        <span class="keyword">using </span>const_iterator_t         = <span class="keyword">typename</span> Container::        const_iterator;</div>
-<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>        <span class="keyword">using </span>reverse_iterator_t       = <span class="keyword">typename</span> Container::      reverse_iterator;</div>
-<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>        <span class="keyword">using </span>const_reverse_iterator_t = <span class="keyword">typename</span> Container::const_reverse_iterator;</div>
-<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span> </div>
-<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>        [[maybe_unused, nodiscard]] <span class="keyword">constexpr</span> iterator_t        begin()       noexcept { <span class="keywordflow">return</span> c.begin() + 1U; }</div>
-<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>        [[maybe_unused, nodiscard]] <span class="keyword">constexpr</span> const_iterator_t  begin() const noexcept { <span class="keywordflow">return</span> c.begin() + 1U; }</div>
-<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>        [[maybe_unused, nodiscard]] <span class="keyword">constexpr</span> const_iterator_t cbegin() const noexcept { <span class="keywordflow">return</span> c.cbegin() + 1U; }</div>
-<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span> </div>
-<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>        [[maybe_unused, nodiscard]] <span class="keyword">constexpr</span> iterator_t        end()       noexcept { <span class="keywordflow">return</span> c.end(); }</div>
-<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>        [[maybe_unused, nodiscard]] <span class="keyword">constexpr</span> const_iterator_t  end() const noexcept { <span class="keywordflow">return</span> c.end(); }</div>
-<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>        [[maybe_unused, nodiscard]] <span class="keyword">constexpr</span> const_iterator_t cend() const noexcept { <span class="keywordflow">return</span> c.cend(); }</div>
-<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span> </div>
-<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>        [[maybe_unused, nodiscard]] <span class="keyword">constexpr</span> reverse_iterator_t        rbegin()       noexcept { <span class="keywordflow">return</span> c.rbegin(); }</div>
-<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>        [[maybe_unused, nodiscard]] <span class="keyword">constexpr</span> const_reverse_iterator_t  rbegin() const noexcept { <span class="keywordflow">return</span> c.rbegin(); }</div>
-<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>        [[maybe_unused, nodiscard]] <span class="keyword">constexpr</span> const_reverse_iterator_t crbegin() const noexcept { <span class="keywordflow">return</span> c.crbegin(); }</div>
-<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span> </div>
-<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>        [[maybe_unused, nodiscard]] <span class="keyword">constexpr</span> reverse_iterator_t        rend()       noexcept { <span class="keywordflow">return</span> c.rend(); }</div>
-<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>        [[maybe_unused, nodiscard]] <span class="keyword">constexpr</span> const_reverse_iterator_t  rend() const noexcept { <span class="keywordflow">return</span> c.rend(); }</div>
-<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>        [[maybe_unused, nodiscard]] <span class="keyword">constexpr</span> const_reverse_iterator_t crend() const noexcept { <span class="keywordflow">return</span> c.crend(); }</div>
-<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>    };</div>
-<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>} <span class="comment">//chdr</span></div>
+<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>        [[maybe_unused]]</div>
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span><span class="preprocessor">#if __cplusplus &gt;= 202002L</span></div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>        <span class="keyword">constexpr</span></div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>        <span class="keywordtype">void</span> wipe() noexcept {</div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>            <span class="keywordflow">try</span> {</div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>                c = std::move(<span class="keyword">decltype</span>(c){});</div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>            }</div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>            <span class="keywordflow">catch</span> (...) {</div>
+<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>                c.clear();</div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>                c.shrink_to_fit();</div>
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>            }</div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>            c.clear();</div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>            c.shrink_to_fit();</div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>        }</div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span> </div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span><span class="preprocessor">#ifndef HEAP_SUPPRESS_EXCEPTION_WARNING</span></div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>        [[deprecated(<span class="stringliteral">&quot;This function does not perform bounds checking.\nSuppress this warning by defining \&quot;HEAP_SUPPRESS_UNSAFE_WARNING\&quot;.&quot;</span>)]]</div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>        [[maybe_unused, nodiscard]] <span class="keyword">constexpr</span> <span class="keyword">const</span> T&amp; operator[](<span class="keywordtype">size_t</span> _index) <span class="keyword">const</span> <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>            <span class="keywordflow">return</span> c[_index + 1U];</div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>        }</div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span> </div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>        <span class="keyword">using </span>iterator_t               = <span class="keyword">typename</span> Container::              iterator;</div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>        <span class="keyword">using </span>const_iterator_t         = <span class="keyword">typename</span> Container::        const_iterator;</div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>        <span class="keyword">using </span>reverse_iterator_t       = <span class="keyword">typename</span> Container::      reverse_iterator;</div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>        <span class="keyword">using </span>const_reverse_iterator_t = <span class="keyword">typename</span> Container::const_reverse_iterator;</div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span> </div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>        [[maybe_unused, nodiscard]] <span class="keyword">constexpr</span> iterator_t        begin()       noexcept { <span class="keywordflow">return</span> c.begin() + 1U; }</div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>        [[maybe_unused, nodiscard]] <span class="keyword">constexpr</span> const_iterator_t  begin() const noexcept { <span class="keywordflow">return</span> c.begin() + 1U; }</div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>        [[maybe_unused, nodiscard]] <span class="keyword">constexpr</span> const_iterator_t cbegin() const noexcept { <span class="keywordflow">return</span> c.cbegin() + 1U; }</div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span> </div>
+<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>        [[maybe_unused, nodiscard]] <span class="keyword">constexpr</span> iterator_t        end()       noexcept { <span class="keywordflow">return</span> c.end(); }</div>
+<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>        [[maybe_unused, nodiscard]] <span class="keyword">constexpr</span> const_iterator_t  end() const noexcept { <span class="keywordflow">return</span> c.end(); }</div>
+<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>        [[maybe_unused, nodiscard]] <span class="keyword">constexpr</span> const_iterator_t cend() const noexcept { <span class="keywordflow">return</span> c.cend(); }</div>
+<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span> </div>
+<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>        [[maybe_unused, nodiscard]] <span class="keyword">constexpr</span> reverse_iterator_t        rbegin()       noexcept { <span class="keywordflow">return</span> c.rbegin(); }</div>
+<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>        [[maybe_unused, nodiscard]] <span class="keyword">constexpr</span> const_reverse_iterator_t  rbegin() const noexcept { <span class="keywordflow">return</span> c.rbegin(); }</div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>        [[maybe_unused, nodiscard]] <span class="keyword">constexpr</span> const_reverse_iterator_t crbegin() const noexcept { <span class="keywordflow">return</span> c.crbegin(); }</div>
 <div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span> </div>
-<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>        [[maybe_unused, nodiscard]] <span class="keyword">constexpr</span> reverse_iterator_t        rend()       noexcept { <span class="keywordflow">return</span> c.rend(); }</div>
+<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>        [[maybe_unused, nodiscard]] <span class="keyword">constexpr</span> const_reverse_iterator_t  rend() const noexcept { <span class="keywordflow">return</span> c.rend(); }</div>
+<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>        [[maybe_unused, nodiscard]] <span class="keyword">constexpr</span> const_reverse_iterator_t crend() const noexcept { <span class="keywordflow">return</span> c.crend(); }</div>
+<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>    };</div>
+<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>} <span class="comment">//chdr</span></div>
+<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span> </div>
+<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span><span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen -->

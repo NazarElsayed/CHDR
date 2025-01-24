@@ -1,5 +1,5 @@
 <map id="push" name="push">
-<area shape="rect" id="Node000001" title="Add a hash to the set." alt="" coords="156,5,207,31"/>
-<area shape="rect" id="Node000002" href="$d6/db9/classchdr_1_1existence__set_a03e45ce97da7ec9580a33a375ac7d302.html#a03e45ce97da7ec9580a33a375ac7d302" title="Constructs an existence_set with initial items." alt="" coords="5,5,108,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="143,21,108,21,108,15,143,15"/>
+<area shape="rect" id="Node000001" title="Add a hash to the set." alt="" coords="140,5,185,28"/>
+<area shape="rect" id="Node000002" href="$d6/db9/classchdr_1_1existence__set_a03e45ce97da7ec9580a33a375ac7d302.html#a03e45ce97da7ec9580a33a375ac7d302" title="Constructs an existence_set with initial items." alt="" coords="5,5,92,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="126,19,92,19,92,14,126,14"/>
 </map>

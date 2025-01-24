@@ -345,6 +345,12 @@ namespace chdr {
         /**
          * @brief Wipes the heap, leaving it in an invalid state.
          *
+         * @details This function completely wipes the internal container of the heap,
+         *          leaving it free of all elements, including the super element.
+         *
+         * @warning Running this code leaves the heap in an invalid state.
+         *          Valid use cases for this function are rare and, as such, its use is generally discouraged.
+         *
          * @remarks Do not use this function unless you know what you are doing.
          */
         [[maybe_unused]]

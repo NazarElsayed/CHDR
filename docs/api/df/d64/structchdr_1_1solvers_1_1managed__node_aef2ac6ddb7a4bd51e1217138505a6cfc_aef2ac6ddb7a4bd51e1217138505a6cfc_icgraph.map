@@ -1,0 +1,5 @@
+<map id="incr" name="incr">
+<area shape="rect" id="Node000001" title="Increments the successor count of the parent node." alt="" coords="151,5,189,28"/>
+<area shape="rect" id="Node000002" href="$df/d64/structchdr_1_1solvers_1_1managed__node_a66205330f118f6d2bb86303fe4cc721c.html#a66205330f118f6d2bb86303fe4cc721c" title="Constructs a node with a specified index and an optional parent pointer." alt="" coords="5,5,103,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="137,19,103,19,103,14,137,14"/>
+</map>

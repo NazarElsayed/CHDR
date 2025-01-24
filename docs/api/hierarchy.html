@@ -1,3 +1,4 @@
+<!-- HTML header for doxygen 1.9.8-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
 <head>
@@ -9,6 +10,9 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
+<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
 <link href="navtree.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="resize.js"></script>
 <script type="text/javascript" src="navtreedata.js"></script>
@@ -17,6 +21,15 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-namespaces.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">
+    DoxygenAwesomeParagraphLink.init()
+    DoxygenAwesomeFragmentCopyButton.init()
+    DoxygenAwesomeDarkModeToggle.init()
+</script>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -25,8 +38,9 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">CHDR
+   <div id="projectname">CHDR<span id="projectnumber">&#160;0.1.0-dev</span>
    </div>
+   <div id="projectbrief">Computational Helper for Direction and Routing</div>
   </td>
  </tr>
  </tbody>
@@ -96,62 +110,35 @@ $(document).ready(function(){initNavTree('hierarchy.html',''); initResizable(); 
 <p><a href="inherits.html">Go to the graphical class hierarchy</a></p>
 This inheritance list is sorted roughly, but not completely, alphabetically:</div><div class="directory">
 <div class="levels">[detail level <span onclick="javascript:toggleLevel(1);">1</span><span onclick="javascript:toggleLevel(2);">2</span>]</div><table class="directory">
-<tr id="row_0_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1alignment.html" target="_self">chdr::alignment&lt; typename &gt;</a></td><td class="desc">Each item is represented by 8 bits in memory </td></tr>
-<tr id="row_1_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1alignment_3_01high__performance_01_4.html" target="_self">chdr::alignment&lt; high_performance &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_2_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1alignment_3_01lowest__memory__usage_01_4.html" target="_self">chdr::alignment&lt; lowest_memory_usage &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_3_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1solvers_1_1astar.html" target="_self">chdr::solvers::astar&lt; params_t &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_4_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1solvers_1_1bfs.html" target="_self">chdr::solvers::bfs&lt; params_t &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_5_" class="odd"><td class="entry"><span style="width:0px;display:inline-block;">&#160;</span><span id="arr_5_" class="arrow" onclick="toggleFolder('5_')">&#9660;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1solvers_1_1bnode.html" target="_self">chdr::solvers::bnode&lt; index_t &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_5_0_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1solvers_1_1managed__node.html" target="_self">chdr::solvers::managed_node&lt; index_t, node &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_5_1_" class="odd"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1solvers_1_1managed__node.html" target="_self">chdr::solvers::managed_node&lt; index_t, derived &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_5_2_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1solvers_1_1unmanaged__node.html" target="_self">chdr::solvers::unmanaged_node&lt; index_t &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_6_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1solvers_1_1bstar.html" target="_self">chdr::solvers::bstar&lt; params_t &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_7_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1solvers_1_1dfs.html" target="_self">chdr::solvers::dfs&lt; params_t &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_8_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1solvers_1_1dijkstra.html" target="_self">chdr::solvers::dijkstra&lt; params_t &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_9_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1solvers_1_1eidastar.html" target="_self">chdr::solvers::eidastar&lt; params_t &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_10_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1solvers_1_1eidbstar.html" target="_self">chdr::solvers::eidbstar&lt; params_t &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_11_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1solvers_1_1eiddfs.html" target="_self">chdr::solvers::eiddfs&lt; params_t &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_12_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="classchdr_1_1existence__set.html" target="_self">chdr::existence_set&lt; alignment_type &gt;</a></td><td class="desc">A set allowing for efficient existence checks without needing to store the original data in memory </td></tr>
-<tr id="row_13_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1solvers_1_1floodfill.html" target="_self">chdr::solvers::floodfill&lt; params_t &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_14_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1solvers_1_1fstar.html" target="_self">chdr::solvers::fstar&lt; params_t &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_15_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1solvers_1_1gbfs.html" target="_self">chdr::solvers::gbfs&lt; params_t &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_16_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1solvers_1_1gdfs.html" target="_self">chdr::solvers::gdfs&lt; params_t &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_17_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1solvers_1_1gjps.html" target="_self">chdr::solvers::gjps&lt; params_t &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_18_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="classchdr_1_1mazes_1_1graph.html" target="_self">chdr::mazes::graph&lt; index_t, scalar_t &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_19_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="classchdr_1_1mazes_1_1grid.html" target="_self">chdr::mazes::grid&lt; coord_t, weight_t &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_20_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4.html" target="_self">chdr::mazes::grid&lt; coord_t, bool &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_21_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1solvers_1_1gstar.html" target="_self">chdr::solvers::gstar&lt; params_t &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_22_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="classchdr_1_1heap.html" target="_self">chdr::heap&lt; T, Compare, Container, Kd &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_23_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1heuristics.html" target="_self">chdr::heuristics</a></td><td class="desc"></td></tr>
-<tr id="row_24_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1high__performance.html" target="_self">chdr::high_performance</a></td><td class="desc">Each item is represented by 1 bit in memory </td></tr>
-<tr id="row_25_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="classchdr_1_1mazes_1_1id__node.html" target="_self">chdr::mazes::id_node&lt; index_t &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_26_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1solvers_1_1idastar.html" target="_self">chdr::solvers::idastar&lt; params_t &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_27_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1solvers_1_1idbstar.html" target="_self">chdr::solvers::idbstar&lt; params_t &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_28_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1solvers_1_1iddfs.html" target="_self">chdr::solvers::iddfs&lt; params_t &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_29_" class="even"><td class="entry"><span style="width:0px;display:inline-block;">&#160;</span><span id="arr_29_" class="arrow" onclick="toggleFolder('29_')">&#9660;</span><span class="icona"><span class="icon">C</span></span><b>std::is_same</b></td><td class="desc"></td></tr>
-<tr id="row_29_0_" class="odd"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1solvers_1_1solver_1_1is__graph.html" target="_self">chdr::solvers::solver&lt; Derived, params_t &gt;::is_graph&lt; T &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_30_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1solvers_1_1jps.html" target="_self">chdr::solvers::jps&lt; params_t &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_31_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1lowest__memory__usage.html" target="_self">chdr::lowest_memory_usage</a></td><td class="desc"></td></tr>
-<tr id="row_32_" class="even"><td class="entry"><span style="width:0px;display:inline-block;">&#160;</span><span id="arr_32_" class="arrow" onclick="toggleFolder('32_')">&#9660;</span><span class="icona"><span class="icon">C</span></span><b>std::pmr::memory_resource</b></td><td class="desc"></td></tr>
-<tr id="row_32_0_" class="odd"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="classchdr_1_1monotonic__pool.html" target="_self">chdr::monotonic_pool</a></td><td class="desc"></td></tr>
-<tr id="row_32_1_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="classchdr_1_1polytonic__pool.html" target="_self">chdr::polytonic_pool</a></td><td class="desc"></td></tr>
-<tr id="row_33_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1solvers_1_1solver_1_1node__data.html" target="_self">chdr::solvers::solver&lt; Derived, params_t &gt;::node_data</a></td><td class="desc"></td></tr>
-<tr id="row_34_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="classchdr_1_1queue.html" target="_self">chdr::queue&lt; T &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_35_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1solvers_1_1solver_1_1resettable.html" target="_self">chdr::solvers::solver&lt; Derived, params_t &gt;::resettable&lt; T &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_36_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="classchdr_1_1solvers_1_1solver.html" target="_self">chdr::solvers::solver&lt; Derived, params_t &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_37_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1solvers_1_1solver__utils.html" target="_self">chdr::solvers::solver_utils</a></td><td class="desc"></td></tr>
-<tr id="row_38_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="classchdr_1_1stack.html" target="_self">chdr::stack&lt; T &gt;</a></td><td class="desc"></td></tr>
-<tr id="row_39_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1utils.html" target="_self">chdr::utils</a></td><td class="desc"></td></tr>
-<tr id="row_40_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="structchdr_1_1mazes_1_1weighted__node.html" target="_self">chdr::mazes::weighted_node&lt; weight_t &gt;</a></td><td class="desc"></td></tr>
+<tr id="row_0_" class="even"><td class="entry"><span style="width:0px;display:inline-block;">&#160;</span><span id="arr_0_" class="arrow" onclick="toggleFolder('0_')">&#9660;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="da/d98/structchdr_1_1solvers_1_1bnode.html" target="_self">bnode&lt; index_t &gt;</a></td><td class="desc">Base class for pathfinding nodes </td></tr>
+<tr id="row_0_0_" class="odd"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="df/d64/structchdr_1_1solvers_1_1managed__node.html" target="_self">managed_node&lt; index_t, node &gt;</a></td><td class="desc"></td></tr>
+<tr id="row_0_1_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="df/d64/structchdr_1_1solvers_1_1managed__node.html" target="_self">managed_node&lt; index_t, derived &gt;</a></td><td class="desc">A hierarchical node in a pathfinding context, with a clean-up mechanism </td></tr>
+<tr id="row_0_2_" class="odd"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html" target="_self">unmanaged_node&lt; index_t &gt;</a></td><td class="desc">A hierarchical node in a pathfinding context, requires manual memory management </td></tr>
+<tr id="row_1_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="d6/db9/classchdr_1_1existence__set.html" target="_self">existence_set&lt; layout_t &gt;</a></td><td class="desc">Represents a container for tracking the existence of elements </td></tr>
+<tr id="row_2_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4.html" target="_self">grid&lt; coord_t, bool &gt;</a></td><td class="desc"></td></tr>
+<tr id="row_3_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="d9/df4/structchdr_1_1high__performance.html" target="_self">high_performance</a></td><td class="desc">One byte represents each item </td></tr>
+<tr id="row_4_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="db/d4a/classchdr_1_1mazes_1_1id__node.html" target="_self">id_node&lt; index_t &gt;</a></td><td class="desc">Represents a node with a customisable identifier </td></tr>
+<tr id="row_5_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="df/d17/structchdr_1_1low__memory__usage.html" target="_self">low_memory_usage</a></td><td class="desc">One bit represents each item </td></tr>
+<tr id="row_6_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span class="icona"><span class="icon">C</span></span><a class="el" href="db/dc4/structchdr_1_1mazes_1_1weighted__node.html" target="_self">weighted_node&lt; weight_t &gt;</a></td><td class="desc">Represents a node with a customisable weight </td></tr>
 </table>
 </div><!-- directory -->
 </div><!-- contents -->
 </div><!-- doc-content -->
-<!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
-  </ul>
+<!-- HTML footer for doxygen -->
+<!-- Start footer part -->
+<div id="nav-path" class="navpath">
+    <!-- id is needed for treeview function! -->
+    <ul>
+      <li class="footer">
+        See the <a href="https://github.com/NazarElsayed/CHDR/tree/main">Official Repository</a>
+      </li>
+    </ul>
 </div>
+<footer class="custom-doxygen-footer">
+  <div>
+    <small>
+    </small>
+  </div>
+</footer>
 </body>
 </html>

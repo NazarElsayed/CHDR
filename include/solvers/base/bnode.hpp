@@ -11,10 +11,38 @@
 
 namespace chdr::solvers {
 
+    /**
+     * @nosubgrouping
+     * @brief Base class for pathfinding nodes.
+     * @details bnode represents the fundamental functionality of a node in a search context,
+     *          storing an index representing an identifier.
+     *          It can be inherited to extend its functionality.
+     * @remarks The stored identifier does not need to be unique.
+     * @tparam index_t The type of the identifier. Must be an integral type.
+     *
+     * @see unmanaged_node
+     * @see managed_node
+     */
     template<typename index_t>
     struct bnode {
 
+        /**
+         * @brief The index or identifier of the node.
+         *
+         * This member represents the identifier for the node within the pathfinding
+         * or search algorithm context. The identifier is typically used to
+         * distinguish or reference specific nodes.
+         *
+         * @details The type of the index is templated and must be an integral type.
+         *          The value stored in this member does not require uniqueness,
+         *          and its interpretation depends on the specific application or derived class.
+         */
         index_t m_index;
+
+        /**
+         * @name Constructors
+         * @{
+         */
 
         /**
          * @brief Constructs an uninitialized BNode.
@@ -36,6 +64,10 @@ namespace chdr::solvers {
         constexpr
 #endif
         bnode& operator=(bnode&&) noexcept = default;
+
+        /**
+         * @}
+         */
 
         [[nodiscard]] friend constexpr bool operator == (const bnode& _a, const bnode& _b) noexcept { return _a.m_index == _b.m_index; }
 

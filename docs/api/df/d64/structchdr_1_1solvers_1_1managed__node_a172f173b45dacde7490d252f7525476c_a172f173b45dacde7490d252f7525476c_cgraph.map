@@ -1,0 +1,5 @@
+<map id="expunge" name="expunge">
+<area shape="rect" id="Node000001" title="Recursively releases dead nodes from the parent hierarchy." alt="" coords="5,5,68,28"/>
+<area shape="rect" id="Node000002" href="$df/d64/structchdr_1_1solvers_1_1managed__node_a41bd77fede7821a6ea86cddfacbb5da6.html#a41bd77fede7821a6ea86cddfacbb5da6" title="Decrements the successor count of the parent node." alt="" coords="116,5,159,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="68,14,102,14,102,19,68,19"/>
+</map>
