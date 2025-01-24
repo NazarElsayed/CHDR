@@ -26,15 +26,18 @@ namespace chdr {
      *
      * @details A specialised data structure designed to efficiently track the existence of
      *          elements without ownership. \n\n
-     *          It has constant lookup, insertion, and removal times -leveraging a dense,
-     *          contiguous memory layout for addressing elements that compresses their representation
-     *          within memory, thereby improving cache locality and reducing the space required to
-     *          store elements. \n\n
+     *          It has constant lookup, insertion, and removal times. \n\n
+     *          It leverages a dense, contiguous memory layout for addressing elements that
+     *          compresses their representation within memory, thereby improving cache locality
+     *          and reducing the space required to store elements. \n\n
      *          Due to its dense structure, the existence set experiences an increased worst-case
      *          memory complexity. However, as it is non-owning, it often uses less memory than its
-     *          sparse counterparts when in monotonic situations. \n\n
+     *          sparse counterparts when indexing is monotonic. \n\n
      *          Memory efficiency and performance are customisable through specifying the memory
      *          layout using the provided template parameter.
+     *
+     * @warning This data structure does not employ collision resolution techniques.
+     *          You must ensure a unique hash or manage collisions yourself.
      *
      * @code
      *

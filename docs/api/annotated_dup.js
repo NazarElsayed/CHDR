@@ -11,8 +11,6 @@ var annotated_dup =
         [ "managed_node", "df/d64/structchdr_1_1solvers_1_1managed__node.html", "df/d64/structchdr_1_1solvers_1_1managed__node" ],
         [ "unmanaged_node", "d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html", "d6/d3c/structchdr_1_1solvers_1_1unmanaged__node" ]
       ] ],
-      [ "existence_set", "d6/db9/classchdr_1_1existence__set.html", "d6/db9/classchdr_1_1existence__set" ],
-      [ "high_performance", "d9/df4/structchdr_1_1high__performance.html", null ],
-      [ "low_memory_usage", "df/d17/structchdr_1_1low__memory__usage.html", null ]
+      [ "existence_set", "d6/db9/classchdr_1_1existence__set.html", "d6/db9/classchdr_1_1existence__set" ]
     ] ]
 ];

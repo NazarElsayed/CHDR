@@ -24,12 +24,40 @@ namespace chdr::solvers {
     template <template <typename params_t> typename Derived, typename params_t>
     class solver final {
 
-    public:
+    private:
 
+        /**
+         * @struct is_graph
+         * @brief A utility trait to check if a type is a graph type.
+         *
+         * @details This struct determines if a given type `T`, when decayed, is equivalent to the graph
+         *          type `mazes::graph` with index and scalar types supplied by parameters from `params_t`.
+         *          This comparison utilises `std::is_same` and `std::decay_t` for precise type matching.
+         *
+         * @note This trait is primarily used within the `solver` class to ensure compatibility with graph
+         *       structures in `mazes`, specifically verifying if the type satisfies graph type requirements
+         *       for operations.
+         *
+         * @tparam T The type to be checked against the graph type.
+         */
+        template <typename T>
+        struct is_graph : std::is_same<std::decay_t<T>, mazes::graph<typename params_t::index_type, typename params_t::scalar_type>>{};
+
+        /**
+         * @struct resettable
+         * @brief A utility trait for determining whether a type has a callable `reset` method.
+         *
+         * @details This struct uses SFINAE (Substitution Failure Is Not An Error) to identify if a given type
+         *          contains a publicly accessible member function named `reset`. The value of the trait will be
+         *          `true` if the `reset` method exists, and `false` otherwise.
+         *
+         * @tparam T The type to be inspected for the presence of a `reset` method.
+         */
         template <typename T>
         struct resettable final {
 
         private:
+
             template <typename U>
             static constexpr auto has_method(int) -> decltype(&U::reset, std::true_type{});
 
@@ -37,13 +65,48 @@ namespace chdr::solvers {
             static constexpr std::false_type has_method(...);
 
         public:
+
+           /**
+            * @brief Determines the value of the `resettable` trait for a given type.
+            *
+            * @details This constant expression evaluates to `true` if the specified type `T`
+            *          possesses a publicly accessible `reset` method. The implementation
+            *          leverages a combination of SFINAE (Substitution Failure Is Not An Error)
+            *          and the detection idiom to ascertain the existence of the method.
+            *
+            * @note This is a static constexpr boolean value used at compile time for type traits
+            *       evaluation.
+            *
+            * @tparam T The type being checked for the presence of a callable `reset` method.
+            */
             static constexpr bool value = decltype(has_method<T>(0))::value;
 
         };
 
-        template <typename T>
-        struct is_graph : std::is_same<std::decay_t<T>, mazes::graph<typename params_t::index_type, typename params_t::scalar_type>>{};
+    public:
 
+        /**
+         * @struct node_data
+         * @brief Represents data associated with a node from a search space in pathfinding algorithms.
+         *
+         * @details This structure encapsulates essential information about a node, including its
+         *          activity state, index, coordinates, and distance. It is primarily utilised in search
+         *          algorithms such as A* and its variants to store and process information related to
+         *          graph traversal.
+         *
+         * @note All member properties of this structure are immutable after initialisation.
+         *
+         * @property active Indicates whether the node is active and should be considered in the
+         *           computation logic.
+         *
+         * @property index The index of the node, typically representing its unique identifier within
+         *           the structure of the search space.
+         *
+         * @property coord The coordinates of the node in the search space, relevant for spatial algorithms.
+         *
+         * @property distance The computed distance metric (e.g., cost or heuristic) associated with
+         *           this node relative to its neighbours.
+         */
         struct node_data {
 
             const bool active;
