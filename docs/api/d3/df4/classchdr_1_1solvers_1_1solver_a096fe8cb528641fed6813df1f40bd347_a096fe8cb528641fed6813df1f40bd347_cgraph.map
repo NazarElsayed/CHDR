@@ -1,0 +1,6 @@
+<map id="solve" name="solve">
+<area shape="rect" id="Node000001" title="Executes the solver with the provided parameters. Parameters are constructed using perfect forwarding..." alt="" coords="5,29,52,52"/>
+<area shape="rect" id="Node000002" href="$d3/df4/classchdr_1_1solvers_1_1solver_a27feec6a8bfa491b399c0cd7e158e5cd.html#a27feec6a8bfa491b399c0cd7e158e5cd" title="Executes the solver with the provided parameters. Parameters are constructed using perfect forwarding..." alt="" coords="100,29,171,52"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="52,38,86,38,86,43,52,43"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="117,30,113,21,115,12,122,5,135,3,151,6,157,14,153,18,148,11,135,8,125,10,119,14,118,20,122,28"/>
+</map>

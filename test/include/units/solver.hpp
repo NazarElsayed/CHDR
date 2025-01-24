@@ -57,7 +57,7 @@ namespace test {
 
             /* TEST ALGORITHM */
             debug::log("(Solver):");
-            decltype(chdr::solvers::solver<solver_t, params_t>()(_params)) path;
+            decltype(chdr::solvers::solver<solver_t, params_t>::solve(_params)) path;
 
             auto result = std::numeric_limits<long double>::max();
             for (size_t i = 0U; i < test_samples; ++i) {
@@ -66,7 +66,7 @@ namespace test {
 
                 /* EXECUTE SOLVE */
                 {
-                    path = chdr::solvers::solver<solver_t, params_t>()(_params);
+                    path = chdr::solvers::solver<solver_t, params_t>::solve(_params);
                 }
 
                 result = chdr::utils::min(

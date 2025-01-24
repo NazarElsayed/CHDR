@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['push_0',['push',['../d6/db9/classchdr_1_1existence__set_a4846fe696d158cb562d6c4fa7778011a.html#a4846fe696d158cb562d6c4fa7778011a',1,'chdr::existence_set::push(size_t _hash)'],['../d6/db9/classchdr_1_1existence__set_ae89cffd80eaa580ee622de692fb9e23b.html#ae89cffd80eaa580ee622de692fb9e23b',1,'chdr::existence_set::push(const T &amp;_item)']]]
+  ['operator_28_29_0',['operator()',['../d3/df4/classchdr_1_1solvers_1_1solver_a27feec6a8bfa491b399c0cd7e158e5cd.html#a27feec6a8bfa491b399c0cd7e158e5cd',1,'chdr::solvers::solver::operator()(Args &amp;&amp;... _args)'],['../d3/df4/classchdr_1_1solvers_1_1solver_ab98298b6d67e41f622dcde441f24ed6f.html#ab98298b6d67e41f622dcde441f24ed6f',1,'chdr::solvers::solver::operator()(const params_t &amp;_params)']]]
 ];
