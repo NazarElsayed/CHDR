@@ -25,7 +25,7 @@ namespace chdr::solvers {
      * @nosubgrouping
      * @class solver
      * @brief A static class serving as the core entry point for the CHDR library, providing a unified interface for managing and invoking solvers.
-     * @details The `solver` class acts as the central interface to instantiate, configure, and execute various solvers.
+     * @details The `solver` class acts as the central interface to instantiate, configure, and invoke various solvers.
      *          It consolidates common utilities and functionalities required to create and manage search or optimisation instances.
      *          This class is designed for flexibility and extensibility, supporting a wide range of solvers through the use of
      *          template specialisations.
@@ -534,7 +534,7 @@ namespace chdr::solvers {
         /**
          * @brief Executes the solver with the provided parameters. Parameters are constructed using perfect forwarding.
          *
-         * @details Constructs a parameters object using the given arguments, and uses it to execute the desired solver.
+         * @details Constructs a parameters object using the given arguments, and uses it to invoke the desired solver.
          *
          * @note You must ensure that the given arguments are valid for constructing the parameters for your intended search.
          *
@@ -570,7 +570,7 @@ namespace chdr::solvers {
         /**
          * @brief Executes the solver with the provided parameters. Parameters are constructed using perfect forwarding.
          *
-         * @details Constructs a parameters object using the given arguments, and uses it to execute the desired solver.
+         * @details Constructs a parameters object using the given arguments, and uses it to invoke the desired solver.
          *
          * @note You must ensure that the given arguments are valid for constructing the parameters for your intended search.
          *
@@ -609,7 +609,7 @@ namespace chdr::solvers {
             if (_params.maze.contains(s) && _params.maze.at(s).is_active() &&
                 _params.maze.contains(e) && _params.maze.at(e).is_active()
             ) {
-                auto result = s != e ? solver_t::execute(_params) : std::vector<typename params_t::coord_type> { _params.end };
+                auto result = s != e ? solver_t::invoke(_params) : std::vector<typename params_t::coord_type> { _params.end };
 
                 if constexpr (solver_utils::template has_method_reset_v<decltype(*_params.monotonic_pmr)>) {
                     if (_params.monotonic_pmr != nullptr) { _params.monotonic_pmr->reset(); }

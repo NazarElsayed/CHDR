@@ -29,7 +29,7 @@ namespace chdr::solvers {
 
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
-        [[maybe_unused, nodiscard]] HOT static constexpr auto execute(const params_t& _params) {
+        [[maybe_unused, nodiscard]] HOT static constexpr auto invoke(const params_t& _params) {
 
             (void)_params;
 

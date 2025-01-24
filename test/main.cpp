@@ -67,7 +67,7 @@ namespace test {
 		}
 
 		template <template <typename params_t> typename solver_t, typename params_t>
-		static int execute(const params_t& _params) {
+		static int invoke(const params_t& _params) {
 			return application::main<solver_t, params_t>(_params);
 		}
 
@@ -121,24 +121,24 @@ namespace test {
 
 			const params args { test, start, end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, polytonic, &pool };
 
-                 if (_solver == "astar"    ) { result = execute<chdr::solvers::    astar, params>(args); }
-            else if (_solver == "bfs"      ) { result = execute<chdr::solvers::      bfs, params>(args); }
-            else if (_solver == "bstar"    ) { result = execute<chdr::solvers::    bstar, params>(args); }
-            else if (_solver == "dfs"      ) { result = execute<chdr::solvers::      dfs, params>(args); }
-            else if (_solver == "dijkstra" ) { result = execute<chdr::solvers:: dijkstra, params>(args); }
-            else if (_solver == "eidastar" ) { result = execute<chdr::solvers:: eidastar, params>(args); }
-            else if (_solver == "eidbstar" ) { result = execute<chdr::solvers:: eidbstar, params>(args); }
-            else if (_solver == "eiddfs"   ) { result = execute<chdr::solvers::   eiddfs, params>(args); }
-            else if (_solver == "floodfill") { result = execute<chdr::solvers::floodfill, params>(args); }
-            else if (_solver == "fstar"    ) { result = execute<chdr::solvers::    fstar, params>(args); }
-            else if (_solver == "gbfs"     ) { result = execute<chdr::solvers::     gbfs, params>(args); }
-            else if (_solver == "gdfs"     ) { result = execute<chdr::solvers::     gdfs, params>(args); }
-            else if (_solver == "gjps"     ) { result = execute<chdr::solvers::     gjps, params>(args); }
-            else if (_solver == "gstar"    ) { result = execute<chdr::solvers::    gstar, params>(args); }
-            else if (_solver == "idastar"  ) { result = execute<chdr::solvers::  idastar, params>(args); }
-            else if (_solver == "idbstar"  ) { result = execute<chdr::solvers::  idbstar, params>(args); }
-            else if (_solver == "iddfs"    ) { result = execute<chdr::solvers::    iddfs, params>(args); }
-            else if (_solver == "jps"      ) { result = execute<chdr::solvers::      jps, params>(args); }
+                 if (_solver == "astar"    ) { result = invoke<chdr::solvers::    astar, params>(args); }
+            else if (_solver == "bfs"      ) { result = invoke<chdr::solvers::      bfs, params>(args); }
+            else if (_solver == "bstar"    ) { result = invoke<chdr::solvers::    bstar, params>(args); }
+            else if (_solver == "dfs"      ) { result = invoke<chdr::solvers::      dfs, params>(args); }
+            else if (_solver == "dijkstra" ) { result = invoke<chdr::solvers:: dijkstra, params>(args); }
+            else if (_solver == "eidastar" ) { result = invoke<chdr::solvers:: eidastar, params>(args); }
+            else if (_solver == "eidbstar" ) { result = invoke<chdr::solvers:: eidbstar, params>(args); }
+            else if (_solver == "eiddfs"   ) { result = invoke<chdr::solvers::   eiddfs, params>(args); }
+            else if (_solver == "floodfill") { result = invoke<chdr::solvers::floodfill, params>(args); }
+            else if (_solver == "fstar"    ) { result = invoke<chdr::solvers::    fstar, params>(args); }
+            else if (_solver == "gbfs"     ) { result = invoke<chdr::solvers::     gbfs, params>(args); }
+            else if (_solver == "gdfs"     ) { result = invoke<chdr::solvers::     gdfs, params>(args); }
+            else if (_solver == "gjps"     ) { result = invoke<chdr::solvers::     gjps, params>(args); }
+            else if (_solver == "gstar"    ) { result = invoke<chdr::solvers::    gstar, params>(args); }
+            else if (_solver == "idastar"  ) { result = invoke<chdr::solvers::  idastar, params>(args); }
+            else if (_solver == "idbstar"  ) { result = invoke<chdr::solvers::  idbstar, params>(args); }
+            else if (_solver == "iddfs"    ) { result = invoke<chdr::solvers::    iddfs, params>(args); }
+            else if (_solver == "jps"      ) { result = invoke<chdr::solvers::      jps, params>(args); }
             else {
 		        debug::log("ERROR: Unknown solver \"" + std::string(_solver) + "\"!", error);
 		    }

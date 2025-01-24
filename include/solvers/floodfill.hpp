@@ -73,7 +73,7 @@ namespace chdr::solvers {
 
     public:
 
-        [[maybe_unused, nodiscard]] static auto execute(const params_t& _params) {
+        [[maybe_unused, nodiscard]] static auto invoke(const params_t& _params) {
 
             const auto s = static_cast<index_t>(utils::to_1d(_params.start, _params.size));
             const auto e = static_cast<index_t>(utils::to_1d(_params.end,   _params.size));

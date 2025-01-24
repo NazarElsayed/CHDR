@@ -170,7 +170,7 @@ namespace chdr::mazes {
                     }
                 };
 
-                // Create a thread pool to execute the work in parallel:
+                // Create a thread pool to perform the work in parallel:
                 const size_t count      = _grid.count();
                 const size_t numThreads = utils::clamp(std::thread::hardware_concurrency(), 1U, 6U);
 

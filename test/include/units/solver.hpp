@@ -64,7 +64,7 @@ namespace test {
 
                 const auto sw_start = std::chrono::high_resolution_clock::now();
 
-                /* EXECUTE SOLVE */
+                /* INVOKE SOLVE */
                 {
                     path = chdr::solvers::solver<solver_t, params_t>::solve(_params);
                 }

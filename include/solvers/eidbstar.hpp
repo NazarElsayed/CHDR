@@ -141,7 +141,7 @@ namespace chdr::solvers {
             return std::vector<coord_t>{};
         }
 
-        [[maybe_unused, nodiscard]] static auto execute(const params_t& _params) {
+        [[maybe_unused, nodiscard]] static auto invoke(const params_t& _params) {
 
             const auto capacity = solver_t::solver_utils::determine_capacity(_params);
 
