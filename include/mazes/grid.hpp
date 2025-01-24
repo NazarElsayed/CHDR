@@ -57,7 +57,7 @@ namespace chdr::mazes {
         constexpr grid(const coord_t& _size, std::vector<weight_t>&& _nodes) :
             m_size(_size),
             m_count(utils::product<size_t>(m_size)),
-            m_nodes(_nodes) {}
+            m_nodes(std::move(_nodes)) {}
 
         constexpr grid           (const grid&) = delete;
         constexpr grid& operator=(const grid&) = delete;

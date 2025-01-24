@@ -170,7 +170,7 @@ $(document).ready(function(){initNavTree('dc/d8a/grid_8hpp_source.html','../../'
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        <span class="keyword">constexpr</span> grid(<span class="keyword">const</span> coord_t&amp; _size, std::vector&lt;weight_t&gt;&amp;&amp; _nodes) :</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>            m_size(_size),</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>            m_count(utils::product&lt;size_t&gt;(m_size)),</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>            m_nodes(_nodes) {}</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>            m_nodes(std::move(_nodes)) {}</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="keyword">constexpr</span> grid           (<span class="keyword">const</span> grid&amp;) = <span class="keyword">delete</span>;</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <span class="keyword">constexpr</span> grid&amp; operator=(<span class="keyword">const</span> grid&amp;) = <span class="keyword">delete</span>;</div>
