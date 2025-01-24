@@ -124,35 +124,29 @@ struct chdr::solvers::managed_node&lt; index_t, derived &gt;</div><p>A hierarchi
 </dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="../../da/d98/structchdr_1_1solvers_1_1bnode.html" title="Base class for pathfinding nodes.">bnode</a> </dd>
 <dd>
-<a class="el" href="../../df/d64/structchdr_1_1solvers_1_1managed__node_a41bd77fede7821a6ea86cddfacbb5da6.html#a41bd77fede7821a6ea86cddfacbb5da6" title="Decrements the successor count of the parent node.">decr</a> </dd>
-<dd>
-<a class="el" href="../../df/d64/structchdr_1_1solvers_1_1managed__node_aef2ac6ddb7a4bd51e1217138505a6cfc.html#aef2ac6ddb7a4bd51e1217138505a6cfc" title="Increments the successor count of the parent node.">incr</a> </dd>
-<dd>
 <a class="el" href="../../df/d64/structchdr_1_1solvers_1_1managed__node_ab41bfb38b8d356173d7acea738bce82e.html#ab41bfb38b8d356173d7acea738bce82e" title="A pointer to the parent node in the hierarchical structure.">m_parent</a> </dd>
 <dd>
-m_successors </dd></dl>
+<a class="el" href="../../df/d64/structchdr_1_1solvers_1_1managed__node_a172f173b45dacde7490d252f7525476c.html#a172f173b45dacde7490d252f7525476c" title="Recursively releases dead nodes from the parent hierarchy.">expunge</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../da/deb/managed__node_8hpp_source.html#l00041">41</a> of file <a class="el" href="../../da/deb/managed__node_8hpp_source.html">managed_node.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../da/deb/managed__node_8hpp_source.html#l00040">40</a> of file <a class="el" href="../../da/deb/managed__node_8hpp_source.html">managed_node.hpp</a>.</p>
 </div><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
-Methods</h2></td></tr>
-<tr class="memitem:a41bd77fede7821a6ea86cddfacbb5da6" id="r_a41bd77fede7821a6ea86cddfacbb5da6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d64/structchdr_1_1solvers_1_1managed__node_a41bd77fede7821a6ea86cddfacbb5da6.html#a41bd77fede7821a6ea86cddfacbb5da6">decr</a> () const noexcept</td></tr>
-<tr class="memdesc:a41bd77fede7821a6ea86cddfacbb5da6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decrements the successor count of the parent node.  <br /></td></tr>
-<tr class="separator:a41bd77fede7821a6ea86cddfacbb5da6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a172f173b45dacde7490d252f7525476c" id="r_a172f173b45dacde7490d252f7525476c"><td class="memTemplParams" colspan="2">template&lt;typename pmr_t &gt; </td></tr>
-<tr class="memitem:a172f173b45dacde7490d252f7525476c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../df/d64/structchdr_1_1solvers_1_1managed__node_a172f173b45dacde7490d252f7525476c.html#a172f173b45dacde7490d252f7525476c">expunge</a> (pmr_t *_pmr) noexcept</td></tr>
-<tr class="memdesc:a172f173b45dacde7490d252f7525476c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recursively releases dead nodes from the parent hierarchy.  <br /></td></tr>
-<tr class="separator:a172f173b45dacde7490d252f7525476c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef2ac6ddb7a4bd51e1217138505a6cfc" id="r_aef2ac6ddb7a4bd51e1217138505a6cfc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d64/structchdr_1_1solvers_1_1managed__node_aef2ac6ddb7a4bd51e1217138505a6cfc.html#aef2ac6ddb7a4bd51e1217138505a6cfc">incr</a> () const noexcept</td></tr>
-<tr class="memdesc:aef2ac6ddb7a4bd51e1217138505a6cfc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Increments the successor count of the parent node.  <br /></td></tr>
-<tr class="separator:aef2ac6ddb7a4bd51e1217138505a6cfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr><td colspan="2"><div class="groupHeader">Constructors</div></td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader">Constructors</h2></td></tr>
 <tr class="memitem:aef9827bf89152bb2f4cd43c538e963bb" id="r_aef9827bf89152bb2f4cd43c538e963bb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d64/structchdr_1_1solvers_1_1managed__node_aef9827bf89152bb2f4cd43c538e963bb.html#aef9827bf89152bb2f4cd43c538e963bb">managed_node</a> () noexcept</td></tr>
 <tr class="memdesc:aef9827bf89152bb2f4cd43c538e963bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs an uninitialized node.  <br /></td></tr>
 <tr class="separator:aef9827bf89152bb2f4cd43c538e963bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66205330f118f6d2bb86303fe4cc721c" id="r_a66205330f118f6d2bb86303fe4cc721c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d64/structchdr_1_1solvers_1_1managed__node_a66205330f118f6d2bb86303fe4cc721c.html#a66205330f118f6d2bb86303fe4cc721c">managed_node</a> (index_t _index, <a class="el" href="../../df/d64/structchdr_1_1solvers_1_1managed__node.html">managed_node</a> *restrict const _parent=nullptr) noexcept</td></tr>
 <tr class="memdesc:a66205330f118f6d2bb86303fe4cc721c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a node with a specified index and an optional parent pointer.  <br /></td></tr>
 <tr class="separator:a66205330f118f6d2bb86303fe4cc721c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Methods</h2></td></tr>
+<tr class="memitem:acda8e1a76bed4a71e36efa61a9f3c59e" id="r_acda8e1a76bed4a71e36efa61a9f3c59e"><td class="memItemLeft" align="right" valign="top">count_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d64/structchdr_1_1solvers_1_1managed__node_acda8e1a76bed4a71e36efa61a9f3c59e.html#acda8e1a76bed4a71e36efa61a9f3c59e">count</a> () const noexcept</td></tr>
+<tr class="memdesc:acda8e1a76bed4a71e36efa61a9f3c59e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current successor count.  <br /></td></tr>
+<tr class="separator:acda8e1a76bed4a71e36efa61a9f3c59e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a172f173b45dacde7490d252f7525476c" id="r_a172f173b45dacde7490d252f7525476c"><td class="memTemplParams" colspan="2">template&lt;typename pmr_t &gt; </td></tr>
+<tr class="memitem:a172f173b45dacde7490d252f7525476c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../df/d64/structchdr_1_1solvers_1_1managed__node_a172f173b45dacde7490d252f7525476c.html#a172f173b45dacde7490d252f7525476c">expunge</a> (pmr_t *_pmr) noexcept</td></tr>
+<tr class="memdesc:a172f173b45dacde7490d252f7525476c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recursively releases dead nodes from the parent hierarchy.  <br /></td></tr>
+<tr class="separator:a172f173b45dacde7490d252f7525476c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Attributes</h2></td></tr>
@@ -168,14 +162,14 @@ Attributes</h2></td></tr>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../dd/dbf/structchdr_1_1solvers_1_1managed__node__inherit__graph.svg" width="455" height="278"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../dd/dbf/structchdr_1_1solvers_1_1managed__node__inherit__graph.svg" width="455" height="226"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-1-trigger" src="../../closed.png" alt="+"/> Collaboration diagram for managed_node&lt; index_t, derived &gt;:</div>
 <div id="dynsection-1-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-1-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../dc/ddc/structchdr_1_1solvers_1_1managed__node__coll__graph.svg" width="774" height="500"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../dc/ddc/structchdr_1_1solvers_1_1managed__node__coll__graph.svg" width="774" height="396"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li><a class="el" href="../../da/deb/managed__node_8hpp_source.html">managed_node.hpp</a></li>

@@ -7,5 +7,6 @@ var searchData=
   ['computational_4',['Computational',['../d5/da1/md_docs_2manual_2roadmap.html#computational',1,'']]],
   ['contains_5',['contains',['../d6/db9/classchdr_1_1existence__set_a3369fb4038184c5446a52c621c7f5d34.html#a3369fb4038184c5446a52c621c7f5d34',1,'chdr::existence_set']]],
   ['contents_6',['Table of Contents',['../index.html#table-of-contents',1,'']]],
-  ['contributing_7',['Contributing',['../index.html#contributing',1,'']]]
+  ['contributing_7',['Contributing',['../index.html#contributing',1,'']]],
+  ['count_8',['count',['../df/d64/structchdr_1_1solvers_1_1managed__node_acda8e1a76bed4a71e36efa61a9f3c59e.html#acda8e1a76bed4a71e36efa61a9f3c59e',1,'chdr::solvers::managed_node']]]
 ];

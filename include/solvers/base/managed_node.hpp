@@ -20,6 +20,7 @@
 namespace chdr::solvers {
 
     /**
+     * @nosubgrouping
      * @brief A hierarchical node in a pathfinding context, with a clean-up mechanism.
      *
      * @details This structure includes a pointer to its parent, allowing it to handle
@@ -42,6 +43,26 @@ namespace chdr::solvers {
 
         using node_t = std::conditional_t<std::is_void_v<derived>, managed_node<index_t>, derived>;
         using count_t = unsigned char;
+
+    public:
+
+        /**
+         * @brief A pointer to the parent node in the hierarchical structure.
+         *
+         * This member allows traversal of the hierarchy by referencing the immediate
+         * parent of the current node. Use of `restrict` indicates that this pointer
+         * is not aliased, improving optimisation in certain compilers.
+         *
+         * @warning The lifetime of the parent node is not managed by this member. Users must
+         *          ensure that the parent node remains valid for the duration of any access
+         *          via this pointer.
+         *
+         * @remark If `m_parent` is `nullptr`, it indicates that the node is a root node
+         *         and does not have a parent.
+         */
+        managed_node* RESTRICT m_parent;
+
+    private:
 
         /**
          * @brief Tracks the number of successor nodes.
@@ -130,22 +151,6 @@ namespace chdr::solvers {
     public:
 
         /**
-         * @brief A pointer to the parent node in the hierarchical structure.
-         *
-         * This member allows traversal of the hierarchy by referencing the immediate
-         * parent of the current node. Use of `restrict` indicates that this pointer
-         * is not aliased, improving optimisation in certain compilers.
-         *
-         * @warning The lifetime of the parent node is not managed by this member. Users must
-         *          ensure that the parent node remains valid for the duration of any access
-         *          via this pointer.
-         *
-         * @remark If `m_parent` is `nullptr`, it indicates that the node is a root node
-         *         and does not have a parent.
-         */
-        managed_node* RESTRICT m_parent;
-
-        /**
          * @name Constructors
          * @{
          */
@@ -219,8 +224,6 @@ namespace chdr::solvers {
          * @param[in, out] _pmr A pointer to the polymorphic memory resource used for deallocating
          *                      nodes. It must manage the memory appropriately and be properly initialised.
          *
-         * @pre `_pmr->deallocate` - Must be `noexcept`.
-         *
          * @warning Care should be taken to ensure that the hierarchy structure remains valid and
          *          consistency is maintained, as improper use can result in undefined behaviour due
          *          to invalid memory access or double deallocations.
@@ -231,19 +234,21 @@ namespace chdr::solvers {
         template <typename pmr_t>
         HOT void expunge(pmr_t* _pmr) noexcept {
 
-            static_assert(noexcept(_pmr->deallocate(std::declval<void*>(), sizeof(managed_node), alignof(managed_node))),
-                          "Deallocate must be noexcept");
-
             while (m_parent != nullptr) {
                 decr();
 
                 if (m_parent->m_successors != 0U) {
                     break;
                 }
-                
+
                 auto* const RESTRICT d = m_parent;
-                m_parent = m_parent->m_parent;
-                _pmr->deallocate(d, sizeof(managed_node), alignof(managed_node));
+                try {
+                    m_parent = m_parent->m_parent;
+                    _pmr->deallocate(d, sizeof(managed_node), alignof(managed_node));
+                }
+                catch (...) {
+                    m_parent = d;
+                }
             }
         }
 

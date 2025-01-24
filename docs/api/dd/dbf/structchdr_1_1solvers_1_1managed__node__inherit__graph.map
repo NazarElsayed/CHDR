@@ -1,5 +1,5 @@
 <map id="managed_node&lt; index_t, derived &gt;" name="managed_node&lt; index_t, derived &gt;">
-<area shape="rect" id="Node000001" title="A hierarchical node in a pathfinding context, with a clean&#45;up mechanism." alt="" coords="5,111,449,272"/>
+<area shape="rect" id="Node000001" title="A hierarchical node in a pathfinding context, with a clean&#45;up mechanism." alt="" coords="5,111,449,220"/>
 <area shape="rect" id="Node000002" href="$da/d98/structchdr_1_1solvers_1_1bnode.html" title="Base class for pathfinding nodes." alt="" coords="173,5,281,63"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="230,76,230,110,225,110,225,76"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="230,77,230,110,225,110,225,77"/>
 </map>

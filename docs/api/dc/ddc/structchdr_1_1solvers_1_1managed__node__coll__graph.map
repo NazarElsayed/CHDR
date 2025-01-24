@@ -1,9 +1,9 @@
 <map id="managed_node&lt; index_t, derived &gt;" name="managed_node&lt; index_t, derived &gt;">
-<area shape="rect" id="Node000001" title="A hierarchical node in a pathfinding context, with a clean&#45;up mechanism." alt="" coords="5,333,449,495"/>
+<area shape="rect" id="Node000001" title="A hierarchical node in a pathfinding context, with a clean&#45;up mechanism." alt="" coords="5,281,449,391"/>
 <area shape="rect" id="Node000002" href="$da/d98/structchdr_1_1solvers_1_1bnode.html" title="Base class for pathfinding nodes." alt="" coords="168,5,276,63"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="225,77,229,333,224,333,220,77"/>
-<area shape="rect" id="Node000003" href="$df/d64/structchdr_1_1solvers_1_1managed__node.html" title="A hierarchical node in a pathfinding context, with a clean&#45;up mechanism." alt="" coords="244,112,688,273"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="278,68,343,110,340,114,275,73"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="381,276,328,324,324,320,377,272"/>
-<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="689,176,707,182,715,193,706,204,702,200,709,193,704,187,687,181"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="225,76,229,281,224,281,220,77"/>
+<area shape="rect" id="Node000003" href="$df/d64/structchdr_1_1solvers_1_1managed__node.html" title="A hierarchical node in a pathfinding context, with a clean&#45;up mechanism." alt="" coords="244,112,688,221"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="287,67,367,109,364,114,284,72"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="391,224,319,274,316,269,388,219"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="689,154,707,158,715,167,706,175,702,171,709,167,704,163,687,159"/>
 </map>

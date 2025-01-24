@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['managed_5fnode_0',['managed_node',['../df/d64/structchdr_1_1solvers_1_1managed__node_aef9827bf89152bb2f4cd43c538e963bb.html#aef9827bf89152bb2f4cd43c538e963bb',1,'chdr::solvers::managed_node::managed_node() noexcept'],['../df/d64/structchdr_1_1solvers_1_1managed__node_a66205330f118f6d2bb86303fe4cc721c.html#a66205330f118f6d2bb86303fe4cc721c',1,'chdr::solvers::managed_node::managed_node(index_t _index, managed_node *restrict const _parent=nullptr) noexcept']]]
+  ['push_0',['push',['../d6/db9/classchdr_1_1existence__set_a4846fe696d158cb562d6c4fa7778011a.html#a4846fe696d158cb562d6c4fa7778011a',1,'chdr::existence_set::push(size_t _hash)'],['../d6/db9/classchdr_1_1existence__set_ae89cffd80eaa580ee622de692fb9e23b.html#ae89cffd80eaa580ee622de692fb9e23b',1,'chdr::existence_set::push(const T &amp;_item)']]]
 ];

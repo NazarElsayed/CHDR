@@ -19,31 +19,27 @@
 
 namespace chdr {
 
-    /** @brief One bit represents each item. */
-    struct low_memory_usage final {};
-
-    /** @brief One byte represents each item. */
-    struct high_performance final {};
-
     /**
      * @nosubgrouping
      * @class existence_set
      * @brief Represents a container for tracking the existence of elements.
      *
-     * @details The `existence_set` is a specialised data structure designed to efficiently track
-     *          the existence of elements without storing their original values. \n\n
-     *          It has constant lookup, insertion, and removal times, storing data in a dense,
-     *          contiguous memory layout that improves the cache locality of stored elements. \n\n
+     * @details A specialised data structure designed to efficiently track the existence of
+     *          elements without ownership. \n\n
+     *          It has constant lookup, insertion, and removal times -leveraging a dense,
+     *          contiguous memory layout for addressing elements that compresses their representation
+     *          within memory, thereby improving cache locality and reducing the space required to
+     *          store elements. \n\n
      *          Due to its dense structure, the existence set experiences an increased worst-case
      *          memory complexity. However, as it is non-owning, it often uses less memory than its
      *          sparse counterparts when in monotonic situations. \n\n
-     *          Memory efficiency and performance are customisable through specifying the number
-     *          of bits used with the provided template parameter.
+     *          Memory efficiency and performance are customisable through specifying the memory
+     *          layout using the provided template parameter.
      *
      * @code
      *
      * // Construct the set:
-     * chdr::existence_set<high_performance> set;
+     * chdr::existence_set set;
      *
      * // Enable elements with hashes 1, 2, and 5.
      * set.push(1);
@@ -62,35 +58,22 @@ namespace chdr {
      * set.erase(2);
      * @endcode
      *
-     * @tparam layout_t Memory layout strategy for the set:
-     *                  - `low_memory_usage`: Minimises memory usage (One bit per item).
-     *                  - `high_performance`: Maximises performance with increased memory usage (One byte per item).
+    * @tparam boolean_t Specifies the width of elements within the set:
+     *                  - `bool`: Minimises memory usage (One bit per item).
+     *                  - `char`: Higher performance with increased memory usage (One byte per item).
+     *                  - ... : Other types may be specified, however, they must be integral and convertible to bool.
      *
      * @note This class uses polymorphic memory resources (`std::pmr::memory_resource`)
      *       to provide fine-grained control over memory allocation.
      *
      * @remarks existence_set follows an STL-like design.
-     *
-     * @see low_memory_usage
-     * @see high_performance
      */
-    template <typename layout_t = high_performance>
+    template <typename boolean_t = char>
     class existence_set {
 
         // Validate the template parameter.
-        static_assert(
-            std::is_same_v<layout_t, low_memory_usage> ||
-            std::is_same_v<layout_t, high_performance>,
-            "layout_t must be one of the following: low_memory_usage, high_performance"
-        );
-
-        /**
-         * @typedef boolean_t
-         * @brief Boolean type based on the specified layout_t.
-         * @details If the specified layout_t is `lowest_memory_usage`, the corresponding boolean type is `bool`.
-         *          Otherwise, for `high_performance`, the boolean type is `char`.
-         */
-        using boolean_t = std::conditional_t<std::is_same_v<layout_t, low_memory_usage>, bool, char>;
+        static_assert(std::is_integral_v<boolean_t>, "boolean_t must be an integral type.");
+        static_assert(std::is_convertible_v<boolean_t, bool>, "boolean_t must be convertible to bool.");
 
     private:
         /**
@@ -387,10 +370,10 @@ namespace chdr {
          */
         [[maybe_unused, nodiscard]] constexpr auto capacity() const noexcept { return c.capacity(); }
 
-        using iterator_t               = typename std::vector<layout_t>::              iterator;
-        using const_iterator_t         = typename std::vector<layout_t>::        const_iterator;
-        using reverse_iterator_t       = typename std::vector<layout_t>::      reverse_iterator;
-        using const_reverse_iterator_t = typename std::vector<layout_t>::const_reverse_iterator;
+        using iterator_t               = typename std::vector<boolean_t>::              iterator;
+        using const_iterator_t         = typename std::vector<boolean_t>::        const_iterator;
+        using reverse_iterator_t       = typename std::vector<boolean_t>::      reverse_iterator;
+        using const_reverse_iterator_t = typename std::vector<boolean_t>::const_reverse_iterator;
 
         [[maybe_unused, nodiscard]] constexpr       iterator_t  begin()       noexcept { return c.begin();  }
         [[maybe_unused, nodiscard]] constexpr const_iterator_t  begin() const noexcept { return c.begin();  }
