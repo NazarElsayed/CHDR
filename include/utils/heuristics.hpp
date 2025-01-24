@@ -59,7 +59,7 @@ namespace chdr {
 	 *			 - **Characteristics**: Measures angle-based similarity, normalized by magnitude.
 	 *			 - **Use-case**: Ideal for problems dealing with directions or high-dimensional data similarity.
 	 *
-	 * @remarks Usage of this class is intended to be thread-safe as all methods are static and do not rely on mutable state.
+	 * @remarks Usage of this class is intended to be thread-safe as all methods are static and do not rely on any mutable state.
 	 */
 	struct heuristics final {
 
