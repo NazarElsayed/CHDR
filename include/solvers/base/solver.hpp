@@ -33,7 +33,7 @@ namespace chdr::solvers {
      *          Key features include:
      *          - Integration with customisable parameter sets defined by `params_t`.
      *          - Specialized utility traits to enforce type and method requirements during compilation.
-     *          - Support for user-defined solver implementations via the `Derived` template parameter.
+     *          - Support for user-defined solver implementations via the `solver_t` template parameter.
      *
      * @code
      *
@@ -75,13 +75,13 @@ namespace chdr::solvers {
      * );
      * @endcode
      *
-     * @tparam Derived The solver algorithm to be used, which must adhere to the interface defined by the `solver` class.
+     * @tparam solver_t The solver algorithm to be used, which must adhere to the interface defined by the `solver` class.
      * @tparam params_t A parameter type that defines the configuration specifics for the solver, including graph, spatial, and other constraints.
      */
-    template <template <typename params_t> typename Derived, typename params_t>
+    template <template <typename params_t> typename solver_t, typename params_t>
     class solver final {
 
-        friend class Derived<params_t>;
+        friend class solver_t<params_t>;
 
     private:
 
@@ -601,15 +601,13 @@ namespace chdr::solvers {
 #endif // __cplusplus >= 202003L
         auto operator()(const params_t& _params) {
 
-            using solver_t = Derived<params_t>;
-
             const auto s = static_cast<typename params_t::index_type>(utils::to_1d(_params.start, _params.size));
             const auto e = static_cast<typename params_t::index_type>(utils::to_1d(_params.end,   _params.size));
 
             if (_params.maze.contains(s) && _params.maze.at(s).is_active() &&
                 _params.maze.contains(e) && _params.maze.at(e).is_active()
             ) {
-                auto result = s != e ? solver_t::invoke(_params) : std::vector<typename params_t::coord_type> { _params.end };
+                auto result = s != e ? solver_t<params_t>::invoke(_params) : std::vector<typename params_t::coord_type> { _params.end };
 
                 if constexpr (solver_utils::template has_method_reset_v<decltype(*_params.monotonic_pmr)>) {
                     if (_params.monotonic_pmr != nullptr) { _params.monotonic_pmr->reset(); }

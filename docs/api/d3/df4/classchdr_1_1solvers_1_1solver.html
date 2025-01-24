@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CHDR: solver&lt; Derived, params_t &gt;</title>
+<title>CHDR: solver&lt; solver_t, params_t &gt;</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -106,17 +106,17 @@ $(document).ready(function(){initNavTree('d3/df4/classchdr_1_1solvers_1_1solver.
   <div class="summary">
 <a href="#pub-static-methods">Static Methods</a> &#124;
 <a href="../../dc/db5/classchdr_1_1solvers_1_1solver-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">solver&lt; Derived, params_t &gt;<span class="mlabels"><span class="mlabel">final</span></span></div></div>
+  <div class="headertitle"><div class="title">solver&lt; solver_t, params_t &gt;<span class="mlabels"><span class="mlabel">final</span></span></div></div>
 </div><!--header-->
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;template&lt; typename params_t &gt; typename Derived, typename params_t&gt;<br />
-class chdr::solvers::solver&lt; Derived, params_t &gt;</div><p>A static class serving as the core entry point for the CHDR library, providing a unified interface for managing and invoking solvers. </p>
-<p>The <code>solver</code> class acts as the central interface to instantiate, configure, and execute various solvers. It consolidates common utilities and functionalities required to create and manage search or optimisation instances. This class is designed for flexibility and extensibility, supporting a wide range of solvers through the use of template specialisations.</p>
+<div class="textblock"><div class="compoundTemplParams">template&lt;template&lt; typename params_t &gt; typename solver_t, typename params_t&gt;<br />
+class chdr::solvers::solver&lt; solver_t, params_t &gt;</div><p>A static class serving as the core entry point for the CHDR library, providing a unified interface for managing and invoking solvers. </p>
+<p>The <code>solver</code> class acts as the central interface to instantiate, configure, and invoke various solvers. It consolidates common utilities and functionalities required to create and manage search or optimisation instances. This class is designed for flexibility and extensibility, supporting a wide range of solvers through the use of template specialisations.</p>
 <p>Key features include:</p><ul>
 <li>Integration with customisable parameter sets defined by <code>params_t</code>.</li>
 <li>Specialized utility traits to enforce type and method requirements during compilation.</li>
-<li>Support for user-defined solver implementations via the <code>Derived</code> template parameter.</li>
+<li>Support for user-defined solver implementations via the <code>solver_t</code> template parameter.</li>
 </ul>
 <div class="fragment"><div class="line"><span class="comment">// Example usage. Replace [...] with your implementations.</span></div>
 <div class="line"><span class="keyword">struct </span>params {</div>
@@ -157,7 +157,7 @@ class chdr::solvers::solver&lt; Derived, params_t &gt;</div><p>A static class se
 <div class="ttc" id="aclasschdr_1_1solvers_1_1solver_a096fe8cb528641fed6813df1f40bd347_html_a096fe8cb528641fed6813df1f40bd347"><div class="ttname"><a href="../../d3/df4/classchdr_1_1solvers_1_1solver_a096fe8cb528641fed6813df1f40bd347.html#a096fe8cb528641fed6813df1f40bd347">chdr::solvers::solver::solve</a></div><div class="ttdeci">static auto solve(Args &amp;&amp;... _args)</div><div class="ttdoc">Executes the solver with the provided parameters. Parameters are constructed using perfect forwarding...</div><div class="ttdef"><b>Definition</b> <a href="../../d2/d1c/solver_8hpp_source.html#l00550">solver.hpp:550</a></div></div>
 </div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Derived</td><td>The solver algorithm to be used, which must adhere to the interface defined by the <code>solver</code> class. </td></tr>
+    <tr><td class="paramname">solver_t</td><td>The solver algorithm to be used, which must adhere to the interface defined by the <code>solver</code> class. </td></tr>
     <tr><td class="paramname">params_t</td><td>A parameter type that defines the configuration specifics for the solver, including graph, spatial, and other constraints. </td></tr>
   </table>
   </dd>
@@ -166,9 +166,9 @@ class chdr::solvers::solver&lt; Derived, params_t &gt;</div><p>A static class se
 <p class="definition">Definition at line <a class="el" href="../../d2/d1c/solver_8hpp_source.html#l00082">82</a> of file <a class="el" href="../../d2/d1c/solver_8hpp_source.html">solver.hpp</a>.</p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Constructors</h2></td></tr>
-<tr class="memitem:afd9ac73f57f4eae43f130211d9b95d86" id="r_afd9ac73f57f4eae43f130211d9b95d86"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/df4/classchdr_1_1solvers_1_1solver_afd9ac73f57f4eae43f130211d9b95d86.html#afd9ac73f57f4eae43f130211d9b95d86">solver</a> () noexcept=default</td></tr>
-<tr class="memdesc:afd9ac73f57f4eae43f130211d9b95d86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for the <code>solver</code> class.  <br /></td></tr>
-<tr class="separator:afd9ac73f57f4eae43f130211d9b95d86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a458fd524cfda3f01c4c8a5d4420303bb" id="r_a458fd524cfda3f01c4c8a5d4420303bb"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/df4/classchdr_1_1solvers_1_1solver_a458fd524cfda3f01c4c8a5d4420303bb.html#a458fd524cfda3f01c4c8a5d4420303bb">solver</a> () noexcept=default</td></tr>
+<tr class="memdesc:a458fd524cfda3f01c4c8a5d4420303bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for the <code>solver</code> class.  <br /></td></tr>
+<tr class="separator:a458fd524cfda3f01c4c8a5d4420303bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Methods</h2></td></tr>
@@ -187,13 +187,6 @@ Static Methods</h2></td></tr>
 <tr class="memdesc:aa62632bf43d0cf6db6a9f6de5e76b0ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes the solver with the provided parameters.  <br /></td></tr>
 <tr class="separator:aa62632bf43d0cf6db6a9f6de5e76b0ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Collaboration diagram for solver&lt; Derived, params_t &gt;:</div>
-<div id="dynsection-0-summary" class="dynsummary" style="display:block;">
-</div>
-<div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../dc/d94/classchdr_1_1solvers_1_1solver__coll__graph.svg" width="267" height="138"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="../../d2/d1c/solver_8hpp_source.html">solver.hpp</a></li>
 </ul>

@@ -10,6 +10,6 @@ var hierarchy =
     [ "has_method_reset< T >", "de/dc4/structchdr_1_1solvers_1_1solver_1_1solver__utils_1_1has__method__reset.html", null ],
     [ "id_node< index_t >", "db/d4a/classchdr_1_1mazes_1_1id__node.html", null ],
     [ "is_graph< T >", "de/d34/structchdr_1_1solvers_1_1solver_1_1solver__utils_1_1is__graph.html", null ],
-    [ "solver< Derived, params_t >", "d3/df4/classchdr_1_1solvers_1_1solver.html", null ],
+    [ "solver< solver_t, params_t >", "d3/df4/classchdr_1_1solvers_1_1solver.html", null ],
     [ "weighted_node< weight_t >", "db/dc4/structchdr_1_1mazes_1_1weighted__node.html", null ]
 ];

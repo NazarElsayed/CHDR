@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CHDR: solver&lt; Derived, params_t &gt;::solver_utils::is_graph&lt; T &gt;</title>
+<title>CHDR: solver&lt; solver_t, params_t &gt;::solver_utils::is_graph&lt; T &gt;</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -103,13 +103,13 @@ $(document).ready(function(){initNavTree('de/d34/structchdr_1_1solvers_1_1solver
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">solver&lt; Derived, params_t &gt;::solver_utils::is_graph&lt; T &gt;</div></div>
+  <div class="headertitle"><div class="title">solver&lt; solver_t, params_t &gt;::solver_utils::is_graph&lt; T &gt;</div></div>
 </div><!--header-->
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;template&lt; typename params_t &gt; typename Derived, typename params_t&gt;<br />
+<div class="textblock"><div class="compoundTemplParams">template&lt;template&lt; typename params_t &gt; typename solver_t, typename params_t&gt;<br />
 template&lt;typename T&gt;<br />
-struct chdr::solvers::solver&lt; Derived, params_t &gt;::solver_utils::is_graph&lt; T &gt;</div><p>A utility trait to check if a type is a graph type. </p>
+struct chdr::solvers::solver&lt; solver_t, params_t &gt;::solver_utils::is_graph&lt; T &gt;</div><p>A utility trait to check if a type is a graph type. </p>
 <p>This struct determines if a given type <code>T</code>, when decayed, is equivalent to the graph type <code>mazes::graph</code> with index and scalar types supplied by parameters from <code>params_t</code>. This comparison utilises <code>std::is_same</code> and <code>std::decay_t</code> for precise type matching.</p>
 <dl class="section note"><dt>Note</dt><dd>This trait is primarily used within the <code>solver</code> class to ensure compatibility with graph structures in <code>mazes</code>, specifically verifying if the type satisfies graph type requirements for operations.</dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
@@ -122,13 +122,6 @@ struct chdr::solvers::solver&lt; Derived, params_t &gt;::solver_utils::is_graph&
 <p class="definition">Definition at line <a class="el" href="../../d2/d1c/solver_8hpp_source.html#l00112">112</a> of file <a class="el" href="../../d2/d1c/solver_8hpp_source.html">solver.hpp</a>.</p>
 </div>
 <p>Inherits is_same&lt; std::decay_t&lt; T &gt;, mazes::graph&lt; params_t::index_type, params_t::scalar_type &gt; &gt;.</p>
-<div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Collaboration diagram for solver&lt; Derived, params_t &gt;::solver_utils::is_graph&lt; T &gt;:</div>
-<div id="dynsection-0-summary" class="dynsummary" style="display:block;">
-</div>
-<div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../d4/ddf/structchdr_1_1solvers_1_1solver_1_1solver__utils_1_1is__graph__coll__graph.svg" width="288" height="68"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li><a class="el" href="../../d2/d1c/solver_8hpp_source.html">solver.hpp</a></li>
 </ul>

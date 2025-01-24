@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CHDR: solver&lt; Derived, params_t &gt;::solver_utils::has_method_reset&lt; T &gt;</title>
+<title>CHDR: solver&lt; solver_t, params_t &gt;::solver_utils::has_method_reset&lt; T &gt;</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -106,13 +106,13 @@ $(document).ready(function(){initNavTree('de/dc4/structchdr_1_1solvers_1_1solver
   <div class="summary">
 <a href="#pub-static-attribs">Static Attributes</a> &#124;
 <a href="../../d1/d2a/structchdr_1_1solvers_1_1solver_1_1solver__utils_1_1has__method__reset-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">solver&lt; Derived, params_t &gt;::solver_utils::has_method_reset&lt; T &gt;<span class="mlabels"><span class="mlabel">final</span></span></div></div>
+  <div class="headertitle"><div class="title">solver&lt; solver_t, params_t &gt;::solver_utils::has_method_reset&lt; T &gt;<span class="mlabels"><span class="mlabel">final</span></span></div></div>
 </div><!--header-->
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;template&lt; typename params_t &gt; typename Derived, typename params_t&gt;<br />
+<div class="textblock"><div class="compoundTemplParams">template&lt;template&lt; typename params_t &gt; typename solver_t, typename params_t&gt;<br />
 template&lt;typename T&gt;<br />
-struct chdr::solvers::solver&lt; Derived, params_t &gt;::solver_utils::has_method_reset&lt; T &gt;</div><p>A utility trait for determining whether a type has a callable <code>reset</code> method. </p>
+struct chdr::solvers::solver&lt; solver_t, params_t &gt;::solver_utils::has_method_reset&lt; T &gt;</div><p>A utility trait for determining whether a type has a callable <code>reset</code> method. </p>
 <p>A utility trait for determining whether a type has a callable <code>allocate</code> method.</p>
 <p>This struct uses SFINAE (Substitution Failure Is Not An Error) to identify if a given type contains a publicly accessible member function named <code>reset</code>. The value of the trait will be <code>true</code> if the <code>reset</code> method exists, and <code>false</code> otherwise.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
@@ -133,17 +133,10 @@ struct chdr::solvers::solver&lt; Derived, params_t &gt;::solver_utils::has_metho
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Attributes</h2></td></tr>
-<tr class="memitem:a0376be5904d0dd864b7d97c9ce1295ab" id="r_a0376be5904d0dd864b7d97c9ce1295ab"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/dc4/structchdr_1_1solvers_1_1solver_1_1solver__utils_1_1has__method__reset_a0376be5904d0dd864b7d97c9ce1295ab.html#a0376be5904d0dd864b7d97c9ce1295ab">value</a> = decltype(has_method&lt;std::remove_reference_t&lt;T&gt;&gt;(0))::value</td></tr>
-<tr class="memdesc:a0376be5904d0dd864b7d97c9ce1295ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines the value of the <code>resettable</code> trait for a given type.  <br /></td></tr>
-<tr class="separator:a0376be5904d0dd864b7d97c9ce1295ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b4ee4ae6cba6bb75200ba7af1910873" id="r_a5b4ee4ae6cba6bb75200ba7af1910873"><td class="memItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/dc4/structchdr_1_1solvers_1_1solver_1_1solver__utils_1_1has__method__reset_a5b4ee4ae6cba6bb75200ba7af1910873.html#a5b4ee4ae6cba6bb75200ba7af1910873">value</a> = decltype(has_method&lt;std::remove_reference_t&lt;T&gt;&gt;(0))::value</td></tr>
+<tr class="memdesc:a5b4ee4ae6cba6bb75200ba7af1910873"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines the value of the <code>resettable</code> trait for a given type.  <br /></td></tr>
+<tr class="separator:a5b4ee4ae6cba6bb75200ba7af1910873"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Collaboration diagram for solver&lt; Derived, params_t &gt;::solver_utils::has_method_reset&lt; T &gt;:</div>
-<div id="dynsection-0-summary" class="dynsummary" style="display:block;">
-</div>
-<div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../d1/d7e/structchdr_1_1solvers_1_1solver_1_1solver__utils_1_1has__method__reset__coll__graph.svg" width="336" height="68"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li><a class="el" href="../../d2/d1c/solver_8hpp_source.html">solver.hpp</a></li>
 </ul>
