@@ -24,8 +24,8 @@ namespace chdr::solvers {
     /**
      * @nosubgrouping
      * @class solver
-     * @brief A static class serving as the core entry point for the CHDR library, providing a unified interface for managing and invoking solvers.
-     * @details The `solver` class acts as the central interface to instantiate, configure, and invoke various solvers.
+     * @brief A static class serving as the core entry point for the CHDR library.
+     * @details The `solver` class provides a unified interface for instantiating, configuring, and invoking various solvers.
      *          It consolidates common utilities and functionalities required to create and manage search or optimisation instances.
      *          This class is designed for flexibility and extensibility, supporting a wide range of solvers through the use of
      *          template specialisations.
@@ -40,12 +40,12 @@ namespace chdr::solvers {
      * // Example usage. Replace [...] with your implementations.
      * struct params {
      *
-     *     using  weight_type [[maybe_unused]] = ...;
-     *     using  scalar_type [[maybe_unused]] = ...;
-     *     using   index_type [[maybe_unused]] = ...;
-     *     using   coord_type [[maybe_unused]] = ...;
+     *     using  weight_type [[maybe_unused]] = ...; // char
+     *     using  scalar_type [[maybe_unused]] = ...; // uint32_t
+     *     using   index_type [[maybe_unused]] = ...; // uint32_t
+     *     using   coord_type [[maybe_unused]] = ...; // chdr::coord<uint32_t, 2>
      *
-     *     using lazy_sorting [[maybe_unused]] = ...;
+     *     using lazy_sorting [[maybe_unused]] = ...; // std::false_type / std::true_type;
      *
      *     const        ... maze;
      *     const coord_type start;
@@ -86,6 +86,11 @@ namespace chdr::solvers {
     private:
 
         struct solver_utils final {
+
+            friend solver<solver_t, params_t>;
+            friend class solver_t<params_t>;
+
+        private:
 
              solver_utils()                                = delete;
              solver_utils           (const solver_utils& ) = delete;

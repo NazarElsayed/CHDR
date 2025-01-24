@@ -1,9 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$da/d98/structchdr_1_1solvers_1_1bnode.html" title="Base class for pathfinding nodes." alt="" coords="5,77,128,102"/>
-<area shape="rect" id="Node000001" href="$df/d64/structchdr_1_1solvers_1_1managed__node.html" title=" " alt="" coords="195,5,348,45"/>
-<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="120,70,206,43,207,48,122,75"/>
-<area shape="rect" id="Node000002" href="$df/d64/structchdr_1_1solvers_1_1managed__node.html" title="A hierarchical node in a pathfinding context, with a clean&#45;up mechanism." alt="" coords="195,69,348,109"/>
-<area shape="poly" id="edge2_Node000000_Node000002" title=" " alt="" coords="142,87,194,87,194,92,142,92"/>
-<area shape="rect" id="Node000003" href="$d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html" title="A hierarchical node in a pathfinding context, requires manual memory management." alt="" coords="176,134,367,159"/>
-<area shape="poly" id="edge3_Node000000_Node000003" title=" " alt="" coords="124,103,177,119,222,131,221,136,175,124,122,109"/>
+<area shape="rect" id="Node000000" href="$da/d98/structchdr_1_1solvers_1_1bnode.html" title="Base class for pathfinding nodes." alt="" coords="5,52,109,75"/>
+<area shape="rect" id="Node000001" href="$df/d64/structchdr_1_1solvers_1_1managed__node.html" title=" " alt="" coords="163,5,342,28"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="118,46,157,37,203,25,205,31,158,42,119,51"/>
+<area shape="rect" id="Node000002" href="$df/d64/structchdr_1_1solvers_1_1managed__node.html" title="A hierarchical node in a pathfinding context, with a clean&#45;up mechanism." alt="" coords="157,52,348,75"/>
+<area shape="poly" id="edge2_Node000000_Node000002" title=" " alt="" coords="123,61,157,61,157,66,123,66"/>
+<area shape="rect" id="Node000003" href="$d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html" title="A hierarchical node in a pathfinding context, requires manual memory management." alt="" coords="172,99,333,121"/>
+<area shape="poly" id="edge3_Node000000_Node000003" title=" " alt="" coords="120,75,205,96,204,101,118,81"/>
 </map>

@@ -18,7 +18,50 @@
 
 namespace chdr {
 
-	struct heuristics {
+	/**
+	 * @class heuristics
+	 * @brief A utility class providing various distance metric calculations.
+	 *
+	 * @details This class provides static methods for computing different distances such as Euclidean, Manhattan,
+	 *		  Chebyshev, Canberra, and Cosine distances.
+	 *
+	 *		  The heuristics class in this file aims to provide a comprehensive toolbox for calculating
+	 *		  distances between n-dimensional points (e.g., nodes in a graph or grid). Below are the
+	 *		  implemented distance metrics, each having its specific characteristics, use-cases, and calculations:
+	 *
+	 *		  1. **Euclidean Distance**:
+	 *			 - **Formula**: `sqrt(sum((b[i] - a[i])^2 for i in 1..n))`
+	 *			 - **Characteristics**: Commonly used to measure straight-line distance in continuous space.
+	 *			 - **Use-case**: Ideal for scenarios where the relationship between points is considered in Euclidean space.
+	 *
+	 *		  2. **Squared Euclidean Distance**:
+	 *			 - **Formula**: `sum((b[i] - a[i])^2 for i in 1..n)`
+	 *			 - **Characteristics**: Avoids costly square root computation; often used as a quick comparison metric.
+	 *			 - **Use-case**: Suitable for optimization-related geometrical problems.
+	 *
+	 *		  3. **Manhattan Distance**:
+	 *			 - **Formula**: `sum(abs(b[i] - a[i]) for i in 1..n)`
+	 *			 - **Characteristics**: Measures distance traversed along grid axes, commonly used for block-based paths.
+	 *			 - **Use-case**: Ideal for grid-search algorithms or scenarios with orthogonal movements.
+	 *
+	 *		  4. **Chebyshev Distance**:
+	 *			 - **Formula**: `max(abs(b[i] - a[i]) for i in 1..n)`
+	 *			 - **Characteristics**: Measures maximum displacement across all dimensions.
+	 *			 - **Use-case**: Common in discrete spaces to represent diagonal or king-like moves in chess-like systems.
+	 *
+	 *		  5. **Canberra Distance**:
+	 *			 - **Formula**: `sum(abs(b[i] - a[i]) / (abs(a[i]) + abs(b[i])) for i in 1..n if denominator != 0)`
+	 *			 - **Characteristics**: Sensitive to small differences when values are close to zero.
+	 *			 - **Use-case**: Useful for calculating distances where variation between values is significant.
+	 *
+	 *		  6. **Cosine Distance**:
+	 *			 - **Formula**: `1 - (dot(a, b) / (||a|| * ||b||))`
+	 *			 - **Characteristics**: Measures angle-based similarity, normalized by magnitude.
+	 *			 - **Use-case**: Ideal for problems dealing with directions or high-dimensional data similarity.
+	 *
+	 * @remarks Usage of this class is intended to be thread-safe as all methods are static and do not rely on mutable state.
+	 */
+	struct heuristics final {
 
 		 heuristics()                              = delete;
 		 heuristics           (const heuristics& ) = delete;
@@ -26,7 +69,9 @@ namespace chdr {
 		 heuristics& operator=(const heuristics& ) = delete;
 		 heuristics& operator=(const heuristics&&) = delete;
 		~heuristics()                              = delete;
-		
+
+	public:
+
         /**
          * @brief Computes the Euclidean distance between two nodes.
          *
@@ -39,7 +84,7 @@ namespace chdr {
             return static_cast<scalar_t>(sqrt(sqr_euclidean_distance(_a, _b)));
         }
 
-        /*
+        /**
          * @brief Computes the squared Euclidean distance between two nodes.
          *
          * @param _a The first node.
@@ -63,12 +108,12 @@ namespace chdr {
         }
 
         /**
-          * @brief Calculate the Manhattan distance between two nodes.
-          *
-          * @param _a The first node.
-          * @param _b The second node.
-          * @return The Manhattan distance between _a and _b.
-          */
+         * @brief Calculate the Manhattan distance between two nodes.
+         *
+         * @param _a The first node.
+         * @param _b The second node.
+         * @return The Manhattan distance between _a and _b.
+         */
 	    template <typename scalar_t, typename coord_t>
         [[maybe_unused, nodiscard]] HOT static constexpr auto manhattan_distance(const coord_t& _a, const coord_t& _b) noexcept {
 
