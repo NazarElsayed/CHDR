@@ -623,10 +623,10 @@ namespace {
 		 * @brief Asserts a condition and logs a message if the condition is false.
 		 * By default, the log type is set to `debug`.
 		 *
-		 * @param[in] _condition The condition to assert.
-		 * @param[in] _message The message to log if the condition is false.
-		 * @param[in] _type (optional) The type of log message to log.
-		 * @param[in] _makeInline (optional) A flag indicating if the log message should be displayed inline.
+		 * @param [in] _condition The condition to assert.
+		 * @param [in] _message The message to log if the condition is false.
+		 * @param [in] _type (optional) The type of log message to log.
+		 * @param [in] _makeInline (optional) A flag indicating if the log message should be displayed inline.
 		 */
 		template <typename T>
         [[maybe_unused]] static void asrt(bool _condition, const T& _message, const log_type& _type = log_type::debug, bool _makeInline = false) noexcept {

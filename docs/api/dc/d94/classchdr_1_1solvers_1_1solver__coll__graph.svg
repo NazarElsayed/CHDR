@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title=" ">
+<g id="a_Node000001"><a xlink:title="A static class serving as the core entry point for the CHDR library, providing a unified interface fo...">
 <polygon fill="#999999" stroke="transparent" points="192,-95 0,-95 0,0 192,0 192,-95"/>
 <text text-anchor="start" x="45.5" y="-84.1" font-family="Helvetica,sans-Serif" font-size="8.00">solver&lt; Derived, params_t &gt;</text>
 <text text-anchor="start" x="94.5" y="-71.1" font-family="Helvetica,sans-Serif" font-size="8.00"> </text>

@@ -23,9 +23,60 @@ namespace chdr::solvers {
 
     /**
      * @nosubgrouping
-     * @brief
-     * @tparam Derived
-     * @tparam params_t
+     * @class solver
+     * @brief A static class serving as the core entry point for the CHDR library, providing a unified interface for managing and invoking solvers.
+     * @details The `solver` class acts as the central interface to instantiate, configure, and execute various solvers.
+     *          It consolidates common utilities and functionalities required to create and manage search or optimisation instances.
+     *          This class is designed for flexibility and extensibility, supporting a wide range of solvers through the use of
+     *          template specialisations.
+     *          
+     *          Key features include:
+     *          - Integration with customisable parameter sets defined by `params_t`.
+     *          - Specialized utility traits to enforce type and method requirements during compilation.
+     *          - Support for user-defined solver implementations via the `Derived` template parameter.
+     *
+     * @code
+     *
+     * // Example usage. Replace [...] with your implementations.
+     * struct params {
+     *
+     *     using  weight_type [[maybe_unused]] = ...;
+     *     using  scalar_type [[maybe_unused]] = ...;
+     *     using   index_type [[maybe_unused]] = ...;
+     *     using   coord_type [[maybe_unused]] = ...;
+     *
+     *     using lazy_sorting [[maybe_unused]] = ...;
+     *
+     *     const        ... maze;
+     *     const coord_type start;
+     *     const coord_type end;
+     *     const coord_type size;
+     *          scalar_type (*h)(const coord_type&, const coord_type&) noexcept;
+     *
+     *     ...* monotonic_pmr;
+     *     ...* polytonic_pmr;
+     *     ...* pool_pmr;
+     *
+     *     const scalar_type  weight       = ...; // 1
+     *     const      size_t  capacity     = ...; // 0
+     *     const      size_t  memoryLimit  = ...; // MAX
+     * };
+     *
+     * // Invoke with chosen algorithm and parameters. Here, A* is used:
+     * auto path = chdr::solvers::solver<chdr::solvers::astar, params>::solve(
+     *     my_maze,
+     *     my_start,
+     *     my_end,
+     *     my_size,
+     *     chdr::heuristics::manhattan_distance<params::scalar_t, params::coord_t>,
+     *     my_monotonic_pmr,
+     *     my_polytonic_pmr,
+     *     my_pool_pmr
+     * );
+     * @endcode
+     *
+     * @tparam Derived The solver algorithm to be used, which must adhere to the interface defined by the `solver` class.
+     * @tparam params_t A parameter type that defines the configuration specifics for the solver, including graph, spatial, and other constraints.
      */
     template <template <typename params_t> typename Derived, typename params_t>
     class solver final {
@@ -205,7 +256,7 @@ namespace chdr::solvers {
              *          Otherwise, the calcuation estimates a preallocation quota based on the size of
              *          the search space.
              *
-             * @param _params [in] An object containing parameters for the maze-solving process.
+             * @param [in] _params An object containing parameters for the maze-solving process.
              *
              * @warning For sufficiently large mazes, the capacity value produce may exceed available system memory.
              *          It may therefore be desirable to attempt presizing inside a `try, catch` block, and continue
@@ -240,9 +291,9 @@ namespace chdr::solvers {
              * @details This method preallocates memory for the given collection type if it supports a method called `allocate`.
              *          Following preallocation, the provided value is emplaced into the collection.
              *
-             * @param _collection [in, out] The collection where the allocation and emplaced value are applied.
+             * @param [in, out] _collection The collection where the allocation and emplaced value are applied.
              *
-             * @param _value The value to be inserted or emplaced within the collection.
+             * @param [in] _value The value to be inserted or emplaced within the collection.
              * @param _increment The incremental size for preallocation, relevant for `existence_set`.
              * @param _max_increment (optional) The maximum allowable increment for preallocation. By default,
              *                                  it is set to the largest value of `size_t`.
@@ -263,6 +314,23 @@ namespace chdr::solvers {
                 _collection.emplace(_value);
             }
 
+            /**
+             * @brief Constructs a reverse path from a given node to its root in a tree or graph structure.
+             *
+             * @details This function iteratively backtracks from the specified node `_node` to its root
+             *          through its parent pointers, converting each node's index into a coordinate
+             *          using the dimensions provided in `_size`. The resulting path is stored in reverse order,
+             *          where the first element corresponds to the root node and the last element corresponds
+             *          to the provided `_node`. The depth of the path is dynamically determined during the
+             *          traversal process.
+             *
+             * @param [in] _node The node to begin backtracking from. This is assumed to be part of a structure
+             *                   where nodes possess a parent pointer (`m_parent`) for traversal.
+             * @param [in] _size The coordinate dimensions, used to convert an index to n-dimensional coordinates.
+             *
+             * @return A vector of n-dimensional coordinates representing the path from the root node
+             *         to the provided `_node`.
+             */
             template<typename node_t, typename coord_t>
             static constexpr auto rbacktrack(const node_t& _node, const coord_t& _size) {
 
@@ -283,6 +351,24 @@ namespace chdr::solvers {
                 return result;
             }
 
+            /**
+             * @brief Constructs a reverse path from a given node to its root in a tree or graph structure.
+             *
+             * @details This function iteratively backtracks from the specified node `_node` to its root
+             *          through its parent pointers, converting each node's index into a coordinate
+             *          using the dimensions provided in `_size`. The resulting path is stored in reverse order,
+             *          where the first element corresponds to the root node and the last element corresponds
+             *          to the provided `_node`. The depth of the path is static, provided using the `_depth` parameter.
+             *
+             * @param [in] _node The node to begin backtracking from. This is assumed to be part of a structure
+             *                   where nodes possess a parent pointer (`m_parent`) for traversal.
+             * @param [in] _size The coordinate dimensions, used to convert an index to n-dimensional coordinates.
+            *
+             * @param _depth The depth of the hierarchy, which determines the length of the resulting vector.
+             *
+             * @return A vector of n-dimensional coordinates representing the path from the root node
+             *         to the provided `_node`.
+             */
             template<typename node_t, typename coord_t>
             static constexpr auto rbacktrack(const node_t& _node, const coord_t& _size, size_t _depth) {
 
@@ -296,6 +382,18 @@ namespace chdr::solvers {
                 return result;
             }
 
+            /**
+             * @brief Constructs a sequence of coordinates by backtracking through the open set.
+             *
+             * @details This method processes the given open set in reverse order, transforming each index
+             *          into a coordinate based on the provided size parameter.
+             *
+             * @param [in] _open The open set container representing the path.
+             * @param [in] _size The coordinate dimensions, used to convert an index to n-dimensional coordinates.
+            *
+             * @return A vector of n-dimensional coordinates representing the path from the root node
+             *         to the provided `_node`.
+             */
             template <typename open_set_t, typename coord_t>
             [[nodiscard]] static constexpr auto ibacktrack(const open_set_t& _open, const coord_t& _size) {
 
@@ -456,7 +554,7 @@ namespace chdr::solvers {
         /**
          * @brief Executes the solver with the provided parameters.
          *
-         * @param _params The parameters object to solve with.
+         * @param [in] _params The parameters object to solve with.
          *
          * @return A std::vector containing the result of the search. If the search fails, the vector will be empty.
          */
@@ -492,7 +590,7 @@ namespace chdr::solvers {
         /**
          * @brief Executes the solver with the provided parameters.
          *
-         * @param _params The parameters object to solve with.
+         * @param [in] _params The parameters object to solve with.
          *
          * @return A std::vector containing the result of the search. If the search fails, the vector will be empty.
          */
