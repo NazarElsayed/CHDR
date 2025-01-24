@@ -31,10 +31,13 @@ namespace chdr::mazes {
     template<typename index_t, typename scalar_t>
     class graph final {
 
+    public:
+
+        using       edge_t = std::pair<index_t, scalar_t>;
+        using neighbours_t = std::pmr::vector<edge_t>;
+
     private:
 
-        using          edge_t = std::pair<index_t, scalar_t>;
-        using    neighbours_t = std::pmr::vector<edge_t>;
         using adjacency_set_t = std::pmr::unordered_map<index_t, neighbours_t>;
 
         std::pmr::unsynchronized_pool_resource memory_resource;
@@ -203,7 +206,7 @@ namespace chdr::mazes {
 #endif
         graph& operator=(graph&&) noexcept = default;
 
-        [[nodiscard]] constexpr const auto& at(index_t _id) const {
+        [[nodiscard]] constexpr const auto& at(const index_t& _id) const {
 
             assert(contains(_id) && "Error: The node with the specified ID does not exist in the graph.");
             return reinterpret_cast<const id_node<index_t>&>(_id);

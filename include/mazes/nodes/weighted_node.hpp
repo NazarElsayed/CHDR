@@ -53,8 +53,8 @@ namespace chdr::mazes {
 
         ~weighted_node() noexcept = default;
 
-        [[nodiscard]] constexpr weighted_node           (const weighted_node&) noexcept = default;
-                      constexpr weighted_node& operator=(const weighted_node&) noexcept = default;
+        [[nodiscard]] constexpr weighted_node           (const weighted_node&) noexcept = delete;
+                      constexpr weighted_node& operator=(const weighted_node&) noexcept = delete;
 
         [[nodiscard]] constexpr weighted_node(weighted_node&&) noexcept = default;
 
