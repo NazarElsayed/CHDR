@@ -1,0 +1,15 @@
+<map id="abs" name="abs">
+<area shape="rect" id="Node000001" title="Computes the absolute value of a given arithmetic type." alt="" coords="501,99,540,121"/>
+<area shape="rect" id="Node000002" href="$d2/df4/structchdr_1_1heuristics_a697263d117f4f386b673e87854c02114.html#a697263d117f4f386b673e87854c02114" title="Computes the Canberra distance between two nodes." alt="" coords="255,5,441,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="502,89,480,64,452,42,426,30,428,26,455,37,484,60,506,86"/>
+<area shape="rect" id="Node000003" href="$d2/df4/structchdr_1_1heuristics_a04c87d0bd2d9fd23e93ab7eada84f72c.html#a04c87d0bd2d9fd23e93ab7eada84f72c" title="Computes the Chebyshev distance between two nodes." alt="" coords="251,52,445,75"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="488,100,453,89,407,77,409,72,454,83,489,95"/>
+<area shape="rect" id="Node000004" href="$d2/df4/structchdr_1_1heuristics_a0ae5cd4c8261c2e6b92393ed5e4fb789.html#a0ae5cd4c8261c2e6b92393ed5e4fb789" title="Calculate the Manhattan distance between two nodes." alt="" coords="251,99,445,121"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="488,113,446,113,446,107,488,107"/>
+<area shape="rect" id="Node000005" href="$d2/df4/structchdr_1_1heuristics_a2fe90d2468d08f5dc0157ff297b921ab.html#a2fe90d2468d08f5dc0157ff297b921ab" title="Computes the squared Euclidean distance between two nodes." alt="" coords="243,145,453,168"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="489,124,454,135,404,148,403,143,453,130,487,119"/>
+<area shape="rect" id="Node000007" href="$d2/dcb/structchdr_1_1utils_adb33afbaf9ed795be953475e0d6df54c.html#adb33afbaf9ed795be953475e0d6df54c" title="Converts a duration in seconds to a formatted string representation." alt="" coords="317,192,379,215"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="505,134,483,159,455,182,417,197,380,204,379,198,415,191,452,177,480,155,501,131"/>
+<area shape="rect" id="Node000006" href="$d2/df4/structchdr_1_1heuristics_a9af3a430ef8b7efb6fec1dc3069a2e16.html#a9af3a430ef8b7efb6fec1dc3069a2e16" title="Computes the Euclidean distance between two nodes." alt="" coords="5,145,195,168"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="229,159,195,159,195,154,229,154"/>
+</map>

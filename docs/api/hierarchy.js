@@ -10,5 +10,6 @@ var hierarchy =
     [ "heuristics", "d2/df4/structchdr_1_1heuristics.html", null ],
     [ "id_node< index_t >", "db/d4a/classchdr_1_1mazes_1_1id__node.html", null ],
     [ "solver< solver_t, params_t >", "d3/df4/classchdr_1_1solvers_1_1solver.html", null ],
+    [ "utils", "d2/dcb/structchdr_1_1utils.html", null ],
     [ "weighted_node< weight_t >", "db/dc4/structchdr_1_1mazes_1_1weighted__node.html", null ]
 ];

@@ -11,7 +11,7 @@
 <!-- Node0 -->
 <g id="Node000000" class="node">
 <title>Node0</title>
-<g id="a_Node000000"><a xlink:href="d2/df4/structchdr_1_1heuristics.html" target="_top" xlink:title="A utility class providing various distance metric calculations.">
+<g id="a_Node000000"><a xlink:href="d2/df4/structchdr_1_1heuristics.html" target="_top" xlink:title="A static utility class providing various distance metric calculations.">
 <polygon fill="white" stroke="#666666" points="50,-17 0,-17 0,0 50,0 50,-17"/>
 <text text-anchor="middle" x="25" y="-6.6" font-family="Helvetica,sans-Serif" font-size="8.00">heuristics</text>
 </a>

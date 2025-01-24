@@ -20,7 +20,7 @@ namespace chdr {
 
 	/**
 	 * @class heuristics
-	 * @brief A utility class providing various distance metric calculations.
+	 * @brief A static utility class providing various distance metric calculations.
 	 *
 	 * @details This class provides static methods for computing different distances such as Euclidean, Manhattan,
 	 *		  Chebyshev, Canberra, and Cosine distances.

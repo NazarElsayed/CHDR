@@ -156,7 +156,7 @@ $(document).ready(function(){initNavTree('db/d56/polytonic__pool_8hpp_source.htm
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>            <span class="keyword">const</span> <span class="keyword">auto</span> aligned_chunk_size = (_size + _alignment - 1U) &amp; ~(_alignment - 1U);</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>            <span class="comment">// Allocate memory:</span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            <span class="keyword">const</span> <span class="keyword">auto</span> allocate_size = utils::max(block_width, aligned_chunk_size);</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            <span class="keyword">const</span> <span class="keyword">auto</span> allocate_size = <a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_abb4d38d3c7a25d93fcedd12666fb00a1.html#abb4d38d3c7a25d93fcedd12666fb00a1">utils::max</a>(block_width, aligned_chunk_size);</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>            blocks.emplace_back(std::make_unique&lt;<span class="keywordtype">char</span>[]&gt;(allocate_size)); <span class="comment">// NOLINT(*-avoid-c-arrays)</span></div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>            block_sizes.emplace_back(allocate_size);</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>            <span class="keyword">auto</span>* new_block = blocks.back().get();</div>
@@ -174,7 +174,7 @@ $(document).ready(function(){initNavTree('db/d56/polytonic__pool_8hpp_source.htm
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>                free.emplace_back(<span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">void</span>*<span class="keyword">&gt;</span>(aligned_base + (i * aligned_chunk_size)));</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>            }</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>            block_width = utils::min(block_width * 2U, max_block_width);</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>            block_width = <a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_ac49e3cb9b2b007da03059d95020d8b49.html#ac49e3cb9b2b007da03059d95020d8b49">utils::min</a>(block_width * 2U, max_block_width);</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>            <span class="keywordflow">return</span> <span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">void</span>*<span class="keyword">&gt;</span>(aligned_base + ((num_chunks - 1U) * aligned_chunk_size));</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        }</div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
@@ -210,7 +210,7 @@ $(document).ready(function(){initNavTree('db/d56/polytonic__pool_8hpp_source.htm
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>                    block_width(initial_block_width) {}</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        <span class="keyword">explicit</span> polytonic_pool(<span class="keywordtype">size_t</span> _capacity) noexcept :</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>            initial_block_width(utils::min(_capacity, max_block_width)),</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>            initial_block_width(<a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_ac49e3cb9b2b007da03059d95020d8b49.html#ac49e3cb9b2b007da03059d95020d8b49">utils::min</a>(_capacity, max_block_width)),</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>                    block_width(initial_block_width)</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        {</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>            assert(_capacity &gt;= 2U &amp;&amp; <span class="stringliteral">&quot;Capacity must be at least 2.&quot;</span>);</div>
@@ -283,6 +283,8 @@ $(document).ready(function(){initNavTree('db/d56/polytonic__pool_8hpp_source.htm
 <div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>} <span class="comment">//chdr</span></div>
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span> </div>
 <div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_POLYTONIC_POOL_HPP</span></div>
+<div class="ttc" id="astructchdr_1_1utils_abb4d38d3c7a25d93fcedd12666fb00a1_html_abb4d38d3c7a25d93fcedd12666fb00a1"><div class="ttname"><a href="../../d2/dcb/structchdr_1_1utils_abb4d38d3c7a25d93fcedd12666fb00a1.html#abb4d38d3c7a25d93fcedd12666fb00a1">chdr::utils::max</a></div><div class="ttdeci">static const T &amp; max(const T &amp;_a, const T &amp;_b) noexcept</div><div class="ttdoc">Determines the maximum of two comparable values.</div><div class="ttdef"><b>Definition</b> <a href="../../df/d93/utils_8hpp_source.html#l00442">utils.hpp:442</a></div></div>
+<div class="ttc" id="astructchdr_1_1utils_ac49e3cb9b2b007da03059d95020d8b49_html_ac49e3cb9b2b007da03059d95020d8b49"><div class="ttname"><a href="../../d2/dcb/structchdr_1_1utils_ac49e3cb9b2b007da03059d95020d8b49.html#ac49e3cb9b2b007da03059d95020d8b49">chdr::utils::min</a></div><div class="ttdeci">static const T &amp; min(const T &amp;_a, const T &amp;_b) noexcept</div><div class="ttdoc">Returns the smaller of two values.</div><div class="ttdef"><b>Definition</b> <a href="../../df/d93/utils_8hpp_source.html#l00425">utils.hpp:425</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen -->

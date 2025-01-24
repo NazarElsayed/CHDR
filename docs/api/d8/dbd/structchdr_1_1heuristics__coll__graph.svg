@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="A utility class providing various distance metric calculations.">
+<g id="a_Node000001"><a xlink:title="A static utility class providing various distance metric calculations.">
 <polygon fill="#999999" stroke="transparent" points="313,-108 0,-108 0,0 313,0 313,-108"/>
 <text text-anchor="start" x="140" y="-97.6" font-family="Helvetica,sans-Serif" font-size="8.00">heuristics</text>
 <text text-anchor="start" x="155.5" y="-84.6" font-family="Helvetica,sans-Serif" font-size="8.00"> </text>

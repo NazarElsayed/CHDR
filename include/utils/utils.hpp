@@ -21,10 +21,39 @@
 
 namespace chdr {
 
+	/**
+	 * @struct utils
+	 * @brief A static utility class containing common utility functions across the library.
+	 *
+	 * @details Contains static helper functions for arithmetic operations, multidimensional
+	 *         indexing, and coordinate transformations.
+	 */
 	struct utils {
 
 	private:
 
+
+	     utils()                         = delete;
+	     utils           (const utils& ) = delete;
+	     utils           (const utils&&) = delete;
+	     utils& operator=(const utils& ) = delete;
+	     utils& operator=(const utils&&) = delete;
+	    ~utils()                         = delete;
+
+		/**
+		 * Multiplies two arithmetic values and ensures that the result does not exceed the
+		 * maximum value for the given type. If an overflow is detected, the maximum value
+		 * for the given type is returned instead.
+		 *
+		 * @tparam T The arithmetic type of the two input values. The type must satisfy
+		 *           `std::is_arithmetic_v<T>`.
+		 *
+		 * @param[in] _a The first value to be multiplied.
+		 * @param[in] _b The second value to be multiplied.
+		 *
+		 * @return The product of `_a` and `_b`. If the multiplication would result
+		 *         in an overflow, the maximum value for the type `T` is returned.
+		 */
 		template <typename T>
 		[[nodiscard]] static constexpr T overflow_safe_multiply(const T& _a, const T& _b) noexcept {
 
@@ -32,33 +61,86 @@ namespace chdr {
 
 			constexpr auto max = std::numeric_limits<T>::max();
 
-			return LIKELY(_b == 0 || _a <= max / _b) ? _a * _b : max; // Alternatively, throw
+			return LIKELY(_b == 0 || _a <= max / _b) ? _a * _b : max; // Alternatively, throw.
 		}
 
+		/**
+		 * @brief Calculates the product of all elements in a coordinate or array.
+		 * @details Recursively calculates the product of all elements in a multidimensional array-like structure,
+		 * utilising overflow-safe multiplication. The calculation begins from the given index and continues
+		 * through the array until reaching the end. If the index exceeds the size of the array, the base
+		 * case returns `1`. The function ensures that overflow does not occur during multiplication.
+		 *
+		 * @tparam T The arithmetic type used for the computation. It must satisfy
+		 *           `std::is_arithmetic_v<T>` and `std::is_trivially_constructible_v<T>`.
+		 * @tparam coord_t The type of the coordinate. It must implement `std::tuple_size`
+		 *                 and support subscript indexing.
+		 *
+		 * @param[in] _coord The coordinate whose elements' product is to be computed.
+		 * @param _index (optional) The current index indicating where in the array computation starts.
+		 *                            Defaults to `0`.
+		 *
+		 * @return The product of all elements in the specified coordinate starting from `_index`.
+		 *         If `_index >= size of _coord`, `1` is returned as the base recursion case. If any
+		 *         multiplication results in an overflow, the value is clamped to the maximum representable
+		 *         value for the type `T`.
+		 */
 		template <typename T, typename coord_t>
-		[[nodiscard]] static constexpr T product_helper(const coord_t& _array, size_t _index = 0U) noexcept {
+		[[nodiscard]] static constexpr T product_helper(const coord_t& _coord, size_t _index = 0U) noexcept {
 			
 			static_assert(std::is_arithmetic_v<T> && std::is_trivially_constructible_v<T>, "T must be a trivially constructible arithmetic type.");
 			
 			constexpr auto Kd = std::tuple_size_v<std::decay_t<coord_t>>;
 
-			return (_index < Kd) ? overflow_safe_multiply<T>(product_helper<T>(_array, _index + 1U), _array[_index]) : T{1};
+			return (_index < Kd) ? overflow_safe_multiply<T>(product_helper<T>(_coord, _index + 1U), _coord[_index]) : T{1};
 		}
 
 	public:
 
-		 utils()                         = delete;
-		 utils           (const utils& ) = delete;
-		 utils           (const utils&&) = delete;
-		 utils& operator=(const utils& ) = delete;
-		 utils& operator=(const utils&&) = delete;
-		~utils()                         = delete;
-
+		/**
+		 * @brief Calculates the product of all elements in a coordinate or array.
+		 * @details Recursively calculates the product of all elements in a multidimensional array-like structure,
+		 * utilising overflow-safe multiplication. The calculation begins from the given index and continues
+		 * through the array until reaching the end. If the index exceeds the size of the array, the base
+		 * case returns `1`. The function ensures that overflow does not occur during multiplication.
+		 *
+		 * @tparam T The arithmetic type used for the computation. It must satisfy
+		 *           `std::is_arithmetic_v<T>` and `std::is_trivially_constructible_v<T>`.
+		 * @tparam coord_t The type of the coordinate. It must implement `std::tuple_size`
+		 *                 and support subscript indexing.
+		 *
+		 * @param[in] _coord The coordinate whose elements' product is to be computed.
+		 *
+		 * @return The product of all elements in the specified coordinate starting from `_index`.
+		 *         If `_index >= size of _coord`, `1` is returned as the base recursion case. If any
+		 *         multiplication results in an overflow, the value is clamped to the maximum representable
+		 *         value for the type `T`.
+		 */
 		template <typename T, typename coord_t>
-		[[nodiscard]] static constexpr T product(const coord_t& _array) noexcept {
-			return product_helper<T>(_array);
+		[[nodiscard]] static constexpr T product(const coord_t& _coord) noexcept {
+			return product_helper<T>(_coord);
 		}
 
+		/**
+		 * @brief Maps a one-dimensional index to a multi-dimensional coordinate representation.
+		 * @details Converts the given one-dimensional array index `_index` into a set of indices
+		 *          that correspond to the various dimensions of a multi-dimensional space
+		*           represented by `_sizes`.
+		*           Supports 1–N dimensional spaces, with explicit optimisations
+		 *          performed for the first four dimensions
+		 *
+		 * @param [in] _index The flattened one-dimensional array index to be converted.
+		 *                    Must be an integral type, and represent a valid index within the
+		 *                    bounds defined by `_sizes`.
+		 *
+		 * @param [in] _sizes A collection of sizes of each dimension in the multi-dimensional
+		 *                    space. Each element specifies the extent of the corresponding
+		 *                    dimension. The number of dimensions, `Kd`, is determined by
+		 *                    the size of this parameter and must be greater than 0.
+		 *
+		 * @return The computed multi-dimensional coordinate as a container of type `coord_t`,
+		 *         where each element specifies the index along a particular dimension.
+		 */
 		template<typename coord_t>
 		[[nodiscard]] static constexpr auto to_nd(const typename std::decay_t<coord_t>::value_type& _index, const coord_t& _sizes) noexcept {
 
@@ -122,6 +204,26 @@ namespace chdr {
 			return result;
 		}
 
+		/**
+		 * @brief Maps a multi-dimensional index to a one-dimensional array index.
+		 * @details Calculates the flattened one-dimensional index corresponding to
+		 *          the specified multi-dimensional indices `_indices`, given the
+		 *          dimensions and sizes of the multi-dimensional space `_sizes`.
+		 *          Supports 1–N dimensional spaces, with explicit optimisations
+		 *          performed for the first four dimensions.
+		 *
+		 * @param [in] _indices A coordinate representation where each element specifies
+		 *                      the index along a particular dimension. The size of
+		 *                      this parameter must match the number of dimensions.
+		 *
+		 * @param [in] _sizes The sizes of each dimension in the multi-dimensional space.
+		 *                    Each element defines the maximum size along the
+		 *                    corresponding dimension. The size of this parameter
+		 *                    must match the number of dimensions.
+		 *
+		 * @returns The computed one-dimensional array index as a value of type T,
+		 *          where T represents the integral type used by coordinate elements.
+		 */
 		template<typename coord_t>
 		[[nodiscard]] static constexpr auto to_1d(const coord_t& _indices, const coord_t& _sizes) noexcept {
 
@@ -162,6 +264,25 @@ namespace chdr {
 			return result;
 		}
 
+		/**
+		 * @brief Determines the sign of a given value.
+		 * @details Computes the sign of the specified value by leveraging compile-time checks
+		 *          to handle signed and unsigned types differently. For signed types, it returns:
+		 *          - A positive indicator `1` for values greater than zero.
+		 *          - A negative indicator `-1` for values less than zero.
+		 *          - Zero `0` for values exactly equal to zero.
+		 *          For unsigned types, it simply returns zero for values equal to zero,
+		 *          and a positive indicator otherwise. This function enforces static type checks
+		 *          to ensure the input type supports required operations (e.g., less-than or equality).
+		 *
+		 * @param [in] _val The value whose sign is to be determined. It must be an arithmetic type
+		 *                  that supports the comparison operators needed for evaluation.
+		 *
+		 * @returns The calculated sign of the input value as `return_t`. This will differ based on
+		 *          whether the type `T` is signed or unsigned:
+		 *          - For signed types: a positive, negative, or zero value in the expected numerical range.
+		 *          - For unsigned types: zero or a positive equivalent of `one_v`.
+		 */
 		template <typename return_t, typename T>
 		[[nodiscard]] static constexpr return_t sign(const T& _val) noexcept {
 
@@ -181,6 +302,24 @@ namespace chdr {
 			}
 		}
 
+		/**
+		 * @brief Computes the power of an unsigned integral base raised to an unsigned integral exponent.
+		 * @details This function calculates the result of raising the given base value to the power of the provided exponent.
+		 *          It utilises an iterative, optimised method (exponentiation by squaring), suitable for unsigned integral
+		 *          types that support arithmetic operations. The input must satisfy the constraints as enforced by the static assertion.
+		 *
+		 * @tparam T  The type of the base and exponent values. Must be an unsigned integral type supporting arithmetic operations.
+		 *            Any type that does not satisfy these conditions will result in a static assertion failure.
+		 *
+		 * @param _base  The unsigned integral base to be raised to the provided exponent.
+		 * @param _exp   The unsigned integral exponent. If the exponent is 0, the result is always 1, regardless of the base.
+		 *
+		 * @return The computed value of _base raised to the power of _exp.
+		 *         For example, powui(2, 3) would return 8.
+		 *
+		 * @note The calculations assume that the result remains within the range of the provided unsigned integral type.
+		 *       Overflow behaviour is undefined and must be considered by the caller.
+		 */
 		template <typename T>
 		static constexpr T powui(T _base, T _exp) noexcept {
 
@@ -200,6 +339,19 @@ namespace chdr {
 			return result;
 		}
 
+		/**
+		 * @brief Computes the absolute value of a given arithmetic type.
+		 * @details This function returns the absolute value of the input parameter, ensuring
+		 *          correct handling of signed and unsigned arithmetic types. If the input type
+		 *          is unsigned, the value is returned as-is. For signed types, a negative value
+		 *          is converted to its positive equivalent.
+		 *
+		 * @param  [in] _value The arithmetic value for which the absolute value is to be computed.
+		 *                     The type T must satisfy the arithmetic constraint, as enforced by static_assert.
+		 *
+		 * @return The absolute value of the input parameter. If the input is unsigned or non-negative,
+		 *         the original value is returned. For signed negative values, the positive equivalent is returned.
+		 */
 		template <typename T>
 		HOT static constexpr T abs(const T& _value) noexcept {
 
@@ -208,6 +360,23 @@ namespace chdr {
 			return std::is_unsigned_v<T> || _value >= 0 ? _value : -_value;
 		}
 
+		/**
+		 * @brief Computes the square root of a given value.
+		 * @details This method calculates the square root of a given value, leveraging a compile-time
+		 *          constant evaluation mechanism if supported. For constant evaluation, it uses
+		 *          an iterative approach (Newton's method). If the value is evaluated at runtime,
+		 *          it delegates the computation to the standard library's `std::sqrt`. The function
+		 *          handles special cases, such as values of `0` and `1`, directly. If the input value
+		 *          is negative during compile-time evaluation, the result will be `NaN` (Not a Number).
+		 *
+		 * @param [in] _value The input value whose square root is to be computed. It must be an arithmetic type.
+		 *                     Passing a negative value during constant evaluation will result in `NaN`.
+		 *
+		 * @returns The computed square root of the input value. If the input is `0` or `1`, the return value
+		 *          will be the input itself. If the input is negative and evaluated at compile time, the
+		 *          function will return `NaN`. For runtime evaluation, behaviour for negative inputs
+		 *          depends on the standard library's `std::sqrt` implementation.
+		 */
 		template <typename T>
 		HOT static constexpr T sqrt(const T& _value) noexcept {
 
@@ -240,18 +409,53 @@ namespace chdr {
 			}
 		}
 
+		/**
+		 * @brief Returns the smaller of two values.
+		 * @details Compares two values of type T and returns the smaller of the two.
+		 *          The function imposes a static assertion to ensure that the type T
+		 *          supports the less-than operator for comparison.
+		 *
+		 * @param [in] _a The first value to be compared.
+		 * @param [in] _b The second value to be compared.
+		 *
+		 * @returns A reference to the smaller of the two values. If both values are equal,
+		 *          the reference to the first argument `_a` is returned.
+		 */
 		template <typename T>
 		HOT static constexpr const T& min(const T& _a, const T& _b) noexcept {
 			static_assert(std::is_invocable_r_v<bool, decltype(std::less<>()), T, T>, "Type T must support the less-than operator.");
 			return (_a < _b) ? _a : _b;
 		}
 
+		/**
+		 * @brief Determines the maximum of two comparable values.
+		 * @details Compares two input values of the same type and returns the larger of the two.
+		 *          The comparison relies on the less-than (`<`) operator, and the type `T` must
+		 *          support this operation to be used with this function.
+		 *
+		 * @param [in] _a The first value to compare.
+		 * @param [in] _b The second value to compare.
+		 *
+		 * @returns A constant reference to the larger of the two input values.
+		 */
 		template <typename T>
 		HOT static constexpr const T& max(const T& _a, const T& _b) noexcept {
 			static_assert(std::is_invocable_r_v<bool, decltype(std::less<>()), T, T>, "Type T must support the less-than operator.");
 			return (_a < _b) ? _b : _a;
 		}
 
+		/**
+		 * @brief Constrains a value to lie within a specified range.
+		 * @details This function ensures that the given value `_value` is clamped within the range defined
+		 *          by `_min` and `_max`. If `_value` is less than `_min`, `_min` is returned. If `_value`
+		 *          exceeds `_max`, `_max` is returned. Otherwise, `_value` is returned unaltered.
+		 *
+		 * @param [in] _value  The value to be clamped.
+		 * @param [in] _min The minimum allowable value of the range.
+		 * @param [in] _max The maximum allowable value of the range.
+		 *
+		 * @returns A reference to the constrained value, either `_value`, `_min`, or `_max`, depending on the range checks.
+		 */
 		template <typename T>
 		HOT static constexpr const T& clamp(const T& _value, const T& _min, const T& _max) noexcept {
 			static_assert(std::is_invocable_r_v<bool, decltype(std::less<>()), T, T>, "Type T must support the less-than operator.");
@@ -263,26 +467,55 @@ namespace chdr {
 				return _min;
 			}
 		}
-		
-        [[nodiscard]] static std::string to_string(long double _duration, long double _scale = std::numeric_limits<long double>::epsilon()) {
+
+		/**
+		 * @brief Converts a duration in seconds to a formatted string representation.
+		 * @details Produces a formatted string representation, of the given duration in seconds,
+		 *          scaling the value to an appropriate unit (seconds, milliseconds, microseconds, or nanoseconds).
+		 *          The resulting string will include the unit suffix and round the result based on the provided scale.
+		 *
+		 * @param _duration The duration in seconds to be converted. It must be expressed as a floating-point number.
+		 * @param [in] _scale (optional) The precision scale to be used for rounding the scaled result.
+		 *                    By default, it uses the smallest precision value for long double representation.
+		 *                    The value is clamped to the range 0 -> 1.
+		 *
+		 * @returns A string containing the scaled and formatted duration, including its
+		 *          appropriate time unit (e.g., "s" for seconds, "ms" for milliseconds).
+		 */
+		[[nodiscard]] static std::string to_string(long double _duration, long double _scale = std::numeric_limits<long double>::epsilon()) {
 
             static std::array<std::string, 4U> units = { "s", "ms", "µs", "ns" };
 
 			auto result = _duration;
 
             size_t i = 0U;
-            while (i < units.size() && result < static_cast<long double>(1.0)) {
-                result *= static_cast<long double>(1000.0);
+            while (i < units.size() && abs(result) < 1.0l) {
+                result *= 1000.0l;
                 ++i;
             }
 
+			_scale = clamp(_scale, 0.0l, 1.0l);
+
             return trim_trailing_zeros(
 	            std::to_string(
-		            std::floor(result / _scale + static_cast<long double>(0.5)) * _scale
+		            std::floor(result / _scale + 0.5l) * _scale
 	            )
             ) + units[i];
         }
 
+		/**
+		 * @brief Removes trailing zeroes from a numeric string.
+		 * @details Removes any trailing zeroes from a numeric string representation, as well as
+		 *          a trailing decimal point if all decimal digits are removed.
+		 *
+		 * @param [in] _str The string to be processed. It must represent a numeric value.
+		 *                       If any trailing zeros or an unnecessary decimal point are present,
+		 *                       they will be removed from this string.
+		 *
+		 * @returns A string with trailing zeros removed. If there was a trailing decimal
+		 *          point with no digits following, it is also removed. The modified string
+		 *          maintains its numeric value.
+		 */
 		[[nodiscard]] static std::string trim_trailing_zeros(std::string _str) {
 
 			_str.erase(_str.find_last_not_of('0') + 1U, std::string::npos);

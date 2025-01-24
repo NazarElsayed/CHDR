@@ -106,15 +106,21 @@ namespace chdr {
 #endif
 
     /**
-     * @brief Function to purposefully trigger heap defragmentation by the internal memory allocator.
-     * @note Calling this function should generally be avoided unless you know what you are doing.
+     * @brief Forces heap defragmentation and consolidation by the internal memory allocator.
      *
      * @details
-     * Details:
-     * - Attempts to allocate a block of memory (by default 2048 bytes), which is 'hopefully enough' to force heap consolidation.
-     * - Frees the allocated block since it is no longer needed.
-     * - Includes a memory barrier between the malloc and free to discourage optimisation and force synchronisation.
-     * - Uses preprocessor blocks around the function to prevent optimisation by a variety of compilers.
+     * This function attempts to trigger heap consolidation by:
+     * - Allocating a block of memory (default size: 2048 bytes).
+     * - Introducing a memory barrier to avoid compiler optimizations and ensure synchronization.
+     * - Freeing the allocated memory block after the barrier.
+     *
+     * @remarks Preprocessor directives are used to prevent the function from being optimized by various compilers.
+     * @warning This function should generally be avoided in regular code and only used when necessary for testing
+     * or extreme performance tuning cases.
+     *
+     * @param _malloc (optional) The size of the memory block to allocate (default: 2048 bytes).
+     * @note Using this function may have side effects. It is intended for advanced use cases where
+     *       heap management or memory consolidation needs to be forced.
      */
     [[maybe_unused]] inline void malloc_consolidate(size_t _malloc = 2048U) {
         void* tmp = malloc(_malloc);

@@ -2,4 +2,6 @@
 <area shape="rect" id="Node000001" title="Computes the Euclidean distance between two nodes." alt="" coords="5,5,117,28"/>
 <area shape="rect" id="Node000002" href="$d2/df4/structchdr_1_1heuristics_a2fe90d2468d08f5dc0157ff297b921ab.html#a2fe90d2468d08f5dc0157ff297b921ab" title="Computes the squared Euclidean distance between two nodes." alt="" coords="165,5,299,28"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,14,152,14,152,19,118,19"/>
+<area shape="rect" id="Node000003" href="$d2/dcb/structchdr_1_1utils_a5dbf4cb43cd80497753aa963c21fa0cf.html#a5dbf4cb43cd80497753aa963c21fa0cf" title="Computes the absolute value of a given arithmetic type." alt="" coords="347,5,437,28"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="299,14,333,14,333,19,299,19"/>
 </map>

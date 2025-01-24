@@ -13,6 +13,7 @@ var annotated_dup =
         [ "unmanaged_node", "d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html", "d6/d3c/structchdr_1_1solvers_1_1unmanaged__node" ]
       ] ],
       [ "existence_set", "d6/db9/classchdr_1_1existence__set.html", "d6/db9/classchdr_1_1existence__set" ],
-      [ "heuristics", "d2/df4/structchdr_1_1heuristics.html", null ]
+      [ "heuristics", "d2/df4/structchdr_1_1heuristics.html", null ],
+      [ "utils", "d2/dcb/structchdr_1_1utils.html", null ]
     ] ]
 ];
