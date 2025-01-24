@@ -207,7 +207,8 @@ namespace chdr::mazes {
     };
 
     /**
-     * Specialization of grid for weight_t = bool
+     * @brief Specialization of grid for weight_t = bool.
+     * @details In this configuration, the grid is represented using a bitset.
      */
     template <typename coord_t>
     class grid<coord_t, bool> final {
