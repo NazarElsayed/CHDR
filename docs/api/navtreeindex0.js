@@ -12,6 +12,7 @@ var NAVTREEINDEX0 =
 "d3/d3e/gjps_8hpp_source.html":[4,0,0,1,13],
 "d3/dec/dfs_8hpp_source.html":[4,0,0,1,4],
 "d3/df4/classchdr_1_1solvers_1_1solver.html":[3,0,0,1,2],
+"d3/df4/classchdr_1_1solvers_1_1solver_afd9ac73f57f4eae43f130211d9b95d86.html#afd9ac73f57f4eae43f130211d9b95d86":[3,0,0,1,2,0],
 "d4/d99/monotonic__pool_8hpp_source.html":[4,0,0,2,1,0],
 "d4/df2/gdfs_8hpp_source.html":[4,0,0,1,12],
 "d5/da1/md_docs_2manual_2roadmap.html":[2],
