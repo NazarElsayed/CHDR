@@ -37,7 +37,7 @@ namespace chdr {
 	 *		  2. **Squared Euclidean Distance**:
 	 *			 - **Formula**: `sum((b[i] - a[i])^2 for i in 1..n)`
 	 *			 - **Characteristics**: Avoids costly square root computation; often used as a quick comparison metric.
-	 *			 - **Use-case**: Suitable for optimization-related geometrical problems.
+	 *			 - **Use-case**: Suitable for optimisation-related geometrical problems.
 	 *
 	 *		  3. **Manhattan Distance**:
 	 *			 - **Formula**: `sum(abs(b[i] - a[i]) for i in 1..n)`

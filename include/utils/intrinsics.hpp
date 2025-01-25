@@ -110,19 +110,18 @@ namespace chdr {
      *
      * @details
      * This function attempts to trigger heap consolidation by:
-     * - Allocating a block of memory (default size: 2048 bytes).
-     * - Introducing a memory barrier to avoid compiler optimizations and ensure synchronization.
+     * - Allocating a block of memory (default size: 4096 bytes).
+     * - Introducing a memory barrier to avoid compiler optimisations and ensure synchronisation.
      * - Freeing the allocated memory block after the barrier.
      *
-     * @remarks Preprocessor directives are used to prevent the function from being optimized by various compilers.
+     * @remarks Preprocessor directives are used to prevent the function from being optimised by various compilers.
      * @warning This function should generally be avoided in regular code and only used when necessary for testing
      * or extreme performance tuning cases.
      *
-     * @param _malloc (optional) The size of the memory block to allocate (default: 2048 bytes).
-     * @note Using this function may have side effects. It is intended for advanced use cases where
-     *       heap management or memory consolidation needs to be forced.
+     * @param _malloc (optional) The size of the memory block to allocate (default: 4096 bytes).
+     * @note Using this function may have side effects. Do not call unless you know what you are doing.
      */
-    [[maybe_unused]] inline void malloc_consolidate(size_t _malloc = 2048U) {
+    [[maybe_unused]] inline void malloc_consolidate(size_t _malloc = 4096U) {
         void* tmp = malloc(_malloc);
         asm volatile("" ::: "memory");
         free(tmp);

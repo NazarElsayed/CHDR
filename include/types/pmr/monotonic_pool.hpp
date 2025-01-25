@@ -24,21 +24,21 @@ namespace chdr {
         static constexpr size_t     s_max_heap_block_size { 65536U };
         static constexpr size_t        s_stack_block_size {  4096U };
 
-        struct block {
-            std::unique_ptr<uint8_t[]> data;
-            size_t size;
-        };
-
-        alignas(std::max_align_t) uint8_t m_stack_block[s_stack_block_size]; // Fixed stack memory block
-        size_t m_stack_write{0U};                                            // Write pointer for stack block
+        alignas(std::max_align_t) uint8_t m_stack_block[s_stack_block_size]; // Fixed stack memory block.
 
         size_t m_current_block_size; // Size of the current block.
+        size_t m_stack_write;        // Current write position for stack block.
         size_t m_block_write;        // Current write position in the active block.
         size_t m_active_block_index; // Index of the current active block.
 
+        struct block {
+            std::unique_ptr<uint8_t[]> data; // NOLINT(*-avoid-c-arrays)
+            size_t size;
+        };
+
         std::vector<block> blocks;
 
-        HOT void expand(size_t _size) {
+        HOT void expand(size_t _bytes) {
 
             if (m_active_block_index + 1U < blocks.size()) { // Reuse an existing block:
                 m_current_block_size = blocks[++m_active_block_index].size;
@@ -47,10 +47,10 @@ namespace chdr {
 
                 m_current_block_size = utils::max(
                     s_initial_heap_block_size,
-                    utils::max(utils::min(m_current_block_size * 2U, s_max_heap_block_size), _size)
+                    utils::max(utils::min(m_current_block_size * 2U, s_max_heap_block_size), _bytes)
                 );
 
-                blocks.emplace_back(std::make_unique<uint8_t[]>(m_current_block_size), m_current_block_size);
+                blocks.emplace_back(std::make_unique<uint8_t[]>(m_current_block_size), m_current_block_size); // NOLINT(*-avoid-c-arrays)
                 m_active_block_index = blocks.size() - 1U;
             }
 
@@ -59,19 +59,18 @@ namespace chdr {
 
     protected:
 
-        [[nodiscard]] HOT void* do_allocate(const size_t _size, const size_t _alignment) override {
+        [[nodiscard]] HOT void* do_allocate(const size_t _bytes, const size_t _alignment) override {
+
+            assert(_bytes > 0U && "Allocation size must be greater than zero.");
 
             // Try allocating from the stack first:
-            if (m_stack_write + _size <= s_stack_block_size) {
+            if (m_stack_write + _bytes <= s_stack_block_size) {
                 auto* aligned_ptr = reinterpret_cast<uint8_t*>(
                     (reinterpret_cast<uintptr_t>(m_stack_block + m_stack_write) + _alignment - 1U) & ~(_alignment - 1U)
                 );
 
-                auto new_position = static_cast<size_t>(aligned_ptr - m_stack_block) + _size;
-                if (new_position <= s_stack_block_size) {
-                    m_stack_write = new_position;
-                    return aligned_ptr;
-                }
+                m_stack_write = static_cast<size_t>(aligned_ptr - m_stack_block) + _bytes;
+                return aligned_ptr;
             }
 
             // If stack block is exhausted, fall back to dynamic blocks:
@@ -79,15 +78,15 @@ namespace chdr {
                 (reinterpret_cast<uintptr_t>(blocks[m_active_block_index].data.get() + m_block_write) + _alignment - 1U) & ~(_alignment - 1U)
             );
 
-            if (aligned_ptr + _size > blocks[m_active_block_index].data.get() + blocks[m_active_block_index].size) {
+            if (aligned_ptr + _bytes > blocks[m_active_block_index].data.get() + blocks[m_active_block_index].size) {
 
                 // Expand if the current block cannot fit the allocation.
-                expand(_size + _alignment);
-                return do_allocate(_size, _alignment);
+                expand(_bytes + _alignment);
+                return do_allocate(_bytes, _alignment);
             }
 
             // Update write position and return the aligned pointer
-            m_block_write += static_cast<size_t>(aligned_ptr + _size - (blocks[m_active_block_index].data.get() + m_block_write));
+            m_block_write += static_cast<size_t>(aligned_ptr + _bytes - (blocks[m_active_block_index].data.get() + m_block_write));
 
             return aligned_ptr;
         }
@@ -104,6 +103,7 @@ namespace chdr {
 
         monotonic_pool() :
             m_current_block_size(s_initial_heap_block_size),
+            m_stack_write       (0U),
             m_block_write       (0U),
             m_active_block_index(0U)
         {
@@ -121,14 +121,12 @@ namespace chdr {
 
         [[nodiscard]] size_t allocated() const {
 
-            size_t result = 0U;
-
             // Include stack usage.
-            result += m_stack_write;
+            size_t result = s_stack_block_size;
 
             // Include dynamic blocks.
-            for (const auto& item : blocks) {
-                result += item.size;
+            for (const auto& [data, size] : blocks) {
+                result += size;
             }
 
             return result;
