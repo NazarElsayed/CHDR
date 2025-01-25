@@ -62,8 +62,7 @@ namespace chdr {
         [[nodiscard]] HOT void* do_allocate(const size_t _size, const size_t _alignment) override {
 
             // Try allocating from the stack first:
-            if (m_stack_write < s_stack_block_size) {
-
+            if (m_stack_write + _size <= s_stack_block_size) {
                 auto* aligned_ptr = reinterpret_cast<uint8_t*>(
                     (reinterpret_cast<uintptr_t>(m_stack_block + m_stack_write) + _alignment - 1U) & ~(_alignment - 1U)
                 );
@@ -73,8 +72,6 @@ namespace chdr {
                     m_stack_write = new_position;
                     return aligned_ptr;
                 }
-
-                return aligned_ptr;
             }
 
             // If stack block is exhausted, fall back to dynamic blocks:
@@ -113,7 +110,7 @@ namespace chdr {
             expand(s_initial_heap_block_size); // Allocate the first dynamic block
         }
 
-        constexpr monotonic_pool(const monotonic_pool&) = delete;
+        constexpr monotonic_pool           (const monotonic_pool&) = delete;
         constexpr monotonic_pool& operator=(const monotonic_pool&) = delete;
 
         [[nodiscard]] constexpr monotonic_pool(monotonic_pool&&) noexcept = default;
@@ -122,7 +119,7 @@ namespace chdr {
     #endif
         monotonic_pool& operator=(monotonic_pool&&) noexcept = default;
 
-        size_t allocated() const {
+        [[nodiscard]] size_t allocated() const {
 
             size_t result = 0U;
 
