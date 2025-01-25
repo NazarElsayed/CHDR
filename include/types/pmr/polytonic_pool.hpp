@@ -215,9 +215,15 @@ namespace chdr {
             m_stack_write = 0U;
             block_width = initial_block_width;
 
-            free.clear();
-            for (const auto& blk : blocks) {
-                free.insert(blk);
+            try {
+                free.clear();
+                for (const auto& item : blocks) {
+                    free.insert(item);
+                }
+            }
+            catch (...) {
+                  free.clear();
+                blocks.clear();
             }
         }
 

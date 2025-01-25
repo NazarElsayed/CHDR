@@ -13,6 +13,10 @@
 <script type="text/javascript" src="../../doxygen-awesome-paragraph-link.js"></script>
 <script type="text/javascript" src="../../doxygen-awesome-darkmode-toggle.js"></script>
 <script type="text/javascript" src="../../doxygen-awesome-fragment-copy-button.js"></script>
+<link href="../../navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="../../resize.js"></script>
+<script type="text/javascript" src="../../navtreedata.js"></script>
+<script type="text/javascript" src="../../navtree.js"></script>
 <link href="../../search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../search/searchdata.js"></script>
 <script type="text/javascript" src="../../search/search.js"></script>
@@ -65,6 +69,23 @@ $(function() {
 $(document).ready(function() { init_codefold(1); });
 /* @license-end */
 </script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('d0/def/unmanaged__node_8hpp_source.html','../../'); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -86,11 +107,6 @@ $(document).ready(function() { init_codefold(1); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="../../dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="../../dir_949292de90bec6ca0ef87cb838b26113.html">solvers</a></li><li class="navelem"><a class="el" href="../../dir_6aece8b0ac0cfc4ca2933706f09f70a1.html">base</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="header">
   <div class="headertitle"><div class="title">unmanaged_node.hpp</div></div>
 </div><!--header-->
@@ -117,10 +133,10 @@ $(document).ready(function() { init_codefold(1); });
 <div class="foldopen" id="foldopen00034" data-start="{" data-end="};">
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">   34</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">unmanaged_node</a> : <a class="code hl_struct" href="../../da/d98/structchdr_1_1solvers_1_1bnode.html">bnode</a>&lt;index_t&gt; {</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_a4cb8a3dd529e9ae5a254d52528c0ca6a.html#a4cb8a3dd529e9ae5a254d52528c0ca6a">   50</a></span>        <span class="keyword">const</span> <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">unmanaged_node</a>* RESTRICT <a class="code hl_variable" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_a4cb8a3dd529e9ae5a254d52528c0ca6a.html#a4cb8a3dd529e9ae5a254d52528c0ca6a">m_parent</a>;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_aa9d49dfbf82823508c4ab2fe6619a2d4.html#aa9d49dfbf82823508c4ab2fe6619a2d4">   50</a></span>        <span class="keyword">const</span> <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">unmanaged_node</a>* RESTRICT <a class="code hl_variable" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_aa9d49dfbf82823508c4ab2fe6619a2d4.html#aa9d49dfbf82823508c4ab2fe6619a2d4">m_parent</a>;</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="comment">// ReSharper disable once CppPossiblyUninitializedMember</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_affb575abbc3beecd1992cfbdfe015c90.html#affb575abbc3beecd1992cfbdfe015c90">   63</a></span>        [[nodiscard]] <span class="keyword">constexpr</span> <a class="code hl_function" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_affb575abbc3beecd1992cfbdfe015c90.html#affb575abbc3beecd1992cfbdfe015c90">unmanaged_node</a>() noexcept {} <span class="comment">// NOLINT(*-pro-type-member-init, *-use-equals-default)</span></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_a05f3d6d2c925a1809848253d4f8caf9e.html#a05f3d6d2c925a1809848253d4f8caf9e">   63</a></span>        [[nodiscard]] <span class="keyword">constexpr</span> <a class="code hl_function" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_a05f3d6d2c925a1809848253d4f8caf9e.html#a05f3d6d2c925a1809848253d4f8caf9e">unmanaged_node</a>() noexcept {} <span class="comment">// NOLINT(*-pro-type-member-init, *-use-equals-default)</span></div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">~unmanaged_node</a>() noexcept = default;</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
@@ -135,8 +151,8 @@ $(document).ready(function() { init_codefold(1); });
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">unmanaged_node</a>&amp; operator=(<a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">unmanaged_node</a>&amp;&amp;) noexcept = default;</div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
 <div class="foldopen" id="foldopen00098" data-start="{" data-end="}">
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno"><a class="line" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_a3164e7ab5b92c4a5f5653f30d317af60.html#a3164e7ab5b92c4a5f5653f30d317af60">   98</a></span>        [[nodiscard]] HOT constexpr <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">unmanaged_node</a>(index_t _index, const <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">unmanaged_node</a>* RESTRICT const _parent = <span class="keywordtype">nullptr</span>) noexcept : <a class="code hl_struct" href="../../da/d98/structchdr_1_1solvers_1_1bnode.html">bnode</a>&lt;index_t&gt;(_index),</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>            <a class="code hl_variable" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_a4cb8a3dd529e9ae5a254d52528c0ca6a.html#a4cb8a3dd529e9ae5a254d52528c0ca6a">m_parent</a>(_parent) {}</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno"><a class="line" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_ac6f3473c2df4d3156ebc0e17ebbe63ff.html#ac6f3473c2df4d3156ebc0e17ebbe63ff">   98</a></span>        [[nodiscard]] HOT constexpr <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">unmanaged_node</a>(index_t _index, const <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">unmanaged_node</a>* RESTRICT const _parent = <span class="keywordtype">nullptr</span>) noexcept : <a class="code hl_struct" href="../../da/d98/structchdr_1_1solvers_1_1bnode.html">bnode</a>&lt;index_t&gt;(_index),</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>            <a class="code hl_variable" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_aa9d49dfbf82823508c4ab2fe6619a2d4.html#aa9d49dfbf82823508c4ab2fe6619a2d4">m_parent</a>(_parent) {}</div>
 </div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    };</div>
@@ -146,11 +162,26 @@ $(document).ready(function() { init_codefold(1); });
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_UNMANAGEDNODE_HPP</span></div>
 <div class="ttc" id="astructchdr_1_1solvers_1_1bnode_html"><div class="ttname"><a href="../../da/d98/structchdr_1_1solvers_1_1bnode.html">chdr::solvers::bnode</a></div><div class="ttdoc">Base class for pathfinding nodes.</div><div class="ttdef"><b>Definition</b> <a href="../../dc/d3c/bnode_8hpp_source.html#l00027">bnode.hpp:27</a></div></div>
-<div class="ttc" id="astructchdr_1_1solvers_1_1unmanaged__node_a4cb8a3dd529e9ae5a254d52528c0ca6a_html_a4cb8a3dd529e9ae5a254d52528c0ca6a"><div class="ttname"><a href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_a4cb8a3dd529e9ae5a254d52528c0ca6a.html#a4cb8a3dd529e9ae5a254d52528c0ca6a">chdr::solvers::unmanaged_node::m_parent</a></div><div class="ttdeci">const unmanaged_node *RESTRICT m_parent</div><div class="ttdoc">A pointer to the parent node in the hierarchical structure.</div><div class="ttdef"><b>Definition</b> <a href="../../d0/def/unmanaged__node_8hpp_source.html#l00050">unmanaged_node.hpp:50</a></div></div>
-<div class="ttc" id="astructchdr_1_1solvers_1_1unmanaged__node_affb575abbc3beecd1992cfbdfe015c90_html_affb575abbc3beecd1992cfbdfe015c90"><div class="ttname"><a href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_affb575abbc3beecd1992cfbdfe015c90.html#affb575abbc3beecd1992cfbdfe015c90">chdr::solvers::unmanaged_node::unmanaged_node</a></div><div class="ttdeci">constexpr unmanaged_node() noexcept</div><div class="ttdoc">Constructs an uninitialized node.</div><div class="ttdef"><b>Definition</b> <a href="../../d0/def/unmanaged__node_8hpp_source.html#l00063">unmanaged_node.hpp:63</a></div></div>
+<div class="ttc" id="astructchdr_1_1solvers_1_1unmanaged__node_a05f3d6d2c925a1809848253d4f8caf9e_html_a05f3d6d2c925a1809848253d4f8caf9e"><div class="ttname"><a href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_a05f3d6d2c925a1809848253d4f8caf9e.html#a05f3d6d2c925a1809848253d4f8caf9e">chdr::solvers::unmanaged_node::unmanaged_node</a></div><div class="ttdeci">unmanaged_node() noexcept</div><div class="ttdoc">Constructs an uninitialized node.</div><div class="ttdef"><b>Definition</b> <a href="../../d0/def/unmanaged__node_8hpp_source.html#l00063">unmanaged_node.hpp:63</a></div></div>
+<div class="ttc" id="astructchdr_1_1solvers_1_1unmanaged__node_aa9d49dfbf82823508c4ab2fe6619a2d4_html_aa9d49dfbf82823508c4ab2fe6619a2d4"><div class="ttname"><a href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_aa9d49dfbf82823508c4ab2fe6619a2d4.html#aa9d49dfbf82823508c4ab2fe6619a2d4">chdr::solvers::unmanaged_node::m_parent</a></div><div class="ttdeci">const unmanaged_node *restrict m_parent</div><div class="ttdoc">A pointer to the parent node in the hierarchical structure.</div><div class="ttdef"><b>Definition</b> <a href="../../d0/def/unmanaged__node_8hpp_source.html#l00050">unmanaged_node.hpp:50</a></div></div>
 <div class="ttc" id="astructchdr_1_1solvers_1_1unmanaged__node_html"><div class="ttname"><a href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">chdr::solvers::unmanaged_node</a></div><div class="ttdoc">A hierarchical node in a pathfinding context, requires manual memory management.</div><div class="ttdef"><b>Definition</b> <a href="../../d0/def/unmanaged__node_8hpp_source.html#l00034">unmanaged_node.hpp:34</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
 <!-- HTML footer for doxygen -->
 <!-- Start footer part -->
+<div id="nav-path" class="navpath">
+    <!-- id is needed for treeview function! -->
+    <ul>
+      <li class="footer">
+        See the <a href="https://github.com/NazarElsayed/CHDR/tree/main">Official Repository</a>
+      </li>
+    </ul>
+</div>
+<footer class="custom-doxygen-footer">
+  <div>
+    <small>
+    </small>
+  </div>
+</footer>
 </body>
 </html>

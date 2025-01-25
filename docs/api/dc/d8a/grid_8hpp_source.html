@@ -13,6 +13,10 @@
 <script type="text/javascript" src="../../doxygen-awesome-paragraph-link.js"></script>
 <script type="text/javascript" src="../../doxygen-awesome-darkmode-toggle.js"></script>
 <script type="text/javascript" src="../../doxygen-awesome-fragment-copy-button.js"></script>
+<link href="../../navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="../../resize.js"></script>
+<script type="text/javascript" src="../../navtreedata.js"></script>
+<script type="text/javascript" src="../../navtree.js"></script>
 <link href="../../search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../search/searchdata.js"></script>
 <script type="text/javascript" src="../../search/search.js"></script>
@@ -65,6 +69,23 @@ $(function() {
 $(document).ready(function() { init_codefold(1); });
 /* @license-end */
 </script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('dc/d8a/grid_8hpp_source.html','../../'); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -86,11 +107,6 @@ $(document).ready(function() { init_codefold(1); });
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="../../dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="../../dir_4d98151ebc14e036e8623fd77932f1bb.html">mazes</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="header">
   <div class="headertitle"><div class="title">grid.hpp</div></div>
 </div><!--header-->
@@ -129,7 +145,7 @@ $(document).ready(function() { init_codefold(1); });
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="keyword">private</span>:</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> s_neighbour_count { <a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_a88b47febe37e9b6c92922824dcb0f672.html#a88b47febe37e9b6c92922824dcb0f672">utils::powui</a>(<span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(3U), s_rank) - 1U };</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> s_neighbour_count { <a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_a132ec9015658e62fa2f575484e51c3ab.html#a132ec9015658e62fa2f575484e51c3ab">utils::powui</a>(<span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(3U), s_rank) - 1U };</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        coord_t m_size;</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        <span class="keywordtype">size_t</span> m_count;</div>
@@ -187,10 +203,10 @@ $(document).ready(function() { init_codefold(1); });
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        <span class="keyword">template</span>&lt;<span class="keywordtype">bool</span> IncludeDiagonals = false&gt;</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        [[nodiscard]] HOT <span class="keyword">constexpr</span> <span class="keyword">auto</span> get_neighbours(<span class="keywordtype">size_t</span> _id) <span class="keyword">const</span> <span class="keyword">noexcept</span> {</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>            <span class="keywordflow">return</span> get_neighbours&lt;IncludeDiagonals&gt;(<a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_a8626929faa2650afe5c38516a65408d4.html#a8626929faa2650afe5c38516a65408d4">utils::to_nd</a>(_id, size()));</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>            <span class="keywordflow">return</span> get_neighbours&lt;IncludeDiagonals&gt;(<a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_aa56b3789fceb847816a4fef606f80dfb.html#aa56b3789fceb847816a4fef606f80dfb">utils::to_nd</a>(_id, size()));</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        }</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        [[nodiscard]] <span class="keyword">constexpr</span> <span class="keyword">const</span> <span class="keyword">auto</span>&amp; at(<span class="keyword">const</span> coord_t&amp; _id)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> at(<a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_ae058109b5e8bcba39eb6b7434d7ea183.html#ae058109b5e8bcba39eb6b7434d7ea183">utils::to_1d</a>(_id, m_size)); }</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        [[nodiscard]] <span class="keyword">constexpr</span> <span class="keyword">const</span> <span class="keyword">auto</span>&amp; at(<span class="keyword">const</span> coord_t&amp; _id)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> at(<a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_a5741e93a4c4f5630e7c86bda862cf611.html#a5741e93a4c4f5630e7c86bda862cf611">utils::to_1d</a>(_id, m_size)); }</div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        [[nodiscard]] HOT <span class="keyword">constexpr</span> <span class="keyword">const</span> <span class="keyword">auto</span>&amp; at(<span class="keywordtype">size_t</span> _id)<span class="keyword"> const </span>{</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>            assert(contains(_id) &amp;&amp; <span class="stringliteral">&quot;Out of bounds access.&quot;</span>);</div>
@@ -272,7 +288,7 @@ $(document).ready(function() { init_codefold(1); });
 <div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>        <span class="keyword">constexpr</span> <span class="keywordtype">void</span> compute_single_diagonal(<span class="keyword">const</span> coord_t&amp; _id, neighbour_t&amp; _output) <span class="keyword">const</span> <span class="keyword">noexcept</span> {</div>
 <div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span> </div>
 <div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>            <span class="keyword">constexpr</span>  <span class="keywordtype">size_t</span> sampleIndex = (Index &gt;= s_neighbour_count / 2U) ? (Index + 1U) : Index;</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>            <span class="keyword">constexpr</span> coord_t direction   = <a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_a8626929faa2650afe5c38516a65408d4.html#a8626929faa2650afe5c38516a65408d4">utils::to_nd</a>(sampleIndex, coord_t { 3U });</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>            <span class="keyword">constexpr</span> coord_t direction   = <a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_aa56b3789fceb847816a4fef606f80dfb.html#aa56b3789fceb847816a4fef606f80dfb">utils::to_nd</a>(sampleIndex, coord_t { 3U });</div>
 <div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span> </div>
 <div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>            <span class="keywordtype">bool</span>    oob    = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>            coord_t coord = _id;</div>
@@ -298,8 +314,8 @@ $(document).ready(function() { init_codefold(1); });
 <div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>            --nCoord[Index];</div>
 <div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>            ++pCoord[Index];</div>
 <div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span> </div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>            _negative = { _id[Index] &gt; 0U                 &amp;&amp; at(<a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_ae058109b5e8bcba39eb6b7434d7ea183.html#ae058109b5e8bcba39eb6b7434d7ea183">utils::to_1d</a>(nCoord, m_size)).is_active(), nCoord };</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>            _positive = { _id[Index] &lt; m_size[Index] - 1U &amp;&amp; at(<a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_ae058109b5e8bcba39eb6b7434d7ea183.html#ae058109b5e8bcba39eb6b7434d7ea183">utils::to_1d</a>(pCoord, m_size)).is_active(), pCoord };</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>            _negative = { _id[Index] &gt; 0U                 &amp;&amp; at(<a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_a5741e93a4c4f5630e7c86bda862cf611.html#a5741e93a4c4f5630e7c86bda862cf611">utils::to_1d</a>(nCoord, m_size)).is_active(), nCoord };</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>            _positive = { _id[Index] &lt; m_size[Index] - 1U &amp;&amp; at(<a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_a5741e93a4c4f5630e7c86bda862cf611.html#a5741e93a4c4f5630e7c86bda862cf611">utils::to_1d</a>(pCoord, m_size)).is_active(), pCoord };</div>
 <div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>        }</div>
 <div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>    };</div>
 <div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span> </div>
@@ -313,7 +329,7 @@ $(document).ready(function() { init_codefold(1); });
 <div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span> </div>
 <div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    <span class="keyword">private</span>:</div>
 <div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span> </div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> s_neighbour_count{<a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_a88b47febe37e9b6c92922824dcb0f672.html#a88b47febe37e9b6c92922824dcb0f672">utils::powui</a>(<span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(3U), s_rank) - 1U};</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> s_neighbour_count{<a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_a132ec9015658e62fa2f575484e51c3ab.html#a132ec9015658e62fa2f575484e51c3ab">utils::powui</a>(<span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(3U), s_rank) - 1U};</div>
 <div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span> </div>
 <div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>        coord_t m_size;</div>
 <div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>        <span class="keywordtype">size_t</span>  m_count;</div>
@@ -368,10 +384,10 @@ $(document).ready(function() { init_codefold(1); });
 <div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span> </div>
 <div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>        <span class="keyword">template</span> &lt;<span class="keywordtype">bool</span> IncludeDiagonals = false&gt;</div>
 <div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>        [[nodiscard]] HOT <span class="keyword">constexpr</span> <span class="keyword">auto</span> get_neighbours(<span class="keywordtype">size_t</span> _id) <span class="keyword">const</span> <span class="keyword">noexcept</span> {</div>
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>            <span class="keywordflow">return</span> get_neighbours&lt;IncludeDiagonals&gt;(<a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_a8626929faa2650afe5c38516a65408d4.html#a8626929faa2650afe5c38516a65408d4">utils::to_nd</a>(_id, size()));</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>            <span class="keywordflow">return</span> get_neighbours&lt;IncludeDiagonals&gt;(<a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_aa56b3789fceb847816a4fef606f80dfb.html#aa56b3789fceb847816a4fef606f80dfb">utils::to_nd</a>(_id, size()));</div>
 <div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>        }</div>
 <div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span> </div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>        [[nodiscard]] <span class="keyword">constexpr</span> <span class="keyword">auto</span> at(<span class="keyword">const</span> coord_t&amp; _id)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> at(<a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_ae058109b5e8bcba39eb6b7434d7ea183.html#ae058109b5e8bcba39eb6b7434d7ea183">utils::to_1d</a>(_id, m_size)); }</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>        [[nodiscard]] <span class="keyword">constexpr</span> <span class="keyword">auto</span> at(<span class="keyword">const</span> coord_t&amp; _id)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> at(<a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_a5741e93a4c4f5630e7c86bda862cf611.html#a5741e93a4c4f5630e7c86bda862cf611">utils::to_1d</a>(_id, m_size)); }</div>
 <div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span> </div>
 <div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>        [[nodiscard]] HOT <span class="keyword">constexpr</span> <a class="code hl_class" href="../../db/dc4/structchdr_1_1mazes_1_1weighted__node.html">weighted_node&lt;bool&gt;</a> at(<span class="keywordtype">size_t</span> _id)<span class="keyword"> const </span>{</div>
 <div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>            assert(contains(_id) &amp;&amp; <span class="stringliteral">&quot;Out of bounds access.&quot;</span>);</div>
@@ -451,7 +467,7 @@ $(document).ready(function() { init_codefold(1); });
 <div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>        <span class="keyword">constexpr</span> <span class="keywordtype">void</span> compute_single_diagonal(<span class="keyword">const</span> coord_t&amp; _id, neighbour_t&amp; _output) <span class="keyword">const</span> <span class="keyword">noexcept</span> {</div>
 <div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span> </div>
 <div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>            <span class="keyword">constexpr</span>  <span class="keywordtype">size_t</span> sampleIndex = (Index &gt;= s_neighbour_count / 2U) ? (Index + 1U) : Index;</div>
-<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>            <span class="keyword">constexpr</span> coord_t direction   = <a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_a8626929faa2650afe5c38516a65408d4.html#a8626929faa2650afe5c38516a65408d4">utils::to_nd</a>(sampleIndex, coord_t { 3U });</div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>            <span class="keyword">constexpr</span> coord_t direction   = <a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_aa56b3789fceb847816a4fef606f80dfb.html#aa56b3789fceb847816a4fef606f80dfb">utils::to_nd</a>(sampleIndex, coord_t { 3U });</div>
 <div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span> </div>
 <div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>            <span class="keywordtype">bool</span>    oob    = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>            coord_t coord = _id;</div>
@@ -477,8 +493,8 @@ $(document).ready(function() { init_codefold(1); });
 <div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>            --nCoord[Index];</div>
 <div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>            ++pCoord[Index];</div>
 <div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span> </div>
-<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>            _negative = { _id[Index] &gt; 0U                 &amp;&amp; at(<a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_ae058109b5e8bcba39eb6b7434d7ea183.html#ae058109b5e8bcba39eb6b7434d7ea183">utils::to_1d</a>(nCoord, m_size)).is_active(), nCoord };</div>
-<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>            _positive = { _id[Index] &lt; m_size[Index] - 1U &amp;&amp; at(<a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_ae058109b5e8bcba39eb6b7434d7ea183.html#ae058109b5e8bcba39eb6b7434d7ea183">utils::to_1d</a>(pCoord, m_size)).is_active(), pCoord };</div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>            _negative = { _id[Index] &gt; 0U                 &amp;&amp; at(<a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_a5741e93a4c4f5630e7c86bda862cf611.html#a5741e93a4c4f5630e7c86bda862cf611">utils::to_1d</a>(nCoord, m_size)).is_active(), nCoord };</div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>            _positive = { _id[Index] &lt; m_size[Index] - 1U &amp;&amp; at(<a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_a5741e93a4c4f5630e7c86bda862cf611.html#a5741e93a4c4f5630e7c86bda862cf611">utils::to_1d</a>(pCoord, m_size)).is_active(), pCoord };</div>
 <div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>        }</div>
 <div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>    };</div>
 </div>
@@ -487,11 +503,26 @@ $(document).ready(function() { init_codefold(1); });
 <div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span> </div>
 <div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_GRID_HPP</span></div>
 <div class="ttc" id="astructchdr_1_1mazes_1_1weighted__node_html"><div class="ttname"><a href="../../db/dc4/structchdr_1_1mazes_1_1weighted__node.html">chdr::mazes::weighted_node</a></div><div class="ttdoc">Represents a node with a customisable weight.</div><div class="ttdef"><b>Definition</b> <a href="../../d1/d2d/weighted__node_8hpp_source.html#l00028">weighted_node.hpp:28</a></div></div>
-<div class="ttc" id="astructchdr_1_1utils_a8626929faa2650afe5c38516a65408d4_html_a8626929faa2650afe5c38516a65408d4"><div class="ttname"><a href="../../d2/dcb/structchdr_1_1utils_a8626929faa2650afe5c38516a65408d4.html#a8626929faa2650afe5c38516a65408d4">chdr::utils::to_nd</a></div><div class="ttdeci">static constexpr auto to_nd(const typename std::decay_t&lt; coord_t &gt;::value_type &amp;_index, const coord_t &amp;_sizes) noexcept</div><div class="ttdoc">Maps a one-dimensional index to a multi-dimensional coordinate representation.</div><div class="ttdef"><b>Definition</b> <a href="../../df/d93/utils_8hpp_source.html#l00145">utils.hpp:145</a></div></div>
-<div class="ttc" id="astructchdr_1_1utils_a88b47febe37e9b6c92922824dcb0f672_html_a88b47febe37e9b6c92922824dcb0f672"><div class="ttname"><a href="../../d2/dcb/structchdr_1_1utils_a88b47febe37e9b6c92922824dcb0f672.html#a88b47febe37e9b6c92922824dcb0f672">chdr::utils::powui</a></div><div class="ttdeci">static constexpr T powui(T _base, T _exp) noexcept</div><div class="ttdoc">Computes the power of an unsigned integral base raised to an unsigned integral exponent.</div><div class="ttdef"><b>Definition</b> <a href="../../df/d93/utils_8hpp_source.html#l00324">utils.hpp:324</a></div></div>
-<div class="ttc" id="astructchdr_1_1utils_ae058109b5e8bcba39eb6b7434d7ea183_html_ae058109b5e8bcba39eb6b7434d7ea183"><div class="ttname"><a href="../../d2/dcb/structchdr_1_1utils_ae058109b5e8bcba39eb6b7434d7ea183.html#ae058109b5e8bcba39eb6b7434d7ea183">chdr::utils::to_1d</a></div><div class="ttdeci">static constexpr auto to_1d(const coord_t &amp;_indices, const coord_t &amp;_sizes) noexcept</div><div class="ttdoc">Maps a multi-dimensional index to a one-dimensional array index.</div><div class="ttdef"><b>Definition</b> <a href="../../df/d93/utils_8hpp_source.html#l00228">utils.hpp:228</a></div></div>
+<div class="ttc" id="astructchdr_1_1utils_a132ec9015658e62fa2f575484e51c3ab_html_a132ec9015658e62fa2f575484e51c3ab"><div class="ttname"><a href="../../d2/dcb/structchdr_1_1utils_a132ec9015658e62fa2f575484e51c3ab.html#a132ec9015658e62fa2f575484e51c3ab">chdr::utils::powui</a></div><div class="ttdeci">static T powui(T _base, T _exp) noexcept</div><div class="ttdoc">Computes the power of an unsigned integral base raised to an unsigned integral exponent.</div><div class="ttdef"><b>Definition</b> <a href="../../df/d93/utils_8hpp_source.html#l00324">utils.hpp:324</a></div></div>
+<div class="ttc" id="astructchdr_1_1utils_a5741e93a4c4f5630e7c86bda862cf611_html_a5741e93a4c4f5630e7c86bda862cf611"><div class="ttname"><a href="../../d2/dcb/structchdr_1_1utils_a5741e93a4c4f5630e7c86bda862cf611.html#a5741e93a4c4f5630e7c86bda862cf611">chdr::utils::to_1d</a></div><div class="ttdeci">static auto to_1d(const coord_t &amp;_indices, const coord_t &amp;_sizes) noexcept</div><div class="ttdoc">Maps a multi-dimensional index to a one-dimensional array index.</div><div class="ttdef"><b>Definition</b> <a href="../../df/d93/utils_8hpp_source.html#l00228">utils.hpp:228</a></div></div>
+<div class="ttc" id="astructchdr_1_1utils_aa56b3789fceb847816a4fef606f80dfb_html_aa56b3789fceb847816a4fef606f80dfb"><div class="ttname"><a href="../../d2/dcb/structchdr_1_1utils_aa56b3789fceb847816a4fef606f80dfb.html#aa56b3789fceb847816a4fef606f80dfb">chdr::utils::to_nd</a></div><div class="ttdeci">static auto to_nd(const typename std::decay_t&lt; coord_t &gt;::value_type &amp;_index, const coord_t &amp;_sizes) noexcept</div><div class="ttdoc">Maps a one-dimensional index to a multi-dimensional coordinate representation.</div><div class="ttdef"><b>Definition</b> <a href="../../df/d93/utils_8hpp_source.html#l00145">utils.hpp:145</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
 <!-- HTML footer for doxygen -->
 <!-- Start footer part -->
+<div id="nav-path" class="navpath">
+    <!-- id is needed for treeview function! -->
+    <ul>
+      <li class="footer">
+        See the <a href="https://github.com/NazarElsayed/CHDR/tree/main">Official Repository</a>
+      </li>
+    </ul>
+</div>
+<footer class="custom-doxygen-footer">
+  <div>
+    <small>
+    </small>
+  </div>
+</footer>
 </body>
 </html>
