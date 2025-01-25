@@ -32,7 +32,7 @@ namespace chdr::solvers {
         using     scalar_t = typename params_t::scalar_type;
         using     weight_t = typename params_t::weight_type;
         using      coord_t = typename params_t:: coord_type;
-        using  direction_t = unsigned char;
+        using  direction_t = uint8_t;
         using   rotation_t = std::array<direction_t, 8U>;
         using     solver_t = solver<jps, params_t>;
         using  neighbour_t = typename std::remove_cvref_t<decltype(params_t::maze)>::neighbour_t;

@@ -42,7 +42,7 @@ namespace chdr::solvers {
     private:
 
         using node_t = std::conditional_t<std::is_void_v<derived>, managed_node<index_t>, derived>;
-        using count_t = unsigned char;
+        using count_t = uint8_t;
 
     public:
 

@@ -122,7 +122,7 @@ namespace test::generator {
                 }
             }
 
-            debug::log("\t[FINISHED] \t(~" + chdr::utils::trim_trailing_zeros(std::to_string(count / static_cast<long double>(1000000000.0))) + "b total candidate nodes)");
+            debug::log("\t[FINISHED] \t(~" + chdr::utils::trim_trailing_zeros(std::to_string(count / 1000000000.0l)) + "b total candidate nodes)");
 
 			return result;
 		}

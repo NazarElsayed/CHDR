@@ -29,12 +29,12 @@ namespace chdr {
      *          It has constant lookup, insertion, and removal times. \n\n
      *          It leverages a dense, contiguous memory layout for addressing elements that
      *          compresses their representation within memory, thereby improving cache locality
-     *          and reducing the space required to store elements. \n\n
+     *          and reducing the space required for storage. \n\n
      *          Due to its dense structure, the existence set experiences an increased worst-case
      *          memory complexity. However, as it is non-owning, it often uses less memory than its
      *          sparse counterparts when indexing is monotonic. \n\n
-     *          Memory efficiency and performance are customisable through specifying the memory
-     *          layout using the provided template parameter.
+     *          Memory efficiency and performance are customisable through specifying the width
+     *          using the provided template parameter.
      *
      * @warning This data structure does not employ collision resolution techniques.
      *          You must ensure a unique hash or manage collisions yourself.
@@ -61,24 +61,32 @@ namespace chdr {
      * set.erase(2);
      * @endcode
      *
-    * @tparam boolean_t Specifies the width of elements within the set:
-     *                  - `bool`: Minimises memory usage (One bit per item).
-     *                  - `char`: Higher performance with increased memory usage (One byte per item).
-     *                  - ... : Other types may be specified, however, they must be integral and convertible to bool.
+     * @tparam width_t The width of the given type specifies the width of elements within the set.
+     *                   For example:
+     *                   - `bool`: Minimises memory usage (One bit per item).
+     *                   - `char`: Higher performance with increased memory usage (One byte per item).
+     *                   - ... : Other types may be specified, however, they must be integral and convertible to bool.
+     *
+     * @remarks For most use cases, a 1-bit or 8-bit width are all that is needed.
+     *          Choosing larger widths may not necessarily improve performance, and could
+     *          reduce the efficiency of the existence set.
+     *          Always consider the execution context of the program, and make adjustments
+     *          to fit the needs of your target platform.
      *
      * @note This class uses polymorphic memory resources (`std::pmr::memory_resource`)
      *       to provide fine-grained control over memory allocation.
      *
-     * @remarks existence_set follows an STL-like design.
+     * @remarks existence_set follows an STL-like design and supports iterators.
      */
-    template <typename boolean_t = char>
+    template <typename width_t = char>
     class existence_set {
 
         // Validate the template parameter.
-        static_assert(std::is_integral_v<boolean_t>, "boolean_t must be an integral type.");
-        static_assert(std::is_convertible_v<boolean_t, bool>, "boolean_t must be convertible to bool.");
+        static_assert(std::is_integral_v<width_t>, "width_t must be an integral type.");
+        static_assert(std::is_convertible_v<width_t, bool>, "width_t must be convertible to bool.");
 
     private:
+
         /**
          * @brief Storage for tracking existence.
          * @details This structure tracks whether elements are present or absent
@@ -87,7 +95,7 @@ namespace chdr {
          * @note Currently uses a polymorphic memory resource-enabled vector.
          *       Future versions may support other container types for added flexibility and constexpr support.
          */
-        std::pmr::vector<boolean_t> c;
+        std::pmr::vector<width_t> c;
 
         /**
          * @brief Enables a hash in the set.
@@ -104,7 +112,7 @@ namespace chdr {
             /*
              * Suppress GCC-specific warnings about potential string overflow in this section of code.
              *
-             * As 'boolean_t' can be a valid alias for 'char' type, linting tools occasionally
+             * As 'width_t' can be a valid alias for 'char' type, linting tools occasionally
              * misidentify this code as string manipulation.
              */
 #if defined(GCC)
@@ -112,7 +120,7 @@ namespace chdr {
 #pragma GCC diagnostic ignored "-Wstringop-overflow"
 #endif
 
-            c[_hash] = static_cast<boolean_t>(true);
+            c[_hash] = static_cast<width_t>(true);
 
 #if defined(GCC)
 #pragma GCC diagnostic pop
@@ -127,7 +135,7 @@ namespace chdr {
          */
         constexpr void disable(size_t _hash) noexcept {
             if (_hash < c.size()) {
-                c[_hash] = static_cast<boolean_t>(false);
+                c[_hash] = static_cast<width_t>(false);
             }
         }
 
@@ -288,7 +296,7 @@ namespace chdr {
         [[maybe_unused]] constexpr void trim() {
 
             auto it = c.rbegin();
-            while (it != c.rend() && !static_cast<boolean_t>(*it)) {
+            while (it != c.rend() && !static_cast<width_t>(*it)) {
                 ++it;
             }
             c.erase(it.base(), c.end());
@@ -320,7 +328,7 @@ namespace chdr {
          * @see existence_set::prune()
          * @see existence_set::reserve()
          */
-        [[maybe_unused]] constexpr void resize(size_t _new_size, boolean_t _new_value = { false }) {
+        [[maybe_unused]] constexpr void resize(size_t _new_size, width_t _new_value = { false }) {
             c.resize(_new_size, _new_value);
         }
 
@@ -373,10 +381,10 @@ namespace chdr {
          */
         [[maybe_unused, nodiscard]] constexpr auto capacity() const noexcept { return c.capacity(); }
 
-        using iterator_t               = typename std::vector<boolean_t>::              iterator;
-        using const_iterator_t         = typename std::vector<boolean_t>::        const_iterator;
-        using reverse_iterator_t       = typename std::vector<boolean_t>::      reverse_iterator;
-        using const_reverse_iterator_t = typename std::vector<boolean_t>::const_reverse_iterator;
+        using iterator_t               = typename std::vector<width_t>::              iterator;
+        using const_iterator_t         = typename std::vector<width_t>::        const_iterator;
+        using reverse_iterator_t       = typename std::vector<width_t>::      reverse_iterator;
+        using const_reverse_iterator_t = typename std::vector<width_t>::const_reverse_iterator;
 
         [[maybe_unused, nodiscard]] constexpr       iterator_t  begin()       noexcept { return c.begin();  }
         [[maybe_unused, nodiscard]] constexpr const_iterator_t  begin() const noexcept { return c.begin();  }

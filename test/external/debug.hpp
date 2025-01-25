@@ -144,7 +144,7 @@ namespace {
 	 * The LogType enum represents different levels of log messages that can be used to categorize log entries.
 	 * Each log type is assigned a character value which is used to differentiate between log messages.
 	 */
-	 enum log_type : unsigned char {
+	 enum log_type : uint8_t {
 		   trace = 1U,       /**< @brief In-depth tracking of system operations.     */
 		   debug = 1U << 1U, /**< @brief General code debugging.                     */
 		    info = 1U << 2U, /**< @brief General insights about application status.  */
