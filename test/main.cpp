@@ -93,7 +93,7 @@ namespace test {
 
 			auto  monotonic = chdr::monotonic_pool();
 			auto* polytonic = std::pmr::new_delete_resource();
-			auto  pool      = chdr::polytonic_pool();
+			auto  pool      = chdr::heterogeneous_pool();
 
 			struct params {
 

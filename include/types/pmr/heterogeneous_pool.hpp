@@ -8,8 +8,8 @@
 
 // ReSharper disable CppInconsistentNaming
 
-#ifndef CHDR_POLYTONIC_POOL_HPP
-#define CHDR_POLYTONIC_POOL_HPP
+#ifndef CHDR_HETEROGENEOUS_POOL_HPP
+#define CHDR_HETEROGENEOUS_POOL_HPP
 
 #include <cassert>
 #include <cstddef>
@@ -25,7 +25,7 @@
 namespace chdr {
 
     template <bool Coalescing = true>
-    class polytonic_pool : public std::pmr::memory_resource {
+    class heterogeneous_pool : public std::pmr::memory_resource {
 
     private:
 
@@ -226,13 +226,13 @@ namespace chdr {
 
     public:
 
-        explicit polytonic_pool() noexcept :
+        explicit heterogeneous_pool() noexcept :
             m_stack_block(),
             initial_block_width(default_block_width),
             m_stack_write(0U),
             block_width(initial_block_width) {}
 
-        explicit polytonic_pool(size_t _capacity) noexcept :
+        explicit heterogeneous_pool(size_t _capacity) noexcept :
             m_stack_block(),
             initial_block_width(utils::min(_capacity, max_block_width)),
             m_stack_write(0U),
@@ -241,7 +241,7 @@ namespace chdr {
             assert(_capacity >= 2U && "Capacity must be at least 2.");
         }
 
-        ~polytonic_pool() override {
+        ~heterogeneous_pool() override {
             cleanup();
         }
 
@@ -288,4 +288,4 @@ namespace chdr {
 
 } //chdr
 
-#endif //CHDR_POLYTONIC_POOL_HPP
+#endif //CHDR_HETEROGENEOUS_POOL_HPP
