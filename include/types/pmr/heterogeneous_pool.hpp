@@ -6,8 +6,6 @@
  * https://creativecommons.org/licenses/by-nc-nd/4.0/
  */
 
-// ReSharper disable CppInconsistentNaming
-
 #ifndef CHDR_HETEROGENEOUS_POOL_HPP
 #define CHDR_HETEROGENEOUS_POOL_HPP
 
@@ -29,16 +27,6 @@ namespace chdr {
 
     private:
 
-        static constexpr size_t default_block_width {  4096U };
-        static constexpr size_t     max_block_width { 65536U };
-        static constexpr size_t  s_stack_block_size {  4096U };
-
-        alignas(std::max_align_t) uint8_t m_stack_block[s_stack_block_size]; // NOLINT(*-avoid-c-arrays)
-
-        size_t initial_block_width;
-        size_t m_stack_write;
-        size_t block_width;
-
         struct block final {
 
             size_t   size;
@@ -53,7 +41,7 @@ namespace chdr {
             ~block() = default;
 
             [[nodiscard]] HOT constexpr block           (const block&) = default;
-                          HOT constexpr block& operator=(const block&) = default;
+            HOT constexpr block& operator=(const block&) = default;
 
             [[nodiscard]] HOT constexpr block(block&& other) noexcept = default;
 
@@ -67,19 +55,29 @@ namespace chdr {
             }
         };
 
-        std::vector<block> blocks;
-        std::map<size_t, block> free;
+        static constexpr size_t s_default_block_width {  4096U };
+        static constexpr size_t     s_max_block_width { 65536U };
+        static constexpr size_t    s_stack_block_size {  4096U };
+
+        alignas(std::max_align_t) uint8_t m_stack_block[s_stack_block_size]; // NOLINT(*-avoid-c-arrays)
+
+        size_t m_stack_write;
+        size_t m_initial_block_width;
+        size_t m_block_width;
+
+        std::vector<block> m_blocks;
+        std::map<size_t, block> m_free;
 
         HOT uint8_t* expand(size_t _bytes, size_t _alignment) noexcept {
 
-            const auto allocate_size = utils::max(block_width, _bytes);
+            const auto allocate_size = utils::max(m_block_width, _bytes);
 
             uint8_t* result = nullptr;
 
             try {
                 result = static_cast<uint8_t*>(::operator new(allocate_size, static_cast<std::align_val_t>(_alignment)));
 
-                blocks.emplace_back(
+                m_blocks.emplace_back(
                     allocate_size,
                     _alignment,
                     result
@@ -101,7 +99,7 @@ namespace chdr {
                      */
                     bool success = false;
                     for (size_t i = 0U; i < remaining_size; ++i) {
-                        if (free.try_emplace(remaining_size - i, new_block).second) {
+                        if (m_free.try_emplace(remaining_size - i, new_block).second) {
                             success = true;
                             break;
                         }
@@ -109,6 +107,8 @@ namespace chdr {
 
                     if (!success) { throw std::bad_alloc(); }
                 }
+
+                m_block_width = utils::min(m_block_width * 2U, s_max_block_width);
             }
             catch (...) {
 
@@ -119,9 +119,6 @@ namespace chdr {
                     result = nullptr;
                 }
             }
-
-            block_width = utils::min(block_width * 2U, max_block_width);
-
             return result;
         }
 
@@ -130,8 +127,8 @@ namespace chdr {
             uint8_t* result;
 
             // Find the smallest free block that fits:
-            auto it = free.lower_bound(_bytes);
-            if (it != free.end() && it->second.size >= _bytes) {
+            auto it = m_free.lower_bound(_bytes);
+            if (it != m_free.end() && it->second.size >= _bytes) {
 
                 result = it->second.data;
 
@@ -143,7 +140,7 @@ namespace chdr {
                     it->second.data += utils::max(_bytes, it->second.alignment);
                 }
                 else {
-                    free.erase(it);
+                    m_free.erase(it);
                 }
             }
             else {
@@ -192,18 +189,18 @@ namespace chdr {
 
                 if constexpr (Coalescing) {
 
-                    auto it = free.lower_bound(_bytes);
+                    auto it = m_free.lower_bound(_bytes);
 
                     // Merge with next block if adjacent:
-                    if (it != free.end() && static_cast<uint8_t*>(_p) + _bytes == it->second.data) {
+                    if (it != m_free.end() && static_cast<uint8_t*>(_p) + _bytes == it->second.data) {
                         _bytes    += it->second.size;
                         _alignment = utils::max(it->second.alignment, _alignment);
 
-                        it = free.erase(it);
+                        it = m_free.erase(it);
                     }
 
                     // Merge with previous block if adjacent:
-                    if (it != free.begin()) {
+                    if (it != m_free.begin()) {
                         --it;
 
                         if (it->second.data + it->second.size == _p) {
@@ -211,12 +208,12 @@ namespace chdr {
                             _bytes    += it->second.size;
                             _alignment = utils::max(it->second.alignment, _alignment);
 
-                            free.erase(it);
+                            m_free.erase(it);
                         }
                     }
                 }
 
-                free.try_emplace(_bytes, _bytes, _alignment, static_cast<uint8_t*>(_p));
+                m_free.try_emplace(_bytes, _bytes, _alignment, static_cast<uint8_t*>(_p));
             }
         }
 
@@ -226,27 +223,56 @@ namespace chdr {
 
     public:
 
-        explicit heterogeneous_pool() noexcept :
-            m_stack_block(),
-            initial_block_width(default_block_width),
+        explicit heterogeneous_pool(size_t _initial_block_width = s_default_block_width, size_t _capacity = 32U) noexcept :
             m_stack_write(0U),
-            block_width(initial_block_width) {}
-
-        explicit heterogeneous_pool(size_t _capacity) noexcept :
-            m_stack_block(),
-            initial_block_width(utils::min(_capacity, max_block_width)),
-            m_stack_write(0U),
-            block_width(initial_block_width)
+            m_initial_block_width(utils::min(_initial_block_width, s_max_block_width)),
+            m_block_width(m_initial_block_width)
         {
             assert(_capacity >= 2U && "Capacity must be at least 2.");
+
+            m_blocks.reserve(_capacity);
         }
 
         ~heterogeneous_pool() override {
             cleanup();
         }
 
+        constexpr heterogeneous_pool           (const heterogeneous_pool&) = delete;
+        constexpr heterogeneous_pool& operator=(const heterogeneous_pool&) = delete;
+
+        [[nodiscard]] constexpr heterogeneous_pool(heterogeneous_pool&& _other) noexcept :
+            m_stack_write        (_other.m_stack_write        ),
+            m_initial_block_width(_other.m_initial_block_width),
+            m_block_width        (_other.m_block_width        ),
+            m_blocks             (std::move(_other.m_blocks)  ),
+            m_free               (std::move(_other.m_free  )  )
+        {
+            _other.m_stack_write = 0;
+            _other.m_blocks.clear();
+            _other.m_free.clear();
+        }
+
+        heterogeneous_pool& operator=(heterogeneous_pool&& _other) noexcept {
+
+            if (this != &_other) {
+
+                cleanup();
+
+                m_stack_write         = _other.m_stack_write;
+                m_initial_block_width = _other.m_initial_block_width;
+                m_block_width         = _other.m_block_width;
+                m_blocks              = std::move(_other.m_blocks);
+                m_free                = std::move(_other.m_free  );
+
+                _other.m_stack_write = 0U;
+                _other.m_blocks.clear();
+                _other.m_free.clear();
+            }
+            return *this;
+        }
+
         void cleanup() noexcept {
-            for (const auto& item : blocks) {
+            for (const auto& item : m_blocks) {
                 ::operator delete(item.data, static_cast<std::align_val_t>(item.alignment));
             }
         }
@@ -254,33 +280,33 @@ namespace chdr {
         void reset() noexcept {
 
             m_stack_write = 0U;
-            block_width = initial_block_width;
+            m_block_width = m_initial_block_width;
 
             try {
-                free.clear();
-                for (const auto& item : blocks) {
-                    free.emplace(item.size, item);
+                m_free.clear();
+                for (const auto& item : m_blocks) {
+                    m_free.emplace(item.size, item);
                 }
             }
             catch (...) {
-                  free.clear();
-                blocks.clear();
+                  m_free.clear();
+                m_blocks.clear();
             }
         }
 
         void release() noexcept {
 
             m_stack_write = 0U;
-            block_width = initial_block_width;
+            m_block_width = m_initial_block_width;
 
             {
                 cleanup();
-                decltype(blocks) temp{};
-                blocks = std::move(temp);
+                decltype(m_blocks) temp{};
+                m_blocks = std::move(temp);
             }
             {
-                decltype(free) temp{};
-                free = std::move(temp);
+                decltype(m_free) temp{};
+                m_free = std::move(temp);
             }
         }
 

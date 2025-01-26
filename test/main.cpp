@@ -91,9 +91,9 @@ namespace test {
 			//const auto test = chdr::mazes::graph<index_t, scalar_t>(grid);
 			//const auto test = generator::graph::generate<weight_t, index_t, coord_t, scalar_t>(start, end, size, seed);
 
-			auto  monotonic = chdr::monotonic_pool();
-			auto* polytonic = std::pmr::new_delete_resource();
-			auto  pool      = chdr::heterogeneous_pool();
+			auto monotonic = chdr::monotonic_pool();
+			auto polytonic = chdr::heterogeneous_pool();
+			auto pool      = chdr::homogeneous_pool();
 
 			struct params {
 
@@ -111,7 +111,7 @@ namespace test {
 		                 scalar_type  (*h)(const coord_type&, const coord_type&) noexcept;
 
 				decltype(monotonic)* monotonic_pmr;
-				decltype(polytonic)  polytonic_pmr;
+				decltype(polytonic)* polytonic_pmr;
 				decltype(     pool)* pool_pmr;
 
 		        const scalar_type  weight       = 1U;
@@ -119,7 +119,7 @@ namespace test {
 		        const      size_t  memoryLimit  = static_cast<size_t>(-1U);
 			};
 
-			const params args { test, start, end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, polytonic, &pool };
+			const params args { test, start, end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &polytonic, &pool };
 
                  if (_solver == "astar"    ) { result = invoke<chdr::solvers::    astar, params>(args); }
             else if (_solver == "bfs"      ) { result = invoke<chdr::solvers::      bfs, params>(args); }

@@ -24,7 +24,7 @@ namespace chdr::solvers {
 
         friend class solver<gstar, params_t>;
 
-    private:
+    public:
 
         using  index_t = typename params_t:: index_type;
         using scalar_t = typename params_t::scalar_type;

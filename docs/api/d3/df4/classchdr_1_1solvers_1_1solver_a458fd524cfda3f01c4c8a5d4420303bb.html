@@ -13,6 +13,10 @@
 <script type="text/javascript" src="../../doxygen-awesome-paragraph-link.js"></script>
 <script type="text/javascript" src="../../doxygen-awesome-darkmode-toggle.js"></script>
 <script type="text/javascript" src="../../doxygen-awesome-fragment-copy-button.js"></script>
+<link href="../../navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="../../resize.js"></script>
+<script type="text/javascript" src="../../navtreedata.js"></script>
+<script type="text/javascript" src="../../navtree.js"></script>
 <link href="../../search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../search/searchdata.js"></script>
 <script type="text/javascript" src="../../search/search.js"></script>
@@ -60,6 +64,23 @@ $(function() {
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('d3/df4/classchdr_1_1solvers_1_1solver_a458fd524cfda3f01c4c8a5d4420303bb.html','../../'); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,39 +102,20 @@ $(function() {
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><b>chdr</b></li><li class="navelem"><b>solvers</b></li><li class="navelem"><a class="el" href="../../d3/df4/classchdr_1_1solvers_1_1solver.html">solver</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="contents">
-<table cellspacing="0" cellpadding="0" border="0">
-  <tr>
-   <td valign="top">
-      <div class="navtab">
-        <table>
-          <tr><td class="navtab"><a class="navtab" href="../../d3/df4/classchdr_1_1solvers_1_1solver_a27feec6a8bfa491b399c0cd7e158e5cd.html#a27feec6a8bfa491b399c0cd7e158e5cd">operator()</a></td></tr>
-          <tr><td class="navtab"><a class="navtab" href="../../d3/df4/classchdr_1_1solvers_1_1solver_ab98298b6d67e41f622dcde441f24ed6f.html#ab98298b6d67e41f622dcde441f24ed6f">operator()</a></td></tr>
-          <tr><td class="navtab"><a class="navtab" href="../../d3/df4/classchdr_1_1solvers_1_1solver_a096fe8cb528641fed6813df1f40bd347.html#a096fe8cb528641fed6813df1f40bd347">solve</a></td></tr>
-          <tr><td class="navtab"><a class="navtab" href="../../d3/df4/classchdr_1_1solvers_1_1solver_aa62632bf43d0cf6db6a9f6de5e76b0ba.html#aa62632bf43d0cf6db6a9f6de5e76b0ba">solve</a></td></tr>
-          <tr><td class="navtabHL"><a class="navtab" href="../../d3/df4/classchdr_1_1solvers_1_1solver_a458fd524cfda3f01c4c8a5d4420303bb.html#a458fd524cfda3f01c4c8a5d4420303bb">solver</a></td></tr>
-        </table>
-      </div>
-   </td>
-   <td valign="top" class="mempage">
 <a id="a458fd524cfda3f01c4c8a5d4420303bb" name="a458fd524cfda3f01c4c8a5d4420303bb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a458fd524cfda3f01c4c8a5d4420303bb">&#9670;&#160;</a></span>solver()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="../../d3/df4/classchdr_1_1solvers_1_1solver.html">template</a>&lt; <a class="el" href="../../d3/df4/classchdr_1_1solvers_1_1solver.html">typename</a> <a class="el" href="../../d3/df4/classchdr_1_1solvers_1_1solver.html">params_t</a> &gt; <a class="el" href="../../d3/df4/classchdr_1_1solvers_1_1solver.html">typename</a> solver_t, <a class="el" href="../../d3/df4/classchdr_1_1solvers_1_1solver.html">typename</a> <a class="el" href="../../d3/df4/classchdr_1_1solvers_1_1solver.html">params_t</a> &gt; </div>
+template&lt;template&lt; typename params_t &gt; typename solver_t, typename params_t &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../d3/df4/classchdr_1_1solvers_1_1solver.html">constexpr</a> <a class="el" href="../../d3/df4/classchdr_1_1solvers_1_1solver.html">solver</a> </td>
+          <td class="memname">constexpr <a class="el" href="../../d3/df4/classchdr_1_1solvers_1_1solver.html">solver</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -132,11 +134,23 @@ template&lt;<a class="el" href="../../d3/df4/classchdr_1_1solvers_1_1solver.html
 
 </div>
 </div>
-    </td>
-  </tr>
-</table>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- HTML footer for doxygen -->
 <!-- Start footer part -->
+<div id="nav-path" class="navpath">
+    <!-- id is needed for treeview function! -->
+    <ul>
+      <li class="footer">
+        See the <a href="https://github.com/NazarElsayed/CHDR/tree/main">Official Repository</a>
+      </li>
+    </ul>
+</div>
+<footer class="custom-doxygen-footer">
+  <div>
+    <small>
+    </small>
+  </div>
+</footer>
 </body>
 </html>

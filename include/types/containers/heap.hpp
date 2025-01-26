@@ -144,40 +144,6 @@ namespace chdr {
             }
         }
 
-        template<typename container_t>
-        explicit heap(const container_t& _container, std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource), comp() {
-
-            c.emplace_back(); // Add uninitialised super element.
-            c.insert(
-                c.end(),
-                _container.begin(),
-                _container.end()
-            );
-
-            if (!empty()) {
-                for (size_t i = size() / Kd; i >= 1U; --i) {
-                    sort_down(c[i]);
-                }
-            }
-        }
-
-        template<typename container_t>
-        explicit heap(container_t&& _container, std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource), comp() {
-
-            c.emplace_back(); // Add uninitialised super element.
-            c.insert(
-                c.end(),
-                std::make_move_iterator(_container.begin()),
-                std::make_move_iterator(_container.end())
-            );
-
-            if (!empty()) {
-                for (size_t i = size() / Kd; i >= 1U; --i) {
-                    sort_down(c[i]);
-                }
-            }
-        }
-
         [[maybe_unused, nodiscard]] HOT constexpr bool empty() const noexcept { return size() == 0U; }
 
         [[maybe_unused, nodiscard]] constexpr size_t size() const noexcept { return c.size() - 1U; }
