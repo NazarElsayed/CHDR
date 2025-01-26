@@ -16,7 +16,6 @@
 #include <cstdint>
 #include <map>
 #include <memory_resource>
-#include <set>
 #include <utility>
 #include <vector>
 
@@ -62,7 +61,7 @@ namespace chdr {
 #endif
             block& operator=(block&& other) noexcept = default;
 
-            [[nodiscard]] HOT constexpr bool operator<(const block& other) const noexcept {
+            [[nodiscard]] HOT constexpr bool operator < (const block& other) const noexcept {
                 return size < other.size;
             }
         };
@@ -91,9 +90,7 @@ namespace chdr {
                 if (remaining_size != 0U) {
 
                     block new_block(
-                        remaining_size,
-                        _alignment,
-                        result + utils::max(_bytes, _alignment)
+                        remaining_size, _alignment, result + utils::max(_bytes, _alignment)
                     );
 
                     /*
