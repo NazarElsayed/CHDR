@@ -73,17 +73,19 @@ namespace chdr {
         HOT void expand(size_t _bytes, size_t _alignment) {
 
             const auto allocate_size = utils::max(block_width, _bytes);
+            if (free.find(allocate_size) == free.end()) {
 
-            free.emplace(
-                allocate_size,
-                blocks.emplace_back(
+                free.emplace(
                     allocate_size,
-                    _alignment,
-                    static_cast<uint8_t*>(::operator new(allocate_size, static_cast<std::align_val_t>(_alignment)))
-                )
-            );
+                    blocks.emplace_back(
+                        allocate_size,
+                        _alignment,
+                        static_cast<uint8_t*>(::operator new(allocate_size, static_cast<std::align_val_t>(_alignment)))
+                    )
+                );
 
-            block_width = utils::min(block_width * 2U, max_block_width);
+                block_width = utils::min(block_width * 2U, max_block_width);
+            }
         }
 
         HOT uint8_t* allocate_from_free(const size_t _bytes) {
@@ -140,6 +142,8 @@ namespace chdr {
                 aligned_ptr = allocate_from_free(aligned_bytes);
             }
 
+            assert(aligned_ptr != nullptr);
+
             if (aligned_ptr == nullptr) {
                 throw std::bad_alloc();
             }
@@ -156,9 +160,9 @@ namespace chdr {
                 auto it = free.lower_bound(_bytes);
 
                 // Merge with next block if adjacent:
-                if (it != free.end() && _p + _bytes == it->second.data) {
-                    _bytes     += it->second.size;
-                    _alignment  = utils::max(it->second.alignment, _alignment);
+                if (it != free.end() && static_cast<uint8_t*>(_p) + _bytes == it->second.data) {
+                    _bytes    += it->second.size;
+                    _alignment = utils::max(it->second.alignment, _alignment);
                     
                     it = free.erase(it);
                 }
@@ -168,9 +172,9 @@ namespace chdr {
                     --it;
                     
                     if (it->second.data + it->second.size == _p) {
-                        _p          = it->second.data;
-                        _bytes     += it->second.size;
-                        _alignment  = utils::max(it->second.alignment, _alignment);
+                        _p         = it->second.data;
+                        _bytes    += it->second.size;
+                        _alignment = utils::max(it->second.alignment, _alignment);
                         
                         free.erase(it);
                     }

@@ -104,8 +104,7 @@ namespace chdr {
         static constexpr auto dimension_v { Kd };
 
         heap(std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {
-            c.reserve(1U);
-            c.emplace_back(); // Add uninitialised super element.
+            c.resize(1U); // Add uninitialised super element.
         }
 
         heap(size_t _capacity, std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {
@@ -129,7 +128,41 @@ namespace chdr {
             }
         }
 
-        explicit heap(Container&& _container) : c(std::move(_container)), comp() {
+        explicit heap(Container&& _container) : c(_container.get_allocator().resource()), comp() {
+
+            c.emplace_back(); // Add uninitialised super element.
+            c.insert(
+                c.end(),
+                std::make_move_iterator(_container.begin()),
+                std::make_move_iterator(_container.end())
+            );
+
+            if (!empty()) {
+                for (size_t i = size() / Kd; i >= 1U; --i) {
+                    sort_down(c[i]);
+                }
+            }
+        }
+
+        template<typename container_t>
+        explicit heap(const container_t& _container, std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource), comp() {
+
+            c.emplace_back(); // Add uninitialised super element.
+            c.insert(
+                c.end(),
+                _container.begin(),
+                _container.end()
+            );
+
+            if (!empty()) {
+                for (size_t i = size() / Kd; i >= 1U; --i) {
+                    sort_down(c[i]);
+                }
+            }
+        }
+
+        template<typename container_t>
+        explicit heap(container_t&& _container, std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource), comp() {
 
             c.emplace_back(); // Add uninitialised super element.
             c.insert(
@@ -380,6 +413,118 @@ namespace chdr {
         using const_iterator_t         = typename Container::        const_iterator;
         using reverse_iterator_t       = typename Container::      reverse_iterator;
         using const_reverse_iterator_t = typename Container::const_reverse_iterator;
+
+        [[maybe_unused, nodiscard]] constexpr iterator_t lower_bounds(const T& _value) noexcept {
+
+            if (!empty()) {
+
+                for (size_t i = 1U; i < c.size();) { // Start from index 1 to skip the super element.
+
+                    if (!comp(c[i], _value)) {
+                        return c.begin() + i; // Return the first element not less than the given value.
+                    }
+
+                    // Iterate through child nodes based on the Kd dimension.
+                    size_t child_start = i * Kd;
+                    size_t child_end   = std::min(child_start + Kd, c.size());
+                    bool   traversed   = false;
+
+                    for (size_t j = child_start; j < child_end; ++j) {
+                        if (j < c.size() && !comp(c[j], _value)) {
+                            i = j; // Traverse to the first valid child node.
+                            traversed = true;
+                            break;
+                        }
+                    }
+
+                    if (!traversed) {
+                        break; // Exit loop if no valid traversal path exists.
+                    }
+                }
+            }
+
+            return c.end(); // Return end if no matching element is found.
+        }
+
+        /**
+         * @brief Inserts an element into the heap while maintaining the heap property.
+         *
+         * @param position The iterator position where the element should be inserted.
+         * @param value The value to insert into the heap.
+         * @return iterator_t An iterator pointing to the inserted element.
+         */
+        constexpr iterator_t insert(iterator_t position, const T& value) {
+            auto distance_from_start = std::distance(c.begin(), position) - 1U; // Adjust for super element offset
+            c.insert(position, value);
+            sort_up(c[distance_from_start]);
+            return c.begin() + distance_from_start + 1U; // Return iterator to inserted element
+        }
+
+        constexpr iterator_t insert(iterator_t position, T&& value) {
+            auto distance_from_start = std::distance(c.begin(), position) - 1U; // Adjust for super element offset
+            c.insert(position, std::move(value));
+            sort_up(c[distance_from_start]);
+            return c.begin() + distance_from_start + 1U; // Return iterator to inserted element
+        }
+
+        /**
+         * @brief Removes an element from the heap using an iterator while maintaining the heap property.
+         *
+         * @param position The iterator position of the element to remove.
+         * @return iterator_t An iterator pointing to the element that follows the removed one.
+         */
+        constexpr iterator_t erase(iterator_t position) {
+
+            auto distance_from_start = std::distance(c.begin(), position);
+            auto size_before = size();
+
+            if (distance_from_start < size() + 1U) { // Ensure valid offset for super element
+                if (distance_from_start == size()) {
+                    c.pop_back(); // If last element, simply remove
+                }
+                else {
+                    c[distance_from_start] = std::move(c.back());
+                    c.pop_back();
+                    if (size_before > 1U) {
+                        if (distance_from_start > 1U && comp(c[distance_from_start], c[distance_from_start / Kd])) {
+                            sort_up(c[distance_from_start]);
+                        }
+                        else {
+                            sort_down(c[distance_from_start]);
+                        }
+                    }
+                }
+            }
+
+            return c.begin() + distance_from_start; // Return iterator to next element after erasure
+        }
+
+        /**
+         * @brief Inserts a range of elements into the heap.
+         *
+         * @tparam InputIt An input iterator type.
+         * @param first The beginning of the range to insert.
+         * @param last The end of the range to insert.
+         */
+        template <typename InputIt>
+        constexpr void insert(InputIt first, InputIt last) {
+            for (InputIt it = first; it != last; ++it) {
+                c.push_back(*it);
+                sort_up(c.back());
+            }
+        }
+
+        /**
+         * @brief Removes all elements in a given range from the heap while maintaining the heap property.
+         *
+         * @param first Iterator to the first element of the range.
+         * @param last Iterator to the element past the last one to erase.
+         */
+        constexpr void erase(iterator_t first, iterator_t last) {
+            for (auto it = first; it != last;) {
+                it = erase(it); // Keep erasing until the last element is removed.
+            }
+        }
 
         [[maybe_unused, nodiscard]] constexpr iterator_t        begin()       noexcept { return c.begin() + 1U; }
         [[maybe_unused, nodiscard]] constexpr const_iterator_t  begin() const noexcept { return c.begin() + 1U; }
