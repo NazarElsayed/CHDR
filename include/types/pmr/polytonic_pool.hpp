@@ -24,6 +24,7 @@
 
 namespace chdr {
 
+    template <bool Coalescing = true>
     class polytonic_pool : public std::pmr::memory_resource {
 
     private:
@@ -189,28 +190,31 @@ namespace chdr {
 
             if (((m_stack_write + (_bytes + _alignment - 1U)) & ~(_alignment - 1U)) > s_stack_block_size) {
 
-                //auto it = free.lower_bound(_bytes);
+                if constexpr (Coalescing) {
 
-                // // Merge with next block if adjacent:
-                // if (it != free.end() && static_cast<uint8_t*>(_p) + _bytes == it->second.data) {
-                //     _bytes    += it->second.size;
-                //     _alignment = utils::max(it->second.alignment, _alignment);
-                //
-                //     it = free.erase(it);
-                // }
-                //
-                // // Merge with previous block if adjacent:
-                // if (it != free.begin()) {
-                //     --it;
-                //
-                //     if (it->second.data + it->second.size == _p) {
-                //         _p         = it->second.data;
-                //         _bytes    += it->second.size;
-                //         _alignment = utils::max(it->second.alignment, _alignment);
-                //
-                //         free.erase(it);
-                //     }
-                // }
+                    auto it = free.lower_bound(_bytes);
+
+                    // Merge with next block if adjacent:
+                    if (it != free.end() && static_cast<uint8_t*>(_p) + _bytes == it->second.data) {
+                        _bytes    += it->second.size;
+                        _alignment = utils::max(it->second.alignment, _alignment);
+
+                        it = free.erase(it);
+                    }
+
+                    // Merge with previous block if adjacent:
+                    if (it != free.begin()) {
+                        --it;
+
+                        if (it->second.data + it->second.size == _p) {
+                            _p         = it->second.data;
+                            _bytes    += it->second.size;
+                            _alignment = utils::max(it->second.alignment, _alignment);
+
+                            free.erase(it);
+                        }
+                    }
+                }
 
                 free.try_emplace(_bytes, _bytes, _alignment, static_cast<uint8_t*>(_p));
             }
