@@ -137,15 +137,14 @@ namespace chdr {
 
                 result = it->second.data;
 
-                size_t remaining_size = it->second.size - _bytes;
+                // Consume the block, or modify it in-place:
+                auto remaining_size = it->second.size - _bytes;
+                if (remaining_size != 0U) {
 
-                // If the block can be modified in place:
-                if (remaining_size > 0) {
-                    it->second.size = remaining_size;
+                    it->second.size  = remaining_size;
                     it->second.data += utils::max(_bytes, it->second.alignment);
                 }
                 else {
-                    // Remove the block from the free list
                     free.erase(it);
                 }
             }
@@ -177,11 +176,8 @@ namespace chdr {
             // Attempt to find a free block, or create one otherwise:
             auto* aligned_ptr = allocate_from_free(aligned_bytes);
             if (aligned_ptr == nullptr) {
-                expand(_bytes, _alignment);
-                aligned_ptr = allocate_from_free(aligned_bytes);
+                aligned_ptr = expand(_bytes, _alignment);
             }
-
-            assert(aligned_ptr != nullptr);
 
             if (aligned_ptr == nullptr) {
                 throw std::bad_alloc();
@@ -196,31 +192,30 @@ namespace chdr {
 
             if (((m_stack_write + (_bytes + _alignment - 1U)) & ~(_alignment - 1U)) > s_stack_block_size) {
 
-                auto it = free.lower_bound(_bytes);
+                //auto it = free.lower_bound(_bytes);
 
-                // Merge with next block if adjacent:
-                if (it != free.end() && static_cast<uint8_t*>(_p) + _bytes == it->second.data) {
-                    _bytes    += it->second.size;
-                    _alignment = utils::max(it->second.alignment, _alignment);
-                    
-                    it = free.erase(it);
-                }
+                // // Merge with next block if adjacent:
+                // if (it != free.end() && static_cast<uint8_t*>(_p) + _bytes == it->second.data) {
+                //     _bytes    += it->second.size;
+                //     _alignment = utils::max(it->second.alignment, _alignment);
+                //
+                //     it = free.erase(it);
+                // }
+                //
+                // // Merge with previous block if adjacent:
+                // if (it != free.begin()) {
+                //     --it;
+                //
+                //     if (it->second.data + it->second.size == _p) {
+                //         _p         = it->second.data;
+                //         _bytes    += it->second.size;
+                //         _alignment = utils::max(it->second.alignment, _alignment);
+                //
+                //         free.erase(it);
+                //     }
+                // }
 
-                // Merge with previous block if adjacent:
-                if (it != free.begin()) {
-                    --it;
-                    
-                    if (it->second.data + it->second.size == _p) {
-                        _p         = it->second.data;
-                        _bytes    += it->second.size;
-                        _alignment = utils::max(it->second.alignment, _alignment);
-                        
-                        free.erase(it);
-                    }
-                }
-
-                // Insert the merged block back into the free list:
-                free.emplace(_bytes, block { _bytes, _alignment, static_cast<uint8_t*>(_p) });
+                free.try_emplace(_bytes, _bytes, _alignment, static_cast<uint8_t*>(_p));
             }
         }
 
