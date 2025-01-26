@@ -70,22 +70,61 @@ namespace chdr {
         std::vector<block> blocks;
         std::map<size_t, block> free;
 
-        HOT void expand(size_t _bytes, size_t _alignment) {
+        HOT uint8_t* expand(size_t _bytes, size_t _alignment) noexcept {
 
             const auto allocate_size = utils::max(block_width, _bytes);
-            if (free.find(allocate_size) == free.end()) {
 
-                free.emplace(
+            uint8_t* result = nullptr;
+
+            try {
+                result = static_cast<uint8_t*>(::operator new(allocate_size, static_cast<std::align_val_t>(_alignment)));
+
+                blocks.emplace_back(
                     allocate_size,
-                    blocks.emplace_back(
-                        allocate_size,
-                        _alignment,
-                        static_cast<uint8_t*>(::operator new(allocate_size, static_cast<std::align_val_t>(_alignment)))
-                    )
+                    _alignment,
+                    result
                 );
 
-                block_width = utils::min(block_width * 2U, max_block_width);
+                size_t remaining_size = allocate_size - _bytes;
+
+                // If the block isn't entirely consumed, add remaining space to the free list.
+                if (remaining_size != 0U) {
+
+                    block new_block(
+                        remaining_size,
+                        _alignment,
+                        result + utils::max(_bytes, _alignment)
+                    );
+
+                    /*
+                     * Attempt to insert new block into free list.
+                     * Repeat with a smaller key upon collision.
+                     * If insertion is impossible, throw.
+                     */
+                    bool success = false;
+                    for (size_t i = 0U; i < remaining_size; ++i) {
+                        if (free.try_emplace(remaining_size - i, new_block).second) {
+                            success = true;
+                            break;
+                        }
+                    }
+
+                    if (!success) { throw std::bad_alloc(); }
+                }
             }
+            catch (...) {
+
+                /* Catch any errors that occur during allocation. */
+
+                if (result != nullptr) {
+                    ::operator delete(result, static_cast<std::align_val_t>(_alignment));
+                    result = nullptr;
+                }
+            }
+
+            block_width = utils::min(block_width * 2U, max_block_width);
+
+            return result;
         }
 
         HOT uint8_t* allocate_from_free(const size_t _bytes) {
@@ -103,7 +142,7 @@ namespace chdr {
                 // If the block can be modified in place:
                 if (remaining_size > 0) {
                     it->second.size = remaining_size;
-                    it->second.data += _bytes;
+                    it->second.data += utils::max(_bytes, it->second.alignment);
                 }
                 else {
                     // Remove the block from the free list
@@ -201,8 +240,8 @@ namespace chdr {
             m_stack_block(),
             initial_block_width(utils::min(_capacity, max_block_width)),
             m_stack_write(0U),
-            block_width(initial_block_width
-        ) {
+            block_width(initial_block_width)
+        {
             assert(_capacity >= 2U && "Capacity must be at least 2.");
         }
 
@@ -210,7 +249,7 @@ namespace chdr {
             cleanup();
         }
 
-        void cleanup() {
+        void cleanup() noexcept {
             for (const auto& item : blocks) {
                 ::operator delete(item.data, static_cast<std::align_val_t>(item.alignment));
             }
