@@ -57,6 +57,8 @@ namespace test {
 
             /* TEST ALGORITHM */
             debug::log("(Solver):");
+            chdr::malloc_consolidate();
+
             decltype(chdr::solvers::solver<solver_t, params_t>::solve(_params)) path;
 
             auto result = std::numeric_limits<long double>::max();

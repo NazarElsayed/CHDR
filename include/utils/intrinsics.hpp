@@ -20,51 +20,60 @@
 
 /**
  * @def IVDEP
- * @brief Enables vectorised loops (platform-specific). Defaults to no effect on unsupported platforms.
+ * @brief Enables vectorised loops (platform-specific).
+ * @note Defaults to no effect on unsupported platforms.
  */
 
 /**
  * @def VECTOR_ALWAYS
- * @brief Forces vectorisation of loops (platform-specific). Defaults to no effect on unsupported platforms.
+ * @brief Forces vectorisation of loops (platform-specific).
+ * @note Defaults to no effect on unsupported platforms.
  */
 
 /**
  * @def LIKELY(x)
- * @brief Hints the compiler that the condition is likely to be true. Defaults to evaluating the condition as-is.
+ * @brief Hints the compiler that the condition is likely to be true.
+ * @note Defaults to evaluating the condition as-is.
  * @param x The condition to evaluate.
  */
 
 /**
  * @def UNLIKELY(x)
- * @brief Hints the compiler that the condition is likely to be false. Defaults to evaluating the condition as-is.
+ * @brief Hints the compiler that the condition is likely to be false.
+ * @note Defaults to evaluating the condition as-is.
  * @param x The condition to evaluate.
  */
 
 /**
  * @def PREFETCH(P, I)
- * @brief Provides a compiler hint to prefetch memory. Defaults to no effect on unsupported platforms.
+ * @brief Provides a compiler hint to prefetch memory.
+ * @note Defaults to no effect on unsupported platforms.
  * @param P Pointer to the memory to prefetch.
  * @param I Prefetch hint identifier (e.g., read/write locality).
  */
 
 /**
  * @def RESTRICT
- * @brief Specifies pointer aliasing restrictions to improve optimisation. Defaults to no effect on unsupported platforms.
+ * @brief Specifies pointer aliasing restrictions to improve optimisation.
+ * @note Defaults to no effect on unsupported platforms.
  */
 
 /**
  * @def ALWAYS_INLINE
- * @brief Forces a function to always be inlined (platform-specific). Defaults to no effect on unsupported platforms.
+ * @brief Forces a function to always be inlined (platform-specific).
+ * @note Defaults to no effect on unsupported platforms.
  */
 
 /**
  * @def HOT
- * @brief Marks a function as performance-critical (platform-specific). Defaults to no effect on unsupported platforms.
+ * @brief Marks a function as performance-critical (platform-specific).
+ * @note Defaults to no effect on unsupported platforms.
  */
 
 /**
  * @def COLD
- * @brief Marks a function as less frequently called (platform-specific). Defaults to no effect on unsupported platforms.
+ * @brief Marks a function as less frequently called (platform-specific).
+ * @note Defaults to no effect on unsupported platforms.
  */
 
 #include <cstddef>
