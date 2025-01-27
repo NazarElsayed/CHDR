@@ -9,12 +9,12 @@
 #ifndef CHDR_COMMON_HPP
 #define CHDR_COMMON_HPP
 
-#define CHDR_VERSION          "0.1.0-dev+f7e4f5b"
+#define CHDR_VERSION          "0.1.0-dev+6453ea7"
 #define CHDR_VERSION_MAJOR     0
 #define CHDR_VERSION_MINOR     1
 #define CHDR_VERSION_PATCH     0
 #define CHDR_VERSION_TWEAK    "dev"
-#define CHDR_VERSION_METADATA "f7e4f5b"
+#define CHDR_VERSION_METADATA "6453ea7"
 
 /* ReSharper enable CppUnusedIncludeDirective */
 // NOLINTBEGIN(*-include-cleaner)
@@ -28,8 +28,8 @@
 #include "include/solvers/base/managed_node.hpp"
 #include "include/solvers/base/solver.hpp"
 #include "include/solvers/base/unmanaged_node.hpp"
+#include "include/solvers/best_first.hpp"
 #include "include/solvers/bfs.hpp"
-#include "include/solvers/bstar.hpp"
 #include "include/solvers/dfs.hpp"
 #include "include/solvers/dijkstra.hpp"
 #include "include/solvers/eidastar.hpp"

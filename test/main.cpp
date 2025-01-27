@@ -37,27 +37,27 @@ namespace test {
 		              << "  <solver> <maze_weight_type> <x> <y> <z>      Process with 3-dimensional coordinates.\n"
 		              << "  <solver> <maze_weight_type> <x> <y> <z> <w>  Process with 4-dimensional coordinates.\n"
 			          << "\nSolvers:\n"
-		              << "  astar      A*\n"
-		              << "  bfs        Breadth-First Search\n"
-		              << "  bstar      Best-First Search\n"
-		              << "  dfs        Depth-First Search\n"
-		              << "  dijkstra   Dijkstra's Algorithm\n"
-		              << "  eidastar   Enhanced Iterative-Deepening A*\n"
-		              << "  eidbstar   Enhanced Iterative-Deepening Best-First Search\n"
-		              << "  eiddfs     Enhanced Iterative-Deepening Depth-First Search\n"
-		              << "  floodfill  Flood Fill\n"
-		              << "  fstar      Fringe Search F*\n"
-		              << "  gbfs       Graveyard Best-First Search\n"
-		              << "  gdfs       Graveyard Depth-First Search\n"
-		              << "  gjps       Graveyard Jump-Point Search\n"
-		              << "  gstar      Graveyard Search (G*)\n"
-		              << "  idastar    Iterative-Deepening A*\n"
-		              << "  idbstar    Iterative-Deepening Best-First Search\n"
-		              << "  iddfs      Iterative-Deepening Depth-First Search\n"
-		              << "  jps        Jump-Point Search\n"
+		              << "  astar       A*\n"
+		              << "  bfs         Breadth-First Search\n"
+		              << "  best_first  Best-First Search\n"
+		              << "  dfs         Depth-First Search\n"
+		              << "  dijkstra    Dijkstra's Algorithm\n"
+		              << "  eidastar    Enhanced Iterative-Deepening A*\n"
+		              << "  eidbstar    Enhanced Iterative-Deepening Best-First Search\n"
+		              << "  eiddfs      Enhanced Iterative-Deepening Depth-First Search\n"
+		              << "  floodfill   Flood Fill\n"
+		              << "  fstar       Fringe Search F*\n"
+		              << "  gbfs        Graveyard Best-First Search\n"
+		              << "  gdfs        Graveyard Depth-First Search\n"
+		              << "  gjps        Graveyard Jump-Point Search\n"
+		              << "  gstar       Graveyard Search (G*)\n"
+		              << "  idastar     Iterative-Deepening A*\n"
+		              << "  idbstar     Iterative-Deepening Best-First Search\n"
+		              << "  iddfs       Iterative-Deepening Depth-First Search\n"
+		              << "  jps         Jump-Point Search\n"
 				      << "\nMaze Weight Type:\n"
-					  << "  bit        Search space is represented with 1-bit values.\n"
-					  << "  byte       Search space is represented with 4-bit values.\n"
+					  << "  bit         Search space represented using 1-bit values.\n"
+					  << "  byte        Search space represented using 4-bit values.\n"
 		              << "\nExample:\n"
 		              << "  chdr astar 10\n"
 		              << "  chdr astar 10 10\n"
@@ -121,24 +121,24 @@ namespace test {
 
 			const params args { test, start, end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &polytonic, &homogeneous };
 
-                 if (_solver == "astar"    ) { result = invoke<chdr::solvers::    astar, params>(args); }
-            else if (_solver == "bfs"      ) { result = invoke<chdr::solvers::      bfs, params>(args); }
-            else if (_solver == "bstar"    ) { result = invoke<chdr::solvers::    bstar, params>(args); }
-            else if (_solver == "dfs"      ) { result = invoke<chdr::solvers::      dfs, params>(args); }
-            else if (_solver == "dijkstra" ) { result = invoke<chdr::solvers:: dijkstra, params>(args); }
-            else if (_solver == "eidastar" ) { result = invoke<chdr::solvers:: eidastar, params>(args); }
-            else if (_solver == "eidbstar" ) { result = invoke<chdr::solvers:: eidbstar, params>(args); }
-            else if (_solver == "eiddfs"   ) { result = invoke<chdr::solvers::   eiddfs, params>(args); }
-            else if (_solver == "floodfill") { result = invoke<chdr::solvers::floodfill, params>(args); }
-            else if (_solver == "fstar"    ) { result = invoke<chdr::solvers::    fstar, params>(args); }
-            else if (_solver == "gbfs"     ) { result = invoke<chdr::solvers::     gbfs, params>(args); }
-            else if (_solver == "gdfs"     ) { result = invoke<chdr::solvers::     gdfs, params>(args); }
-            else if (_solver == "gjps"     ) { result = invoke<chdr::solvers::     gjps, params>(args); }
-            else if (_solver == "gstar"    ) { result = invoke<chdr::solvers::    gstar, params>(args); }
-            else if (_solver == "idastar"  ) { result = invoke<chdr::solvers::  idastar, params>(args); }
-            else if (_solver == "idbstar"  ) { result = invoke<chdr::solvers::  idbstar, params>(args); }
-            else if (_solver == "iddfs"    ) { result = invoke<chdr::solvers::    iddfs, params>(args); }
-            else if (_solver == "jps"      ) { result = invoke<chdr::solvers::      jps, params>(args); }
+                 if (_solver == "astar"     ) { result = invoke<chdr::solvers::     astar, params>(args); }
+            else if (_solver == "bfs"       ) { result = invoke<chdr::solvers::       bfs, params>(args); }
+            else if (_solver == "best_first") { result = invoke<chdr::solvers::best_first, params>(args); }
+            else if (_solver == "dfs"       ) { result = invoke<chdr::solvers::       dfs, params>(args); }
+            else if (_solver == "dijkstra"  ) { result = invoke<chdr::solvers::  dijkstra, params>(args); }
+            else if (_solver == "eidastar"  ) { result = invoke<chdr::solvers::  eidastar, params>(args); }
+            else if (_solver == "eidbstar"  ) { result = invoke<chdr::solvers::  eidbstar, params>(args); }
+            else if (_solver == "eiddfs"    ) { result = invoke<chdr::solvers::    eiddfs, params>(args); }
+            else if (_solver == "floodfill" ) { result = invoke<chdr::solvers:: floodfill, params>(args); }
+            else if (_solver == "fstar"     ) { result = invoke<chdr::solvers::     fstar, params>(args); }
+            else if (_solver == "gbfs"      ) { result = invoke<chdr::solvers::      gbfs, params>(args); }
+            else if (_solver == "gdfs"      ) { result = invoke<chdr::solvers::      gdfs, params>(args); }
+            else if (_solver == "gjps"      ) { result = invoke<chdr::solvers::      gjps, params>(args); }
+            else if (_solver == "gstar"     ) { result = invoke<chdr::solvers::     gstar, params>(args); }
+            else if (_solver == "idastar"   ) { result = invoke<chdr::solvers::   idastar, params>(args); }
+            else if (_solver == "idbstar"   ) { result = invoke<chdr::solvers::   idbstar, params>(args); }
+            else if (_solver == "iddfs"     ) { result = invoke<chdr::solvers::     iddfs, params>(args); }
+            else if (_solver == "jps"       ) { result = invoke<chdr::solvers::       jps, params>(args); }
             else {
 		        debug::log("ERROR: Unknown solver \"" + std::string(_solver) + "\"!", error);
 		    }

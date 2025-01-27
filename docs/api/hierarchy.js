@@ -1,6 +1,7 @@
 var hierarchy =
 [
     [ "astar< params_t >", "d0/d64/structchdr_1_1solvers_1_1astar.html", null ],
+    [ "best_first< params_t >", "de/d28/structchdr_1_1solvers_1_1best__first.html", null ],
     [ "bnode< index_t >", "da/d98/structchdr_1_1solvers_1_1bnode.html", [
       [ "managed_node< index_t, node >", "df/d64/structchdr_1_1solvers_1_1managed__node.html", null ],
       [ "managed_node< index_t, derived >", "df/d64/structchdr_1_1solvers_1_1managed__node.html", null ],

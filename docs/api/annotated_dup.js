@@ -8,6 +8,7 @@ var annotated_dup =
       ] ],
       [ "solvers", null, [
         [ "astar", "d0/d64/structchdr_1_1solvers_1_1astar.html", null ],
+        [ "best_first", "de/d28/structchdr_1_1solvers_1_1best__first.html", null ],
         [ "bnode", "da/d98/structchdr_1_1solvers_1_1bnode.html", "da/d98/structchdr_1_1solvers_1_1bnode" ],
         [ "managed_node", "df/d64/structchdr_1_1solvers_1_1managed__node.html", "df/d64/structchdr_1_1solvers_1_1managed__node" ],
         [ "solver", "d3/df4/classchdr_1_1solvers_1_1solver.html", "d3/df4/classchdr_1_1solvers_1_1solver" ],

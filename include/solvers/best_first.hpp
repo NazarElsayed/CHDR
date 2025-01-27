@@ -20,17 +20,40 @@
 
 namespace chdr::solvers {
 
+    /**
+     * @struct best_first
+     * @brief Greedy best-first search algorithm.
+     * @details A heuristic-informed graph traversal and pathfinding algorithm which always prioritises its next move
+     *          based on least cost.
+     *
+     * Advantages:
+     * - Lower constant factor than A*.
+     * - Highly effective in searches with few obstacles.
+     * - Does not need a prepass, although performance can improve if the search space is pruned first.
+     *
+     * Limitations:
+     * - Does not guarantee an optimal path according to the cost heuristic.
+     * - Quickly exhausts memory in large or exhaustive searches.
+     * - Inefficient or complex search heuristics can reduce performance.
+     * - Poor performance when searches lack solutions.
+     * - Not suited for use in unbounded (infinite) space.
+     *
+     * Further Reading:
+     * - <a href="https://en.wikipedia.org/wiki/Best-first_search">Wikipedia Article</a>
+     *
+     * @tparam params_t Type containing the search parameters.
+     */
     template<typename params_t>
-    struct [[maybe_unused]] bstar final {
+    struct [[maybe_unused]] best_first final {
 
-        friend class solver<bstar, params_t>;
+        friend class solver<best_first, params_t>;
 
     private:
 
         using  index_t = typename params_t:: index_type;
         using scalar_t = typename params_t::scalar_type;
         using  coord_t = typename params_t:: coord_type;
-        using solver_t = solver<bstar, params_t>;
+        using solver_t = solver<best_first, params_t>;
 
         static_assert(std::is_arithmetic_v<scalar_t>, "scalar_t must be an integral or floating point type.");
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
