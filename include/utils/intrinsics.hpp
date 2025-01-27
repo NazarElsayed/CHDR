@@ -32,21 +32,21 @@
 
 /**
  * @def LIKELY(x)
- * @brief Hints the compiler that the condition is likely to be true.
+ * @brief Hints to the compiler that the condition is likely to be true (platform-specific).
  * @note Defaults to evaluating the condition as-is.
  * @param x The condition to evaluate.
  */
 
 /**
  * @def UNLIKELY(x)
- * @brief Hints the compiler that the condition is likely to be false.
+ * @brief Hints to the compiler that the condition is likely to be false (platform-specific).
  * @note Defaults to evaluating the condition as-is.
  * @param x The condition to evaluate.
  */
 
 /**
  * @def PREFETCH(P, I)
- * @brief Provides a compiler hint to prefetch memory.
+ * @brief Provides a compiler hint to prefetch memory (platform-specific).
  * @note Defaults to no effect on unsupported platforms.
  * @param P Pointer to the memory to prefetch.
  * @param I Prefetch hint identifier (e.g., read/write locality).
@@ -54,13 +54,13 @@
 
 /**
  * @def RESTRICT
- * @brief Specifies pointer aliasing restrictions to improve optimisation.
+ * @brief Specifies pointer aliasing restrictions to improve optimisation (platform-specific).
  * @note Defaults to no effect on unsupported platforms.
  */
 
 /**
  * @def ALWAYS_INLINE
- * @brief Forces a function to always be inlined (platform-specific).
+ * @brief Provides a compiler hint that a function should be inlined (platform-specific).
  * @note Defaults to no effect on unsupported platforms.
  */
 
@@ -117,25 +117,25 @@ namespace chdr {
     /** @brief Forces vectorisation of loops (platform-specific). */
     #define VECTOR_ALWAYS
 
-    /** @brief Hints the compiler that the condition is likely to be true. */
+    /** @brief Hints to the compiler that the condition is likely to be true (platform-specific). */
     #define LIKELY(x) (x)
 
-    /** @brief Hints the compiler that the condition is likely to be false. */
+    /** @brief Hints to the compiler that the condition is likely to be false (platform-specific). */
     #define UNLIKELY(x) (x)
 
-    /** @brief Provides a compiler hint to prefetch memory. */
+    /** @brief Provides a compiler hint to prefetch memory (platform-specific). */
     #define PREFETCH(P, I) ((void))
 
-    /** @brief Specifies pointer aliasing restrictions to improve optimisation. */
+    /** @brief Specifies pointer aliasing restrictions to improve optimisation (platform-specific). */
     #define RESTRICT restrict
 
-    /** @brief Forces a function to always be inlined. */
+    /** @brief Provides a compiler hint that a function should be inlined (platform-specific). */
     #define ALWAYS_INLINE __forceinline
 
-    /** @brief Marks a function as performance-critical. */
+    /** @brief Marks a function as performance-critical (platform-specific). */
     #define HOT
 
-    /** @brief Marks a function as less frequently called. */
+    /** @brief Marks a function as less frequently called (platform-specific). */
     #define COLD __declspec(noinline)
 
 #elif defined(__INTEL_COMPILER) || defined(__INTEL_LLVM_COMPILER)
@@ -146,25 +146,25 @@ namespace chdr {
     /** @brief Forces vectorisation of loops (platform-specific). */
     #define VECTOR_ALWAYS _Pragma("vector always")
 
-    /** @brief Hints the compiler that the condition is likely to be true. */
+    /** @brief Hints to the compiler that the condition is likely to be true (platform-specific). */
     #define LIKELY(x) __builtin_expect(!!(x), 1)
 
-    /** @brief Hints the compiler that the condition is likely to be false. */
+    /** @brief Hints to the compiler that the condition is likely to be false (platform-specific). */
     #define UNLIKELY(x) __builtin_expect(!!(x), 0)
 
-    /** @brief Provides a compiler hint to prefetch memory. */
+    /** @brief Provides a compiler hint to prefetch memory (platform-specific). */
     #define PREFETCH(P, I) _mm_prefetch(reinterpret_cast<const char*>(P), I)
 
-    /** @brief Specifies pointer aliasing restrictions to improve optimisation. */
+    /** @brief Specifies pointer aliasing restrictions to improve optimisation (platform-specific). */
     #define RESTRICT __restrict__
 
-    /** @brief Forces a function to always be inlined. */
+    /** @brief Provides a compiler hint that a function should be inlined (platform-specific). */
     #define ALWAYS_INLINE __attribute__((always_inline))
 
-    /** @brief Marks a function as performance-critical. */
+    /** @brief Marks a function as performance-critical (platform-specific). */
     #define HOT __attribute__((hot))
 
-    /** @brief Marks a function as less frequently called. */
+    /** @brief Marks a function as less frequently called (platform-specific). */
     #define COLD __attribute__((cold))
 
 #elif defined(__clang__)
@@ -175,25 +175,25 @@ namespace chdr {
     /** @brief Forces vectorisation of loops (platform-specific). */
     #define VECTOR_ALWAYS
 
-    /** @brief Hints the compiler that the condition is likely to be true. */
+    /** @brief Hints to the compiler that the condition is likely to be true (platform-specific). */
     #define LIKELY(x) __builtin_expect(!!(x), 1)
 
-    /** @brief Hints the compiler that the condition is likely to be false. */
+    /** @brief Hints to the compiler that the condition is likely to be false (platform-specific). */
     #define UNLIKELY(x) __builtin_expect(!!(x), 0)
 
-    /** @brief Provides a compiler hint to prefetch memory. */
+    /** @brief Provides a compiler hint to prefetch memory (platform-specific). */
     #define PREFETCH(P, I) _mm_prefetch(reinterpret_cast<const char*>(P), I)
 
-    /** @brief Specifies pointer aliasing restrictions to improve optimisation. */
+    /** @brief Specifies pointer aliasing restrictions to improve optimisation (platform-specific). */
     #define RESTRICT __restrict__
 
-    /** @brief Forces a function to always be inlined. */
+    /** @brief Provides a compiler hint that a function should be inlined (platform-specific). */
     #define ALWAYS_INLINE __attribute__((always_inline))
 
-    /** @brief Marks a function as performance-critical. */
+    /** @brief Marks a function as performance-critical (platform-specific). */
     #define HOT __attribute__((hot))
 
-    /** @brief Marks a function as less frequently called. */
+    /** @brief Marks a function as less frequently called (platform-specific). */
     #define COLD __attribute__((cold))
 
 #elif defined(__GNUC__)
@@ -204,25 +204,25 @@ namespace chdr {
     /** @brief Forces vectorisation of loops (platform-specific). */
     #define VECTOR_ALWAYS
 
-    /** @brief Hints the compiler that the condition is likely to be true. */
+    /** @brief Hints to the compiler that the condition is likely to be true (platform-specific). */
     #define LIKELY(x) __builtin_expect(!!(x), 1)
 
-    /** @brief Hints the compiler that the condition is likely to be false. */
+    /** @brief Hints to the compiler that the condition is likely to be false (platform-specific). */
     #define UNLIKELY(x) __builtin_expect(!!(x), 0)
 
-    /** @brief Provides a compiler hint to prefetch memory. */
+    /** @brief Provides a compiler hint to prefetch memory (platform-specific). */
     #define PREFETCH(P, I) _mm_prefetch(reinterpret_cast<const char*>(P), I)
 
-    /** @brief Specifies pointer aliasing restrictions to improve optimisation. */
+    /** @brief Specifies pointer aliasing restrictions to improve optimisation (platform-specific). */
     #define RESTRICT __restrict__
 
-    /** @brief Forces a function to always be inlined. */
+    /** @brief Provides a compiler hint that a function should be inlined (platform-specific). */
     #define ALWAYS_INLINE __attribute__((always_inline))
 
-    /** @brief Marks a function as performance-critical. */
+    /** @brief Marks a function as performance-critical (platform-specific). */
     #define HOT __attribute__((hot))
 
-    /** @brief Marks a function as less frequently called. */
+    /** @brief Marks a function as less frequently called (platform-specific). */
     #define COLD __attribute__((cold))
 
 #else
@@ -233,25 +233,25 @@ namespace chdr {
     /** @brief Forces vectorisation of loops (platform-specific). */
     #define VECTOR_ALWAYS
 
-    /** @brief Hints the compiler that the condition is likely to be true. */
+    /** @brief Hints to the compiler that the condition is likely to be true (platform-specific). */
     #define LIKELY(x)
 
-    /** @brief Hints the compiler that the condition is likely to be false. */
+    /** @brief Hints to the compiler that the condition is likely to be false (platform-specific). */
     #define UNLIKELY(x)
 
-    /** @brief Provides a compiler hint to prefetch memory. */
+    /** @brief Provides a compiler hint to prefetch memory (platform-specific). */
     #define PREFETCH(P, I)
 
-    /** @brief Specifies pointer aliasing restrictions to improve optimisation. */
+    /** @brief Specifies pointer aliasing restrictions to improve optimisation (platform-specific). */
     #define RESTRICT
 
-    /** @brief Forces a function to always be inlined. */
+    /** @brief Provides a compiler hint that a function should be inlined (platform-specific). */
     #define ALWAYS_INLINE
 
-    /** @brief Marks a function as performance-critical. */
+    /** @brief Marks a function as performance-critical (platform-specific). */
     #define HOT
 
-    /** @brief Marks a function as less frequently called. */
+    /** @brief Marks a function as less frequently called (platform-specific). */
     #define COLD
     
 #endif
