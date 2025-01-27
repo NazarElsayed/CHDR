@@ -9,6 +9,10 @@
 #ifndef CHDR_UTILS_HPP
 #define CHDR_UTILS_HPP
 
+/**
+ * @file utils.hpp
+ */
+
 #include <array>
 #include <cmath>
 #include <cstddef>

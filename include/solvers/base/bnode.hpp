@@ -9,10 +9,15 @@
 #ifndef CHDR_BNODE_HPP
 #define CHDR_BNODE_HPP
 
+/**
+  * @file bnode.hpp
+ */
+
 namespace chdr::solvers {
 
     /**
      * @nosubgrouping
+     * @struct bnode
      * @brief Base class for pathfinding nodes.
      * @details bnode represents the fundamental functionality of a node in a search context,
      *          storing an index representing an identifier.

@@ -9,6 +9,10 @@
 #ifndef CHDR_MANAGEDNODE_HPP
 #define CHDR_MANAGEDNODE_HPP
 
+/**
+ * @file managed_node.hpp
+ */
+
 #include <cassert>
 
 #include "bnode.hpp"
@@ -21,6 +25,7 @@ namespace chdr::solvers {
 
     /**
      * @nosubgrouping
+     * @struct managed_node
      * @brief A hierarchical node in a pathfinding context, with a clean-up mechanism.
      *
      * @details This structure includes a pointer to its parent, allowing it to handle

@@ -9,6 +9,10 @@
 #ifndef CHDR_EXISTENCE_SET_HPP
 #define CHDR_EXISTENCE_SET_HPP
 
+/**
+ * @file existence_set.hpp
+ */
+
 #include <cstddef>
 #include <initializer_list>
 #include <memory_resource>

@@ -9,6 +9,10 @@
 #ifndef CHDR_WEIGHTED_NODE_HPP
 #define CHDR_WEIGHTED_NODE_HPP
 
+/**
+ * @file weighted_node.hpp
+ */
+
 #include <limits>
 #include <type_traits>
 
@@ -16,7 +20,7 @@ namespace chdr::mazes {
 
     /**
      * @nosubgrouping
-     * @class weighted_node
+     * @struct weighted_node
      * @brief Represents a node with a customisable weight.
      * @details The weighted_node class encapsulates a weight of a user-defined integral type.
      * @note The weighted_node class is equivalent to its stored weight and can be reinterpreted as the weights's type.

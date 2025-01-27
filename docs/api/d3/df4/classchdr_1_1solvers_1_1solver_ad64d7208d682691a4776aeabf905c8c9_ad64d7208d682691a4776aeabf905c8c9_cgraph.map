@@ -1,0 +1,6 @@
+<map id="operator()" name="operator()">
+<area shape="rect" id="Node000001" title="Executes the solver with the provided parameters." alt="" coords="5,29,76,52"/>
+<area shape="rect" id="Node000002" href="$d3/df4/classchdr_1_1solvers_1_1solver_a096fe8cb528641fed6813df1f40bd347.html#a096fe8cb528641fed6813df1f40bd347" title="Executes the solver with the provided parameters. Parameters are constructed using perfect forwarding..." alt="" coords="124,29,171,52"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="76,38,110,38,110,43,76,43"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="129,30,125,21,127,12,134,5,147,3,163,6,169,14,165,18,160,11,147,8,137,10,131,14,130,20,134,28"/>
+</map>

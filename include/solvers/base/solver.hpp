@@ -9,6 +9,10 @@
 #ifndef CHDR_SOLVER_HPP
 #define CHDR_SOLVER_HPP
 
+/**
+ * @file solver.hpp
+ */
+
 #include <cstddef>
 #include <type_traits>
 #include <vector>

@@ -9,6 +9,10 @@
 #ifndef CHDR_IDNODE_HPP
 #define CHDR_IDNODE_HPP
 
+/**
+ * @file id_node.hpp
+ */
+
 #include <type_traits>
 
 namespace chdr::mazes {

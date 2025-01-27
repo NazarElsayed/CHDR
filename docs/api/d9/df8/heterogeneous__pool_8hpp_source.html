@@ -341,100 +341,109 @@ $(document).ready(function(){initNavTree('d9/df8/heterogeneous__pool_8hpp_source
 <div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span> </div>
 <div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>        <span class="keyword">explicit</span> heterogeneous_pool(<span class="keywordtype">size_t</span> _initial_block_width = s_default_block_width, <span class="keywordtype">size_t</span> _capacity = 32U) noexcept :</div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>            m_stack_write(0U),</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>            m_initial_block_width(utils::min(_initial_block_width, s_max_block_width)),</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>            m_block_width(m_initial_block_width)</div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>        {</div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>            assert(_capacity &gt;= 2U &amp;&amp; <span class="stringliteral">&quot;Capacity must be at least 2.&quot;</span>);</div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span> </div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>            m_blocks.reserve(_capacity);</div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>        }</div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span> </div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>        ~heterogeneous_pool()<span class="keyword"> override </span>{</div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>            cleanup();</div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>        }</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span> </div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>        <span class="keyword">constexpr</span> heterogeneous_pool           (<span class="keyword">const</span> heterogeneous_pool&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>        <span class="keyword">constexpr</span> heterogeneous_pool&amp; operator=(<span class="keyword">const</span> heterogeneous_pool&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span> </div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>        [[nodiscard]] <span class="keyword">constexpr</span> heterogeneous_pool(heterogeneous_pool&amp;&amp; _other) noexcept :</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>            m_stack_write        (_other.m_stack_write        ),</div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>            m_initial_block_width(_other.m_initial_block_width),</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>            m_block_width        (_other.m_block_width        ),</div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>            m_blocks             (std::move(_other.m_blocks)  ),</div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>            m_free               (std::move(_other.m_free  )  )</div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>        {</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>            _other.m_stack_write = 0;</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>            _other.m_blocks.clear();</div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>            _other.m_free.clear();</div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>        }</div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span> </div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>        heterogeneous_pool&amp; operator=(heterogeneous_pool&amp;&amp; _other) <span class="keyword">noexcept</span> {</div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span> </div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>            <span class="keywordflow">if</span> (<span class="keyword">this</span> != &amp;_other) {</div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span> </div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>                cleanup();</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>            m_stack_block(),</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>            m_stack_write(0U),</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>            m_initial_block_width(utils::min(_initial_block_width, s_max_block_width)),</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>            m_block_width(m_initial_block_width)</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>        {</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>            assert(_capacity &gt;= 2U &amp;&amp; <span class="stringliteral">&quot;Capacity must be at least 2.&quot;</span>);</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span> </div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>            m_blocks.reserve(_capacity);</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>        }</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span> </div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>        ~heterogeneous_pool()<span class="keyword"> override </span>{</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>            cleanup();</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>        }</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span> </div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>        <span class="keyword">constexpr</span> heterogeneous_pool           (<span class="keyword">const</span> heterogeneous_pool&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>        <span class="keyword">constexpr</span> heterogeneous_pool&amp; operator=(<span class="keyword">const</span> heterogeneous_pool&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span> </div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        [[nodiscard]]</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span><span class="preprocessor">#if __cplusplus &gt;= 202002L</span></div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>        <span class="keyword">constexpr</span></div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>        <span class="keyword">constexpr</span> heterogeneous_pool(heterogeneous_pool&amp;&amp; _other) noexcept :</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>            m_stack_block        (                            ),</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>            m_stack_write        (_other.m_stack_write        ),</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>            m_initial_block_width(_other.m_initial_block_width),</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>            m_block_width        (_other.m_block_width        ),</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>            m_blocks             (std::move(_other.m_blocks)  ),</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>            m_free               (std::move(_other.m_free  )  )</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>        {</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>            _other.m_stack_write = 0;</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>            _other.m_blocks.clear();</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>            _other.m_free.clear();</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>        }</div>
 <div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span> </div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>                m_stack_write         = _other.m_stack_write;</div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>                m_initial_block_width = _other.m_initial_block_width;</div>
-<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>                m_block_width         = _other.m_block_width;</div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>                m_blocks              = std::move(_other.m_blocks);</div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>                m_free                = std::move(_other.m_free  );</div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span> </div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>                _other.m_stack_write = 0U;</div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>                _other.m_blocks.clear();</div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>                _other.m_free.clear();</div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>            }</div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>            <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>        }</div>
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span> </div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>        <span class="keywordtype">void</span> cleanup() noexcept {</div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; item : m_blocks) {</div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>                ::operator <span class="keyword">delete</span>(item.data, <span class="keyword">static_cast&lt;</span>std::align_val_t<span class="keyword">&gt;</span>(item.alignment));</div>
-<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>            }</div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>        }</div>
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span> </div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>        <span class="keywordtype">void</span> reset() noexcept {</div>
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span> </div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>            m_stack_write = 0U;</div>
-<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>            m_block_width = m_initial_block_width;</div>
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span> </div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>            <span class="keywordflow">try</span> {</div>
-<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>                m_free.clear();</div>
-<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>                <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; item : m_blocks) {</div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>                    m_free.emplace(item.size, item);</div>
-<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>                }</div>
-<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>            }</div>
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>            <span class="keywordflow">catch</span> (...) {</div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>                  m_free.clear();</div>
-<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>                m_blocks.clear();</div>
-<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>            }</div>
-<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>        }</div>
-<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span> </div>
-<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>        <span class="keywordtype">void</span> release() noexcept {</div>
-<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span> </div>
-<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>            m_stack_write = 0U;</div>
-<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>            m_block_width = m_initial_block_width;</div>
-<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span> </div>
-<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>            {</div>
-<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>                cleanup();</div>
-<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>                <span class="keyword">decltype</span>(m_blocks) temp{};</div>
-<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>                m_blocks = std::move(temp);</div>
-<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>            }</div>
-<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>            {</div>
-<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>                <span class="keyword">decltype</span>(m_free) temp{};</div>
-<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>                m_free = std::move(temp);</div>
-<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>            }</div>
-<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>        }</div>
-<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span> </div>
-<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>    };</div>
-<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span> </div>
-<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>} <span class="comment">//chdr</span></div>
-<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span> </div>
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_HETEROGENEOUS_POOL_HPP</span></div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span><span class="preprocessor">#if __cplusplus &gt;= 202002L</span></div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>        <span class="keyword">constexpr</span></div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>        heterogeneous_pool&amp; operator=(heterogeneous_pool&amp;&amp; _other) <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span> </div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>            <span class="keywordflow">if</span> (<span class="keyword">this</span> != &amp;_other) {</div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span> </div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>                cleanup();</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span> </div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>                m_stack_write         = _other.m_stack_write;</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>                m_initial_block_width = _other.m_initial_block_width;</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>                m_block_width         = _other.m_block_width;</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>                m_blocks              = std::move(_other.m_blocks);</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>                m_free                = std::move(_other.m_free  );</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span> </div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>                _other.m_stack_write = 0U;</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>                _other.m_blocks.clear();</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>                _other.m_free.clear();</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>            }</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>            <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>        }</div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span> </div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>        <span class="keywordtype">void</span> cleanup() noexcept {</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; item : m_blocks) {</div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>                ::operator <span class="keyword">delete</span>(item.data, <span class="keyword">static_cast&lt;</span>std::align_val_t<span class="keyword">&gt;</span>(item.alignment));</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>            }</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>        }</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span> </div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>        <span class="keywordtype">void</span> reset() noexcept {</div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span> </div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>            m_stack_write = 0U;</div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>            m_block_width = m_initial_block_width;</div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span> </div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>            <span class="keywordflow">try</span> {</div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>                m_free.clear();</div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>                <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; item : m_blocks) {</div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>                    m_free.emplace(item.size, item);</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>                }</div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>            }</div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>            <span class="keywordflow">catch</span> (...) {</div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>                  m_free.clear();</div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>                m_blocks.clear();</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>            }</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>        }</div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span> </div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>        <span class="keywordtype">void</span> release() noexcept {</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span> </div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>            m_stack_write = 0U;</div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>            m_block_width = m_initial_block_width;</div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span> </div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>            {</div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>                cleanup();</div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>                <span class="keyword">decltype</span>(m_blocks) temp{};</div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>                m_blocks = std::move(temp);</div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>            }</div>
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>            {</div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>                <span class="keyword">decltype</span>(m_free) temp{};</div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>                m_free = std::move(temp);</div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>            }</div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>        }</div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span> </div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>    };</div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span> </div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>} <span class="comment">//chdr</span></div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span> </div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_HETEROGENEOUS_POOL_HPP</span></div>
 <div class="ttc" id="aintrinsics_8hpp_a1eb14cc432874ddacd1934791dbe12a3_html_a1eb14cc432874ddacd1934791dbe12a3"><div class="ttname"><a href="../../d7/d65/intrinsics_8hpp_a1eb14cc432874ddacd1934791dbe12a3.html#a1eb14cc432874ddacd1934791dbe12a3">HOT</a></div><div class="ttdeci">#define HOT</div><div class="ttdoc">Marks a function as performance-critical (platform-specific).</div><div class="ttdef"><b>Definition</b> <a href="../../d7/d65/intrinsics_8hpp_source.html#l00252">intrinsics.hpp:252</a></div></div>
-<div class="ttc" id="astructchdr_1_1utils_abb4d38d3c7a25d93fcedd12666fb00a1_html_abb4d38d3c7a25d93fcedd12666fb00a1"><div class="ttname"><a href="../../d2/dcb/structchdr_1_1utils_abb4d38d3c7a25d93fcedd12666fb00a1.html#abb4d38d3c7a25d93fcedd12666fb00a1">chdr::utils::max</a></div><div class="ttdeci">static const T &amp; max(const T &amp;_a, const T &amp;_b) noexcept</div><div class="ttdoc">Determines the maximum of two comparable values.</div><div class="ttdef"><b>Definition</b> <a href="../../df/d93/utils_8hpp_source.html#l00457">utils.hpp:457</a></div></div>
-<div class="ttc" id="astructchdr_1_1utils_ac49e3cb9b2b007da03059d95020d8b49_html_ac49e3cb9b2b007da03059d95020d8b49"><div class="ttname"><a href="../../d2/dcb/structchdr_1_1utils_ac49e3cb9b2b007da03059d95020d8b49.html#ac49e3cb9b2b007da03059d95020d8b49">chdr::utils::min</a></div><div class="ttdeci">static const T &amp; min(const T &amp;_a, const T &amp;_b) noexcept</div><div class="ttdoc">Returns the smaller of two values.</div><div class="ttdef"><b>Definition</b> <a href="../../df/d93/utils_8hpp_source.html#l00439">utils.hpp:439</a></div></div>
+<div class="ttc" id="astructchdr_1_1utils_abb4d38d3c7a25d93fcedd12666fb00a1_html_abb4d38d3c7a25d93fcedd12666fb00a1"><div class="ttname"><a href="../../d2/dcb/structchdr_1_1utils_abb4d38d3c7a25d93fcedd12666fb00a1.html#abb4d38d3c7a25d93fcedd12666fb00a1">chdr::utils::max</a></div><div class="ttdeci">static const T &amp; max(const T &amp;_a, const T &amp;_b) noexcept</div><div class="ttdoc">Determines the maximum of two comparable values.</div><div class="ttdef"><b>Definition</b> <a href="../../df/d93/utils_8hpp_source.html#l00461">utils.hpp:461</a></div></div>
+<div class="ttc" id="astructchdr_1_1utils_ac49e3cb9b2b007da03059d95020d8b49_html_ac49e3cb9b2b007da03059d95020d8b49"><div class="ttname"><a href="../../d2/dcb/structchdr_1_1utils_ac49e3cb9b2b007da03059d95020d8b49.html#ac49e3cb9b2b007da03059d95020d8b49">chdr::utils::min</a></div><div class="ttdeci">static const T &amp; min(const T &amp;_a, const T &amp;_b) noexcept</div><div class="ttdoc">Returns the smaller of two values.</div><div class="ttdef"><b>Definition</b> <a href="../../df/d93/utils_8hpp_source.html#l00443">utils.hpp:443</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen -->

@@ -36,7 +36,7 @@
 <text text-anchor="start" x="4" y="-84.6" font-family="Helvetica,sans-Serif" font-size="8.00">+</text>
 <text text-anchor="start" x="13" y="-84.6" font-family="Helvetica,sans-Serif" font-size="8.00">void resize(size_t _new_size, width_t _new_value={ false })</text>
 <text text-anchor="start" x="4" y="-71.6" font-family="Helvetica,sans-Serif" font-size="8.00">+</text>
-<text text-anchor="start" x="13" y="-71.6" font-family="Helvetica,sans-Serif" font-size="8.00">void shrink_to_fit() noexcept</text>
+<text text-anchor="start" x="13" y="-71.6" font-family="Helvetica,sans-Serif" font-size="8.00">void shrink_to_fit()</text>
 <text text-anchor="start" x="4" y="-58.6" font-family="Helvetica,sans-Serif" font-size="8.00">+</text>
 <text text-anchor="start" x="13" y="-58.6" font-family="Helvetica,sans-Serif" font-size="8.00">auto size() const noexcept</text>
 <text text-anchor="start" x="4" y="-45.6" font-family="Helvetica,sans-Serif" font-size="8.00">+</text>

@@ -1,5 +1,5 @@
 <map id="to_1d" name="to_1d">
-<area shape="rect" id="Node000001" title="Maps a multi&#45;dimensional index to a one&#45;dimensional array index." alt="" coords="224,5,273,28"/>
-<area shape="rect" id="Node000002" href="$d3/df4/classchdr_1_1solvers_1_1solver_ab98298b6d67e41f622dcde441f24ed6f.html#ab98298b6d67e41f622dcde441f24ed6f" title="Executes the solver with the provided parameters." alt="" coords="5,5,176,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="210,19,176,19,176,14,210,14"/>
+<area shape="rect" id="Node000001" title="Maps a multi&#45;dimensional index to a one&#45;dimensional array index." alt="" coords="200,5,249,28"/>
+<area shape="rect" id="Node000002" href="$d3/df4/classchdr_1_1solvers_1_1solver_aa62632bf43d0cf6db6a9f6de5e76b0ba.html#aa62632bf43d0cf6db6a9f6de5e76b0ba" title="Executes the solver with the provided parameters." alt="" coords="5,5,152,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="186,19,152,19,152,14,186,14"/>
 </map>

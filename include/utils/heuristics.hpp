@@ -9,6 +9,10 @@
 #ifndef CHDR_HEURISTICS_HPP
 #define CHDR_HEURISTICS_HPP
 
+/**
+ * @file heuristics.hpp
+ */
+
 #include <cstddef>
 
 #include "../utils/utils.hpp"
@@ -19,7 +23,7 @@
 namespace chdr {
 
 	/**
-	 * @class heuristics
+	 * @struct heuristics
 	 * @brief A static utility class providing various distance metric calculations.
 	 *
 	 * @details This class provides static methods for computing different distances such as Euclidean, Manhattan,

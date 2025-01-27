@@ -9,6 +9,10 @@
 #ifndef CHDR_UNMANAGEDNODE_HPP
 #define CHDR_UNMANAGEDNODE_HPP
 
+/**
+ * @file unmanaged_node.hpp
+ */
+
 #include "bnode.hpp"
 
 // ReSharper disable once CppUnusedIncludeDirective
@@ -17,6 +21,7 @@
 namespace chdr::solvers {
 
     /**
+     * @struct unmanaged_node
      * @brief A hierarchical node in a pathfinding context, requires manual memory management.
      *
      * @details This structure includes a pointer to its parent, allowing it to handle
