@@ -25,16 +25,16 @@ Its flexible design ensures compatibility across many platforms, compilers, and 
 CHDR strikes the perfect balance between usability and performance. It supports efficient routing in 1D, 2D, 3D, and higher-dimensional spaces, making it an ideal choice for developers seeking fast and reliable pathfinding solutions.
 
 ### Key Features
-- Extremely Fast Searches
-- Straightforward and Easy to Use
-- Well-Tested
-- Well-Documented
-- High Compatibility
-- Interoperable with Common Frameworks
-- Reduced Memory Footprint
-- Optimised Memory Access Patterns
-- No RTTI
-- Type Agnostic
+- Extremely fast searches.
+- Straightforward and easy to use.
+- Standalone – no external dependencies or license agreements.
+- Well-tested.
+- Well-documented.
+- Interoperable with common frameworks.
+- Supports industry-standard platforms, compilers and toolchains.
+- Reduced memory footprint with optimised access patterns.
+- Type-agnostic.
+- No RTTI.
 
 
 ## Usage

@@ -1,7 +1,5 @@
 <map id="operator()" name="operator()">
-<area shape="rect" id="Node000001" title="Executes the solver with the provided parameters." alt="" coords="5,29,76,52"/>
-<area shape="rect" id="Node000002" href="$d3/df4/classchdr_1_1solvers_1_1solver_afd9ac73f57f4eae43f130211d9b95d86.html#afd9ac73f57f4eae43f130211d9b95d86" title="Constructor for the solver class." alt="" coords="149,5,199,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="76,32,135,21,136,26,77,37"/>
-<area shape="rect" id="Node000003" href="$d2/dcb/structchdr_1_1utils_a5741e93a4c4f5630e7c86bda862cf611.html#a5741e93a4c4f5630e7c86bda862cf611" title="Maps a multi&#45;dimensional index to a one&#45;dimensional array index." alt="" coords="124,52,224,75"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="77,44,111,50,110,55,76,49"/>
+<area shape="rect" id="Node000001" title="Executes the solver with the provided parameters." alt="" coords="5,5,76,28"/>
+<area shape="rect" id="Node000002" href="$d2/dcb/structchdr_1_1utils_a5741e93a4c4f5630e7c86bda862cf611.html#a5741e93a4c4f5630e7c86bda862cf611" title="Maps a multi&#45;dimensional index to a one&#45;dimensional array index." alt="" coords="124,5,224,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="76,14,110,14,110,19,76,19"/>
 </map>
