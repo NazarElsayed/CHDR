@@ -13,6 +13,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory_resource>
+#include <utility>
 #include <vector>
 #include <algorithm>
 
@@ -172,6 +173,7 @@ namespace chdr {
     public:
 
         explicit homogeneous_pool(size_t _initial_block_width = s_default_block_width, size_t _capacity = 32U) noexcept :
+            m_stack_block        (),
             m_alignment          (0U),
             m_stack_write        (0U),
             m_initial_block_width(utils::min(_initial_block_width, s_max_block_width)),
@@ -190,7 +192,12 @@ namespace chdr {
         constexpr homogeneous_pool           (const homogeneous_pool&) = delete;
         constexpr homogeneous_pool& operator=(const homogeneous_pool&) = delete;
 
-        [[nodiscard]] constexpr homogeneous_pool(homogeneous_pool&& _other) noexcept :
+        [[nodiscard]]
+#if __cplusplus >= 202002L
+        constexpr
+#endif
+        homogeneous_pool(homogeneous_pool&& _other) noexcept :
+            m_stack_block        (                            ),
             m_alignment          (_other.m_alignment          ),
             m_stack_write        (_other.m_stack_write        ),
             m_initial_block_width(_other.m_initial_block_width),
@@ -203,6 +210,9 @@ namespace chdr {
             _other.m_free.clear();
         }
 
+#if __cplusplus >= 202002L
+        constexpr
+#endif
         homogeneous_pool& operator=(homogeneous_pool&& _other) noexcept {
 
             if (this != &_other) {

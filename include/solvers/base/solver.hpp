@@ -548,12 +548,11 @@ namespace chdr::solvers {
          */
         template <typename... Args>
         [[maybe_unused, nodiscard]]
-        static
 #if __cplusplus >= 202003L
         constexpr
 #endif // __cplusplus >= 202003L
-        auto solve(Args&&... _args) {
-            return operator()(std::forward<Args>(_args)...);
+        static auto solve(Args&&... _args) {
+            return solve(std::forward<Args>(_args)...);
         }
 
         /**
@@ -564,47 +563,10 @@ namespace chdr::solvers {
          * @return A std::vector containing the result of the search. If the search fails, the vector will be empty.
          */
         [[maybe_unused, nodiscard]]
-        static
 #if __cplusplus >= 202003L
         constexpr
 #endif // __cplusplus >= 202003L
-        auto solve(const params_t& _params) {
-            return operator()(_params);
-        }
-
-        /**
-         * @brief Executes the solver with the provided parameters. Parameters are constructed using perfect forwarding.
-         *
-         * @details Constructs a parameters object using the given arguments, and uses it to invoke the desired solver.
-         *
-         * @note You must ensure that the given arguments are valid for constructing the parameters for your intended search.
-         *
-         * @tparam Args A parameter pack containing the arguments to construct the parameters object.
-         * @return A std::vector containing the result of the search. If the search fails, the vector will be empty.
-         */
-        template <typename... Args>
-        [[maybe_unused, nodiscard]]
-        static
-#if __cplusplus >= 202003L
-        constexpr
-#endif // __cplusplus >= 202003L
-        auto operator()(Args&&... _args) {
-            return operator()({ std::forward<Args>(_args)... });
-        }
-
-        /**
-         * @brief Executes the solver with the provided parameters.
-         *
-         * @param [in] _params The parameters object to solve with.
-         *
-         * @return A std::vector containing the result of the search. If the search fails, the vector will be empty.
-         */
-        [[maybe_unused, nodiscard]]
-        static
-#if __cplusplus >= 202003L
-        constexpr
-#endif // __cplusplus >= 202003L
-        auto operator()(const params_t& _params) {
+        static auto solve(const params_t& _params) {
 
             const auto s = static_cast<typename params_t::index_type>(utils::to_1d(_params.start, _params.size));
             const auto e = static_cast<typename params_t::index_type>(utils::to_1d(_params.end,   _params.size));
@@ -628,6 +590,40 @@ namespace chdr::solvers {
             }
 
             return std::vector<typename params_t::coord_type>{};
+        }
+
+        /**
+         * @brief Executes the solver with the provided parameters. Parameters are constructed using perfect forwarding.
+         *
+         * @details Constructs a parameters object using the given arguments, and uses it to invoke the desired solver.
+         *
+         * @note You must ensure that the given arguments are valid for constructing the parameters for your intended search.
+         *
+         * @tparam Args A parameter pack containing the arguments to construct the parameters object.
+         * @return A std::vector containing the result of the search. If the search fails, the vector will be empty.
+         */
+        template <typename... Args>
+        [[maybe_unused, nodiscard]]
+#if __cplusplus >= 202003L
+        constexpr
+#endif // __cplusplus >= 202003L
+        auto operator()(Args&&... _args) {
+            return operator()({ std::forward<Args>(_args)... });
+        }
+
+        /**
+         * @brief Executes the solver with the provided parameters.
+         *
+         * @param [in] _params The parameters object to solve with.
+         *
+         * @return A std::vector containing the result of the search. If the search fails, the vector will be empty.
+         */
+        [[maybe_unused, nodiscard]]
+#if __cplusplus >= 202003L
+        constexpr
+#endif // __cplusplus >= 202003L
+        auto operator()(const params_t& _params) {
+            return solve(_params);
         }
     };
 

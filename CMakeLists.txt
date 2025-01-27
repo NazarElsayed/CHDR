@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION ${CMAKE_VERSION})
 
 project(CHDR VERSION 0.0.0 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 message(NOTICE "NOTICE: Checking for local Git repository:")
@@ -120,8 +120,8 @@ message(NOTICE "NOTICE: Building test application:")
 set(WARNINGS_BASE "-Wall -Wextra -Wpedantic -Wconversion -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Woverloaded-virtual -Wnull-dereference -Wdouble-promotion -Wvla -Wformat=2 -Wmissing-declarations -Wsuggest-override -Wstrict-overflow=5 -Wuninitialized -Wswitch-enum -Wswitch-default -Wcast-qual -Wwrite-strings -Wpointer-arith -Wfloat-equal -Wc++20-extensions")
 
 #if (DEFINED SUPER_PEDANTIC)
-#    message(WARNING "WARNING: \"SUPER_PEDANTIC\" enabled. Build system may catch warnings as errors.")
-#    set(WARNINGS "${WARNINGS_BASE} -pedantic -Werror")
+    message(WARNING "WARNING: \"SUPER_PEDANTIC\" enabled. Build system may catch warnings as errors.")
+    set(WARNINGS "${WARNINGS_BASE} -pedantic -Werror")
 #else ()
     set(WARNINGS "${WARNINGS_BASE}")
 #endif ()
@@ -165,7 +165,7 @@ target_precompile_headers(chdr INTERFACE stdafx.hpp)
 ## LINK OPTIONS:
 if (UNIX)
     if (CMAKE_BUILD_TYPE STREQUAL "Release")
-        target_link_options(chdr PRIVATE -flto=auto, -Wl,--strip-all -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
+        target_link_options(chdr PRIVATE -Wl,--strip-all -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
     else ()
         target_link_options(chdr PRIVATE -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
     endif ()

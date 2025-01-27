@@ -35,8 +35,8 @@ namespace chdr::solvers {
         using  direction_t = uint8_t;
         using   rotation_t = std::array<direction_t, 8U>;
         using     solver_t = solver<gjps, params_t>;
-        using  neighbour_t = typename std::remove_cvref_t<decltype(params_t::maze)>::neighbour_t;
-        using neighbours_t = typename std::remove_cvref_t<decltype(params_t::maze)>::neighbours_t;
+        using  neighbour_t = typename std::remove_cv_t<std::remove_reference_t<decltype(params_t::maze)>>::neighbour_t;
+        using neighbours_t = typename std::remove_cv_t<std::remove_reference_t<decltype(params_t::maze)>>::neighbours_t;
 
         static constexpr auto Kd = std::tuple_size_v<std::decay_t<typename params_t::coord_type>>;
 

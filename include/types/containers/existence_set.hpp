@@ -356,11 +356,8 @@ namespace chdr {
          *
          * @see existence_set::trim()
          */
-        [[maybe_unused]] constexpr void shrink_to_fit() noexcept {
-            try {
-                c.shrink_to_fit();
-            }
-            catch (...) {} // NOLINT(*-empty-catch)
+        [[maybe_unused]] constexpr void shrink_to_fit() {
+            c.shrink_to_fit();
         }
 
         /**

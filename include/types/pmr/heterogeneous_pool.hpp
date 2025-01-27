@@ -228,6 +228,7 @@ namespace chdr {
     public:
 
         explicit heterogeneous_pool(size_t _initial_block_width = s_default_block_width, size_t _capacity = 32U) noexcept :
+            m_stack_block(),
             m_stack_write(0U),
             m_initial_block_width(utils::min(_initial_block_width, s_max_block_width)),
             m_block_width(m_initial_block_width)
@@ -244,7 +245,12 @@ namespace chdr {
         constexpr heterogeneous_pool           (const heterogeneous_pool&) = delete;
         constexpr heterogeneous_pool& operator=(const heterogeneous_pool&) = delete;
 
-        [[nodiscard]] constexpr heterogeneous_pool(heterogeneous_pool&& _other) noexcept :
+        [[nodiscard]]
+#if __cplusplus >= 202002L
+        constexpr
+#endif
+        constexpr heterogeneous_pool(heterogeneous_pool&& _other) noexcept :
+            m_stack_block        (                            ),
             m_stack_write        (_other.m_stack_write        ),
             m_initial_block_width(_other.m_initial_block_width),
             m_block_width        (_other.m_block_width        ),
@@ -256,6 +262,9 @@ namespace chdr {
             _other.m_free.clear();
         }
 
+#if __cplusplus >= 202002L
+        constexpr
+#endif
         heterogeneous_pool& operator=(heterogeneous_pool&& _other) noexcept {
 
             if (this != &_other) {

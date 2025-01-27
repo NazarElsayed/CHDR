@@ -169,6 +169,7 @@ namespace chdr {
     public:
 
         monotonic_pool() noexcept :
+            m_stack_block       (),
             m_current_block_size(s_initial_heap_block_size),
             m_stack_write       (0U),
             m_block_write       (0U),
@@ -181,7 +182,12 @@ namespace chdr {
         constexpr monotonic_pool           (const monotonic_pool&) = delete;
         constexpr monotonic_pool& operator=(const monotonic_pool&) = delete;
 
-        [[nodiscard]] constexpr monotonic_pool(monotonic_pool&& _other) noexcept :
+        [[nodiscard]]
+#if __cplusplus >= 202002L
+        constexpr
+#endif
+        monotonic_pool(monotonic_pool&& _other) noexcept :
+            m_stack_block       (                           ),
             m_current_block_size(_other.m_current_block_size),
             m_stack_write       (_other.m_stack_write       ),
             m_block_write       (_other.m_block_write       ),
@@ -195,6 +201,9 @@ namespace chdr {
             _other.m_blocks.clear();
         }
 
+#if __cplusplus >= 202002L
+        constexpr
+#endif
         monotonic_pool& operator=(monotonic_pool&& _other) noexcept {
 
             if (this != &_other) {
