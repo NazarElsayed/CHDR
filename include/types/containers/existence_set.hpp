@@ -34,7 +34,7 @@ namespace chdr {
      *          memory complexity. However, as it is non-owning, it often uses less memory than its
      *          sparse counterparts when indexing is monotonic. \n\n
      *          Memory efficiency and performance are customisable through specifying the width
-     *          using the provided template parameter.
+     *          using the provided template parameter.\n\n
      *
      * @warning This data structure does not employ collision resolution techniques.
      *          You must ensure a unique hash or manage collisions yourself.
@@ -72,11 +72,9 @@ namespace chdr {
      *          reduce the efficiency of the existence set.
      *          Always consider the execution context of the program, and make adjustments
      *          to fit the needs of your target platform.
-     *
      * @note This class uses polymorphic memory resources (`std::pmr::memory_resource`)
      *       to provide fine-grained control over memory allocation.
-     *
-     * @remarks existence_set follows an STL-like design and supports iterators.
+     * @note `existence_set` follows an STL-like design and supports iterators.
      */
     template <typename width_t = char>
     class existence_set {

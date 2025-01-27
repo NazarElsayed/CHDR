@@ -291,18 +291,18 @@ $(document).ready(function(){initNavTree('dc/d8a/grid_8hpp_source.html','../../'
 <div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>            <span class="keyword">constexpr</span> coord_t direction   = <a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_aa56b3789fceb847816a4fef606f80dfb.html#aa56b3789fceb847816a4fef606f80dfb">utils::to_nd</a>(sampleIndex, coord_t { 3U });</div>
 <div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span> </div>
 <div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>            <span class="keywordtype">bool</span>    oob    = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>            coord_t coord = _id;</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>            coord_t <a class="code hl_typedef" href="../../d9/dfc/coord_8hpp_a5a89553aa616ec03af46b4681aabbca3.html#a5a89553aa616ec03af46b4681aabbca3">coord</a> = _id;</div>
 <div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span> </div>
 <div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>            <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> j = 0U; j &lt; s_rank; ++j) {</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>                coord[j] += (direction[j] - 1U);</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>                oob |= (coord[j] &gt;= m_size[j]);</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>                <a class="code hl_typedef" href="../../d9/dfc/coord_8hpp_a5a89553aa616ec03af46b4681aabbca3.html#a5a89553aa616ec03af46b4681aabbca3">coord</a>[j] += (direction[j] - 1U);</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>                oob |= (<a class="code hl_typedef" href="../../d9/dfc/coord_8hpp_a5a89553aa616ec03af46b4681aabbca3.html#a5a89553aa616ec03af46b4681aabbca3">coord</a>[j] &gt;= m_size[j]);</div>
 <div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span> </div>
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>                <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (s_rank &gt; 4U) {</div>
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>                    <span class="keywordflow">if</span> (oob) { <span class="keywordflow">break</span>; }</div>
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>                }</div>
 <div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>            }</div>
 <div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span> </div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>            _output = { !oob &amp;&amp; at(coord).is_active(), coord };</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>            _output = { !oob &amp;&amp; at(coord).is_active(), <a class="code hl_typedef" href="../../d9/dfc/coord_8hpp_a5a89553aa616ec03af46b4681aabbca3.html#a5a89553aa616ec03af46b4681aabbca3">coord</a> };</div>
 <div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>        }</div>
 <div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span> </div>
 <div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>        <span class="keyword">template</span>&lt;<span class="keywordtype">size_t</span> Index&gt;</div>
@@ -470,18 +470,18 @@ $(document).ready(function(){initNavTree('dc/d8a/grid_8hpp_source.html','../../'
 <div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>            <span class="keyword">constexpr</span> coord_t direction   = <a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_aa56b3789fceb847816a4fef606f80dfb.html#aa56b3789fceb847816a4fef606f80dfb">utils::to_nd</a>(sampleIndex, coord_t { 3U });</div>
 <div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span> </div>
 <div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>            <span class="keywordtype">bool</span>    oob    = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>            coord_t coord = _id;</div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>            coord_t <a class="code hl_typedef" href="../../d9/dfc/coord_8hpp_a5a89553aa616ec03af46b4681aabbca3.html#a5a89553aa616ec03af46b4681aabbca3">coord</a> = _id;</div>
 <div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span> </div>
 <div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>            <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> j = 0U; j &lt; s_rank; ++j) {</div>
-<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>                coord[j] += (direction[j] - 1U);</div>
-<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>                     oob |= (coord[j] &gt;= m_size[j]);</div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>                <a class="code hl_typedef" href="../../d9/dfc/coord_8hpp_a5a89553aa616ec03af46b4681aabbca3.html#a5a89553aa616ec03af46b4681aabbca3">coord</a>[j] += (direction[j] - 1U);</div>
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>                     oob |= (<a class="code hl_typedef" href="../../d9/dfc/coord_8hpp_a5a89553aa616ec03af46b4681aabbca3.html#a5a89553aa616ec03af46b4681aabbca3">coord</a>[j] &gt;= m_size[j]);</div>
 <div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span> </div>
 <div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>                <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (s_rank &gt; 4U) {</div>
 <div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>                    <span class="keywordflow">if</span> (oob) { <span class="keywordflow">break</span>; }</div>
 <div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>                }</div>
 <div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>            }</div>
 <div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span> </div>
-<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>            _output = { !oob &amp;&amp; at(coord).is_active(), coord };</div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>            _output = { !oob &amp;&amp; at(<a class="code hl_typedef" href="../../d9/dfc/coord_8hpp_a5a89553aa616ec03af46b4681aabbca3.html#a5a89553aa616ec03af46b4681aabbca3">coord</a>).is_active(), <a class="code hl_typedef" href="../../d9/dfc/coord_8hpp_a5a89553aa616ec03af46b4681aabbca3.html#a5a89553aa616ec03af46b4681aabbca3">coord</a> };</div>
 <div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>        }</div>
 <div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span> </div>
 <div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>        <span class="keyword">template</span> &lt;<span class="keywordtype">size_t</span> Index&gt;</div>
@@ -502,6 +502,7 @@ $(document).ready(function(){initNavTree('dc/d8a/grid_8hpp_source.html','../../'
 <div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>} <span class="comment">//chdr::mazes</span></div>
 <div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span> </div>
 <div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_GRID_HPP</span></div>
+<div class="ttc" id="acoord_8hpp_a5a89553aa616ec03af46b4681aabbca3_html_a5a89553aa616ec03af46b4681aabbca3"><div class="ttname"><a href="../../d9/dfc/coord_8hpp_a5a89553aa616ec03af46b4681aabbca3.html#a5a89553aa616ec03af46b4681aabbca3">chdr::coord</a></div><div class="ttdeci">std::array&lt; T, Kd &gt; coord</div><div class="ttdoc">A K-dimensional coordinate type.</div><div class="ttdef"><b>Definition</b> <a href="../../d9/dfc/coord_8hpp_source.html#l00031">coord.hpp:31</a></div></div>
 <div class="ttc" id="aintrinsics_8hpp_a1eb14cc432874ddacd1934791dbe12a3_html_a1eb14cc432874ddacd1934791dbe12a3"><div class="ttname"><a href="../../d7/d65/intrinsics_8hpp_a1eb14cc432874ddacd1934791dbe12a3.html#a1eb14cc432874ddacd1934791dbe12a3">HOT</a></div><div class="ttdeci">#define HOT</div><div class="ttdoc">Marks a function as performance-critical (platform-specific).</div><div class="ttdef"><b>Definition</b> <a href="../../d7/d65/intrinsics_8hpp_source.html#l00252">intrinsics.hpp:252</a></div></div>
 <div class="ttc" id="astructchdr_1_1mazes_1_1weighted__node_html"><div class="ttname"><a href="../../db/dc4/structchdr_1_1mazes_1_1weighted__node.html">chdr::mazes::weighted_node</a></div><div class="ttdoc">Represents a node with a customisable weight.</div><div class="ttdef"><b>Definition</b> <a href="../../d1/d2d/weighted__node_8hpp_source.html#l00028">weighted_node.hpp:28</a></div></div>
 <div class="ttc" id="astructchdr_1_1utils_a132ec9015658e62fa2f575484e51c3ab_html_a132ec9015658e62fa2f575484e51c3ab"><div class="ttname"><a href="../../d2/dcb/structchdr_1_1utils_a132ec9015658e62fa2f575484e51c3ab.html#a132ec9015658e62fa2f575484e51c3ab">chdr::utils::powui</a></div><div class="ttdeci">static T powui(T _base, T _exp) noexcept</div><div class="ttdoc">Computes the power of an unsigned integral base raised to an unsigned integral exponent.</div><div class="ttdef"><b>Definition</b> <a href="../../df/d93/utils_8hpp_source.html#l00335">utils.hpp:335</a></div></div>

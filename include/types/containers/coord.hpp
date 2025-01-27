@@ -9,6 +9,12 @@
 #ifndef CHDR_COORD_HPP
 #define CHDR_COORD_HPP
 
+/**
+ * @file coord.hpp
+ *
+ * @details Provides a K-dimensional coordinate type that is suitable for use in a `constexpr` context.
+ */
+
 #include <array>
 #include <cstddef>
 
@@ -16,9 +22,8 @@ namespace chdr {
 
     /**
       * @brief A K-dimensional coordinate type.
-      *
       * @details A type for representing points in a K-dimensional space using `std::array`.
-      *
+      * @remarks This type supports use in a `constexpr` context.
       * @tparam T Type of elements in the coordinate.
       * @tparam Kd Dimensionality of the coordinate.
       */

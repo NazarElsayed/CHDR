@@ -12,6 +12,8 @@ var searchData=
   ['contains_9',['contains',['../d6/db9/classchdr_1_1existence__set_a3369fb4038184c5446a52c621c7f5d34.html#a3369fb4038184c5446a52c621c7f5d34',1,'chdr::existence_set']]],
   ['contents_10',['Table of Contents',['../index.html#table-of-contents',1,'']]],
   ['contributing_11',['Contributing',['../index.html#contributing',1,'']]],
-  ['cosine_5fdistance_12',['cosine_distance',['../d2/df4/structchdr_1_1heuristics_aa5fb3dbd83ab54f1935edc280461c87c.html#aa5fb3dbd83ab54f1935edc280461c87c',1,'chdr::heuristics']]],
-  ['count_13',['count',['../df/d64/structchdr_1_1solvers_1_1managed__node_acda8e1a76bed4a71e36efa61a9f3c59e.html#acda8e1a76bed4a71e36efa61a9f3c59e',1,'chdr::solvers::managed_node']]]
+  ['coord_12',['coord',['../d9/dfc/coord_8hpp_a5a89553aa616ec03af46b4681aabbca3.html#a5a89553aa616ec03af46b4681aabbca3',1,'chdr']]],
+  ['coord_2ehpp_13',['coord.hpp',['../d9/dfc/coord_8hpp.html',1,'']]],
+  ['cosine_5fdistance_14',['cosine_distance',['../d2/df4/structchdr_1_1heuristics_aa5fb3dbd83ab54f1935edc280461c87c.html#aa5fb3dbd83ab54f1935edc280461c87c',1,'chdr::heuristics']]],
+  ['count_15',['count',['../df/d64/structchdr_1_1solvers_1_1managed__node_acda8e1a76bed4a71e36efa61a9f3c59e.html#acda8e1a76bed4a71e36efa61a9f3c59e',1,'chdr::solvers::managed_node']]]
 ];
