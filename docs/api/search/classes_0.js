@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['bnode_0',['bnode',['../da/d98/structchdr_1_1solvers_1_1bnode.html',1,'chdr::solvers']]]
+  ['astar_0',['astar',['../d0/d64/structchdr_1_1solvers_1_1astar.html',1,'chdr::solvers']]]
 ];

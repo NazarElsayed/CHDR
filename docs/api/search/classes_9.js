@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['lowest_5fmemory_5fusage_0',['lowest_memory_usage',['../structchdr_1_1lowest__memory__usage.html',1,'chdr']]]
+  ['weighted_5fnode_0',['weighted_node',['../db/dc4/structchdr_1_1mazes_1_1weighted__node.html',1,'chdr::mazes']]]
 ];
