@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['weighted_5fnode_0',['weighted_node',['../db/dc4/structchdr_1_1mazes_1_1weighted__node.html',1,'weighted_node&lt; weight_t &gt;'],['../db/dc4/structchdr_1_1mazes_1_1weighted__node_a9756943f9da99f348748229a17ab28ed.html#a9756943f9da99f348748229a17ab28ed',1,'chdr::mazes::weighted_node::weighted_node()']]]
+  ['unmanaged_5fnode_0',['unmanaged_node',['../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html',1,'unmanaged_node&lt; index_t &gt;'],['../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_a05f3d6d2c925a1809848253d4f8caf9e.html#a05f3d6d2c925a1809848253d4f8caf9e',1,'chdr::solvers::unmanaged_node::unmanaged_node() noexcept'],['../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_ac6f3473c2df4d3156ebc0e17ebbe63ff.html#ac6f3473c2df4d3156ebc0e17ebbe63ff',1,'chdr::solvers::unmanaged_node::unmanaged_node(index_t _index, const unmanaged_node *restrict const _parent=nullptr) noexcept']]],
+  ['usage_1',['Usage',['../index.html#usage',1,'']]],
+  ['utils_2',['utils',['../d2/dcb/structchdr_1_1utils.html',1,'chdr']]]
 ];

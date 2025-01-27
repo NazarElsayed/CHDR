@@ -37,14 +37,14 @@ namespace chdr {
             ~block() = default;
 
             [[nodiscard]] HOT constexpr block           (const block&) = default;
-            HOT constexpr block& operator=(const block&) = default;
+                          HOT constexpr block& operator=(const block&) = default;
 
-            [[nodiscard]] HOT constexpr block(block&& other) noexcept = default;
+            [[nodiscard]] HOT constexpr block(block&& _other) noexcept = default;
 
 #if __cplusplus > 202302L
             constexpr
 #endif
-            block& operator=(block&& other) noexcept = default;
+            block& operator=(block&& _other) noexcept = default;
         };
 
         static constexpr size_t s_default_block_width {  4096U };
@@ -94,7 +94,7 @@ namespace chdr {
                     }
                 }
 
-                m_block_width = utils::min(m_block_width * 2U, s_max_block_width);
+                m_block_width = utils::min((m_block_width * 3U) / 2U, s_max_block_width);
             }
             catch (...) {
 
@@ -103,6 +103,8 @@ namespace chdr {
                 if (result != nullptr) {
                     ::operator delete(result, static_cast<std::align_val_t>(_alignment));
                     result = nullptr;
+
+                    m_blocks.pop_back();
                 }
             }
 

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['_7eunmanaged_5fnode_0',['~unmanaged_node',['../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_adc98f1197c5524d1c4798511c526b7dc.html#adc98f1197c5524d1c4798511c526b7dc',1,'chdr::solvers::unmanaged_node']]]
+  ['value_0',['value',['../db/dc4/structchdr_1_1mazes_1_1weighted__node_a9a9d24859a5366d0b48f6496ed3574b5.html#a9a9d24859a5366d0b48f6496ed3574b5',1,'chdr::mazes::weighted_node::value() const noexcept'],['../db/dc4/structchdr_1_1mazes_1_1weighted__node_a62fb7a2e242a85d1a1191b2ee9cb4e4e.html#a62fb7a2e242a85d1a1191b2ee9cb4e4e',1,'chdr::mazes::weighted_node::value(weight_t _value) noexcept']]]
 ];

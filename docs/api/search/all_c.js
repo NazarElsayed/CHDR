@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['references_0',['References',['../index.html#references',1,'']]],
-  ['reserve_1',['reserve',['../d6/db9/classchdr_1_1existence__set_aa66b014d5c0a1d4eb03fa4c8bac415c3.html#aa66b014d5c0a1d4eb03fa4c8bac415c3',1,'chdr::existence_set']]],
-  ['resize_2',['resize',['../d6/db9/classchdr_1_1existence__set_a26e416e6d95f37dc50de15a1fca899a1.html#a26e416e6d95f37dc50de15a1fca899a1',1,'chdr::existence_set']]],
-  ['roadmap_3',['Roadmap',['../d5/da1/md_docs_2manual_2roadmap.html',1,'']]]
+  ['of_20contents_0',['Table of Contents',['../index.html#table-of-contents',1,'']]],
+  ['operator_28_29_1',['operator()',['../d3/df4/classchdr_1_1solvers_1_1solver_a27feec6a8bfa491b399c0cd7e158e5cd.html#a27feec6a8bfa491b399c0cd7e158e5cd',1,'chdr::solvers::solver::operator()(Args &amp;&amp;... _args)'],['../d3/df4/classchdr_1_1solvers_1_1solver_ab98298b6d67e41f622dcde441f24ed6f.html#ab98298b6d67e41f622dcde441f24ed6f',1,'chdr::solvers::solver::operator()(const params_t &amp;_params)']]],
+  ['other_20languages_2',['Other Languages',['../da/dc4/md_docs_2manual_2getting__started.html#other-languages',1,'']]]
 ];

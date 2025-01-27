@@ -118,7 +118,7 @@ class chdr::solvers::solver&lt; solver_t, params_t &gt;</div><p>A static class s
 <li>Specialized utility traits to enforce type and method requirements during compilation.</li>
 <li>Support for user-defined solver implementations via the <code>solver_t</code> template parameter.</li>
 </ul>
-<div class="fragment"><div class="line"><span class="comment">// Example usage. Replace [...] with your implementations.</span></div>
+<div class="fragment"><div class="line"><span class="comment">// Example usage. Replace [...] with your values.</span></div>
 <div class="line"><span class="keyword">struct </span>params {</div>
 <div class="line"> </div>
 <div class="line">    <span class="keyword">using  </span>weight_type [[maybe_unused]] = ...; <span class="comment">// char</span></div>
@@ -128,19 +128,19 @@ class chdr::solvers::solver&lt; solver_t, params_t &gt;</div><p>A static class s
 <div class="line"> </div>
 <div class="line">    <span class="keyword">using </span>lazy_sorting [[maybe_unused]] = ...; <span class="comment">// std::false_type / std::true_type;</span></div>
 <div class="line"> </div>
-<div class="line">    <span class="keyword">const</span>        ... maze;</div>
+<div class="line">    <span class="keyword">const</span>        ... maze;  <span class="comment">// i.e. chdr::grid, chdr::graph</span></div>
 <div class="line">    <span class="keyword">const</span> coord_type start;</div>
 <div class="line">    <span class="keyword">const</span> coord_type end;</div>
 <div class="line">    <span class="keyword">const</span> coord_type size;</div>
 <div class="line">         scalar_type (*h)(<span class="keyword">const</span> coord_type&amp;, <span class="keyword">const</span> coord_type&amp;) <span class="keyword">noexcept</span>;</div>
 <div class="line"> </div>
-<div class="line">    ...* monotonic_pmr;</div>
-<div class="line">    ...* polytonic_pmr;</div>
-<div class="line">    ...* pool_pmr;</div>
+<div class="line">    std::pmr::memory_resource*   monotonic_pmr;</div>
+<div class="line">    std::pmr::memory_resource*   polytonic_pmr;</div>
+<div class="line">    std::pmr::memory_resource* homogeneous_pmr;</div>
 <div class="line"> </div>
-<div class="line">    <span class="keyword">const</span> scalar_type  weight       = ...; <span class="comment">// 1</span></div>
-<div class="line">    <span class="keyword">const</span>      <span class="keywordtype">size_t</span>  capacity     = ...; <span class="comment">// 0</span></div>
-<div class="line">    <span class="keyword">const</span>      <span class="keywordtype">size_t</span>  memoryLimit  = ...; <span class="comment">// MAX</span></div>
+<div class="line">    <span class="keyword">const</span> scalar_type weight       = ...; <span class="comment">// 1</span></div>
+<div class="line">    <span class="keyword">const</span>      <span class="keywordtype">size_t</span> capacity     = ...; <span class="comment">// 0</span></div>
+<div class="line">    <span class="keyword">const</span>      <span class="keywordtype">size_t</span> memoryLimit  = ...; <span class="comment">// MAX</span></div>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Invoke with chosen algorithm and parameters. Here, A* is used:</span></div>
@@ -152,7 +152,7 @@ class chdr::solvers::solver&lt; solver_t, params_t &gt;</div><p>A static class s
 <div class="line">    chdr::heuristics::manhattan_distance&lt;params::scalar_t, params::coord_t&gt;,</div>
 <div class="line">    my_monotonic_pmr,</div>
 <div class="line">    my_polytonic_pmr,</div>
-<div class="line">    my_pool_pmr</div>
+<div class="line">    my_homogeneous_pmr</div>
 <div class="line">);</div>
 <div class="ttc" id="aclasschdr_1_1solvers_1_1solver_a096fe8cb528641fed6813df1f40bd347_html_a096fe8cb528641fed6813df1f40bd347"><div class="ttname"><a href="../../d3/df4/classchdr_1_1solvers_1_1solver_a096fe8cb528641fed6813df1f40bd347.html#a096fe8cb528641fed6813df1f40bd347">chdr::solvers::solver::solve</a></div><div class="ttdeci">static auto solve(Args &amp;&amp;... _args)</div><div class="ttdoc">Executes the solver with the provided parameters. Parameters are constructed using perfect forwarding...</div><div class="ttdef"><b>Definition</b> <a href="../../d2/d1c/solver_8hpp_source.html#l00555">solver.hpp:555</a></div></div>
 </div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>

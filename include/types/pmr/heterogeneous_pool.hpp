@@ -41,17 +41,17 @@ namespace chdr {
             ~block() = default;
 
             [[nodiscard]] HOT constexpr block           (const block&) = default;
-            HOT constexpr block& operator=(const block&) = default;
+                          HOT constexpr block& operator=(const block&) = default;
 
-            [[nodiscard]] HOT constexpr block(block&& other) noexcept = default;
+            [[nodiscard]] HOT constexpr block(block&& _other) noexcept = default;
 
 #if __cplusplus > 202302L
             constexpr
 #endif
-            block& operator=(block&& other) noexcept = default;
+            block& operator=(block&& _other) noexcept = default;
 
-            [[nodiscard]] HOT constexpr bool operator < (const block& other) const noexcept {
-                return size < other.size;
+            [[nodiscard]] HOT constexpr bool operator < (const block& _other) const noexcept {
+                return size < _other.size;
             }
         };
 
@@ -105,10 +105,12 @@ namespace chdr {
                         }
                     }
 
-                    if (!success) { throw std::bad_alloc(); }
+                    if (!success) {
+                        throw std::bad_alloc();
+                    }
                 }
 
-                m_block_width = utils::min(m_block_width * 2U, s_max_block_width);
+                m_block_width = utils::min((m_block_width * 3U) / 2U, s_max_block_width);
             }
             catch (...) {
 
@@ -117,12 +119,14 @@ namespace chdr {
                 if (result != nullptr) {
                     ::operator delete(result, static_cast<std::align_val_t>(_alignment));
                     result = nullptr;
+
+                    m_blocks.pop_back();
                 }
             }
             return result;
         }
 
-        HOT uint8_t* allocate_from_free(const size_t _bytes) {
+        HOT uint8_t* allocate_from_free(size_t _bytes) {
 
             uint8_t* result;
 

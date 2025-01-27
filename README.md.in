@@ -20,12 +20,14 @@ The CHDR project is one of the fastest and most efficient pathfinding libraries 
 
 CHDR provides a user-friendly API with ultra-low latency, minimal memory usage, and high-performance implementations of cutting-edge algorithms widely used in Robotics, Game Development, GNSS Navigation, AI, and other high-performance applications.
 
-Its flexible design ensures compatibility across many platforms, compilers, and toolchains. Offered as a lightweight, header-only C++17 library with a
-modular, standards-compliant architecture, CHDR compiles seamlessly under strict conditions and has passed rigorous testing with tools such as
-Valgrind and Google's Sanitizers.
+Its flexible design ensures compatibility across many platforms, compilers, and toolchains. Offered as a lightweight, header-only C++17 library with a modular, standards-compliant architecture, CHDR compiles seamlessly under strict conditions and has passed rigorous testing with tools such as Valgrind and Google's Sanitizers.
 
-By leveraging advanced metaprogramming techniques, CHDR strikes the perfect balance between usability and performance. It supports efficient routing in 1D, 2D, 3D, 4D, and even higher-dimensional spaces, making it an ideal choice for developers seeking fast and reliable pathfinding solutions.
+CHDR strikes the perfect balance between usability and performance. It supports efficient routing in 1D, 2D, 3D, and higher-dimensional spaces, making it an ideal choice for developers seeking fast and reliable pathfinding solutions.
 
+### Key Features
+- Low Memory Footprint and Optimised Memory Access Patterns
+- Extremely Fast Searches
+- 
 
 ## Usage
 

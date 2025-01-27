@@ -392,7 +392,7 @@ $(document).ready(function(){initNavTree('d3/d3e/gjps_8hpp_source.html','../../'
 <div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>                                    solver_t::solver_utils::preallocate_emplace(_closed, n, _capacity, _params.maze.count());</div>
 <div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span> </div>
 <div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>                                    <span class="keywordflow">if</span> (curr_ptr == <span class="keyword">nullptr</span>) {</div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>                                        curr_ptr = <span class="keyword">new</span> (_params.pool_pmr-&gt;allocate(<span class="keyword">sizeof</span>(node), <span class="keyword">alignof</span>(node))) node(std::move(curr));</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>                                        curr_ptr = <span class="keyword">new</span> (_params.homogeneous_pmr-&gt;allocate(<span class="keyword">sizeof</span>(node), <span class="keyword">alignof</span>(node))) node(std::move(curr));</div>
 <div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>                                    }</div>
 <div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span> </div>
 <div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>                                    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (params_t::lazy_sorting::value) {</div>
@@ -406,7 +406,7 @@ $(document).ready(function(){initNavTree('d3/d3e/gjps_8hpp_source.html','../../'
 <div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>                        }</div>
 <div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span> </div>
 <div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>                        <span class="keywordflow">if</span> (curr_ptr == <span class="keyword">nullptr</span>) {</div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>                            curr.expunge(_params.pool_pmr);</div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>                            curr.expunge(_params.homogeneous_pmr);</div>
 <div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>                        }</div>
 <div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>                    }</div>
 <div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>                    <span class="keywordflow">else</span> { <span class="comment">// SOLUTION REACHED ...</span></div>

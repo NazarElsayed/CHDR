@@ -37,7 +37,7 @@ namespace chdr::solvers {
      *
      * @code
      *
-     * // Example usage. Replace [...] with your implementations.
+     * // Example usage. Replace [...] with your values.
      * struct params {
      *
      *     using  weight_type [[maybe_unused]] = ...; // char
@@ -47,19 +47,19 @@ namespace chdr::solvers {
      *
      *     using lazy_sorting [[maybe_unused]] = ...; // std::false_type / std::true_type;
      *
-     *     const        ... maze;
+     *     const        ... maze;  // i.e. chdr::grid, chdr::graph
      *     const coord_type start;
      *     const coord_type end;
      *     const coord_type size;
      *          scalar_type (*h)(const coord_type&, const coord_type&) noexcept;
      *
-     *     ...* monotonic_pmr;
-     *     ...* polytonic_pmr;
-     *     ...* pool_pmr;
+     *     std::pmr::memory_resource*   monotonic_pmr;
+     *     std::pmr::memory_resource*   polytonic_pmr;
+     *     std::pmr::memory_resource* homogeneous_pmr;
      *
-     *     const scalar_type  weight       = ...; // 1
-     *     const      size_t  capacity     = ...; // 0
-     *     const      size_t  memoryLimit  = ...; // MAX
+     *     const scalar_type weight       = ...; // 1
+     *     const      size_t capacity     = ...; // 0
+     *     const      size_t memoryLimit  = ...; // MAX
      * };
      *
      * // Invoke with chosen algorithm and parameters. Here, A* is used:
@@ -71,7 +71,7 @@ namespace chdr::solvers {
      *     chdr::heuristics::manhattan_distance<params::scalar_t, params::coord_t>,
      *     my_monotonic_pmr,
      *     my_polytonic_pmr,
-     *     my_pool_pmr
+     *     my_homogeneous_pmr
      * );
      * @endcode
      *
@@ -426,16 +426,16 @@ namespace chdr::solvers {
          */
         struct node_data {
 
-            /** @brief Indicates whether the node is active and should be considered in the computation logic. */
+            /** @brief Whether the node is active and should be considered within the search. */
             const bool active;
 
-            /** @brief The index of the node, typically representing its unique identifier within the structure of the search space. */
+            /** @brief Index of the node, typically representing its unique identifier within the structure of the search space. */
             const typename params_t::index_type index;
 
-            /** @brief The coordinates of the node in the search space, relevant for spatial algorithms. */
+            /** @brief Coordinate of the node in the search space. */
             const typename params_t::coord_type coord;
 
-            /** @brief The computed distance metric (e.g., cost or heuristic) associated with this node relative to its neighbours. */
+            /** @brief Computed distance metric (e.g., cost or heuristic) associated with this node relative to its neighbours. */
             const typename params_t::scalar_type distance;
          };
 
@@ -620,8 +620,8 @@ namespace chdr::solvers {
                 if constexpr (solver_utils::template has_method_reset_v<decltype(*_params.polytonic_pmr)>) {
                     if (_params.polytonic_pmr != nullptr) { _params.polytonic_pmr->reset(); }
                 }
-                if constexpr (solver_utils::template has_method_reset_v<decltype(*_params.pool_pmr)>) {
-                    if (_params.pool_pmr      != nullptr) { _params.pool_pmr->reset();      }
+                if constexpr (solver_utils::template has_method_reset_v<decltype(*_params.homogeneous_pmr)>) {
+                    if (_params.homogeneous_pmr != nullptr) { _params.homogeneous_pmr->reset(); }
                 }
 
                 return result;
