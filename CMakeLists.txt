@@ -165,7 +165,7 @@ target_precompile_headers(chdr INTERFACE stdafx.hpp)
 ## LINK OPTIONS:
 if (UNIX)
     if (CMAKE_BUILD_TYPE STREQUAL "Release")
-        target_link_options(chdr PRIVATE -Wl,--strip-all -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
+        target_link_options(chdr PRIVATE -flto=auto, -Wl,--strip-all -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
     else ()
         target_link_options(chdr PRIVATE -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
     endif ()

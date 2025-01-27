@@ -68,7 +68,11 @@ namespace chdr {
             try {
 
                 if (m_active_block_index + 1U < m_blocks.size()) { // Reuse an existing block:
-                    m_current_block_size = m_blocks[++m_active_block_index].size;
+
+                    auto& recycled_block = m_blocks[++m_active_block_index];
+
+                    m_current_block_size = recycled_block.size;
+                    result = recycled_block.data;
                 }
                 else {                                             // Allocate a new, larger block:
 
