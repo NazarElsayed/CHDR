@@ -10,7 +10,7 @@ A comprehensive solution for pathfinding in K-dimensions.
 - [Background](#background)
 - [Manual](docs/manual/getting_started.md)
 - [Roadmap](docs/manual/roadmap.md)
-- [License](#license)
+- [Licence](#licence)
 - [References](#references)
 
 
@@ -27,7 +27,7 @@ CHDR strikes the perfect balance between usability and performance. It supports 
 ### Key Features
 - Extremely fast searches.
 - Straightforward and easy to use.
-- Standalone – no external dependencies or license agreements.
+- Standalone – no external dependencies or third-party licence agreements.
 - Well-tested.
 - Well-documented.
 - Interoperable with common frameworks.
@@ -47,14 +47,14 @@ CHDR is currently in pre-release. During this time the library may undergo major
 
 ## Contributing
 
-If you encounter any issues or have suggestions for improvements, feel free to post them in the project's issue tracker. Your feedback helps us make CHDR better. At this time, please note that derivative works or modifications to the library are not permitted under the current license agreement. Refer to the [license](#license) section for more information.
+If you encounter any issues or have suggestions for improvements, feel free to post them in the project's issue tracker. Your feedback helps us make CHDR better. At this time, please note that derivative works or modifications to the library are not permitted under the current licence agreement. Refer to the [licence](#licence) section for more information.
 
 
-## License
+## Licence
 
 **[Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en)**
 
-CHDR is currently licensed under **[CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en)**. Please refer to the license documentation for exact details. For permission regarding use in commercial or derivative works, please contact the developers.
+CHDR is currently licenced under **[CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en)**. Please refer to the licence documentation for exact details. For permission regarding use in commercial or derivative works, please contact the developers.
 
 ## References
 

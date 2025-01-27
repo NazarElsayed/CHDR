@@ -6,6 +6,6 @@ var index =
     ] ],
     [ "Usage", "index.html#usage", null ],
     [ "Contributing", "index.html#contributing", null ],
-    [ "License", "index.html#license", null ],
+    [ "Licence", "index.html#licence", null ],
     [ "References", "index.html#references", null ]
 ];
