@@ -57,9 +57,9 @@ namespace chdr::solvers {
      *     const coord_type size;
      *          scalar_type (*h)(const coord_type&, const coord_type&) noexcept;
      *
-     *     std::pmr::memory_resource*   monotonic_pmr;
-     *     std::pmr::memory_resource*   polytonic_pmr;
-     *     std::pmr::memory_resource* homogeneous_pmr;
+     *     ...*   monotonic_pmr;
+     *     ...*   polytonic_pmr;
+     *     ...* homogeneous_pmr;
      *
      *     const scalar_type weight       = ...; // 1
      *     const      size_t capacity     = ...; // 0
@@ -547,8 +547,16 @@ namespace chdr::solvers {
          *
          * @note You must ensure that the given arguments are valid for constructing the parameters for your intended search.
          *
+         * @remarks Calling this will reset the state of `monotonic_pmr`, `polytonic_pmr`, and `homogeneous_pmr`, if they have a visible method `reset()`.
+         *
+         * @warning Aliasing the polymorphic memory resources as other types may hide the `reset()` method from this function.
+         *          If you intend for this function to trigger a reset of these parameters, you must provide them as a type where the `reset()` method
+         *          is visible.
+         *
          * @tparam Args A parameter pack containing the arguments to construct the parameters object.
          * @return A std::vector containing the result of the search. If the search fails, the vector will be empty.
+         *
+         * @see solve
          */
         template <typename... Args>
         [[maybe_unused, nodiscard]]
@@ -564,7 +572,15 @@ namespace chdr::solvers {
          *
          * @param [in] _params The parameters object to solve with.
          *
+         * @remarks Calling this will reset the state of `monotonic_pmr`, `polytonic_pmr`, and `homogeneous_pmr`, if they have a visible method `reset()`.
+         *
+         * @warning Aliasing the polymorphic memory resources as other types may hide the `reset()` method from this function.
+         *          If you intend for this function to trigger a reset of these parameters, you must provide them as a type where the `reset()` method
+         *          is visible.
+         *
          * @return A std::vector containing the result of the search. If the search fails, the vector will be empty.
+         *
+         * @see solve
          */
         [[maybe_unused, nodiscard]]
 #if __cplusplus >= 202003L
@@ -572,25 +588,39 @@ namespace chdr::solvers {
 #endif // __cplusplus >= 202003L
         static auto solve(const params_t& _params) {
 
-            const auto s = static_cast<typename params_t::index_type>(utils::to_1d(_params.start, _params.size));
-            const auto e = static_cast<typename params_t::index_type>(utils::to_1d(_params.end,   _params.size));
+            std::exception_ptr exception;
 
-            if (_params.maze.contains(s) && _params.maze.at(s).is_active() &&
-                _params.maze.contains(e) && _params.maze.at(e).is_active()
-            ) {
-                auto result = s != e ? solver_t<params_t>::invoke(_params) : std::vector<typename params_t::coord_type> { _params.end };
+            try {
+                const auto s = static_cast<typename params_t::index_type>(utils::to_1d(_params.start, _params.size));
+                const auto e = static_cast<typename params_t::index_type>(utils::to_1d(_params.end,   _params.size));
 
-                if constexpr (solver_utils::template has_method_reset_v<decltype(*_params.monotonic_pmr)>) {
+                if (_params.maze.contains(s) && _params.maze.at(s).is_active() &&
+                    _params.maze.contains(e) && _params.maze.at(e).is_active()
+                ) {
+                    return s != e ? solver_t<params_t>::invoke(_params) : std::vector<typename params_t::coord_type> { _params.end };
+                }
+            }
+            catch (...) { // NOLINT(*-empty-catch)
+                exception = std::current_exception();
+            }
+
+            try {
+                if constexpr (solver_utils::template has_method_reset_v<std::remove_pointer_t<std::decay_t<decltype(_params.monotonic_pmr)>>>) {
                     if (_params.monotonic_pmr != nullptr) { _params.monotonic_pmr->reset(); }
                 }
-                if constexpr (solver_utils::template has_method_reset_v<decltype(*_params.polytonic_pmr)>) {
+                if constexpr (solver_utils::template has_method_reset_v<std::remove_pointer_t<std::decay_t<decltype(_params.polytonic_pmr)>>>) {
                     if (_params.polytonic_pmr != nullptr) { _params.polytonic_pmr->reset(); }
                 }
-                if constexpr (solver_utils::template has_method_reset_v<decltype(*_params.homogeneous_pmr)>) {
+                if constexpr (solver_utils::template has_method_reset_v<std::remove_pointer_t<std::decay_t<decltype(_params.homogeneous_pmr)>>>) {
                     if (_params.homogeneous_pmr != nullptr) { _params.homogeneous_pmr->reset(); }
                 }
+            }
+            catch (...) { // NOLINT(*-empty-catch)
+                if (!exception) {
+                    exception = std::current_exception();
+                }
 
-                return result;
+                std::rethrow_exception(exception);
             }
 
             return std::vector<typename params_t::coord_type>{};
@@ -603,8 +633,16 @@ namespace chdr::solvers {
          *
          * @note You must ensure that the given arguments are valid for constructing the parameters for your intended search.
          *
+         * @remarks Calling this will reset the state of `monotonic_pmr`, `polytonic_pmr`, and `homogeneous_pmr`, if they have a visible method `reset()`.
+         *
+         * @warning Aliasing the polymorphic memory resources as other types may hide the `reset()` method from this function.
+         *          If you intend for this function to trigger a reset of these parameters, you must provide them as a type where the `reset()` method
+         *          is visible.
+         *
          * @tparam Args A parameter pack containing the arguments to construct the parameters object.
          * @return A std::vector containing the result of the search. If the search fails, the vector will be empty.
+         *
+         * @see solve
          */
         template <typename... Args>
         [[maybe_unused, nodiscard]]
@@ -620,7 +658,15 @@ namespace chdr::solvers {
          *
          * @param [in] _params The parameters object to solve with.
          *
+         * @remarks Calling this will reset the state of `monotonic_pmr`, `polytonic_pmr`, and `homogeneous_pmr`, if they have a visible method `reset()`.
+         *
+         * @warning Aliasing the polymorphic memory resources as other types may hide the `reset()` method from this function.
+         *          If you intend for this function to trigger a reset of these parameters, you must provide them as a type where the `reset()` method
+         *          is visible.
+         *
          * @return A std::vector containing the result of the search. If the search fails, the vector will be empty.
+         *
+         * @see solve
          */
         [[maybe_unused, nodiscard]]
 #if __cplusplus >= 202003L

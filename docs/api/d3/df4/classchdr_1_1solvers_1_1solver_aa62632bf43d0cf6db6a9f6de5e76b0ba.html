@@ -136,9 +136,12 @@ template&lt;template&lt; typename params_t &gt; typename solver_t, typename para
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A std::vector containing the result of the search. If the search fails, the vector will be empty. </dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>Calling this will reset the state of <code>monotonic_pmr</code>, <code>polytonic_pmr</code>, and <code>homogeneous_pmr</code>, if they have a visible method <code>reset()</code>.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>Aliasing the polymorphic memory resources as other types may hide the <code>reset()</code> method from this function. If you intend for this function to trigger a reset of these parameters, you must provide them as a type where the <code>reset()</code> method is visible.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A std::vector containing the result of the search. If the search fails, the vector will be empty.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="../../d3/df4/classchdr_1_1solvers_1_1solver_a096fe8cb528641fed6813df1f40bd347.html#a096fe8cb528641fed6813df1f40bd347" title="Executes the solver with the provided parameters. Parameters are constructed using perfect forwarding...">solve</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d2/d1c/solver_8hpp_source.html#l00573">573</a> of file <a class="el" href="../../d2/d1c/solver_8hpp_source.html">solver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d2/d1c/solver_8hpp_source.html#l00589">589</a> of file <a class="el" href="../../d2/d1c/solver_8hpp_source.html">solver.hpp</a>.</p>
 <div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
