@@ -131,22 +131,22 @@ template&lt;typename T , typename coord_t &gt; </div>
 
 <p>Calculates the product of all elements in a coordinate or array. </p>
 <p>Recursively calculates the product of all elements in a multidimensional array-like structure, utilising overflow-safe multiplication. The calculation begins from the given index and continues through the array until reaching the end. If the index exceeds the size of the array, the base case returns <code>1</code>. The function ensures that overflow does not occur during multiplication.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">T</td><td>The arithmetic type used for the computation. It must satisfy <code>std::is_arithmetic_v&lt;T&gt;</code> and <code>std::is_trivially_constructible_v&lt;T&gt;</code>. </td></tr>
-    <tr><td class="paramname">coord_t</td><td>The type of the coordinate. It must implement <code>std::tuple_size</code> and support subscript indexing.</td></tr>
-  </table>
-  </dd>
-</dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">_coord</td><td>The coordinate whose elements' product is to be computed.</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The arithmetic type used for the computation. It must satisfy <code>std::is_arithmetic_v&lt;T&gt;</code> and <code>std::is_trivially_constructible_v&lt;T&gt;</code>.</td></tr>
+    <tr><td class="paramname">coord_t</td><td>The type of the coordinate. It must implement <code>std::tuple_size</code> and support subscript indexing.</td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section return"><dt>Returns</dt><dd>The product of all elements in the specified coordinate starting from <code>_index</code>. If <code>_index &gt;= size of _coord</code>, <code>1</code> is returned as the base recursion case. If any multiplication results in an overflow, the value is clamped to the maximum representable value for the type <code>T</code>. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../df/d93/utils_8hpp_source.html#l00120">120</a> of file <a class="el" href="../../df/d93/utils_8hpp_source.html">utils.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../df/d93/utils_8hpp_source.html#l00127">127</a> of file <a class="el" href="../../df/d93/utils_8hpp_source.html">utils.hpp</a>.</p>
 
 </div>
 </div>

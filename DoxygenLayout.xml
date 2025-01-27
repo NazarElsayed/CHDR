@@ -145,39 +145,39 @@
 
   <!-- Layout definition for a file page -->
   <file>
-    <briefdescription visible="yes"/>
+    <briefdescription visible="no"/>
     <includes visible="$SHOW_INCLUDE_FILES"/>
-    <includegraph visible="yes"/>
-    <includedbygraph visible="yes"/>
+    <detaileddescription title="Description"/>
     <sourcelink visible="yes"/>
     <memberdecl>
-      <interfaces visible="yes" title=""/>
-      <classes visible="yes" title=""/>
-      <structs visible="yes" title=""/>
-      <exceptions visible="yes" title=""/>
-      <namespaces visible="yes" title=""/>
-      <concepts visible="yes" title=""/>
-      <constantgroups visible="yes" title=""/>
-      <defines title=""/>
-      <typedefs title=""/>
-      <sequences title=""/>
-      <dictionaries title=""/>
-      <enums title=""/>
-      <functions title=""/>
-      <variables title=""/>
-      <membergroups visible="yes"/>
+      <membergroups visible="yes" title=""/>
+      <interfaces visible="yes" title="Interfaces"/>
+      <classes visible="yes" title="Classes"/>
+      <structs visible="yes" title="Structs"/>
+      <exceptions visible="yes" title="Exceptions"/>
+      <namespaces visible="yes" title="Namespaces"/>
+      <concepts visible="yes" title="Concepts"/>
+      <constantgroups visible="yes" title="Constant Groups"/>
+      <defines title="Defines"/>
+      <typedefs title="Types"/>
+      <sequences title="Sequences"/>
+      <dictionaries title="Dictionaries"/>
+      <enums title="Enums"/>
+      <functions title="Functions"/>
+      <variables title="Variables"/>
     </memberdecl>
-    <detaileddescription title=""/>
     <memberdef>
-      <inlineclasses title=""/>
-      <defines title=""/>
-      <typedefs title=""/>
-      <sequences title=""/>
-      <dictionaries title=""/>
-      <enums title=""/>
-      <functions title=""/>
-      <variables title=""/>
+      <inlineclasses title="Classes"/>
+      <defines title="Defines"/>
+      <typedefs title="Types"/>
+      <sequences title="Sequences"/>
+      <dictionaries title="Dictionaries"/>
+      <enums title="Enums"/>
+      <functions title="Functions"/>
+      <variables title="Variables"/>
     </memberdef>
+    <includegraph visible="yes"/>
+    <includedbygraph visible="yes"/>
     <authorsection/>
   </file>
 

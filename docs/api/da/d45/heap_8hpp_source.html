@@ -221,7 +221,7 @@ $(document).ready(function(){initNavTree('da/d45/heap_8hpp_source.html','../../'
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        }</div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        heap(<span class="keywordtype">size_t</span> _capacity, std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>            c.reserve(<a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_ac49e3cb9b2b007da03059d95020d8b49.html#ac49e3cb9b2b007da03059d95020d8b49">utils::min</a>(_capacity, std::numeric_limits&lt;size_t&gt;::max() - 1U) + 1U);</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>            c.reserve(<a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_af080e8d9bad9ea513c51823f5805733f.html#af080e8d9bad9ea513c51823f5805733f">utils::min</a>(_capacity, std::numeric_limits&lt;size_t&gt;::max() - 1U) + 1U);</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>            c.emplace_back(); <span class="comment">// Add uninitialised super element.</span></div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        }</div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
@@ -587,7 +587,7 @@ $(document).ready(function(){initNavTree('da/d45/heap_8hpp_source.html','../../'
 <div class="line"><a id="l00511" name="l00511"></a><span class="lineno">  511</span>} <span class="comment">//chdr</span></div>
 <div class="line"><a id="l00512" name="l00512"></a><span class="lineno">  512</span> </div>
 <div class="line"><a id="l00513" name="l00513"></a><span class="lineno">  513</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="astructchdr_1_1utils_ac49e3cb9b2b007da03059d95020d8b49_html_ac49e3cb9b2b007da03059d95020d8b49"><div class="ttname"><a href="../../d2/dcb/structchdr_1_1utils_ac49e3cb9b2b007da03059d95020d8b49.html#ac49e3cb9b2b007da03059d95020d8b49">chdr::utils::min</a></div><div class="ttdeci">static const T &amp; min(const T &amp;_a, const T &amp;_b) noexcept</div><div class="ttdoc">Returns the smaller of two values.</div><div class="ttdef"><b>Definition</b> <a href="../../df/d93/utils_8hpp_source.html#l00425">utils.hpp:425</a></div></div>
+<div class="ttc" id="astructchdr_1_1utils_af080e8d9bad9ea513c51823f5805733f_html_af080e8d9bad9ea513c51823f5805733f"><div class="ttname"><a href="../../d2/dcb/structchdr_1_1utils_af080e8d9bad9ea513c51823f5805733f.html#af080e8d9bad9ea513c51823f5805733f">chdr::utils::min</a></div><div class="ttdeci">static HOT constexpr const T &amp; min(const T &amp;_a, const T &amp;_b) noexcept</div><div class="ttdoc">Returns the smaller of two values.</div><div class="ttdef"><b>Definition</b> <a href="../../df/d93/utils_8hpp_source.html#l00439">utils.hpp:439</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen -->

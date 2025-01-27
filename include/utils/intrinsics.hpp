@@ -9,6 +9,15 @@
 #ifndef CHDR_INTRINSICS_HPP
 #define CHDR_INTRINSICS_HPP
 
+/**
+ * @file intrinsics.hpp
+ *
+ * @details Provides architecture-specific intrinsics, compiler-specific macros, and other low-level utilities,
+ *          ensuring consistent behavior and performance across various development environments.
+ *
+ * @note This file dynamically includes SIMD instructions based on their availability.
+ */
+
 #include <cstddef>
 #include <cstdlib>
 

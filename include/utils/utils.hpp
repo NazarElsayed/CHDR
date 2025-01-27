@@ -41,9 +41,11 @@ namespace chdr {
 	    ~utils()                         = delete;
 
 		/**
-		 * Multiplies two arithmetic values and ensures that the result does not exceed the
-		 * maximum value for the given type. If an overflow is detected, the maximum value
-		 * for the given type is returned instead.
+		 * @brief Multiplies two numbers and clamps in the case of overflow.
+		 *
+		 * @details Multiplies two arithmetic values and ensures that the result does not exceed the
+		 *          maximum value for the given type. If an overflow is detected, the maximum value
+		 *          for the given type is returned instead.
 		 *
 		 * @tparam T The arithmetic type of the two input values. The type must satisfy
 		 *           `std::is_arithmetic_v<T>`.
@@ -66,19 +68,22 @@ namespace chdr {
 
 		/**
 		 * @brief Calculates the product of all elements in a coordinate or array.
+		 *
 		 * @details Recursively calculates the product of all elements in a multidimensional array-like structure,
-		 * utilising overflow-safe multiplication. The calculation begins from the given index and continues
-		 * through the array until reaching the end. If the index exceeds the size of the array, the base
-		 * case returns `1`. The function ensures that overflow does not occur during multiplication.
+		 *          utilising overflow-safe multiplication. The calculation begins from the given index and continues
+		 *          through the array until reaching the end. If the index exceeds the size of the array, the base
+		 *          case returns `1`. The function ensures that overflow does not occur during multiplication.
 		 *
 		 * @tparam T The arithmetic type used for the computation. It must satisfy
 		 *           `std::is_arithmetic_v<T>` and `std::is_trivially_constructible_v<T>`.
+		 *
 		 * @tparam coord_t The type of the coordinate. It must implement `std::tuple_size`
 		 *                 and support subscript indexing.
 		 *
-		 * @param[in] _coord The coordinate whose elements' product is to be computed.
+		 * @param [in] _coord The coordinate whose elements' product is to be computed.
+		 *
 		 * @param _index (optional) The current index indicating where in the array computation starts.
-		 *                            Defaults to `0`.
+		 *                          Defaults to `0`.
 		 *
 		 * @return The product of all elements in the specified coordinate starting from `_index`.
 		 *         If `_index >= size of _coord`, `1` is returned as the base recursion case. If any
@@ -99,17 +104,19 @@ namespace chdr {
 
 		/**
 		 * @brief Calculates the product of all elements in a coordinate or array.
+		 *
 		 * @details Recursively calculates the product of all elements in a multidimensional array-like structure,
-		 * utilising overflow-safe multiplication. The calculation begins from the given index and continues
-		 * through the array until reaching the end. If the index exceeds the size of the array, the base
-		 * case returns `1`. The function ensures that overflow does not occur during multiplication.
+		 *          utilising overflow-safe multiplication. The calculation begins from the given index and continues
+		 *          through the array until reaching the end. If the index exceeds the size of the array, the base
+		 *          case returns `1`. The function ensures that overflow does not occur during multiplication.
+		 *
+		 * @param[in] _coord The coordinate whose elements' product is to be computed.
 		 *
 		 * @tparam T The arithmetic type used for the computation. It must satisfy
 		 *           `std::is_arithmetic_v<T>` and `std::is_trivially_constructible_v<T>`.
+		 *
 		 * @tparam coord_t The type of the coordinate. It must implement `std::tuple_size`
 		 *                 and support subscript indexing.
-		 *
-		 * @param[in] _coord The coordinate whose elements' product is to be computed.
 		 *
 		 * @return The product of all elements in the specified coordinate starting from `_index`.
 		 *         If `_index >= size of _coord`, `1` is returned as the base recursion case. If any
@@ -123,6 +130,7 @@ namespace chdr {
 
 		/**
 		 * @brief Maps a one-dimensional index to a multi-dimensional coordinate representation.
+		 *
 		 * @details Converts the given one-dimensional array index `_index` into a set of indices
 		 *          that correspond to the various dimensions of a multi-dimensional space
 		*           represented by `_sizes`.
@@ -206,6 +214,7 @@ namespace chdr {
 
 		/**
 		 * @brief Maps a multi-dimensional index to a one-dimensional array index.
+		 *
 		 * @details Calculates the flattened one-dimensional index corresponding to
 		 *          the specified multi-dimensional indices `_indices`, given the
 		 *          dimensions and sizes of the multi-dimensional space `_sizes`.
@@ -266,6 +275,7 @@ namespace chdr {
 
 		/**
 		 * @brief Determines the sign of a given value.
+		 *
 		 * @details Computes the sign of the specified value by leveraging compile-time checks
 		 *          to handle signed and unsigned types differently. For signed types, it returns:
 		 *          - A positive indicator `1` for values greater than zero.
@@ -304,6 +314,7 @@ namespace chdr {
 
 		/**
 		 * @brief Computes the power of an unsigned integral base raised to an unsigned integral exponent.
+		 *
 		 * @details This function calculates the result of raising the given base value to the power of the provided exponent.
 		 *          It utilises an iterative, optimised method (exponentiation by squaring), suitable for unsigned integral
 		 *          types that support arithmetic operations. The input must satisfy the constraints as enforced by the static assertion.
@@ -311,8 +322,8 @@ namespace chdr {
 		 * @tparam T  The type of the base and exponent values. Must be an unsigned integral type supporting arithmetic operations.
 		 *            Any type that does not satisfy these conditions will result in a static assertion failure.
 		 *
-		 * @param _base  The unsigned integral base to be raised to the provided exponent.
-		 * @param _exp   The unsigned integral exponent. If the exponent is 0, the result is always 1, regardless of the base.
+		 * @param _base The unsigned integral base to be raised to the provided exponent.
+		 * @param _exp  The unsigned integral exponent. If the exponent is 0, the result is always 1, regardless of the base.
 		 *
 		 * @return The computed value of _base raised to the power of _exp.
 		 *         For example, powui(2, 3) would return 8.
@@ -341,6 +352,7 @@ namespace chdr {
 
 		/**
 		 * @brief Computes the absolute value of a given arithmetic type.
+		 *
 		 * @details This function returns the absolute value of the input parameter, ensuring
 		 *          correct handling of signed and unsigned arithmetic types. If the input type
 		 *          is unsigned, the value is returned as-is. For signed types, a negative value
@@ -362,6 +374,7 @@ namespace chdr {
 
 		/**
 		 * @brief Computes the square root of a given value.
+		 *
 		 * @details This method calculates the square root of a given value, leveraging a compile-time
 		 *          constant evaluation mechanism if supported. For constant evaluation, it uses
 		 *          an iterative approach (Newton's method). If the value is evaluated at runtime,
@@ -370,7 +383,7 @@ namespace chdr {
 		 *          is negative during compile-time evaluation, the result will be `NaN` (Not a Number).
 		 *
 		 * @param [in] _value The input value whose square root is to be computed. It must be an arithmetic type.
-		 *                     Passing a negative value during constant evaluation will result in `NaN`.
+		 *                    Passing a negative value during constant evaluation will result in `NaN`.
 		 *
 		 * @returns The computed square root of the input value. If the input is `0` or `1`, the return value
 		 *          will be the input itself. If the input is negative and evaluated at compile time, the
@@ -411,6 +424,7 @@ namespace chdr {
 
 		/**
 		 * @brief Returns the smaller of two values.
+		 *
 		 * @details Compares two values of type T and returns the smaller of the two.
 		 *          The function imposes a static assertion to ensure that the type T
 		 *          supports the less-than operator for comparison.
@@ -429,6 +443,7 @@ namespace chdr {
 
 		/**
 		 * @brief Determines the maximum of two comparable values.
+		 *
 		 * @details Compares two input values of the same type and returns the larger of the two.
 		 *          The comparison relies on the less-than (`<`) operator, and the type `T` must
 		 *          support this operation to be used with this function.
@@ -446,6 +461,7 @@ namespace chdr {
 
 		/**
 		 * @brief Constrains a value to lie within a specified range.
+		 *
 		 * @details This function ensures that the given value `_value` is clamped within the range defined
 		 *          by `_min` and `_max`. If `_value` is less than `_min`, `_min` is returned. If `_value`
 		 *          exceeds `_max`, `_max` is returned. Otherwise, `_value` is returned unaltered.
@@ -470,14 +486,16 @@ namespace chdr {
 
 		/**
 		 * @brief Converts a duration in seconds to a formatted string representation.
+		 *
 		 * @details Produces a formatted string representation, of the given duration in seconds,
 		 *          scaling the value to an appropriate unit (seconds, milliseconds, microseconds, or nanoseconds).
 		 *          The resulting string will include the unit suffix and round the result based on the provided scale.
 		 *
 		 * @param _duration The duration in seconds to be converted. It must be expressed as a floating-point number.
-		 * @param [in] _scale (optional) The precision scale to be used for rounding the scaled result.
-		 *                    By default, it uses the smallest precision value for long double representation.
-		 *                    The value is clamped to the range 0 -> 1.
+		 * 
+		 * @param _scale (optional) The precision scale to be used for rounding the scaled result.
+		 *                          By default, it uses the smallest precision value for long double representation.
+		 *                          The value is clamped to the range 0 -> 1.
 		 *
 		 * @returns A string containing the scaled and formatted duration, including its
 		 *          appropriate time unit (e.g., "s" for seconds, "ms" for milliseconds).
@@ -505,12 +523,13 @@ namespace chdr {
 
 		/**
 		 * @brief Removes trailing zeroes from a numeric string.
+		 *
 		 * @details Removes any trailing zeroes from a numeric string representation, as well as
 		 *          a trailing decimal point if all decimal digits are removed.
 		 *
-		 * @param [in] _str The string to be processed. It must represent a numeric value.
-		 *                       If any trailing zeros or an unnecessary decimal point are present,
-		 *                       they will be removed from this string.
+		 * @param _str The string to be processed. It must represent a numeric value.
+		 *             If any trailing zeros or an unnecessary decimal point are present,
+		 *             they will be removed from this string.
 		 *
 		 * @returns A string with trailing zeros removed. If there was a trailing decimal
 		 *          point with no digits following, it is also removed. The modified string
