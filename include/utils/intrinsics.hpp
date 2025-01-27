@@ -18,6 +18,55 @@
  * @note This file dynamically includes SIMD instructions based on their availability.
  */
 
+/**
+ * @def IVDEP
+ * @brief Enables vectorised loops (platform-specific). Defaults to no effect on unsupported platforms.
+ */
+
+/**
+ * @def VECTOR_ALWAYS
+ * @brief Forces vectorisation of loops (platform-specific). Defaults to no effect on unsupported platforms.
+ */
+
+/**
+ * @def LIKELY(x)
+ * @brief Hints the compiler that the condition is likely to be true. Defaults to evaluating the condition as-is.
+ * @param x The condition to evaluate.
+ */
+
+/**
+ * @def UNLIKELY(x)
+ * @brief Hints the compiler that the condition is likely to be false. Defaults to evaluating the condition as-is.
+ * @param x The condition to evaluate.
+ */
+
+/**
+ * @def PREFETCH(P, I)
+ * @brief Provides a compiler hint to prefetch memory. Defaults to no effect on unsupported platforms.
+ * @param P Pointer to the memory to prefetch.
+ * @param I Prefetch hint identifier (e.g., read/write locality).
+ */
+
+/**
+ * @def RESTRICT
+ * @brief Specifies pointer aliasing restrictions to improve optimisation. Defaults to no effect on unsupported platforms.
+ */
+
+/**
+ * @def ALWAYS_INLINE
+ * @brief Forces a function to always be inlined (platform-specific). Defaults to no effect on unsupported platforms.
+ */
+
+/**
+ * @def HOT
+ * @brief Marks a function as performance-critical (platform-specific). Defaults to no effect on unsupported platforms.
+ */
+
+/**
+ * @def COLD
+ * @brief Marks a function as less frequently called (platform-specific). Defaults to no effect on unsupported platforms.
+ */
+
 #include <cstddef>
 #include <cstdlib>
 
@@ -52,55 +101,150 @@
 namespace chdr {
 
 #ifdef _MSC_VER
-#define IVDEP __pragma(loop(ivdep))
-#define VECTOR_ALWAYS
-#define LIKELY(x)   (x)
-#define UNLIKELY(x) (x)
-#define PREFETCH(P, I) ((void)))
-#define RESTRICT restrict
-#define ALWAYS_INLINE __forceinline
-#define HOT
-#define COLD __declspec(noinline)
+
+    /** @brief Enables vectorised loops (platform-specific). */
+    #define IVDEP __pragma(loop(ivdep))
+
+    /** @brief Forces vectorisation of loops (platform-specific). */
+    #define VECTOR_ALWAYS
+
+    /** @brief Hints the compiler that the condition is likely to be true. */
+    #define LIKELY(x) (x)
+
+    /** @brief Hints the compiler that the condition is likely to be false. */
+    #define UNLIKELY(x) (x)
+
+    /** @brief Provides a compiler hint to prefetch memory. */
+    #define PREFETCH(P, I) ((void))
+
+    /** @brief Specifies pointer aliasing restrictions to improve optimisation. */
+    #define RESTRICT restrict
+
+    /** @brief Forces a function to always be inlined. */
+    #define ALWAYS_INLINE __forceinline
+
+    /** @brief Marks a function as performance-critical. */
+    #define HOT
+
+    /** @brief Marks a function as less frequently called. */
+    #define COLD __declspec(noinline)
+
 #elif defined(__INTEL_COMPILER) || defined(__INTEL_LLVM_COMPILER)
-#define IVDEP _Pragma("ivdep")
-#define VECTOR_ALWAYS _Pragma("vector always")
-#define LIKELY(x)   __builtin_expect(!!(x), 1)
-#define UNLIKELY(x) __builtin_expect(!!(x), 0)
-#define PREFETCH(P, I) _mm_prefetch(reinterpret_cast<const char*>(P), I)
-#define RESTRICT __restrict__
-#define ALWAYS_INLINE __attribute__((always_inline))
-#define HOT __attribute__((hot))
-#define COLD __attribute__((cold))
+
+    /** @brief Enables vectorised loops (platform-specific). */
+    #define IVDEP _Pragma("ivdep")
+
+    /** @brief Forces vectorisation of loops (platform-specific). */
+    #define VECTOR_ALWAYS _Pragma("vector always")
+
+    /** @brief Hints the compiler that the condition is likely to be true. */
+    #define LIKELY(x) __builtin_expect(!!(x), 1)
+
+    /** @brief Hints the compiler that the condition is likely to be false. */
+    #define UNLIKELY(x) __builtin_expect(!!(x), 0)
+
+    /** @brief Provides a compiler hint to prefetch memory. */
+    #define PREFETCH(P, I) _mm_prefetch(reinterpret_cast<const char*>(P), I)
+
+    /** @brief Specifies pointer aliasing restrictions to improve optimisation. */
+    #define RESTRICT __restrict__
+
+    /** @brief Forces a function to always be inlined. */
+    #define ALWAYS_INLINE __attribute__((always_inline))
+
+    /** @brief Marks a function as performance-critical. */
+    #define HOT __attribute__((hot))
+
+    /** @brief Marks a function as less frequently called. */
+    #define COLD __attribute__((cold))
+
 #elif defined(__clang__)
-#define IVDEP _Pragma("clang loop vectorize(enable)")
-#define VECTOR_ALWAYS
-#define LIKELY(x)   __builtin_expect(!!(x), 1)
-#define UNLIKELY(x) __builtin_expect(!!(x), 0)
-#define PREFETCH(P, I) _mm_prefetch(reinterpret_cast<const char*>(P), I)
-#define RESTRICT __restrict__
-#define ALWAYS_INLINE __attribute__((always_inline))
-#define HOT __attribute__((hot))
-#define COLD __attribute__((cold))
+
+    /** @brief Enables vectorised loops (platform-specific). */
+    #define IVDEP _Pragma("clang loop vectorise(enable)")
+
+    /** @brief Forces vectorisation of loops (platform-specific). */
+    #define VECTOR_ALWAYS
+
+    /** @brief Hints the compiler that the condition is likely to be true. */
+    #define LIKELY(x) __builtin_expect(!!(x), 1)
+
+    /** @brief Hints the compiler that the condition is likely to be false. */
+    #define UNLIKELY(x) __builtin_expect(!!(x), 0)
+
+    /** @brief Provides a compiler hint to prefetch memory. */
+    #define PREFETCH(P, I) _mm_prefetch(reinterpret_cast<const char*>(P), I)
+
+    /** @brief Specifies pointer aliasing restrictions to improve optimisation. */
+    #define RESTRICT __restrict__
+
+    /** @brief Forces a function to always be inlined. */
+    #define ALWAYS_INLINE __attribute__((always_inline))
+
+    /** @brief Marks a function as performance-critical. */
+    #define HOT __attribute__((hot))
+
+    /** @brief Marks a function as less frequently called. */
+    #define COLD __attribute__((cold))
+
 #elif defined(__GNUC__)
-#define IVDEP _Pragma("GCC ivdep")
-#define VECTOR_ALWAYS
-#define LIKELY(x)   __builtin_expect(!!(x), 1)
-#define UNLIKELY(x) __builtin_expect(!!(x), 0)
-#define PREFETCH(P, I) _mm_prefetch(reinterpret_cast<const char*>(P), I)
-#define RESTRICT __restrict__
-#define ALWAYS_INLINE __attribute__((always_inline))
-#define HOT __attribute__((hot))
-#define COLD __attribute__((cold))
+
+    /** @brief Enables vectorised loops (platform-specific). */
+    #define IVDEP _Pragma("GCC ivdep")
+
+    /** @brief Forces vectorisation of loops (platform-specific). */
+    #define VECTOR_ALWAYS
+
+    /** @brief Hints the compiler that the condition is likely to be true. */
+    #define LIKELY(x) __builtin_expect(!!(x), 1)
+
+    /** @brief Hints the compiler that the condition is likely to be false. */
+    #define UNLIKELY(x) __builtin_expect(!!(x), 0)
+
+    /** @brief Provides a compiler hint to prefetch memory. */
+    #define PREFETCH(P, I) _mm_prefetch(reinterpret_cast<const char*>(P), I)
+
+    /** @brief Specifies pointer aliasing restrictions to improve optimisation. */
+    #define RESTRICT __restrict__
+
+    /** @brief Forces a function to always be inlined. */
+    #define ALWAYS_INLINE __attribute__((always_inline))
+
+    /** @brief Marks a function as performance-critical. */
+    #define HOT __attribute__((hot))
+
+    /** @brief Marks a function as less frequently called. */
+    #define COLD __attribute__((cold))
+
 #else
-#define IVDEP
-#define VECTOR_ALWAYS
-#define LIKELY(x)   (x)
-#define UNLIKELY(x) (x)
-#define PREFETCH(P, I) ((void)))
-#define RESTRICT
-#define ALWAYS_INLINE
-#define HOT
-#define COLD
+
+    /** @brief Enables vectorised loops (platform-specific). */
+    #define IVDEP
+
+    /** @brief Forces vectorisation of loops (platform-specific). */
+    #define VECTOR_ALWAYS
+
+    /** @brief Hints the compiler that the condition is likely to be true. */
+    #define LIKELY(x)
+
+    /** @brief Hints the compiler that the condition is likely to be false. */
+    #define UNLIKELY(x)
+
+    /** @brief Provides a compiler hint to prefetch memory. */
+    #define PREFETCH(P, I)
+
+    /** @brief Specifies pointer aliasing restrictions to improve optimisation. */
+    #define RESTRICT
+
+    /** @brief Forces a function to always be inlined. */
+    #define ALWAYS_INLINE
+
+    /** @brief Marks a function as performance-critical. */
+    #define HOT
+
+    /** @brief Marks a function as less frequently called. */
+    #define COLD
+    
 #endif
 
 #ifdef _MSC_VER

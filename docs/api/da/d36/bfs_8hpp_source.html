@@ -148,7 +148,7 @@ $(document).ready(function(){initNavTree('da/d36/bfs_8hpp_source.html','../../')
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="keyword">static_assert</span>(std::is_integral_v&lt;index_t&gt;, <span class="stringliteral">&quot;index_t must be an integral type.&quot;</span>);</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> open_set_t, <span class="keyword">typename</span> closed_set_t&gt;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        [[nodiscard]] HOT <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> solve_internal(open_set_t&amp; _open, closed_set_t&amp; _closed, <span class="keywordtype">size_t</span> _capacity, <span class="keyword">const</span> params_t&amp; _params) {</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        [[nodiscard]] <a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_a1eb14cc432874ddacd1934791dbe12a3.html#a1eb14cc432874ddacd1934791dbe12a3">HOT</a> <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> solve_internal(open_set_t&amp; _open, closed_set_t&amp; _closed, <span class="keywordtype">size_t</span> _capacity, <span class="keyword">const</span> params_t&amp; _params) {</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>            <span class="keyword">const</span> <span class="keyword">auto</span> s = utils::to_1d(_params.start, _params.size);</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>            <span class="keyword">const</span> <span class="keyword">auto</span> e = utils::to_1d(_params.end,   _params.size);</div>
@@ -157,14 +157,14 @@ $(document).ready(function(){initNavTree('da/d36/bfs_8hpp_source.html','../../')
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>            _closed.emplace(s);</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            <span class="comment">// Main loop:</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>            <span class="keywordflow">while</span> (LIKELY(!_open.empty())) {</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>            <span class="keywordflow">while</span> (<a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_affde14445f49f65ff4f5b592e44ee71a.html#affde14445f49f65ff4f5b592e44ee71a">LIKELY</a>(!_open.empty())) {</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>                <span class="keyword">auto</span> curr(std::move(_open.top()));</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>                _open.pop();</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>                <span class="keywordflow">if</span> (curr.m_index != e) { <span class="comment">// SEARCH FOR SOLUTION...</span></div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>                    node* RESTRICT curr_ptr(<span class="keyword">nullptr</span>);</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>                    node* <a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_aae3356b63849abbe8789dd41648ee90a.html#aae3356b63849abbe8789dd41648ee90a">RESTRICT</a> curr_ptr(<span class="keyword">nullptr</span>);</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>                    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; n_data : _params.maze.get_neighbours(curr.m_index)) {</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
@@ -211,6 +211,9 @@ $(document).ready(function(){initNavTree('da/d36/bfs_8hpp_source.html','../../')
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>} <span class="comment">//chdr::solvers</span></div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_BFS_HPP</span></div>
+<div class="ttc" id="aintrinsics_8hpp_a1eb14cc432874ddacd1934791dbe12a3_html_a1eb14cc432874ddacd1934791dbe12a3"><div class="ttname"><a href="../../d7/d65/intrinsics_8hpp_a1eb14cc432874ddacd1934791dbe12a3.html#a1eb14cc432874ddacd1934791dbe12a3">HOT</a></div><div class="ttdeci">#define HOT</div><div class="ttdoc">Marks a function as performance-critical (platform-specific). Defaults to no effect on unsupported pl...</div><div class="ttdef"><b>Definition</b> <a href="../../d7/d65/intrinsics_8hpp_source.html#l00243">intrinsics.hpp:243</a></div></div>
+<div class="ttc" id="aintrinsics_8hpp_aae3356b63849abbe8789dd41648ee90a_html_aae3356b63849abbe8789dd41648ee90a"><div class="ttname"><a href="../../d7/d65/intrinsics_8hpp_aae3356b63849abbe8789dd41648ee90a.html#aae3356b63849abbe8789dd41648ee90a">RESTRICT</a></div><div class="ttdeci">#define RESTRICT</div><div class="ttdoc">Specifies pointer aliasing restrictions to improve optimisation. Defaults to no effect on unsupported...</div><div class="ttdef"><b>Definition</b> <a href="../../d7/d65/intrinsics_8hpp_source.html#l00237">intrinsics.hpp:237</a></div></div>
+<div class="ttc" id="aintrinsics_8hpp_affde14445f49f65ff4f5b592e44ee71a_html_affde14445f49f65ff4f5b592e44ee71a"><div class="ttname"><a href="../../d7/d65/intrinsics_8hpp_affde14445f49f65ff4f5b592e44ee71a.html#affde14445f49f65ff4f5b592e44ee71a">LIKELY</a></div><div class="ttdeci">#define LIKELY(x)</div><div class="ttdoc">Hints the compiler that the condition is likely to be true. Defaults to evaluating the condition as-i...</div><div class="ttdef"><b>Definition</b> <a href="../../d7/d65/intrinsics_8hpp_source.html#l00228">intrinsics.hpp:228</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen -->
