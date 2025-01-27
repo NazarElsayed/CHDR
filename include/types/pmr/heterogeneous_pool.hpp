@@ -249,7 +249,7 @@ namespace chdr {
 #if __cplusplus >= 202002L
         constexpr
 #endif
-        constexpr heterogeneous_pool(heterogeneous_pool&& _other) noexcept :
+        heterogeneous_pool(heterogeneous_pool&& _other) noexcept :
             m_stack_block        (                            ),
             m_stack_write        (_other.m_stack_write        ),
             m_initial_block_width(_other.m_initial_block_width),
