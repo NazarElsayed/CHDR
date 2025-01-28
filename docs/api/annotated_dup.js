@@ -22,6 +22,7 @@ var annotated_dup =
       [ "existence_set", "d6/db9/classchdr_1_1existence__set.html", "d6/db9/classchdr_1_1existence__set" ],
       [ "heap", "d3/d61/classchdr_1_1heap.html", "d3/d61/classchdr_1_1heap" ],
       [ "heuristics", "d2/df4/structchdr_1_1heuristics.html", null ],
+      [ "monotonic_pool", "df/db2/classchdr_1_1monotonic__pool.html", "df/db2/classchdr_1_1monotonic__pool" ],
       [ "utils", "d2/dcb/structchdr_1_1utils.html", null ]
     ] ]
 ];

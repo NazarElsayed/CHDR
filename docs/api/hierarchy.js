@@ -17,6 +17,7 @@ var hierarchy =
     [ "heap< T, Compare, Container, Kd >", "d3/d61/classchdr_1_1heap.html", null ],
     [ "heuristics", "d2/df4/structchdr_1_1heuristics.html", null ],
     [ "id_node< index_t >", "db/d4a/classchdr_1_1mazes_1_1id__node.html", null ],
+    [ "monotonic_pool", "df/db2/classchdr_1_1monotonic__pool.html", null ],
     [ "solver< solver_t, params_t >", "d3/df4/classchdr_1_1solvers_1_1solver.html", null ],
     [ "utils", "d2/dcb/structchdr_1_1utils.html", null ],
     [ "weighted_node< weight_t >", "db/dc4/structchdr_1_1mazes_1_1weighted__node.html", null ]

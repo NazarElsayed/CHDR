@@ -127,6 +127,24 @@ namespace chdr {
             return result;
         }
 
+        /**
+         * @brief Frees all memory blocks managed by the memory pool.
+         *
+         * @details Iterates over all allocated blocks in the memory pool and deallocates
+         *          their associated memory. This ensures that all memory resources used
+         *          by the `monotonic_pool` are released. The function is designed to
+         *          handle memory in alignment-sensitive contexts, guaranteeing proper
+         *          alignment for each block as it is deallocated.
+         *
+         *          It is intended to be called as part of the pool's destruction or
+         *          reset mechanisms.
+         */
+        void cleanup() noexcept {
+            for (const auto& item : m_blocks) {
+                ::operator delete(item.data, static_cast<std::align_val_t>(m_alignment));
+            }
+        }
+
     protected:
 
         [[nodiscard]] HOT void* do_allocate(const size_t _bytes, const size_t _alignment) override {
@@ -185,6 +203,14 @@ namespace chdr {
               m_free.reserve(_capacity);
         }
 
+        /**
+         * @brief Destroys the object and releases all allocated memory.
+         *
+         * @details The destructor ensures that any memory managed by the pool
+         *          is cleaned up properly by invoking the internal `cleanup()` method.
+         *
+         * @warning Manually destruction is not recommended and may result in undefined behaviour.
+         */
         ~homogeneous_pool() override {
             cleanup();
         }
@@ -233,12 +259,19 @@ namespace chdr {
             return *this;
         }
 
-        void cleanup() noexcept {
-            for (const auto& item : m_blocks) {
-                ::operator delete(item.data, static_cast<std::align_val_t>(m_alignment));
-            }
-        }
-
+        /**
+         * @brief Resets the memory pool state to its initial configuration.
+         *
+         * @details Resets internal counters and indices, restoring the pool to a
+         *          state as if no memory has been allocated. All blocks remain allocated,
+         *          but any previously allocated data is effectively invalidated. This method
+         *          does not deallocate or release memory already held by the pool.
+         *
+         * @warning After calling this method, all previously allocated memory from the pool
+         *          should be deemed inaccessible.
+         *
+         * @see release()
+         */
         HOT void reset() noexcept {
 
             m_stack_write = 0U;
@@ -268,6 +301,22 @@ namespace chdr {
             }
         }
 
+        /**
+         * @brief Releases all memory resources and resets the internal state of the memory pool.
+         *
+         * @details This method reinitialises the memory pool to its default state by resetting
+         *          all internal bookkeeping measures, such as current block size, stack write position,
+         *          block write position, and active block index. It also cleans up any allocated blocks
+         *          and deallocates associated memory resources.
+         *
+         *          The operation is designed to deallocate and clear the entire pool, making it ready
+         *          for reuse without the need to destroy the object.
+         *
+         * @warning After calling this method, all previously allocated memory from the pool
+         *          is no longer accessible, and attempting to use such memory will result in undefined behaviour.
+         *
+         * @see reset()
+         */
         void release() noexcept {
 
             m_stack_write = 0U;
