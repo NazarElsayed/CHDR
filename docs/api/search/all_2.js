@@ -1,7 +1,7 @@
 var searchData=
 [
   ['canberra_5fdistance_0',['canberra_distance',['../d2/df4/structchdr_1_1heuristics_a697263d117f4f386b673e87854c02114.html#a697263d117f4f386b673e87854c02114',1,'chdr::heuristics']]],
-  ['capacity_1',['capacity',['../d6/db9/classchdr_1_1existence__set_a4effe75935975bcddf86d9efd85776ef.html#a4effe75935975bcddf86d9efd85776ef',1,'chdr::existence_set']]],
+  ['capacity_1',['capacity',['../d6/db9/classchdr_1_1existence__set_a4effe75935975bcddf86d9efd85776ef.html#a4effe75935975bcddf86d9efd85776ef',1,'chdr::existence_set::capacity()'],['../d3/d61/classchdr_1_1heap_a260442ef344f843c480ff1f6aefd6db3.html#a260442ef344f843c480ff1f6aefd6db3',1,'chdr::heap::capacity()']]],
   ['chdr_2ehpp_2',['chdr.hpp',['../d9/d96/chdr_8hpp.html',1,'']]],
   ['chdr_5fversion_3',['CHDR_VERSION',['../d9/d96/chdr_8hpp_a7c955826a2f9fda2c38061394ef95fcc.html#a7c955826a2f9fda2c38061394ef95fcc',1,'chdr.hpp']]],
   ['chdr_5fversion_5fmajor_4',['CHDR_VERSION_MAJOR',['../d9/d96/chdr_8hpp_a3199c0d8c97aa3e18231ff0cfa9cece0.html#a3199c0d8c97aa3e18231ff0cfa9cece0',1,'chdr.hpp']]],
@@ -11,12 +11,12 @@ var searchData=
   ['chdr_5fversion_5ftweak_8',['CHDR_VERSION_TWEAK',['../d9/d96/chdr_8hpp_a2d3d68c367dca2fe262982625b5174eb.html#a2d3d68c367dca2fe262982625b5174eb',1,'chdr.hpp']]],
   ['chebyshev_5fdistance_9',['chebyshev_distance',['../d2/df4/structchdr_1_1heuristics_a04c87d0bd2d9fd23e93ab7eada84f72c.html#a04c87d0bd2d9fd23e93ab7eada84f72c',1,'chdr::heuristics']]],
   ['clamp_10',['clamp',['../d2/dcb/structchdr_1_1utils_ab94b095ba27e03185c77fca09d6974e8.html#ab94b095ba27e03185c77fca09d6974e8',1,'chdr::utils']]],
-  ['clear_11',['clear',['../d6/db9/classchdr_1_1existence__set_a03bfacfaaba9195e4498375659f43531.html#a03bfacfaaba9195e4498375659f43531',1,'chdr::existence_set']]],
+  ['clear_11',['clear',['../d3/d61/classchdr_1_1heap_a03bfacfaaba9195e4498375659f43531.html#a03bfacfaaba9195e4498375659f43531',1,'chdr::heap::clear()'],['../d6/db9/classchdr_1_1existence__set_a03bfacfaaba9195e4498375659f43531.html#a03bfacfaaba9195e4498375659f43531',1,'chdr::existence_set::clear()']]],
   ['cmake_12',['Example CMake',['../da/dc4/md_docs_2manual_2getting__started.html#example-cmake',1,'']]],
   ['cold_13',['COLD',['../d7/d65/intrinsics_8hpp_adf49424ef577203642abd5ac56f6cf72.html#adf49424ef577203642abd5ac56f6cf72',1,'intrinsics.hpp']]],
   ['compatibility_14',['Compatibility',['../da/dc4/md_docs_2manual_2getting__started.html#compatibility',1,'']]],
   ['computational_15',['Computational',['../d5/da1/md_docs_2manual_2roadmap.html#computational',1,'']]],
-  ['contains_16',['contains',['../d6/db9/classchdr_1_1existence__set_a3369fb4038184c5446a52c621c7f5d34.html#a3369fb4038184c5446a52c621c7f5d34',1,'chdr::existence_set']]],
+  ['contains_16',['contains',['../d3/d61/classchdr_1_1heap_aec43d6ff800e89019bacb468a3ca4c2b.html#aec43d6ff800e89019bacb468a3ca4c2b',1,'chdr::heap::contains()'],['../d6/db9/classchdr_1_1existence__set_a3369fb4038184c5446a52c621c7f5d34.html#a3369fb4038184c5446a52c621c7f5d34',1,'chdr::existence_set::contains()']]],
   ['contents_17',['Table of Contents',['../index.html#table-of-contents',1,'']]],
   ['contributing_18',['Contributing',['../index.html#contributing',1,'']]],
   ['coord_19',['coord',['../d9/dfc/coord_8hpp_a5a89553aa616ec03af46b4681aabbca3.html#a5a89553aa616ec03af46b4681aabbca3',1,'chdr']]],

@@ -1,0 +1,5 @@
+<map id="heap" name="heap">
+<area shape="rect" id="Node000001" title="Constructs a heap container with a specified initial capacity and memory resource." alt="" coords="5,5,52,28"/>
+<area shape="rect" id="Node000002" href="$d2/dcb/structchdr_1_1utils_ac49e3cb9b2b007da03059d95020d8b49.html#ac49e3cb9b2b007da03059d95020d8b49" title="Returns the smaller of two values." alt="" coords="100,5,191,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="53,14,86,14,86,19,53,19"/>
+</map>

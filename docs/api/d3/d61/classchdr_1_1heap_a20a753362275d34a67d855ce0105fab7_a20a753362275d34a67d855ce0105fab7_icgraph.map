@@ -1,0 +1,9 @@
+<map id="top" name="top">
+<area shape="rect" id="Node000001" title="Retrieves a reference to the top element of the heap." alt="" coords="117,52,156,75"/>
+<area shape="rect" id="Node000002" href="$d3/d61/classchdr_1_1heap_acc864476d3a1311f187c3290d0b161aa.html#acc864476d3a1311f187c3290d0b161aa" title="Removes and returns the top element from the heap." alt="" coords="5,5,69,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,51,61,30,63,26,106,46"/>
+<area shape="rect" id="Node000003" href="$d3/d61/classchdr_1_1heap_a66ae5a391f699d2e564c2545ab9c6d82.html#a66ae5a391f699d2e564c2545ab9c6d82" title="Retrieves a constant reference to the front element of the heap." alt="" coords="15,52,59,75"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="104,66,59,66,59,61,104,61"/>
+<area shape="rect" id="Node000004" href="$d3/d61/classchdr_1_1heap_acbf9b62bac7333654c7862dc8cfd1e48.html#acbf9b62bac7333654c7862dc8cfd1e48" title="Retrieves a reference to the front element of the heap." alt="" coords="15,99,59,121"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="106,80,61,102,58,98,104,76"/>
+</map>

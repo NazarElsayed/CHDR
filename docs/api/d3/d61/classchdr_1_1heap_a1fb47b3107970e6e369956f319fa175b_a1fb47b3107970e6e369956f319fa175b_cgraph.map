@@ -1,0 +1,5 @@
+<map id="enqueue_nosort" name="enqueue_nosort">
+<area shape="rect" id="Node000001" title="Adds a new element to the heap container using perfect forwarding. Does not sort the heap." alt="" coords="5,5,105,28"/>
+<area shape="rect" id="Node000002" href="$d3/d61/classchdr_1_1heap_aefb7f4a6038fad93c814add9fd1e031b.html#aefb7f4a6038fad93c814add9fd1e031b" title="Adds a new element to the heap container using perfect forwarding. Does not sort the heap." alt="" coords="153,5,252,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,14,139,14,139,19,106,19"/>
+</map>

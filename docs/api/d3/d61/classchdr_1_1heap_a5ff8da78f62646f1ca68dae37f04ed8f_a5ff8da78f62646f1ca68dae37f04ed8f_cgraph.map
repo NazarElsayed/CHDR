@@ -1,0 +1,16 @@
+<map id="erase" name="erase">
+<area shape="rect" id="Node000001" title="Removes a specified item from the heap, restoring the heap property after removal." alt="" coords="5,80,55,103"/>
+<area shape="rect" id="Node000002" href="$d3/d61/classchdr_1_1heap_a3f6fc5de06a318920d84f3c3742db07f.html#a3f6fc5de06a318920d84f3c3742db07f" title="Determines whether the heap container is empty." alt="" coords="113,5,164,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="46,78,108,34,111,38,49,82"/>
+<area shape="rect" id="Node000003" href="$d3/d61/classchdr_1_1heap_a3caedb145a667c26028740417dcf32c3.html#a3caedb145a667c26028740417dcf32c3" title="Retrieves the number of elements currently present in the heap." alt="" coords="223,80,263,103"/>
+<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="55,89,209,89,209,94,55,94"/>
+<area shape="rect" id="Node000005" href="$d3/d61/classchdr_1_1heap_a9bb7e9906ed7296a33c7c08c4d0ef800.html#a9bb7e9906ed7296a33c7c08c4d0ef800" title="Reorganises the heap by moving a specified item downward to maintain the heap property." alt="" coords="103,104,175,127"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="55,94,90,102,89,107,54,99"/>
+<area shape="rect" id="Node000006" href="$d3/d61/classchdr_1_1heap_ab3bf20f6c00b1d3c85593ed5a5c4c3a1.html#ab3bf20f6c00b1d3c85593ed5a5c4c3a1" title="Adjusts the position of an item in the heap by moving it upwards towards the root." alt="" coords="109,151,168,173"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="50,100,110,141,107,145,47,105"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="157,26,216,70,213,74,154,30"/>
+<area shape="rect" id="Node000004" href="$d2/dcb/structchdr_1_1utils_abb4d38d3c7a25d93fcedd12666fb00a1.html#abb4d38d3c7a25d93fcedd12666fb00a1" title="Determines the maximum of two comparable values." alt="" coords="311,80,404,103"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="263,89,297,89,297,94,263,94"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="174,104,209,96,210,101,175,110"/>
+<area shape="poly" id="edge8_Node000006_Node000003" title=" " alt="" coords="155,148,173,136,212,108,215,113,176,140,158,153"/>
+</map>

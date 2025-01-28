@@ -13,6 +13,7 @@ var hierarchy =
     [ "flood< params_t >", "d7/da2/structchdr_1_1solvers_1_1flood.html", null ],
     [ "fstar< params_t >", "df/d41/structchdr_1_1solvers_1_1fstar.html", null ],
     [ "grid< coord_t, bool >", "de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4.html", null ],
+    [ "heap< T, Compare, Container, Kd >", "d3/d61/classchdr_1_1heap.html", null ],
     [ "heuristics", "d2/df4/structchdr_1_1heuristics.html", null ],
     [ "id_node< index_t >", "db/d4a/classchdr_1_1mazes_1_1id__node.html", null ],
     [ "solver< solver_t, params_t >", "d3/df4/classchdr_1_1solvers_1_1solver.html", null ],
