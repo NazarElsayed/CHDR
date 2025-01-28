@@ -1,7 +1,4 @@
 var searchData=
 [
-  ['of_20contents_0',['Table of Contents',['../index.html#table-of-contents',1,'']]],
-  ['operator_28_29_1',['operator()',['../d3/df4/classchdr_1_1solvers_1_1solver_a6721174d30d2100eef1e9faed0942eb2.html#a6721174d30d2100eef1e9faed0942eb2',1,'chdr::solvers::solver::operator()(Args &amp;&amp;... _args)'],['../d3/df4/classchdr_1_1solvers_1_1solver_ad64d7208d682691a4776aeabf905c8c9.html#ad64d7208d682691a4776aeabf905c8c9',1,'chdr::solvers::solver::operator()(const params_t &amp;_params)']]],
-  ['operator_5b_5d_2',['operator[]',['../d3/d61/classchdr_1_1heap_ab5c2a5cf22a2e550cc1d02f0bcd3dd43.html#ab5c2a5cf22a2e550cc1d02f0bcd3dd43',1,'chdr::heap']]],
-  ['other_20languages_3',['Other Languages',['../da/dc4/md_docs_2manual_2getting__started.html#other-languages',1,'']]]
+  ['nodes_0',['nodes',['../dd/de3/classchdr_1_1mazes_1_1grid_a0203fb4a719f6d6e35b2ceac48d116b2.html#a0203fb4a719f6d6e35b2ceac48d116b2',1,'chdr::mazes::grid::nodes() const noexcept'],['../dd/de3/classchdr_1_1mazes_1_1grid_a03f52122eda68167d9451df9e263e0c4.html#a03f52122eda68167d9451df9e263e0c4',1,'chdr::mazes::grid::nodes(const std::vector&lt; weight_t &gt; &amp;_value) noexcept'],['../de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_ac7e1ed6c57c2d8ab6eee13fb9b7b66af.html#ac7e1ed6c57c2d8ab6eee13fb9b7b66af',1,'chdr::mazes::grid&lt; coord_t, bool &gt;::nodes() const noexcept'],['../de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_ad3e7854f02faee6b530a4623907c67c2.html#ad3e7854f02faee6b530a4623907c67c2',1,'chdr::mazes::grid&lt; coord_t, bool &gt;::nodes(const std::vector&lt; bool &gt; &amp;_value) noexcept']]]
 ];

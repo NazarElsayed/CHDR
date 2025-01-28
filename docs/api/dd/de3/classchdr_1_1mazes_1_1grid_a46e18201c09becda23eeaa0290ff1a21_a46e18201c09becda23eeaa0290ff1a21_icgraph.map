@@ -1,0 +1,7 @@
+<map id="contains" name="contains">
+<area shape="rect" id="Node000001" title="Determines whether the provided coordinate is within the bounds of the grid." alt="" coords="252,29,313,52"/>
+<area shape="rect" id="Node000002" href="$de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_ab58cfd52d8229de59597dfca35e037c6.html#ab58cfd52d8229de59597dfca35e037c6" title="Retrieves the node at a specified index." alt="" coords="5,5,204,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="238,37,189,31,190,25,239,32"/>
+<area shape="rect" id="Node000003" href="$dd/de3/classchdr_1_1mazes_1_1grid_ae9339187e855ce031aaac1203aaa8a09.html#ae9339187e855ce031aaac1203aaa8a09" title="Retrieves the node at a specified index." alt="" coords="85,52,124,75"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="239,49,124,64,124,58,238,44"/>
+</map>

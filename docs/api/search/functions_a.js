@@ -1,5 +1,8 @@
 var searchData=
 [
-  ['operator_28_29_0',['operator()',['../d3/df4/classchdr_1_1solvers_1_1solver_a6721174d30d2100eef1e9faed0942eb2.html#a6721174d30d2100eef1e9faed0942eb2',1,'chdr::solvers::solver::operator()(Args &amp;&amp;... _args)'],['../d3/df4/classchdr_1_1solvers_1_1solver_ad64d7208d682691a4776aeabf905c8c9.html#ad64d7208d682691a4776aeabf905c8c9',1,'chdr::solvers::solver::operator()(const params_t &amp;_params)']]],
-  ['operator_5b_5d_1',['operator[]',['../d3/d61/classchdr_1_1heap_ab5c2a5cf22a2e550cc1d02f0bcd3dd43.html#ab5c2a5cf22a2e550cc1d02f0bcd3dd43',1,'chdr::heap']]]
+  ['malloc_5fconsolidate_0',['malloc_consolidate',['../d7/d65/intrinsics_8hpp_a6079a0cf08f5514307afb208fadeb966.html#a6079a0cf08f5514307afb208fadeb966',1,'chdr']]],
+  ['managed_5fnode_1',['managed_node',['../df/d64/structchdr_1_1solvers_1_1managed__node_aef9827bf89152bb2f4cd43c538e963bb.html#aef9827bf89152bb2f4cd43c538e963bb',1,'chdr::solvers::managed_node::managed_node() noexcept'],['../df/d64/structchdr_1_1solvers_1_1managed__node_a66205330f118f6d2bb86303fe4cc721c.html#a66205330f118f6d2bb86303fe4cc721c',1,'chdr::solvers::managed_node::managed_node(index_t _index, managed_node *restrict const _parent=nullptr) noexcept']]],
+  ['manhattan_5fdistance_2',['manhattan_distance',['../d2/df4/structchdr_1_1heuristics_a0ae5cd4c8261c2e6b92393ed5e4fb789.html#a0ae5cd4c8261c2e6b92393ed5e4fb789',1,'chdr::heuristics']]],
+  ['max_3',['max',['../d2/dcb/structchdr_1_1utils_abb4d38d3c7a25d93fcedd12666fb00a1.html#abb4d38d3c7a25d93fcedd12666fb00a1',1,'chdr::utils']]],
+  ['min_4',['min',['../d2/dcb/structchdr_1_1utils_ac49e3cb9b2b007da03059d95020d8b49.html#ac49e3cb9b2b007da03059d95020d8b49',1,'chdr::utils']]]
 ];

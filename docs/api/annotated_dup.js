@@ -2,7 +2,8 @@ var annotated_dup =
 [
     [ "chdr", null, [
       [ "mazes", null, [
-        [ "grid< coord_t, bool >", "de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4.html", null ],
+        [ "grid", "dd/de3/classchdr_1_1mazes_1_1grid.html", "dd/de3/classchdr_1_1mazes_1_1grid" ],
+        [ "grid< coord_t, bool >", "de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4.html", "de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4" ],
         [ "id_node", "db/d4a/classchdr_1_1mazes_1_1id__node.html", "db/d4a/classchdr_1_1mazes_1_1id__node" ],
         [ "weighted_node", "db/dc4/structchdr_1_1mazes_1_1weighted__node.html", "db/dc4/structchdr_1_1mazes_1_1weighted__node" ]
       ] ],

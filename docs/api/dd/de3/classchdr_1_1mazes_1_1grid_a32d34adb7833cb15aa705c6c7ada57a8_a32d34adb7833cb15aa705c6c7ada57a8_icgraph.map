@@ -1,0 +1,7 @@
+<map id="size" name="size">
+<area shape="rect" id="Node000001" title="Retrieves the size of the grid." alt="" coords="317,29,357,52"/>
+<area shape="rect" id="Node000002" href="$dd/de3/classchdr_1_1mazes_1_1grid_ad242ff0ed9416b32cc9de01ef6ea09cf.html#ad242ff0ed9416b32cc9de01ef6ea09cf" title="Retrieves the neighbours of a node within the grid." alt="" coords="89,5,185,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="303,39,185,25,186,20,304,34"/>
+<area shape="rect" id="Node000003" href="$de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_ad242ff0ed9416b32cc9de01ef6ea09cf.html#ad242ff0ed9416b32cc9de01ef6ea09cf" title="Retrieves the neighbours of a node within the grid." alt="" coords="5,52,269,75"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="304,47,238,55,237,49,303,42"/>
+</map>

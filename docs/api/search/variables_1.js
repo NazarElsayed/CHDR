@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['value_0',['value',['../de/dc4/structchdr_1_1solvers_1_1solver_1_1solver__utils_1_1has__method__reset_a0376be5904d0dd864b7d97c9ce1295ab.html#a0376be5904d0dd864b7d97c9ce1295ab',1,'chdr::solvers::solver::solver_utils::has_method_reset']]]
+  ['s_5frank_0',['s_rank',['../dd/de3/classchdr_1_1mazes_1_1grid_ab5320922a6c904dad907d98a4f39a7fc.html#ab5320922a6c904dad907d98a4f39a7fc',1,'chdr::mazes::grid::s_rank'],['../de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_ab5320922a6c904dad907d98a4f39a7fc.html#ab5320922a6c904dad907d98a4f39a7fc',1,'chdr::mazes::grid&lt; coord_t, bool &gt;::s_rank']]]
 ];
