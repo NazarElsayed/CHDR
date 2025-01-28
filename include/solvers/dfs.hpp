@@ -9,6 +9,10 @@
 #ifndef CHDR_DFS_HPP
 #define CHDR_DFS_HPP
 
+/**
+ * @file dfs.hpp
+ */
+
 #include <cstddef>
 #include <vector>
 
@@ -20,6 +24,29 @@
 
 namespace chdr::solvers {
 
+    /**
+     * @struct dfs
+     * @brief Depth-first search algorithm.
+     * @details A graph traversal and pathfinding algorithm which explores each branch of the search tree completely
+     *          before continuing.
+     *
+     * Advantages:
+     * - Low constant time factor.
+     * - Lower constant memory factor than most heuristic-informed algorithms.
+     * - Does not need a prepass, although performance can improve if the search space is pruned first.
+     *
+     * Limitations:
+     * - Ineffective in searches with many obstacles.
+     * - Does not always guarantee an optimal path if the search space is not uniform.
+     * - Quickly consumes memory in large or exhaustive searches.
+     * - Often slower than heuristic-informed searches.
+     * - Ill-suited for any problem in unbounded (infinite) space.
+     *
+     * Further Reading:
+     * - <a href="https://en.wikipedia.org/wiki/Depth-first_search">Wikipedia Article</a>
+     *
+     * @tparam params_t Type containing the search parameters.
+     */
     template<typename params_t>
     struct [[maybe_unused]] dfs final {
 

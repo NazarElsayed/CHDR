@@ -9,11 +9,34 @@
 #ifndef CHDR_COMMON_HPP
 #define CHDR_COMMON_HPP
 
+/**
+ * @file chdr.hpp
+ *
+ * @details Include this header in your project to access the CHDR library.
+ *
+ * @code
+ * #include <chdr.hpp>
+ * @endcode
+ *
+ * @note Please refer to the [manual](docs/manual/getting_started.md) for more information.
+ */
+
+/** @brief Full version string of the CHDR library. */
 #define CHDR_VERSION          "@CHDR_VERSION_FULL@"
+
+/** @brief CHDR major version number. */
 #define CHDR_VERSION_MAJOR     @CHDR_VERSION_MAJOR@
+
+/** @brief CHDR minor version number. */
 #define CHDR_VERSION_MINOR     @CHDR_VERSION_MINOR@
+
+/** @brief CHDR patch version number. */
 #define CHDR_VERSION_PATCH     @CHDR_VERSION_PATCH@
+
+/** @brief CHDR version tweak string. */
 #define CHDR_VERSION_TWEAK    "@CHDR_VERSION_TWEAK@"
+
+/** @brief CHDR version metadata string. */
 #define CHDR_VERSION_METADATA "@CHDR_VERSION_METADATA@"
 
 /* ReSharper enable CppUnusedIncludeDirective */

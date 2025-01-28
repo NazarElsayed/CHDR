@@ -111,23 +111,24 @@ $(document).ready(function(){initNavTree('d0/d64/structchdr_1_1solvers_1_1astar.
 <a name="details" id="details"></a><h2 class="groupheader">Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename params_t&gt;<br />
 struct chdr::solvers::astar&lt; params_t &gt;</div><p>A* search algorithm. </p>
-<p>A* (Hart et al. 1968) is a heuristic-informed graph traversal and pathfinding algorithm. A* can be seen as an extension of Dijkstra's algorithm for "single-search, single-target" (SSST) pathfinding problems, and is one of the most widely used search algorithms owing to its completeness and efficiency.<br  />
+<p>A* (Hart et al. 1968) is a heuristic-informed graph traversal and pathfinding algorithm. A* can be seen as an extension of Dijkstra's algorithm for determining the optimal solution in "single-search, single-target" (SSST) pathfinding problems, and is one of the most widely used search algorithms owing to its completeness and efficiency.<br  />
 <br  />
  Advantages:</p><ul>
-<li>Low constant factor makes A* particularly effective in small to moderately sized search spaces.</li>
+<li>Low constant time factor makes A* particularly effective in small to moderately sized search spaces.</li>
+<li>Able to modulate between a breadth-first and a best-first approach.</li>
 <li>Does not need a prepass, although performance can improve if the search space is pruned first.</li>
+<li>High performance in bounded (finite) search scenarios.</li>
 </ul>
 <p>Limitations:</p><ul>
-<li>Quickly exhausts memory in large or exhaustive searches.</li>
+<li>Quickly consumes memory in large or exhaustive searches.</li>
 <li>Inefficient or complex search heuristics can reduce performance.</li>
 <li>Poor performance when searches lack solutions.</li>
-<li>Not suited for use in unbounded (infinite) space.</li>
 </ul>
 <p>Further Reading:</p><ul>
 <li><a href="https://en.wikipedia.org/wiki/A*_search_algorithm">Wikipedia Article</a></li>
 </ul>
 <p>References:</p><ul>
-<li>Hart, P., Nilsson, N. and Raphael, B., 1968. A Formal Basis for the Heuristic Determination of Minimum Cost Paths. IEEE Transactions on Systems Science and Cybernetics, 4 (2), 100–107.</li>
+<li>Hart, P., Nilsson, N. and Raphael, B., 1968. A Formal Basis for the Heuristic Determination of Minimum Cost Paths. IEEE Transactions on Systems Science and Cybernetics, 4 (2), 100–107. Available From: <a href="http://ieeexplore.ieee.org/document/4082128/">http://ieeexplore.ieee.org/document/4082128/</a></li>
 </ul>
 <dl class="section note"><dt>Note</dt><dd>A* guarantees the optimal path if the heuristic is admissible (never overestimates the cost). </dd></dl>
 <dl class="section remark"><dt>Remarks</dt><dd>A* has inspired numerous variations and extensions over the decades. </dd></dl>
@@ -138,7 +139,7 @@ struct chdr::solvers::astar&lt; params_t &gt;</div><p>A* search algorithm. </p>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/da9/astar_8hpp_source.html#l00056">56</a> of file <a class="el" href="../../dc/da9/astar_8hpp_source.html">astar.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/da9/astar_8hpp_source.html#l00059">59</a> of file <a class="el" href="../../dc/da9/astar_8hpp_source.html">astar.hpp</a>.</p>
 </div><div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Collaboration diagram for astar&lt; params_t &gt;:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">

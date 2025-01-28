@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['existence_5fset_0',['existence_set',['../d6/db9/classchdr_1_1existence__set.html',1,'chdr']]]
+  ['dfs_0',['dfs',['../d9/db9/structchdr_1_1solvers_1_1dfs.html',1,'chdr::solvers']]]
 ];

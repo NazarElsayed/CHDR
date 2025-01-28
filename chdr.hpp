@@ -9,12 +9,35 @@
 #ifndef CHDR_COMMON_HPP
 #define CHDR_COMMON_HPP
 
-#define CHDR_VERSION          "0.1.0-dev+6453ea7"
+/**
+ * @file chdr.hpp
+ *
+ * @details Include this header in your project to access the CHDR library.
+ *
+ * @code
+ * #include <chdr.hpp>
+ * @endcode
+ *
+ * @note Please refer to the [manual](docs/manual/getting_started.md) for more information.
+ */
+
+/** @brief Full version string of the CHDR library. */
+#define CHDR_VERSION          "0.1.0-dev+1504083"
+
+/** @brief CHDR major version number. */
 #define CHDR_VERSION_MAJOR     0
+
+/** @brief CHDR minor version number. */
 #define CHDR_VERSION_MINOR     1
+
+/** @brief CHDR patch version number. */
 #define CHDR_VERSION_PATCH     0
+
+/** @brief CHDR version tweak string. */
 #define CHDR_VERSION_TWEAK    "dev"
-#define CHDR_VERSION_METADATA "6453ea7"
+
+/** @brief CHDR version metadata string. */
+#define CHDR_VERSION_METADATA "1504083"
 
 /* ReSharper enable CppUnusedIncludeDirective */
 // NOLINTBEGIN(*-include-cleaner)
@@ -35,7 +58,7 @@
 #include "include/solvers/eidastar.hpp"
 #include "include/solvers/eidbstar.hpp"
 #include "include/solvers/eiddfs.hpp"
-#include "include/solvers/floodfill.hpp"
+#include "include/solvers/flood.hpp"
 #include "include/solvers/fstar.hpp"
 #include "include/solvers/gbfs.hpp"
 #include "include/solvers/gdfs.hpp"

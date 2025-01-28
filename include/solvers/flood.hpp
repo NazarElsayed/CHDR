@@ -9,6 +9,10 @@
 #ifndef CHDR_FLOODFILL_HPP
 #define CHDR_FLOODFILL_HPP
 
+/**
+ * @file flood.hpp
+ */
+
 #include <cstddef>
 #include <vector>
 
@@ -19,14 +23,35 @@
 
 namespace chdr::solvers {
 
+    /**
+     * @struct flood
+     * @brief Generalisation of breadth-first search for determining solvability.
+     * @details A graph traversal algorithm which expands every search neighbour during an iteration.
+     *          It does not store any information about nodes or their connectivity, giving it an exceptionally
+     *          low constant time and memory factor.\n\n
+     *          It is not suited for general-purpose pathfinding, however is a fast algorithm for determining if
+     *          a route to the target node exists.\n\n
+     *
+     * Advantages:
+     * - Very low constant time factor.
+     * - Very low constant memory factor.
+     * - Well suited for solvable problems in unbounded (infinite) space.
+     * - Does not need a prepass, although performance can improve if the search space is pruned first.
+     *
+     * Limitations:
+     * - Does not produce a path, only the location of the destination if a path does exist.
+     * - Poor performance when searches lack solutions.
+     *
+     * @tparam params_t Type containing the search parameters.
+     */
     template<typename params_t>
-    struct [[maybe_unused]] floodfill final {
+    struct [[maybe_unused]] flood final {
 
     private:
 
         using  index_t = typename params_t::index_type;
         using  coord_t = typename params_t::coord_type;
-        using solver_t = solver<floodfill, params_t>;
+        using solver_t = solver<flood, params_t>;
 
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 

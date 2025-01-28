@@ -237,22 +237,18 @@ namespace chdr::solvers {
          * @see managed_node
          */
         template <typename pmr_t>
-        HOT void expunge(pmr_t* _pmr) noexcept {
+        HOT void expunge(pmr_t* _pmr) {
 
             while (m_parent != nullptr) {
                 decr();
 
-                if (m_parent->m_successors != 0U) {
-                    break;
-                }
-
-                auto* const RESTRICT d = m_parent;
-                try {
+                if (m_parent->m_successors == 0U) {
+                    auto* const RESTRICT d = m_parent;
                     m_parent = m_parent->m_parent;
                     _pmr->deallocate(d, sizeof(managed_node), alignof(managed_node));
                 }
-                catch (...) {
-                    m_parent = d;
+                else {
+                    break;
                 }
             }
         }
@@ -267,7 +263,7 @@ namespace chdr::solvers {
          *
          * @returns The successor count.
          */
-        count_t count() const noexcept {
+        [[nodiscard]] count_t count() const noexcept {
             return m_successors;
         }
     };

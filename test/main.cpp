@@ -45,7 +45,7 @@ namespace test {
 		              << "  eidastar    Enhanced Iterative-Deepening A*\n"
 		              << "  eidbstar    Enhanced Iterative-Deepening Best-First Search\n"
 		              << "  eiddfs      Enhanced Iterative-Deepening Depth-First Search\n"
-		              << "  floodfill   Flood Fill\n"
+		              << "  flood       Flood Fill\n"
 		              << "  fstar       Fringe Search F*\n"
 		              << "  gbfs        Graveyard Best-First Search\n"
 		              << "  gdfs        Graveyard Depth-First Search\n"
@@ -129,7 +129,7 @@ namespace test {
             else if (_solver == "eidastar"  ) { result = invoke<chdr::solvers::  eidastar, params>(args); }
             else if (_solver == "eidbstar"  ) { result = invoke<chdr::solvers::  eidbstar, params>(args); }
             else if (_solver == "eiddfs"    ) { result = invoke<chdr::solvers::    eiddfs, params>(args); }
-            else if (_solver == "floodfill" ) { result = invoke<chdr::solvers:: floodfill, params>(args); }
+            else if (_solver == "flood"     ) { result = invoke<chdr::solvers::     flood, params>(args); }
             else if (_solver == "fstar"     ) { result = invoke<chdr::solvers::     fstar, params>(args); }
             else if (_solver == "gbfs"      ) { result = invoke<chdr::solvers::      gbfs, params>(args); }
             else if (_solver == "gdfs"      ) { result = invoke<chdr::solvers::      gdfs, params>(args); }

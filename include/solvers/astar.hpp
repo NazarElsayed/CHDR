@@ -19,6 +19,7 @@
 #include "../types/containers/existence_set.hpp"
 #include "../types/containers/heap.hpp"
 #include "../utils/utils.hpp"
+#include "base/managed_node.hpp"
 #include "base/solver.hpp"
 #include "base/unmanaged_node.hpp"
 
@@ -28,25 +29,27 @@ namespace chdr::solvers {
      * @struct astar
      * @brief A* search algorithm.
      * @details A* (Hart et al. 1968) is a heuristic-informed graph traversal and pathfinding algorithm.
-     *          A* can be seen as an extension of Dijkstra's algorithm for "single-search, single-target" (SSST)
-     *          pathfinding problems, and is one of the most widely used search algorithms owing to its completeness
-     *          and efficiency.\n\n
+     *          A* can be seen as an extension of Dijkstra's algorithm for determining the optimal solution in
+     *          "single-search, single-target" (SSST) pathfinding problems, and is one of the most widely used
+     *          search algorithms owing to its completeness and efficiency.\n\n
      *
      * Advantages:
-     * - Low constant factor makes A* particularly effective in small to moderately sized search spaces.
+     * - Low constant time factor makes A* particularly effective in small to moderately sized search spaces.
+     * - Able to modulate between a breadth-first and a best-first approach.
      * - Does not need a prepass, although performance can improve if the search space is pruned first.
+     * - High performance in bounded (finite) search scenarios.
      *
      * Limitations:
-     * - Quickly exhausts memory in large or exhaustive searches.
+     * - Quickly consumes memory in large or exhaustive searches.
      * - Inefficient or complex search heuristics can reduce performance.
      * - Poor performance when searches lack solutions.
-     * - Not suited for use in unbounded (infinite) space.
      *
      * Further Reading:
      * - <a href="https://en.wikipedia.org/wiki/A*_search_algorithm">Wikipedia Article</a>
      *
      * References:
-     * - Hart, P., Nilsson, N. and Raphael, B., 1968. A Formal Basis for the Heuristic Determination of Minimum Cost Paths. IEEE Transactions on Systems Science and Cybernetics, 4 (2), 100–107.
+     * - Hart, P., Nilsson, N. and Raphael, B., 1968. A Formal Basis for the Heuristic Determination of Minimum Cost Paths.
+     *   IEEE Transactions on Systems Science and Cybernetics, 4 (2), 100–107. Available From: http://ieeexplore.ieee.org/document/4082128/
      *
      * @note A* guarantees the optimal path if the heuristic is admissible (never overestimates the cost).
      * @remarks A* has inspired numerous variations and extensions over the decades.

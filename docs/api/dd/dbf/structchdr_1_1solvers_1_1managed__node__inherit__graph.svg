@@ -19,7 +19,7 @@
 <text text-anchor="start" x="4.5" y="-45.6" font-family="Helvetica,sans-Serif" font-size="8.00">+</text>
 <text text-anchor="start" x="13.5" y="-45.6" font-family="Helvetica,sans-Serif" font-size="8.00">count_t count() const noexcept</text>
 <text text-anchor="start" x="4.5" y="-32.6" font-family="Helvetica,sans-Serif" font-size="8.00">+</text>
-<text text-anchor="start" x="13.5" y="-32.6" font-family="Helvetica,sans-Serif" font-size="8.00">void expunge(pmr_t *_pmr) noexcept</text>
+<text text-anchor="start" x="13.5" y="-32.6" font-family="Helvetica,sans-Serif" font-size="8.00">void expunge(pmr_t *_pmr)</text>
 <text text-anchor="start" x="5" y="-19.6" font-family="Helvetica,sans-Serif" font-size="8.00">*</text>
 <text text-anchor="start" x="13.5" y="-19.6" font-family="Helvetica,sans-Serif" font-size="8.00">managed_node() noexcept</text>
 <text text-anchor="start" x="5" y="-6.6" font-family="Helvetica,sans-Serif" font-size="8.00">*</text>

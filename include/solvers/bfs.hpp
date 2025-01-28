@@ -9,6 +9,10 @@
 #ifndef CHDR_BFS_HPP
 #define CHDR_BFS_HPP
 
+/**
+ * @file bfs.hpp
+ */
+
 #include <cstddef>
 #include <vector>
 
@@ -20,6 +24,29 @@
 
 namespace chdr::solvers {
 
+    /**
+     * @struct bfs
+     * @brief Breadth-first search algorithm.
+     * @details A graph traversal and pathfinding algorithm which expands every search neighbour during an iteration.
+     *
+     * Advantages:
+     * - Low constant time factor.
+     * - Lower constant memory factor than most heuristic-informed algorithms.
+     * - Effective in searches with many obstacles.
+     * - Well suited for solvable problems in unbounded (infinite) space.
+     * - Does not need a prepass, although performance can improve if the search space is pruned first.
+     * - The resulting path is optimal in uniform-cost graphs.
+     *
+     * Limitations:
+     * - Does not always guarantee an optimal path if the search space is not uniform.
+     * - Quickly consumes memory in large or exhaustive searches.
+     * - Often slower than heuristic-informed searches.
+     *
+     * Further Reading:
+     * - <a href="https://en.wikipedia.org/wiki/Breadth-first_search">Wikipedia Article</a>
+     *
+     * @tparam params_t Type containing the search parameters.
+     */
     template<typename params_t>
     struct [[maybe_unused]] bfs final {
 

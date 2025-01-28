@@ -9,6 +9,10 @@
 #ifndef CHDR_BSTAR_HPP
 #define CHDR_BSTAR_HPP
 
+/**
+ * @file best_first.hpp
+ */
+
 #include <cstddef>
 #include <vector>
 
@@ -27,16 +31,16 @@ namespace chdr::solvers {
      *          based on least cost.
      *
      * Advantages:
-     * - Lower constant factor than A*.
+     * - Lower constant time and memory factor than A*.
      * - Highly effective in searches with few obstacles.
      * - Does not need a prepass, although performance can improve if the search space is pruned first.
+     * - High performance in bounded (finite) search scenarios.
      *
      * Limitations:
      * - Does not guarantee an optimal path according to the cost heuristic.
-     * - Quickly exhausts memory in large or exhaustive searches.
+     * - Quickly consumes memory in large or exhaustive searches.
      * - Inefficient or complex search heuristics can reduce performance.
      * - Poor performance when searches lack solutions.
-     * - Not suited for use in unbounded (infinite) space.
      *
      * Further Reading:
      * - <a href="https://en.wikipedia.org/wiki/Best-first_search">Wikipedia Article</a>

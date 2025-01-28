@@ -113,16 +113,16 @@ $(document).ready(function(){initNavTree('de/d28/structchdr_1_1solvers_1_1best__
 struct chdr::solvers::best_first&lt; params_t &gt;</div><p>Greedy best-first search algorithm. </p>
 <p>A heuristic-informed graph traversal and pathfinding algorithm which always prioritises its next move based on least cost.</p>
 <p>Advantages:</p><ul>
-<li>Lower constant factor than A*.</li>
+<li>Lower constant time and memory factor than A*.</li>
 <li>Highly effective in searches with few obstacles.</li>
 <li>Does not need a prepass, although performance can improve if the search space is pruned first.</li>
+<li>High performance in bounded (finite) search scenarios.</li>
 </ul>
 <p>Limitations:</p><ul>
 <li>Does not guarantee an optimal path according to the cost heuristic.</li>
-<li>Quickly exhausts memory in large or exhaustive searches.</li>
+<li>Quickly consumes memory in large or exhaustive searches.</li>
 <li>Inefficient or complex search heuristics can reduce performance.</li>
 <li>Poor performance when searches lack solutions.</li>
-<li>Not suited for use in unbounded (infinite) space.</li>
 </ul>
 <p>Further Reading:</p><ul>
 <li><a href="https://en.wikipedia.org/wiki/Best-first_search">Wikipedia Article</a></li>
@@ -134,7 +134,7 @@ struct chdr::solvers::best_first&lt; params_t &gt;</div><p>Greedy best-first sea
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d3/d77/best__first_8hpp_source.html#l00047">47</a> of file <a class="el" href="../../d3/d77/best__first_8hpp_source.html">best_first.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d3/d77/best__first_8hpp_source.html#l00051">51</a> of file <a class="el" href="../../d3/d77/best__first_8hpp_source.html">best_first.hpp</a>.</p>
 </div><div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Collaboration diagram for best_first&lt; params_t &gt;:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">

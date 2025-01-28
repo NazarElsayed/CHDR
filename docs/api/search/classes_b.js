@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['node_5fdata_0',['node_data',['../structchdr_1_1solvers_1_1solver_1_1node__data.html',1,'chdr::solvers::solver']]]
+  ['weighted_5fnode_0',['weighted_node',['../db/dc4/structchdr_1_1mazes_1_1weighted__node.html',1,'chdr::mazes']]]
 ];
