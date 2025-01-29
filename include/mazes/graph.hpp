@@ -40,8 +40,16 @@ namespace chdr::mazes {
      * @details A mutable graph represented using an adjacency set.
      *          Supports adding and removing nodes and edges, pruning for optimisation,
      *          and other utilities necessary for graph-based pathfinding operations.
+     *          
      * @tparam index_t  The type used for indexing nodes in the graph.
      * @tparam scalar_t The type used for edge weights in the graph.
+     * 
+     * @note This class uses polymorphic memory resources (`std::pmr::memory_resource`).
+     * @note Follows an STL-like design and supports iterators.
+     * 
+     * @warning It is very strongly recommended that you use a pool allocation scheme
+     *          (i.e `std::pmr::unsynchronized_pool_resource`, `std::pmr::synchronized_pool_resource`)
+     *          with this data structure to improve data locality and reduce fragmentation.
      */
     template<typename index_t, typename scalar_t>
     class graph final {
@@ -55,8 +63,6 @@ namespace chdr::mazes {
 
         using adjacency_set_t = std::pmr::unordered_map<index_t, neighbours_t>;
 
-        std::pmr::unsynchronized_pool_resource memory_resource;
-
         adjacency_set_t m_entries;
 
     public:
@@ -68,15 +74,38 @@ namespace chdr::mazes {
          * @{
          */
 
-        [[maybe_unused]] constexpr graph() noexcept : m_entries(&memory_resource) {}
+        /**
+         * @brief Constructs a `graph` instance with default initialisation.
+         *
+         * @details Creates an empty graph.
+         *
+         * @param [in] _resource A pointer to a memory resource for allocator usage. Defaults to
+         *                       `std::pmr::get_default_resource`. (optional)
+         *
+         * @return A `graph` instance with no nodes or edges.
+         */
+        [[maybe_unused]] constexpr graph(std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) noexcept : m_entries(_resource) {}
 
-        ~graph() noexcept = default;
-
-        [[maybe_unused]] constexpr graph(const std::initializer_list<std::initializer_list<edge_t>>& _adjacencyList) : m_entries(&memory_resource) {
+        /**
+         * @brief Constructs a `graph` instance from an adjacency list.
+         *
+         * @details Initialises a graph using an `std::initializer_list` that represents the adjacency list for the graph.
+         *          Each inner list contains the edges associated with a single node, where each edge is represented as a pair of
+         *          the destination node index and its weight. Optionally, a memory resource can be specified for resource management.
+         *
+         * @param[in] _adjacency_list  A two-dimensional `std::initializer_list` representing the adjacency list.
+         *                            Each sublist corresponds to the edges of a single node.
+         *
+         * @param [in] _resource A pointer to a memory resource for allocator usage. Defaults to
+         *                       `std::pmr::get_default_resource`. (optional)
+         *
+         * @return A `graph` instance with nodes and edges created from the provided adjacency list.
+         */
+        [[maybe_unused]] constexpr graph(const std::initializer_list<std::initializer_list<edge_t>>& _adjacency_list, std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : m_entries(_resource) {
 
             index_t index{0};
 
-            for (const auto& entry: _adjacencyList) {
+            for (const auto& entry: _adjacency_list) {
 
                 for (const auto& edge: entry) {
                     add(index, edge);
@@ -86,12 +115,28 @@ namespace chdr::mazes {
             }
         }
 
+        /**
+         * @brief Constructs a `graph` instance from a grid structure.
+         *
+         * @details Builds a graph representation of the provided grid, where each active grid cell is treated 
+         *          as a node and connections to its neighbors are treated as edges.\n\n
+         *          If pruning is enabled (default), intermediate transitory nodes are removed, and longer 
+         *          direct connections are established to produce a more compact graph representation. 
+         *          Multi-threading is used to improve performance during graph construction.
+         *
+         * @tparam coord_t The data type used for grid coordinates.
+         * @tparam weight_t The data type used for edge weights.
+         * @tparam Prune A boolean flag indicating whether transitory nodes should be pruned (default: true).
+         * @param _grid The input grid structure from which the graph is constructed.
+         * @param _resource A pointer to a memory resource for allocator usage. Defaults to
+         *                  `std::pmr::get_default_resource`. (optional)
+         */
         template <typename coord_t, typename weight_t, const bool Prune = true>
         [[maybe_unused]]
 #if defined(__cpp_constexpr_dynamic_alloc) && (__cpp_constexpr_dynamic_alloc >= 201907L)
         constexpr
 #endif // defined(__cpp_constexpr_dynamic_alloc) && (__cpp_constexpr_dynamic_alloc >= 201907L)
-        explicit graph(const grid<coord_t, weight_t>& _grid) : m_entries(&memory_resource) {
+        explicit graph(const grid<coord_t, weight_t>& _grid, std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : m_entries(_resource) {
 
             const auto size = _grid.size();
 
@@ -116,17 +161,17 @@ namespace chdr::mazes {
             else {
 
                 // TODO: Add support for directed graphs.
-
                 std::mutex mtx;
 
                 const auto worker = [&](index_t _start, index_t _end) ALWAYS_INLINE {
 
-                    stack<edge_t> stack;
+                    std::pmr::unsynchronized_pool_resource pool;
+                    stack<edge_t> stack(&pool);
 
-                    std::unordered_set<index_t> global_closed;
-                    std::unordered_set<index_t> local_closed;
+                    std::pmr::unordered_set<index_t> global_closed(&pool);
+                    std::pmr::unordered_set<index_t> local_closed(&pool);
 
-                    std::unordered_map<index_t, neighbours_t> thread_connections;
+                    std::pmr::unordered_map<index_t, neighbours_t> thread_connections(&pool);
 
                     for (auto index = _start; index < _end; ++index) {
 
@@ -200,6 +245,8 @@ namespace chdr::mazes {
                 const auto chunkSize = static_cast<index_t>((count + numThreads - 1U) / numThreads);
 
                 std::vector<std::future<void>> futures;
+                futures.reserve(numThreads);
+
                 for (size_t i = 0U; i < numThreads; ++i) {
 
                     const index_t start = static_cast<index_t>(i) * chunkSize;
@@ -212,7 +259,7 @@ namespace chdr::mazes {
                     fut.get();
                 }
 
-                malloc_consolidate();
+                chdr::malloc_consolidate();
             }
         }
 
@@ -316,7 +363,7 @@ namespace chdr::mazes {
             }
             while (!nodesToRemove.empty());
 
-            malloc_consolidate();
+            chdr::malloc_consolidate();
         }
 
         [[maybe_unused]] void print() const noexcept {

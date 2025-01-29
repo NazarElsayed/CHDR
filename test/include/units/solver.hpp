@@ -39,7 +39,16 @@ namespace test {
 #else //!NDEBUG
             constexpr size_t base_samples = 100000000UL;
 #endif //!NDEBUG
-            const size_t test_samples = chdr::utils::max(base_samples / _params.maze.count(), static_cast<size_t>(1U));
+
+            size_t test_samples = chdr::utils::max(base_samples / _params.maze.count(), static_cast<size_t>(1U));
+
+            // Modified code block
+            if constexpr (std::is_same_v<
+                std::decay_t<decltype(_params.maze)>,
+                chdr::mazes::graph<typename params_t::index_type, typename params_t::scalar_type>>
+            ) {
+                test_samples = chdr::utils::sqrt(test_samples);
+            }
 
             /* CAPTURE SYSTEM NOISE */
             auto noise_floor_min = std::numeric_limits<long double>::max();

@@ -111,21 +111,39 @@ $(document).ready(function(){initNavTree('d9/dcb/classchdr_1_1mazes_1_1graph.htm
 <a name="details" id="details"></a><h2 class="groupheader">Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename index_t, typename scalar_t&gt;<br />
 class chdr::mazes::graph&lt; index_t, scalar_t &gt;</div><p>Graph structure for use in maze-solving algorithms. </p>
-<p>A mutable graph represented using an adjacency set. Supports adding and removing nodes and edges, pruning for optimisation, and other utilities necessary for graph-based pathfinding operations. </p><dl class="tparams"><dt>Template Parameters</dt><dd>
+<p>A mutable graph represented using an adjacency set. Supports adding and removing nodes and edges, pruning for optimisation, and other utilities necessary for graph-based pathfinding operations.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">index_t</td><td>The type used for indexing nodes in the graph. </td></tr>
-    <tr><td class="paramname">scalar_t</td><td>The type used for edge weights in the graph. </td></tr>
+    <tr><td class="paramname">scalar_t</td><td>The type used for edge weights in the graph.</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section note"><dt>Note</dt><dd>This class uses polymorphic memory resources (<code>std::pmr::memory_resource</code>). </dd>
+<dd>
+Follows an STL-like design and supports iterators.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>It is very strongly recommended that you use a pool allocation scheme (i.e <code>std::pmr::unsynchronized_pool_resource</code>, <code>std::pmr::synchronized_pool_resource</code>) with this data structure to improve data locality and reduce fragmentation. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d9/de9/graph_8hpp_source.html#l00047">47</a> of file <a class="el" href="../../d9/de9/graph_8hpp_source.html">graph.hpp</a>.</p>
-</div><div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+<p class="definition">Definition at line <a class="el" href="../../d9/de9/graph_8hpp_source.html#l00055">55</a> of file <a class="el" href="../../d9/de9/graph_8hpp_source.html">graph.hpp</a>.</p>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader">Constructors</h2></td></tr>
+<tr class="memitem:af6a9cefebb16df824bca88d7ad895f70" id="r_af6a9cefebb16df824bca88d7ad895f70"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dcb/classchdr_1_1mazes_1_1graph_af6a9cefebb16df824bca88d7ad895f70.html#af6a9cefebb16df824bca88d7ad895f70">graph</a> (std::pmr::memory_resource *_resource=std::pmr::get_default_resource()) noexcept</td></tr>
+<tr class="memdesc:af6a9cefebb16df824bca88d7ad895f70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <code>graph</code> instance with default initialisation.  <br /></td></tr>
+<tr class="separator:af6a9cefebb16df824bca88d7ad895f70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c5fa6f424fe23ab89d383a1f8f78b02" id="r_a9c5fa6f424fe23ab89d383a1f8f78b02"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dcb/classchdr_1_1mazes_1_1graph_a9c5fa6f424fe23ab89d383a1f8f78b02.html#a9c5fa6f424fe23ab89d383a1f8f78b02">graph</a> (const std::initializer_list&lt; std::initializer_list&lt; edge_t &gt; &gt; &amp;_adjacency_list, std::pmr::memory_resource *_resource=std::pmr::get_default_resource())</td></tr>
+<tr class="memdesc:a9c5fa6f424fe23ab89d383a1f8f78b02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <code>graph</code> instance from an adjacency list.  <br /></td></tr>
+<tr class="separator:a9c5fa6f424fe23ab89d383a1f8f78b02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60033e7e4a2cecc9670870abd2e43555" id="r_a60033e7e4a2cecc9670870abd2e43555"><td class="memTemplParams" colspan="2">template&lt;typename coord_t , typename weight_t , const bool Prune = true&gt; </td></tr>
+<tr class="memitem:a60033e7e4a2cecc9670870abd2e43555"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d9/dcb/classchdr_1_1mazes_1_1graph_a60033e7e4a2cecc9670870abd2e43555.html#a60033e7e4a2cecc9670870abd2e43555">graph</a> (const <a class="el" href="../../dd/de3/classchdr_1_1mazes_1_1grid.html">grid</a>&lt; coord_t, weight_t &gt; &amp;_grid, std::pmr::memory_resource *_resource=std::pmr::get_default_resource())</td></tr>
+<tr class="memdesc:a60033e7e4a2cecc9670870abd2e43555"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <code>graph</code> instance from a grid structure.  <br /></td></tr>
+<tr class="separator:a60033e7e4a2cecc9670870abd2e43555"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Collaboration diagram for graph&lt; index_t, scalar_t &gt;:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../d8/d16/classchdr_1_1mazes_1_1graph__coll__graph.svg" width="148" height="68"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../d8/d16/classchdr_1_1mazes_1_1graph__coll__graph.svg" width="756" height="103"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="../../d9/de9/graph_8hpp_source.html">graph.hpp</a></li>

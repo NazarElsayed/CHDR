@@ -87,13 +87,13 @@ namespace test {
 
 			const auto grid = generator::grid::generate<weight_t>(start, end, _size, 0.0, 0.0, seed);
 
-			const auto& test = grid;
-			//const auto test = chdr::mazes::graph<index_t, scalar_t>(grid);
-			//const auto test = generator::graph::generate<weight_t, index_t, coord_t, scalar_t>(start, end, size, seed);
-
 			auto   monotonic = chdr::monotonic_pool();
 			auto   polytonic = chdr::heterogeneous_pool();
 			auto homogeneous = chdr::homogeneous_pool();
+
+			const auto& test = grid;
+			//const auto test = chdr::mazes::graph<index_t, scalar_t>(grid, &polytonic);
+			//const auto test = generator::graph::generate<weight_t, index_t, coord_t, scalar_t>(start, end, size, seed);
 
 			struct params {
 
@@ -133,12 +133,12 @@ namespace test {
             else if (_solver == "fstar"     ) { result = invoke<chdr::solvers::     fstar, params>(args); }
             else if (_solver == "gbfs"      ) { result = invoke<chdr::solvers::      gbfs, params>(args); }
             else if (_solver == "gdfs"      ) { result = invoke<chdr::solvers::      gdfs, params>(args); }
-            else if (_solver == "gjps"      ) { result = invoke<chdr::solvers::      gjps, params>(args); }
+            //else if (_solver == "gjps"      ) { result = invoke<chdr::solvers::      gjps, params>(args); }
             else if (_solver == "gstar"     ) { result = invoke<chdr::solvers::     gstar, params>(args); }
             else if (_solver == "idastar"   ) { result = invoke<chdr::solvers::   idastar, params>(args); }
             else if (_solver == "idbstar"   ) { result = invoke<chdr::solvers::   idbstar, params>(args); }
             else if (_solver == "iddfs"     ) { result = invoke<chdr::solvers::     iddfs, params>(args); }
-            else if (_solver == "jps"       ) { result = invoke<chdr::solvers::       jps, params>(args); }
+            //else if (_solver == "jps"       ) { result = invoke<chdr::solvers::       jps, params>(args); }
             else {
 		        debug::log("ERROR: Unknown solver \"" + std::string(_solver) + "\"!", error);
 		    }

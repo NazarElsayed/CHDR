@@ -1,15 +1,18 @@
 <map id="count" name="count">
-<area shape="rect" id="Node000001" title="Retrieves the total count of elements in the grid." alt="" coords="300,123,348,145"/>
-<area shape="rect" id="Node000002" href="$dd/de3/classchdr_1_1mazes_1_1grid_ab00c46b30252de392da24ac2192e6d0c.html#ab00c46b30252de392da24ac2192e6d0c" title="Determines whether the given identifier is within the bounds of the grid." alt="" coords="98,5,159,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="309,112,286,75,269,56,251,42,229,31,205,24,159,19,160,14,206,19,230,26,253,37,273,53,290,71,314,109"/>
-<area shape="rect" id="Node000003" href="$de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_ab00c46b30252de392da24ac2192e6d0c.html#ab00c46b30252de392da24ac2192e6d0c" title="Determines whether the given identifier is within the bounds of the grid." alt="" coords="14,52,243,75"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="297,116,275,101,251,88,216,77,217,72,253,84,278,97,300,112"/>
-<area shape="rect" id="Node000004" href="$dd/de3/classchdr_1_1mazes_1_1grid_a26abb5332fbee454974e5ce9ba4de82f.html#a26abb5332fbee454974e5ce9ba4de82f" title="Determines whether a cell is transitory based on its neighbours." alt="" coords="89,99,168,121"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="286,132,168,117,168,112,287,127"/>
-<area shape="rect" id="Node000005" href="$de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_a26abb5332fbee454974e5ce9ba4de82f.html#a26abb5332fbee454974e5ce9ba4de82f" title="Determines whether a cell is transitory based on its neighbours." alt="" coords="5,145,252,168"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="287,141,227,148,226,143,286,136"/>
-<area shape="rect" id="Node000006" href="$dd/de3/classchdr_1_1mazes_1_1grid_a264c48c1d975bf357e96edcb92331ad2.html#a264c48c1d975bf357e96edcb92331ad2" title="Determines whether a cell at the given index is transitory." alt="" coords="89,192,168,215"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="299,156,253,182,210,195,169,202,168,197,209,190,251,177,296,151"/>
-<area shape="rect" id="Node000007" href="$de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_a264c48c1d975bf357e96edcb92331ad2.html#a264c48c1d975bf357e96edcb92331ad2" title="Determines whether a cell at the given index is transitory." alt="" coords="5,239,252,261"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="313,159,289,195,273,213,253,228,226,241,223,236,251,224,269,209,285,192,309,156"/>
+<area shape="rect" id="Node000001" title="Retrieves the total count of elements in the grid." alt="" coords="496,145,544,168"/>
+<area shape="rect" id="Node000002" href="$d9/dcb/classchdr_1_1mazes_1_1graph_a60033e7e4a2cecc9670870abd2e43555.html#a60033e7e4a2cecc9670870abd2e43555" title="Constructs a graph instance from a grid structure." alt="" coords="5,121,153,144"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="509,133,487,84,470,60,447,42,413,25,383,14,355,9,328,9,271,19,202,42,168,58,137,81,92,123,89,119,133,77,165,54,200,37,270,14,328,3,356,4,384,9,415,20,449,37,473,57,492,81,514,131"/>
+<area shape="rect" id="Node000003" href="$dd/de3/classchdr_1_1mazes_1_1grid_ab00c46b30252de392da24ac2192e6d0c.html#ab00c46b30252de392da24ac2192e6d0c" title="Determines whether the given identifier is within the bounds of the grid." alt="" coords="294,52,355,75"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="500,136,477,111,447,88,400,73,355,67,356,61,401,67,449,84,480,107,504,133"/>
+<area shape="rect" id="Node000004" href="$de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_ab00c46b30252de392da24ac2192e6d0c.html#ab00c46b30252de392da24ac2192e6d0c" title="Determines whether the given identifier is within the bounds of the grid." alt="" coords="210,99,439,121"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="482,146,447,135,396,124,397,119,449,130,483,141"/>
+<area shape="rect" id="Node000005" href="$dd/de3/classchdr_1_1mazes_1_1grid_a26abb5332fbee454974e5ce9ba4de82f.html#a26abb5332fbee454974e5ce9ba4de82f" title="Determines whether a cell is transitory based on its neighbours." alt="" coords="285,145,364,168"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="482,159,364,159,364,154,482,154"/>
+<area shape="rect" id="Node000006" href="$de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_a26abb5332fbee454974e5ce9ba4de82f.html#a26abb5332fbee454974e5ce9ba4de82f" title="Determines whether a cell is transitory based on its neighbours." alt="" coords="201,192,448,215"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="484,172,449,182,392,195,391,189,447,177,482,166"/>
+<area shape="rect" id="Node000007" href="$dd/de3/classchdr_1_1mazes_1_1grid_a264c48c1d975bf357e96edcb92331ad2.html#a264c48c1d975bf357e96edcb92331ad2" title="Determines whether a cell at the given index is transitory." alt="" coords="285,239,364,261"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="504,181,480,206,449,228,406,244,365,251,364,246,405,239,447,224,476,202,500,177"/>
+<area shape="rect" id="Node000008" href="$de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_a264c48c1d975bf357e96edcb92331ad2.html#a264c48c1d975bf357e96edcb92331ad2" title="Determines whether a cell at the given index is transitory." alt="" coords="201,285,448,308"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="513,182,490,230,472,254,450,275,425,288,422,283,446,271,468,251,485,227,508,180"/>
+<area shape="poly" id="edge7_Node000007_Node000002" title=" " alt="" coords="271,248,236,241,200,229,167,210,136,187,90,147,94,143,139,183,169,205,202,224,237,236,272,243"/>
 </map>

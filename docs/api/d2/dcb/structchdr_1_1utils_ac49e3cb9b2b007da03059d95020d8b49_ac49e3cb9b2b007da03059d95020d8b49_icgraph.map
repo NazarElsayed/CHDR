@@ -1,7 +1,9 @@
 <map id="min" name="min">
-<area shape="rect" id="Node000001" title="Returns the smaller of two values." alt="" coords="208,29,247,52"/>
-<area shape="rect" id="Node000002" href="$d3/d61/classchdr_1_1heap_ad902f3d62fc2c60c9bd9627517da1a5e.html#ad902f3d62fc2c60c9bd9627517da1a5e" title="Constructs a heap container with a specified initial capacity and memory resource." alt="" coords="31,5,134,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="193,38,134,28,135,23,194,33"/>
-<area shape="rect" id="Node000003" href="$d6/db9/classchdr_1_1existence__set_a30c34264336dae664d5b7942e3f16337.html#a30c34264336dae664d5b7942e3f16337" title="Allocates additional capacity to accommodate the hash, ensuring an increase in storage is within the ..." alt="" coords="5,52,160,75"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="194,48,156,55,155,49,194,43"/>
+<area shape="rect" id="Node000001" title="Returns the smaller of two values." alt="" coords="208,52,247,75"/>
+<area shape="rect" id="Node000002" href="$d9/dcb/classchdr_1_1mazes_1_1graph_a60033e7e4a2cecc9670870abd2e43555.html#a60033e7e4a2cecc9670870abd2e43555" title="Constructs a graph instance from a grid structure." alt="" coords="9,5,157,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="194,54,159,42,123,31,125,26,161,37,196,49"/>
+<area shape="rect" id="Node000003" href="$d3/d61/classchdr_1_1heap_ad902f3d62fc2c60c9bd9627517da1a5e.html#ad902f3d62fc2c60c9bd9627517da1a5e" title="Constructs a heap container with a specified initial capacity and memory resource." alt="" coords="31,52,134,75"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="194,66,134,66,134,61,194,61"/>
+<area shape="rect" id="Node000004" href="$d6/db9/classchdr_1_1existence__set_a30c34264336dae664d5b7942e3f16337.html#a30c34264336dae664d5b7942e3f16337" title="Allocates additional capacity to accommodate the hash, ensuring an increase in storage is within the ..." alt="" coords="5,99,160,121"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="195,77,161,89,122,101,120,96,159,83,194,72"/>
 </map>

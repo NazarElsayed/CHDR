@@ -60,8 +60,7 @@ namespace chdr {
         [[maybe_unused]] HOT constexpr void pop() { c.pop_back(); }
 
         [[maybe_unused]] constexpr void clear() {
-            stack_t empty;
-            std::swap(c, empty);
+            c.clear();
         }
 
         using               iterator_t = typename std::vector<T>::              iterator;

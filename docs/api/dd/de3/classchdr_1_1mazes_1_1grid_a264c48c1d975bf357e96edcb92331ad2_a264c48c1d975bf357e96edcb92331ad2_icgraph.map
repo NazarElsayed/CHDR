@@ -1,0 +1,5 @@
+<map id="is_transitory" name="is_transitory">
+<area shape="rect" id="Node000001" title="Determines whether a cell at the given index is transitory." alt="" coords="201,5,280,28"/>
+<area shape="rect" id="Node000002" href="$d9/dcb/classchdr_1_1mazes_1_1graph_a60033e7e4a2cecc9670870abd2e43555.html#a60033e7e4a2cecc9670870abd2e43555" title="Constructs a graph instance from a grid structure." alt="" coords="5,5,153,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="188,19,154,19,154,14,188,14"/>
+</map>

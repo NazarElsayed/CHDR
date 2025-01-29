@@ -1,6 +1,8 @@
 <map id="at" name="at">
-<area shape="rect" id="Node000001" title="Retrieves the node at a specified coordinate." alt="" coords="123,29,161,52"/>
-<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="159,18,154,11,142,8,132,10,127,14,126,20,129,28,124,30,121,21,122,12,130,5,142,3,157,6,163,15"/>
-<area shape="rect" id="Node000002" href="$dd/de3/classchdr_1_1mazes_1_1grid_a943b441c52cc08ef04269321f14cc1f9.html#a943b441c52cc08ef04269321f14cc1f9" title="Provides a reference access to the element at the specified index." alt="" coords="5,29,75,52"/>
-<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="109,43,75,43,75,38,109,38"/>
+<area shape="rect" id="Node000001" title="Retrieves the node at a specified coordinate." alt="" coords="201,29,240,52"/>
+<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="245,20,239,11,221,8,206,10,199,15,198,21,203,29,199,32,192,22,194,12,204,5,221,3,241,7,249,17"/>
+<area shape="rect" id="Node000002" href="$d9/dcb/classchdr_1_1mazes_1_1graph_a60033e7e4a2cecc9670870abd2e43555.html#a60033e7e4a2cecc9670870abd2e43555" title="Constructs a graph instance from a grid structure." alt="" coords="5,5,153,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="187,38,146,31,147,25,188,33"/>
+<area shape="rect" id="Node000003" href="$dd/de3/classchdr_1_1mazes_1_1grid_a943b441c52cc08ef04269321f14cc1f9.html#a943b441c52cc08ef04269321f14cc1f9" title="Provides a reference access to the element at the specified index." alt="" coords="45,52,114,75"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="188,48,115,60,114,55,188,43"/>
 </map>
