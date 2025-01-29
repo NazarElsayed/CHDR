@@ -1,0 +1,7 @@
+<map id="add" name="add">
+<area shape="rect" id="Node000001" title="Adds a new vertex to the graph with the specified identifier." alt="" coords="104,29,144,52"/>
+<area shape="rect" id="Node000002" href="$d9/dcb/classchdr_1_1mazes_1_1graph_a5ca1351a03df5ff49f85cc4b5669cefc.html#a5ca1351a03df5ff49f85cc4b5669cefc" title="Constructs a graph instance from a grid structure." alt="" coords="5,5,56,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,35,56,26,57,21,92,30"/>
+<area shape="rect" id="Node000003" href="$d9/dcb/classchdr_1_1mazes_1_1graph_a9c5fa6f424fe23ab89d383a1f8f78b02.html#a9c5fa6f424fe23ab89d383a1f8f78b02" title="Constructs a graph instance from an adjacency list." alt="" coords="5,52,56,75"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="92,51,57,60,56,55,90,46"/>
+</map>

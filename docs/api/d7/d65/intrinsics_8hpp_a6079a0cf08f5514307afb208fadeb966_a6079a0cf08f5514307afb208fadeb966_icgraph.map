@@ -1,6 +1,6 @@
 <map id="malloc_consolidate" name="malloc_consolidate">
 <area shape="rect" id="Node000001" title="Forces heap defragmentation and consolidation by the internal memory allocator." alt="" coords="201,29,312,52"/>
-<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="288,19,279,11,257,8,238,10,228,15,227,20,233,27,228,31,221,21,224,11,236,5,257,3,281,6,291,15"/>
-<area shape="rect" id="Node000002" href="$d9/dcb/classchdr_1_1mazes_1_1graph_a60033e7e4a2cecc9670870abd2e43555.html#a60033e7e4a2cecc9670870abd2e43555" title="Constructs a graph instance from a grid structure." alt="" coords="5,29,153,52"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="188,43,154,43,154,38,188,38"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="288,19,279,11,257,8,238,10,228,15,227,20,233,27,228,31,221,21,224,11,236,5,257,3,281,6,291,15"/>
+<area shape="rect" id="Node000002" href="$d9/dcb/classchdr_1_1mazes_1_1graph_a5d9e7e33eb15c5778780e40b320d4632.html#a5d9e7e33eb15c5778780e40b320d4632" title="Prunes the graph of transitory nodes." alt="" coords="5,29,153,52"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="188,43,154,43,154,38,188,38"/>
 </map>

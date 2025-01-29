@@ -1,6 +1,6 @@
 <map id="to_1d" name="to_1d">
 <area shape="rect" id="Node000001" title="Maps a multi&#45;dimensional index to a one&#45;dimensional array index." alt="" coords="457,100,507,123"/>
-<area shape="rect" id="Node000002" href="$d9/dcb/classchdr_1_1mazes_1_1graph_a60033e7e4a2cecc9670870abd2e43555.html#a60033e7e4a2cecc9670870abd2e43555" title="Constructs a graph instance from a grid structure." alt="" coords="10,40,158,63"/>
+<area shape="rect" id="Node000002" href="$d9/dcb/classchdr_1_1mazes_1_1graph_a5ca1351a03df5ff49f85cc4b5669cefc.html#a5ca1351a03df5ff49f85cc4b5669cefc" title="Constructs a graph instance from a grid structure." alt="" coords="10,40,158,63"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="466,90,442,57,427,41,408,30,370,16,329,10,288,8,248,11,173,25,116,43,114,37,172,20,247,6,288,3,330,4,371,11,410,25,430,37,446,53,471,86"/>
 <area shape="rect" id="Node000003" href="$de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_acae1d695ad2f308980a748bce2a94fe0.html#acae1d695ad2f308980a748bce2a94fe0" title="Retrieves the node at a specified coordinate." alt="" coords="211,64,409,87"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="443,106,364,89,366,84,444,101"/>

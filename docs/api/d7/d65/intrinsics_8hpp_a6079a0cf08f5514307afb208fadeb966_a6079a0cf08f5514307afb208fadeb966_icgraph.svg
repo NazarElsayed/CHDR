@@ -18,9 +18,9 @@
 </g>
 </g>
 <!-- Node1&#45;&gt;Node1 -->
-<g id="edge2_Node000001_Node000001" class="edge">
+<g id="edge1_Node000001_Node000001" class="edge">
 <title>Node1&#45;&gt;Node1</title>
-<g id="a_edge2_Node000001_Node000001"><a xlink:title=" ">
+<g id="a_edge1_Node000001_Node000001"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M213.13,-26.19C212.07,-31.17 203.86,-35 188.5,-35 164.52,-35 157.97,-25.67 168.83,-17.19"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="216.06,-24.25 208.17,-17.19 209.93,-27.63 216.06,-24.25"/>
 </a>
@@ -29,16 +29,16 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="../../d9/dcb/classchdr_1_1mazes_1_1graph_a60033e7e4a2cecc9670870abd2e43555.html#a60033e7e4a2cecc9670870abd2e43555" target="_top" xlink:title="Constructs a graph instance from a grid structure.">
+<g id="a_Node000002"><a xlink:href="../../d9/dcb/classchdr_1_1mazes_1_1graph_a5d9e7e33eb15c5778780e40b320d4632.html#a5d9e7e33eb15c5778780e40b320d4632" target="_top" xlink:title="Prunes the graph of transitory nodes.">
 <polygon fill="white" stroke="#666666" points="111,-17 0,-17 0,0 111,0 111,-17"/>
-<text text-anchor="middle" x="55.5" y="-6.6" font-family="Helvetica,sans-Serif" font-size="8.00">chdr::mazes::graph::graph</text>
+<text text-anchor="middle" x="55.5" y="-6.6" font-family="Helvetica,sans-Serif" font-size="8.00">chdr::mazes::graph::prune</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node2 -->
-<g id="edge1_Node000001_Node000002" class="edge">
+<g id="edge2_Node000001_Node000002" class="edge">
 <title>Node1&#45;&gt;Node2</title>
-<g id="a_edge1_Node000001_Node000002"><a xlink:title=" ">
+<g id="a_edge2_Node000001_Node000002"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M136.75,-8.5C128.37,-8.5 119.64,-8.5 111.17,-8.5"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="136.77,-12 146.77,-8.5 136.77,-5 136.77,-12"/>
 </a>

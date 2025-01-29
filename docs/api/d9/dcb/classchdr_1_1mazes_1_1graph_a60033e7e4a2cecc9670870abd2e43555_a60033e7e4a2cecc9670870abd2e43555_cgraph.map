@@ -1,26 +1,31 @@
 <map id="graph" name="graph">
-<area shape="rect" id="Node000001" title="Constructs a graph instance from a grid structure." alt="" coords="5,227,56,249"/>
-<area shape="rect" id="Node000002" href="$dd/de3/classchdr_1_1mazes_1_1grid_a2c953e28d925a8042220b3abe9023479.html#a2c953e28d925a8042220b3abe9023479" title="Retrieves the node at a specified coordinate." alt="" coords="128,29,247,52"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="31,226,38,195,51,154,72,109,102,69,122,55,125,60,106,73,76,112,56,156,43,197,36,227"/>
-<area shape="rect" id="Node000003" href="$d2/dcb/structchdr_1_1utils_a5741e93a4c4f5630e7c86bda862cf611.html#a5741e93a4c4f5630e7c86bda862cf611" title="Maps a multi&#45;dimensional index to a one&#45;dimensional array index." alt="" coords="361,55,461,77"/>
-<area shape="poly" id="edge14_Node000001_Node000003" title=" " alt="" coords="33,226,55,171,75,139,102,113,131,96,162,83,227,66,291,59,347,59,347,64,291,65,228,72,164,88,134,101,106,117,79,143,59,173,38,228"/>
-<area shape="rect" id="Node000004" href="$d2/dcb/structchdr_1_1utils_ab94b095ba27e03185c77fca09d6974e8.html#ab94b095ba27e03185c77fca09d6974e8" title="Constrains a value to lie within a specified range." alt="" coords="137,128,238,151"/>
-<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="40,225,66,197,103,168,132,153,134,158,105,172,70,201,44,228"/>
-<area shape="rect" id="Node000005" href="$dd/de3/classchdr_1_1mazes_1_1grid_ad6077e456dd6abb62d82087b55dc2331.html#ad6077e456dd6abb62d82087b55dc2331" title="Retrieves the total count of elements in the grid." alt="" coords="343,203,479,225"/>
-<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="55,225,103,211,162,205,221,202,329,204,328,210,221,207,162,210,105,217,57,230"/>
-<area shape="rect" id="Node000006" href="$dd/de3/classchdr_1_1mazes_1_1grid_a0abdfb4af71cccf812fb2b7150f0cc72.html#a0abdfb4af71cccf812fb2b7150f0cc72" title="Retrieves the neighbours of a node within the grid." alt="" coords="319,251,503,273"/>
-<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="57,246,104,259,207,268,305,268,305,273,207,274,104,265,55,251"/>
-<area shape="rect" id="Node000007" href="$dd/de3/classchdr_1_1mazes_1_1grid_a264c48c1d975bf357e96edcb92331ad2.html#a264c48c1d975bf357e96edcb92331ad2" title="Determines whether a cell at the given index is transitory." alt="" coords="104,227,271,249"/>
-<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="56,235,90,235,90,241,56,241"/>
-<area shape="rect" id="Node000008" href="$d7/d65/intrinsics_8hpp_a6079a0cf08f5514307afb208fadeb966.html#a6079a0cf08f5514307afb208fadeb966" title="Forces heap defragmentation and consolidation by the internal memory allocator." alt="" coords="118,349,257,372"/>
-<area shape="poly" id="edge10_Node000001_Node000008" title=" " alt="" coords="45,248,106,304,156,339,153,344,102,308,41,252"/>
-<area shape="rect" id="Node000009" href="$d2/dcb/structchdr_1_1utils_ac49e3cb9b2b007da03059d95020d8b49.html#ac49e3cb9b2b007da03059d95020d8b49" title="Returns the smaller of two values." alt="" coords="142,396,233,419"/>
-<area shape="poly" id="edge12_Node000001_Node000009" title=" " alt="" coords="37,249,44,276,57,313,77,350,106,383,130,396,127,401,102,387,73,353,52,315,39,278,32,250"/>
-<area shape="rect" id="Node000010" href="$dd/de3/classchdr_1_1mazes_1_1grid_a32d34adb7833cb15aa705c6c7ada57a8.html#a32d34adb7833cb15aa705c6c7ada57a8" title="Retrieves the size of the grid." alt="" coords="123,443,251,465"/>
-<area shape="poly" id="edge13_Node000001_Node000010" title=" " alt="" coords="35,249,40,284,51,333,72,385,87,409,106,429,113,435,110,439,102,433,83,412,68,387,46,335,35,285,30,250"/>
-<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="162,31,156,21,158,11,169,5,187,3,209,6,218,15,214,19,207,11,187,8,171,10,163,15,161,20,166,28"/>
-<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="248,45,347,56,347,62,247,50"/>
-<area shape="poly" id="edge8_Node000007_Node000005" title=" " alt="" coords="271,226,329,220,329,225,271,232"/>
-<area shape="poly" id="edge9_Node000007_Node000006" title=" " alt="" coords="271,244,305,248,305,253,271,250"/>
-<area shape="poly" id="edge11_Node000008_Node000008" title=" " alt="" coords="162,351,156,341,158,331,169,325,187,323,209,326,218,335,214,339,207,331,187,328,171,330,163,335,161,340,166,348"/>
+<area shape="rect" id="Node000001" title="Constructs a graph instance from a grid structure." alt="" coords="5,273,56,296"/>
+<area shape="rect" id="Node000002" href="$d9/dcb/classchdr_1_1mazes_1_1graph_ab41a4e064828273b133921f8d05a7540.html#ab41a4e064828273b133921f8d05a7540" title="Adds a new vertex to the graph with the specified identifier." alt="" coords="167,5,207,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="29,273,31,229,40,166,49,132,62,97,79,65,102,37,127,22,153,16,155,21,129,27,106,41,84,68,66,100,54,133,45,167,36,230,34,273"/>
+<area shape="rect" id="Node000003" href="$dd/de3/classchdr_1_1mazes_1_1grid_a2c953e28d925a8042220b3abe9023479.html#a2c953e28d925a8042220b3abe9023479" title="Retrieves the node at a specified coordinate." alt="" coords="128,76,247,99"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="31,273,38,242,51,200,72,156,102,116,122,102,125,106,106,120,76,158,56,202,43,243,36,274"/>
+<area shape="rect" id="Node000004" href="$d2/dcb/structchdr_1_1utils_a5741e93a4c4f5630e7c86bda862cf611.html#a5741e93a4c4f5630e7c86bda862cf611" title="Maps a multi&#45;dimensional index to a one&#45;dimensional array index." alt="" coords="361,101,461,124"/>
+<area shape="poly" id="edge17_Node000001_Node000004" title=" " alt="" coords="33,272,55,218,75,186,102,160,131,143,162,130,227,113,291,106,347,105,347,111,291,111,228,118,164,135,134,148,106,164,79,189,59,220,38,274"/>
+<area shape="rect" id="Node000005" href="$d2/dcb/structchdr_1_1utils_ab94b095ba27e03185c77fca09d6974e8.html#ab94b095ba27e03185c77fca09d6974e8" title="Constrains a value to lie within a specified range." alt="" coords="137,175,238,197"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="40,271,66,243,103,214,132,200,134,205,105,219,70,247,44,275"/>
+<area shape="rect" id="Node000006" href="$dd/de3/classchdr_1_1mazes_1_1grid_ad6077e456dd6abb62d82087b55dc2331.html#ad6077e456dd6abb62d82087b55dc2331" title="Retrieves the total count of elements in the grid." alt="" coords="343,249,479,272"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="55,272,103,258,162,251,221,249,329,251,328,256,221,254,162,257,105,263,57,277"/>
+<area shape="rect" id="Node000007" href="$dd/de3/classchdr_1_1mazes_1_1grid_a0abdfb4af71cccf812fb2b7150f0cc72.html#a0abdfb4af71cccf812fb2b7150f0cc72" title="Retrieves the neighbours of a node within the grid." alt="" coords="319,309,503,332"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="57,291,105,305,207,317,305,320,305,325,207,322,103,310,56,297"/>
+<area shape="rect" id="Node000008" href="$dd/de3/classchdr_1_1mazes_1_1grid_a264c48c1d975bf357e96edcb92331ad2.html#a264c48c1d975bf357e96edcb92331ad2" title="Determines whether a cell at the given index is transitory." alt="" coords="104,273,271,296"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="56,282,90,282,90,287,56,287"/>
+<area shape="rect" id="Node000009" href="$d7/d65/intrinsics_8hpp_a6079a0cf08f5514307afb208fadeb966.html#a6079a0cf08f5514307afb208fadeb966" title="Forces heap defragmentation and consolidation by the internal memory allocator." alt="" coords="341,417,480,440"/>
+<area shape="poly" id="edge11_Node000001_Node000009" title=" " alt="" coords="50,294,105,326,169,353,236,377,351,411,350,416,234,382,168,358,103,331,47,299"/>
+<area shape="rect" id="Node000010" href="$d2/dcb/structchdr_1_1utils_ac49e3cb9b2b007da03059d95020d8b49.html#ac49e3cb9b2b007da03059d95020d8b49" title="Returns the smaller of two values." alt="" coords="142,423,233,445"/>
+<area shape="poly" id="edge13_Node000001_Node000010" title=" " alt="" coords="38,295,62,346,81,376,106,401,131,416,128,421,102,405,77,379,57,349,34,297"/>
+<area shape="rect" id="Node000011" href="$d9/dcb/classchdr_1_1mazes_1_1graph_a66ec42d2ff5b84117b1da4cbba719f1b.html#a66ec42d2ff5b84117b1da4cbba719f1b" title="Prunes the graph of transitory nodes." alt="" coords="162,469,213,492"/>
+<area shape="poly" id="edge14_Node000001_Node000011" title=" " alt="" coords="36,296,42,328,54,371,75,417,89,438,106,456,126,468,149,475,148,480,124,473,102,460,85,441,70,420,49,373,36,329,31,297"/>
+<area shape="rect" id="Node000012" href="$dd/de3/classchdr_1_1mazes_1_1grid_a32d34adb7833cb15aa705c6c7ada57a8.html#a32d34adb7833cb15aa705c6c7ada57a8" title="Retrieves the size of the grid." alt="" coords="123,516,251,539"/>
+<area shape="poly" id="edge16_Node000001_Node000012" title=" " alt="" coords="35,296,38,335,48,391,69,451,85,479,106,503,113,508,109,513,102,507,81,482,64,453,43,393,33,336,30,296"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="162,77,156,68,158,58,169,52,187,49,209,53,218,62,214,66,207,58,187,55,171,57,163,61,161,67,166,74"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="248,91,347,103,347,108,247,97"/>
+<area shape="poly" id="edge9_Node000008_Node000006" title=" " alt="" coords="271,273,329,267,329,272,271,278"/>
+<area shape="poly" id="edge10_Node000008_Node000007" title=" " alt="" coords="259,293,326,304,326,310,258,299"/>
+<area shape="poly" id="edge12_Node000009_Node000009" title=" " alt="" coords="376,419,367,409,370,399,385,393,411,391,443,395,451,400,455,405,450,408,448,403,441,400,411,396,387,398,374,403,372,408,380,415"/>
+<area shape="poly" id="edge15_Node000011_Node000009" title=" " alt="" coords="212,472,347,441,348,446,213,478"/>
 </map>

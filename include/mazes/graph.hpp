@@ -103,11 +103,11 @@ namespace chdr::mazes {
          */
         [[maybe_unused]] constexpr graph(const std::initializer_list<std::initializer_list<edge_t>>& _adjacency_list, std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : m_entries(_resource) {
 
-            index_t index{0};
+            index_t index {0};
 
-            for (const auto& entry: _adjacency_list) {
+            for (const auto& entry : _adjacency_list) {
 
-                for (const auto& edge: entry) {
+                for (const auto& edge : entry) {
                     add(index, edge);
                 }
 
@@ -120,18 +120,20 @@ namespace chdr::mazes {
          *
          * @details Builds a graph representation of the provided grid, where each active grid cell is treated 
          *          as a node and connections to its neighbors are treated as edges.\n\n
-         *          If pruning is enabled (default), intermediate transitory nodes are removed, and longer 
+         *          If pruning is enabled, intermediate transitory nodes are removed, and longer
          *          direct connections are established to produce a more compact graph representation. 
-         *          Multi-threading is used to improve performance during graph construction.
+         *          Multi-threading is used to improve performance during pruning.
          *
-         * @tparam coord_t The data type used for grid coordinates.
-         * @tparam weight_t The data type used for edge weights.
-         * @tparam Prune A boolean flag indicating whether transitory nodes should be pruned (default: true).
          * @param _grid The input grid structure from which the graph is constructed.
          * @param _resource A pointer to a memory resource for allocator usage. Defaults to
          *                  `std::pmr::get_default_resource`. (optional)
+         *
+         * @tparam coord_t The data type used for grid coordinates.
+         * @tparam weight_t The data type used for edge weights.
+         * @tparam Prune Indicates whether transitory nodes should be pruned (optional, default `true`).
+         * @tparam ConsolidateAfterPrune If true, attempts to consolidate the managed heap after pruning (optional, default `true`).
          */
-        template <typename coord_t, typename weight_t, const bool Prune = true>
+        template <typename coord_t, typename weight_t, const bool Prune = true, const bool ConsolidateAfterPrune = true>
         [[maybe_unused]]
 #if defined(__cpp_constexpr_dynamic_alloc) && (__cpp_constexpr_dynamic_alloc >= 201907L)
         constexpr
@@ -142,7 +144,7 @@ namespace chdr::mazes {
 
             if constexpr (!Prune) {
 
-                index_t index{0};
+                index_t index {0};
                 for (auto& element : _grid) {
 
                     if (element.is_active()) {
@@ -238,7 +240,7 @@ namespace chdr::mazes {
                     }
                 };
 
-                // Create a thread pool to perform the work in parallel:
+                // Create a thread pool to perform work in parallel:
                 const size_t count      = _grid.count();
                 const size_t numThreads = utils::clamp(std::thread::hardware_concurrency(), 1U, 6U);
 
@@ -259,7 +261,8 @@ namespace chdr::mazes {
                     fut.get();
                 }
 
-                chdr::malloc_consolidate();
+                // Finalise the pruning process on a single thread.
+                prune<ConsolidateAfterPrune>();
             }
         }
 
@@ -274,23 +277,57 @@ namespace chdr::mazes {
         graph& operator=(graph&&) noexcept = default;
 
         /**
-         * @}
+         * @brief Retrieves the vertex at a specified index.
+         * @param _id Index of the vertex to retrieve.
+         * @warning If the specified index is out of bounds, calling this function is undefined behaviour.
+         * @return Vertex at a specified index within the grid.
+         * @see contains()
+         * @see operator[]()
          */
-
         [[nodiscard]] constexpr const auto& at(const index_t& _id) const {
-
             assert(contains(_id) && "Error: The node with the specified ID does not exist in the graph.");
             return reinterpret_cast<const id_node<index_t>&>(_id);
         }
 
+        /**
+         * @brief Adds a new vertex to the graph with the specified identifier.
+         *
+         * @details This method ensures that a vertex with the given identifier is added to
+         *          the graph, if it does not already exist.
+         *
+         * @param [in] _from_id The identifier of the node to be added.
+         */
         constexpr void add(index_t _from_id) {
-            m_entries.insert_or_assign(_from_id, neighbours_t{});
+            m_entries.try_emplace(_from_id, neighbours_t{});
         }
 
+        /**
+         * @brief Adds a new edge to the graph with the specified identifier.
+         *
+         * @details This method ensures that the specified edge is added to the graph. 
+         *          If the given vertex does not exist in the graph, a new vertex with the
+         *          specified identifier is created, and the edge is then added. 
+         *          The edge is comprised of a destination node identifier and an associated weight.
+         *          This operation always inserts the edge, even if an identical edge already exists.
+         *
+         * @param [in] _from_id The identifier of the node from which the edge originates.
+         * @param [in] _edge    The edge to be added, represented as a pair of destination node and weight.
+         */
         constexpr void add(index_t _from_id, const edge_t& _edge) {
             m_entries[_from_id].emplace_back(_edge);
         }
 
+        /**
+         * Removes a specified edge associated with a given vertex identifier
+         * from the graph. If the last edge of the vertex is removed, the vertex
+         * entry itself will be erased.
+         *
+         * @param [in] _from_id The identifier of the source node. The function
+         *                 checks whether this vertex exists in the graph
+         *                 before attempting to remove the edge.
+         * @param [in] _edge The edge to be removed. It is matched against
+         *                 existing edges connected to the specified vertex.
+         */
         [[maybe_unused]] constexpr void remove(index_t _from_id, const edge_t& _edge) noexcept {
 
             if (contains(_from_id)) {
@@ -304,48 +341,82 @@ namespace chdr::mazes {
             }
         }
 
+        /**
+         * @brief Prunes the graph of transitory nodes.
+         * @details Removes nodes from the graph that have exactly two neighbours, merging their
+         *          connections with adjacent nodes to simplify the structure of the graph. This
+         *          operation is repeated until no further nodes can be pruned.\n\n
+         *          The algorithm adjusts the connections between neighbouring nodes before
+         *          removing nodes with degree 2. This includes updating edge weights by summing
+         *          the costs of connecting through the intermediate node.
+         *
+         * @remark The function directly modifies the internal graph representation.
+         *         It does not support directed graphs and assumes undirected relationships
+         *         between nodes. Future versions may extend support to directed graphs.
+         *
+         * @pre The graph must have at least three nodes for any pruning to occur.
+         *
+         * @post A simplified graph structure with fewer nodes will result if pruning
+         *       conditions are met. Nodes with only two neighbours are eliminated, with
+         *       connections appropriately merged.
+         *
+         * @warning This can be a slow operation. It is suggested that pruning is performed outside of
+         *          hot loops or performance-critical code.
+         *
+         * @tparam ConsolidateAfterPrune If true, attempts to consolidate the managed heap after pruning (optional, default `true`).
+         */
+        template <bool ConsolidateAfterPrune = true>
         [[maybe_unused]] void prune() {
 
-            // TODO: Fix erroneous graph when pruned twice and add support for pruning directed graphs.
+            // TODO: Extend support for pruning directed graphs.
 
             std::vector<index_t> nodesToRemove;
+
+            bool dirty = false;
 
             do {
                 nodesToRemove.clear();
 
                 for (const auto& entry : m_entries) {
 
-                    auto& [node, neighbours] = entry;
-
                     if (m_entries.size() > 2U) {
 
-                        if (neighbours.size() == 2U) {
+                        if (auto& [node, neighbours] = entry; neighbours.size() == 2U) {
 
-                            auto& [n1_id, n1_cost] = *(  neighbours.begin());
-                            auto& [n2_id, n2_cost] = *(++neighbours.begin());
+                            dirty = ConsolidateAfterPrune;
+
+                            auto it = neighbours.begin();
+
+                            auto& [n1_id, n1_cost] = *it;
+                            auto& [n2_id, n2_cost] = *(++it);
 
                             auto s1 = m_entries.find(n1_id);
                             auto s2 = m_entries.find(n2_id);
 
                             // Merge the connections from the current node with its neighbours:
-                            if (s1 != m_entries.end()) {
 
+                            if (s1 != m_entries.end() && n1_id != n2_id) {
                                 auto& set = s1->second;
-                                auto sn = set.find(std::make_pair(node, n1_cost));
+                                auto  sn  = std::find(set.begin(), set.end(), std::make_pair(node, n1_cost));
 
                                 if (sn != set.end()) {
-                                    set.emplace(n2_id, sn->second + n2_cost);
-                                    set.erase(sn);
+                                    neighbour_t new_vertex{n2_id, sn->second + n2_cost};
+                                    if (std::find(set.begin(), set.end(), new_vertex) == set.end()) {
+                                        set.emplace_back(new_vertex);
+                                    }
                                 }
                             }
-                            if (s2 != m_entries.end()) {
 
+                            if (s2 != m_entries.end() && n1_id != n2_id) {
                                 auto& set = s2->second;
-                                auto sn = set.find(std::make_pair(node, n2_cost));
+                                auto  sn  = std::find(set.begin(), set.end(), std::make_pair(node, n2_cost));
 
                                 if (sn != set.end()) {
-                                    set.emplace(n1_id, sn->second + n1_cost);
+                                    neighbour_t new_vertex{n1_id, sn->second + n1_cost};
                                     set.erase(sn);
+                                    if (std::find(set.begin(), set.end(), new_vertex) == set.end()) {
+                                        set.emplace_back(new_vertex);
+                                    }
                                 }
                             }
 
@@ -361,9 +432,11 @@ namespace chdr::mazes {
                     m_entries.erase(node);
                 }
             }
-            while (!nodesToRemove.empty());
+            while (!nodesToRemove.empty() && m_entries.size() > 2U);
 
-            chdr::malloc_consolidate();
+            if (dirty) {
+                chdr::malloc_consolidate();
+            }
         }
 
         [[maybe_unused]] void print() const noexcept {

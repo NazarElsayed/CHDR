@@ -148,8 +148,13 @@ var NAVTREEINDEX0 =
 "d9/d96/chdr_8hpp_source.html":[4,0,1],
 "d9/db9/structchdr_1_1solvers_1_1dfs.html":[3,0,0,1,4],
 "d9/dcb/classchdr_1_1mazes_1_1graph.html":[3,0,0,0,0],
-"d9/dcb/classchdr_1_1mazes_1_1graph_a60033e7e4a2cecc9670870abd2e43555.html#a60033e7e4a2cecc9670870abd2e43555":[3,0,0,0,0,2],
+"d9/dcb/classchdr_1_1mazes_1_1graph_a50cc7fa4c48882e5665f24305a38fc3b.html#a50cc7fa4c48882e5665f24305a38fc3b":[3,0,0,0,0,7],
+"d9/dcb/classchdr_1_1mazes_1_1graph_a5ca1351a03df5ff49f85cc4b5669cefc.html#a5ca1351a03df5ff49f85cc4b5669cefc":[3,0,0,0,0,2],
+"d9/dcb/classchdr_1_1mazes_1_1graph_a5d9e7e33eb15c5778780e40b320d4632.html#a5d9e7e33eb15c5778780e40b320d4632":[3,0,0,0,0,6],
+"d9/dcb/classchdr_1_1mazes_1_1graph_a8e662ec5003e04b135c5d7cdb6c91db7.html#a8e662ec5003e04b135c5d7cdb6c91db7":[3,0,0,0,0,4],
+"d9/dcb/classchdr_1_1mazes_1_1graph_a997cc2471f01562028c11abd6d463160.html#a997cc2471f01562028c11abd6d463160":[3,0,0,0,0,5],
 "d9/dcb/classchdr_1_1mazes_1_1graph_a9c5fa6f424fe23ab89d383a1f8f78b02.html#a9c5fa6f424fe23ab89d383a1f8f78b02":[3,0,0,0,0,1],
+"d9/dcb/classchdr_1_1mazes_1_1graph_ab41a4e064828273b133921f8d05a7540.html#ab41a4e064828273b133921f8d05a7540":[3,0,0,0,0,3],
 "d9/dcb/classchdr_1_1mazes_1_1graph_af6a9cefebb16df824bca88d7ad895f70.html#af6a9cefebb16df824bca88d7ad895f70":[3,0,0,0,0,0],
 "d9/ddd/id__node_8hpp.html":[4,0,0,0,0,0],
 "d9/ddd/id__node_8hpp_source.html":[4,0,0,0,0,0],
@@ -244,10 +249,5 @@ var NAVTREEINDEX0 =
 "df/d71/iddfs_8hpp_source.html":[4,0,0,1,17],
 "df/d93/utils_8hpp.html":[4,0,0,3,2],
 "df/d93/utils_8hpp_source.html":[4,0,0,3,2],
-"df/db2/classchdr_1_1monotonic__pool.html":[3,0,0,7],
-"df/db2/classchdr_1_1monotonic__pool_a0e2ac0eeff53a482605452dca909069d.html#a0e2ac0eeff53a482605452dca909069d":[3,0,0,7,4],
-"df/db2/classchdr_1_1monotonic__pool_a20194325f0380eb3bbc6bc6c8b2697d9.html#a20194325f0380eb3bbc6bc6c8b2697d9":[3,0,0,7,6],
-"df/db2/classchdr_1_1monotonic__pool_a23b477d0e2d399f75d585d154c346591.html#a23b477d0e2d399f75d585d154c346591":[3,0,0,7,5],
-"df/db2/classchdr_1_1monotonic__pool_a482928f9f49b0da9817293e481fe3ed0.html#a482928f9f49b0da9817293e481fe3ed0":[3,0,0,7,2],
-"df/db2/classchdr_1_1monotonic__pool_a4dd7d4580e03abd1e0f14e983d44c332.html#a4dd7d4580e03abd1e0f14e983d44c332":[3,0,0,7,3]
+"df/db2/classchdr_1_1monotonic__pool.html":[3,0,0,7]
 };

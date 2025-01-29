@@ -1,6 +1,6 @@
 <map id="count" name="count">
 <area shape="rect" id="Node000001" title="Retrieves the total count of elements in the grid." alt="" coords="496,145,544,168"/>
-<area shape="rect" id="Node000002" href="$d9/dcb/classchdr_1_1mazes_1_1graph_a60033e7e4a2cecc9670870abd2e43555.html#a60033e7e4a2cecc9670870abd2e43555" title="Constructs a graph instance from a grid structure." alt="" coords="5,121,153,144"/>
+<area shape="rect" id="Node000002" href="$d9/dcb/classchdr_1_1mazes_1_1graph_a5ca1351a03df5ff49f85cc4b5669cefc.html#a5ca1351a03df5ff49f85cc4b5669cefc" title="Constructs a graph instance from a grid structure." alt="" coords="5,121,153,144"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="509,133,487,84,470,60,447,42,413,25,383,14,355,9,328,9,271,19,202,42,168,58,137,81,92,123,89,119,133,77,165,54,200,37,270,14,328,3,356,4,384,9,415,20,449,37,473,57,492,81,514,131"/>
 <area shape="rect" id="Node000003" href="$dd/de3/classchdr_1_1mazes_1_1grid_ab00c46b30252de392da24ac2192e6d0c.html#ab00c46b30252de392da24ac2192e6d0c" title="Determines whether the given identifier is within the bounds of the grid." alt="" coords="294,52,355,75"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="500,136,477,111,447,88,400,73,355,67,356,61,401,67,449,84,480,107,504,133"/>

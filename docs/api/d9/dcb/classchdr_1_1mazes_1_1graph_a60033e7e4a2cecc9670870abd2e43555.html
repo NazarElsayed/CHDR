@@ -144,12 +144,12 @@ template&lt;typename coord_t , typename weight_t , const bool Prune = true&gt; <
 <p>Constructs a <code>graph</code> instance from a grid structure. </p>
 <p>Builds a graph representation of the provided grid, where each active grid cell is treated as a node and connections to its neighbors are treated as edges.<br  />
 <br  />
- If pruning is enabled (default), intermediate transitory nodes are removed, and longer direct connections are established to produce a more compact graph representation. Multi-threading is used to improve performance during graph construction.</p>
+ If pruning is enabled, intermediate transitory nodes are removed, and longer direct connections are established to produce a more compact graph representation. Multi-threading is used to improve performance during pruning.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">coord_t</td><td>The data type used for grid coordinates. </td></tr>
     <tr><td class="paramname">weight_t</td><td>The data type used for edge weights. </td></tr>
-    <tr><td class="paramname">Prune</td><td>A boolean flag indicating whether transitory nodes should be pruned (default: true). </td></tr>
+    <tr><td class="paramname">Prune</td><td>A boolean flag indicating whether transitory nodes should be pruned (optional, default <code>true</code>). </td></tr>
   </table>
   </dd>
 </dl>
@@ -167,7 +167,7 @@ template&lt;typename coord_t , typename weight_t , const bool Prune = true&gt; <
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../d9/dcb/classchdr_1_1mazes_1_1graph_a60033e7e4a2cecc9670870abd2e43555_a60033e7e4a2cecc9670870abd2e43555_cgraph.svg" width="508" height="471"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../d9/dcb/classchdr_1_1mazes_1_1graph_a60033e7e4a2cecc9670870abd2e43555_a60033e7e4a2cecc9670870abd2e43555_cgraph.svg" width="508" height="544"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
