@@ -28,17 +28,16 @@ namespace chdr::mazes {
     /**
      * @nosubgrouping
      * @class grid
-     * @brief Represents a multi-dimensional grid structure that stores nodes, provides neighbour calculation,
-     *        and facilitates grid navigation and operations.
+     * @brief Multi-dimensional grid structure.
      *
-     * @details The `grid` class is a fixed-size, final class that uses compile-time constants and ensures
-     *          efficient handling of multidimensional grid data. It includes functionality to access nodes,
-     *          compute neighbours (both diagonal and axis-aligned), and assess neighbour activity.
-     *          Additionally, it supports move semantics for optimal memory usage and performance.
+     * @details A fixed-size grid which uses compile-time constants and ensures efficient handling
+     *          of multidimensional grid data.
      *
      * @note This class uses a `coord_t` type for grid dimensions and indexing, and a `weight_t` type to
-     *       represent the weight or state of the nodes in the grid. It is optimised for performance-sensitive
-     *       scenarios and assumes valid input dimensions.
+     *       represent the weight or state of the nodes in the grid.
+     *
+     * @tparam coord_t Type representing coordinates.
+     * @tparam weight_t Type representing node weights.
      */
     template<typename coord_t, typename weight_t>
     class grid final {
@@ -442,6 +441,7 @@ namespace chdr::mazes {
     /**
      * @nosubgrouping
      * @brief Specialization of grid for weight_t = bool.
+     * @tparam coord_t Type representing coordinates.
      * @note In this configuration, the grid is represented using a bitset.
      * @see grid
      */

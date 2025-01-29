@@ -9,6 +9,10 @@
 #ifndef CHDR_GRAPH_HPP
 #define CHDR_GRAPH_HPP
 
+/**
+ * @file graph.hpp
+ */
+
 #include <cassert>
 #include <cstddef>
 #include <future>
@@ -28,6 +32,17 @@
 
 namespace chdr::mazes {
 
+    /**
+     * @nosubgrouping
+     * @class graph
+     * @brief Graph structure for use in maze-solving algorithms.
+     *
+     * @details A mutable graph represented using an adjacency set.
+     *          Supports adding and removing nodes and edges, pruning for optimisation,
+     *          and other utilities necessary for graph-based pathfinding operations.
+     * @tparam index_t  The type used for indexing nodes in the graph.
+     * @tparam scalar_t The type used for edge weights in the graph.
+     */
     template<typename index_t, typename scalar_t>
     class graph final {
 
@@ -47,6 +62,11 @@ namespace chdr::mazes {
     public:
 
         using neighbour_t = edge_t;
+
+        /**
+         * @name Constructors
+         * @{
+         */
 
         [[maybe_unused]] constexpr graph() noexcept : m_entries(&memory_resource) {}
 
@@ -205,6 +225,10 @@ namespace chdr::mazes {
         constexpr
 #endif
         graph& operator=(graph&&) noexcept = default;
+
+        /**
+         * @}
+         */
 
         [[nodiscard]] constexpr const auto& at(const index_t& _id) const {
 
