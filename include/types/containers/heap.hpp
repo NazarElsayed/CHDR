@@ -478,7 +478,11 @@ namespace chdr {
                     const auto p = i / Kd;
 
                     if (comp(c[p], c[i])) {
-                        std::swap(c[i], c[p]);
+                        // Swap elements:
+                        auto tmp = std::move(c[i]);
+                        c[i] = std::move(c[p]);
+                        c[p] = std::move(tmp);
+
                         i = p;
                     }
                     else {
@@ -526,7 +530,11 @@ namespace chdr {
                         }
 
                         if (comp(c[i], c[min])) {
-                            std::swap(c[i], c[min]);
+                            // Swap elements:
+                            auto tmp = std::move(c[i]);
+                            c[i] = std::move(c[min]);
+                            c[min] = std::move(tmp);
+
                             i = min;
                         }
                         else {

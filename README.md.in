@@ -27,7 +27,7 @@ CHDR strikes the perfect balance between usability and performance. It supports 
 ### Key Features
 - Extremely fast searches.
 - Straightforward and easy to use.
-- Standalone – no external dependencies or third-party licence agreements.
+- Standalone – no external dependencies.
 - Well-tested.
 - Well-documented.
 - Interoperable with common frameworks.

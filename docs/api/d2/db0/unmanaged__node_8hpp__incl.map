@@ -1,11 +1,11 @@
 <map id="unmanaged_node.hpp" name="unmanaged_node.hpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="38,5,169,28"/>
-<area shape="rect" id="Node000002" href="$dc/d3c/bnode_8hpp.html" title=" " alt="" coords="5,76,79,99"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,30,62,68,58,64,92,26"/>
-<area shape="rect" id="Node000003" href="$d7/d65/intrinsics_8hpp.html" title=" " alt="" coords="103,76,226,99"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="114,26,149,64,145,68,110,30"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="98,147,154,169"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="161,100,141,136,136,133,157,97"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="178,147,229,169"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="173,97,193,133,189,136,168,100"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="43,5,192,31"/>
+<area shape="rect" id="Node000002" href="$dc/d3c/bnode_8hpp.html" title=" " alt="" coords="5,79,88,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,33,70,71,66,67,104,29"/>
+<area shape="rect" id="Node000003" href="$d7/d65/intrinsics_8hpp.html" title=" " alt="" coords="113,79,263,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="131,29,169,67,165,71,127,33"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="111,152,177,177"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="183,106,161,142,156,139,178,103"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="201,152,261,177"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="197,103,219,139,215,142,193,106"/>
 </map>
