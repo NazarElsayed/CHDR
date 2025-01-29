@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CHDR: homogeneous_pool</title>
+<title>CHDR: homogeneous_pool&lt; StackSize, MaxStackAllocationSize, MaxHeapBlockSize &gt;</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -107,25 +107,34 @@ $(document).ready(function(){initNavTree('d7/d66/classchdr_1_1homogeneous__pool.
 <a href="#pub-methods">Methods</a> &#124;
 <a href="#pro-methods">Protected Methods</a> &#124;
 <a href="../../dd/d62/classchdr_1_1homogeneous__pool-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">homogeneous_pool<span class="mlabels"><span class="mlabel">final</span></span></div></div>
+  <div class="headertitle"><div class="title">homogeneous_pool&lt; StackSize, MaxStackAllocationSize, MaxHeapBlockSize &gt;<span class="mlabels"><span class="mlabel">final</span></span></div></div>
 </div><!--header-->
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">Description</h2>
-<div class="textblock"><p>A pooled memory resource for managing homogeneous memory allocations. </p>
+<div class="textblock"><div class="compoundTemplParams">template&lt;size_t StackSize = 4096U, size_t MaxStackAllocationSize = -1U, size_t MaxHeapBlockSize = 65536U&gt;<br />
+class chdr::homogeneous_pool&lt; StackSize, MaxStackAllocationSize, MaxHeapBlockSize &gt;</div><p>A pooled memory resource for managing homogeneous memory allocations. </p>
 <p>Provides efficient memory management by for situations where allocations are identical in size and alignment. It supports pre-allocated stack memory and dynamic memory expansion. Allocations are performed in blocks, reducing the overhead of frequent dynamic memory allocation.</p>
 <p>The primary features include:</p><ul>
 <li>Support for stack allocation.</li>
 <li>Allocation and deallocation of memory with alignment guarantees.</li>
 <li>Block reuse through a free list.</li>
 </ul>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">StackSize</td><td>Size of the pool's stack buffer, in bytes. (optional, defaults to <code>4096</code>) </td></tr>
+    <tr><td class="paramname">MaxStackAllocationSize</td><td>Maximum size of a direct allocation to the stack buffer, in bytes. (optional) </td></tr>
+    <tr><td class="paramname">MaxHeapBlockSize</td><td>Maximum size of a heap-allocated block, in bytes. (optional, defaults to <code>65536</code>)</td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section remark"><dt>Remarks</dt><dd>Inherits from <code>std::pmr::memory_resource</code> to integrate with the PMR (Polymorphic Memory Resource) framework provided in the C++ Standard Library. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d5/d3c/homogeneous__pool_8hpp_source.html#l00048">48</a> of file <a class="el" href="../../d5/d3c/homogeneous__pool_8hpp_source.html">homogeneous_pool.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d5/d3c/homogeneous__pool_8hpp_source.html#l00053">53</a> of file <a class="el" href="../../d5/d3c/homogeneous__pool_8hpp_source.html">homogeneous_pool.hpp</a>.</p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Constructors</h2></td></tr>
-<tr class="memitem:a4c4d678fd6f100383dbd002b8da60426" id="r_a4c4d678fd6f100383dbd002b8da60426"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d66/classchdr_1_1homogeneous__pool_a4c4d678fd6f100383dbd002b8da60426.html#a4c4d678fd6f100383dbd002b8da60426">homogeneous_pool</a> (size_t _initial_block_width=s_default_block_width, size_t _capacity=32U) noexcept</td></tr>
-<tr class="memdesc:a4c4d678fd6f100383dbd002b8da60426"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a memory pool.  <br /></td></tr>
-<tr class="separator:a4c4d678fd6f100383dbd002b8da60426"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7282a29216923fff4803e920bf80095" id="r_ac7282a29216923fff4803e920bf80095"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d66/classchdr_1_1homogeneous__pool_ac7282a29216923fff4803e920bf80095.html#ac7282a29216923fff4803e920bf80095">homogeneous_pool</a> (size_t _initial_block_width=s_default_heap_block_size, size_t _capacity=32U) noexcept</td></tr>
+<tr class="memdesc:ac7282a29216923fff4803e920bf80095"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a memory pool.  <br /></td></tr>
+<tr class="separator:ac7282a29216923fff4803e920bf80095"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ed4acc511578372a24cc1e4af050ea2" id="r_a9ed4acc511578372a24cc1e4af050ea2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d66/classchdr_1_1homogeneous__pool_a9ed4acc511578372a24cc1e4af050ea2.html#a9ed4acc511578372a24cc1e4af050ea2">~homogeneous_pool</a> () override</td></tr>
 <tr class="memdesc:a9ed4acc511578372a24cc1e4af050ea2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroys the object and releases all allocated memory.  <br /></td></tr>
 <tr class="separator:a9ed4acc511578372a24cc1e4af050ea2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -154,11 +163,11 @@ Protected Methods</h2></td></tr>
 
 <p>Inherits memory_resource.</p>
 <div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Collaboration diagram for homogeneous_pool:</div>
+  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Collaboration diagram for homogeneous_pool&lt; StackSize, MaxStackAllocationSize, MaxHeapBlockSize &gt;:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../dc/d5f/classchdr_1_1homogeneous__pool__coll__graph.svg" width="519" height="172"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../dc/d5f/classchdr_1_1homogeneous__pool__coll__graph.svg" width="542" height="172"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="../../d5/d3c/homogeneous__pool_8hpp_source.html">homogeneous_pool.hpp</a></li>

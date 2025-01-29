@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CHDR: monotonic_pool</title>
+<title>CHDR: monotonic_pool&lt; StackSize, MaxStackAllocationSize, MaxHeapBlockSize &gt;</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -106,20 +106,29 @@ $(document).ready(function(){initNavTree('df/db2/classchdr_1_1monotonic__pool.ht
   <div class="summary">
 <a href="#pro-methods">Protected Methods</a> &#124;
 <a href="../../db/df2/classchdr_1_1monotonic__pool-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">monotonic_pool<span class="mlabels"><span class="mlabel">final</span></span></div></div>
+  <div class="headertitle"><div class="title">monotonic_pool&lt; StackSize, MaxStackAllocationSize, MaxHeapBlockSize &gt;<span class="mlabels"><span class="mlabel">final</span></span></div></div>
 </div><!--header-->
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">Description</h2>
-<div class="textblock"><p>A pooled memory resource that manages memory blocks in a monotonic allocation scheme. </p>
+<div class="textblock"><div class="compoundTemplParams">template&lt;size_t StackSize = 4096U, size_t MaxStackAllocationSize = -1U, size_t MaxHeapBlockSize = 65536U&gt;<br />
+class chdr::monotonic_pool&lt; StackSize, MaxStackAllocationSize, MaxHeapBlockSize &gt;</div><p>A pooled memory resource that manages memory blocks in a monotonic allocation scheme. </p>
 <p>Designed for scenarios where multiple allocations are performed, but the memory is freed all at once rather than per individual allocation. Allocations are performed in blocks, reducing the overhead of frequent dynamic memory allocation.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">StackSize</td><td>Size of the pool's stack buffer, in bytes. (optional, defaults to <code>4096</code>) </td></tr>
+    <tr><td class="paramname">MaxStackAllocationSize</td><td>Maximum size of a direct allocation to the stack buffer, in bytes. (optional) </td></tr>
+    <tr><td class="paramname">MaxHeapBlockSize</td><td>Maximum size of a heap-allocated block, in bytes. (optional, defaults to <code>65536</code>)</td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section remark"><dt>Remarks</dt><dd>Inherits from <code>std::pmr::memory_resource</code> to integrate with the PMR (Polymorphic Memory Resource) framework provided in the C++ Standard Library. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/monotonic__pool_8hpp_source.html#l00037">37</a> of file <a class="el" href="../../d4/d99/monotonic__pool_8hpp_source.html">monotonic_pool.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/monotonic__pool_8hpp_source.html#l00042">42</a> of file <a class="el" href="../../d4/d99/monotonic__pool_8hpp_source.html">monotonic_pool.hpp</a>.</p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Constructors</h2></td></tr>
-<tr class="memitem:a621d5f3c47bb78dd04d723892f9bb00e" id="r_a621d5f3c47bb78dd04d723892f9bb00e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/db2/classchdr_1_1monotonic__pool_a621d5f3c47bb78dd04d723892f9bb00e.html#a621d5f3c47bb78dd04d723892f9bb00e">monotonic_pool</a> () noexcept</td></tr>
-<tr class="memdesc:a621d5f3c47bb78dd04d723892f9bb00e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a memory pool.  <br /></td></tr>
-<tr class="separator:a621d5f3c47bb78dd04d723892f9bb00e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d8d1a09629a36930c4f137b135f1800" id="r_a8d8d1a09629a36930c4f137b135f1800"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/db2/classchdr_1_1monotonic__pool_a8d8d1a09629a36930c4f137b135f1800.html#a8d8d1a09629a36930c4f137b135f1800">monotonic_pool</a> (size_t _initial_block_width=s_default_heap_block_size) noexcept</td></tr>
+<tr class="memdesc:a8d8d1a09629a36930c4f137b135f1800"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a memory pool.  <br /></td></tr>
+<tr class="separator:a8d8d1a09629a36930c4f137b135f1800"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea26d588bdab32f3bafe7094560bec91" id="r_aea26d588bdab32f3bafe7094560bec91"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/db2/classchdr_1_1monotonic__pool_aea26d588bdab32f3bafe7094560bec91.html#aea26d588bdab32f3bafe7094560bec91">~monotonic_pool</a> () noexcept</td></tr>
 <tr class="memdesc:aea26d588bdab32f3bafe7094560bec91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroys the object and releases all allocated memory.  <br /></td></tr>
 <tr class="separator:aea26d588bdab32f3bafe7094560bec91"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -145,11 +154,11 @@ Protected Methods</h2></td></tr>
 
 <p>Inherits memory_resource.</p>
 <div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Collaboration diagram for monotonic_pool:</div>
+  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Collaboration diagram for monotonic_pool&lt; StackSize, MaxStackAllocationSize, MaxHeapBlockSize &gt;:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../d5/d82/classchdr_1_1monotonic__pool__coll__graph.svg" width="395" height="172"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../d5/d82/classchdr_1_1monotonic__pool__coll__graph.svg" width="416" height="172"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="../../d4/d99/monotonic__pool_8hpp_source.html">monotonic_pool.hpp</a></li>

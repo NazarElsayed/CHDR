@@ -30,10 +30,7 @@ namespace chdr {
      * @nosubgrouping
      * @class heterogeneous_pool
      * @brief A pooled memory resource for managing heterogeneous memory allocations.
-     * 
-     * @tparam Coalescing Indicates whether the pool coalesces adjacent free memory blocks
-     *                    for more efficient memory usage. Defaults to `true`.
-     * 
+     *
      * @details Provides efficient memory management by for situations where allocations may vary in size.
      *          It supports pre-allocated stack memory, dynamic memory expansion, and optional coalescing of
      *          memory blocks for reuse.
@@ -45,10 +42,17 @@ namespace chdr {
      *          - Block reuse through a free list.
      *          - Optional coalescing of adjacent free blocks for optimised memory reuse.
      *
+     * @tparam              StackSize Size of the pool's stack buffer, in bytes. (optional, defaults to `4096`)
+     * @tparam MaxStackAllocationSize Maximum size of a direct allocation to the stack buffer, in bytes. (optional)
+     * @tparam       MaxHeapBlockSize Maximum size of a heap-allocated block, in bytes. (optional, defaults to `65536`)
+     *
+     * @tparam Coalescing Indicates whether the pool coalesces adjacent free memory blocks
+     *                    for more efficient memory usage. (optional, defaults to `true`)
+     *
      * @remarks Inherits from `std::pmr::memory_resource` to integrate with the
      *          PMR (Polymorphic Memory Resource) framework provided in the C++ Standard Library.
      */
-    template <bool Coalescing = true>
+    template <size_t StackSize = 4096U, size_t MaxStackAllocationSize = -1U, size_t MaxHeapBlockSize = 65536U, bool Coalescing = true>
     class heterogeneous_pool final : public std::pmr::memory_resource {
 
     private:
@@ -81,15 +85,15 @@ namespace chdr {
             }
         };
 
-        static constexpr size_t s_default_block_width {  4096U };
-        static constexpr size_t     s_max_block_width { 65536U };
-        static constexpr size_t    s_stack_block_size {  4096U };
+        static constexpr size_t        s_stack_block_size { StackSize        };
+        static constexpr size_t s_default_heap_block_size {  4096U           };
+        static constexpr size_t     s_max_heap_block_size { MaxHeapBlockSize };
 
         alignas(std::max_align_t) uint8_t m_stack_block[s_stack_block_size]; // NOLINT(*-avoid-c-arrays)
 
-        size_t m_stack_write;
-        size_t m_initial_block_width;
-        size_t m_block_width;
+        size_t m_stack_write;         // Current write position for the stack block.
+        size_t m_initial_block_width; // Width of the first allocated block.
+        size_t m_block_width;         // Size of the current block.
 
         std::vector<block> m_blocks;
         std::map<size_t, block> m_free;
@@ -136,7 +140,7 @@ namespace chdr {
                     }
                 }
 
-                m_block_width = utils::min((m_block_width * 3U) / 2U, s_max_block_width);
+                m_block_width = utils::min((m_block_width * 3U) / 2U, s_max_heap_block_size);
             }
             catch (...) {
 
@@ -226,7 +230,7 @@ namespace chdr {
             const size_t aligned_bytes = (_bytes + _alignment - 1U) & ~(_alignment - 1U);
 
             // Attempt to allocate from the stack block:
-            if (m_stack_write + aligned_bytes <= s_stack_block_size) {
+            if (aligned_bytes < MaxStackAllocationSize && m_stack_write + aligned_bytes <= s_stack_block_size) {
 
                 auto* aligned_ptr = m_stack_block + ((m_stack_write + _alignment - 1U) & ~(_alignment - 1U));
                 m_stack_write = static_cast<size_t>(aligned_ptr - m_stack_block) + aligned_bytes;
@@ -334,11 +338,11 @@ namespace chdr {
          * @param _capacity Specifies the number of blocks the pool should initially reserve.
          *                  (optional, default value is `32U`).
          */
-        explicit heterogeneous_pool(size_t _initial_block_width = s_default_block_width, size_t _capacity = 32U) noexcept :
-            m_stack_block(),
-            m_stack_write(0U),
-            m_initial_block_width(utils::min(_initial_block_width, s_max_block_width)),
-            m_block_width(m_initial_block_width)
+        explicit heterogeneous_pool(size_t _initial_block_width = s_default_heap_block_size, size_t _capacity = 32U) noexcept :
+            m_stack_block        (),
+            m_stack_write        (0U),
+            m_initial_block_width(utils::min(_initial_block_width, s_max_heap_block_size)),
+            m_block_width        (m_initial_block_width)
         {
             assert(_initial_block_width >= 2U && "Capacity must be at least 2.");
 
@@ -376,9 +380,7 @@ namespace chdr {
             m_blocks             (std::move(_other.m_blocks)  ),
             m_free               (std::move(_other.m_free  )  )
         {
-            _other.m_stack_write = 0;
-            _other.m_blocks.clear();
-            _other.m_free.clear();
+            _other.release();
         }
 
 #if __cplusplus >= 202002L
@@ -396,9 +398,7 @@ namespace chdr {
                 m_blocks              = std::move(_other.m_blocks);
                 m_free                = std::move(_other.m_free  );
 
-                _other.m_stack_write = 0U;
-                _other.m_blocks.clear();
-                _other.m_free.clear();
+                _other.release();
             }
             return *this;
         }

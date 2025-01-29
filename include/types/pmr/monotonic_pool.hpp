@@ -31,9 +31,14 @@ namespace chdr {
      *          at once rather than per individual allocation. Allocations are performed in blocks, reducing
      *          the overhead of frequent dynamic memory allocation.
      *
+     * @tparam              StackSize Size of the pool's stack buffer, in bytes. (optional, defaults to `4096`)
+     * @tparam MaxStackAllocationSize Maximum size of a direct allocation to the stack buffer, in bytes. (optional)
+     * @tparam       MaxHeapBlockSize Maximum size of a heap-allocated block, in bytes. (optional, defaults to `65536`)
+     *
      * @remarks Inherits from `std::pmr::memory_resource` to integrate with the
      *          PMR (Polymorphic Memory Resource) framework provided in the C++ Standard Library.
      */
+    template <size_t StackSize = 4096U, size_t MaxStackAllocationSize = -1U, size_t MaxHeapBlockSize = 65536U>
     class monotonic_pool final : public std::pmr::memory_resource {
 
         struct block final {
@@ -64,16 +69,17 @@ namespace chdr {
             }
         };
 
-        static constexpr size_t s_initial_heap_block_size {  4096U };
-        static constexpr size_t     s_max_heap_block_size { 65536U };
-        static constexpr size_t        s_stack_block_size {  4096U };
+        static constexpr size_t        s_stack_block_size { StackSize        };
+        static constexpr size_t s_default_heap_block_size {  4096U           };
+        static constexpr size_t     s_max_heap_block_size { MaxHeapBlockSize };
 
         alignas(std::max_align_t) uint8_t m_stack_block[s_stack_block_size]; // Fixed stack memory block.
 
-        size_t m_current_block_size; // Size of the current block.
-        size_t m_stack_write;        // Current write position for stack block.
-        size_t m_block_write;        // Current write position in the active block.
-        size_t m_active_block_index; // Index of the current active block.
+        size_t m_stack_write;         // Current write position for the stack block.
+        size_t m_block_write;         // Current write position in the active block.
+        size_t m_active_block_index;  // Index of the current active block.
+        size_t m_initial_block_width; // Width of the first allocated block.
+        size_t m_block_width;         // Size of the current block.
 
         std::vector<block> m_blocks;
 
@@ -87,20 +93,20 @@ namespace chdr {
 
                     auto& recycled_block = m_blocks[++m_active_block_index];
 
-                    m_current_block_size = recycled_block.size;
+                    m_block_width = recycled_block.size;
                     result = recycled_block.data;
                 }
                 else {                                             // Allocate a new, larger block:
 
-                    m_current_block_size = utils::max(
-                        s_initial_heap_block_size,
-                        utils::max(utils::min((m_current_block_size * 3U) / 2U, s_max_heap_block_size), _bytes)
+                    m_block_width = utils::max(
+                        m_initial_block_width,
+                        utils::max(utils::min((m_block_width * 3U) / 2U, s_max_heap_block_size), _bytes)
                     );
 
-                    result = static_cast<uint8_t*>(::operator new(m_current_block_size, static_cast<std::align_val_t>(_alignment)));
+                    result = static_cast<uint8_t*>(::operator new(m_block_width, static_cast<std::align_val_t>(_alignment)));
 
                     m_blocks.emplace_back(
-                        m_current_block_size,
+                        m_block_width,
                         _alignment,
                         result
                     );
@@ -162,20 +168,23 @@ namespace chdr {
          * @returns A pointer to the aligned memory block of the requested size. The caller must not manually free this memory.
          */
         [[nodiscard]] HOT void* do_allocate(const size_t _bytes, const size_t _alignment) override {
-
             assert(_bytes > 0U && "Allocation size must be greater than zero.");
 
-            uint8_t* aligned_ptr;
+            // Attempt to allocate from the stack block:
+            if (m_stack_write < StackSize) {
 
-            // Try allocating from the stack first:
-            if (m_stack_write + _bytes <= s_stack_block_size) {
-                aligned_ptr = reinterpret_cast<uint8_t*>(
-                    (reinterpret_cast<uintptr_t>(m_stack_block + m_stack_write) + _alignment - 1U) & ~(_alignment - 1U)
-                );
+                const size_t aligned_bytes = (_bytes + _alignment - 1U) & ~(_alignment - 1U);
 
-                m_stack_write = static_cast<size_t>(aligned_ptr - m_stack_block) + _bytes;
-                return aligned_ptr;
+                if (aligned_bytes < MaxStackAllocationSize && m_stack_write + aligned_bytes <= s_stack_block_size) {
+
+                    auto* aligned_ptr = m_stack_block + ((m_stack_write + _alignment - 1U) & ~(_alignment - 1U));
+                    m_stack_write = static_cast<size_t>(aligned_ptr - m_stack_block) + aligned_bytes;
+
+                    return aligned_ptr;
+                }
             }
+
+            uint8_t* aligned_ptr;
 
             // If stack block is exhausted, fall back to dynamic blocks:
             if (!m_blocks.empty()) {
@@ -250,12 +259,13 @@ namespace chdr {
          * @brief Constructs a memory pool.
          * @details Initialises a pooled memory resource.
          */
-        monotonic_pool() noexcept :
-            m_stack_block       (),
-            m_current_block_size(s_initial_heap_block_size),
-            m_stack_write       (0U),
-            m_block_write       (0U),
-            m_active_block_index(0U) {}
+        monotonic_pool(size_t _initial_block_width = s_default_heap_block_size) noexcept :
+            m_stack_block        (),
+            m_stack_write        (0U),
+            m_block_write        (0U),
+            m_active_block_index (0U),
+            m_initial_block_width(utils::min(_initial_block_width, s_max_heap_block_size)),
+            m_block_width        (m_initial_block_width) {}
 
         /**
          * @brief Destroys the object and releases all allocated memory.
@@ -281,18 +291,15 @@ namespace chdr {
         constexpr
 #endif
         monotonic_pool(monotonic_pool&& _other) noexcept :
-            m_stack_block       (                           ),
-            m_current_block_size(_other.m_current_block_size),
-            m_stack_write       (_other.m_stack_write       ),
-            m_block_write       (_other.m_block_write       ),
-            m_active_block_index(_other.m_active_block_index),
-            m_blocks            (std::move(_other.m_blocks) )
+            m_stack_block        (),
+            m_stack_write        (_other.m_stack_write        ),
+            m_block_write        (_other.m_block_write        ),
+            m_active_block_index (_other.m_active_block_index ),
+            m_initial_block_width(_other.m_initial_block_width),
+            m_block_width        (_other.m_block_width        ),
+            m_blocks             (std::move(_other.m_blocks)  )
         {
-            _other.m_stack_write        = 0U;
-            _other.m_current_block_size = s_initial_heap_block_size;
-            _other.m_active_block_index = 0U;
-            _other.m_block_write        = 0U;
-            _other.m_blocks.clear();
+            _other.release();
         }
 
 #if __cplusplus >= 202002L
@@ -304,17 +311,14 @@ namespace chdr {
 
                 cleanup();
 
-                m_current_block_size  = _other.m_current_block_size;
                 m_stack_write         = _other.m_stack_write;
                 m_block_write         = _other.m_block_write;
                 m_active_block_index  = _other.m_active_block_index;
+                m_initial_block_width = _other.m_initial_block_width;
+                m_block_width         = _other.m_block_width;
                 m_blocks              = std::move(_other.m_blocks);
 
-                _other.m_current_block_size = s_initial_heap_block_size;
-                _other.m_stack_write        = 0U;
-                _other.m_block_write        = 0U;
-                _other.m_active_block_index = 0U;
-                _other.m_blocks.clear();
+                _other.release();
             }
             return *this;
         }
@@ -355,7 +359,7 @@ namespace chdr {
          */
         void release() {
 
-            m_current_block_size = s_initial_heap_block_size;
+            m_block_width        = m_initial_block_width;
             m_stack_write        = 0U;
             m_block_write        = 0U;
             m_active_block_index = 0U;

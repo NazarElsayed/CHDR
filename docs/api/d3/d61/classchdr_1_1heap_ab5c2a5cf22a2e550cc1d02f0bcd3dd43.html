@@ -133,7 +133,7 @@ template&lt;typename T , typename Compare  = std::less&lt;T&gt;, typename Contai
 <p>This operator provides read-only access to the <code>T</code> element at the specified index within the heap's container. The internal structure assumes a one-based indexing system due to the heap's layout, so the user-provided index is incremented by one before accessing the container. It is intended for accessing heap elements in a constant time complexity.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">_index</td><td>The zero-based index of the element to access within the heap container. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">_index</td><td>The zero-based index of the element to access within the heap container. </td></tr>
   </table>
   </dd>
 </dl>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CHDR: chdr::mazes::grid&lt; coord_t, bool &gt;::contains</title>
+<title>CHDR: chdr::homogeneous_pool::homogeneous_pool</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -77,7 +77,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_a3ed565d1d388610ab92788cd13b3ecd4.html','../../'); initResizable(); });
+$(document).ready(function(){initNavTree('d7/d66/classchdr_1_1homogeneous__pool_ac7282a29216923fff4803e920bf80095.html','../../'); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -103,43 +103,53 @@ $(document).ready(function(){initNavTree('de/de1/classchdr_1_1mazes_1_1grid_3_01
 </div>
 
 <div class="contents">
-<a id="a3ed565d1d388610ab92788cd13b3ecd4" name="a3ed565d1d388610ab92788cd13b3ecd4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3ed565d1d388610ab92788cd13b3ecd4">&#9670;&#160;</a></span>contains() <span class="overload">[1/2]</span></h2>
+<a id="ac7282a29216923fff4803e920bf80095" name="ac7282a29216923fff4803e920bf80095"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac7282a29216923fff4803e920bf80095">&#9670;&#160;</a></span>homogeneous_pool()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename coord_t &gt; </div>
+template&lt;size_t StackSize = 4096U, size_t MaxStackAllocationSize = -1U, size_t MaxHeapBlockSize = 65536U&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr bool contains </td>
+          <td class="memname"><a class="el" href="../../d7/d66/classchdr_1_1homogeneous__pool.html">homogeneous_pool</a> </td>
           <td>(</td>
-          <td class="paramtype">const coord_t &amp;&#160;</td>
-          <td class="paramname"><em>_id</em></td><td>)</td>
-          <td> const</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>_initial_block_width</em> = <code>s_default_heap_block_size</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>_capacity</em> = <code>32U</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span><span class="mlabel">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Determines whether the provided coordinate is within the bounds of the grid. </p>
-<p>Evaluates the provided coordinate against the dimensions of the grid to ensure that all of its values fall within the grid's defined bounds. Each dimension of the coordinate is compared against the corresponding size of the grid.</p>
+<p>Constructs a memory pool. </p>
+<p>Initialises a pooled memory resource. The constructor allows configuring the initial block width and overall capacity of the pool.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">_id</td><td>The coordinate to be evaluated. It represents a multi-dimensional position in the grid.</td></tr>
+    <tr><td class="paramname">_initial_block_width</td><td>Defines the desired width for the memory blocks, in bytes. If it exceeds the maximum block width, it will be clamped automatically. Must be at least 2.</td></tr>
+    <tr><td class="paramname">_capacity</td><td>Specifies the number of blocks the pool should initially reserve. (optional, default value is <code>32U</code>). </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>true</code> if the provided coordinate lies within the bounds of the grid. Otherwise, <code>false</code>. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/d8a/grid_8hpp_source.html#l00688">688</a> of file <a class="el" href="../../dc/d8a/grid_8hpp_source.html">grid.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d5/d3c/homogeneous__pool_8hpp_source.html#l00288">288</a> of file <a class="el" href="../../d5/d3c/homogeneous__pool_8hpp_source.html">homogeneous_pool.hpp</a>.</p>
 
 </div>
 </div>

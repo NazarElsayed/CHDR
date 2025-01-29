@@ -667,7 +667,7 @@ namespace chdr {
          *          is incremented by one before accessing the container. It is intended for accessing heap elements in a constant
          *          time complexity.
          *
-         * @param _index The zero-based index of the element to access within the heap container.
+         * @param [in] _index The zero-based index of the element to access within the heap container.
          * @return const T& A constant reference to the element located at the specified index in the heap container.
          */
 #ifndef HEAP_SUPPRESS_EXCEPTION_WARNING
@@ -829,7 +829,9 @@ namespace chdr {
         [[maybe_unused, nodiscard]] constexpr reverse_iterator_t        rend()       noexcept { return c.rend(); }
         [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t  rend() const noexcept { return c.rend(); }
         [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t crend() const noexcept { return c.crend(); }
+
     };
+
 } //chdr
 
 #endif
