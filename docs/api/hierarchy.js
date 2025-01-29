@@ -12,6 +12,7 @@ var hierarchy =
     [ "existence_set< width_t >", "d6/db9/classchdr_1_1existence__set.html", null ],
     [ "flood< params_t >", "d7/da2/structchdr_1_1solvers_1_1flood.html", null ],
     [ "fstar< params_t >", "df/d41/structchdr_1_1solvers_1_1fstar.html", null ],
+    [ "graph< index_t, scalar_t >", "d9/dcb/classchdr_1_1mazes_1_1graph.html", null ],
     [ "grid< coord_t, weight_t >", "dd/de3/classchdr_1_1mazes_1_1grid.html", null ],
     [ "grid< coord_t, bool >", "de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4.html", null ],
     [ "heap< T, Compare, Container, Kd >", "d3/d61/classchdr_1_1heap.html", null ],
