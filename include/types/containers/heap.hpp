@@ -474,21 +474,21 @@ namespace chdr {
 
                 assert(i < size() && "(Out of Bounds) Item does not exist in Heap.");
 
+                auto value_to_insert = std::move(c[i]);
+
                 while (i > 1U) {
                     const auto p = i / Kd;
 
-                    if (comp(c[p], c[i])) {
-                        // Swap elements:
-                        auto tmp = std::move(c[i]);
+                    if (comp(c[p], value_to_insert)) {
                         c[i] = std::move(c[p]);
-                        c[p] = std::move(tmp);
-
                         i = p;
                     }
                     else {
                         break;
                     }
                 }
+
+                c[i] = std::move(value_to_insert);
             }
         }
 
@@ -506,36 +506,32 @@ namespace chdr {
             if (size() > 1U) {
 
                 auto i = index_of(_item);
-
                 assert(i < size() && "(Out of Bounds) Item does not exist in Heap.");
 
-                while (i > 1U) {
-                    const auto c0 = i * Kd;
-                    const auto cn = c0 + (Kd - 1U);
+                auto value_to_insert = std::move(c[i]);
 
-                    if (cn < c.size()) {
-                        size_t min{};
+                const auto c0 = i * Kd;
+                const auto cn = c0 + (Kd - 1U);
+
+                while (i > 1U) {
+
+                    if (c0 < c.size()) {
+                        size_t max = c0;
 
                         if constexpr (Kd == 2U) {
-                            min = (cn < c.size() && comp(c[c0], c[cn])) ? cn : c0;
+                            max = (cn < c.size() && comp(c[c0], c[cn])) ? cn : c0;
                         }
                         else {
-                            min = i;
-
                             for (auto j = c0; j <= cn && j < c.size(); ++j) {
-                                if (comp(c[min], c[j])) {
-                                    min = j;
+                                if (comp(c[max], c[j])) {
+                                    max = j;
                                 }
                             }
                         }
 
-                        if (comp(c[i], c[min])) {
-                            // Swap elements:
-                            auto tmp = std::move(c[i]);
-                            c[i] = std::move(c[min]);
-                            c[min] = std::move(tmp);
-
-                            i = min;
+                        if (comp(value_to_insert, c[max])) {
+                            c[i] = std::move(c[max]);
+                            i = max;
                         }
                         else {
                             break;
@@ -545,6 +541,8 @@ namespace chdr {
                         break;
                     }
                 }
+
+                c[i] = std::move(value_to_insert);
             }
         }
 
