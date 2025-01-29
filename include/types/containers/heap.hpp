@@ -174,7 +174,7 @@ namespace chdr {
          * @brief Retrieves the number of elements currently present in the heap.
          * @return size_t The count of elements in the heap, excluding the reserved element.
          */
-        [[maybe_unused, nodiscard]] constexpr size_t size() const noexcept { return utils::max(c.size(), 1U) - 1U; }
+        [[maybe_unused, nodiscard]] constexpr size_t size() const noexcept { return utils::max(c.size(), static_cast<size_t>(1U)) - static_cast<size_t>(1U); }
 
         /**
          * @brief Retrieves the maximum number of elements that can be held by the container without reallocating memory.

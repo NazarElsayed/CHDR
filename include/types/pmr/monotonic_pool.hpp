@@ -143,24 +143,6 @@ namespace chdr {
             }
         }
 
-        /**
-         * @brief Destroys the object and releases all allocated memory.
-         *
-         * @details The destructor ensures that any memory managed by the pool
-         *          is cleaned up properly by invoking the internal `cleanup()` method.
-         *
-         * @warning Manual destruction is not recommended and may result in undefined behaviour.
-         *          Consider using `release()` or `reset()` instead.
-         *
-         * @see release()
-         * @see reset()
-         */
-        [[deprecated("Manual destruction is not recommended and may result in undefined behaviour. "
-                     "Consider using release() or reset() instead.")]]
-        ~monotonic_pool() noexcept {
-            cleanup();
-        }
-
     protected:
 
         /**
@@ -240,7 +222,6 @@ namespace chdr {
          *             Must be a power of two. Currently unused.
          */
         HOT void do_deallocate(void* /*__p*/, const size_t /*__bytes*/, size_t /*__alignment*/) override {
-            assert(_p != nullptr && "Cannot deallocate null pointer.");
             // No-op.
         }
 
@@ -275,6 +256,22 @@ namespace chdr {
             m_stack_write       (0U),
             m_block_write       (0U),
             m_active_block_index(0U) {}
+
+        /**
+         * @brief Destroys the object and releases all allocated memory.
+         *
+         * @details The destructor ensures that any memory managed by the pool
+         *          is cleaned up properly by invoking the internal `cleanup()` method.
+         *
+         * @warning Manual destruction is not recommended and may result in undefined behaviour.
+         *          Consider using `release()` or `reset()` instead.
+         *
+         * @see release()
+         * @see reset()
+         */
+        ~monotonic_pool() noexcept {
+            cleanup();
+        }
 
         constexpr monotonic_pool           (const monotonic_pool&) = delete;
         constexpr monotonic_pool& operator=(const monotonic_pool&) = delete;

@@ -167,25 +167,7 @@ namespace chdr {
                 ::operator delete(item.data, static_cast<std::align_val_t>(m_alignment));
             }
         }
-
-        /**
-         * @brief Destroys the object and releases all allocated memory.
-         *
-         * @details The destructor ensures that any memory managed by the pool
-         *          is cleaned up properly by invoking the internal `cleanup()` method.
-         *
-         * @warning Manual destruction is not recommended and may result in undefined behaviour.
-         *          Consider using `release()` or `reset()` instead.
-         *
-         * @see release()
-         * @see reset()
-         */
-        [[deprecated("Manual destruction is not recommended and may result in undefined behaviour. "
-                     "Consider using release() or reset() instead.")]]
-        ~homogeneous_pool() override {
-            cleanup();
-        }
-
+    
     protected:
 
         /**
@@ -308,6 +290,22 @@ namespace chdr {
 
             m_blocks.reserve(_capacity);
               m_free.reserve(_capacity);
+        }
+
+        /**
+         * @brief Destroys the object and releases all allocated memory.
+         *
+         * @details The destructor ensures that any memory managed by the pool
+         *          is cleaned up properly by invoking the internal `cleanup()` method.
+         *
+         * @warning Manual destruction is not recommended and may result in undefined behaviour.
+         *          Consider using `release()` or `reset()` instead.
+         *
+         * @see release()
+         * @see reset()
+         */
+        ~homogeneous_pool() override {
+            cleanup();
         }
 
         constexpr homogeneous_pool           (const homogeneous_pool&) = delete;

@@ -198,24 +198,6 @@ namespace chdr {
             }
         }
 
-        /**
-         * @brief Destroys the object and releases all allocated memory.
-         *
-         * @details The destructor ensures that any memory managed by the pool
-         *          is cleaned up properly by invoking the internal `cleanup()` method.
-         *
-         * @warning Manual destruction is not recommended and may result in undefined behaviour.
-         *          Consider using `release()` or `reset()` instead.
-         *
-         * @see release()
-         * @see reset()
-         */
-        [[deprecated("Manual destruction is not recommended and may result in undefined behaviour. "
-                     "Consider using release() or reset() instead.")]]
-        ~heterogeneous_pool() override {
-            cleanup();
-        }
-
     protected:
 
         /**
@@ -361,6 +343,22 @@ namespace chdr {
             assert(_initial_block_width >= 2U && "Capacity must be at least 2.");
 
             m_blocks.reserve(_capacity);
+        }
+
+        /**
+         * @brief Destroys the object and releases all allocated memory.
+         *
+         * @details The destructor ensures that any memory managed by the pool
+         *          is cleaned up properly by invoking the internal `cleanup()` method.
+         *
+         * @warning Manual destruction is not recommended and may result in undefined behaviour.
+         *          Consider using `release()` or `reset()` instead.
+         *
+         * @see release()
+         * @see reset()
+         */
+        ~heterogeneous_pool() override {
+            cleanup();
         }
 
         constexpr heterogeneous_pool           (const heterogeneous_pool&) = delete;
