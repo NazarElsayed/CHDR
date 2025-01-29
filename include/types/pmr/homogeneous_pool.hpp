@@ -9,6 +9,10 @@
 #ifndef CHDR_HOMOGENEOUS_POOL_HPP
 #define CHDR_HOMOGENEOUS_POOL_HPP
 
+/**
+ * @file homogeneous_pool.hpp
+ */
+
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
@@ -22,7 +26,26 @@
 
 namespace chdr {
 
-    class homogeneous_pool : public std::pmr::memory_resource {
+    /**
+     * @nosubgrouping
+     * @class homogeneous_pool
+     * @brief A pooled memory resource for managing homogeneous memory allocations.
+     *
+     * @details Provides efficient memory management by for situations where allocations
+     *          are identical in size and alignment.
+     *          It supports pre-allocated stack memory and dynamic memory expansion.
+     *          Allocations are performed in blocks, reducing the overhead of frequent
+     *          dynamic memory allocation.
+     *
+     *          The primary features include:
+     *          - Support for stack allocation.
+     *          - Allocation and deallocation of memory with alignment guarantees.
+     *          - Block reuse through a free list.
+     *
+     * @remarks Inherits from `std::pmr::memory_resource` to integrate with the
+     *          PMR (Polymorphic Memory Resource) framework provided in the C++ Standard Library.
+     */
+    class homogeneous_pool final : public std::pmr::memory_resource {
     
     private:
 
@@ -132,12 +155,12 @@ namespace chdr {
          *
          * @details Iterates over all allocated blocks in the memory pool and deallocates
          *          their associated memory. This ensures that all memory resources used
-         *          by the `monotonic_pool` are released. The function is designed to
-         *          handle memory in alignment-sensitive contexts, guaranteeing proper
-         *          alignment for each block as it is deallocated.
+         *          by the pool are released. The function is designed to handle memory
+         *          in alignment-sensitive contexts, guaranteeing proper alignment for
+         *          each block as it is deallocated.
          *
-         *          It is intended to be called as part of the pool's destruction or
-         *          reset mechanisms.
+         *          It is intended to be called as part of the pool's release and
+         *          destruction mechanisms.
          */
         void cleanup() noexcept {
             for (const auto& item : m_blocks) {
@@ -145,8 +168,47 @@ namespace chdr {
             }
         }
 
+        /**
+         * @brief Destroys the object and releases all allocated memory.
+         *
+         * @details The destructor ensures that any memory managed by the pool
+         *          is cleaned up properly by invoking the internal `cleanup()` method.
+         *
+         * @warning Manual destruction is not recommended and may result in undefined behaviour.
+         *          Consider using `release()` or `reset()` instead.
+         *
+         * @see release()
+         * @see reset()
+         */
+        [[deprecated("Manual destruction is not recommended and may result in undefined behaviour. "
+                     "Consider using release() or reset() instead.")]]
+        ~homogeneous_pool() override {
+            cleanup();
+        }
+
     protected:
 
+        /**
+         * @brief Allocates memory with the specified size and alignment.
+         *
+         * @details Implements the allocation interface of `std::pmr::memory_resource`.
+         *          This method attempts to allocate the requested memory in the following order:
+         *          1. From the internal fixed-sized stack block if sufficient space is available.
+         *          2. If the stack buffer does not have enough space to accommodate the allocation,
+         *             it searches for a free block of memory that matches the allocation requirements.
+         *          3. If no suitable free block is found, it attempts to expand the memory pool to fulfil the request.\n\n
+         *          If none of the above options can satisfy the request, an exception of type `std::bad_alloc` is thrown.
+         *          Alignment is guaranteed for both the stack and dynamic allocations as per the requested alignment.
+         *
+         * @param [in] _bytes The size of the memory block to allocate, in bytes. Must be greater than zero.
+         * @param [in] _alignment The alignment constraint for the start of the allocated memory block.
+         *                   Must be a power of two.
+         *
+         * @warning All subsequent calls to this function must use the same value for _bytes and _alignment.
+         *          Not doing so is undefined behaviour.
+         *
+         * @return A pointer to the beginning of the allocated memory block.
+         */
         [[nodiscard]] HOT void* do_allocate(const size_t _bytes, const size_t _alignment) override {
             assert(_bytes > 0U && "Allocation size must be greater than zero.");
 
@@ -178,18 +240,63 @@ namespace chdr {
             return aligned_ptr;
         }
 
-        HOT void do_deallocate(void* _p, size_t, size_t) override {
+        /**
+         * @brief Deallocates memory and returns it to the pool for future use.
+         *
+         * @details This method is used to release a previously allocated chunk of memory and store
+         *          it in the internal free list for reuse.
+         *
+         * @param [in] _p Pointer to the memory block to be deallocated. Must not be null.
+         * @param [in] _size Size of the memory block to be deallocated, in bytes. Currently unused.
+         * @param [in] _alignment Alignment constraint for the start of the allocated memory block.
+         *                 Must be a power of two. Currently unused.
+         *
+         * @remarks The deallocation does not free the memory back to the system but recycles it
+         *          internally for subsequent allocations.
+         *
+         * @warning Calling this function with a nullptr, or attempting to release memory not
+         *          owned by the pool is undefined behaviour.
+         */
+        HOT void do_deallocate(void* _p, const size_t /*__bytes*/, size_t /*__alignment*/) override {
             assert(_p != nullptr && "Cannot deallocate null pointer.");
 
             m_free.push_back(static_cast<uint8_t*>(_p));
         }
 
+        /**
+         * @brief Compares the equality of two memory resources.
+         *
+         * @details This method overrides the `do_is_equal` function of the `std::pmr::memory_resource` interface.
+         *          It determines if the specified memory resource is the same as the current instance.
+         *
+         * @param _other [in] A reference to another `memory_resource` object to compare against.
+         *
+         * @returns `true` if the provided memory resource is the same instance as this one; `false` otherwise.
+         */
         [[nodiscard]] bool do_is_equal(const memory_resource& _other) const noexcept override {
             return this == &_other;
         }
 
     public:
 
+        /**
+         * @name Constructors
+         * @{
+         */
+
+        /**
+         * @brief Constructs a memory pool.
+         *
+         * @details Initialises a pooled memory resource.
+         *          The constructor allows configuring the initial block width and overall capacity of the pool.
+         *
+         * @param _initial_block_width Defines the desired width for the memory blocks, in bytes.
+         *                             If it exceeds the maximum block width, it will be clamped automatically.
+         *                             Must be at least 2.
+         *
+         * @param _capacity Specifies the number of blocks the pool should initially reserve.
+         *                  (optional, default value is `32U`).
+         */
         explicit homogeneous_pool(size_t _initial_block_width = s_default_block_width, size_t _capacity = 32U) noexcept :
             m_stack_block        (),
             m_alignment          (0U),
@@ -197,22 +304,10 @@ namespace chdr {
             m_initial_block_width(utils::min(_initial_block_width, s_max_block_width)),
             m_block_width        (m_initial_block_width)
         {
-            assert(_capacity >= 2U && "Capacity must be at least 2.");
+            assert(_initial_block_width >= 2U && "Capacity must be at least 2.");
 
             m_blocks.reserve(_capacity);
               m_free.reserve(_capacity);
-        }
-
-        /**
-         * @brief Destroys the object and releases all allocated memory.
-         *
-         * @details The destructor ensures that any memory managed by the pool
-         *          is cleaned up properly by invoking the internal `cleanup()` method.
-         *
-         * @warning Manually destruction is not recommended and may result in undefined behaviour.
-         */
-        ~homogeneous_pool() override {
-            cleanup();
         }
 
         constexpr homogeneous_pool           (const homogeneous_pool&) = delete;
@@ -260,6 +355,10 @@ namespace chdr {
         }
 
         /**
+         * @}
+         */
+
+        /**
          * @brief Resets the memory pool state to its initial configuration.
          *
          * @details Resets internal counters and indices, restoring the pool to a
@@ -305,9 +404,8 @@ namespace chdr {
          * @brief Releases all memory resources and resets the internal state of the memory pool.
          *
          * @details This method reinitialises the memory pool to its default state by resetting
-         *          all internal bookkeeping measures, such as current block size, stack write position,
-         *          block write position, and active block index. It also cleans up any allocated blocks
-         *          and deallocates associated memory resources.
+         *          all internal bookkeeping measures.
+         *          It also cleans up any allocated blocks and deallocates associated memory resources.
          *
          *          The operation is designed to deallocate and clear the entire pool, making it ready
          *          for reuse without the need to destroy the object.

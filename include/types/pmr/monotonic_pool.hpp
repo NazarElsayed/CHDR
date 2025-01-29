@@ -27,12 +27,14 @@ namespace chdr {
      * @class monotonic_pool
      * @brief A pooled memory resource that manages memory blocks in a monotonic allocation scheme.
      *
-     * @details Implements `std::pmr::memory_resource` and provides a pool-based memory allocation mechanism.
-     *          It is designed for scenarios where multiple allocations are performed, but the memory is freed
-     *          all at once rather than per individual allocation. Allocations are performed in blocks, reducing
+     * @details Designed for scenarios where multiple allocations are performed, but the memory is freed all
+     *          at once rather than per individual allocation. Allocations are performed in blocks, reducing
      *          the overhead of frequent dynamic memory allocation.
+     *
+     * @remarks Inherits from `std::pmr::memory_resource` to integrate with the
+     *          PMR (Polymorphic Memory Resource) framework provided in the C++ Standard Library.
      */
-    class monotonic_pool : public std::pmr::memory_resource {
+    class monotonic_pool final : public std::pmr::memory_resource {
 
         struct block final {
 
@@ -128,12 +130,12 @@ namespace chdr {
          *
          * @details Iterates over all allocated blocks in the memory pool and deallocates
          *          their associated memory. This ensures that all memory resources used
-         *          by the `monotonic_pool` are released. The function is designed to
-         *          handle memory in alignment-sensitive contexts, guaranteeing proper
-         *          alignment for each block as it is deallocated.
+         *          by the pool are released. The function is designed to handle memory
+         *          in alignment-sensitive contexts, guaranteeing proper alignment for
+         *          each block as it is deallocated.
          *
-         *          It is intended to be called as part of the pool's destruction or
-         *          reset mechanisms.
+         *          It is intended to be called as part of the pool's release and
+         *          destruction mechanisms.
          */
         void cleanup() noexcept {
             for (const auto& item : m_blocks) {
@@ -141,14 +143,32 @@ namespace chdr {
             }
         }
 
+        /**
+         * @brief Destroys the object and releases all allocated memory.
+         *
+         * @details The destructor ensures that any memory managed by the pool
+         *          is cleaned up properly by invoking the internal `cleanup()` method.
+         *
+         * @warning Manual destruction is not recommended and may result in undefined behaviour.
+         *          Consider using `release()` or `reset()` instead.
+         *
+         * @see release()
+         * @see reset()
+         */
+        [[deprecated("Manual destruction is not recommended and may result in undefined behaviour. "
+                     "Consider using release() or reset() instead.")]]
+        ~monotonic_pool() noexcept {
+            cleanup();
+        }
+
     protected:
 
         /**
          * @brief Allocates memory with the specified size and alignment.
          *
-         * @details Implements the allocation interface of `std::pmr::memory_resource` for the `monotonic_pool` class.
+         * @details Implements the allocation interface of `std::pmr::memory_resource`.
          *          This method attempts to allocate the requested memory in the following order:
-         *          1. From the internal fixed-sized stack block (`m_stack_block`) if sufficient space is available.
+         *          1. From the internal fixed-sized stack block if sufficient space is available.
          *          2. From the current active dynamic block if it has sufficient remaining capacity.
          *          3. By invoking the `expand` function, which creates a new block to fulfil the allocation request.\n\n
          *          If none of the above options can satisfy the request, an exception of type `std::bad_alloc` is thrown.
@@ -158,8 +178,6 @@ namespace chdr {
          * @param _alignment The alignment requirement for the memory to allocate. Must be a power of `2`.
          *
          * @returns A pointer to the aligned memory block of the requested size. The caller must not manually free this memory.
-         *
-         * @throws std::bad_alloc If no memory block can be allocated for the requested size and alignment.
          */
         [[nodiscard]] HOT void* do_allocate(const size_t _bytes, const size_t _alignment) override {
 
@@ -216,16 +234,18 @@ namespace chdr {
          *          deallocation, this implementation is a no-operation function. Any memory allocated
          *          by this resource will only be freed upon resetting or releasing the entire pool.
          *
-         * @param __p [in] Pointer to the memory block to be deallocated. This parameter is ignored.
-         * @param __bytes Size of the memory block to be deallocated, in bytes. This parameter is ignored.
-         * @param __alignment Alignment of the memory block. This parameter is ignored.
+         * @param [in] _p Pointer to the memory block to be deallocated. Must not be null. Currently unused.
+         * @param [in] _bytes Size of the memory block to be deallocated, in bytes. Currently unused.
+         * @param [in] _alignment Alignment constraint for the start of the allocated memory block.
+         *             Must be a power of two. Currently unused.
          */
         HOT void do_deallocate(void* /*__p*/, const size_t /*__bytes*/, size_t /*__alignment*/) override {
+            assert(_p != nullptr && "Cannot deallocate null pointer.");
             // No-op.
         }
 
         /**
-         * @brief Compares the equality of two memory resource instances.
+         * @brief Compares the equality of two memory resources.
          *
          * @details This method overrides the `do_is_equal` function of the `std::pmr::memory_resource` interface.
          *          It determines if the specified memory resource is the same as the current instance.
@@ -246,7 +266,8 @@ namespace chdr {
          */
 
         /**
-         * @brief Constructs the pool with default members.
+         * @brief Constructs a memory pool.
+         * @details Initialises a pooled memory resource.
          */
         monotonic_pool() noexcept :
             m_stack_block       (),
@@ -254,20 +275,6 @@ namespace chdr {
             m_stack_write       (0U),
             m_block_write       (0U),
             m_active_block_index(0U) {}
-
-        /**
-         * @brief Destroys the object and releases all allocated memory.
-         *
-         * @details The destructor ensures that any memory managed by the pool
-         *          is cleaned up properly by invoking the internal `cleanup()` method.
-         *
-         * @warning Manually destruction is not recommended and may result in undefined behaviour.
-         */
-        [[deprecated("Manual destruction is not recommended and may result in undefined behaviour. "
-                     "Use monotonic_pool::release() or monotonic_pool::reset() instead.")]]
-        ~monotonic_pool() noexcept {
-            cleanup();
-        }
 
         constexpr monotonic_pool           (const monotonic_pool&) = delete;
         constexpr monotonic_pool& operator=(const monotonic_pool&) = delete;
@@ -338,9 +345,8 @@ namespace chdr {
          * @brief Releases all memory resources and resets the internal state of the memory pool.
          *
          * @details This method reinitialises the memory pool to its default state by resetting
-         *          all internal bookkeeping measures, such as current block size, stack write position,
-         *          block write position, and active block index. It also cleans up any allocated blocks
-         *          and deallocates associated memory resources.
+         *          all internal bookkeeping measures.
+         *          It also cleans up any allocated blocks and deallocates associated memory resources.
          *
          *          The operation is designed to deallocate and clear the entire pool, making it ready
          *          for reuse without the need to destroy the object.

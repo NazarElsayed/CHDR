@@ -76,9 +76,8 @@ namespace chdr {
      *          reduce the efficiency of the existence set.
      *          Always consider the execution context of the program, and make adjustments
      *          to fit the needs of your target platform.
-     * @note This class uses polymorphic memory resources (`std::pmr::memory_resource`)
-     *       to provide fine-grained control over memory allocation.
-     * @note `existence_set` follows an STL-like design and supports iterators.
+     * @note This class uses polymorphic memory resources (`std::pmr::memory_resource`).
+     * @note Follows an STL-like design and supports iterators.
      */
     template <typename width_t = char>
     class existence_set {

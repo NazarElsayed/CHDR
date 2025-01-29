@@ -138,8 +138,8 @@ $(document).ready(function(){initNavTree('df/db2/classchdr_1_1monotonic__pool_a4
 </div><div class="memdoc">
 
 <p>Allocates memory with the specified size and alignment. </p>
-<p>Implements the allocation interface of <code>std::pmr::memory_resource</code> for the <code><a class="el" href="../../df/db2/classchdr_1_1monotonic__pool.html" title="A pooled memory resource that manages memory blocks in a monotonic allocation scheme.">monotonic_pool</a></code> class. This method attempts to allocate the requested memory in the following order:</p><ol type="1">
-<li>From the internal fixed-sized stack block (<code>m_stack_block</code>) if sufficient space is available.</li>
+<p>Implements the allocation interface of <code>std::pmr::memory_resource</code>. This method attempts to allocate the requested memory in the following order:</p><ol type="1">
+<li>From the internal fixed-sized stack block if sufficient space is available.</li>
 <li>From the current active dynamic block if it has sufficient remaining capacity.</li>
 <li>By invoking the <code>expand</code> function, which creates a new block to fulfil the allocation request.<br  />
 <br  />
@@ -152,15 +152,9 @@ $(document).ready(function(){initNavTree('df/db2/classchdr_1_1monotonic__pool_a4
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A pointer to the aligned memory block of the requested size. The caller must not manually free this memory.</dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname">std::bad_alloc</td><td>If no memory block can be allocated for the requested size and alignment. </td></tr>
-  </table>
-  </dd>
-</dl>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to the aligned memory block of the requested size. The caller must not manually free this memory. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/monotonic__pool_8hpp_source.html#l00164">164</a> of file <a class="el" href="../../d4/d99/monotonic__pool_8hpp_source.html">monotonic_pool.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/monotonic__pool_8hpp_source.html#l00182">182</a> of file <a class="el" href="../../d4/d99/monotonic__pool_8hpp_source.html">monotonic_pool.hpp</a>.</p>
 
 </div>
 </div>

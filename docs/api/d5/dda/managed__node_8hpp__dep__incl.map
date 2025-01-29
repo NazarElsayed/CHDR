@@ -1,17 +1,11 @@
 <map id="managed_node.hpp" name="managed_node.hpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="119,5,238,28"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="111,5,230,28"/>
 <area shape="rect" id="Node000002" href="$dc/da9/astar_8hpp.html" title=" " alt="" coords="5,76,72,99"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="147,36,61,78,58,74,145,32"/>
-<area shape="rect" id="Node000003" href="$d9/d96/chdr_8hpp.html" title=" " alt="" coords="147,147,210,169"/>
-<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="160,40,147,57,137,77,136,96,143,114,168,145,164,148,139,117,131,97,132,75,143,54,156,37"/>
-<area shape="rect" id="Node000004" href="$de/d94/gbfs_8hpp_source.html" title=" " alt="" coords="147,76,210,99"/>
-<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="181,41,181,76,176,76,176,41"/>
-<area shape="rect" id="Node000005" href="$d4/df2/gdfs_8hpp_source.html" title=" " alt="" coords="234,76,297,99"/>
-<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="204,34,254,74,251,78,201,39"/>
-<area shape="rect" id="Node000006" href="$d1/def/gstar_8hpp_source.html" title=" " alt="" coords="321,76,388,99"/>
-<area shape="poly" id="edge8_Node000001_Node000006" title=" " alt="" coords="218,30,330,73,328,78,216,35"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="73,102,159,144,157,149,70,107"/>
-<area shape="poly" id="edge5_Node000004_Node000003" title=" " alt="" coords="181,112,181,147,176,147,176,112"/>
-<area shape="poly" id="edge7_Node000005_Node000003" title=" " alt="" coords="243,109,193,149,190,144,240,105"/>
-<area shape="poly" id="edge9_Node000006_Node000003" title=" " alt="" coords="317,106,206,149,204,144,315,101"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="140,37,59,78,57,74,138,32"/>
+<area shape="rect" id="Node000003" href="$de/d94/gbfs_8hpp_source.html" title=" " alt="" coords="97,76,159,99"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="159,41,137,77,132,75,155,38"/>
+<area shape="rect" id="Node000004" href="$d4/df2/gdfs_8hpp_source.html" title=" " alt="" coords="183,76,246,99"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="187,38,210,74,206,77,182,41"/>
+<area shape="rect" id="Node000005" href="$d1/def/gstar_8hpp_source.html" title=" " alt="" coords="271,76,337,99"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="204,32,285,74,283,78,201,37"/>
 </map>

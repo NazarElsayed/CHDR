@@ -147,14 +147,14 @@ $(document).ready(function(){initNavTree('df/db2/classchdr_1_1monotonic__pool_a3
 <p>This method is overridden to comply with the <code>std::pmr::memory_resource</code> interface. As the <code><a class="el" href="../../df/db2/classchdr_1_1monotonic__pool.html" title="A pooled memory resource that manages memory blocks in a monotonic allocation scheme.">monotonic_pool</a></code> only supports monotonic allocation without individual deallocation, this implementation is a no-operation function. Any memory allocated by this resource will only be freed upon resetting or releasing the entire pool.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">__p</td><td>[in] Pointer to the memory block to be deallocated. This parameter is ignored. </td></tr>
-    <tr><td class="paramname">__bytes</td><td>Size of the memory block to be deallocated, in bytes. This parameter is ignored. </td></tr>
-    <tr><td class="paramname">__alignment</td><td>Alignment of the memory block. This parameter is ignored. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">_p</td><td>Pointer to the memory block to be deallocated. Must not be null. Currently unused. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">_bytes</td><td>Size of the memory block to be deallocated, in bytes. Currently unused. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">_alignment</td><td>Alignment constraint for the start of the allocated memory block. Must be a power of two. Currently unused. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/monotonic__pool_8hpp_source.html#l00223">223</a> of file <a class="el" href="../../d4/d99/monotonic__pool_8hpp_source.html">monotonic_pool.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/monotonic__pool_8hpp_source.html#l00242">242</a> of file <a class="el" href="../../d4/d99/monotonic__pool_8hpp_source.html">monotonic_pool.hpp</a>.</p>
 
 </div>
 </div>

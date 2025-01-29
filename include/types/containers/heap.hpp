@@ -42,9 +42,8 @@ namespace chdr {
      * @tparam Container The type of container used to store the heap elements (defaulted to a PMR vector).
      * @tparam Compare A callable object that defines the order relationship between elements.
      * @tparam Kd The dimension of the heap (defaulted to binary, i.e., Kd=2). Must be ≥ 2.
-     * @note This class uses polymorphic memory resources (`std::pmr::memory_resource`)
-     *       to provide fine-grained control over memory allocation.
-     * @note `heap` follows an STL-like design and supports iterators.
+     * @note This class uses polymorphic memory resources (`std::pmr::memory_resource`).
+     * @note Follows an STL-like design and supports iterators.
      */
     template <typename T, typename Compare = std::less<T>, typename Container = std::pmr::vector<T>, size_t Kd = 2U>
     class heap {
@@ -622,7 +621,7 @@ namespace chdr {
          *
          * @param _index The zero-based index of the element to retrieve.
          * @return const T& A constant reference to the element at the specified index within the heap container.
-         * @see operator[]
+         * @see operator[]()
          */
         [[maybe_unused, nodiscard]] constexpr const T& at(size_t _index) const {
             return c.at(_index + 1U);

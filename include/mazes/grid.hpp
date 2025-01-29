@@ -263,7 +263,7 @@ namespace chdr::mazes {
          * @warning If the specified coordinate is out of bounds, calling this function is undefined behaviour.
          * @return Node at a specified coordinate within the grid.
          * @see contains()
-         * @see operator[]
+         * @see operator[]()
          */
         [[nodiscard]] constexpr const auto& at(const coord_t& _id) const noexcept { return at(utils::to_1d(_id, m_size)); }
 
@@ -273,7 +273,7 @@ namespace chdr::mazes {
          * @warning If the specified index is out of bounds, calling this function is undefined behaviour.
          * @return Node at a specified index within the grid.
          * @see contains()
-         * @see operator[]
+         * @see operator[]()
          */
         [[nodiscard]] HOT constexpr const auto& at(size_t _id) const noexcept {
             assert(contains(_id) && "Out of bounds access.");
@@ -657,7 +657,7 @@ namespace chdr::mazes {
          * @warning If the specified coordinate is out of bounds, calling this function is undefined behaviour.
          * @return Node at a specified coordinate within the grid.
          * @see contains()
-         * @see operator[]
+         * @see operator[]()
          */
         [[nodiscard]] constexpr auto at(const coord_t& _id) const { return at(utils::to_1d(_id, m_size)); }
 
@@ -667,7 +667,7 @@ namespace chdr::mazes {
          * @warning If the specified index is out of bounds, calling this function is undefined behaviour.
          * @return Node at a specified index within the grid.
          * @see contains()
-         * @see operator[]
+         * @see operator[]()
          */
         [[nodiscard]] HOT constexpr weighted_node<bool> at(size_t _id) const {
             assert(contains(_id) && "Out of bounds access.");

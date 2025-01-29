@@ -43,7 +43,7 @@ For guides, example implementations, and step-by-step tutorials on how to use th
 
 **Important Notice:**
 
-CHDR is currently in pre-release. During this time the library may undergo major changes, and you should expect a higher-than-usual occurrence of stability issues if you choose to use it at this time. Our first major release is pending, and we will publish it once we are satisfied that it meets our high standards of quality, stability, and performance.
+*CHDR is currently in pre-release. The library may undergo major changes, and you should expect a higher-than-usual occurrence of stability issues if you choose to use it at this time. Our first major release is pending, and we will publish it once we are satisfied that it meets our high standards of quality, stability, and performance.*
 
 ## Contributing
 
