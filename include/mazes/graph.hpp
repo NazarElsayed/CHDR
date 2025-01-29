@@ -439,35 +439,57 @@ namespace chdr::mazes {
             }
         }
 
-        [[maybe_unused]] void print() const noexcept {
-
-            for (const auto& [node, edges]: m_entries) {
-
-                std::cout << "Node " << node << ":\n";
-
-                for (const auto& edge: edges) {
-                    std::cout << "  -> (" << edge.first << ", " << edge.second << ")\n";
-                }
-            }
-        }
-
+        /**
+         * Retrieves the neighbours associated with a vertex in the graph.
+         *
+         * This method fetches a constant reference to the neighbours of the vertex with the given identifier.
+         *
+         * @param _id [in] The index of the node whose neighbours are to be retrieved.
+         * @return A constant reference to the neighbours associated with the specified node ID.
+         * @warning If the requested node does not exist within the graph, calling this function invokes undefined behaviour.
+         * @see contains()
+         */
         [[maybe_unused, nodiscard]] HOT constexpr const neighbours_t& get_neighbours(index_t _id) const {
             assert(contains(_id) && "Node with the specified ID does not exist in the graph.");
             return m_entries.find(_id)->second;
         }
 
+        /**
+         * Checks if the specified vertex exists within the graph.
+         *
+         * @param [in] _id Identifier of the vertex to search for.
+         * @return `true` if the vertex exists, `false` otherwise.
+         */
         [[maybe_unused, nodiscard]] HOT constexpr bool contains(index_t _id) const noexcept {
             return m_entries.find(_id) != m_entries.end();
         }
 
+        /**
+         * @brief Returns the total number of vertices in the graph.
+         *
+         * @return The number of vertices within the graph.
+         */
         [[maybe_unused, nodiscard]] constexpr size_t count() const noexcept {
             return m_entries.size();
         }
 
+        /**
+         * @brief Clears all entries from the graph.
+         *
+         * @details Removes all elements from the internal entries container, leaving the graph empty.
+         */
         [[maybe_unused]] void clear() noexcept {
             m_entries.clear();
         }
 
+        /**
+         * @brief Retrieves the vertex at a specified index.
+         * @param _id Index of the vertex to retrieve.
+         * @warning If the specified index is out of bounds, calling this function is undefined behaviour.
+         * @return Vertex at a specified index within the grid.
+         * @see contains()
+         * @see at()
+         */
         [[nodiscard]] HOT constexpr const id_node<index_t>& operator[](size_t _id) const noexcept {
             return at(_id);
         }

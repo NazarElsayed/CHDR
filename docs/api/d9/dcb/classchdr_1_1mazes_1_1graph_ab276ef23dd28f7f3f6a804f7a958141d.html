@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CHDR: chdr::mazes::graph::at</title>
+<title>CHDR: chdr::mazes::graph::contains</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -77,7 +77,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('d9/dcb/classchdr_1_1mazes_1_1graph_a997cc2471f01562028c11abd6d463160.html','../../'); initResizable(); });
+$(document).ready(function(){initNavTree('d9/dcb/classchdr_1_1mazes_1_1graph_ab276ef23dd28f7f3f6a804f7a958141d.html','../../'); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -103,8 +103,8 @@ $(document).ready(function(){initNavTree('d9/dcb/classchdr_1_1mazes_1_1graph_a99
 </div>
 
 <div class="contents">
-<a id="a997cc2471f01562028c11abd6d463160" name="a997cc2471f01562028c11abd6d463160"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a997cc2471f01562028c11abd6d463160">&#9670;&#160;</a></span>at()</h2>
+<a id="ab276ef23dd28f7f3f6a804f7a958141d" name="ab276ef23dd28f7f3f6a804f7a958141d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab276ef23dd28f7f3f6a804f7a958141d">&#9670;&#160;</a></span>contains()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -115,47 +115,35 @@ template&lt;typename index_t , typename scalar_t &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const auto &amp; at </td>
+          <td class="memname">bool contains </td>
           <td>(</td>
-          <td class="paramtype">const index_t &amp;&#160;</td>
+          <td class="paramtype">index_t&#160;</td>
           <td class="paramname"><em>_id</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Retrieves the vertex at a specified index. </p>
+<p>Checks if the specified vertex exists within the graph.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">_id</td><td>Index of the vertex to retrieve. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">_id</td><td>Identifier of the vertex to search for. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section warning"><dt>Warning</dt><dd>If the specified index is out of bounds, calling this function is undefined behaviour. </dd></dl>
-<dl class="section return"><dt>Returns</dt><dd>Vertex at a specified index within the grid. </dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="../../d9/dcb/classchdr_1_1mazes_1_1graph_ab276ef23dd28f7f3f6a804f7a958141d.html#ab276ef23dd28f7f3f6a804f7a958141d">contains()</a> </dd>
-<dd>
-<a class="el" href="../../d9/dcb/classchdr_1_1mazes_1_1graph_ac7b04f1f94182c3fa0db1d1449eeb3a9.html#ac7b04f1f94182c3fa0db1d1449eeb3a9" title="Retrieves the vertex at a specified index.">operator[]()</a> </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if the vertex exists, <code>false</code> otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d9/de9/graph_8hpp_source.html#l00287">287</a> of file <a class="el" href="../../d9/de9/graph_8hpp_source.html">graph.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d9/de9/graph_8hpp_source.html#l00463">463</a> of file <a class="el" href="../../d9/de9/graph_8hpp_source.html">graph.hpp</a>.</p>
 <div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
+  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../d9/dcb/classchdr_1_1mazes_1_1graph_a997cc2471f01562028c11abd6d463160_a997cc2471f01562028c11abd6d463160_cgraph.svg" width="159" height="34"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-<div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-1-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-1-summary" class="dynsummary" style="display:block;">
-</div>
-<div id="dynsection-1-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../d9/dcb/classchdr_1_1mazes_1_1graph_a997cc2471f01562028c11abd6d463160_a997cc2471f01562028c11abd6d463160_icgraph.svg" width="167" height="34"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../d9/dcb/classchdr_1_1mazes_1_1graph_ab276ef23dd28f7f3f6a804f7a958141d_ab276ef23dd28f7f3f6a804f7a958141d_icgraph.svg" width="334" height="127"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
