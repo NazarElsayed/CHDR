@@ -460,8 +460,7 @@ namespace chdr {
          * @brief Adjusts the position of an item in the heap by moving it upwards towards the root.
          *
          * @details This function is used to maintain the heap's structural and ordering properties
-         *          when an item's position may have been compromised. It moves the specified item
-         *          upwards in the heap until the heap's ordering constraints are satisfied.
+         *          when an item's position may have been compromised.
          *
          * @param _item [in] The item to be sorted upwards within the heap. The item's new position
          *                    will adhere to the heap's rules after execution.
@@ -497,7 +496,7 @@ namespace chdr {
          *
          * @details This function moves the specified item downward within the heap structure to restore the heap's ordering
          *          property. It is typically used after a modification or removal operation that causes the heap to become
-         *          unbalanced. The operation is efficient, utilising comparisons and optional element swaps.
+         *          unbalanced.
          *
          * @param _item [in] The item to be moved downward within the heap to restore the heap property.
          */
