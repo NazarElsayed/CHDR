@@ -110,9 +110,10 @@ $(document).ready(function(){initNavTree('df/d41/structchdr_1_1solvers_1_1fstar.
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename params_t&gt;<br />
-struct chdr::solvers::fstar&lt; params_t &gt;</div><p>F* search algorithm. </p>
-<p>F* (Björnsson et al. 2005) is a graph traversal and pathfinding algorithm which iteratively advances the search fringe using two 'fringe lists' instead of a priority queue. Like A*, F* is capable of finding the optimal solution given an admissible heuristic.</p>
-<p>Advantages:</p><ul>
+struct chdr::solvers::fstar&lt; params_t &gt;</div><p>Frine search algorithm. </p>
+<p>F* (Björnsson et al. 2005) is a graph traversal and pathfinding algorithm which iteratively advances the search fringe using two 'fringe lists' instead of a priority queue. Like A*, F* is capable of finding the optimal solution given an admissible heuristic. In some cases, an F* search may outperform an A* search due to reduced memory overhead.<br  />
+<br  />
+ Advantages:</p><ul>
 <li>Resulting path will be optimal if the heuristic is admissible.</li>
 <li>Capable of out-performing the A* algorithm in certain situations.</li>
 <li>Lower constant memory factor than A*.</li>
@@ -137,7 +138,7 @@ struct chdr::solvers::fstar&lt; params_t &gt;</div><p>F* search algorithm. </p>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d1/d5a/fstar_8hpp_source.html#l00058">58</a> of file <a class="el" href="../../d1/d5a/fstar_8hpp_source.html">fstar.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d1/d5a/fstar_8hpp_source.html#l00059">59</a> of file <a class="el" href="../../d1/d5a/fstar_8hpp_source.html">fstar.hpp</a>.</p>
 </div><div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Collaboration diagram for fstar&lt; params_t &gt;:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">

@@ -9,6 +9,10 @@
 #ifndef CHDR_GSTAR_HPP
 #define CHDR_GSTAR_HPP
 
+/**
+ * @file gstar.hpp
+ */
+
 #include <cstddef>
 
 #include "../solvers/base/managed_node.hpp"
@@ -19,6 +23,30 @@
 
 namespace chdr::solvers {
 
+    /**
+     * @struct gstar
+     * @brief Graveyard search algorithm.
+     * @details G* (Eriksson, L. & Elsayed, N. 2025) is a heuristic-informed graph traversal and pathfinding algorithm.
+     *          G* is an optimisation of the A* algorithm that reduces memory usage by dynamically dropping redundant
+     *          paths from the search tree.
+     *          Like A*, G* is capable of finding the optimal solution given an admissible heuristic.
+     *          In some cases, a G* search may outperform an A* search due to reduced memory overhead.\n\n
+     *
+     * Advantages:
+     * - Significantly reduced average memory usage when compared to A*.
+     * - Capable of out-performing the A* algorithm in certain situations.
+     * - Resulting path will be optimal if the heuristic is admissible.
+     * - Well suited for solvable problems in unbounded (infinite) space.
+     * - Does not need a prepass, although performance can improve if the search space is pruned first.
+     *
+     * Limitations:
+     * - Higher constant factor than A* makes it less effective in small searches.
+     * - Inefficient or complex search heuristics can reduce performance.
+     * - Poor performance when searches lack solutions.
+     *
+     * @note G* guarantees the optimal path if the heuristic is admissible (never overestimates the cost).
+     * @tparam params_t Type containing the search parameters.
+     */
     template<typename params_t>
     struct [[maybe_unused]] gstar final {
 

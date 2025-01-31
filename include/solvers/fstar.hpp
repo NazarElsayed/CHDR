@@ -26,10 +26,11 @@ namespace chdr::solvers {
 
     /**
      * @struct fstar
-     * @brief F* search algorithm.
+     * @brief Frine search algorithm.
      * @details F* (Björnsson et al. 2005) is a graph traversal and pathfinding algorithm which iteratively advances
      *          the search fringe using two 'fringe lists' instead of a priority queue.
      *          Like A*, F* is capable of finding the optimal solution given an admissible heuristic.
+     *          In some cases, an F* search may outperform an A* search due to reduced memory overhead.\n\n
      *
      * Advantages:
      * - Resulting path will be optimal if the heuristic is admissible.

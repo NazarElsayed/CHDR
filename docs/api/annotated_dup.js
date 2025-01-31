@@ -16,6 +16,9 @@ var annotated_dup =
         [ "dfs", "d9/db9/structchdr_1_1solvers_1_1dfs.html", null ],
         [ "flood", "d7/da2/structchdr_1_1solvers_1_1flood.html", null ],
         [ "fstar", "df/d41/structchdr_1_1solvers_1_1fstar.html", null ],
+        [ "gbfs", "d5/d28/structchdr_1_1solvers_1_1gbfs.html", null ],
+        [ "gdfs", "d1/df6/structchdr_1_1solvers_1_1gdfs.html", null ],
+        [ "gstar", "df/d26/structchdr_1_1solvers_1_1gstar.html", null ],
         [ "managed_node", "df/d64/structchdr_1_1solvers_1_1managed__node.html", "df/d64/structchdr_1_1solvers_1_1managed__node" ],
         [ "solver", "d3/df4/classchdr_1_1solvers_1_1solver.html", "d3/df4/classchdr_1_1solvers_1_1solver" ],
         [ "unmanaged_node", "d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html", "d6/d3c/structchdr_1_1solvers_1_1unmanaged__node" ]

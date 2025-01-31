@@ -9,6 +9,10 @@
 #ifndef CHDR_GDFS_HPP
 #define CHDR_GDFS_HPP
 
+/**
+ * @file gdfs.hpp
+ */
+
 #include <cstddef>
 #include <vector>
 
@@ -20,6 +24,22 @@
 
 namespace chdr::solvers {
 
+    /**
+     * @struct gdfs
+     * @brief Graveyard-optimised variant of the depth-first-search algorithm.
+     * @details G*-optimised variant of DFS, reducing memory usage by allowing for the dynamic
+     *          pruning of redundant data from the search tree.
+     *
+     * Advantages:
+     * - Significantly reduced average memory usage when compared to DFS.
+     *
+     * Limitations:
+     * - Higher constant factor than DFS makes it less effective in small searches.
+     *
+     * @tparam params_t Type containing the search parameters.
+     * @see dfs
+     * @see gstar
+     */
     template<typename params_t>
     struct [[maybe_unused]] gdfs final {
 

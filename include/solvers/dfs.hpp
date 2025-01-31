@@ -28,7 +28,7 @@ namespace chdr::solvers {
      * @struct dfs
      * @brief Depth-first search algorithm.
      * @details A graph traversal and pathfinding algorithm which explores each branch of the search tree completely
-     *          before continuing.
+     *          before continuing.\n\n
      *
      * Advantages:
      * - Low constant time factor.

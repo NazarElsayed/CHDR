@@ -28,7 +28,7 @@ namespace chdr::solvers {
      * @struct best_first
      * @brief Greedy best-first search algorithm.
      * @details A heuristic-informed graph traversal and pathfinding algorithm which always prioritises its next move
-     *          based on least cost.
+     *          based on least cost.\n\n
      *
      * Advantages:
      * - Lower constant time and memory factor than A*.

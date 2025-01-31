@@ -27,7 +27,7 @@ namespace chdr::solvers {
     /**
      * @struct bfs
      * @brief Breadth-first search algorithm.
-     * @details A graph traversal and pathfinding algorithm which expands every search neighbour during an iteration.
+     * @details A graph traversal and pathfinding algorithm which expands every search neighbour during an iteration.\n\n
      *
      * Advantages:
      * - Low constant time factor.
