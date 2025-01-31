@@ -364,10 +364,14 @@ namespace chdr {
         }
 
         /**
-         * @brief Get the size of the set.
-         * @details Returns the number of elements in the set.
-         *
-         * @return The size of the set.
+         * @brief Checks if the set is empty.
+         * @return `true` if the set is empty, otherwise `false`.
+         */
+        [[maybe_unused, nodiscard]] HOT constexpr bool empty() const noexcept { return c.empty(); }
+
+        /**
+         * @brief Retrieves the number of elements currently stored in the set.
+         * @return The number of elements in the set.
          */
         [[maybe_unused, nodiscard]] constexpr auto size() const noexcept { return c.size(); }
 

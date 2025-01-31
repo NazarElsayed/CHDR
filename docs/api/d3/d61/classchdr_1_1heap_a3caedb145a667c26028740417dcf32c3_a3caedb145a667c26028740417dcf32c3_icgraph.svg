@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Retrieves the number of elements currently present in the heap.">
+<g id="a_Node000001"><a xlink:title="Retrieves the number of elements currently stored in the heap.">
 <polygon fill="#999999" stroke="#666666" points="307,-354 277,-354 277,-337 307,-337 307,-354"/>
 <text text-anchor="middle" x="292" y="-343.6" font-family="Helvetica,sans-Serif" font-size="8.00">size</text>
 </a>
@@ -92,7 +92,7 @@
 <!-- Node6 -->
 <g id="Node000006" class="node">
 <title>Node6</title>
-<g id="a_Node000006"><a xlink:href="../../d3/d61/classchdr_1_1heap_a3f6fc5de06a318920d84f3c3742db07f.html#a3f6fc5de06a318920d84f3c3742db07f" target="_top" xlink:title="Determines whether the heap container is empty.">
+<g id="a_Node000006"><a xlink:href="../../d3/d61/classchdr_1_1heap_a3f6fc5de06a318920d84f3c3742db07f.html#a3f6fc5de06a318920d84f3c3742db07f" target="_top" xlink:title="Checks if the heap is empty.">
 <polygon fill="white" stroke="#666666" points="233,-514 195,-514 195,-497 233,-497 233,-514"/>
 <text text-anchor="middle" x="214" y="-503.6" font-family="Helvetica,sans-Serif" font-size="8.00">empty</text>
 </a>

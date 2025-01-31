@@ -1,6 +1,6 @@
 <map id="erase" name="erase">
 <area shape="rect" id="Node000001" title="Removes an element from the heap using an iterator while maintaining the heap property." alt="" coords="5,22,55,45"/>
-<area shape="rect" id="Node000002" href="$d3/d61/classchdr_1_1heap_a3caedb145a667c26028740417dcf32c3.html#a3caedb145a667c26028740417dcf32c3" title="Retrieves the number of elements currently present in the heap." alt="" coords="223,22,263,45"/>
+<area shape="rect" id="Node000002" href="$d3/d61/classchdr_1_1heap_a3caedb145a667c26028740417dcf32c3.html#a3caedb145a667c26028740417dcf32c3" title="Retrieves the number of elements currently stored in the heap." alt="" coords="223,22,263,45"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="55,21,102,7,139,3,175,7,211,17,209,22,174,12,139,8,103,12,56,26"/>
 <area shape="rect" id="Node000004" href="$d3/d61/classchdr_1_1heap_a9bb7e9906ed7296a33c7c08c4d0ef800.html#a9bb7e9906ed7296a33c7c08c4d0ef800" title="Reorganises the heap by moving a specified item downward to maintain the heap property." alt="" coords="103,22,175,45"/>
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="55,31,89,31,89,36,55,36"/>

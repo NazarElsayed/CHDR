@@ -1,5 +1,9 @@
 var searchData=
 [
-  ['value_0',['value',['../db/dc4/structchdr_1_1mazes_1_1weighted__node_a9a9d24859a5366d0b48f6496ed3574b5.html#a9a9d24859a5366d0b48f6496ed3574b5',1,'chdr::mazes::weighted_node::value() const noexcept'],['../db/dc4/structchdr_1_1mazes_1_1weighted__node_a62fb7a2e242a85d1a1191b2ee9cb4e4e.html#a62fb7a2e242a85d1a1191b2ee9cb4e4e',1,'chdr::mazes::weighted_node::value(weight_t _value) noexcept']]],
-  ['vector_5falways_1',['VECTOR_ALWAYS',['../d7/d65/intrinsics_8hpp_a9cc41c1083f88e113a53fa8b5cd2c002.html#a9cc41c1083f88e113a53fa8b5cd2c002',1,'intrinsics.hpp']]]
+  ['unlikely_0',['UNLIKELY',['../d7/d65/intrinsics_8hpp_ab10d0a221f4d7a706701b806c8135fd7.html#ab10d0a221f4d7a706701b806c8135fd7',1,'intrinsics.hpp']]],
+  ['unmanaged_5fnode_1',['unmanaged_node',['../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html',1,'unmanaged_node&lt; index_t &gt;'],['../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_a05f3d6d2c925a1809848253d4f8caf9e.html#a05f3d6d2c925a1809848253d4f8caf9e',1,'chdr::solvers::unmanaged_node::unmanaged_node() noexcept'],['../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_ac6f3473c2df4d3156ebc0e17ebbe63ff.html#ac6f3473c2df4d3156ebc0e17ebbe63ff',1,'chdr::solvers::unmanaged_node::unmanaged_node(index_t _index, const unmanaged_node *restrict const _parent=nullptr) noexcept']]],
+  ['unmanaged_5fnode_2ehpp_2',['unmanaged_node.hpp',['../d0/def/unmanaged__node_8hpp.html',1,'']]],
+  ['usage_3',['Usage',['../index.html#usage',1,'']]],
+  ['utils_4',['utils',['../d2/dcb/structchdr_1_1utils.html',1,'chdr']]],
+  ['utils_2ehpp_5',['utils.hpp',['../df/d93/utils_8hpp.html',1,'']]]
 ];

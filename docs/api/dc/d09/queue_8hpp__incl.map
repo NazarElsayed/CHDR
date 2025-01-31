@@ -1,0 +1,11 @@
+<map id="queue.hpp" name="queue.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="113,5,186,28"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,76,61,99"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,30,64,71,61,67,131,26"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="86,76,138,99"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="146,29,126,65,122,63,141,27"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="163,76,213,99"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="157,27,178,63,173,65,153,29"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="237,76,347,99"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="172,26,260,68,258,73,169,30"/>
+</map>

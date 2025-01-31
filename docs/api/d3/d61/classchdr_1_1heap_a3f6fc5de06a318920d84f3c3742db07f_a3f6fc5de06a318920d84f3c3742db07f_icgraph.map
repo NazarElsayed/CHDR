@@ -1,5 +1,5 @@
 <map id="empty" name="empty">
-<area shape="rect" id="Node000001" title="Determines whether the heap container is empty." alt="" coords="255,264,305,287"/>
+<area shape="rect" id="Node000001" title="Checks if the heap is empty." alt="" coords="255,264,305,287"/>
 <area shape="rect" id="Node000002" href="$d3/d61/classchdr_1_1heap_adf4e3bffff56ce9f6c2ca6a36d40a725.html#adf4e3bffff56ce9f6c2ca6a36d40a725" title="Constructs a heap from a collection of elements." alt="" coords="139,5,185,28"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="275,250,269,207,258,151,237,93,222,66,205,41,184,26,187,22,209,37,227,63,242,91,263,150,275,206,280,250"/>
 <area shape="rect" id="Node000003" href="$d3/d61/classchdr_1_1heap_a115a6b02da0ef70b6e9cf66736b45b27.html#a115a6b02da0ef70b6e9cf66736b45b27" title="Constructs a heap from a collection of elements with move semantics." alt="" coords="139,52,185,75"/>

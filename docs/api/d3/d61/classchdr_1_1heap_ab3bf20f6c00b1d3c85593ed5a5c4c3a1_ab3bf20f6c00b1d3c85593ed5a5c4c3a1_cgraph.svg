@@ -20,7 +20,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="../../d3/d61/classchdr_1_1heap_a3caedb145a667c26028740417dcf32c3.html#a3caedb145a667c26028740417dcf32c3" target="_top" xlink:title="Retrieves the number of elements currently present in the heap.">
+<g id="a_Node000002"><a xlink:href="../../d3/d61/classchdr_1_1heap_a3caedb145a667c26028740417dcf32c3.html#a3caedb145a667c26028740417dcf32c3" target="_top" xlink:title="Retrieves the number of elements currently stored in the heap.">
 <polygon fill="white" stroke="#666666" points="110,-17 80,-17 80,0 110,0 110,-17"/>
 <text text-anchor="middle" x="95" y="-6.6" font-family="Helvetica,sans-Serif" font-size="8.00">size</text>
 </a>

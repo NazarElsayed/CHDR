@@ -2,6 +2,9 @@ var classchdr_1_1heap =
 [
     [ "heap", "d3/d61/classchdr_1_1heap_a2e16b5d12260aa6b226d468ab0934e27.html#a2e16b5d12260aa6b226d468ab0934e27", null ],
     [ "heap", "d3/d61/classchdr_1_1heap_ad902f3d62fc2c60c9bd9627517da1a5e.html#ad902f3d62fc2c60c9bd9627517da1a5e", null ],
+    [ "~heap", "d3/d61/classchdr_1_1heap_a38b796da1ecdfc32e59445a66b40d7fe.html#a38b796da1ecdfc32e59445a66b40d7fe", null ],
+    [ "heap", "d3/d61/classchdr_1_1heap_ae209cf3ae7cb19684a3539d3a16a0d69.html#ae209cf3ae7cb19684a3539d3a16a0d69", null ],
+    [ "heap", "d3/d61/classchdr_1_1heap_abe9521d0937520de1b3648d2afc0efa5.html#abe9521d0937520de1b3648d2afc0efa5", null ],
     [ "heap", "d3/d61/classchdr_1_1heap_adf4e3bffff56ce9f6c2ca6a36d40a725.html#adf4e3bffff56ce9f6c2ca6a36d40a725", null ],
     [ "heap", "d3/d61/classchdr_1_1heap_a115a6b02da0ef70b6e9cf66736b45b27.html#a115a6b02da0ef70b6e9cf66736b45b27", null ],
     [ "at", "d3/d61/classchdr_1_1heap_a41ba10e2f12eabd80c458aa708b4f89b.html#a41ba10e2f12eabd80c458aa708b4f89b", null ],
@@ -27,6 +30,8 @@ var classchdr_1_1heap =
     [ "insert", "d3/d61/classchdr_1_1heap_a5dfd7f9a4ad6a51dfb81d4da0f5ec261.html#a5dfd7f9a4ad6a51dfb81d4da0f5ec261", null ],
     [ "insert", "d3/d61/classchdr_1_1heap_a45a566405e1e982fe89c9eab9315e0ce.html#a45a566405e1e982fe89c9eab9315e0ce", null ],
     [ "lower_bounds", "d3/d61/classchdr_1_1heap_a2adc794fbb932e87602833ccd8c84e67.html#a2adc794fbb932e87602833ccd8c84e67", null ],
+    [ "operator=", "d3/d61/classchdr_1_1heap_a98d6e66455b83df5f2fb52c4425d90c8.html#a98d6e66455b83df5f2fb52c4425d90c8", null ],
+    [ "operator=", "d3/d61/classchdr_1_1heap_a561c435d631efabf284099793a4a39e4.html#a561c435d631efabf284099793a4a39e4", null ],
     [ "operator[]", "d3/d61/classchdr_1_1heap_ab5c2a5cf22a2e550cc1d02f0bcd3dd43.html#ab5c2a5cf22a2e550cc1d02f0bcd3dd43", null ],
     [ "pop", "d3/d61/classchdr_1_1heap_a274dca2a1d2c68ff3249f37b3ae410d5.html#a274dca2a1d2c68ff3249f37b3ae410d5", null ],
     [ "pop_back", "d3/d61/classchdr_1_1heap_a90957d02dbdc1afa0c6dc61861842f4e.html#a90957d02dbdc1afa0c6dc61861842f4e", null ],

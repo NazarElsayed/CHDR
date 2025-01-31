@@ -111,6 +111,64 @@ namespace chdr {
         }
 
         /**
+         * @brief Default destructor.
+         */
+        ~heap() = default;
+
+        /**
+         * @brief Copy constructor.
+         *
+         * @details Creates a deep copy of the given heap, including its internal container and comparator.
+         *
+         * @param _other The heap to copy from.
+         */
+        heap(const heap& _other) : c(_other.c), comp(_other.comp) {}
+
+        /**
+         * @brief Copy assignment operator.
+         *
+         * @details Assigns another heap to this one by performing a deep copy of the other heap's internal
+         * container and comparator.
+         *
+         * @param _other The heap to copy from.
+         * @return Reference to this heap after the assignment.
+         */
+        heap& operator=(const heap& _other) {
+            if (this != &_other) {
+                c    = _other.c;
+                comp = _other.comp;
+            }
+            return *this;
+        }
+
+        /**
+         * @brief Move constructor.
+         *
+         * @details Transfers ownership of the resources of the given heap to this one,
+         * leaving the other heap in a valid but unspecified state.
+         *
+         * @param _other The heap to move from.
+         */
+        heap(heap&& _other) noexcept : c(std::move(_other.c)), comp(std::move(_other.comp)) {}
+
+        /**
+         * @brief Move assignment operator.
+         *
+         * @details Transfers ownership of the resources of the given heap to this one,
+         * leaving the other heap in a valid but unspecified state.
+         *
+         * @param _other The heap to move from.
+         * @return Reference to this heap after the assignment.
+         */
+        heap& operator=(heap&& _other) noexcept {
+            if (this != &_other) {
+                c    = std::move(_other.c);
+                comp = std::move(_other.comp);
+            }
+            return *this;
+        }
+
+        /**
          * @brief Constructs a heap from a collection of elements.
          *
          * @details Initialises the heap with a copy of the elements from the provided container.
@@ -165,14 +223,14 @@ namespace chdr {
          */
 
         /**
-         * @brief Determines whether the heap container is empty.
-         * @return bool True if the heap is empty, otherwise false.
+         * @brief Checks if the heap is empty.
+         * @return `true` if the heap is empty, otherwise `false`.
          */
         [[maybe_unused, nodiscard]] HOT constexpr bool empty() const noexcept { return size() == 0U; }
 
         /**
-         * @brief Retrieves the number of elements currently present in the heap.
-         * @return size_t The count of elements in the heap, excluding the reserved element.
+         * @brief Retrieves the number of elements currently stored in the heap.
+         * @return The number of elements in the heap.
          */
         [[maybe_unused, nodiscard]] constexpr size_t size() const noexcept { return utils::max(c.size(), static_cast<size_t>(1U)) - static_cast<size_t>(1U); }
 

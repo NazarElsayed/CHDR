@@ -1,27 +1,37 @@
 <map id="graph" name="graph">
-<area shape="rect" id="Node000001" title="Constructs a graph instance from a grid structure." alt="" coords="5,247,56,269"/>
+<area shape="rect" id="Node000001" title="Constructs a graph instance from a grid structure." alt="" coords="5,367,56,389"/>
 <area shape="rect" id="Node000002" href="$d9/dcb/classchdr_1_1mazes_1_1graph_ab41a4e064828273b133921f8d05a7540.html#ab41a4e064828273b133921f8d05a7540" title="Adds a new vertex to the graph with the specified identifier." alt="" coords="167,5,207,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="30,246,33,207,43,151,65,90,81,62,102,37,126,23,153,16,154,21,129,28,106,41,85,65,69,93,48,152,38,208,35,247"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="30,366,37,299,50,201,71,103,85,64,102,37,126,22,153,15,154,20,128,27,106,41,90,66,76,104,55,202,42,300,36,367"/>
 <area shape="rect" id="Node000003" href="$dd/de3/classchdr_1_1mazes_1_1grid_a2c953e28d925a8042220b3abe9023479.html#a2c953e28d925a8042220b3abe9023479" title="Retrieves the node at a specified coordinate." alt="" coords="128,76,247,99"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="32,246,54,185,75,148,102,116,124,102,127,106,106,120,79,151,59,187,37,247"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="29,366,31,321,39,255,48,218,61,182,79,147,102,116,120,102,123,107,106,120,84,150,66,184,54,220,45,256,36,321,34,366"/>
 <area shape="rect" id="Node000004" href="$d2/dcb/structchdr_1_1utils_a5741e93a4c4f5630e7c86bda862cf611.html#a5741e93a4c4f5630e7c86bda862cf611" title="Maps a multi&#45;dimensional index to a one&#45;dimensional array index." alt="" coords="361,101,461,124"/>
-<area shape="poly" id="edge14_Node000001_Node000004" title=" " alt="" coords="35,245,59,202,79,179,103,160,163,132,229,116,292,109,347,107,347,112,292,114,229,121,165,137,105,164,83,183,64,206,39,248"/>
+<area shape="poly" id="edge18_Node000001_Node000004" title=" " alt="" coords="29,366,32,326,42,270,63,211,80,183,102,160,120,149,145,140,209,126,281,118,347,113,347,118,281,123,210,132,147,145,123,154,106,164,85,187,68,213,47,272,37,327,35,367"/>
 <area shape="rect" id="Node000005" href="$d2/dcb/structchdr_1_1utils_ab94b095ba27e03185c77fca09d6974e8.html#ab94b095ba27e03185c77fca09d6974e8" title="Constrains a value to lie within a specified range." alt="" coords="137,175,238,197"/>
-<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="44,244,71,225,103,206,123,198,125,203,105,211,74,229,48,248"/>
-<area shape="rect" id="Node000006" href="$d9/dcb/classchdr_1_1mazes_1_1graph_ad6077e456dd6abb62d82087b55dc2331.html#ad6077e456dd6abb62d82087b55dc2331" title="Returns the total number of vertices in the graph." alt="" coords="163,221,211,244"/>
-<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="56,251,149,236,150,241,56,257"/>
-<area shape="rect" id="Node000007" href="$dd/de3/classchdr_1_1mazes_1_1grid_ad6077e456dd6abb62d82087b55dc2331.html#ad6077e456dd6abb62d82087b55dc2331" title="Retrieves the total count of elements in the grid." alt="" coords="343,296,479,319"/>
-<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="57,259,329,294,329,299,56,264"/>
-<area shape="rect" id="Node000008" href="$dd/de3/classchdr_1_1mazes_1_1grid_a0abdfb4af71cccf812fb2b7150f0cc72.html#a0abdfb4af71cccf812fb2b7150f0cc72" title="Retrieves the neighbours of a node within the grid." alt="" coords="319,344,503,367"/>
-<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="39,269,62,312,81,335,105,353,136,365,168,374,235,380,299,376,353,367,354,372,299,381,235,385,167,379,134,371,103,358,78,339,58,315,34,271"/>
-<area shape="rect" id="Node000009" href="$dd/de3/classchdr_1_1mazes_1_1grid_a264c48c1d975bf357e96edcb92331ad2.html#a264c48c1d975bf357e96edcb92331ad2" title="Determines whether a cell at the given index is transitory." alt="" coords="104,320,271,343"/>
-<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="51,267,105,298,140,313,138,318,103,303,48,272"/>
-<area shape="rect" id="Node000010" href="$d2/dcb/structchdr_1_1utils_ac49e3cb9b2b007da03059d95020d8b49.html#ac49e3cb9b2b007da03059d95020d8b49" title="Returns the smaller of two values." alt="" coords="142,419,233,441"/>
-<area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="37,269,59,330,79,366,106,397,131,413,128,417,102,401,75,369,54,332,32,271"/>
-<area shape="rect" id="Node000011" href="$dd/de3/classchdr_1_1mazes_1_1grid_a32d34adb7833cb15aa705c6c7ada57a8.html#a32d34adb7833cb15aa705c6c7ada57a8" title="Retrieves the size of the grid." alt="" coords="123,465,251,488"/>
-<area shape="poly" id="edge13_Node000001_Node000011" title=" " alt="" coords="35,269,40,305,51,354,72,407,87,431,106,452,113,458,110,462,102,456,83,434,67,409,46,356,34,306,30,270"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="31,366,37,335,49,292,70,246,85,225,102,207,122,194,125,199,106,211,89,228,75,249,54,293,42,336,36,367"/>
+<area shape="rect" id="Node000006" href="$db/dc9/classchdr_1_1stack_ac8bb3912a3ce86b15842e79d0b421204.html#ac8bb3912a3ce86b15842e79d0b421204" title="Clears all elements from the stack." alt="" coords="136,221,239,244"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="33,366,56,312,76,280,102,253,122,242,125,247,106,257,80,284,61,314,38,368"/>
+<area shape="rect" id="Node000007" href="$d9/dcb/classchdr_1_1mazes_1_1graph_ad6077e456dd6abb62d82087b55dc2331.html#ad6077e456dd6abb62d82087b55dc2331" title="Returns the total number of vertices in the graph." alt="" coords="163,268,211,291"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="40,365,66,337,103,308,149,287,151,292,105,312,70,341,44,368"/>
+<area shape="rect" id="Node000008" href="$dd/de3/classchdr_1_1mazes_1_1grid_ad6077e456dd6abb62d82087b55dc2331.html#ad6077e456dd6abb62d82087b55dc2331" title="Retrieves the total count of elements in the grid." alt="" coords="343,436,479,459"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="55,365,103,351,188,339,225,341,271,351,306,366,338,385,389,424,386,429,335,389,304,370,270,357,225,346,188,344,105,357,57,370"/>
+<area shape="rect" id="Node000009" href="$db/dc9/classchdr_1_1stack_add55c8b8d3e3d6419e57210d3313fd09.html#add55c8b8d3e3d6419e57210d3313fd09" title="Constructs an element in place, adding it to the stack." alt="" coords="128,367,247,389"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="56,375,114,375,114,381,56,381"/>
+<area shape="rect" id="Node000010" href="$db/dc9/classchdr_1_1stack_a3f6fc5de06a318920d84f3c3742db07f.html#a3f6fc5de06a318920d84f3c3742db07f" title="Checks if the stack is empty." alt="" coords="133,413,241,436"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="57,383,105,398,134,407,133,412,103,403,56,388"/>
+<area shape="rect" id="Node000011" href="$dd/de3/classchdr_1_1mazes_1_1grid_a0abdfb4af71cccf812fb2b7150f0cc72.html#a0abdfb4af71cccf812fb2b7150f0cc72" title="Retrieves the neighbours of a node within the grid." alt="" coords="319,484,503,507"/>
+<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="37,389,45,412,59,442,79,471,105,493,136,507,168,516,236,522,301,517,356,507,357,513,302,523,236,527,167,521,134,512,103,498,75,474,54,444,40,414,32,390"/>
+<area shape="rect" id="Node000012" href="$dd/de3/classchdr_1_1mazes_1_1grid_a264c48c1d975bf357e96edcb92331ad2.html#a264c48c1d975bf357e96edcb92331ad2" title="Determines whether a cell at the given index is transitory." alt="" coords="104,460,271,483"/>
+<area shape="poly" id="edge12_Node000001_Node000012" title=" " alt="" coords="43,388,69,417,105,445,122,453,119,458,103,450,65,420,39,391"/>
+<area shape="rect" id="Node000013" href="$d2/dcb/structchdr_1_1utils_ac49e3cb9b2b007da03059d95020d8b49.html#ac49e3cb9b2b007da03059d95020d8b49" title="Returns the smaller of two values." alt="" coords="142,559,233,581"/>
+<area shape="poly" id="edge15_Node000001_Node000013" title=" " alt="" coords="37,389,43,418,56,458,77,500,106,537,131,553,128,558,102,541,72,503,51,460,38,420,31,390"/>
+<area shape="rect" id="Node000014" href="$db/dc9/classchdr_1_1stack_a312e7f6c761a199c1369fbe651e084f0.html#a312e7f6c761a199c1369fbe651e084f0" title="Pops an element from the stack." alt="" coords="139,605,236,628"/>
+<area shape="poly" id="edge16_Node000001_Node000014" title=" " alt="" coords="35,390,38,429,48,483,70,542,86,569,106,592,127,605,124,610,102,596,81,572,65,544,43,485,33,429,30,390"/>
+<area shape="rect" id="Node000015" href="$dd/de3/classchdr_1_1mazes_1_1grid_a32d34adb7833cb15aa705c6c7ada57a8.html#a32d34adb7833cb15aa705c6c7ada57a8" title="Retrieves the size of the grid." alt="" coords="123,652,251,675"/>
+<area shape="poly" id="edge17_Node000001_Node000015" title=" " alt="" coords="34,389,35,435,43,502,51,539,64,575,82,609,106,639,113,645,109,649,102,643,78,612,59,578,46,541,37,503,29,436,29,389"/>
+<area shape="rect" id="Node000016" href="$db/dc9/classchdr_1_1stack_a20a753362275d34a67d855ce0105fab7.html#a20a753362275d34a67d855ce0105fab7" title="Provides access to the top element of the stack." alt="" coords="140,699,235,721"/>
+<area shape="poly" id="edge19_Node000001_Node000016" title=" " alt="" coords="36,389,43,451,57,540,78,628,91,663,106,685,128,700,126,704,102,689,87,665,73,630,52,541,38,452,30,390"/>
 <area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="162,77,156,68,158,58,169,52,187,49,209,53,218,62,214,66,207,58,187,55,171,57,163,61,161,67,166,74"/>
 <area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="248,91,347,103,347,108,247,97"/>
-<area shape="poly" id="edge10_Node000009_Node000007" title=" " alt="" coords="271,320,329,313,329,319,271,325"/>
-<area shape="poly" id="edge11_Node000009_Node000008" title=" " alt="" coords="271,338,305,341,305,347,271,343"/>
+<area shape="poly" id="edge13_Node000012_Node000008" title=" " alt="" coords="271,460,329,453,329,459,271,465"/>
+<area shape="poly" id="edge14_Node000012_Node000011" title=" " alt="" coords="271,478,305,481,305,487,271,483"/>
 </map>

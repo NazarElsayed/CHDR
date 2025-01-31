@@ -1,8 +1,8 @@
 <map id="lower_bounds" name="lower_bounds">
 <area shape="rect" id="Node000001" title="Finds the first element in the heap not less than the specified value." alt="" coords="5,5,95,28"/>
-<area shape="rect" id="Node000002" href="$d3/d61/classchdr_1_1heap_a3f6fc5de06a318920d84f3c3742db07f.html#a3f6fc5de06a318920d84f3c3742db07f" title="Determines whether the heap container is empty." alt="" coords="143,5,193,28"/>
+<area shape="rect" id="Node000002" href="$d3/d61/classchdr_1_1heap_a3f6fc5de06a318920d84f3c3742db07f.html#a3f6fc5de06a318920d84f3c3742db07f" title="Checks if the heap is empty." alt="" coords="143,5,193,28"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,14,129,14,129,19,95,19"/>
-<area shape="rect" id="Node000003" href="$d3/d61/classchdr_1_1heap_a3caedb145a667c26028740417dcf32c3.html#a3caedb145a667c26028740417dcf32c3" title="Retrieves the number of elements currently present in the heap." alt="" coords="241,5,281,28"/>
+<area shape="rect" id="Node000003" href="$d3/d61/classchdr_1_1heap_a3caedb145a667c26028740417dcf32c3.html#a3caedb145a667c26028740417dcf32c3" title="Retrieves the number of elements currently stored in the heap." alt="" coords="241,5,281,28"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="194,14,228,14,228,19,194,19"/>
 <area shape="rect" id="Node000004" href="$d2/dcb/structchdr_1_1utils_abb4d38d3c7a25d93fcedd12666fb00a1.html#abb4d38d3c7a25d93fcedd12666fb00a1" title="Determines the maximum of two comparable values." alt="" coords="329,5,423,28"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="282,14,315,14,315,19,282,19"/>

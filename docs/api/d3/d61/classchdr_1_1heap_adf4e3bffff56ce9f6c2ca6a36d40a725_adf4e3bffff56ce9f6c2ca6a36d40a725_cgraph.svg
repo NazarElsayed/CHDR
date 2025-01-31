@@ -20,7 +20,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="../../d3/d61/classchdr_1_1heap_a3f6fc5de06a318920d84f3c3742db07f.html#a3f6fc5de06a318920d84f3c3742db07f" target="_top" xlink:title="Determines whether the heap container is empty.">
+<g id="a_Node000002"><a xlink:href="../../d3/d61/classchdr_1_1heap_a3f6fc5de06a318920d84f3c3742db07f.html#a3f6fc5de06a318920d84f3c3742db07f" target="_top" xlink:title="Checks if the heap is empty.">
 <polygon fill="white" stroke="#666666" points="117,-91 79,-91 79,-74 117,-74 117,-91"/>
 <text text-anchor="middle" x="98" y="-80.6" font-family="Helvetica,sans-Serif" font-size="8.00">empty</text>
 </a>
@@ -38,7 +38,7 @@
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="../../d3/d61/classchdr_1_1heap_a3caedb145a667c26028740417dcf32c3.html#a3caedb145a667c26028740417dcf32c3" target="_top" xlink:title="Retrieves the number of elements currently present in the heap.">
+<g id="a_Node000003"><a xlink:href="../../d3/d61/classchdr_1_1heap_a3caedb145a667c26028740417dcf32c3.html#a3caedb145a667c26028740417dcf32c3" target="_top" xlink:title="Retrieves the number of elements currently stored in the heap.">
 <polygon fill="white" stroke="#666666" points="191,-54 161,-54 161,-37 191,-37 191,-54"/>
 <text text-anchor="middle" x="176" y="-43.6" font-family="Helvetica,sans-Serif" font-size="8.00">size</text>
 </a>

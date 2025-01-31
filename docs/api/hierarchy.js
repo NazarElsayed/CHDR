@@ -21,7 +21,9 @@ var hierarchy =
     [ "homogeneous_pool< StackSize, MaxStackAllocationSize, MaxHeapBlockSize >", "d7/d66/classchdr_1_1homogeneous__pool.html", null ],
     [ "id_node< index_t >", "db/d4a/classchdr_1_1mazes_1_1id__node.html", null ],
     [ "monotonic_pool< StackSize, MaxStackAllocationSize, MaxHeapBlockSize >", "df/db2/classchdr_1_1monotonic__pool.html", null ],
+    [ "queue< T >", "d7/de5/classchdr_1_1queue.html", null ],
     [ "solver< solver_t, params_t >", "d3/df4/classchdr_1_1solvers_1_1solver.html", null ],
+    [ "stack< T >", "db/dc9/classchdr_1_1stack.html", null ],
     [ "utils", "d2/dcb/structchdr_1_1utils.html", null ],
     [ "weighted_node< weight_t >", "db/dc4/structchdr_1_1mazes_1_1weighted__node.html", null ]
 ];

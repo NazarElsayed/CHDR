@@ -56,7 +56,7 @@
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="../../d3/d61/classchdr_1_1heap_a3caedb145a667c26028740417dcf32c3.html#a3caedb145a667c26028740417dcf32c3" target="_top" xlink:title="Retrieves the number of elements currently present in the heap.">
+<g id="a_Node000004"><a xlink:href="../../d3/d61/classchdr_1_1heap_a3caedb145a667c26028740417dcf32c3.html#a3caedb145a667c26028740417dcf32c3" target="_top" xlink:title="Retrieves the number of elements currently stored in the heap.">
 <polygon fill="#fff0f0" stroke="red" points="264,-17 234,-17 234,0 264,0 264,-17"/>
 <text text-anchor="middle" x="249" y="-6.6" font-family="Helvetica,sans-Serif" font-size="8.00">size</text>
 </a>

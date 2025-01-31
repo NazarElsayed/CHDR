@@ -26,6 +26,8 @@ var annotated_dup =
       [ "heuristics", "d2/df4/structchdr_1_1heuristics.html", null ],
       [ "homogeneous_pool", "d7/d66/classchdr_1_1homogeneous__pool.html", "d7/d66/classchdr_1_1homogeneous__pool" ],
       [ "monotonic_pool", "df/db2/classchdr_1_1monotonic__pool.html", "df/db2/classchdr_1_1monotonic__pool" ],
+      [ "queue", "d7/de5/classchdr_1_1queue.html", "d7/de5/classchdr_1_1queue" ],
+      [ "stack", "db/dc9/classchdr_1_1stack.html", "db/dc9/classchdr_1_1stack" ],
       [ "utils", "d2/dcb/structchdr_1_1utils.html", null ]
     ] ]
 ];

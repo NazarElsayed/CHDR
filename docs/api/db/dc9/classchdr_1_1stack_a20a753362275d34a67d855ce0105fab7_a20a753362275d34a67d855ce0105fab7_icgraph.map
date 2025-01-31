@@ -1,0 +1,9 @@
+<map id="top" name="top">
+<area shape="rect" id="Node000001" title="Provides access to the top element of the stack." alt="" coords="201,52,240,75"/>
+<area shape="rect" id="Node000002" href="$d9/dcb/classchdr_1_1mazes_1_1graph_a5ca1351a03df5ff49f85cc4b5669cefc.html#a5ca1351a03df5ff49f85cc4b5669cefc" title="Constructs a graph instance from a grid structure." alt="" coords="5,5,153,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="188,54,152,42,118,31,119,26,154,37,189,49"/>
+<area shape="rect" id="Node000003" href="$db/dc9/classchdr_1_1stack_a66ae5a391f699d2e564c2545ab9c6d82.html#a66ae5a391f699d2e564c2545ab9c6d82" title="Provides access to the top element of the stack." alt="" coords="57,52,101,75"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="188,66,102,66,102,61,188,61"/>
+<area shape="rect" id="Node000004" href="$db/dc9/classchdr_1_1stack_acbf9b62bac7333654c7862dc8cfd1e48.html#acbf9b62bac7333654c7862dc8cfd1e48" title="Provides access to the top element of the stack." alt="" coords="57,99,101,121"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="189,77,154,89,103,106,101,101,152,83,187,72"/>
+</map>
