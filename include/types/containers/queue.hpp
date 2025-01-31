@@ -54,10 +54,8 @@ namespace chdr {
          * @details This constructor initialises the queue, with support for a custom memory resource.
          *          If no memory resource is explicitly provided, the default memory resource is used.
          *
-         * @param [in] _resource A pointer to the memory resource to be used for
+         * @param [in, out] _resource A pointer to the memory resource to be used for
          *                       memory allocation. Defaults to the global default polymorphic memory resource.
-         *
-         * @return A constructed `queue` object configured with the provided or default memory resource.
          */
         constexpr queue(std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {}
 

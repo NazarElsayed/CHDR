@@ -45,7 +45,6 @@ namespace chdr::mazes {
         /**
          * @brief Constructs an id_node instance with the specified identifier.
          * @param _id The identifier to initialise the id_node with.
-         * @return An id_node instance containing the provided identifier.
          */
         [[nodiscard]] constexpr id_node(index_t _id) noexcept : m_id(_id) {}
 

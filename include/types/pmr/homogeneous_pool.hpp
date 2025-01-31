@@ -235,7 +235,7 @@ namespace chdr {
          *          it in the internal free list for reuse.
          *
          * @param [in] _p Pointer to the memory block to be deallocated. Must not be null.
-         * @param [in] _size Size of the memory block to be deallocated, in bytes. Currently unused.
+         * @param [in] _bytes Size of the memory block to be deallocated, in bytes. Currently unused.
          * @param [in] _alignment Alignment constraint for the start of the allocated memory block.
          *                 Must be a power of two. Currently unused.
          *
@@ -245,7 +245,7 @@ namespace chdr {
          * @warning Calling this function with a nullptr, or attempting to release memory not
          *          owned by the pool is undefined behaviour.
          */
-        HOT void do_deallocate(void* _p, const size_t /*__bytes*/, size_t /*__alignment*/) override {
+        HOT void do_deallocate([[maybe_unused]] void* _p, [[maybe_unused]] const size_t _bytes, [[maybe_unused]] size_t _alignment) override {
             assert(_p != nullptr && "Cannot deallocate null pointer.");
 
             m_free.push_back(static_cast<uint8_t*>(_p));
@@ -257,7 +257,7 @@ namespace chdr {
          * @details This method overrides the `do_is_equal` function of the `std::pmr::memory_resource` interface.
          *          It determines if the specified memory resource is the same as the current instance.
          *
-         * @param _other [in] A reference to another `memory_resource` object to compare against.
+         * @param [in] _other A reference to another `memory_resource` object to compare against.
          *
          * @returns `true` if the provided memory resource is the same instance as this one; `false` otherwise.
          */

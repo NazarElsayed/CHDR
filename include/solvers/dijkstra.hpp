@@ -9,12 +9,47 @@
 #ifndef CHDR_DIJKSTRA_HPP
 #define CHDR_DIJKSTRA_HPP
 
+/**
+ * @file dijkstra.hpp
+ */
+
+#include <iostream>
 #include <vector>
 
 #include "base/solver.hpp"
 
 namespace chdr::solvers {
 
+    /**
+     * @struct dijkstra
+     * @brief Dijkstra's algorithm [unfinished].
+     * @details Dijkstra's algorithm (Dijkstra, E. W. 1959) is a graph traversal and pathfinding algorithm.
+     *          It is a "single-source, multiple-target" (SSMT) algorithm, providing a technique for resolving
+     *          the shortest path between a source and every other node in a graph.\n\n
+     *
+     * @warning This algorithm is not yet implemented.
+     *
+     * Advantages:
+     * - Guarantees the lowest-cost path in graphs with non-negative edge weights.
+     * - Effective and efficient in graphs with relatively few edges.
+     * - Works well for both directed and undirected graphs.
+     *
+     * Limitations:
+     * - Requires all edge weights to be non-negative (does not handle negative weights).
+     * - Can be less efficient in dense graphs compared to other algorithms like Floyd-Warshall.
+     * - Quickly consumes memory in large or exhaustive searches.
+     * - Largely superceded by other algorithms for "single-source, single-target" (SSST) searches.
+     *
+     * Further Reading:
+     * - <a href="https://en.wikipedia.org/wiki/Dijkstra's_algorithm">Wikipedia Article</a>
+     *
+     * References:
+     * - Dijkstra, E. W., 1959. A Note on Two Problems in Connexion with Graphs. Numerische Mathematik, 1, 269–271.
+     *
+     * @note Unlike SSST algorithms, Dijkstra returns a shortest-path tree,
+     *       indicating the shortest path between any node and the source.
+     * @tparam params_t Type containing the search parameters.
+     */
     template<typename params_t>
     struct [[maybe_unused]] dijkstra final {
 

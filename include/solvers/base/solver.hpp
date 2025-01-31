@@ -530,8 +530,6 @@ namespace chdr::solvers {
          * @brief Constructor for the `solver` class.
          *
          * @details Initialises a `solver` instance with default values.
-         *
-         * @return Instance of the `solver` class.
          */
         [[nodiscard]] constexpr solver() noexcept = default;
         ~solver() = default;
@@ -544,6 +542,8 @@ namespace chdr::solvers {
          * @brief Executes the solver with the provided parameters. Parameters are constructed using perfect forwarding.
          *
          * @details Constructs a parameters object using the given arguments, and uses it to invoke the desired solver.
+         *
+         * @param _args A parameter pack containing the arguments to construct the parameters object.
          *
          * @note You must ensure that the given arguments are valid for constructing the parameters for your intended search.
          *
@@ -630,6 +630,8 @@ namespace chdr::solvers {
          * @brief Executes the solver with the provided parameters. Parameters are constructed using perfect forwarding.
          *
          * @details Constructs a parameters object using the given arguments, and uses it to invoke the desired solver.
+         *
+         * @param _args A parameter pack containing the arguments to construct the parameters object.
          *
          * @note You must ensure that the given arguments are valid for constructing the parameters for your intended search.
          *

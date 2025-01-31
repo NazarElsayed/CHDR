@@ -9,6 +9,7 @@ var hierarchy =
       [ "unmanaged_node< index_t >", "d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html", null ]
     ] ],
     [ "dfs< params_t >", "d9/db9/structchdr_1_1solvers_1_1dfs.html", null ],
+    [ "dijkstra< params_t >", "db/d52/structchdr_1_1solvers_1_1dijkstra.html", null ],
     [ "existence_set< width_t >", "d6/db9/classchdr_1_1existence__set.html", null ],
     [ "flood< params_t >", "d7/da2/structchdr_1_1solvers_1_1flood.html", null ],
     [ "fstar< params_t >", "df/d41/structchdr_1_1solvers_1_1fstar.html", null ],

@@ -133,6 +133,12 @@ template&lt;typename... Args&gt; </div>
 
 <p>Executes the solver with the provided parameters. Parameters are constructed using perfect forwarding. </p>
 <p>Constructs a parameters object using the given arguments, and uses it to invoke the desired solver.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">_args</td><td>A parameter pack containing the arguments to construct the parameters object.</td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section note"><dt>Note</dt><dd>You must ensure that the given arguments are valid for constructing the parameters for your intended search.</dd></dl>
 <dl class="section remark"><dt>Remarks</dt><dd>Calling this will reset the state of <code>monotonic_pmr</code>, <code>polytonic_pmr</code>, and <code>homogeneous_pmr</code>, if they have a visible method <code>reset()</code>.</dd></dl>
 <dl class="section warning"><dt>Warning</dt><dd>Aliasing the polymorphic memory resources as other types may hide the <code>reset()</code> method from this function. If you intend for this function to trigger a reset of these parameters, you must provide them as a type where the <code>reset()</code> method is visible.</dd></dl>

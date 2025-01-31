@@ -54,8 +54,8 @@ namespace chdr {
          * @details Constructs a new stack, optionally associating it with a specific memory resource.
          *          If no memory resource is specified, the stack uses the default memory resource.
          *
-         * @param [in] _resource (optional) Pointer to the memory resource to be used for memory allocations.
-         *                       If not provided, the default memory resource is utilised.
+         * @param [in, out] _resource (optional) Pointer to the memory resource to be used for memory allocations.
+         *                            If not provided, the default memory resource is utilised.
          */
         constexpr stack([[maybe_unused]] std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {}
 

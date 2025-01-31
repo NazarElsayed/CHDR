@@ -18,7 +18,7 @@
 <text text-anchor="start" x="4" y="-84.1" font-family="Helvetica,sans-Serif" font-size="8.00">#</text>
 <text text-anchor="start" x="13" y="-84.1" font-family="Helvetica,sans-Serif" font-size="8.00">void * do_allocate(const size_t _bytes, const size_t _alignment) override</text>
 <text text-anchor="start" x="4" y="-71.1" font-family="Helvetica,sans-Serif" font-size="8.00">#</text>
-<text text-anchor="start" x="13" y="-71.1" font-family="Helvetica,sans-Serif" font-size="8.00">void do_deallocate(void *, const size_t, size_t) override</text>
+<text text-anchor="start" x="13" y="-71.1" font-family="Helvetica,sans-Serif" font-size="8.00">void do_deallocate(void *_p, const size_t _bytes, size_t _alignment) override</text>
 <text text-anchor="start" x="4" y="-58.1" font-family="Helvetica,sans-Serif" font-size="8.00">#</text>
 <text text-anchor="start" x="13" y="-58.1" font-family="Helvetica,sans-Serif" font-size="8.00">bool do_is_equal(const memory_resource &amp;_other) const noexcept override</text>
 <text text-anchor="start" x="4.5" y="-45.1" font-family="Helvetica,sans-Serif" font-size="8.00">*</text>

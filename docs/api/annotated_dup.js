@@ -14,6 +14,7 @@ var annotated_dup =
         [ "bfs", "d3/d8d/structchdr_1_1solvers_1_1bfs.html", null ],
         [ "bnode", "da/d98/structchdr_1_1solvers_1_1bnode.html", "da/d98/structchdr_1_1solvers_1_1bnode" ],
         [ "dfs", "d9/db9/structchdr_1_1solvers_1_1dfs.html", null ],
+        [ "dijkstra", "db/d52/structchdr_1_1solvers_1_1dijkstra.html", null ],
         [ "flood", "d7/da2/structchdr_1_1solvers_1_1flood.html", null ],
         [ "fstar", "df/d41/structchdr_1_1solvers_1_1fstar.html", null ],
         [ "gbfs", "d5/d28/structchdr_1_1solvers_1_1gbfs.html", null ],

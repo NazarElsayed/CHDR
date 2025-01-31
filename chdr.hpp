@@ -22,7 +22,7 @@
  */
 
 /** @brief Full version string of the CHDR library. */
-#define CHDR_VERSION          "0.1.0-dev+17d53450"
+#define CHDR_VERSION          "0.1.0-dev+60a6a11f"
 
 /** @brief CHDR major version number. */
 #define CHDR_VERSION_MAJOR     0
@@ -37,7 +37,7 @@
 #define CHDR_VERSION_TWEAK    "dev"
 
 /** @brief CHDR version metadata string. */
-#define CHDR_VERSION_METADATA "17d53450"
+#define CHDR_VERSION_METADATA "60a6a11f"
 
 /* ReSharper enable CppUnusedIncludeDirective */
 // NOLINTBEGIN(*-include-cleaner)

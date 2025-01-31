@@ -192,8 +192,6 @@ namespace chdr::solvers {
          *
          * @see bnode
          * @see m_parent
-         *
-         * @return An instance of managed_node, initialised with the given parameters.
          */
         [[nodiscard]] HOT constexpr managed_node(index_t _index, managed_node* RESTRICT const _parent = nullptr) noexcept : bnode<index_t>(_index),
             m_parent(_parent),
@@ -226,8 +224,8 @@ namespace chdr::solvers {
          *          the root of the hierarchy is reached, or a node with a non-zero
          *          successor count is found.
          *
-         * @param[in, out] _pmr A pointer to the polymorphic memory resource used for deallocating
-         *                      nodes. It must manage the memory appropriately and be properly initialised.
+         * @param [in, out] resource A pointer to the polymorphic memory resource used for deallocating nodes.
+         *                           It must manage the memory appropriately and be properly initialised.
          *
          * @warning Care should be taken to ensure that the hierarchy structure remains valid and
          *          consistency is maintained, as improper use can result in undefined behaviour due
@@ -236,8 +234,8 @@ namespace chdr::solvers {
          * @see m_parent
          * @see managed_node
          */
-        template <typename pmr_t>
-        HOT void expunge(pmr_t* _pmr) {
+        template <typename memory_resource_t>
+        HOT void expunge(memory_resource_t* resource) {
 
             while (m_parent != nullptr) {
                 decr();
@@ -245,7 +243,7 @@ namespace chdr::solvers {
                 if (m_parent->m_successors == 0U) {
                     auto* const RESTRICT d = m_parent;
                     m_parent = m_parent->m_parent;
-                    _pmr->deallocate(d, sizeof(managed_node), alignof(managed_node));
+                    resource->deallocate(d, sizeof(managed_node), alignof(managed_node));
                 }
                 else {
                     break;

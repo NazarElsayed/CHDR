@@ -230,7 +230,7 @@ namespace chdr {
          * @param [in] _alignment Alignment constraint for the start of the allocated memory block.
          *             Must be a power of two. Currently unused.
          */
-        HOT void do_deallocate(void* /*__p*/, const size_t /*__bytes*/, size_t /*__alignment*/) override {
+        HOT void do_deallocate([[maybe_unused]] void* _p, [[maybe_unused]] const size_t _bytes, [[maybe_unused]] size_t _alignment) override {
             // No-op.
         }
 
@@ -258,6 +258,7 @@ namespace chdr {
         /**
          * @brief Constructs a memory pool.
          * @details Initialises a pooled memory resource.
+         * @param _initial_block_width Width of the first dynamically-allocated block. (optional)
          */
         monotonic_pool(size_t _initial_block_width = s_default_heap_block_size) noexcept :
             m_stack_block        (),

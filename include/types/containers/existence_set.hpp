@@ -189,7 +189,7 @@ namespace chdr {
          *
          * @param [in] _items The items to initialise the existence_set with, given as an initializer list.
          * @param [in, out] _resource (optional) Pointer to the memory resource to use for the internal memory management.
-         *                        Defaults to std::pmr::get_default_resource().
+         *                                       Defaults to std::pmr::get_default_resource().
          */
         [[maybe_unused]] constexpr existence_set(const std::initializer_list<size_t>& _items, std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {
 

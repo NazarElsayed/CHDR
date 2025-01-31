@@ -103,7 +103,7 @@ namespace chdr {
          *
          * @param _capacity The desired capacity of the heap container.
          * @param [in, out] _resource (optional) A pointer to a polymorphic memory resource for managing memory allocations.
-         *                  If not provided, the default polymorphic memory resource is used.
+         *                                       If not provided, the default polymorphic memory resource is used.
          */
         heap(size_t _capacity, std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {
             c.reserve(utils::min(_capacity, std::numeric_limits<size_t>::max() - 1U) + 1U);

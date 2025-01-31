@@ -81,8 +81,6 @@ namespace chdr::mazes {
          *
          * @param [in] _resource A pointer to a memory resource for allocator usage. Defaults to
          *                       `std::pmr::get_default_resource`. (optional)
-         *
-         * @return A `graph` instance with no nodes or edges.
          */
         [[maybe_unused]] constexpr graph(std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) noexcept : m_entries(_resource) {}
 
@@ -98,8 +96,6 @@ namespace chdr::mazes {
          *
          * @param [in] _resource A pointer to a memory resource for allocator usage. Defaults to
          *                       `std::pmr::get_default_resource`. (optional)
-         *
-         * @return A `graph` instance with nodes and edges created from the provided adjacency list.
          */
         [[maybe_unused]] constexpr graph(const std::initializer_list<std::initializer_list<edge_t>>& _adjacency_list, std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : m_entries(_resource) {
 

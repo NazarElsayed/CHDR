@@ -97,8 +97,6 @@ namespace chdr::solvers {
          *
          * @warning If `_parent` is not `nullptr`, it must point to a valid and initialised
          *          unmanaged_node. Failing to ensure this may lead to undefined behaviour.
-         *
-         * @return An instance of unmanaged_node, initialised with the given parameters.
          */
         [[nodiscard]] HOT constexpr unmanaged_node(index_t _index, const unmanaged_node* RESTRICT const _parent = nullptr) noexcept : bnode<index_t>(_index),
             m_parent(_parent) {}

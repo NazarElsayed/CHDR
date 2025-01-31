@@ -51,7 +51,6 @@ namespace chdr::mazes {
          * @brief Constructs a weighted_node instance with the specified weight.
          * @param _value The weight to initialise the weighted_node with.
          * @warning For weighted_node instances, the maximum value of weight_t is reserved for inactive nodes.
-         * @return A weighted_node instance with the specified weight.
          */
         [[nodiscard]] constexpr weighted_node(weight_t _value) noexcept : m_value(_value) {}
 

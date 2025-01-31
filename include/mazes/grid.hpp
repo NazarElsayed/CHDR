@@ -91,7 +91,7 @@ namespace chdr::mazes {
          *
          * @details Initialises the grid with the given dimensions.
          *
-         * @param[in] _size The dimensions of the grid, represented as a `coord_t` type.
+         * @param [in] _size The dimensions of the grid, represented as a `coord_t` type.
          */
         constexpr grid(const coord_t& _size) :
             m_size(_size),
@@ -106,8 +106,8 @@ namespace chdr::mazes {
          *          
          * @note The number of nodes provided must match the total number of cells in the grid.
          *
-         * @param[in] _size The dimensions of the grid, represented as a `coord_t` type.
-         * @param[in] _nodes A vector of node values.
+         * @param [in] _size The dimensions of the grid, represented as a `coord_t` type.
+         * @param [in] _nodes A vector of node values.
          *
          * @warning The number of nodes provided must match the number of cells in the grid.
          */
@@ -335,7 +335,7 @@ namespace chdr::mazes {
          * @details Evaluates the state of a cell based on its active neighbours.
          *          A cell is considered transitory if it has precisely two active neighbours.
          *
-         * @param _index The index of the cell to evaluate.
+         * @param _neighbours The index of the cell to evaluate.
          *
          * @return True if the cell has exactly two active neighbours; otherwise, false.
          */
@@ -653,7 +653,7 @@ namespace chdr::mazes {
 
         /**
          * @brief Retrieves the node at a specified coordinate.
-         * @param _id Coordinate of the node to retrieve.
+         * @param [in] _id Coordinate of the node to retrieve.
          * @warning If the specified coordinate is out of bounds, calling this function is undefined behaviour.
          * @return Node at a specified coordinate within the grid.
          * @see contains()
@@ -729,7 +729,7 @@ namespace chdr::mazes {
          * @details Evaluates the state of a cell based on its active neighbours.
          *          A cell is considered transitory if it has precisely two active neighbours.
          *
-         * @param _index The index of the cell to evaluate.
+         * @param _neighbours Neighbours to evaluate.
          *
          * @return True if the cell has exactly two active neighbours; otherwise, false.
          */

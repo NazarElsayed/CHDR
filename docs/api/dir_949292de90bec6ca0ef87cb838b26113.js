@@ -5,7 +5,7 @@ var dir_949292de90bec6ca0ef87cb838b26113 =
     [ "best_first.hpp", "d3/d77/best__first_8hpp.html", "d3/d77/best__first_8hpp" ],
     [ "bfs.hpp", "da/d36/bfs_8hpp.html", "da/d36/bfs_8hpp" ],
     [ "dfs.hpp", "d3/dec/dfs_8hpp.html", "d3/dec/dfs_8hpp" ],
-    [ "dijkstra.hpp", "d3/d11/dijkstra_8hpp_source.html", null ],
+    [ "dijkstra.hpp", "d3/d11/dijkstra_8hpp.html", "d3/d11/dijkstra_8hpp" ],
     [ "eidastar.hpp", "d6/ded/eidastar_8hpp_source.html", null ],
     [ "eidbstar.hpp", "dd/d67/eidbstar_8hpp_source.html", null ],
     [ "eiddfs.hpp", "dd/d95/eiddfs_8hpp_source.html", null ],
