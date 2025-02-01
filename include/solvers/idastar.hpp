@@ -18,6 +18,9 @@
 #include "base/bnode.hpp"
 #include "base/solver.hpp"
 
+// ReSharper disable once CppUnusedIncludeDirective
+#include "../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
+
 namespace chdr::solvers {
 
     template<typename params_t>
@@ -74,6 +77,8 @@ namespace chdr::solvers {
                 bound(_bound),
                 neighbours(_params.maze.get_neighbours(_curr.m_index)),
                 neighbours_idx(0U) {}
+
+            ~state() = default;
 
             state           (const state&) = delete;
             state& operator=(const state&) = delete;

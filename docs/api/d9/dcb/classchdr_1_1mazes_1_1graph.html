@@ -122,9 +122,9 @@ class chdr::mazes::graph&lt; index_t, scalar_t &gt;</div><p>Graph structure for 
 <dl class="section note"><dt>Note</dt><dd>This class uses polymorphic memory resources (<code>std::pmr::memory_resource</code>). </dd>
 <dd>
 Follows an STL-like design and supports iterators.</dd></dl>
-<dl class="section warning"><dt>Warning</dt><dd>It is very strongly recommended that you use a pool allocation scheme (i.e <code>std::pmr::unsynchronized_pool_resource</code>, <code>std::pmr::synchronized_pool_resource</code>) with this data structure to improve data locality and reduce fragmentation. </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>It is very strongly recommended that you use a pool allocation scheme (i.e. <code>std::pmr::unsynchronized_pool_resource</code>, <code>std::pmr::synchronized_pool_resource</code>) with this data structure to improve data locality and reduce fragmentation. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d9/de9/graph_8hpp_source.html#l00055">55</a> of file <a class="el" href="../../d9/de9/graph_8hpp_source.html">graph.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d9/de9/graph_8hpp_source.html#l00061">61</a> of file <a class="el" href="../../d9/de9/graph_8hpp_source.html">graph.hpp</a>.</p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Constructors</h2></td></tr>
 <tr class="memitem:af6a9cefebb16df824bca88d7ad895f70" id="r_af6a9cefebb16df824bca88d7ad895f70"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dcb/classchdr_1_1mazes_1_1graph_af6a9cefebb16df824bca88d7ad895f70.html#af6a9cefebb16df824bca88d7ad895f70">graph</a> (std::pmr::memory_resource *_resource=std::pmr::get_default_resource()) noexcept</td></tr>
@@ -137,9 +137,6 @@ Follows an STL-like design and supports iterators.</dd></dl>
 <tr class="memitem:a5ca1351a03df5ff49f85cc4b5669cefc"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d9/dcb/classchdr_1_1mazes_1_1graph_a5ca1351a03df5ff49f85cc4b5669cefc.html#a5ca1351a03df5ff49f85cc4b5669cefc">graph</a> (const <a class="el" href="../../dd/de3/classchdr_1_1mazes_1_1grid.html">grid</a>&lt; coord_t, weight_t &gt; &amp;_grid, std::pmr::memory_resource *_resource=std::pmr::get_default_resource())</td></tr>
 <tr class="memdesc:a5ca1351a03df5ff49f85cc4b5669cefc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <code>graph</code> instance from a grid structure.  <br /></td></tr>
 <tr class="separator:a5ca1351a03df5ff49f85cc4b5669cefc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a997cc2471f01562028c11abd6d463160" id="r_a997cc2471f01562028c11abd6d463160"><td class="memItemLeft" align="right" valign="top">const auto &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dcb/classchdr_1_1mazes_1_1graph_a997cc2471f01562028c11abd6d463160.html#a997cc2471f01562028c11abd6d463160">at</a> (const index_t &amp;_id) const</td></tr>
-<tr class="memdesc:a997cc2471f01562028c11abd6d463160"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the vertex at a specified index.  <br /></td></tr>
-<tr class="separator:a997cc2471f01562028c11abd6d463160"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab41a4e064828273b133921f8d05a7540" id="r_ab41a4e064828273b133921f8d05a7540"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dcb/classchdr_1_1mazes_1_1graph_ab41a4e064828273b133921f8d05a7540.html#ab41a4e064828273b133921f8d05a7540">add</a> (index_t _from_id)</td></tr>
 <tr class="memdesc:ab41a4e064828273b133921f8d05a7540"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a new vertex to the graph with the specified identifier.  <br /></td></tr>
 <tr class="separator:ab41a4e064828273b133921f8d05a7540"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -162,9 +159,12 @@ Follows an STL-like design and supports iterators.</dd></dl>
 <tr class="memitem:a03bfacfaaba9195e4498375659f43531" id="r_a03bfacfaaba9195e4498375659f43531"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dcb/classchdr_1_1mazes_1_1graph_a03bfacfaaba9195e4498375659f43531.html#a03bfacfaaba9195e4498375659f43531">clear</a> () noexcept</td></tr>
 <tr class="memdesc:a03bfacfaaba9195e4498375659f43531"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears all entries from the graph.  <br /></td></tr>
 <tr class="separator:a03bfacfaaba9195e4498375659f43531"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac7b04f1f94182c3fa0db1d1449eeb3a9" id="r_ac7b04f1f94182c3fa0db1d1449eeb3a9"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="../../db/d4a/classchdr_1_1mazes_1_1id__node.html">id_node</a>&lt; index_t &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dcb/classchdr_1_1mazes_1_1graph_ac7b04f1f94182c3fa0db1d1449eeb3a9.html#ac7b04f1f94182c3fa0db1d1449eeb3a9">operator[]</a> (size_t _id) const noexcept</td></tr>
-<tr class="memdesc:ac7b04f1f94182c3fa0db1d1449eeb3a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the vertex at a specified index.  <br /></td></tr>
-<tr class="separator:ac7b04f1f94182c3fa0db1d1449eeb3a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a943b441c52cc08ef04269321f14cc1f9" id="r_a943b441c52cc08ef04269321f14cc1f9"><td class="memItemLeft" align="right" valign="top">auto &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dcb/classchdr_1_1mazes_1_1graph_a943b441c52cc08ef04269321f14cc1f9.html#a943b441c52cc08ef04269321f14cc1f9">operator[]</a> (size_t _id) const noexcept</td></tr>
+<tr class="memdesc:a943b441c52cc08ef04269321f14cc1f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the vertex at a specified index.  <br /></td></tr>
+<tr class="separator:a943b441c52cc08ef04269321f14cc1f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16518fd691e7ddba60f06d5c767b1f8e" id="r_a16518fd691e7ddba60f06d5c767b1f8e"><td class="memItemLeft" align="right" valign="top">static const auto &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dcb/classchdr_1_1mazes_1_1graph_a16518fd691e7ddba60f06d5c767b1f8e.html#a16518fd691e7ddba60f06d5c767b1f8e">at</a> (const index_t &amp;_id)</td></tr>
+<tr class="memdesc:a16518fd691e7ddba60f06d5c767b1f8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the vertex at a specified index.  <br /></td></tr>
+<tr class="separator:a16518fd691e7ddba60f06d5c767b1f8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Collaboration diagram for graph&lt; index_t, scalar_t &gt;:</div>

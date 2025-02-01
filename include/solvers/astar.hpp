@@ -14,14 +14,17 @@
  */
 
 #include <cstddef>
+#include <type_traits>
 #include <vector>
 
 #include "../types/containers/existence_set.hpp"
 #include "../types/containers/heap.hpp"
 #include "../utils/utils.hpp"
-#include "base/managed_node.hpp"
 #include "base/solver.hpp"
 #include "base/unmanaged_node.hpp"
+
+// ReSharper disable once CppUnusedIncludeDirective
+#include "../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
 
 namespace chdr::solvers {
 
@@ -36,7 +39,7 @@ namespace chdr::solvers {
      * Advantages:
      * - Low constant time factor makes A* particularly effective in small to moderately sized search spaces.
      * - Able to modulate between a breadth-first and a best-first approach.
-     * - Does not need a prepass, although performance can improve if the search space is pruned first.
+     * - Does not need a pre-pass, although performance can improve if the search space is pruned first.
      * - High performance in bounded (finite) search scenarios.
      *
      * Limitations:
@@ -87,6 +90,8 @@ namespace chdr::solvers {
                 m_gScore(_gScore),
                 m_fScore(_gScore + _hScore) {}
 
+            ~node() = default;
+
             node           (const node&) = delete;
             node& operator=(const node&) = delete;
 
@@ -96,7 +101,7 @@ namespace chdr::solvers {
             constexpr
 #endif
             HOT node& operator=(node&& _other) noexcept = default;
-            
+
             [[nodiscard]] HOT friend constexpr bool operator < (const node& _a, const node& _b) noexcept {
                 return _a.m_fScore == _b.m_fScore ?
                        _a.m_gScore >  _b.m_gScore :

@@ -14,9 +14,11 @@
  */
 
 #include <cstddef>
-#include <queue>
-#include <vector>
+#include <deque>
 #include <memory_resource>
+
+// ReSharper disable once CppUnusedIncludeDirective
+#include "../../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
 
 namespace chdr {
 
@@ -233,10 +235,10 @@ namespace chdr {
             c = std::move(decltype(c){});
         }
 
-        using               iterator_t = typename std::vector<T>::              iterator;
-        using         const_iterator_t = typename std::vector<T>::        const_iterator;
-        using       reverse_iterator_t = typename std::vector<T>::      reverse_iterator;
-        using const_reverse_iterator_t = typename std::vector<T>::const_reverse_iterator;
+        using               iterator_t = typename decltype(c)::              iterator;
+        using         const_iterator_t = typename decltype(c)::        const_iterator;
+        using       reverse_iterator_t = typename decltype(c)::      reverse_iterator;
+        using const_reverse_iterator_t = typename decltype(c)::const_reverse_iterator;
 
         [[maybe_unused, nodiscard]] constexpr       iterator_t  begin()       noexcept { return c.begin();  }
         [[maybe_unused, nodiscard]] constexpr const_iterator_t  begin() const noexcept { return c.begin();  }

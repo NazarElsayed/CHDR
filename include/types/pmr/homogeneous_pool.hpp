@@ -13,14 +13,17 @@
  * @file homogeneous_pool.hpp
  */
 
+#include <algorithm>
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
-#include <memory_resource>
 #include <utility>
 #include <vector>
-#include <algorithm>
 
+// ReSharper disable once CppUnusedIncludeDirective
+#include <memory_resource> // NOLINT(*-include-cleaner)
+
+// ReSharper disable once CppUnusedIncludeDirective
 #include "../../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
 #include "../../utils/utils.hpp"
 
@@ -51,29 +54,12 @@ namespace chdr {
      */
     template <size_t StackSize = 4096U, size_t MaxStackAllocationSize = -1U, size_t MaxHeapBlockSize = 65536U>
     class homogeneous_pool final : public std::pmr::memory_resource {
-    
+
     private:
 
         struct block final {
-
             size_t   size;
             uint8_t* data;
-
-            [[nodiscard]] HOT constexpr block(size_t _size, uint8_t* _data) noexcept :
-                size(_size),
-                data(_data) {}
-
-            ~block() = default;
-
-            [[nodiscard]] HOT constexpr block           (const block&) = default;
-                          HOT constexpr block& operator=(const block&) = default;
-
-            [[nodiscard]] HOT constexpr block(block&& _other) noexcept = default;
-
-#if __cplusplus > 202302L
-            constexpr
-#endif
-            block& operator=(block&& _other) noexcept = default;
         };
 
         static constexpr size_t        s_stack_block_size { StackSize        };
@@ -110,11 +96,10 @@ namespace chdr {
                 const auto aligned_chunk_size = (     _size + _alignment - 1U) & ~(_alignment - 1U);
                 const auto aligned_base       = (result_num + _alignment - 1U) & ~(_alignment - 1U);
 
-                // Divide into aligned chunks:
-                const auto num_chunks = (allocate_size - (aligned_base - result_num)) / aligned_chunk_size;
-
-                // Distribute free chunks:
-                if (num_chunks > 1U) {
+                // Divide into aligned chunks and distribute:
+                if (const auto num_chunks = (allocate_size - (aligned_base - result_num)) / aligned_chunk_size;
+                    num_chunks > 1U
+                ) {
                     m_free.reserve(m_free.size() + num_chunks - 1U);
 
                     IVDEP
@@ -129,7 +114,9 @@ namespace chdr {
 
                 /* Catch any errors that occur during allocation. */
 
+                // ReSharper disable once CppDFAConstantConditions
                 if (result != nullptr) {
+                    // ReSharper disable once CppDFAUnreachableCode
                     ::operator delete(result, static_cast<std::align_val_t>(_alignment));
                     result = nullptr;
 
@@ -172,7 +159,7 @@ namespace chdr {
                 ::operator delete(item.data, static_cast<std::align_val_t>(m_alignment));
             }
         }
-    
+
     protected:
 
         /**

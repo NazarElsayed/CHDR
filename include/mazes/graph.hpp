@@ -13,11 +13,11 @@
  * @file graph.hpp
  */
 
+#include <array>
 #include <cassert>
 #include <cstddef>
 #include <future>
 #include <initializer_list>
-#include <iostream>
 #include <mutex>
 #include <thread>
 #include <unordered_map>
@@ -25,10 +25,16 @@
 #include <utility>
 #include <vector>
 
+// ReSharper disable once CppUnusedIncludeDirective
+#include <memory_resource> // NOLINT(*-include-cleaner)
+
+#include "grid.hpp"
 #include "../types/containers/stack.hpp"
 #include "../utils/utils.hpp"
-#include "grid.hpp"
 #include "nodes/id_node.hpp"
+
+// ReSharper disable once CppUnusedIncludeDirective
+#include "../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
 
 namespace chdr::mazes {
 
@@ -48,7 +54,7 @@ namespace chdr::mazes {
      * @note Follows an STL-like design and supports iterators.
      * 
      * @warning It is very strongly recommended that you use a pool allocation scheme
-     *          (i.e `std::pmr::unsynchronized_pool_resource`, `std::pmr::synchronized_pool_resource`)
+     *          (i.e. `std::pmr::unsynchronized_pool_resource`, `std::pmr::synchronized_pool_resource`)
      *          with this data structure to improve data locality and reduce fragmentation.
      */
     template<typename index_t, typename scalar_t>
@@ -242,25 +248,29 @@ namespace chdr::mazes {
 
                 const auto chunkSize = static_cast<index_t>((count + numThreads - 1U) / numThreads);
 
-                std::vector<std::future<void>> futures;
-                futures.reserve(numThreads);
+                std::array<std::future<void>, 6U> futures;
 
                 for (size_t i = 0U; i < numThreads; ++i) {
+                    assert(i < numThreads && "Error: Index 'i' exceeds the number of initialised threads.");
 
                     const index_t start = static_cast<index_t>(i) * chunkSize;
                     const index_t end   = utils::min(start + chunkSize, static_cast<index_t>(count));
 
-                    futures.emplace_back(std::async(std::launch::async, worker, start, end));
+                    futures[i] = std::async(std::launch::async, worker, start, end);
                 }
 
-                for (auto& fut : futures) {
-                    fut.get();
+                for (size_t i = 0U; i < numThreads; ++i) {
+                    assert(i < numThreads && "Error: Index 'i' exceeds the number of initialised threads.");
+
+                    futures[i].get();
                 }
 
                 // Finalise the pruning process on a single thread.
                 prune<ConsolidateAfterPrune>();
             }
         }
+
+        ~graph() = default;
 
         [[nodiscard]] constexpr graph           (const graph&) = delete;
                       constexpr graph& operator=(const graph&) = delete;
@@ -280,7 +290,7 @@ namespace chdr::mazes {
          * @see contains()
          * @see operator[]()
          */
-        [[nodiscard]] constexpr const auto& at(const index_t& _id) const {
+        [[nodiscard]] static constexpr const auto& at(const index_t& _id) {
             assert(contains(_id) && "Error: The node with the specified ID does not exist in the graph.");
             return reinterpret_cast<const id_node<index_t>&>(_id);
         }
@@ -396,8 +406,10 @@ namespace chdr::mazes {
                                 auto  sn  = std::find(set.begin(), set.end(), std::make_pair(node, n1_cost));
 
                                 if (sn != set.end()) {
-                                    neighbour_t new_vertex{n2_id, sn->second + n2_cost};
-                                    if (std::find(set.begin(), set.end(), new_vertex) == set.end()) {
+
+                                    if (neighbour_t new_vertex { n2_id, sn->second + n2_cost };
+                                        std::find(set.begin(), set.end(), new_vertex) == set.end()
+                                    ) {
                                         set.emplace_back(new_vertex);
                                     }
                                 }
@@ -486,7 +498,7 @@ namespace chdr::mazes {
          * @see contains()
          * @see at()
          */
-        [[nodiscard]] HOT constexpr const id_node<index_t>& operator[](size_t _id) const noexcept {
+        [[nodiscard]] HOT constexpr auto& operator[](size_t _id) const noexcept {
             return at(_id);
         }
 

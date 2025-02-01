@@ -20,11 +20,11 @@ namespace chdr::mazes {
     /**
      * @nosubgrouping
      * @class id_node
-     * @brief Represents a node with a customisable identifier.
-     * @details The id_node class encapsulates an identifier of a user-defined integral type.
-     * @note The id_node class is equivalent to its stored identifier and can be reinterpreted as the identifier's type.
+     * @brief Represents a node with customisable identifier.
+     * @details Encapsulates an identifier of a user-defined integral type.
+     * @note Is equivalent to its stored identifier and can be reinterpreted as the identifier's type.
      * @remarks The stored identifier does not need to be unique.
-     * @tparam index_t The type of the identifier. Must be an integral type.
+     * @tparam index_t Identifier type. Must be integral type.
      */
     template <typename index_t>
     class id_node final {
@@ -43,8 +43,8 @@ namespace chdr::mazes {
          */
 
         /**
-         * @brief Constructs an id_node instance with the specified identifier.
-         * @param _id The identifier to initialise the id_node with.
+         * @brief Constructs an instance using the specified identifier.
+         * @param _id The identifier to initialise with.
          */
         [[nodiscard]] constexpr id_node(index_t _id) noexcept : m_id(_id) {}
 
@@ -63,7 +63,7 @@ namespace chdr::mazes {
         constexpr
 #endif
         id_node& operator=(id_node&&) noexcept = default;
-        
+
         /**
          * @brief Whether the node is active or not.
          * @warning For id_node instances, this always returns true.

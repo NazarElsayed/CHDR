@@ -111,13 +111,13 @@ $(document).ready(function(){initNavTree('db/dc4/structchdr_1_1mazes_1_1weighted
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename weight_t&gt;<br />
-struct chdr::mazes::weighted_node&lt; weight_t &gt;</div><p>Represents a node with a customisable weight. </p>
-<p>The <a class="el" href="../../db/dc4/structchdr_1_1mazes_1_1weighted__node.html" title="Represents a node with a customisable weight.">weighted_node</a> class encapsulates a weight of a user-defined integral type. </p><dl class="section note"><dt>Note</dt><dd>The <a class="el" href="../../db/dc4/structchdr_1_1mazes_1_1weighted__node.html" title="Represents a node with a customisable weight.">weighted_node</a> class is equivalent to its stored weight and can be reinterpreted as the weights's type. </dd></dl>
-<dl class="section remark"><dt>Remarks</dt><dd>The stored weight may be signed or unsigned. </dd></dl>
-<dl class="section warning"><dt>Warning</dt><dd>For <a class="el" href="../../db/dc4/structchdr_1_1mazes_1_1weighted__node.html" title="Represents a node with a customisable weight.">weighted_node</a> instances, the maximum value of weight_t is reserved for inactive nodes. </dd></dl>
+struct chdr::mazes::weighted_node&lt; weight_t &gt;</div><p>Represents a node with customisable weight. </p>
+<p>Encapsulates a user-defined integral type. </p><dl class="section note"><dt>Note</dt><dd>Is equivalent to its stored weight and can be reinterpreted as the weight's type. </dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>Stored weight may be signed or unsigned. </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>The maximum value of weight_t is reserved for inactive nodes. </dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">weight_t</td><td>The type representing weight. Must be an integral type. </td></tr>
+    <tr><td class="paramname">weight_t</td><td>Weight type. Must be integral. </td></tr>
   </table>
   </dd>
 </dl>
@@ -126,13 +126,13 @@ struct chdr::mazes::weighted_node&lt; weight_t &gt;</div><p>Represents a node wi
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Constructors</h2></td></tr>
 <tr class="memitem:a9756943f9da99f348748229a17ab28ed" id="r_a9756943f9da99f348748229a17ab28ed"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dc4/structchdr_1_1mazes_1_1weighted__node_a9756943f9da99f348748229a17ab28ed.html#a9756943f9da99f348748229a17ab28ed">weighted_node</a> (weight_t _value) noexcept</td></tr>
-<tr class="memdesc:a9756943f9da99f348748229a17ab28ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="../../db/dc4/structchdr_1_1mazes_1_1weighted__node.html" title="Represents a node with a customisable weight.">weighted_node</a> instance with the specified weight.  <br /></td></tr>
+<tr class="memdesc:a9756943f9da99f348748229a17ab28ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="../../db/dc4/structchdr_1_1mazes_1_1weighted__node.html" title="Represents a node with customisable weight.">weighted_node</a> instance with the specified weight.  <br /></td></tr>
 <tr class="separator:a9756943f9da99f348748229a17ab28ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Methods</h2></td></tr>
 <tr class="memitem:a518756b2cf243cebed5b0d669be1f757" id="r_a518756b2cf243cebed5b0d669be1f757"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dc4/structchdr_1_1mazes_1_1weighted__node_a518756b2cf243cebed5b0d669be1f757.html#a518756b2cf243cebed5b0d669be1f757">is_active</a> () const noexcept</td></tr>
-<tr class="memdesc:a518756b2cf243cebed5b0d669be1f757"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the node is active or not.  <br /></td></tr>
+<tr class="memdesc:a518756b2cf243cebed5b0d669be1f757"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the node counts as active.  <br /></td></tr>
 <tr class="separator:a518756b2cf243cebed5b0d669be1f757"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9a9d24859a5366d0b48f6496ed3574b5" id="r_a9a9d24859a5366d0b48f6496ed3574b5"><td class="memItemLeft" align="right" valign="top">weight_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dc4/structchdr_1_1mazes_1_1weighted__node_a9a9d24859a5366d0b48f6496ed3574b5.html#a9a9d24859a5366d0b48f6496ed3574b5">value</a> () const noexcept</td></tr>
 <tr class="memdesc:a9a9d24859a5366d0b48f6496ed3574b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the weight of the node.  <br /></td></tr>

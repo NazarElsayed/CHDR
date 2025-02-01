@@ -14,10 +14,10 @@
  */
 
 #include <cstddef>
+#include <limits>
 #include <type_traits>
 #include <vector>
 
-#include "../../types/containers/existence_set.hpp"
 #include "../../utils/utils.hpp"
 
 // ReSharper disable once CppUnusedIncludeDirective
@@ -94,14 +94,14 @@ namespace chdr::solvers {
             friend solver;
             friend struct solver_t<params_t>;
 
-        private:
+            solver_utils()                                = delete;
+            solver_utils           (const solver_utils& ) = delete;
+            solver_utils           (const solver_utils&&) = delete;
+            solver_utils& operator=(const solver_utils& ) = delete;
+            solver_utils& operator=(const solver_utils&&) = delete;
+            ~solver_utils()                               = delete;
 
-             solver_utils()                                = delete;
-             solver_utils           (const solver_utils& ) = delete;
-             solver_utils           (const solver_utils&&) = delete;
-             solver_utils& operator=(const solver_utils& ) = delete;
-             solver_utils& operator=(const solver_utils&&) = delete;
-            ~solver_utils()                                = delete;
+        private:
 
             /**
              * @struct is_graph
@@ -155,10 +155,16 @@ namespace chdr::solvers {
              private:
 
                  template <typename U>
-                 static constexpr auto has_method(int) -> decltype(&U::reset, std::true_type{});
+                 static constexpr decltype(&U::reset, std::true_type{}) has_method([[maybe_unused]] int _i) {
+                     static_assert(std::true_type::value, "This function should not be called at run time.");
+                     return {};
+                 }
 
                  template <typename>
-                 static constexpr std::false_type has_method(...);
+                 static constexpr std::false_type has_method(...) {
+                     static_assert(std::true_type::value, "This function should not be called at run time.");
+                     return {};
+                 }
 
              public:
 
@@ -214,11 +220,16 @@ namespace chdr::solvers {
             private:
 
                 template <typename U>
-                static constexpr auto has_method(int) -> decltype(&U::reset, std::true_type{});
+                static constexpr decltype(&U::reset, std::true_type{}) has_method([[maybe_unused]] int _i) {
+                    static_assert(std::true_type::value, "This function should not be called at run time.");
+                    return {};
+                }
 
                 template <typename>
-                static constexpr std::false_type has_method(...);
-
+                static constexpr std::false_type has_method(...) {
+                    static_assert(std::true_type::value, "This function should not be called at run time.");
+                    return {};
+                }
             public:
 
                 /**
@@ -343,18 +354,21 @@ namespace chdr::solvers {
             template<typename node_t, typename coord_t>
             static constexpr auto rbacktrack(const node_t& _node, const coord_t& _size) {
 
-                std::vector<coord_t> result;
+                std::vector<coord_t> result{};
 
                 {
                     size_t depth = 0U;
-                    for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent), ++depth) {}
+                    for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent)) {
+                        ++depth;
+                    }
 
                     result.resize(depth);
                 }
 
                 size_t i = 0U;
-                for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent), ++i) {
+                for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent)) {
                     result[(result.size() - 1U) - i] = utils::to_nd(t->m_index, _size);
+                    ++i;
                 }
 
                 return result;
@@ -384,8 +398,9 @@ namespace chdr::solvers {
                 std::vector<coord_t> result(_depth);
 
                 size_t i = 0U;
-                for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent), ++i) {
+                for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent)) {
                     result[(result.size() - 1U) - i] = utils::to_nd(t->m_index, _size);
+                    ++i;
                 }
 
                 return result;
@@ -406,10 +421,11 @@ namespace chdr::solvers {
             template <typename open_set_t, typename coord_t>
             [[nodiscard]] static constexpr auto ibacktrack(const open_set_t& _open, const coord_t& _size) {
 
-                std::vector<coord_t> result;
+                std::vector<coord_t> result{};
                 result.reserve(_open.size());
 
-                for (auto it = _open.rbegin(); it != _open.rend(); ++it) {
+                const auto end = _open.rend();
+                for (auto it = _open.rbegin(); it != end; ++it) {
                     result.emplace_back(utils::to_nd(it->m_index, _size));
                 }
 
@@ -428,7 +444,7 @@ namespace chdr::solvers {
          *
          * @note All member fields of this structure are immutable after initialisation.
          */
-        struct node_data {
+        struct node_data final {
 
             /** @brief Whether the node is active and should be considered within the search. */
             const bool active;
@@ -505,20 +521,6 @@ namespace chdr::solvers {
             }
         }
 
-         /**
-          * @name Constructors
-          * @{
-          */
-
-         solver           (const solver& ) = delete;
-         solver           (const solver&&) = delete;
-         solver& operator=(const solver& ) = delete;
-         solver& operator=(const solver&&) = delete;
-
-         /**
-          * @}
-          */
-
     public:
 
         /**
@@ -533,6 +535,11 @@ namespace chdr::solvers {
          */
         [[nodiscard]] constexpr solver() noexcept = default;
         ~solver() = default;
+
+        solver           (const solver& ) = delete;
+        solver           (const solver&&) = delete;
+        solver& operator=(const solver& ) = delete;
+        solver& operator=(const solver&&) = delete;
 
         /**
          * @}
@@ -588,6 +595,8 @@ namespace chdr::solvers {
 #endif // __cplusplus >= 202003L
         static auto solve(const params_t& _params) {
 
+            std::vector<typename params_t::coord_type> result{};
+
             std::exception_ptr exception;
 
             try {
@@ -597,10 +606,14 @@ namespace chdr::solvers {
                 if (_params.maze.contains(s) && _params.maze.at(s).is_active() &&
                     _params.maze.contains(e) && _params.maze.at(e).is_active()
                 ) {
-                    return s != e ? solver_t<params_t>::invoke(_params) : std::vector<typename params_t::coord_type> { _params.end };
+                    result = s != e ?
+                        solver_t<params_t>::invoke(_params) :
+                        std::vector<typename params_t::coord_type> { _params.end };
                 }
             }
             catch (...) { // NOLINT(*-empty-catch)
+
+                // ReSharper disable once CppDFAUnusedValue
                 exception = std::current_exception();
             }
 
@@ -623,7 +636,7 @@ namespace chdr::solvers {
                 std::rethrow_exception(exception);
             }
 
-            return std::vector<typename params_t::coord_type>{};
+            return result;
         }
 
         /**

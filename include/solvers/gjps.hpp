@@ -23,6 +23,9 @@
 #include "../utils/utils.hpp"
 #include "base/solver.hpp"
 
+// ReSharper disable once CppUnusedIncludeDirective
+#include "../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
+
 namespace chdr::solvers {
 
     /**
@@ -77,6 +80,8 @@ namespace chdr::solvers {
                 m_gScore(_gScore),
                 m_fScore(_gScore + _hScore),
                 m_direction(_direction) {}
+
+            ~node() = default;
 
             node           (const node&) = delete;
             node& operator=(const node&) = delete;

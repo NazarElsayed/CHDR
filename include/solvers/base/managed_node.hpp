@@ -95,64 +95,6 @@ namespace chdr::solvers {
          */
         count_t m_successors;
 
-        /**
-         * @brief Decrements the successor count of the parent node.
-         *
-         * This member function decreases the `m_successors` count for the parent node
-         * (`m_parent`) by exactly 1.
-         *
-         * @remark This operation is commonly used when removing or expunging child
-         *         nodes from a parent node in a hierarchical structure.
-         *
-         * @throws This function does not throw exceptions; however, violations of
-         *         preconditions (e.g., a null parent or an underflow situation) trigger
-         *         an assertion failure in debug builds.
-         *
-         * @pre `m_parent != nullptr` – The parent node must exist.
-         * @pre `m_parent->m_successors > 0` – The parent node must have at least one successor.
-         *
-         * @post The parent's successor count (`m_successors`) is decremented by 1.
-         *
-         * @see expunge
-         * @see incr
-         * @see m_successors
-         * @see managed_node
-         */
-        constexpr void decr() const noexcept {
-            assert(m_parent != nullptr && "Dereferencing of nullptr.");
-            assert(m_parent->m_successors != static_cast<decltype(m_successors)>(0U) && "Underflow detected!");
-
-            --m_parent->m_successors;
-        }
-
-        /**
-         * @brief Increments the successor count of the parent node.
-         *
-         * This member function increases the `m_successors` count for the parent node
-         * (`m_parent`) by exactly 1.
-         *
-         * @remark This operation is commonly used during expansion or when
-         *         adding child nodes from a parent node in a hierarchical structure.
-         *
-         * @throws This function does not throw exceptions; however, violations of
-         *         preconditions (e.g., a null parent or an underflow situation) trigger
-         *         an assertion failure in debug builds.
-         *
-         * @pre `m_parent != nullptr` – The parent node must exist.
-         * @pre `m_parent->m_successors != -1U ` – The operation must not overflow.
-         *
-         * @see decr
-         * @see expunge
-         * @see m_successors
-         * @see managed_node
-         */
-        constexpr void incr() const noexcept {
-            assert(m_parent != nullptr && "Dereferencing of nullptr.");
-            assert(m_parent->m_successors != static_cast<decltype(m_successors)>(-1U) && "Overflow detected!");
-
-            ++m_parent->m_successors;
-        }
-
     public:
 
         /**
@@ -197,8 +139,12 @@ namespace chdr::solvers {
             m_parent(_parent),
             m_successors(0U)
         {
-            if (_parent != nullptr) {
-                incr();
+            if (_parent != nullptr) { // Increment:
+
+                assert(m_parent != nullptr && "Dereferencing of nullptr.");
+                assert(m_parent->m_successors != static_cast<decltype(m_successors)>(-1U) && "Overflow detected!");
+
+                ++m_parent->m_successors;
             }
         }
 
@@ -238,7 +184,13 @@ namespace chdr::solvers {
         HOT void expunge(memory_resource_t* resource) {
 
             while (m_parent != nullptr) {
-                decr();
+
+                { // Decrement:
+                    assert(m_parent != nullptr && "Dereferencing of nullptr.");
+                    assert(m_parent->m_successors != static_cast<decltype(m_successors)>(0U) && "Underflow detected!");
+
+                    --m_parent->m_successors;
+                }
 
                 if (m_parent->m_successors == 0U) {
                     auto* const RESTRICT d = m_parent;

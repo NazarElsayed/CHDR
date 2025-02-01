@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Represents a node with a customisable weight.">
+<g id="a_Node000001"><a xlink:title="Represents a node with customisable weight.">
 <polygon fill="#999999" stroke="transparent" points="168,-82 0,-82 0,0 168,0 168,-82"/>
 <text text-anchor="start" x="34.5" y="-71.6" font-family="Helvetica,sans-Serif" font-size="8.00">weighted_node&lt; weight_t &gt;</text>
 <text text-anchor="start" x="82.5" y="-58.6" font-family="Helvetica,sans-Serif" font-size="8.00"> </text>

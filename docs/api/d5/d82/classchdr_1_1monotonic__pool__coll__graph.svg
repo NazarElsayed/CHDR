@@ -24,7 +24,7 @@
 <text text-anchor="start" x="4.5" y="-45.1" font-family="Helvetica,sans-Serif" font-size="8.00">*</text>
 <text text-anchor="start" x="13" y="-45.1" font-family="Helvetica,sans-Serif" font-size="8.00">monotonic_pool(size_t _initial_block_width=s_default_heap_block_size) noexcept</text>
 <text text-anchor="start" x="4.5" y="-32.1" font-family="Helvetica,sans-Serif" font-size="8.00">*</text>
-<text text-anchor="start" x="13" y="-32.1" font-family="Helvetica,sans-Serif" font-size="8.00">~monotonic_pool() noexcept</text>
+<text text-anchor="start" x="13" y="-32.1" font-family="Helvetica,sans-Serif" font-size="8.00">~monotonic_pool() noexcept override</text>
 <text text-anchor="start" x="4.5" y="-19.1" font-family="Helvetica,sans-Serif" font-size="8.00">*</text>
 <text text-anchor="start" x="13" y="-19.1" font-family="Helvetica,sans-Serif" font-size="8.00">void reset() noexcept</text>
 <text text-anchor="start" x="4.5" y="-6.1" font-family="Helvetica,sans-Serif" font-size="8.00">*</text>

@@ -14,12 +14,17 @@
  */
 
 #include <cstddef>
+#include <functional>
 #include <initializer_list>
+#include <limits>
 #include <memory_resource>
 #include <type_traits>
 #include <vector>
 
 #include "../../utils/utils.hpp"
+
+// ReSharper disable once CppUnusedIncludeDirective
+#include "../../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
 
 namespace chdr {
 
@@ -297,9 +302,9 @@ namespace chdr {
         [[maybe_unused]] constexpr void trim() {
 
             auto it = c.rbegin();
-            while (it != c.rend() && !static_cast<width_t>(*it)) {
-                ++it;
-            }
+            const auto end = c.rend();
+            for (; it != end && !static_cast<bool>(static_cast<width_t>(*it)); ++it) {}
+
             c.erase(it.base(), c.end());
             c.shrink_to_fit();
         }

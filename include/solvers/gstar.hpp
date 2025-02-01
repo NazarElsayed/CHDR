@@ -21,6 +21,9 @@
 #include "../utils/utils.hpp"
 #include "base/solver.hpp"
 
+// ReSharper disable once CppUnusedIncludeDirective
+#include "../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
+
 namespace chdr::solvers {
 
     /**
@@ -37,7 +40,7 @@ namespace chdr::solvers {
      * - Capable of out-performing the A* algorithm in certain situations.
      * - Resulting path will be optimal if the heuristic is admissible.
      * - Well suited for solvable problems in unbounded (infinite) space.
-     * - Does not need a prepass, although performance can improve if the search space is pruned first.
+     * - Does not need a pre-pass, although performance can improve if the search space is pruned first.
      *
      * Limitations:
      * - Higher constant factor than A* makes it less effective in small searches.
@@ -78,6 +81,8 @@ namespace chdr::solvers {
             [[nodiscard]] constexpr node(index_t _index, scalar_t _gScore, scalar_t _hScore, node* RESTRICT const _parent = nullptr) noexcept : managed_node<index_t, node>(_index, _parent),
                 m_gScore(_gScore          ),
                 m_fScore(_gScore + _hScore) {}
+
+            ~node() = default;
 
             node           (const node&) = delete;
             node& operator=(const node&) = delete;

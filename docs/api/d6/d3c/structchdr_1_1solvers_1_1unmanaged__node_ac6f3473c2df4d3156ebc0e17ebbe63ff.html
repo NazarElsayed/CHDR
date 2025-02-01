@@ -140,15 +140,15 @@ template&lt;typename index_t &gt; </div>
 </div><div class="memdoc">
 
 <p>Constructs a node with a specified index and an optional parent pointer. </p>
-<p>This constructor initialises a node, allowing both the index and the parent node to be specified. The parent pointer is useful in defining hierarchical relationships between nodes in tree-like structures. By default, the parent node is set to <code>nullptr</code>, which means the node is a root in the hierarchy.</p>
+<p>This constructor initialises a node, allowing both the index and parent node to be specified. The parent pointer is useful in defining hierarchical relationships between nodes in tree-like structures. By default, the parent node is set to <code>nullptr</code>, which means the node is a root in the hierarchy.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">_index</td><td>The index or identifier of the node, used in the context of pathfinding or search. </td></tr>
-    <tr><td class="paramname">_parent</td><td>[in] (optional) A pointer to the parent node in the hierarchy. If <code>nullptr</code>, the node will be considered a root node.</td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">_index</td><td>The index or identifier of the node, used in the context of pathfinding or search. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">_parent</td><td>(optional) A pointer to the parent node in the hierarchy. If <code>nullptr</code>, the node will be considered a root node.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section warning"><dt>Warning</dt><dd>The memory associated with the parent node is not managed by this constructor or the <a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html" title="A hierarchical node in a pathfinding context, requires manual memory management.">unmanaged_node</a> class itself. It is the caller’s responsibility to ensure that the parent node remains valid for the lifetime of this object.</dd>
+<dl class="section warning"><dt>Warning</dt><dd>Memory associated with the parent node is not managed by this constructor, or the class itself. It is the responsibility of the caller to ensure the parent node is valid during the lifetime of this object.</dd>
 <dd>
 If <code>_parent</code> is not <code>nullptr</code>, it must point to a valid and initialised <a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html" title="A hierarchical node in a pathfinding context, requires manual memory management.">unmanaged_node</a>. Failing to ensure this may lead to undefined behaviour. </dd></dl>
 

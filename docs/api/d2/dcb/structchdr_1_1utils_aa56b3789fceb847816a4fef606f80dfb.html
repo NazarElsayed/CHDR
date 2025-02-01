@@ -139,16 +139,16 @@ template&lt;typename coord_t &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Maps a one-dimensional index to a multi-dimensional coordinate representation. </p>
-<p>Converts the given one-dimensional array index <code>_index</code> into a set of indices that correspond to the various dimensions of a multi-dimensional space represented by <code>_sizes</code>. Supports 1–N dimensional spaces, with explicit optimisations performed for the first four dimensions</p>
+<p>Maps a one-dimensional index to a multidimensional coordinate representation. </p>
+<p>Converts the given one-dimensional array index <code>_index</code> into a set of indices that correspond to the various dimensions of a multidimensional space represented by <code>_sizes</code>. Supports 1–N dimensional spaces, with explicit optimisations performed for the first four dimensions</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">_index</td><td>The flattened one-dimensional array index to be converted. Must be an integral type, and represent a valid index within the bounds defined by <code>_sizes</code>.</td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">_sizes</td><td>A collection of sizes of each dimension in the multi-dimensional space. Each element specifies the extent of the corresponding dimension. The number of dimensions, <code>Kd</code>, is determined by the size of this parameter and must be greater than 0.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">_sizes</td><td>A collection of sizes of each dimension in the multidimensional space. Each element specifies the extent of the corresponding dimension. The number of dimensions, <code>Kd</code>, is determined by the size of this parameter and must be greater than 0.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The computed multi-dimensional coordinate as a container of type <code>coord_t</code>, where each element specifies the index along a particular dimension. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The computed multidimensional coordinate as a container of type <code>coord_t</code>, where each element specifies the index along a particular dimension. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="../../df/d93/utils_8hpp_source.html#l00157">157</a> of file <a class="el" href="../../df/d93/utils_8hpp_source.html">utils.hpp</a>.</p>
 <div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">

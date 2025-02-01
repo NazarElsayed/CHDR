@@ -21,12 +21,12 @@ namespace chdr::mazes {
     /**
      * @nosubgrouping
      * @struct weighted_node
-     * @brief Represents a node with a customisable weight.
-     * @details The weighted_node class encapsulates a weight of a user-defined integral type.
-     * @note The weighted_node class is equivalent to its stored weight and can be reinterpreted as the weights's type.
-     * @remarks The stored weight may be signed or unsigned.
-     * @warning For weighted_node instances, the maximum value of weight_t is reserved for inactive nodes.
-     * @tparam weight_t The type representing weight. Must be an integral type.
+     * @brief Represents a node with customisable weight.
+     * @details Encapsulates a user-defined integral type.
+     * @note Is equivalent to its stored weight and can be reinterpreted as the weight's type.
+     * @remarks Stored weight may be signed or unsigned.
+     * @warning The maximum value of weight_t is reserved for inactive nodes.
+     * @tparam weight_t Weight type. Must be integral.
      */
     template <typename weight_t>
     struct weighted_node {
@@ -71,8 +71,8 @@ namespace chdr::mazes {
         weighted_node& operator=(weighted_node&&) noexcept = default;
 
         /**
-         * @brief Whether the node is active or not.
-         * @warning For weighted_node instances, the maximum value of weight_t is reserved for inactive nodes.
+         * @brief Whether the node counts as active.
+         * @warning For weighted_node instances, the maximum value of weight_t indicates an inactive node.
          * @return If the weight equals the maximum possible weight, false. Otherwise, true.
          */
         [[nodiscard]] HOT constexpr bool is_active() const noexcept {

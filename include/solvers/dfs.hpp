@@ -22,18 +22,21 @@
 #include "base/solver.hpp"
 #include "base/unmanaged_node.hpp"
 
+// ReSharper disable once CppUnusedIncludeDirective
+#include "../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
+
 namespace chdr::solvers {
 
     /**
      * @struct dfs
      * @brief Depth-first search algorithm.
-     * @details A graph traversal and pathfinding algorithm which explores each branch of the search tree completely
+     * @details A graph traversal and pathfinding algorithm that explores each branch of the search tree completely
      *          before continuing.\n\n
      *
      * Advantages:
      * - Low constant time factor.
      * - Lower constant memory factor than most heuristic-informed algorithms.
-     * - Does not need a prepass, although performance can improve if the search space is pruned first.
+     * - Does not need a pre-pass, although performance can improve if the search space is pruned first.
      *
      * Limitations:
      * - Ineffective in searches with many obstacles.

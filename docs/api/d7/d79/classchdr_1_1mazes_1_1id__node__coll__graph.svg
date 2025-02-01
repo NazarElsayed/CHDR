@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Represents a node with a customisable identifier.">
+<g id="a_Node000001"><a xlink:title="Represents a node with customisable identifier.">
 <polygon fill="#999999" stroke="transparent" points="126,-82 0,-82 0,0 126,0 126,-82"/>
 <text text-anchor="start" x="29" y="-71.6" font-family="Helvetica,sans-Serif" font-size="8.00">id_node&lt; index_t &gt;</text>
 <text text-anchor="start" x="61.5" y="-58.6" font-family="Helvetica,sans-Serif" font-size="8.00"> </text>

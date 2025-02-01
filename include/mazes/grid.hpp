@@ -17,21 +17,24 @@
 #include <array>
 #include <cassert>
 #include <cstddef>
+#include <type_traits>
 #include <utility>
 #include <vector>
 
 #include "../utils/utils.hpp"
 #include "nodes/weighted_node.hpp"
 
+// ReSharper disable once CppUnusedIncludeDirective
+#include "../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
+
 namespace chdr::mazes {
 
     /**
      * @nosubgrouping
      * @class grid
-     * @brief Multi-dimensional grid structure.
+     * @brief Multidimensional grid structure.
      *
-     * @details A fixed-size grid which uses compile-time constants and ensures efficient handling
-     *          of multidimensional grid data.
+     * @details A fixed-size grid for handling of multidimensional grid data.
      *
      * @note This class uses a `coord_t` type for grid dimensions and indexing, and a `weight_t` type to
      *       represent the weight or state of the nodes in the grid.
@@ -60,7 +63,7 @@ namespace chdr::mazes {
     private:
 
         /**
-         * @brief Represents the total number of neighbouring cells in a multi-dimensional grid.
+         * @brief Represents the total number of neighbouring cells in a multidimensional grid.
          *
          * @details Represents the number of neighbouring cells for a given grid rank (`s_rank`), excluding the cell itself.
          *          It is calculated using the formula `3^s_rank - 1`, where `s_rank` denotes the dimensionality of the grid.
@@ -126,7 +129,7 @@ namespace chdr::mazes {
          *          corresponding node values `_nodes`, which are emplaced using move semantics.
          *
          * @param[in] _size The dimensions of the grid, represented as a `coord_t` type.
-         * @param[in] _nodes A rvalue reference to a vector of node values.
+         * @param[in] _nodes An rvalue reference to a vector of node values.
          *
          * @warning The number of nodes provided must match the number of cells in the grid.
          */
@@ -137,6 +140,8 @@ namespace chdr::mazes {
         {
             assert(m_nodes.size() == m_count && "The number of nodes must match the number of cells in the grid.");
         }
+
+        ~grid() = default;
 
         constexpr grid           (const grid&) = delete;
         constexpr grid& operator=(const grid&) = delete;
@@ -286,7 +291,7 @@ namespace chdr::mazes {
          *         its values fall within the grid's defined bounds. Each dimension of the coordinate is compared
          *          against the corresponding size of the grid.
          *
-         * @param [in] _id The coordinate to be evaluated. It represents a multi-dimensional position in the grid.
+         * @param [in] _id The coordinate to be evaluated. It represents a multidimensional position in the grid.
          *
          * @return `true` if the provided coordinate lies within the bounds of the grid. Otherwise, `false`.
          */
@@ -320,9 +325,12 @@ namespace chdr::mazes {
 
             size_t count = 0U;
 
-            for (const auto& [nActive, nCoord] : get_neighbours(_index)) {
-                if (nActive && ++count > 2U) {
-                    break;
+            for (const auto& [nActive, _] : get_neighbours(_index)) {
+
+                if (nActive) {
+                    if (++count > 2U) {
+                        break;
+                    }
                 }
             }
 
@@ -343,9 +351,12 @@ namespace chdr::mazes {
 
             size_t count = 0U;
 
-            for (const auto& [nActive, nCoord] : _neighbours) {
-                if (nActive && ++count > 2U) {
-                    break;
+            for (const auto& [nActive, _] : _neighbours) {
+
+                if (nActive) {
+                    if (++count > 2U) {
+                        break;
+                    }
                 }
             }
 
@@ -409,15 +420,15 @@ namespace chdr::mazes {
             constexpr  size_t sampleIndex = (Index >= s_neighbour_count / 2U) ? (Index + 1U) : Index;
             constexpr coord_t direction   = utils::to_nd(sampleIndex, coord_t { 3U });
 
-            bool    oob    = false;
+            bool oob = false;
             coord_t coord = _id;
 
             for (size_t j = 0U; j < s_rank; ++j) {
                 coord[j] += (direction[j] - 1U);
-                oob |= (coord[j] >= m_size[j]);
 
-                if constexpr (s_rank > 4U) {
-                    if (oob) { break; }
+                if (coord[j] >= m_size[j]) {
+                    oob = true;
+                    break;
                 }
             }
 
@@ -464,7 +475,7 @@ namespace chdr::mazes {
     private:
 
         /**
-         * @brief Represents the total number of neighbouring cells in a multi-dimensional grid.
+         * @brief Represents the total number of neighbouring cells in a multidimensional grid.
          *
          * @details Represents the number of neighbouring cells for a given grid rank (`s_rank`), excluding the cell itself.
          *          It is calculated using the formula `3^s_rank - 1`, where `s_rank` denotes the dimensionality of the grid.
@@ -535,6 +546,8 @@ namespace chdr::mazes {
             m_size(_size),
             m_count(utils::product<size_t>(m_size)),
             m_nodes(_nodes) {}
+
+        ~grid() = default;
 
         constexpr grid           (const grid&) = delete;
         constexpr grid& operator=(const grid&) = delete;
@@ -681,7 +694,7 @@ namespace chdr::mazes {
          *         its values fall within the grid's defined bounds. Each dimension of the coordinate is compared
          *          against the corresponding size of the grid.
          *
-         * @param [in] _id The coordinate to be evaluated. It represents a multi-dimensional position in the grid.
+         * @param [in] _id The coordinate to be evaluated. It represents a multidimensional position in the grid.
          *
          * @return `true` if the provided coordinate lies within the bounds of the grid. Otherwise, `false`.
          */
@@ -714,9 +727,12 @@ namespace chdr::mazes {
         [[nodiscard]] constexpr bool is_transitory(size_t _index) const noexcept {
             size_t count = 0U;
 
-            for (const auto& [nActive, nCoord] : get_neighbours(_index)) {
-                if (nActive && ++count > 2U) {
-                    break;
+            for (const auto& [nActive, _] : get_neighbours(_index)) {
+
+                if (nActive) {
+                    if (++count > 2U) {
+                        break;
+                    }
                 }
             }
 
@@ -736,9 +752,12 @@ namespace chdr::mazes {
         [[nodiscard]] constexpr bool is_transitory(const neighbours_t& _neighbours) const noexcept {
             size_t count = 0U;
 
-            for (const auto& [nActive, nCoord] : _neighbours) {
-                if (nActive && ++count > 2U) {
-                    break;
+            for (const auto& [nActive, _] : _neighbours) {
+
+                if (nActive) {
+                    if (++count > 2U) {
+                        break;
+                    }
                 }
             }
 
@@ -783,14 +802,14 @@ namespace chdr::mazes {
     private:
 
         template <size_t... Indices>
-        [[nodiscard]] constexpr auto compute_diagonal_neighbours(const coord_t& _id, std::index_sequence<Indices...>) const noexcept {
+        [[nodiscard]] constexpr auto compute_diagonal_neighbours(const coord_t& _id, [[maybe_unused]] std::index_sequence<Indices...> _indices) const noexcept {
             neighbours_t result{};
             (compute_single_diagonal<Indices>(_id, result[Indices]), ...);
             return result;
         }
 
         template <size_t... Indices>
-        [[nodiscard]] constexpr auto compute_axis_neighbours(const coord_t& _id, std::index_sequence<Indices...>) const noexcept {
+        [[nodiscard]] constexpr auto compute_axis_neighbours(const coord_t& _id, [[maybe_unused]] std::index_sequence<Indices...> _indices) const noexcept {
             neighbours_t result{};
             (compute_single_axis<Indices>(_id, result[Indices], result[s_rank + Indices]), ...);
             return result;
@@ -802,15 +821,15 @@ namespace chdr::mazes {
             constexpr  size_t sampleIndex = (Index >= s_neighbour_count / 2U) ? (Index + 1U) : Index;
             constexpr coord_t direction   = utils::to_nd(sampleIndex, coord_t { 3U });
 
-            bool    oob    = false;
+            bool oob = false;
             coord_t coord = _id;
 
             for (size_t j = 0U; j < s_rank; ++j) {
                 coord[j] += (direction[j] - 1U);
-                     oob |= (coord[j] >= m_size[j]);
 
-                if constexpr (s_rank > 4U) {
-                    if (oob) { break; }
+                if (coord[j] >= m_size[j]) {
+                    oob = true;
+                    break;
                 }
             }
 
@@ -830,7 +849,7 @@ namespace chdr::mazes {
             _positive = { _id[Index] < m_size[Index] - 1U && at(utils::to_1d(pCoord, m_size)).is_active(), pCoord };
         }
     };
-    
+
 } //chdr::mazes
 
 #endif //CHDR_GRID_HPP

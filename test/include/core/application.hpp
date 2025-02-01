@@ -149,7 +149,7 @@ namespace test {
 				on_terminate();
 			}
 		}
-		
+
 	public:
 
 		 application()                           = delete;

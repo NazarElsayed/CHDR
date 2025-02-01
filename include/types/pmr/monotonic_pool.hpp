@@ -15,10 +15,14 @@
 
 #include <cassert>
 #include <cstddef>
+#include <cstdint>
 #include <memory>
 #include <vector>
 
 #include "../../utils/utils.hpp"
+
+// ReSharper disable once CppUnusedIncludeDirective
+#include "../../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
 
 namespace chdr {
 
@@ -42,30 +46,12 @@ namespace chdr {
     class monotonic_pool final : public std::pmr::memory_resource {
 
         struct block final {
-
             size_t   size;
             size_t   alignment;
             uint8_t* data;
 
-            [[nodiscard]] HOT constexpr block(size_t _size, size_t _alignment, uint8_t* _data) noexcept :
-                size     (_size),
-                alignment(_alignment),
-                data     (_data) {}
-
-            ~block() = default;
-
-            [[nodiscard]] HOT constexpr block           (const block&) = default;
-            HOT constexpr block& operator=(const block&) = default;
-
-            [[nodiscard]] HOT constexpr block(block&& _other) noexcept = default;
-
-#if __cplusplus > 202302L
-            constexpr
-#endif
-            block& operator=(block&& _other) noexcept = default;
-
-            [[nodiscard]] HOT constexpr bool operator < (const block& _other) const noexcept {
-                return size < _other.size;
+            [[nodiscard]] friend HOT constexpr bool operator < (const block& _lhs, const block& _rhs) noexcept {
+                return _lhs.size < _rhs.size;
             }
         };
 
@@ -120,7 +106,9 @@ namespace chdr {
 
                 /* Catch any errors that occur during allocation. */
 
+                // ReSharper disable once CppDFAConstantConditions
                 if (result != nullptr) {
+                    // ReSharper disable once CppDFAUnreachableCode
                     ::operator delete(result, static_cast<std::align_val_t>(_alignment));
                     result = nullptr;
 
@@ -173,9 +161,10 @@ namespace chdr {
             // Attempt to allocate from the stack block:
             if (m_stack_write < StackSize) {
 
-                const size_t aligned_bytes = (_bytes + _alignment - 1U) & ~(_alignment - 1U);
-
-                if (aligned_bytes < MaxStackAllocationSize && m_stack_write + aligned_bytes <= s_stack_block_size) {
+                if (const size_t aligned_bytes = (_bytes + _alignment - 1U) & ~(_alignment - 1U);
+                    aligned_bytes < MaxStackAllocationSize &&
+                    m_stack_write + aligned_bytes <= s_stack_block_size
+                ) {
 
                     auto* aligned_ptr = m_stack_block + ((m_stack_write + _alignment - 1U) & ~(_alignment - 1U));
                     m_stack_write = static_cast<size_t>(aligned_ptr - m_stack_block) + aligned_bytes;
@@ -210,7 +199,9 @@ namespace chdr {
             // Update write position.
             m_block_write += static_cast<size_t>(aligned_ptr + _bytes - (m_blocks[m_active_block_index].data + m_block_write));
 
+            // ReSharper disable once CppDFAConstantConditions
             if (aligned_ptr == nullptr) {
+                // ReSharper disable once CppDFAUnreachableCode
                 throw std::bad_alloc();
             }
 
@@ -280,7 +271,7 @@ namespace chdr {
          * @see release()
          * @see reset()
          */
-        ~monotonic_pool() noexcept {
+        ~monotonic_pool() noexcept override {
             cleanup();
         }
 

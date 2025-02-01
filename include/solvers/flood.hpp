@@ -21,12 +21,15 @@
 #include "../utils/utils.hpp"
 #include "base/solver.hpp"
 
+// ReSharper disable once CppUnusedIncludeDirective
+#include "../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
+
 namespace chdr::solvers {
 
     /**
      * @struct flood
      * @brief Generalisation of breadth-first search for determining solvability.
-     * @details A graph traversal algorithm which expands every search neighbour during an iteration.
+     * @details A graph traversal algorithm that expands every search neighbour during an iteration.
      *          It does not store any information about nodes or their connectivity, giving it an exceptionally
      *          low constant time and memory factor.\n\n
      *          It is not suited for general-purpose pathfinding, however is a fast algorithm for determining if
@@ -36,7 +39,7 @@ namespace chdr::solvers {
      * - Very low constant time factor.
      * - Very low constant memory factor.
      * - Well suited for solvable problems in unbounded (infinite) space.
-     * - Does not need a prepass, although performance can improve if the search space is pruned first.
+     * - Does not need a pre-pass, although performance can improve if the search space is pruned first.
      *
      * Limitations:
      * - Does not produce a path, only the location of the destination if a path does exist.

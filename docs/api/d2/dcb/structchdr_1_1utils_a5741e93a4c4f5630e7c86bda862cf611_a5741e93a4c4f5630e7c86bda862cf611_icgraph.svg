@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Maps a multi&#45;dimensional index to a one&#45;dimensional array index.">
+<g id="a_Node000001"><a xlink:title="Maps a multidimensional index to a one&#45;dimensional array index.">
 <polygon fill="#999999" stroke="#666666" points="376,-78 339,-78 339,-61 376,-61 376,-78"/>
 <text text-anchor="middle" x="357.5" y="-67.6" font-family="Helvetica,sans-Serif" font-size="8.00">to_1d</text>
 </a>

@@ -17,10 +17,13 @@
 #include <cstddef>
 #include <cstdint>
 #include <map>
-#include <memory_resource>
 #include <utility>
 #include <vector>
 
+// ReSharper disable once CppUnusedIncludeDirective
+#include <memory_resource> // NOLINT(*-include-cleaner)
+
+// ReSharper disable once CppUnusedIncludeDirective
 #include "../../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
 #include "../../utils/utils.hpp"
 
@@ -58,30 +61,12 @@ namespace chdr {
     private:
 
         struct block final {
-
             size_t   size;
             size_t   alignment;
             uint8_t* data;
 
-            [[nodiscard]] HOT constexpr block(size_t _size, size_t _alignment, uint8_t* _data) noexcept :
-                size     (_size),
-                alignment(_alignment),
-                data     (_data) {}
-
-            ~block() = default;
-
-            [[nodiscard]] HOT constexpr block           (const block&) = default;
-                          HOT constexpr block& operator=(const block&) = default;
-
-            [[nodiscard]] HOT constexpr block(block&& _other) noexcept = default;
-
-#if __cplusplus > 202302L
-            constexpr
-#endif
-            block& operator=(block&& _other) noexcept = default;
-
-            [[nodiscard]] HOT constexpr bool operator < (const block& _other) const noexcept {
-                return size < _other.size;
+            [[nodiscard]] friend HOT constexpr bool operator <(const block& _lhs, const block& _rhs) noexcept {
+                return _lhs.size < _rhs.size;
             }
         };
 
@@ -113,10 +98,10 @@ namespace chdr {
                     result
                 );
 
-                size_t remaining_size = allocate_size - _bytes;
-
-                // If the block isn't entirely consumed, add remaining space to the free list.
-                if (remaining_size != 0U) {
+                // If the block is not entirely consumed, add the remaining space to the free list.
+                if (const size_t remaining_size = allocate_size - _bytes;
+                    remaining_size != 0U
+                ) {
 
                     block new_block(
                         remaining_size, _alignment, result + utils::max(_bytes, _alignment)
@@ -146,7 +131,9 @@ namespace chdr {
 
                 /* Catch any errors that occur during allocation. */
 
+                // ReSharper disable once CppDFAConstantConditions
                 if (result != nullptr) {
+                    // ReSharper disable once CppDFAUnreachableCode
                     ::operator delete(result, static_cast<std::align_val_t>(_alignment));
                     result = nullptr;
 
@@ -279,7 +266,7 @@ namespace chdr {
                     auto it = m_free.lower_bound(_bytes);
 
                     // Merge with next block if adjacent:
-                    if (it != m_free.end() && static_cast<uint8_t*>(_p) + _bytes == it->second.data) {
+                    if (it != m_free.end() && _bytes + static_cast<uint8_t*>(_p) == it->second.data) {
                         _bytes    += it->second.size;
                         _alignment = utils::max(it->second.alignment, _alignment);
 

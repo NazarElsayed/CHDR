@@ -18,6 +18,8 @@
  * @note This file dynamically includes SIMD instructions based on their availability.
  */
 
+#include <atomic>
+
 /**
  * @def IVDEP
  * @brief Enables vectorised loops (platform-specific).
@@ -253,7 +255,7 @@ namespace chdr {
 
     /** @brief Marks a function as less frequently called (platform-specific). */
     #define COLD
-    
+
 #endif
 
 #ifdef _MSC_VER
@@ -284,8 +286,9 @@ namespace chdr {
      * @note Using this function may have side effects. Do not call unless you know what you are doing.
      */
     [[maybe_unused]] inline void malloc_consolidate(size_t _malloc = 4096U) {
-        void* tmp = malloc(_malloc);
-        asm volatile("" ::: "memory");
+
+        auto* tmp = malloc(_malloc);
+        std::atomic_thread_fence(std::memory_order_seq_cst);
         free(tmp);
     }
 

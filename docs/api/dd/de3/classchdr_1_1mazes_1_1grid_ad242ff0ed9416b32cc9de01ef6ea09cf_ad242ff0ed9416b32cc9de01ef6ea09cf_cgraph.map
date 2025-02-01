@@ -2,6 +2,6 @@
 <area shape="rect" id="Node000001" title="Retrieves the neighbours of a node within the grid." alt="" coords="5,29,101,52"/>
 <area shape="rect" id="Node000002" href="$dd/de3/classchdr_1_1mazes_1_1grid_a32d34adb7833cb15aa705c6c7ada57a8.html#a32d34adb7833cb15aa705c6c7ada57a8" title="Retrieves the size of the grid." alt="" coords="179,5,219,28"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,30,166,19,166,25,102,35"/>
-<area shape="rect" id="Node000003" href="$d2/dcb/structchdr_1_1utils_aa56b3789fceb847816a4fef606f80dfb.html#aa56b3789fceb847816a4fef606f80dfb" title="Maps a one&#45;dimensional index to a multi&#45;dimensional coordinate representation." alt="" coords="149,52,249,75"/>
+<area shape="rect" id="Node000003" href="$d2/dcb/structchdr_1_1utils_aa56b3789fceb847816a4fef606f80dfb.html#aa56b3789fceb847816a4fef606f80dfb" title="Maps a one&#45;dimensional index to a multidimensional coordinate representation." alt="" coords="149,52,249,75"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="102,45,136,51,135,56,101,51"/>
 </map>

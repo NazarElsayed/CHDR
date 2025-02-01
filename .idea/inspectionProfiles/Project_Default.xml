@@ -12,7 +12,6 @@
     <inspection_tool class="CommaExpressionJS" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="ConstantConditionalExpressionJS" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="ContinueOrBreakFromFinallyBlockJS" enabled="false" level="WARNING" enabled_by_default="false" />
-    <inspection_tool class="CppDFAUnreachableFunctionCall" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="CppEnforceCVQualifiersOrder" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="CppEnforceCVQualifiersPlacement" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="CppEnforceDoStatementBraces" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -25,8 +24,11 @@
     <inspection_tool class="CppLocalVariableWithNonTrivialDtorIsNeverUsed" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="CppNonExplicitConvertingConstructor" enabled="false" level="HINT" enabled_by_default="false" />
     <inspection_tool class="CppRedundantAccessSpecifier" enabled="false" level="HINT" enabled_by_default="false" />
+    <inspection_tool class="CppRedundantTemplateKeyword" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="CppRedundantTypenameKeyword" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="CppRemoveRedundantBraces" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="CppTabsAreDisallowed" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="CppUnnecessaryWhitespace" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="CppUseAssociativeContains" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="CssDeprecatedValue" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="CssInvalidAtRule" enabled="false" level="ERROR" enabled_by_default="false" />
@@ -121,6 +123,7 @@
     </inspection_tool>
     <inspection_tool class="HtmlUnknownTarget" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="HtmlWrongAttributeValue" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="IfStdIsConstantEvaluatedCanBeReplaced" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="IncompatibleMaskJS" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="InfiniteLoopJS" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="InfiniteRecursionJS" enabled="false" level="WARNING" enabled_by_default="false" />
@@ -196,6 +199,7 @@
     <inspection_tool class="JSXUnresolvedComponent" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="KarmaConfigFile" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="LoopStatementThatDoesntLoopJS" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="Misra" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="NodeCoreCodingAssistance" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="NpmUsedModulesInstalled" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="OCInconsistentNaming" enabled="true" level="WEAK WARNING" enabled_by_default="true" />

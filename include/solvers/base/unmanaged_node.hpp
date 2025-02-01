@@ -82,18 +82,18 @@ namespace chdr::solvers {
         /**
          * @brief Constructs a node with a specified index and an optional parent pointer.
          *
-         * This constructor initialises a node, allowing both the index and the parent node to be
-         * specified. The parent pointer is useful in defining hierarchical relationships between
-         * nodes in tree-like structures. By default, the parent node is set to `nullptr`, which
-         * means the node is a root in the hierarchy.
+         * @details This constructor initialises a node, allowing both the index and parent node to be specified.
+         *          The parent pointer is useful in defining hierarchical relationships between nodes in tree-like
+         *          structures.
+         *          By default, the parent node is set to `nullptr`, which means the node is a root in the hierarchy.
          *
          * @param _index The index or identifier of the node, used in the context of pathfinding or search.
-         * @param _parent [in] (optional) A pointer to the parent node in the hierarchy. If `nullptr`,
-         *                 the node will be considered a root node.
+         * @param [in] _parent (optional) A pointer to the parent node in the hierarchy. If `nullptr`,
+         *                                the node will be considered a root node.
          *
-         * @warning The memory associated with the parent node is not managed by this constructor or
-         *         the unmanaged_node class itself. It is the caller’s responsibility to ensure that
-         *         the parent node remains valid for the lifetime of this object.
+         * @warning Memory associated with the parent node is not managed by this constructor, or the class itself.
+         *          It is the responsibility of the caller to ensure the parent node is valid during the lifetime
+         *          of this object.
          *
          * @warning If `_parent` is not `nullptr`, it must point to a valid and initialised
          *          unmanaged_node. Failing to ensure this may lead to undefined behaviour.

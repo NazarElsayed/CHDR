@@ -14,6 +14,7 @@
  */
 
 #include <cstddef>
+#include <type_traits>
 #include <vector>
 
 #include "../types/containers/existence_set.hpp"
@@ -22,18 +23,21 @@
 #include "base/solver.hpp"
 #include "base/unmanaged_node.hpp"
 
+// ReSharper disable once CppUnusedIncludeDirective
+#include "../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
+
 namespace chdr::solvers {
 
     /**
      * @struct best_first
      * @brief Greedy best-first search algorithm.
-     * @details A heuristic-informed graph traversal and pathfinding algorithm which always prioritises its next move
+     * @details A heuristic-informed graph traversal and pathfinding algorithm that always prioritises its next move
      *          based on least cost.\n\n
      *
      * Advantages:
      * - Lower constant time and memory factor than A*.
      * - Highly effective in searches with few obstacles.
-     * - Does not need a prepass, although performance can improve if the search space is pruned first.
+     * - Does not need a pre-pass, although performance can improve if the search space is pruned first.
      * - High performance in bounded (finite) search scenarios.
      *
      * Limitations:
@@ -76,6 +80,8 @@ namespace chdr::solvers {
 
             [[nodiscard]] constexpr node(index_t _index, scalar_t _hScore, const unmanaged_node<index_t>* RESTRICT const _parent = nullptr) noexcept : unmanaged_node<index_t>(_index, _parent),
                 m_hScore(_hScore) {}
+
+            ~node() = default;
 
             node           (const node&) = delete;
             node& operator=(const node&) = delete;

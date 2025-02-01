@@ -22,12 +22,15 @@
 #include "base/solver.hpp"
 #include "base/unmanaged_node.hpp"
 
+// ReSharper disable once CppUnusedIncludeDirective
+#include "../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
+
 namespace chdr::solvers {
 
     /**
      * @struct fstar
      * @brief Frine search algorithm.
-     * @details F* (Björnsson et al. 2005) is a graph traversal and pathfinding algorithm which iteratively advances
+     * @details F* (Björnsson et al. 2005) is a graph traversal and pathfinding algorithm that iteratively advances
      *          the search fringe using two 'fringe lists' instead of a priority queue.
      *          Like A*, F* is capable of finding the optimal solution given an admissible heuristic.
      *          In some cases, an F* search may outperform an A* search due to reduced memory overhead.\n\n
@@ -37,7 +40,7 @@ namespace chdr::solvers {
      * - Capable of out-performing the A* algorithm in certain situations.
      * - Lower constant memory factor than A*.
      * - Well suited for solvable problems in unbounded (infinite) space.
-     * - Does not need a prepass, although performance can improve if the search space is pruned first.
+     * - Does not need a pre-pass, although performance can improve if the search space is pruned first.
      *
      * Limitations:
      * - Higher constant time factor than A*.
@@ -50,7 +53,7 @@ namespace chdr::solvers {
      * - Björnsson, Y., Enzenberger, M., Holte, R. C. and Schaeffer, J., 2005. Fringe Search: Beating A* at Pathfinding on Game Maps.
      *   In: IEEE Conference on Computational Intelligence and Games [online]. Available from: https://api.semanticscholar.org/CorpusID:18308132.
      *
-	 * @remarks F* generally has a lower memory overhead than A*, and avoids the need for sorting operations. This
+     * @remarks F* generally has a lower memory overhead than A*, and avoids the need for sorting operations. This
      *          can make it faster than A* in select situations.
      *
      * @tparam params_t Type containing the search parameters.
@@ -87,6 +90,8 @@ namespace chdr::solvers {
             [[nodiscard]] constexpr node(index_t _index, scalar_t _gScore, scalar_t _fScore, const unmanaged_node<index_t>* RESTRICT const _parent = nullptr) noexcept : unmanaged_node<index_t>(_index, _parent),
                 m_gScore(_gScore),
                 m_fScore(_fScore) {}
+
+            ~node() = default;
 
             node           (const node&) = delete;
             node& operator=(const node&) = delete;

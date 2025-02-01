@@ -33,7 +33,7 @@ namespace test::generator {
 			static_assert(std::is_integral_v<weight_t>, "Type weight_t must be an integral type.");
 
 			constexpr auto Kd = std::tuple_size_v<std::decay_t<coord_t>>;
-			
+
             constexpr bool bidirectional = true;
 
             _end = _start;

@@ -8,15 +8,15 @@ cmake_minimum_required(VERSION ${CMAKE_VERSION})
 
 project(CHDR VERSION 0.0.0 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 message(NOTICE "NOTICE: Checking for local Git repository:")
 execute_process(
-        COMMAND git rev-parse --is-inside-work-tree
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        RESULT_VARIABLE IS_GIT_REPO
-        OUTPUT_QUIET
+    COMMAND git rev-parse --is-inside-work-tree
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    RESULT_VARIABLE IS_GIT_REPO
+    OUTPUT_QUIET
 )
 
 if (IS_GIT_REPO EQUAL 0)

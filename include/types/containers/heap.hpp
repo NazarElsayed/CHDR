@@ -17,9 +17,13 @@
 
 #include <cstddef>
 #include <functional>
-#include <memory_resource>
-#include <stdexcept> // NOLINT(*-include-cleaner)
 #include <vector>
+
+// ReSharper disable once CppUnusedIncludeDirective
+#include <memory_resource> // NOLINT(*-include-cleaner)
+
+// ReSharper disable once CppUnusedIncludeDirective
+#include "../../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
 
 namespace chdr {
 
@@ -764,10 +768,10 @@ namespace chdr {
                     }
 
                     // Iterate through child nodes based on the Kd dimension.
-                    size_t child_start = i * Kd;
-                    size_t child_end   = std::min(child_start + Kd, c.size());
-                    bool   traversed   = false;
+                    const size_t child_start = i * Kd;
+                    const size_t child_end   = std::min(child_start + Kd, c.size());
 
+                    bool traversed = false;
                     for (size_t j = child_start; j < child_end; ++j) {
                         if (j < c.size() && !comp(c[j], _value)) {
                             i = j; // Traverse to the first valid child node.
@@ -821,14 +825,16 @@ namespace chdr {
          */
         constexpr iterator_t erase(iterator_t _position) {
 
-            auto distance_from_start = std::distance(c.begin(), _position);
-            auto size_before = size();
+            const auto distance_from_start = std::distance(c.begin(), _position);
+            const auto size_before = size();
 
-            if (distance_from_start < size() + 1U) { // Ensure valid offset for super element
+            if (distance_from_start < size() + 1U) { // Offset for super element.
+
                 if (distance_from_start == size()) {
-                    c.pop_back(); // If last element, simply remove
+                    c.pop_back(); // Remove if last element.
                 }
                 else {
+
                     c[distance_from_start] = std::move(c.back());
                     c.pop_back();
                     if (size_before > 1U) {

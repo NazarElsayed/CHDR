@@ -22,19 +22,22 @@
 #include "base/solver.hpp"
 #include "base/unmanaged_node.hpp"
 
+// ReSharper disable once CppUnusedIncludeDirective
+#include "../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
+
 namespace chdr::solvers {
 
     /**
      * @struct bfs
      * @brief Breadth-first search algorithm.
-     * @details A graph traversal and pathfinding algorithm which expands every search neighbour during an iteration.\n\n
+     * @details A graph traversal and pathfinding algorithm that expands every search neighbour during an iteration.\n\n
      *
      * Advantages:
      * - Low constant time factor.
      * - Lower constant memory factor than most heuristic-informed algorithms.
      * - Effective in searches with many obstacles.
      * - Well suited for solvable problems in unbounded (infinite) space.
-     * - Does not need a prepass, although performance can improve if the search space is pruned first.
+     * - Does not need a pre-pass, although performance can improve if the search space is pruned first.
      * - The resulting path is optimal in uniform-cost graphs.
      *
      * Limitations:

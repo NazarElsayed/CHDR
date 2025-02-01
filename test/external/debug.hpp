@@ -45,7 +45,7 @@
 #include <vector>
 
 #if __linux__ || __APPLE__
-	
+
 	#include <execinfo.h>
 
 #elif _WIN32
@@ -136,7 +136,7 @@
 #endif
 
 namespace {
-	
+
 	/**
 	 * @enum log_type
 	 * @brief Enumeration representing different types of log messages.
@@ -152,13 +152,13 @@ namespace {
 		   error = 1U << 4U, /**< @brief Major issues disrupting normal operations.  */
 		critical = 1U << 5U, /**< @brief Severe problems causing system failure.     */
 	};
-	
+
 	class print final {
-		
+
 		friend struct debug;
-		
+
 	private:
-		
+
 		static constexpr const char* to_string(const log_type& _type) noexcept {
 
 			switch (_type) {
@@ -171,9 +171,9 @@ namespace {
 				default:       { return "UNKNOWN"; }
 			}
 		}
-		
+
 		static void multiplatform(const std::string_view& _message, const log_type& _type, bool _makeInline) {
-	
+
 #ifdef __linux__
 			try {
 	            ansi(_message, _type, _makeInline);
@@ -201,13 +201,13 @@ namespace {
 #else
 			fallback(_message, _type, _makeInline);
 #endif
-		
+
 		}
-		
+
 		static void fallback(const std::string_view& _message, const log_type& _type, bool _makeInline) {
-			
+
 			std::cout << to_string(_type) << ": " << _message;
-			
+
 			if (_makeInline && _type != info) {
 				std::cout << std::flush;
 			}
@@ -215,11 +215,11 @@ namespace {
 				std::cout << std::endl;
 			}
 		}
-		
+
 #if __linux__ | __APPLE__
-		
+
 		static constexpr void ansi(const std::string_view& _message, const log_type& _type, bool _makeInline) {
-			
+
 			/* ANSI TEXT COLORS */
 			constexpr auto ANSI_RESET   [[maybe_unused]] = "\033[0m";
 			constexpr auto ANSI_BLACK   [[maybe_unused]] = "\033[30m";
@@ -230,7 +230,7 @@ namespace {
 			constexpr auto ANSI_MAGENTA [[maybe_unused]] = "\033[35m";
 			constexpr auto ANSI_CYAN    [[maybe_unused]] = "\033[36m";
 			constexpr auto ANSI_WHITE   [[maybe_unused]] = "\033[37m";
-			
+
 			/* ANSI BACKGROUND COLORS */
 			constexpr auto ANSI_BG_BLACK   [[maybe_unused]] = "\033[40m";
 			constexpr auto ANSI_BG_RED     [[maybe_unused]] = "\033[41m";
@@ -240,88 +240,88 @@ namespace {
 			constexpr auto ANSI_BG_MAGENTA [[maybe_unused]] = "\033[45m";
 			constexpr auto ANSI_BG_CYAN    [[maybe_unused]] = "\033[46m";
 			constexpr auto ANSI_BG_WHITE   [[maybe_unused]] = "\033[47m";
-			
+
 			switch (_type) {
-				
+
 				case critical: {
 					std::cout << ANSI_MAGENTA << _message << ANSI_RESET << '\a';
-					
+
 					if (_makeInline) {
 						std::cout << std::flush;
 					}
 					else {
 						std::cout << std::endl;
 					}
-					
+
 					break;
 				}
 				case error: {
 					std::cout << ANSI_RED << _message << ANSI_RESET;
-					
+
 					if (_makeInline) {
 						std::cout << std::flush;
 					}
 					else {
 						std::cout << std::endl;
 					}
-					
+
 					break;
 				}
 				case warning: {
 					std::cout << ANSI_YELLOW << _message << ANSI_RESET;
-					
+
 					if (_makeInline) {
 						std::cout << std::flush;
 					}
 					else {
 						std::cout << std::endl;
 					}
-					
+
 					break;
 				}
 				case info: {
 					std::cout << ANSI_CYAN << _message << ANSI_RESET;
-					
+
 					if (!_makeInline) {
 						std::cout << '\n';
 					}
-					
+
 					break;
 				}
 				case debug: {
 					std::cout << ANSI_WHITE << _message << ANSI_RESET;
-					
+
 					if (_makeInline) {
 						std::cout << std::flush;
 					}
 					else {
 						std::cout << std::endl;
 					}
-					
+
 					break;
 				}
 				case trace: {
 					std::cout << ANSI_BG_WHITE << ANSI_BLACK << _message << ANSI_RESET;
-					
+
 					if (_makeInline) {
 						std::cout << '\n';
 					}
 					else {
 						std::cout << std::endl;
 					}
-					
+
 					break;
 				}
 				default: {
 					std::cout << ANSI_BG_MAGENTA << ANSI_BLACK << _message << ANSI_RESET;
-					
+
 					if (_makeInline) {
 						std::cout << std::flush;
 					}
 					else {
 						std::cout << std::endl;
 					}
-					
+
 					break;
 				}
 			}
@@ -330,7 +330,7 @@ namespace {
 #elif _WIN32
 
 		void SetCAttr(void* _h, const WORD &_attribute) {
-			
+
 		    if (!SetConsoleTextAttribute(_h, _attribute)) {
 		        throw std::runtime_error("Failed to set the console text attribute.");
 		    }
@@ -352,103 +352,103 @@ namespace {
 
 			try {
 				HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
-				
+
 				if (h != nullptr && h != INVALID_HANDLE_VALUE) {
-					
+
 					CONSOLE_SCREEN_BUFFER_INFO cinfo;
 					if (GetConsoleScreenBufferInfo(h, &cinfo)) {
-						
+
 						const auto& previous_attr = cinfo.wAttributes;
-						
+
 						switch (_type) {
 							case critical: {
 	                            SetCAttr(h, BACKGROUND_BLACK | FOREGROUND_MAGENTA);
 								std::cout << _message;
 	                            SetCAttr(h, previous_attr);
-								
+
 								Beep(800, 200);
-								
+
 								if (_makeInline) {
 									std::cout << std::flush;
 								}
 								else {
 									std::cout << std::endl;
 								}
-								
+
 								break;
 							}
 							case error: {
 	                            SetCAttr(h, BACKGROUND_BLACK | FOREGROUND_RED);
 								std::cout << _message;
 	                            SetCAttr(h, previous_attr);
-								
+
 								if (_makeInline) {
 									std::cout << std::flush;
 								}
 								else {
 									std::cout << std::endl;
 								}
-								
+
 								break;
 							}
 							case warning: {
 	                            SetCAttr(h, BACKGROUND_BLACK | FOREGROUND_YELLOW);
 								std::cout << _message;
 	                            SetCAttr(h, previous_attr);
-								
+
 								if (_makeInline) {
 									std::cout << std::flush;
 								}
 								else {
 									std::cout << std::endl;
 								}
-								
+
 								break;
 							}
 							case info: {
 	                            SetCAttr(h, BACKGROUND_BLACK | FOREGROUND_CYAN);
 								std::cout << _message;
 	                            SetCAttr(h, previous_attr);
-								
+
 								if (!_makeInline) {
 									std::cout << '\n';
 								}
-								
+
 								break;
 							}
 							case debug: {
 	                            SetCAttr(h, BACKGROUND_BLACK | FOREGROUND_WHITE);
 								std::cout << _message;
 	                            SetCAttr(h, previous_attr);
-								
+
 								if (_makeInline) {
 									std::cout << std::flush;
 								}
 								else {
 									std::cout << std::endl;
 								}
-								
+
 								break;
 							}
 							case trace: {
 	                            SetCAttr(h, BACKGROUND_WHITE | FOREGROUND_BLACK);
 								std::cout << _message;
 	                            SetCAttr(h, previous_attr);
-								
+
 								if (_makeInline) {
 									std::cout << '\n';
 								}
 								else {
 									std::cout << std::endl;
 								}
-								
+
 								break;
 							}
 							default: {
 	                            SetCAttr(h, BACKGROUND_MAGENTA | FOREGROUND_BLACK);
 								std::cout << _message;
 	                            SetCAttr(h, previous_attr);
-								
+
 								if (_makeInline) {
 									std::cout << std::flush;
 								}
@@ -457,7 +457,7 @@ namespace {
 								}
 							}
 						}
-						
+
 					}
 					else {
 						throw std::runtime_error("Failed to get the console screen buffer info.");
@@ -469,15 +469,15 @@ namespace {
 			}
 			catch (const std::exception& e) {
 				std::cerr << "WIN32_LOG_ERR: " << e.what() << std::endl;
-				
+
 				throw e;
 			}
 		}
 
 #endif
-	
+
 	};
-	
+
 	/**
 	 * @brief The debug class provides a set of static methods for debugging and logging.
 	 *
@@ -486,21 +486,21 @@ namespace {
 	 * and logging messages with different log types.
 	 */
 	struct debug final {
-	
+
 	private:
-		
+
 		inline static std::mutex s_lock;
-		
+
 		/**
 		 * @brief Metadata about a log.
 		 */
 		struct meta final {
-			
+
 			std::time_t m_timestamp;
 			     size_t m_thread_id;
 			     bool   m_inline;
 		};
-		
+
 		/** Metadata about the previous log. */
 		inline static meta s_last_log { 0U, static_cast<size_t>(-1U), false };
 
@@ -584,24 +584,24 @@ namespace {
 		 debug& operator=(const debug&&) = delete;
 		~debug()                         = delete;
 
-		
+
 		struct thread_id final {
-		
+
 		private:
-			
+
 			inline static std::mutex s_lock;
-			
+
 			inline static size_t s_ctr;
 			inline static std::unordered_map<std::thread::id, size_t> s_thread_ids;
-		
+
 		public:
-		
+
             [[maybe_unused, nodiscard]] static size_t get(const std::thread::id _id) {
-				
+
 				const std::lock_guard guard(s_lock);
-				
+
 				size_t result;
-				
+
 				if (s_thread_ids.find(_id) != s_thread_ids.end()) {
 					result = s_thread_ids[_id];
 				}
@@ -609,16 +609,16 @@ namespace {
 					s_thread_ids[_id] = s_ctr;
 					result = s_ctr++;
 				}
-				
+
 				return result;
 			}
-			
+
             [[maybe_unused, nodiscard]] static size_t get() {
 				return get(std::this_thread::get_id());
 			}
-			
+
 		};
-		
+
 		/**
 		 * @brief Asserts a condition and logs a message if the condition is false.
 		 * By default, the log type is set to `debug`.
@@ -630,12 +630,12 @@ namespace {
 		 */
 		template <typename T>
         [[maybe_unused]] static void asrt(bool _condition, const T& _message, const log_type& _type = log_type::debug, bool _makeInline = false) noexcept {
-			
+
 			if (!_condition) {
 				log(_message, _type, _makeInline);
 			}
 		}
-		
+
 		/**
 		 * @brief Triggers a breakpoint.
 		 *
@@ -644,23 +644,23 @@ namespace {
 		 * @warning Please note that if the function cannot identify the correct signal for a breakpoint, no breakpoint will occur.
 		 */
         [[maybe_unused]] static void brk() noexcept {
-		
+
 #if !defined(NDEBUG) || _DEBUG
-			
+
 			flush();
-			
+
 			try {
 				const std::lock_guard guard(s_lock);
-				
+
 				psnip_trap();
 			}
 			catch (const std::exception& e) {
 				std::cerr << "BREAKPOINT_ERR: " << e.what() << "\n";
 			}
-			
+
 #endif
 		}
-		
+
 		/**
 		 * @brief Flushes the log output.
 		 *
@@ -672,9 +672,9 @@ namespace {
 		 * - debug::Flush()
 		 */
         [[maybe_unused]] static void flush() noexcept {
-			
+
 			const std::lock_guard guard(s_lock);
-			
+
 			try {
 				try {
 					std::cout << std::flush;
@@ -685,7 +685,7 @@ namespace {
 			}
 			catch (...) {}
 		}
-		
+
 		/**
 		 * @brief Logs a message with a specified log type.
 		 *
@@ -722,15 +722,15 @@ namespace {
 		[[maybe_unused, nodiscard]] static std::vector<std::string> stack_trace(size_t _frames) {
 
 			std::vector<std::string> result;
-			
+
 			try {
-			
+
 	#if __linux__ || __APPLE__
-				
+
 				// Capture stack frames:
 				std::vector<void*> array(_frames);
 				const auto frames = static_cast<size_t>(backtrace(array.data(), static_cast<int>(_frames)));
-				
+
 				// Convert addresses into an array of human-readable strings
 				const std::unique_ptr<char*, void(*)(void*)> strings(backtrace_symbols(array.data(), static_cast<int>(frames)), std::free);
 
@@ -738,7 +738,7 @@ namespace {
 				for (size_t i = 0U; i < frames; ++i) {
 				    result.emplace_back(strings.get()[i]);
 				}
-				
+
 				if (result.size() == _frames) {
 					result.emplace_back("...");
 				}
@@ -752,7 +752,7 @@ namespace {
 			catch (const std::exception& e) {
 				log(e);
 			}
-			
+
 			return result;
 		}
 	};

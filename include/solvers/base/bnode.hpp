@@ -19,7 +19,7 @@ namespace chdr::solvers {
      * @nosubgrouping
      * @struct bnode
      * @brief Base class for pathfinding nodes.
-     * @details bnode represents the fundamental functionality of a node in a search context,
+     * @details Represents the fundamental functionality of a node in a search context,
      *          storing an index representing an identifier.
      *          It can be inherited to extend its functionality.
      * @remarks The stored identifier does not need to be unique.
