@@ -15,6 +15,7 @@ var hierarchy =
     [ "fstar< params_t >", "df/d41/structchdr_1_1solvers_1_1fstar.html", null ],
     [ "gbfs< params_t >", "d5/d28/structchdr_1_1solvers_1_1gbfs.html", null ],
     [ "gdfs< params_t >", "d1/df6/structchdr_1_1solvers_1_1gdfs.html", null ],
+    [ "gjps< params_t >", "df/d4e/structchdr_1_1solvers_1_1gjps.html", null ],
     [ "graph< index_t, scalar_t >", "d9/dcb/classchdr_1_1mazes_1_1graph.html", null ],
     [ "grid< coord_t, weight_t >", "dd/de3/classchdr_1_1mazes_1_1grid.html", null ],
     [ "grid< coord_t, bool >", "de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4.html", null ],

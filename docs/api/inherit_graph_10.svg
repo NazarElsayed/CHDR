@@ -11,7 +11,7 @@
 <!-- Node0 -->
 <g id="Node000000" class="node">
 <title>Node0</title>
-<g id="a_Node000000"><a xlink:href="d1/df6/structchdr_1_1solvers_1_1gdfs.html" target="_top" xlink:title="Graveyard&#45;optimised variant of the depth&#45;first&#45;search algorithm.">
+<g id="a_Node000000"><a xlink:href="d1/df6/structchdr_1_1solvers_1_1gdfs.html" target="_top" xlink:title="Graveyard&#45;optimised variant of the depth&#45;first search algorithm.">
 <polygon fill="white" stroke="#666666" points="79,-17 0,-17 0,0 79,0 79,-17"/>
 <text text-anchor="middle" x="39.5" y="-6.6" font-family="Helvetica,sans-Serif" font-size="8.00">gdfs&lt; params_t &gt;</text>
 </a>

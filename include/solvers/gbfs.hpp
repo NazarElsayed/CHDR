@@ -26,7 +26,7 @@ namespace chdr::solvers {
 
     /**
      * @struct gbfs
-     * @brief Graveyard-optimised variant of the breadth-first-search algorithm.
+     * @brief Graveyard-optimised variant of the breadth-first search algorithm.
      * @details G*-optimised variant of BFS, reducing memory usage by allowing for the dynamic
      *          pruning of redundant data from the search tree.
      *

@@ -13,7 +13,7 @@ var dir_949292de90bec6ca0ef87cb838b26113 =
     [ "fstar.hpp", "d1/d5a/fstar_8hpp.html", "d1/d5a/fstar_8hpp" ],
     [ "gbfs.hpp", "de/d94/gbfs_8hpp.html", "de/d94/gbfs_8hpp" ],
     [ "gdfs.hpp", "d4/df2/gdfs_8hpp.html", "d4/df2/gdfs_8hpp" ],
-    [ "gjps.hpp", "d3/d3e/gjps_8hpp_source.html", null ],
+    [ "gjps.hpp", "d3/d3e/gjps_8hpp.html", "d3/d3e/gjps_8hpp" ],
     [ "gstar.hpp", "d1/def/gstar_8hpp.html", "d1/def/gstar_8hpp" ],
     [ "idastar.hpp", "db/df9/idastar_8hpp_source.html", null ],
     [ "idbstar.hpp", "d1/d24/idbstar_8hpp_source.html", null ],

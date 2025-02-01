@@ -26,7 +26,7 @@ namespace chdr::solvers {
 
     /**
      * @struct gdfs
-     * @brief Graveyard-optimised variant of the depth-first-search algorithm.
+     * @brief Graveyard-optimised variant of the depth-first search algorithm.
      * @details G*-optimised variant of DFS, reducing memory usage by allowing for the dynamic
      *          pruning of redundant data from the search tree.
      *

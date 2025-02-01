@@ -9,6 +9,10 @@
 #ifndef CHDR_GJPS_HPP
 #define CHDR_GJPS_HPP
 
+/**
+ * @file gjps.hpp
+ */
+
 #include <array>
 #include <cstddef>
 #include <type_traits>
@@ -21,6 +25,22 @@
 
 namespace chdr::solvers {
 
+    /**
+     * @struct gjps
+     * @brief Graveyard-optimised variant of the jump-point search algorithm.
+     * @details G*-optimised variant of JPS, reducing memory usage by allowing for the dynamic
+     *          pruning of redundant data from the search tree.
+     *
+     * Advantages:
+     * - Significantly reduced average memory usage when compared to JPS.
+     *
+     * Limitations:
+     * - Higher constant factor than JPS makes it less effective in small searches.
+     *
+     * @tparam params_t Type containing the search parameters.
+     * @see jps
+     * @see gstar
+     */
     template<typename params_t>
     struct [[maybe_unused]] gjps final {
 
