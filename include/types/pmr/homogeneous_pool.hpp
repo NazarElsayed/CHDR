@@ -17,6 +17,8 @@
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
+#include <limits>
+#include <new>
 #include <utility>
 #include <vector>
 
@@ -52,7 +54,7 @@ namespace chdr {
      * @remarks Inherits from `std::pmr::memory_resource` to integrate with the
      *          PMR (Polymorphic Memory Resource) framework provided in the C++ Standard Library.
      */
-    template <size_t StackSize = 4096U, size_t MaxStackAllocationSize = -1U, size_t MaxHeapBlockSize = 65536U>
+    template <size_t StackSize = 4096U, size_t MaxStackAllocationSize = std::numeric_limits<size_t>::max(), size_t MaxHeapBlockSize = 65536U>
     class homogeneous_pool final : public std::pmr::memory_resource {
 
     private:
@@ -71,7 +73,8 @@ namespace chdr {
         static constexpr size_t s_default_heap_block_size {  4096U           };
         static constexpr size_t     s_max_heap_block_size { MaxHeapBlockSize };
 
-        alignas(std::max_align_t) uint8_t m_stack_block[s_stack_block_size]; // NOLINT(*-avoid-c-arrays)
+        // Fixed stack memory block:
+        alignas(std::max_align_t) uint8_t m_stack_block[s_stack_block_size]; //NOLINT(*-avoid-c-arrays)
 
         size_t m_alignment;           // Alignment of the allocated memory.
         size_t m_stack_write;         // Current write position for the stack block.
@@ -83,7 +86,7 @@ namespace chdr {
 
         HOT uint8_t* expand(size_t _size, size_t _alignment) noexcept {
 
-            uint8_t* result = nullptr;
+            uint8_t* result { nullptr };
 
             try {
                 const auto allocate_size = utils::max(m_block_width, _alignment);
@@ -134,7 +137,7 @@ namespace chdr {
 
         HOT uint8_t* allocate_from_free() noexcept {
 
-            uint8_t* result;
+            uint8_t* result{};
 
             if (!m_free.empty()) {
                 result = m_free.back();
@@ -161,7 +164,7 @@ namespace chdr {
          */
         void cleanup() noexcept {
             for (const auto& item : m_blocks) {
-                ::operator delete(item.data, static_cast<std::align_val_t>(m_alignment));
+                operator delete(item.data, static_cast<std::align_val_t>(m_alignment));
             }
         }
 
@@ -188,10 +191,12 @@ namespace chdr {
          *
          * @return A pointer to the beginning of the allocated memory block.
          */
-        [[nodiscard]] HOT void* do_allocate(const size_t _bytes, const size_t _alignment) override {
+        [[nodiscard]] virtual HOT void* do_allocate(const size_t _bytes, const size_t _alignment) override {
             assert(_bytes > 0U && "Allocation size must be greater than zero.");
 
             m_alignment = _alignment;
+
+            uint8_t* aligned_ptr { nullptr };
 
             // Attempt to allocate from the stack block:
             if (m_stack_write < StackSize) {
@@ -200,17 +205,16 @@ namespace chdr {
 
                 if (aligned_bytes < MaxStackAllocationSize && m_stack_write + aligned_bytes <= s_stack_block_size) {
 
-                    auto* aligned_ptr = m_stack_block + ((m_stack_write + _alignment - 1U) & ~(_alignment - 1U));
+                    aligned_ptr = m_stack_block + ((m_stack_write + _alignment - 1U) & ~(_alignment - 1U));
                     m_stack_write = static_cast<size_t>(aligned_ptr - m_stack_block) + aligned_bytes;
-
-                    return aligned_ptr;
                 }
             }
-
-            // Attempt to find a free block, or create one otherwise:
-            auto* aligned_ptr = allocate_from_free();
-            if (aligned_ptr == nullptr) {
-                aligned_ptr = expand(_bytes, _alignment);
+            else {
+                // Attempt to find a free block, or create one otherwise:
+                aligned_ptr = allocate_from_free();
+                if (aligned_ptr == nullptr) {
+                    aligned_ptr = expand(_bytes, _alignment);
+                }
             }
 
             if (aligned_ptr == nullptr) {
@@ -237,7 +241,7 @@ namespace chdr {
          * @warning Calling this function with a nullptr, or attempting to release memory not
          *          owned by the pool is undefined behaviour.
          */
-        HOT void do_deallocate([[maybe_unused]] void* _p, [[maybe_unused]] const size_t _bytes, [[maybe_unused]] size_t _alignment) override {
+        virtual HOT void do_deallocate([[maybe_unused]] void* _p, [[maybe_unused]] const size_t _bytes, [[maybe_unused]] size_t _alignment) override {
             assert(_p != nullptr && "Cannot deallocate null pointer.");
 
             m_free.push_back(static_cast<uint8_t*>(_p));
@@ -253,7 +257,7 @@ namespace chdr {
          *
          * @returns `true` if the provided memory resource is the same instance as this one; `false` otherwise.
          */
-        [[nodiscard]] bool do_is_equal(const memory_resource& _other) const noexcept override {
+        [[nodiscard]] virtual bool do_is_equal(const memory_resource& _other) const noexcept override {
             return this == &_other;
         }
 
@@ -302,7 +306,7 @@ namespace chdr {
          * @see release()
          * @see reset()
          */
-        ~homogeneous_pool() override {
+        virtual ~homogeneous_pool() override {
             cleanup();
         }
 

@@ -7,9 +7,9 @@ var searchData=
   ['managed_5fnode_2ehpp_4',['managed_node.hpp',['../da/deb/managed__node_8hpp.html',1,'']]],
   ['managed_5fnode_3c_20index_5ft_2c_20node_20_3e_5',['managed_node&lt; index_t, node &gt;',['../df/d64/structchdr_1_1solvers_1_1managed__node.html',1,'chdr::solvers']]],
   ['manhattan_5fdistance_6',['manhattan_distance',['../d2/df4/structchdr_1_1heuristics_a0ae5cd4c8261c2e6b92393ed5e4fb789.html#a0ae5cd4c8261c2e6b92393ed5e4fb789',1,'chdr::heuristics']]],
-  ['max_7',['max',['../d2/dcb/structchdr_1_1utils_abb4d38d3c7a25d93fcedd12666fb00a1.html#abb4d38d3c7a25d93fcedd12666fb00a1',1,'chdr::utils']]],
+  ['max_7',['max',['../d2/dcb/structchdr_1_1utils_a05e8953d59fd314cf105f52b0c1272dd.html#a05e8953d59fd314cf105f52b0c1272dd',1,'chdr::utils']]],
   ['maze_20types_8',['Maze Types',['../d5/da1/md_docs_2manual_2roadmap.html#maze-types',1,'']]],
-  ['min_9',['min',['../d2/dcb/structchdr_1_1utils_ac49e3cb9b2b007da03059d95020d8b49.html#ac49e3cb9b2b007da03059d95020d8b49',1,'chdr::utils']]],
+  ['min_9',['min',['../d2/dcb/structchdr_1_1utils_a2287d696e022b9c172ac719c733627e3.html#a2287d696e022b9c172ac719c733627e3',1,'chdr::utils']]],
   ['monotonic_5fpool_10',['monotonic_pool',['../df/db2/classchdr_1_1monotonic__pool.html',1,'monotonic_pool&lt; StackSize, MaxStackAllocationSize, MaxHeapBlockSize &gt;'],['../df/db2/classchdr_1_1monotonic__pool_a8d8d1a09629a36930c4f137b135f1800.html#a8d8d1a09629a36930c4f137b135f1800',1,'chdr::monotonic_pool::monotonic_pool()']]],
   ['monotonic_5fpool_2ehpp_11',['monotonic_pool.hpp',['../d4/d99/monotonic__pool_8hpp.html',1,'']]]
 ];

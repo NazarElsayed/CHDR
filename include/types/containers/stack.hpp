@@ -64,8 +64,8 @@ namespace chdr {
          * @brief Constructs a new stack with a specified initial capacity.
          *
          * @details Creates a new stack object and reserves memory for at least `_capacity` elements.
-         *          Optionally, associates the stack with a specific memory resource. If no memory resource
-         *          is specified, the stack uses the default memory resource.
+         *          Optionally, the stack can be associated with a specific memory resource.
+         *          If no memory resource is specified, the stack uses the default memory resource.
          *
          * @param [in] _capacity The number of elements to reserve storage for.
          * @param [in] _resource (optional) Pointer to the memory resource to be used for memory allocations.
@@ -226,7 +226,7 @@ namespace chdr {
          * @brief Pops an element from the stack.
          *
          * @details Removes the first element from the stack, reducing the size of the stack by one.
-         *          As stackss maintain a FILO ordering, this will be the most recently added item.
+         *          As stacks maintain a FILO ordering, this will be the most recently added item.
          *
          * @warning Invokes undefined behaviour if the stack is empty.
          */

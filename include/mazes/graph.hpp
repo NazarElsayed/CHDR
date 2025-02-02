@@ -28,9 +28,9 @@
 // ReSharper disable once CppUnusedIncludeDirective
 #include <memory_resource> // NOLINT(*-include-cleaner)
 
-#include "grid.hpp"
 #include "../types/containers/stack.hpp"
 #include "../utils/utils.hpp"
+#include "grid.hpp"
 #include "nodes/id_node.hpp"
 
 // ReSharper disable once CppUnusedIncludeDirective

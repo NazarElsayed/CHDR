@@ -1,0 +1,7 @@
+<map id="clamp" name="clamp">
+<area shape="rect" id="Node000001" title="Constrains a value to lie within a specified range." alt="" coords="201,29,252,52"/>
+<area shape="rect" id="Node000002" href="$d9/dcb/classchdr_1_1mazes_1_1graph_a5ca1351a03df5ff49f85cc4b5669cefc.html#a5ca1351a03df5ff49f85cc4b5669cefc" title="Constructs a graph instance from a grid structure." alt="" coords="5,5,153,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="187,37,149,31,149,25,188,32"/>
+<area shape="rect" id="Node000003" href="$d2/dcb/structchdr_1_1utils_acad2a572d66e0496dbb846b093aea3a6.html#acad2a572d66e0496dbb846b093aea3a6" title="Converts a duration in seconds to a formatted string representation." alt="" coords="48,52,111,75"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="188,49,111,61,110,56,187,44"/>
+</map>

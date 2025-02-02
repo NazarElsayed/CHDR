@@ -101,7 +101,7 @@
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="../../d2/dcb/structchdr_1_1utils_abb4d38d3c7a25d93fcedd12666fb00a1.html#abb4d38d3c7a25d93fcedd12666fb00a1" target="_top" xlink:title="Determines the maximum of two comparable values.">
+<g id="a_Node000004"><a xlink:href="../../d2/dcb/structchdr_1_1utils_a05e8953d59fd314cf105f52b0c1272dd.html#a05e8953d59fd314cf105f52b0c1272dd" target="_top" xlink:title="Determines the maximum of two comparable values.">
 <polygon fill="white" stroke="#666666" points="299,-70 229,-70 229,-53 299,-53 299,-70"/>
 <text text-anchor="middle" x="264" y="-59.6" font-family="Helvetica,sans-Serif" font-size="8.00">chdr::utils::max</text>
 </a>

@@ -74,7 +74,7 @@
 <!-- Node5 -->
 <g id="Node000005" class="node">
 <title>Node5</title>
-<g id="a_Node000005"><a xlink:href="../../d2/dcb/structchdr_1_1utils_ab94b095ba27e03185c77fca09d6974e8.html#ab94b095ba27e03185c77fca09d6974e8" target="_top" xlink:title="Constrains a value to lie within a specified range.">
+<g id="a_Node000005"><a xlink:href="../../d2/dcb/structchdr_1_1utils_a81ba0122d283ec87be2676092c872a52.html#a81ba0122d283ec87be2676092c872a52" target="_top" xlink:title="Constrains a value to lie within a specified range.">
 <polygon fill="white" stroke="#666666" points="174.5,-410 98.5,-410 98.5,-393 174.5,-393 174.5,-410"/>
 <text text-anchor="middle" x="136.5" y="-399.6" font-family="Helvetica,sans-Serif" font-size="8.00">chdr::utils::clamp</text>
 </a>
@@ -218,7 +218,7 @@
 <!-- Node13 -->
 <g id="Node000013" class="node">
 <title>Node13</title>
-<g id="a_Node000013"><a xlink:href="../../d2/dcb/structchdr_1_1utils_ac49e3cb9b2b007da03059d95020d8b49.html#ac49e3cb9b2b007da03059d95020d8b49" target="_top" xlink:title="Returns the smaller of two values.">
+<g id="a_Node000013"><a xlink:href="../../d2/dcb/structchdr_1_1utils_a2287d696e022b9c172ac719c733627e3.html#a2287d696e022b9c172ac719c733627e3" target="_top" xlink:title="Returns the smaller of two values.">
 <polygon fill="white" stroke="#666666" points="170.5,-122 102.5,-122 102.5,-105 170.5,-105 170.5,-122"/>
 <text text-anchor="middle" x="136.5" y="-111.6" font-family="Helvetica,sans-Serif" font-size="8.00">chdr::utils::min</text>
 </a>

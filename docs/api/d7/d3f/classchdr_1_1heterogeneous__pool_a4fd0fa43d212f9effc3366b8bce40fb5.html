@@ -109,7 +109,7 @@ $(document).ready(function(){initNavTree('d7/d3f/classchdr_1_1heterogeneous__poo
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t StackSize = 4096U, size_t MaxStackAllocationSize = -1U, size_t MaxHeapBlockSize = 65536U, bool Coalescing = true&gt; </div>
+template&lt;size_t StackSize = 4096U, size_t MaxStackAllocationSize = std::numeric_limits&lt;size_t&gt;::max(), size_t MaxHeapBlockSize = 65536U, bool Coalescing = true&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -134,7 +134,7 @@ template&lt;size_t StackSize = 4096U, size_t MaxStackAllocationSize = -1U, size_
 <dl class="section warning"><dt>Warning</dt><dd>After calling this method, all previously allocated memory from the pool is no longer accessible, and attempting to use such memory will result in undefined behaviour.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="../../d7/d3f/classchdr_1_1heterogeneous__pool_a20194325f0380eb3bbc6bc6c8b2697d9.html#a20194325f0380eb3bbc6bc6c8b2697d9" title="Resets the memory pool state to its initial configuration.">reset()</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d9/df8/heterogeneous__pool_8hpp_source.html#l00444">444</a> of file <a class="el" href="../../d9/df8/heterogeneous__pool_8hpp_source.html">heterogeneous_pool.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d9/df8/heterogeneous__pool_8hpp_source.html#l00448">448</a> of file <a class="el" href="../../d9/df8/heterogeneous__pool_8hpp_source.html">heterogeneous_pool.hpp</a>.</p>
 
 </div>
 </div>

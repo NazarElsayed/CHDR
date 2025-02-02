@@ -110,7 +110,7 @@ $(document).ready(function(){initNavTree('df/db2/classchdr_1_1monotonic__pool.ht
 </div><!--header-->
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;size_t StackSize = 4096U, size_t MaxStackAllocationSize = -1U, size_t MaxHeapBlockSize = 65536U&gt;<br />
+<div class="textblock"><div class="compoundTemplParams">template&lt;size_t StackSize = 4096U, size_t MaxStackAllocationSize = std::numeric_limits&lt;size_t&gt;::max(), size_t MaxHeapBlockSize = 65536U&gt;<br />
 class chdr::monotonic_pool&lt; StackSize, MaxStackAllocationSize, MaxHeapBlockSize &gt;</div><p>A pooled memory resource that manages memory blocks in a monotonic allocation scheme. </p>
 <p>Designed for scenarios where multiple allocations are performed, but the memory is freed all at once rather than per individual allocation. Allocations are performed in blocks, reducing the overhead of frequent dynamic memory allocation.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
@@ -123,15 +123,15 @@ class chdr::monotonic_pool&lt; StackSize, MaxStackAllocationSize, MaxHeapBlockSi
 </dl>
 <dl class="section remark"><dt>Remarks</dt><dd>Inherits from <code>std::pmr::memory_resource</code> to integrate with the PMR (Polymorphic Memory Resource) framework provided in the C++ Standard Library. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/monotonic__pool_8hpp_source.html#l00046">46</a> of file <a class="el" href="../../d4/d99/monotonic__pool_8hpp_source.html">monotonic_pool.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/monotonic__pool_8hpp_source.html#l00047">47</a> of file <a class="el" href="../../d4/d99/monotonic__pool_8hpp_source.html">monotonic_pool.hpp</a>.</p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Constructors</h2></td></tr>
 <tr class="memitem:a8d8d1a09629a36930c4f137b135f1800" id="r_a8d8d1a09629a36930c4f137b135f1800"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/db2/classchdr_1_1monotonic__pool_a8d8d1a09629a36930c4f137b135f1800.html#a8d8d1a09629a36930c4f137b135f1800">monotonic_pool</a> (size_t _initial_block_width=s_default_heap_block_size) noexcept</td></tr>
 <tr class="memdesc:a8d8d1a09629a36930c4f137b135f1800"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a memory pool.  <br /></td></tr>
 <tr class="separator:a8d8d1a09629a36930c4f137b135f1800"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a493856a1680c4e0ae182572eeec2ad9f" id="r_a493856a1680c4e0ae182572eeec2ad9f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/db2/classchdr_1_1monotonic__pool_a493856a1680c4e0ae182572eeec2ad9f.html#a493856a1680c4e0ae182572eeec2ad9f">~monotonic_pool</a> () noexcept override</td></tr>
-<tr class="memdesc:a493856a1680c4e0ae182572eeec2ad9f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroys the object and releases all allocated memory.  <br /></td></tr>
-<tr class="separator:a493856a1680c4e0ae182572eeec2ad9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46d99ef5f169cf648372a2d7ff61ff15" id="r_a46d99ef5f169cf648372a2d7ff61ff15"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/db2/classchdr_1_1monotonic__pool_a46d99ef5f169cf648372a2d7ff61ff15.html#a46d99ef5f169cf648372a2d7ff61ff15">~monotonic_pool</a> () noexcept override</td></tr>
+<tr class="memdesc:a46d99ef5f169cf648372a2d7ff61ff15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroys the object and releases all allocated memory.  <br /></td></tr>
+<tr class="separator:a46d99ef5f169cf648372a2d7ff61ff15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a20194325f0380eb3bbc6bc6c8b2697d9" id="r_a20194325f0380eb3bbc6bc6c8b2697d9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/db2/classchdr_1_1monotonic__pool_a20194325f0380eb3bbc6bc6c8b2697d9.html#a20194325f0380eb3bbc6bc6c8b2697d9">reset</a> () noexcept</td></tr>
 <tr class="memdesc:a20194325f0380eb3bbc6bc6c8b2697d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets the memory pool state to its initial configuration.  <br /></td></tr>
 <tr class="separator:a20194325f0380eb3bbc6bc6c8b2697d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -141,15 +141,15 @@ class chdr::monotonic_pool&lt; StackSize, MaxStackAllocationSize, MaxHeapBlockSi
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Methods</h2></td></tr>
-<tr class="memitem:a482928f9f49b0da9817293e481fe3ed0" id="r_a482928f9f49b0da9817293e481fe3ed0"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/db2/classchdr_1_1monotonic__pool_a482928f9f49b0da9817293e481fe3ed0.html#a482928f9f49b0da9817293e481fe3ed0">do_allocate</a> (const size_t _bytes, const size_t _alignment) override</td></tr>
-<tr class="memdesc:a482928f9f49b0da9817293e481fe3ed0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocates memory with the specified size and alignment.  <br /></td></tr>
-<tr class="separator:a482928f9f49b0da9817293e481fe3ed0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae5f93da7fa26d4e815c0fe7ae63f102a" id="r_ae5f93da7fa26d4e815c0fe7ae63f102a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/db2/classchdr_1_1monotonic__pool_ae5f93da7fa26d4e815c0fe7ae63f102a.html#ae5f93da7fa26d4e815c0fe7ae63f102a">do_deallocate</a> (void *_p, const size_t _bytes, size_t _alignment) override</td></tr>
-<tr class="memdesc:ae5f93da7fa26d4e815c0fe7ae63f102a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Does nothing. Deallocation is a no-op in monotonic allocation schemes.  <br /></td></tr>
-<tr class="separator:ae5f93da7fa26d4e815c0fe7ae63f102a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e2ac0eeff53a482605452dca909069d" id="r_a0e2ac0eeff53a482605452dca909069d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/db2/classchdr_1_1monotonic__pool_a0e2ac0eeff53a482605452dca909069d.html#a0e2ac0eeff53a482605452dca909069d">do_is_equal</a> (const memory_resource &amp;_other) const noexcept override</td></tr>
-<tr class="memdesc:a0e2ac0eeff53a482605452dca909069d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compares the equality of two memory resources.  <br /></td></tr>
-<tr class="separator:a0e2ac0eeff53a482605452dca909069d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7df84a2e107640ba5385112b3b6f8504" id="r_a7df84a2e107640ba5385112b3b6f8504"><td class="memItemLeft" align="right" valign="top">virtual void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/db2/classchdr_1_1monotonic__pool_a7df84a2e107640ba5385112b3b6f8504.html#a7df84a2e107640ba5385112b3b6f8504">do_allocate</a> (const size_t _bytes, const size_t _alignment) override</td></tr>
+<tr class="memdesc:a7df84a2e107640ba5385112b3b6f8504"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocates memory with the specified size and alignment.  <br /></td></tr>
+<tr class="separator:a7df84a2e107640ba5385112b3b6f8504"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d661e0c01970b82d6cf1a939fe7a5bb" id="r_a8d661e0c01970b82d6cf1a939fe7a5bb"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/db2/classchdr_1_1monotonic__pool_a8d661e0c01970b82d6cf1a939fe7a5bb.html#a8d661e0c01970b82d6cf1a939fe7a5bb">do_deallocate</a> (void *_p, const size_t _bytes, size_t _alignment) override</td></tr>
+<tr class="memdesc:a8d661e0c01970b82d6cf1a939fe7a5bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Does nothing. Deallocation is a no-op in monotonic allocation schemes.  <br /></td></tr>
+<tr class="separator:a8d661e0c01970b82d6cf1a939fe7a5bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abda3c8300680a2838ef5ae8640772bb4" id="r_abda3c8300680a2838ef5ae8640772bb4"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/db2/classchdr_1_1monotonic__pool_abda3c8300680a2838ef5ae8640772bb4.html#abda3c8300680a2838ef5ae8640772bb4">do_is_equal</a> (const memory_resource &amp;_other) const noexcept override</td></tr>
+<tr class="memdesc:abda3c8300680a2838ef5ae8640772bb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compares the equality of two memory resources.  <br /></td></tr>
+<tr class="separator:abda3c8300680a2838ef5ae8640772bb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 
 <p>Inherits memory_resource.</p>
@@ -158,7 +158,7 @@ Protected Methods</h2></td></tr>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../d5/d82/classchdr_1_1monotonic__pool__coll__graph.svg" width="416" height="172"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../d5/d82/classchdr_1_1monotonic__pool__coll__graph.svg" width="426" height="172"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="../../d4/d99/monotonic__pool_8hpp_source.html">monotonic_pool.hpp</a></li>

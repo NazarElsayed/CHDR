@@ -20,15 +20,15 @@
 <text text-anchor="start" x="4.5" y="-71.1" font-family="Helvetica,sans-Serif" font-size="8.00">+</text>
 <text text-anchor="start" x="13.5" y="-71.1" font-family="Helvetica,sans-Serif" font-size="8.00">void reset() noexcept</text>
 <text text-anchor="start" x="4.5" y="-58.1" font-family="Helvetica,sans-Serif" font-size="8.00">#</text>
-<text text-anchor="start" x="13.5" y="-58.1" font-family="Helvetica,sans-Serif" font-size="8.00">void * do_allocate(const size_t _bytes, const size_t _alignment) override</text>
+<text text-anchor="start" x="13.5" y="-58.1" font-family="Helvetica,sans-Serif" font-size="8.00">virtual void * do_allocate(const size_t _bytes, const size_t _alignment) override</text>
 <text text-anchor="start" x="4.5" y="-45.1" font-family="Helvetica,sans-Serif" font-size="8.00">#</text>
-<text text-anchor="start" x="13.5" y="-45.1" font-family="Helvetica,sans-Serif" font-size="8.00">void do_deallocate(void *_p, size_t _bytes, size_t _alignment) override</text>
+<text text-anchor="start" x="13.5" y="-45.1" font-family="Helvetica,sans-Serif" font-size="8.00">virtual void do_deallocate(void *_p, size_t _bytes, size_t _alignment) override</text>
 <text text-anchor="start" x="4.5" y="-32.1" font-family="Helvetica,sans-Serif" font-size="8.00">#</text>
-<text text-anchor="start" x="13.5" y="-32.1" font-family="Helvetica,sans-Serif" font-size="8.00">bool do_is_equal(const memory_resource &amp;_other) const noexcept override</text>
+<text text-anchor="start" x="13.5" y="-32.1" font-family="Helvetica,sans-Serif" font-size="8.00">virtual bool do_is_equal(const memory_resource &amp;_other) const noexcept override</text>
 <text text-anchor="start" x="5" y="-19.1" font-family="Helvetica,sans-Serif" font-size="8.00">*</text>
 <text text-anchor="start" x="13.5" y="-19.1" font-family="Helvetica,sans-Serif" font-size="8.00">heterogeneous_pool(size_t _initial_block_width=s_default_heap_block_size, size_t _capacity=32U) noexcept</text>
 <text text-anchor="start" x="5" y="-6.1" font-family="Helvetica,sans-Serif" font-size="8.00">*</text>
-<text text-anchor="start" x="13.5" y="-6.1" font-family="Helvetica,sans-Serif" font-size="8.00">~heterogeneous_pool() override</text>
+<text text-anchor="start" x="13.5" y="-6.1" font-family="Helvetica,sans-Serif" font-size="8.00">virtual ~heterogeneous_pool() override</text>
 <polygon fill="#666666" stroke="#666666" points="0.5,-105.5 0.5,-105.5 401.5,-105.5 401.5,-105.5 0.5,-105.5"/>
 <polygon fill="#666666" stroke="#666666" points="0.5,-92.5 0.5,-92.5 401.5,-92.5 401.5,-92.5 0.5,-92.5"/>
 <polygon fill="none" stroke="#666666" points="0,0 0,-121 401,-121 401,0 0,0"/>

@@ -38,7 +38,7 @@
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="../../d2/dcb/structchdr_1_1utils_ab94b095ba27e03185c77fca09d6974e8.html#ab94b095ba27e03185c77fca09d6974e8" target="_top" xlink:title="Constrains a value to lie within a specified range.">
+<g id="a_Node000003"><a xlink:href="../../d2/dcb/structchdr_1_1utils_a81ba0122d283ec87be2676092c872a52.html#a81ba0122d283ec87be2676092c872a52" target="_top" xlink:title="Constrains a value to lie within a specified range.">
 <polygon fill="white" stroke="#666666" points="143,-52 105,-52 105,-35 143,-35 143,-52"/>
 <text text-anchor="middle" x="124" y="-41.6" font-family="Helvetica,sans-Serif" font-size="8.00">clamp</text>
 </a>

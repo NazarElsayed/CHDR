@@ -400,30 +400,39 @@ namespace chdr {
 
             static_assert(std::is_arithmetic_v<T>, "Type T must be arithmetic.");
 
+            T result{};
+
             if (__builtin_is_constant_evaluated()) {
 
-                if (_value >= static_cast<T>(0)) {
+                if (_value < static_cast<T>(0)) {
+                    result = std::numeric_limits<T>::quiet_NaN();
+                }
+                else {
 
-                    if (_value != static_cast<T>(0) && _value != static_cast<T>(1)) {
+                    if (_value == static_cast<T>(0) ||
+                        _value == static_cast<T>(1)
+                    ) {
+                        result = _value; // sqrt(0) = 0, sqrt(1) = 1
+                    }
+                    else {
 
                         T x    { _value };
                         T last {    0   };
 
                         while (x != last) {
                             last = x;
-                            x = (x + _value / x) / static_cast<T>(2);
+                               x = (x + _value / x) / static_cast<T>(2);
                         }
 
-                        return x;
+                        result = x;
                     }
-
-                    return _value; // sqrt(0) = 0, sqrt(1) = 1
                 }
-
-                return std::numeric_limits<T>::quiet_NaN();
+            }
+            else {
+                result = static_cast<T>(std::sqrt(_value));
             }
 
-            return static_cast<T>(std::sqrt(_value));
+            return result;
         }
 
         /**
@@ -440,7 +449,7 @@ namespace chdr {
          *          the reference to the first argument `_a` is returned.
          */
         template <typename T>
-        HOT static constexpr const T& min(const T& _a, const T& _b) noexcept {
+        HOT static constexpr T min(T _a, T _b) noexcept {
             static_assert(std::is_invocable_r_v<bool, decltype(std::less()), T, T>, "Type T must support the less-than operator.");
             return (_a < _b) ? _a : _b;
         }
@@ -458,7 +467,7 @@ namespace chdr {
          * @returns A constant reference to the larger of the two input values.
          */
         template <typename T>
-        HOT static constexpr const T& max(const T& _a, const T& _b) noexcept {
+        HOT static constexpr T max(T _a, T _b) noexcept {
             static_assert(std::is_invocable_r_v<bool, decltype(std::less()), T, T>, "Type T must support the less-than operator.");
             return (_a < _b) ? _b : _a;
         }
@@ -477,14 +486,19 @@ namespace chdr {
          * @returns A reference to the constrained value, either `_value`, `_min`, or `_max`, depending on the range checks.
          */
         template <typename T>
-        HOT static constexpr const T& clamp(const T& _value, const T& _min, const T& _max) noexcept {
+        HOT static constexpr T clamp(T _value, T _min, T _max) noexcept {
             static_assert(std::is_invocable_r_v<bool, decltype(std::less()), T, T>, "Type T must support the less-than operator.");
 
+            T result{};
+
             if (_value >= _min) {
-                return _value < _max ? _value : _max;
+                result = _value < _max ? _value : _max;
+            }
+            else {
+                result = _min;
             }
 
-            return _min;
+            return result;
         }
 
         /**

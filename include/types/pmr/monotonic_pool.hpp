@@ -16,7 +16,8 @@
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
-#include <memory>
+#include <limits>
+#include <new>
 #include <vector>
 
 #include "../../utils/utils.hpp"
@@ -42,7 +43,7 @@ namespace chdr {
      * @remarks Inherits from `std::pmr::memory_resource` to integrate with the
      *          PMR (Polymorphic Memory Resource) framework provided in the C++ Standard Library.
      */
-    template <size_t StackSize = 4096U, size_t MaxStackAllocationSize = -1U, size_t MaxHeapBlockSize = 65536U>
+    template <size_t StackSize = 4096U, size_t MaxStackAllocationSize = std::numeric_limits<size_t>::max(), size_t MaxHeapBlockSize = 65536U>
     class monotonic_pool final : public std::pmr::memory_resource {
 
         struct block final {
@@ -65,7 +66,8 @@ namespace chdr {
         static constexpr size_t s_default_heap_block_size {  4096U           };
         static constexpr size_t     s_max_heap_block_size { MaxHeapBlockSize };
 
-        alignas(std::max_align_t) uint8_t m_stack_block[s_stack_block_size]; // Fixed stack memory block.
+        // Fixed stack memory block:
+        alignas(std::max_align_t) uint8_t m_stack_block[s_stack_block_size]; //NOLINT(*-avoid-c-arrays)
 
         size_t m_stack_write;         // Current write position for the stack block.
         size_t m_block_write;         // Current write position in the active block.
@@ -77,7 +79,7 @@ namespace chdr {
 
         HOT uint8_t* expand(size_t _bytes, size_t _alignment) {
 
-            uint8_t* result = nullptr;
+            uint8_t* result { nullptr };
 
             try {
 
@@ -139,7 +141,7 @@ namespace chdr {
          */
         void cleanup() noexcept {
             for (const auto& item : m_blocks) {
-                ::operator delete(item.data, static_cast<std::align_val_t>(item.alignment));
+                operator delete(item.data, static_cast<std::align_val_t>(item.alignment));
             }
         }
 
@@ -161,8 +163,10 @@ namespace chdr {
          *
          * @returns A pointer to the aligned memory block of the requested size. The caller must not manually free this memory.
          */
-        [[nodiscard]] HOT void* do_allocate(const size_t _bytes, const size_t _alignment) override {
+        [[nodiscard]] virtual HOT void* do_allocate(const size_t _bytes, const size_t _alignment) override {
             assert(_bytes > 0U && "Allocation size must be greater than zero.");
+
+            uint8_t* aligned_ptr { nullptr };
 
             // Attempt to allocate from the stack block:
             if (m_stack_write < StackSize) {
@@ -171,43 +175,37 @@ namespace chdr {
                     aligned_bytes < MaxStackAllocationSize &&
                     m_stack_write + aligned_bytes <= s_stack_block_size
                 ) {
-
-                    auto* aligned_ptr = m_stack_block + ((m_stack_write + _alignment - 1U) & ~(_alignment - 1U));
+                    aligned_ptr = m_stack_block + ((m_stack_write + _alignment - 1U) & ~(_alignment - 1U));
                     m_stack_write = static_cast<size_t>(aligned_ptr - m_stack_block) + aligned_bytes;
-
-                    return aligned_ptr;
-                }
-            }
-
-            uint8_t* aligned_ptr;
-
-            // If stack block is exhausted, fall back to dynamic blocks:
-            if (!m_blocks.empty()) {
-
-                aligned_ptr = reinterpret_cast<uint8_t*>(
-                    (reinterpret_cast<uintptr_t>(m_blocks[m_active_block_index].data + m_block_write) + _alignment - 1U) & ~(_alignment - 1U)
-                );
-
-                // Invalidate if the current block cannot fit the allocation.
-                if (aligned_ptr + _bytes > m_blocks[m_active_block_index].data + m_blocks[m_active_block_index].size) {
-                    aligned_ptr = nullptr;
                 }
             }
             else {
-                aligned_ptr = nullptr;
+                // If the stack block is exhausted, fall back to dynamic blocks:
+                if (!m_blocks.empty()) {
+
+                    aligned_ptr = reinterpret_cast<uint8_t*>(
+                        (reinterpret_cast<uintptr_t>(m_blocks[m_active_block_index].data + m_block_write) + _alignment - 1U) & ~(_alignment - 1U)
+                    );
+
+                    // Invalidate if the current block cannot fit the allocation.
+                    if (aligned_ptr + _bytes > m_blocks[m_active_block_index].data + m_blocks[m_active_block_index].size) {
+                        aligned_ptr = nullptr;
+                    }
+                }
+                else {
+                    aligned_ptr = nullptr;
+                }
+
+                // Expand if no valid candidate for allocation was found.
+                if (aligned_ptr == nullptr) {
+                    aligned_ptr = expand(_bytes, _alignment);
+                }
+
+                // Update write position.
+                m_block_write += static_cast<size_t>(aligned_ptr + _bytes - (m_blocks[m_active_block_index].data + m_block_write));
             }
 
-            // Expand if no valid candidate for allocation was found.
             if (aligned_ptr == nullptr) {
-                aligned_ptr = expand(_bytes, _alignment);
-            }
-
-            // Update write position.
-            m_block_write += static_cast<size_t>(aligned_ptr + _bytes - (m_blocks[m_active_block_index].data + m_block_write));
-
-            // ReSharper disable once CppDFAConstantConditions
-            if (aligned_ptr == nullptr) {
-                // ReSharper disable once CppDFAUnreachableCode
                 throw std::bad_alloc();
             }
 
@@ -227,7 +225,7 @@ namespace chdr {
          * @param [in] _alignment Alignment constraint for the start of the allocated memory block.
          *             Must be a power of two. Currently unused.
          */
-        HOT void do_deallocate([[maybe_unused]] void* _p, [[maybe_unused]] const size_t _bytes, [[maybe_unused]] size_t _alignment) override {
+        virtual HOT void do_deallocate([[maybe_unused]] void* _p, [[maybe_unused]] const size_t _bytes, [[maybe_unused]] size_t _alignment) override {
             // No-op.
         }
 
@@ -241,7 +239,7 @@ namespace chdr {
          *
          * @returns `true` if the provided memory resource is the same instance as this one; `false` otherwise.
          */
-        [[nodiscard]] bool do_is_equal(const memory_resource& _other) const noexcept override {
+        [[nodiscard]] virtual bool do_is_equal(const memory_resource& _other) const noexcept override {
             return this == &_other;
         }
 
@@ -277,7 +275,7 @@ namespace chdr {
          * @see release()
          * @see reset()
          */
-        ~monotonic_pool() noexcept override {
+        virtual ~monotonic_pool() noexcept override {
             cleanup();
         }
 

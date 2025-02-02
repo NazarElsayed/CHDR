@@ -597,7 +597,7 @@ namespace chdr::solvers {
 
             std::vector<typename params_t::coord_type> result{};
 
-            std::exception_ptr exception;
+            std::exception_ptr exception { nullptr };
 
             try {
                 const auto s = static_cast<typename params_t::index_type>(utils::to_1d(_params.start, _params.size));
@@ -629,7 +629,7 @@ namespace chdr::solvers {
                 }
             }
             catch (...) { // NOLINT(*-empty-catch)
-                if (!exception) {
+                if (exception != nullptr) {
                     exception = std::current_exception();
                 }
 

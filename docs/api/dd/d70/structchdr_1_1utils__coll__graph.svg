@@ -18,11 +18,11 @@
 <text text-anchor="start" x="4" y="-149.6" font-family="Helvetica,sans-Serif" font-size="8.00">+</text>
 <text text-anchor="start" x="13" y="-149.6" font-family="Helvetica,sans-Serif" font-size="8.00">static T abs(const T &amp;_value) noexcept</text>
 <text text-anchor="start" x="4" y="-136.6" font-family="Helvetica,sans-Serif" font-size="8.00">+</text>
-<text text-anchor="start" x="13" y="-136.6" font-family="Helvetica,sans-Serif" font-size="8.00">static const T &amp; clamp(const T &amp;_value, const T &amp;_min, const T &amp;_max) noexcept</text>
+<text text-anchor="start" x="13" y="-136.6" font-family="Helvetica,sans-Serif" font-size="8.00">static T clamp(T _value, T _min, T _max) noexcept</text>
 <text text-anchor="start" x="4" y="-123.6" font-family="Helvetica,sans-Serif" font-size="8.00">+</text>
-<text text-anchor="start" x="13" y="-123.6" font-family="Helvetica,sans-Serif" font-size="8.00">static const T &amp; max(const T &amp;_a, const T &amp;_b) noexcept</text>
+<text text-anchor="start" x="13" y="-123.6" font-family="Helvetica,sans-Serif" font-size="8.00">static T max(T _a, T _b) noexcept</text>
 <text text-anchor="start" x="4" y="-110.6" font-family="Helvetica,sans-Serif" font-size="8.00">+</text>
-<text text-anchor="start" x="13" y="-110.6" font-family="Helvetica,sans-Serif" font-size="8.00">static const T &amp; min(const T &amp;_a, const T &amp;_b) noexcept</text>
+<text text-anchor="start" x="13" y="-110.6" font-family="Helvetica,sans-Serif" font-size="8.00">static T min(T _a, T _b) noexcept</text>
 <text text-anchor="start" x="4" y="-97.6" font-family="Helvetica,sans-Serif" font-size="8.00">+</text>
 <text text-anchor="start" x="13" y="-97.6" font-family="Helvetica,sans-Serif" font-size="8.00">static T powui(T _base, T _exp) noexcept</text>
 <text text-anchor="start" x="4" y="-84.6" font-family="Helvetica,sans-Serif" font-size="8.00">+</text>
