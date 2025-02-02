@@ -15,12 +15,15 @@
 
 #include <array>
 #include <cstddef>
+#include <cstdint>
 #include <type_traits>
 #include <utility>
+#include <vector>
 
 #include "../mazes/grid.hpp"
 #include "../types/containers/existence_set.hpp"
 #include "../utils/utils.hpp"
+#include "base/managed_node.hpp"
 #include "base/solver.hpp"
 
 // ReSharper disable once CppUnusedIncludeDirective

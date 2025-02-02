@@ -19,6 +19,7 @@
 #include "../types/containers/existence_set.hpp"
 #include "../types/containers/heap.hpp"
 #include "../utils/utils.hpp"
+#include "base/managed_node.hpp"
 #include "base/solver.hpp"
 
 // ReSharper disable once CppUnusedIncludeDirective

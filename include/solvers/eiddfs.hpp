@@ -154,13 +154,13 @@ namespace chdr::solvers {
                         }
                     }
                     else {
-                        _open.pop_back();
-                        stack.pop();
+                          _open.pop_back();
+                          stack.pop();
                         _closed.erase(curr.m_index);
                     }
                 }
 
-                _open.erase(_open.begin() + 1U, _open.end());
+                  _open.erase(_open.begin() + 1U, _open.end());
                   stack.clear();
                 _closed.clear();
             }
