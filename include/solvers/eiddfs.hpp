@@ -9,6 +9,10 @@
 #ifndef CHDR_EIDDFS_HPP
 #define CHDR_EIDDFS_HPP
 
+/**
+ * @file eiddfs.hpp
+ */
+
 #include <cstddef>
 #include <limits>
 #include <vector>

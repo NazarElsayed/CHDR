@@ -16,43 +16,43 @@
 
 namespace test::generator {
 
-	struct grid final {
+    struct grid final {
 
-	private:
+    private:
 
-		static constexpr size_t null_v = static_cast<size_t>(-1U);
+        static constexpr size_t null_v = static_cast<size_t>(-1U);
 
-	public:
+    public:
 
-		template <typename weight_t, typename coord_t, typename scalar_t>
-		static constexpr auto generate(const coord_t& _start, coord_t& _end, const coord_t& _size, scalar_t _loops = static_cast<scalar_t>(0.0), scalar_t _obstacles = static_cast<scalar_t>(0.0), size_t _seed = null_v) {
+        template <typename weight_t, typename coord_t, typename scalar_t>
+        static constexpr auto generate(const coord_t& _start, coord_t& _end, const coord_t& _size, scalar_t _loops = static_cast<scalar_t>(0.0), scalar_t _obstacles = static_cast<scalar_t>(0.0), size_t _seed = null_v) {
 
-			static_assert(std::is_integral_v<weight_t>, "Type T must be an integral type.");
+            static_assert(std::is_integral_v<weight_t>, "Type T must be an integral type.");
 
-			using backtracking_t = utils::backtracking<coord_t>;
+            using backtracking_t = utils::backtracking<coord_t>;
 
             debug::log("(Maze):");
 
-			const auto maze = backtracking_t::generate(_start, _end, _size, _loops, _obstacles, _seed);
+            const auto maze = backtracking_t::generate(_start, _end, _size, _loops, _obstacles, _seed);
 
-			debug::log("\t[FINISHED] \t(~" + chdr::utils::trim_trailing_zeros(std::to_string(chdr::utils::product<size_t>(_size) / 1000000000.0l)) + "b total candidate nodes)");
+            debug::log("\t[FINISHED] \t(~" + chdr::utils::trim_trailing_zeros(std::to_string(chdr::utils::product<size_t>(_size) / 1000000000.0l)) + "b total candidate nodes)");
 
-			if constexpr (std::is_same_v<weight_t, bool>) {
-				return chdr::mazes::grid<coord_t, weight_t>(_size, maze);
-			}
-			else {
+            if constexpr (std::is_same_v<weight_t, bool>) {
+                return chdr::mazes::grid<coord_t, weight_t>(_size, maze);
+            }
+            else {
 
-				std::vector<weight_t> nodes(maze.size());
-				std::transform(maze.begin(), maze.end(), nodes.begin(), [](const auto& _node) {
-					return _node == backtracking_t::WALL ?
-						       std::numeric_limits<weight_t>::max() :
-						       std::numeric_limits<weight_t>::lowest();
-				});
+                std::vector<weight_t> nodes(maze.size());
+                std::transform(maze.begin(), maze.end(), nodes.begin(), [](const auto& _node) {
+                    return _node == backtracking_t::WALL ?
+                        std::numeric_limits<weight_t>::max() :
+                        std::numeric_limits<weight_t>::lowest();
+                });
 
-				return chdr::mazes::grid<coord_t, weight_t>(_size, std::move(nodes));
-			}
-		}
-	};
+                return chdr::mazes::grid<coord_t, weight_t>(_size, std::move(nodes));
+            }
+        }
+    };
 
 } //test::generator
 

@@ -20,230 +20,230 @@
 
 namespace test {
 
-	/**
-	 * @class application
-	 * @brief Represents the application context.
-	 *
-	 * The application class is responsible for managing the main execution flow of the program and handling the termination of the application.
-	 */
-	class application final {
+    /**
+     * @class application
+     * @brief Represents the application context.
+     *
+     * The application class is responsible for managing the main execution flow of the program and handling the termination of the application.
+     */
+    class application final {
 
-	private:
+    private:
 
-		inline static std::atomic<bool> s_quit        { false }; // Is Application scheduled to quit?
-		inline static std::atomic<bool> s_initialised { false }; // Is Application initialised?
+        inline static std::atomic<bool> s_quit        { false }; // Is Application scheduled to quit?
+        inline static std::atomic<bool> s_initialised { false }; // Is Application initialised?
 
-		inline static std::unique_ptr<std::byte[]> s_contingency_block;	// NOLINT(*-avoid-c-arrays)
+        inline static std::unique_ptr<std::byte[]> s_contingency_block;    // NOLINT(*-avoid-c-arrays)
 
-		/**
-		 * @brief Reinforces the contingent memory block.
-		 *
-		 * Ensures that a contingency memory block is allocated for critical low-memory scenarios.
-		 * This method makes an effort to allocate a fallback memory buffer to support
-		 * continued minimal functionality when memory resources are severely constrained.
-		 */
-		static void reinforce_contingent_memory() noexcept {
-			try {
-				if (s_contingency_block == nullptr) {
+        /**
+         * @brief Reinforces the contingent memory block.
+         *
+         * Ensures that a contingency memory block is allocated for critical low-memory scenarios.
+         * This method makes an effort to allocate a fallback memory buffer to support
+         * continued minimal functionality when memory resources are severely constrained.
+         */
+        static void reinforce_contingent_memory() noexcept {
+            try {
+                if (s_contingency_block == nullptr) {
 
-					static constexpr auto contingency_block_size = 16384U;
+                    static constexpr auto contingency_block_size = 16384U;
 
-					s_contingency_block = std::make_unique<std::byte[]>(contingency_block_size);	// NOLINT(*-avoid-c-arrays)
-				}
-			}
-			catch (...) {
-				/*
-				 * There may not be enough memory to print or do just about anything.
-				 * So allow the exception to fall through, and hope the failed allocation
-				 * is picked up by the critical new handler before the OS kills the app.
-				 */
-			}
-		}
+                    s_contingency_block = std::make_unique<std::byte[]>(contingency_block_size);    // NOLINT(*-avoid-c-arrays)
+                }
+            }
+            catch (...) {
+                /*
+                 * There may not be enough memory to print or do just about anything.
+                 * So allow the exception to fall through, and hope the failed allocation
+                 * is picked up by the critical new handler before the OS kills the app.
+                 */
+            }
+        }
 
-		/**
-		 * @brief Finalises the application.
-		 *
-		 * Releases allocated resources.
-		 *
-		 * @note This function should only be called when the application is about to terminate.
-		 */
-		static void finalise() noexcept {
+        /**
+         * @brief Finalises the application.
+         *
+         * Releases allocated resources.
+         *
+         * @note This function should only be called when the application is about to terminate.
+         */
+        static void finalise() noexcept {
 
-			try {
+            try {
 
-				debug::log("application::finalise()", info);
+                debug::log("application::finalise()", info);
 
-				try {
-				}
-				catch (const std::exception& e) {
-					debug::log(e, critical);
-				}
+                try {
+                }
+                catch (const std::exception& e) {
+                    debug::log(e, critical);
+                }
 
-				debug::flush();
-			}
-			catch (...) {}
-		}
+                debug::flush();
+            }
+            catch (...) {}
+        }
 
-		/**
-		 * @brief Called when the application unexpectedly terminates.
-		 *
-		 * Perform finalisation and then exit the application.
-		 *
-		 * @see debug::log(const std::string_view&, const LogType&, bool)
-		 * @see application::finalise()
-		 * @see std::exit()
-		 */
-		static void on_terminate() noexcept {
+        /**
+         * @brief Called when the application unexpectedly terminates.
+         *
+         * Perform finalisation and then exit the application.
+         *
+         * @see debug::log(const std::string_view&, const LogType&, bool)
+         * @see application::finalise()
+         * @see std::exit()
+         */
+        static void on_terminate() noexcept {
 
-			try {
-				try {
+            try {
+                try {
 
-					std::string reason = "NULL";
+                    std::string reason = "NULL";
 
-					if (const auto critical_error = std::current_exception(); critical_error != nullptr) {
+                    if (const auto critical_error = std::current_exception(); critical_error != nullptr) {
 
-						try {
-							std::rethrow_exception(critical_error);
-						}
-						catch (const std::exception &e) {
-							reason = e.what();
-						}
-						catch (...) {
-							reason = "UNKNOWN\"";
-						}
-					}
+                        try {
+                            std::rethrow_exception(critical_error);
+                        }
+                        catch (const std::exception &e) {
+                            reason = e.what();
+                        }
+                        catch (...) {
+                            reason = "UNKNOWN\"";
+                        }
+                    }
 
-					debug::log("application::on_terminate()! [REASON]: \"" + reason + "\"", critical);
-				}
-				catch (...) {}
+                    debug::log("application::on_terminate()! [REASON]: \"" + reason + "\"", critical);
+                }
+                catch (...) {}
 
                 finalise();
 
-				debug::log("Finalised.", trace);
-			}
-			catch (...) {}
+                debug::log("Finalised.", trace);
+            }
+            catch (...) {}
 
-			std::exit(343);
-			// ReSharper disable once CppDFAUnreachableCode
-		}
+            std::exit(343);
+            // ReSharper disable once CppDFAUnreachableCode
+        }
 
-		/**
-		 * @brief Custom handler for memory allocation failures.
-		 *
-		 * This function is invoked when the system is unable to allocate memory.
-		 *
-		 * If available, it allows execution to continue on contingency memory, otherwise the application terminates gracefully.
-		 */
-		static void critical_new_handler() noexcept {
+        /**
+         * @brief Custom handler for memory allocation failures.
+         *
+         * This function is invoked when the system is unable to allocate memory.
+         *
+         * If available, it allows execution to continue on contingency memory, otherwise the application terminates gracefully.
+         */
+        static void critical_new_handler() noexcept {
 
-			bool has_lifeline = s_contingency_block != nullptr;
-			s_contingency_block.reset();
+            bool has_lifeline = s_contingency_block != nullptr;
+            s_contingency_block.reset();
 
-			try {
-				debug::log("application::critical_new_handler(): CHDR was unable to allocate memory. Is there enough system memory to perform the solve?", critical);
-			}
-			catch(...) {
-			}
+            try {
+                debug::log("application::critical_new_handler(): CHDR was unable to allocate memory. Is there enough system memory to perform the solve?", critical);
+            }
+            catch(...) {
+            }
 
-			if (!has_lifeline) {
-				on_terminate();
-			}
-		}
+            if (!has_lifeline) {
+                on_terminate();
+            }
+        }
 
-	public:
+    public:
 
-		 application()                           = delete;
-		 application(const application&  _other) = delete;
-		 application(      application&& _other) = delete;
-		~application()                           = delete;
+         application()                           = delete;
+         application(const application&  _other) = delete;
+         application(      application&& _other) = delete;
+        ~application()                           = delete;
 
-		application& operator = (const application&  _other) = delete;
-		application& operator =       (application&& _other) = delete;
+        application& operator = (const application&  _other) = delete;
+        application& operator =       (application&& _other) = delete;
 
-		/**
-		 * @brief Entry point of the application.
-		 *
-		 * This function is the main entry point of the application, and contains the main loop.
-		 *
-		 * @return An integer error code (0 for successful execution)
-		 */
-		template <template <typename params_t> typename solver_t, typename params_t>
-		[[nodiscard]] static int main(const params_t& _params) noexcept {
+        /**
+         * @brief Entry point of the application.
+         *
+         * This function is the main entry point of the application, and contains the main loop.
+         *
+         * @return An integer error code (0 for successful execution)
+         */
+        template <template <typename params_t> typename solver_t, typename params_t>
+        [[nodiscard]] static int main(const params_t& _params) noexcept {
 
-			debug::log("application::main()", info);
+            debug::log("application::main()", info);
 
-			// Restrict main() to one instance.
-			if (s_initialised) {
-				debug::log("Attempted to call application::main() while it is already running! Do you have multiple instances?", warning);
-			}
-			else {
+            // Restrict main() to one instance.
+            if (s_initialised) {
+                debug::log("Attempted to call application::main() while it is already running! Do you have multiple instances?", warning);
+            }
+            else {
 
-				try {
+                try {
 
-					s_quit        = false;
-					s_initialised =  true;
+                    s_quit        = false;
+                    s_initialised =  true;
 
-					// Set custom termination behaviour:
-					std::set_terminate(on_terminate);
-					std::set_new_handler(critical_new_handler);
+                    // Set custom termination behaviour:
+                    std::set_terminate(on_terminate);
+                    std::set_new_handler(critical_new_handler);
 
-					reinforce_contingent_memory();
+                    reinforce_contingent_memory();
 
-					/* INIT */
+                    /* INIT */
 
-					// ...
+                    // ...
 
-					debug::log("Application Initialised.", info);
+                    debug::log("Application Initialised.", info);
 
-					/* LOOP */
-					while (!s_quit) {
+                    /* LOOP */
+                    while (!s_quit) {
 
-						try {
+                        try {
 
-							try {
-								solver::run<solver_t, params_t>(_params);
-							}
-							catch (const std::exception& e) {
-								debug::log(e, error);
-							}
+                            try {
+                                solver::run<solver_t, params_t>(_params);
+                            }
+                            catch (const std::exception& e) {
+                                debug::log(e, error);
+                            }
 
-							reinforce_contingent_memory();
-						}
-						catch (const std::exception& e) {
-							debug::log(e, critical);
-						}
+                            reinforce_contingent_memory();
+                        }
+                        catch (const std::exception& e) {
+                            debug::log(e, critical);
+                        }
 
                         quit();
-					}
-				}
-				catch (const std::exception& e) {
-					debug::log(e, critical);
-				}
+                    }
+                }
+                catch (const std::exception& e) {
+                    debug::log(e, critical);
+                }
 
-				/* FINALISE */
+                /* FINALISE */
                 finalise();
 
-				debug::log("Application Terminated Normally.", info);
-			}
+                debug::log("Application Terminated Normally.", info);
+            }
 
-			return EXIT_SUCCESS;
-		}
+            return EXIT_SUCCESS;
+        }
 
-		/**
-		 * @brief Quit function.
-		 *
-		 * This function is responsible for quitting the application.
-		 *
-		 * @see application::s_quit
-		 * @see debug::log(const std::string_view&, const LogType&, bool)
-		 */
-		static void quit() noexcept {
+        /**
+         * @brief Quit function.
+         *
+         * This function is responsible for quitting the application.
+         *
+         * @see application::s_quit
+         * @see debug::log(const std::string_view&, const LogType&, bool)
+         */
+        static void quit() noexcept {
 
-			debug::log("application::quit()", info);
+            debug::log("application::quit()", info);
 
             s_quit = true;
-		}
-	};
+        }
+    };
 
 } //test
 

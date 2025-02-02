@@ -21,18 +21,18 @@
 
 namespace test::generator {
 
-	struct graph final {
+    struct graph final {
 
-	    using rng_engine_t = utils::lcg<size_t>;
+        using rng_engine_t = utils::lcg<size_t>;
 
-	    static constexpr size_t null_v = static_cast<size_t>(-1U);
+        static constexpr size_t null_v = static_cast<size_t>(-1U);
 
         template <typename weight_t, typename index_t, typename coord_t, typename scalar_t>
         static auto generate(const coord_t& _start, coord_t& _end, const coord_t& _size, size_t _seed = null_v) {
 
-			static_assert(std::is_integral_v<weight_t>, "Type weight_t must be an integral type.");
+            static_assert(std::is_integral_v<weight_t>, "Type weight_t must be an integral type.");
 
-			constexpr auto Kd = std::tuple_size_v<std::decay_t<coord_t>>;
+            constexpr auto Kd = std::tuple_size_v<std::decay_t<coord_t>>;
 
             constexpr bool bidirectional = true;
 
@@ -124,9 +124,9 @@ namespace test::generator {
 
             debug::log("\t[FINISHED] \t(~" + chdr::utils::trim_trailing_zeros(std::to_string(count / 1000000000.0l)) + "b total candidate nodes)");
 
-			return result;
-		}
-	};
+            return result;
+        }
+    };
 
 } //test::generator
 
