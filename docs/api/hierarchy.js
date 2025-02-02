@@ -25,6 +25,8 @@ var hierarchy =
     [ "heuristics", "d2/df4/structchdr_1_1heuristics.html", null ],
     [ "homogeneous_pool< StackSize, MaxStackAllocationSize, MaxHeapBlockSize >", "d7/d66/classchdr_1_1homogeneous__pool.html", null ],
     [ "id_node< index_t >", "db/d4a/classchdr_1_1mazes_1_1id__node.html", null ],
+    [ "idastar< params_t >", "d4/d17/structchdr_1_1solvers_1_1idastar.html", null ],
+    [ "idbest_first< params_t >", "dc/dd5/structchdr_1_1solvers_1_1idbest__first.html", null ],
     [ "jps< params_t >", "d8/d87/structchdr_1_1solvers_1_1jps.html", null ],
     [ "monotonic_pool< StackSize, MaxStackAllocationSize, MaxHeapBlockSize >", "df/db2/classchdr_1_1monotonic__pool.html", null ],
     [ "queue< T >", "d7/de5/classchdr_1_1queue.html", null ],

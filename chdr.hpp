@@ -22,7 +22,7 @@
  */
 
 /** @brief Full version string of the CHDR library. */
-#define CHDR_VERSION          "0.1.0-dev+8ae2babd"
+#define CHDR_VERSION          "0.1.0-dev+7662e263"
 
 /** @brief CHDR major version number. */
 #define CHDR_VERSION_MAJOR     0
@@ -37,7 +37,7 @@
 #define CHDR_VERSION_TWEAK    "dev"
 
 /** @brief CHDR version metadata string. */
-#define CHDR_VERSION_METADATA "8ae2babd"
+#define CHDR_VERSION_METADATA "7662e263"
 
 /* ReSharper enable CppUnusedIncludeDirective */
 // NOLINTBEGIN(*-include-cleaner)
@@ -56,7 +56,7 @@
 #include "include/solvers/dfs.hpp"
 #include "include/solvers/dijkstra.hpp"
 #include "include/solvers/eidastar.hpp"
-#include "include/solvers/eidbstar.hpp"
+#include "include/solvers/eidbest_first.hpp"
 #include "include/solvers/eiddfs.hpp"
 #include "include/solvers/flood.hpp"
 #include "include/solvers/fstar.hpp"
@@ -65,7 +65,7 @@
 #include "include/solvers/gjps.hpp"
 #include "include/solvers/gstar.hpp"
 #include "include/solvers/idastar.hpp"
-#include "include/solvers/idbstar.hpp"
+#include "include/solvers/idbest_first.hpp"
 #include "include/solvers/iddfs.hpp"
 #include "include/solvers/jps.hpp"
 #include "include/types/containers/coord.hpp"

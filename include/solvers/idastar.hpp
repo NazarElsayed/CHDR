@@ -9,6 +9,10 @@
 #ifndef CHDR_IDASTAR_HPP
 #define CHDR_IDASTAR_HPP
 
+/**
+ * @file idastar.hpp
+ */
+
 #include <cstddef>
 #include <limits>
 #include <vector>
@@ -23,6 +27,35 @@
 
 namespace chdr::solvers {
 
+    /**
+     * @struct idastar
+     * @brief Iterative-deepening A* search algorithm.
+     * @details IDA* (Korf, R. E., 1985) is a heuristic-informed variant of the iterative-deepening DFS algorithm.\n
+     *          It minimises memory usage by repeatedly traversing the search space with incrementing cost thresholds.\n\n
+     *
+     * Advantages:
+     * - Heuristic-driven search can improve search results when compared to IDDFS.
+     * - Minimises memory usage when compared to the original A* algorithm.
+     * - Does not need a pre-pass, although performance can improve if the search space is pruned first.
+     *
+     * Limitations:
+     * - Low performance due to the repeated traversal of the search space.
+     *
+     * Further Reading:
+     * - <a href="https://en.wikipedia.org/wiki/Iterative_deepening_A*">Wikipedia Article</a>
+     *
+     * References:
+     * - Korf, R. E., 1985. Depth-first iterative-deepening. Artificial Intelligence, 27 (1), 97–109.
+     *
+     * @note Guarantees the optimal path if the heuristic is admissible (never overestimates the cost).
+     *
+     * @tparam params_t Type containing the search parameters.
+     *
+     * @see astar
+     * @see gstar
+     * @see iddfs
+     * @see eidastar
+     */
     template<typename params_t>
     struct [[maybe_unused]] idastar final {
 

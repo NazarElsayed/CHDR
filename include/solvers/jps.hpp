@@ -30,8 +30,7 @@
 namespace chdr::solvers {
 
     /**
-     * @nosubgrouping
-     * @class jps
+     * @struct jps
      * @brief Jump-point search algorithm.
      * @details JPS (Harabor, D. and Grastien, A., 2011) is a pathfinding algorithm for optimal routing through
      *          uniform-cost grids.\n

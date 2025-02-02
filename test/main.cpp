@@ -127,7 +127,7 @@ namespace test {
             else if (_solver == "dfs"       ) { result = invoke<chdr::solvers::       dfs, params>(args); }
             else if (_solver == "dijkstra"  ) { result = invoke<chdr::solvers::  dijkstra, params>(args); }
             else if (_solver == "eidastar"  ) { result = invoke<chdr::solvers::  eidastar, params>(args); }
-            else if (_solver == "eidbstar"  ) { result = invoke<chdr::solvers::  eidbstar, params>(args); }
+            else if (_solver == "eidbstar"  ) { result = invoke<chdr::solvers::  eidbest_first, params>(args); }
             else if (_solver == "eiddfs"    ) { result = invoke<chdr::solvers::    eiddfs, params>(args); }
             else if (_solver == "flood"     ) { result = invoke<chdr::solvers::     flood, params>(args); }
             else if (_solver == "fstar"     ) { result = invoke<chdr::solvers::     fstar, params>(args); }
@@ -136,7 +136,7 @@ namespace test {
             else if (_solver == "gjps"      ) { result = invoke<chdr::solvers::      gjps, params>(args); }
             else if (_solver == "gstar"     ) { result = invoke<chdr::solvers::     gstar, params>(args); }
             else if (_solver == "idastar"   ) { result = invoke<chdr::solvers::   idastar, params>(args); }
-            else if (_solver == "idbstar"   ) { result = invoke<chdr::solvers::   idbstar, params>(args); }
+            else if (_solver == "idbstar"   ) { result = invoke<chdr::solvers::   idbest_first, params>(args); }
             else if (_solver == "iddfs"     ) { result = invoke<chdr::solvers::     iddfs, params>(args); }
             else if (_solver == "jps"       ) { result = invoke<chdr::solvers::       jps, params>(args); }
             else {

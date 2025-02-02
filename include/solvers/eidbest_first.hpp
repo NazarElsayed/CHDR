@@ -6,10 +6,9 @@
  * https://creativecommons.org/licenses/by-nc-nd/4.0/
  */
 
-#ifndef CHDR_IDBSTAR_HPP
-#define CHDR_IDBSTAR_HPP
+#ifndef CHDR_EIDBSTAR_HPP
+#define CHDR_EIDBSTAR_HPP
 
-#include <cstddef>
 #include <limits>
 #include <vector>
 
@@ -24,16 +23,16 @@
 namespace chdr::solvers {
 
     template<typename params_t>
-    struct [[maybe_unused]] idbstar final {
+    struct [[maybe_unused]] eidbest_first final {
 
-        friend class solver<idbstar, params_t>;
+        friend class solver<eidbest_first, params_t>;
 
     private:
 
         using  index_t = typename params_t:: index_type;
         using scalar_t = typename params_t::scalar_type;
         using  coord_t = typename params_t:: coord_type;
-        using solver_t = solver<idbstar, params_t>;
+        using solver_t = solver<eidbest_first, params_t>;
 
         static_assert(std::is_arithmetic_v<scalar_t>, "scalar_t must be an integral or floating point type.");
         static_assert(std::numeric_limits<scalar_t>::is_specialized, "scalar_t must be a numeric type with defined numeric limits.");
@@ -62,11 +61,11 @@ namespace chdr::solvers {
         template <typename neighbours_t>
         struct state final {
 
-            node     curr;
+            node curr;
             scalar_t bound;
 
             neighbours_t neighbours;
-            size_t       neighbours_idx;
+            index_t      neighbours_idx;
 
             [[nodiscard]] state(const node& _curr, scalar_t _bound, const params_t& _params) :
                 curr(_curr.m_index, _curr.m_hScore),
@@ -87,6 +86,8 @@ namespace chdr::solvers {
             state& operator=(state&&) noexcept = default;
         };
 
+        using transposition_table_t = std::unordered_map<index_t, scalar_t>;
+
         template <typename open_set_t>
         [[nodiscard]] HOT static constexpr auto solve_internal(open_set_t& _open, const params_t& _params) {
 
@@ -97,12 +98,15 @@ namespace chdr::solvers {
 
             auto min = std::numeric_limits<scalar_t>::max();
 
-            auto bound = _params.h(_params.start, _params.end) * _params.weight;
+            const auto bound = _params.h(_params.start, _params.end) * _params.weight;
 
             _open.emplace_back(s, bound);
 
             stack<state<neighbours_t>> stack;
             stack.emplace(_open.back(), bound, _params);
+
+            transposition_table_t transposition_table;
+            transposition_table[_open.back().m_index] = bound;
 
             // Main loop:
             while (!stack.empty()) {
@@ -115,14 +119,22 @@ namespace chdr::solvers {
 
                     if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
 
-                        if (std::none_of(_open.begin(), _open.end(), [&n](const auto& _item) ALWAYS_INLINE { return _item.m_index == n.index; })) {
+                        auto h = _params.h(n.coord, _params.end) * _params.weight;
 
-                            _open.emplace_back(n.index, _params.h(n.coord, _params.end) * _params.weight);
+                        auto search = transposition_table.find(n.index);
+                        if (!(search != transposition_table.end() && h >= search->second)) {
+                            transposition_table[n.index] = h;
+
+                            _open.emplace_back(n.index, h);
 
                             if (n.index != e) { // SEARCH FOR SOLUTION...
                                 stack.emplace(_open.back(), _.bound, _params);
                             }
                             else { // SOLUTION REACHED ...
+
+                                // ReSharper disable once CppDFAUnusedValue
+                                transposition_table = {};
+
                                 return solver_t::solver_utils::ibacktrack(_open, _params.size);
                             }
                         }
@@ -155,4 +167,4 @@ namespace chdr::solvers {
 
 } //chdr::solvers
 
-#endif //CHDR_IDBSTAR_HPP
+#endif //CHDR_EIDBSTAR_HPP
