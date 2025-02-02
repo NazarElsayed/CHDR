@@ -17,8 +17,12 @@
 #include <cstddef>
 #include <cstdint>
 #include <limits>
+#include <memory>
 #include <new>
 #include <vector>
+
+// ReSharper disable once CppUnusedIncludeDirective
+#include <memory_resource> // NOLINT(*-include-cleaner)
 
 #include "../../utils/utils.hpp"
 
@@ -67,7 +71,7 @@ namespace chdr {
         static constexpr size_t     s_max_heap_block_size { MaxHeapBlockSize };
 
         // Fixed stack memory block:
-        alignas(std::max_align_t) uint8_t m_stack_block[s_stack_block_size]; //NOLINT(*-avoid-c-arrays)
+        alignas(max_align_t) uint8_t m_stack_block[s_stack_block_size]; //NOLINT(*-avoid-c-arrays)
 
         size_t m_stack_write;         // Current write position for the stack block.
         size_t m_block_write;         // Current write position in the active block.
@@ -90,7 +94,7 @@ namespace chdr {
                     m_block_width = recycled_block.size;
                     result = recycled_block.data;
                 }
-                else {                                             // Allocate a new, larger block:
+                else { // Allocate a new, larger block:
 
                     m_block_width = utils::max(
                         m_initial_block_width,
@@ -179,17 +183,18 @@ namespace chdr {
                     m_stack_write = static_cast<size_t>(aligned_ptr - m_stack_block) + aligned_bytes;
                 }
             }
-            else {
+
+            if (aligned_ptr == nullptr) {
+
                 // If the stack block is exhausted, fall back to dynamic blocks:
                 if (!m_blocks.empty()) {
 
-                    aligned_ptr = reinterpret_cast<uint8_t*>(
-                        (reinterpret_cast<uintptr_t>(m_blocks[m_active_block_index].data + m_block_write) + _alignment - 1U) & ~(_alignment - 1U)
-                    );
+                    auto*  raw_ptr = static_cast<void*>(static_cast<uint8_t*>(m_blocks[m_active_block_index].data) + m_block_write);
+                    size_t space   = m_blocks[m_active_block_index].size - m_block_write;
 
-                    // Invalidate if the current block cannot fit the allocation.
-                    if (aligned_ptr + _bytes > m_blocks[m_active_block_index].data + m_blocks[m_active_block_index].size) {
-                        aligned_ptr = nullptr;
+                    aligned_ptr = static_cast<uint8_t*>(std::align(_alignment, _bytes, raw_ptr, space));
+                    if (aligned_ptr != nullptr) {
+                        m_block_write = static_cast<size_t>(static_cast<uint8_t*>(aligned_ptr) - static_cast<uint8_t*>(m_blocks[m_active_block_index].data)) + _bytes;
                     }
                 }
                 else {
@@ -205,7 +210,9 @@ namespace chdr {
                 m_block_write += static_cast<size_t>(aligned_ptr + _bytes - (m_blocks[m_active_block_index].data + m_block_write));
             }
 
+            // ReSharper disable once CppDFAConstantConditions
             if (aligned_ptr == nullptr) {
+                // ReSharper disable once CppDFAUnreachableCode
                 throw std::bad_alloc();
             }
 

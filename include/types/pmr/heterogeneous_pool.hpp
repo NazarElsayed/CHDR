@@ -83,7 +83,7 @@ namespace chdr {
         static constexpr size_t     s_max_heap_block_size { MaxHeapBlockSize };
 
         // Fixed stack memory block:
-        alignas(std::max_align_t) uint8_t m_stack_block[s_stack_block_size]; //NOLINT(*-avoid-c-arrays)
+        alignas(max_align_t) uint8_t m_stack_block[s_stack_block_size]; //NOLINT(*-avoid-c-arrays)
 
         size_t m_stack_write;         // Current write position for the stack block.
         size_t m_initial_block_width; // Width of the first allocated block.
@@ -229,7 +229,9 @@ namespace chdr {
                 aligned_ptr = m_stack_block + ((m_stack_write + _alignment - 1U) & ~(_alignment - 1U));
                 m_stack_write = static_cast<size_t>(aligned_ptr - m_stack_block) + aligned_bytes;
             }
-            else {
+
+            if (aligned_ptr == nullptr) {
+
                 // Attempt to find a free block, or create one otherwise:
                 aligned_ptr = allocate_from_free(aligned_bytes);
                 if (aligned_ptr == nullptr) {
@@ -237,7 +239,9 @@ namespace chdr {
                 }
             }
 
+            // ReSharper disable once CppDFAConstantConditions
             if (aligned_ptr == nullptr) {
+                // ReSharper disable once CppDFAUnreachableCode
                 throw std::bad_alloc();
             }
 

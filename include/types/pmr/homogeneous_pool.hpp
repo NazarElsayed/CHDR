@@ -74,7 +74,7 @@ namespace chdr {
         static constexpr size_t     s_max_heap_block_size { MaxHeapBlockSize };
 
         // Fixed stack memory block:
-        alignas(std::max_align_t) uint8_t m_stack_block[s_stack_block_size]; //NOLINT(*-avoid-c-arrays)
+        alignas(max_align_t) uint8_t m_stack_block[s_stack_block_size]; //NOLINT(*-avoid-c-arrays)
 
         size_t m_alignment;           // Alignment of the allocated memory.
         size_t m_stack_write;         // Current write position for the stack block.
@@ -208,7 +208,9 @@ namespace chdr {
                     m_stack_write = static_cast<size_t>(aligned_ptr - m_stack_block) + aligned_bytes;
                 }
             }
-            else {
+
+            if (aligned_ptr == nullptr) {
+
                 // Attempt to find a free block, or create one otherwise:
                 aligned_ptr = allocate_from_free();
                 if (aligned_ptr == nullptr) {
@@ -216,7 +218,9 @@ namespace chdr {
                 }
             }
 
+            // ReSharper disable once CppDFAConstantConditions
             if (aligned_ptr == nullptr) {
+                // ReSharper disable once CppDFAUnreachableCode
                 throw std::bad_alloc();
             }
 
@@ -430,6 +434,6 @@ namespace chdr {
         }
     };
 
-} // namespace chdr
+} //chdr
 
 #endif // CHDR_HOMOGENEOUS_POOL_HPP
