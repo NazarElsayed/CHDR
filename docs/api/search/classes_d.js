@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['queue_0',['queue',['../classchdr_1_1queue.html',1,'chdr']]]
+  ['weighted_5fnode_0',['weighted_node',['../db/dc4/structchdr_1_1mazes_1_1weighted__node.html',1,'chdr::mazes']]]
 ];

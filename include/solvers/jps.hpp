@@ -9,6 +9,10 @@
 #ifndef CHDR_JPS_HPP
 #define CHDR_JPS_HPP
 
+/**
+ * @file jps.hpp
+ */
+
 #include <array>
 #include <cstddef>
 #include <cstdint>
@@ -25,6 +29,44 @@
 
 namespace chdr::solvers {
 
+    /**
+     * @nosubgrouping
+     * @class jps
+     * @brief Jump-point search algorithm.
+     * @details JPS (Harabor, D. and Grastien, A., 2011) is a pathfinding algorithm for optimal routing through
+     *          uniform-cost grids.\n
+     *          JPS employs symmetry-breaking techniques to avoid processing nodes that do not contribute to the search,
+     *          allowing for significantly reduced search times and memory usage.\n\n
+     *
+     * Advantages:
+     * - Faster average search times than A*.
+     * - Lower average memory usage than A*.
+     *
+     * Limitations:
+     * - Limited to searches on uniform-cost grid topologies.
+     * - Less effective than A* when the search space cannot be reduced.
+     * - Higher constant factor than A* makes JPS slower in small search spaces.
+     * - Inappropriate for use in unbounded (infinite) search spaces.
+     * - Inefficient or complex search heuristics can reduce performance.
+     * - Poor performance when searches lack solutions.
+     *
+     * Further Reading:
+     * - <a href="https://en.wikipedia.org/wiki/Jump_point_search">Wikipedia Article</a>
+     * - <a href="https://www.youtube.com/watch?v=NmM4pv8uQwI">Video: ICAPS 2014: Daniel Harabor on "Improving Jump Point Search"</a>
+     *
+     * References:
+     * - Harabor, D. and Grastien, A., 2011. Online Graph Pruning for Pathfinding On Grid Maps. Proceedings of the AAAI Conference on Artificial Intelligence, 25 (1), 1114–1119.
+     * - Harabor, D. and Grastien, A., 2012. The JPS Pathfinding System. Proceedings of the International Symposium on Combinatorial Search, 3 (1), 207–208.
+     * - Harabor, D. and Grastien, A., 2014. Improving Jump Point Search. Proceedings International Conference on Automated Planning and Scheduling, ICAPS, 2014, 128–135.
+     *
+     * @note Guarantees the optimal path if the heuristic is admissible (never overestimates the cost), and the search
+     *       space is a uniform-cost grid.
+     *
+     * @remarks Currently, only a 2D implementation is provided.
+     *          Implementations for higher dimensions may be provided with future CHDR versions.
+     *
+     * @tparam params_t Type containing the search parameters.
+     */
     template<typename params_t>
     struct [[maybe_unused]] jps final {
 
