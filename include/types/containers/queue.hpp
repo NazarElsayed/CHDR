@@ -59,7 +59,7 @@ namespace chdr {
          * @param [in, out] _resource A pointer to the memory resource to be used for
          *                       memory allocation. Defaults to the global default polymorphic memory resource.
          */
-        constexpr queue(std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {}
+        [[maybe_unused, nodiscard]] explicit constexpr queue(std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {}
 
         ~queue() = default;
 

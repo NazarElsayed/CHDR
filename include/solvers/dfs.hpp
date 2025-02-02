@@ -102,8 +102,8 @@ namespace chdr::solvers {
                 }
                 else { // SOLUTION REACHED ...
 
-                    _open   = {};
-                    _closed = {};
+                    _open   =   open_set_t{};
+                    _closed = closed_set_t{};
 
                     return solver_t::solver_utils::rbacktrack(curr, _params.size);
                 }

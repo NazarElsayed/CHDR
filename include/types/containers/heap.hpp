@@ -93,7 +93,7 @@ namespace chdr {
          *        for managing memory allocations within the heap. If not provided, the default
          *        memory resource is used.
          */
-        heap(std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {
+        [[maybe_unused, nodiscard]] explicit heap(std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {
             c.resize(1U); // Add uninitialised super element.
         }
 
@@ -109,7 +109,7 @@ namespace chdr {
          * @param [in, out] _resource (optional) A pointer to a polymorphic memory resource for managing memory allocations.
          *                                       If not provided, the default polymorphic memory resource is used.
          */
-        heap(size_t _capacity, std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {
+        [[maybe_unused, nodiscard]] explicit heap(size_t _capacity, std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {
             c.reserve(utils::min(_capacity, std::numeric_limits<size_t>::max() - 1U) + 1U);
             c.emplace_back(); // Add uninitialised super element.
         }

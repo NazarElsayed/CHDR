@@ -146,7 +146,7 @@ namespace chdr::solvers {
                                 }
                                 else { // SOLUTION REACHED ...
 
-                                    _closed = {};
+                                    _closed = closed_set_t{};
 
                                     return solver_t::solver_utils::ibacktrack(_open, _params.size);
                                 }

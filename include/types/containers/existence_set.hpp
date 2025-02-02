@@ -15,7 +15,6 @@
 
 #include <cstddef>
 #include <functional>
-#include <initializer_list>
 #include <limits>
 #include <memory_resource>
 #include <type_traits>
@@ -163,7 +162,7 @@ namespace chdr {
          * that will be used for memory allocation. If not provided, the default memory
          * resource is used.
          */
-        [[maybe_unused]] constexpr existence_set(std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) noexcept : c(_resource) {}
+        [[maybe_unused, nodiscard]] explicit constexpr existence_set(std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) noexcept : c(_resource) {}
 
         /**
          * @brief Constructs an existence_set with the specified capacity.
@@ -176,33 +175,8 @@ namespace chdr {
          * @param [in, out] _resource (optional) A pointer to the memory resource to use for allocations.
          *                      If no custom resource is provided, the default memory resource is used.
          */
-        [[maybe_unused]] constexpr explicit existence_set(size_t _capacity, std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {
+        [[maybe_unused, nodiscard]] explicit constexpr existence_set(size_t _capacity, std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {
             reserve(_capacity);
-        }
-
-        /**
-         * @brief Constructs an existence_set with initial items.
-         *
-         * @details This constructor initialises the existence_set using a list of hashes.
-         *          Each hash is inserted into the existence set during initialisation.
-         *
-         * @note Duplicate hashes will be merged into single entries.
-         *
-         * @remarks This constructor allows the existence_set to allocate memory using a specified
-         *          polymorphic memory resource. If no resource is provided, the default memory
-         *          resource is used.
-         *
-         * @param [in] _items The items to initialise the existence_set with, given as an initializer list.
-         * @param [in, out] _resource (optional) Pointer to the memory resource to use for the internal memory management.
-         *                                       Defaults to std::pmr::get_default_resource().
-         */
-        [[maybe_unused]] constexpr existence_set(const std::initializer_list<size_t>& _items, std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {
-
-            reserve(_items.size());
-
-            for (const auto& item : _items) {
-                push(item);
-            }
         }
 
         /**
@@ -302,8 +276,7 @@ namespace chdr {
         [[maybe_unused]] constexpr void trim() {
 
             auto it = c.rbegin();
-            const auto end = c.rend();
-            for (; it != end && !static_cast<bool>(static_cast<width_t>(*it)); ++it) {}
+            for (; it != c.rend() && !static_cast<bool>(*it); ++it) {}
 
             c.erase(it.base(), c.end());
             c.shrink_to_fit();

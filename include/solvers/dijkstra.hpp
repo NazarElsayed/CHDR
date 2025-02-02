@@ -41,7 +41,7 @@ namespace chdr::solvers {
      * - Requires all edge weights to be non-negative (does not handle negative weights).
      * - Can be less efficient in dense graphs compared to other algorithms like Floyd-Warshall.
      * - Quickly consumes memory in large or exhaustive searches.
-     * - Largely superceded by other algorithms for "single-source, single-target" (SSST) searches.
+     * - Largely superseded by other algorithms for "single-source, single-target" (SSST) searches.
      *
      * Further Reading:
      * - <a href="https://en.wikipedia.org/wiki/Dijkstra's_algorithm">Wikipedia Article</a>

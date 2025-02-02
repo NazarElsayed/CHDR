@@ -58,7 +58,7 @@ namespace chdr {
          * @param [in, out] _resource (optional) Pointer to the memory resource to be used for memory allocations.
          *                            If not provided, the default memory resource is utilised.
          */
-        constexpr stack([[maybe_unused]] std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {}
+        [[maybe_unused, nodiscard]] explicit constexpr stack([[maybe_unused]] std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {}
 
         /**
          * @brief Constructs a new stack with a specified initial capacity.
@@ -71,7 +71,7 @@ namespace chdr {
          * @param [in] _resource (optional) Pointer to the memory resource to be used for memory allocations.
          *                       If not provided, the default memory resource is utilised.
          */
-        constexpr stack(size_t _capacity, [[maybe_unused]] std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {
+        [[maybe_unused, nodiscard]] explicit constexpr stack(size_t _capacity, [[maybe_unused]] std::pmr::memory_resource* _resource = std::pmr::get_default_resource()) : c(_resource) {
             c.reserve(_capacity);
         }
 

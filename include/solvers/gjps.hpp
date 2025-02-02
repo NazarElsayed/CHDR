@@ -139,7 +139,7 @@ namespace chdr::solvers {
 
         [[nodiscard]] static constexpr auto get_direction(const coord_t& _from, const coord_t& _to) {
 
-            coord_t dir;
+            coord_t dir{};
             for (size_t i = 0U; i < Kd; ++i) {
                 dir[i] = static_cast<index_t>(utils::sign<signed>(static_cast<signed>(_to[i]) - static_cast<signed>(_from[i])) + 1);
             }
@@ -327,9 +327,9 @@ namespace chdr::solvers {
                             _open.wipe();
                         }
                         else {
-                            _open = {};
+                            _open = open_set_t{};
                         }
-                        _closed = {};
+                         _closed = closed_set_t{};
 
                         return solver_t::solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);
                     }

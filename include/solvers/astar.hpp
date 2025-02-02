@@ -156,9 +156,9 @@ namespace chdr::solvers {
                         _open.wipe();
                     }
                     else {
-                        _open = {};
+                        _open = open_set_t{};
                     }
-                    _closed = {};
+                    _closed = closed_set_t{};
 
                     return solver_t::solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);
                 }
