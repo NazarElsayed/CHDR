@@ -1,0 +1,7 @@
+<map id="bnode" name="bnode">
+<area shape="rect" id="Node000001" title="Constructs an uninitialized BNode." alt="" coords="297,29,349,52"/>
+<area shape="rect" id="Node000002" href="$df/d64/structchdr_1_1solvers_1_1managed__node_a66205330f118f6d2bb86303fe4cc721c.html#a66205330f118f6d2bb86303fe4cc721c" title="Constructs a node with a specified index and an optional parent pointer." alt="" coords="5,5,249,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="283,39,220,31,220,25,284,33"/>
+<area shape="rect" id="Node000003" href="$df/d64/structchdr_1_1solvers_1_1managed__node_ab5f592a9006a0547df3cf2c3ab2118a0.html#ab5f592a9006a0547df3cf2c3ab2118a0" title="Recursively releases dead nodes from the parent hierarchy." alt="" coords="22,52,233,75"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="284,48,226,55,225,49,283,43"/>
+</map>

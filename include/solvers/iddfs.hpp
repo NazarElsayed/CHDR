@@ -129,7 +129,7 @@ namespace chdr::solvers {
                 // Main loop:
                 while (!stack.empty()) {
 
-                    auto& _ = stack.top();
+                    auto& _    = stack.top();
                     auto& curr = _open.back();
 
                     if (curr.m_depth <= bound && _.neighbours_idx != _.neighbours.size()) {

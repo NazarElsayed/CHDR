@@ -66,7 +66,7 @@ namespace chdr {
         /**
          * @brief Calculates the product of all elements in a coordinate or array.
          *
-         * @details Recursively calculates the product of all elements in a multidimensional array-like structure,
+         * @details Calculates the product of all elements in a multidimensional array-like structure,
          *          utilising overflow-safe multiplication. The calculation begins from the given index and continues
          *          through the array until reaching the end. If the index exceeds the size of the array, the base
          *          case returns `1`. The function ensures that overflow does not occur during multiplication.
@@ -79,22 +79,25 @@ namespace chdr {
          *
          * @param [in] _coord The coordinate whose elements' product is to be computed.
          *
-         * @param _index (optional) The current index indicating where in the array computation starts.
-         *                          Defaults to `0`.
-         *
          * @return The product of all elements in the specified coordinate starting from `_index`.
          *         If `_index >= size of _coord`, `1` is returned as the base recursion case. If any
          *         multiplication results in an overflow, the value is clamped to the maximum representable
          *         value for the type `T`.
          */
         template <typename T, typename coord_t>
-        [[nodiscard]] static constexpr T product_helper(const coord_t& _coord, size_t _index = 0U) noexcept {
+        [[nodiscard]] static constexpr T product_helper(const coord_t& _coord) noexcept {
 
             static_assert(std::is_arithmetic_v<T> && std::is_trivially_constructible_v<T>, "T must be a trivially constructible arithmetic type.");
 
             constexpr auto Kd = std::tuple_size_v<std::decay_t<coord_t>>;
 
-            return (_index < Kd) ? overflow_safe_multiply<T>(product_helper<T>(_coord, _index + 1U), _coord[_index]) : T{1};
+            T result{1};
+
+            for (size_t i = 0U; i < Kd; ++i) {
+                result = overflow_safe_multiply<T>(result, _coord[i]);
+            }
+
+            return result;
         }
 
     public:

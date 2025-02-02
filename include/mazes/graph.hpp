@@ -184,9 +184,7 @@ namespace chdr::mazes {
                             global_closed.clear();
                             global_closed.insert(index);
 
-                            const auto& neighbours = _grid.get_neighbours(index);
-
-                            if (!_grid.is_transitory(neighbours)) {
+                            if (const auto& neighbours = _grid.get_neighbours(index); !_grid.is_transitory(neighbours)) {
 
                                 for (const auto& n1 : neighbours) {
 
@@ -211,9 +209,9 @@ namespace chdr::mazes {
 
                                                     if (const auto& [sActive3, sCoord3] = n3; sActive3) {
 
-                                                        const auto s = static_cast<index_t>(utils::to_1d(sCoord3, size));
-
-                                                        if (global_closed.find(s) == global_closed.end()) {
+                                                        if (const auto s = static_cast<index_t>(utils::to_1d(sCoord3, size));
+                                                            global_closed.find(s) == global_closed.end()
+                                                        ) {
 
                                                             const edge_t next = std::make_pair(s, currDistance + static_cast<scalar_t>(1));
 

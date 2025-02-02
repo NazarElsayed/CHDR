@@ -201,10 +201,9 @@ namespace chdr {
             // Attempt to allocate from the stack block:
             if (m_stack_write < StackSize) {
 
-                const size_t aligned_bytes = (_bytes + _alignment - 1U) & ~(_alignment - 1U);
-
-                if (aligned_bytes < MaxStackAllocationSize && m_stack_write + aligned_bytes <= s_stack_block_size) {
-
+                if (const size_t aligned_bytes = (_bytes + _alignment - 1U) & ~(_alignment - 1U);
+                    aligned_bytes < MaxStackAllocationSize && m_stack_write + aligned_bytes <= s_stack_block_size
+                ) {
                     aligned_ptr = m_stack_block + ((m_stack_write + _alignment - 1U) & ~(_alignment - 1U));
                     m_stack_write = static_cast<size_t>(aligned_ptr - m_stack_block) + aligned_bytes;
                 }
