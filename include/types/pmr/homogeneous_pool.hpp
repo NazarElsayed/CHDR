@@ -58,8 +58,13 @@ namespace chdr {
     private:
 
         struct block final {
+
             size_t   size;
             uint8_t* data;
+
+            [[nodiscard]] HOT constexpr block(size_t _size, uint8_t* _data) noexcept :
+                size(_size),
+                data(_data) {}
         };
 
         static constexpr size_t        s_stack_block_size { StackSize        };
@@ -83,7 +88,7 @@ namespace chdr {
             try {
                 const auto allocate_size = utils::max(m_block_width, _alignment);
 
-                result = static_cast<uint8_t*>(::operator new(allocate_size, static_cast<std::align_val_t>(_alignment)));
+                result = static_cast<uint8_t*>(operator new(allocate_size, static_cast<std::align_val_t>(_alignment)));
 
                 m_blocks.emplace_back(
                     allocate_size,

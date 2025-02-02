@@ -46,11 +46,17 @@ namespace chdr {
     class monotonic_pool final : public std::pmr::memory_resource {
 
         struct block final {
+
             size_t   size;
             size_t   alignment;
             uint8_t* data;
 
-            [[nodiscard]] friend HOT constexpr bool operator < (const block& _lhs, const block& _rhs) noexcept {
+            [[nodiscard]] HOT constexpr block(size_t _size, size_t _alignment, uint8_t* _data) noexcept :
+                size     (_size     ),
+                alignment(_alignment),
+                data     (_data     ) {}
+
+            [[nodiscard]] friend HOT constexpr bool operator <(const block& _lhs, const block& _rhs) noexcept {
                 return _lhs.size < _rhs.size;
             }
         };
@@ -89,7 +95,7 @@ namespace chdr {
                         utils::max(utils::min((m_block_width * 3U) / 2U, s_max_heap_block_size), _bytes)
                     );
 
-                    result = static_cast<uint8_t*>(::operator new(m_block_width, static_cast<std::align_val_t>(_alignment)));
+                    result = static_cast<uint8_t*>(operator new(m_block_width, static_cast<std::align_val_t>(_alignment)));
 
                     m_blocks.emplace_back(
                         m_block_width,

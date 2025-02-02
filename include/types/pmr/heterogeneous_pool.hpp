@@ -61,9 +61,15 @@ namespace chdr {
     private:
 
         struct block final {
+
             size_t   size;
             size_t   alignment;
             uint8_t* data;
+
+            [[nodiscard]] HOT constexpr block(size_t _size, size_t _alignment, uint8_t* _data) noexcept :
+                size     (_size     ),
+                alignment(_alignment),
+                data     (_data     ) {}
 
             [[nodiscard]] friend HOT constexpr bool operator <(const block& _lhs, const block& _rhs) noexcept {
                 return _lhs.size < _rhs.size;
@@ -90,7 +96,7 @@ namespace chdr {
             uint8_t* result = nullptr;
 
             try {
-                result = static_cast<uint8_t*>(::operator new(allocate_size, static_cast<std::align_val_t>(_alignment)));
+                result = static_cast<uint8_t*>(operator new(allocate_size, static_cast<std::align_val_t>(_alignment)));
 
                 m_blocks.emplace_back(
                     allocate_size,
@@ -103,10 +109,6 @@ namespace chdr {
                     remaining_size != 0U
                 ) {
 
-                    block new_block(
-                        remaining_size, _alignment, result + utils::max(_bytes, _alignment)
-                    );
-
                     /*
                      * Attempt to insert new block into free list.
                      * Repeat with a smaller key upon collision.
@@ -114,7 +116,7 @@ namespace chdr {
                      */
                     bool success = false;
                     for (size_t i = 0U; i < remaining_size; ++i) {
-                        if (m_free.try_emplace(remaining_size - i, new_block).second) {
+                        if (m_free.try_emplace(remaining_size - i, remaining_size, _alignment, result + utils::max(_bytes, _alignment)).second) {
                             success = true;
                             break;
                         }
