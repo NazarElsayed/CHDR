@@ -134,7 +134,7 @@ namespace chdr::solvers {
 
             _open.emplace_back(s, bound);
 
-            stack<state<neighbours_t>> stack;
+            stack<state<neighbours_t>> stack{};
             stack.emplace(_open.back(), bound, _params);
 
             // Main loop:

@@ -107,7 +107,7 @@ namespace test::generator::utils {
                           container_t&, size_t>,
                           "container_t must implement the subscript operator []");
 
-            chdr::stack<std::pair<coord_t, size_t>> stack;
+            chdr::stack<std::pair<coord_t, size_t>> stack{};
             stack.emplace(_coord, 0U);
 
             while (!stack.empty()) {

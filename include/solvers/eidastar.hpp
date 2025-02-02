@@ -139,7 +139,7 @@ namespace chdr::solvers {
 
             _open.emplace_back(s, static_cast<scalar_t>(0), bound);
 
-            stack<state<neighbours_t>> stack;
+            stack<state<neighbours_t>> stack{};
             stack.emplace(_open.back(), bound, _params);
 
             transposition_table_t transposition_table;

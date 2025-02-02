@@ -198,7 +198,7 @@ $(document).ready(function(){initNavTree('dd/d95/eiddfs_8hpp_source.html','../..
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>            _open.emplace_back(s, 0U);</div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>            <a class="code hl_class" href="../../db/dc9/classchdr_1_1stack.html">stack&lt;state&lt;neighbours_t&gt;</a>&gt; <a class="code hl_class" href="../../db/dc9/classchdr_1_1stack.html">stack</a>;</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>            <a class="code hl_class" href="../../db/dc9/classchdr_1_1stack.html">stack&lt;state&lt;neighbours_t&gt;</a>&gt; <a class="code hl_class" href="../../db/dc9/classchdr_1_1stack.html">stack</a>{};</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>            <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> bound = 0U; bound &lt; std::numeric_limits&lt;size_t&gt;::max(); ++bound) {</div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span> </div>
@@ -233,13 +233,13 @@ $(document).ready(function(){initNavTree('dd/d95/eiddfs_8hpp_source.html','../..
 <div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>                        }</div>
 <div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>                    }</div>
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>                    <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>                        _open.pop_back();</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>                        <a class="code hl_class" href="../../db/dc9/classchdr_1_1stack.html">stack</a>.<a class="code hl_function" href="../../db/dc9/classchdr_1_1stack_a312e7f6c761a199c1369fbe651e084f0.html#a312e7f6c761a199c1369fbe651e084f0">pop</a>();</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>                          _open.pop_back();</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>                          <a class="code hl_class" href="../../db/dc9/classchdr_1_1stack.html">stack</a>.<a class="code hl_function" href="../../db/dc9/classchdr_1_1stack_a312e7f6c761a199c1369fbe651e084f0.html#a312e7f6c761a199c1369fbe651e084f0">pop</a>();</div>
 <div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>                        _closed.erase(curr.m_index);</div>
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>                    }</div>
 <div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>                }</div>
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span> </div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>                _open.erase(_open.begin() + 1U, _open.end());</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>                  _open.erase(_open.begin() + 1U, _open.end());</div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>                  <a class="code hl_class" href="../../db/dc9/classchdr_1_1stack.html">stack</a>.<a class="code hl_function" href="../../db/dc9/classchdr_1_1stack_ac8bb3912a3ce86b15842e79d0b421204.html#ac8bb3912a3ce86b15842e79d0b421204">clear</a>();</div>
 <div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>                _closed.clear();</div>
 <div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>            }</div>

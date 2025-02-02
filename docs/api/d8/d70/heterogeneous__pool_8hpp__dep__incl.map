@@ -1,17 +1,20 @@
 <map id="heterogeneous_pool.hpp" name="heterogeneous_pool.hpp">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,5,147,28"/>
-<area shape="rect" id="Node000002" href="$d9/d96/chdr_8hpp.html" title=" " alt="" coords="105,217,167,240"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,42,67,69,67,98,73,135,88,168,107,195,127,215,123,219,103,198,83,171,68,136,61,99,61,69,66,41"/>
-<area shape="rect" id="Node000003" href="$da/deb/managed__node_8hpp.html" title=" " alt="" coords="77,76,195,99"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="96,37,129,74,125,78,92,40"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="118,110,104,128,95,147,94,166,101,185,126,215,122,219,96,188,88,167,89,146,100,125,113,107"/>
+<area shape="rect" id="Node000002" href="$d9/d96/chdr_8hpp.html" title=" " alt="" coords="147,217,210,240"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,42,69,102,74,136,86,168,99,184,114,197,149,215,147,220,112,201,95,187,82,171,69,138,64,102,68,41"/>
+<area shape="rect" id="Node000003" href="$da/deb/managed__node_8hpp.html" title=" " alt="" coords="119,76,238,99"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="104,34,165,74,162,78,101,38"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="140,107,114,124,94,148,91,158,92,168,106,187,128,203,153,215,151,220,126,207,102,191,87,170,86,158,90,145,111,120,137,103"/>
 <area shape="rect" id="Node000004" href="$de/d94/gbfs_8hpp.html" title=" " alt="" coords="105,147,167,169"/>
-<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="139,112,139,147,133,147,133,112"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="167,112,145,148,140,145,163,109"/>
 <area shape="rect" id="Node000005" href="$d4/df2/gdfs_8hpp.html" title=" " alt="" coords="191,147,254,169"/>
-<area shape="poly" id="edge6_Node000003_Node000005" title=" " alt="" coords="161,105,211,144,208,149,158,109"/>
-<area shape="rect" id="Node000006" href="$d1/def/gstar_8hpp.html" title=" " alt="" coords="279,147,345,169"/>
-<area shape="poly" id="edge8_Node000003_Node000006" title=" " alt="" coords="176,101,287,144,285,149,174,106"/>
-<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="139,183,139,217,133,217,133,183"/>
-<area shape="poly" id="edge7_Node000005_Node000002" title=" " alt="" coords="201,180,150,219,147,215,197,176"/>
-<area shape="poly" id="edge9_Node000006_Node000002" title=" " alt="" coords="274,177,163,220,161,215,272,172"/>
+<area shape="poly" id="edge6_Node000003_Node000005" title=" " alt="" coords="195,109,218,145,214,148,190,112"/>
+<area shape="rect" id="Node000006" href="$d3/d3e/gjps_8hpp.html" title=" " alt="" coords="278,147,341,169"/>
+<area shape="poly" id="edge8_Node000003_Node000006" title=" " alt="" coords="211,103,291,144,289,149,209,107"/>
+<area shape="rect" id="Node000007" href="$d1/def/gstar_8hpp.html" title=" " alt="" coords="365,147,432,169"/>
+<area shape="poly" id="edge10_Node000003_Node000007" title=" " alt="" coords="225,100,367,144,365,149,223,105"/>
+<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="152,179,175,216,170,219,147,182"/>
+<area shape="poly" id="edge7_Node000005_Node000002" title=" " alt="" coords="211,182,187,219,183,216,207,179"/>
+<area shape="poly" id="edge9_Node000006_Node000002" title=" " alt="" coords="279,178,199,220,197,215,277,173"/>
+<area shape="poly" id="edge11_Node000007_Node000002" title=" " alt="" coords="354,176,211,220,209,215,352,171"/>
 </map>

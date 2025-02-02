@@ -120,7 +120,7 @@ namespace chdr::solvers {
 
             _open.emplace_back(s, 0U);
 
-            stack<state<neighbours_t>> stack;
+            stack<state<neighbours_t>> stack{};
 
             for (size_t bound = 0U; bound < std::numeric_limits<size_t>::max(); ++bound) {
 
