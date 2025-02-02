@@ -32,9 +32,7 @@ namespace chdr::mazes {
     /**
      * @nosubgrouping
      * @class grid
-     * @brief Multidimensional grid structure.
-     *
-     * @details A fixed-size grid for handling of multidimensional grid data.
+     * @brief Represents a uniform-cost, bidirectional grid in K-dimensions.
      *
      * @note This class uses a `coord_t` type for grid dimensions and indexing, and a `weight_t` type to
      *       represent the weight or state of the nodes in the grid.

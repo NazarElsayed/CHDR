@@ -11,7 +11,7 @@
 <!-- Node0 -->
 <g id="Node000000" class="node">
 <title>Node0</title>
-<g id="a_Node000000"><a xlink:href="dd/de3/classchdr_1_1mazes_1_1grid.html" target="_top" xlink:title="Multidimensional grid structure.">
+<g id="a_Node000000"><a xlink:href="dd/de3/classchdr_1_1mazes_1_1grid.html" target="_top" xlink:title="Represents a uniform&#45;cost, bidirectional grid in K&#45;dimensions.">
 <polygon fill="white" stroke="#666666" points="105,-17 0,-17 0,0 105,0 105,-17"/>
 <text text-anchor="middle" x="52.5" y="-6.6" font-family="Helvetica,sans-Serif" font-size="8.00">grid&lt; coord_t, weight_t &gt;</text>
 </a>

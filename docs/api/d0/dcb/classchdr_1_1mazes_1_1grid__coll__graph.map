@@ -1,3 +1,3 @@
 <map id="grid&lt; coord_t, weight_t &gt;" name="grid&lt; coord_t, weight_t &gt;">
-<area shape="rect" id="Node000001" title="Multidimensional grid structure." alt="" coords="5,5,349,323"/>
+<area shape="rect" id="Node000001" title="Represents a uniform&#45;cost, bidirectional grid in K&#45;dimensions." alt="" coords="5,5,349,323"/>
 </map>
