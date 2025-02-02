@@ -285,7 +285,7 @@ namespace chdr {
      * @param _malloc (optional) The size of the memory block to allocate (default: 4096 bytes).
      * @note Using this function may have side effects. Do not call unless you know what you are doing.
      */
-    [[maybe_unused]] inline void malloc_consolidate(size_t _malloc = 4096U) {
+    [[maybe_unused]] inline void malloc_consolidate(const size_t _malloc = 4096U) {
 
         auto* tmp = malloc(_malloc);
         std::atomic_thread_fence(std::memory_order_seq_cst);

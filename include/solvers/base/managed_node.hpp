@@ -49,26 +49,6 @@ namespace chdr::solvers {
         using node_t = std::conditional_t<std::is_void_v<derived>, managed_node<index_t>, derived>;
         using count_t = uint8_t;
 
-    public:
-
-        /**
-         * @brief A pointer to the parent node in the hierarchical structure.
-         *
-         * This member allows traversal of the hierarchy by referencing the immediate
-         * parent of the current node. Use of `restrict` indicates that this pointer
-         * is not aliased, improving optimisation in certain compilers.
-         *
-         * @warning The lifetime of the parent node is not managed by this member. Users must
-         *          ensure that the parent node remains valid for the duration of any access
-         *          via this pointer.
-         *
-         * @remark If `m_parent` is `nullptr`, it indicates that the node is a root node
-         *         and does not have a parent.
-         */
-        managed_node* RESTRICT m_parent;
-
-    private:
-
         /**
          * @brief Tracks the number of successor nodes.
          *
@@ -96,6 +76,22 @@ namespace chdr::solvers {
         count_t m_successors;
 
     public:
+
+        /**
+         * @brief A pointer to the parent node in the hierarchical structure.
+         *
+         * This member allows traversal of the hierarchy by referencing the immediate
+         * parent of the current node. Use of `restrict` indicates that this pointer
+         * is not aliased, improving optimisation in certain compilers.
+         *
+         * @warning The lifetime of the parent node is not managed by this member. Users must
+         *          ensure that the parent node remains valid for the duration of any access
+         *          via this pointer.
+         *
+         * @remark If `m_parent` is `nullptr`, it indicates that the node is a root node
+         *         and does not have a parent.
+         */
+        managed_node* RESTRICT m_parent;
 
         /**
          * @name Constructors

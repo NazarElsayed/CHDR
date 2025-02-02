@@ -304,13 +304,13 @@ namespace chdr {
             constexpr auto  one_v = static_cast<T>(1);
 
             if constexpr (std::is_signed_v<T>) {
-                static_assert(std::is_invocable_r_v<bool, decltype(std::less<>()), T, T>, "Type T must support the less-than operator.");
+                static_assert(std::is_invocable_r_v<bool, decltype(std::less()), T, T>, "Type T must support the less-than operator.");
                 static_assert(!std::is_same_v<return_t, bool> && "return_t cannot be bool if T is signed.");
 
                 return static_cast<return_t>(zero_v < _val) - (_val < zero_v);
             }
             else {
-                static_assert(std::is_invocable_r_v<bool, decltype(std::equal_to<>()), T, T>, "Type T must support the equality operator.");
+                static_assert(std::is_invocable_r_v<bool, decltype(std::equal_to()), T, T>, "Type T must support the equality operator.");
 
                 return static_cast<return_t>(_val == zero_v ? zero_v : one_v);
             }
@@ -441,7 +441,7 @@ namespace chdr {
          */
         template <typename T>
         HOT static constexpr const T& min(const T& _a, const T& _b) noexcept {
-            static_assert(std::is_invocable_r_v<bool, decltype(std::less<>()), T, T>, "Type T must support the less-than operator.");
+            static_assert(std::is_invocable_r_v<bool, decltype(std::less()), T, T>, "Type T must support the less-than operator.");
             return (_a < _b) ? _a : _b;
         }
 
@@ -459,7 +459,7 @@ namespace chdr {
          */
         template <typename T>
         HOT static constexpr const T& max(const T& _a, const T& _b) noexcept {
-            static_assert(std::is_invocable_r_v<bool, decltype(std::less<>()), T, T>, "Type T must support the less-than operator.");
+            static_assert(std::is_invocable_r_v<bool, decltype(std::less()), T, T>, "Type T must support the less-than operator.");
             return (_a < _b) ? _b : _a;
         }
 
@@ -478,7 +478,7 @@ namespace chdr {
          */
         template <typename T>
         HOT static constexpr const T& clamp(const T& _value, const T& _min, const T& _max) noexcept {
-            static_assert(std::is_invocable_r_v<bool, decltype(std::less<>()), T, T>, "Type T must support the less-than operator.");
+            static_assert(std::is_invocable_r_v<bool, decltype(std::less()), T, T>, "Type T must support the less-than operator.");
 
             if (_value >= _min) {
                 return _value < _max ? _value : _max;
@@ -503,7 +503,7 @@ namespace chdr {
          * @returns A string containing the scaled and formatted duration, including its
          *          appropriate time unit (e.g. "s" for seconds, "ms" for milliseconds).
          */
-        [[nodiscard]] static std::string to_string(long double _duration, long double _scale = std::numeric_limits<long double>::epsilon()) {
+        [[nodiscard]] static std::string to_string(const long double _duration, long double _scale = std::numeric_limits<long double>::epsilon()) {
 
             constexpr std::array<const char* const, 4U> units { "s", "ms", "µs", "ns" };
 

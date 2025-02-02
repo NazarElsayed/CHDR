@@ -38,7 +38,7 @@
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="../../d2/dcb/structchdr_1_1utils_adb33afbaf9ed795be953475e0d6df54c.html#adb33afbaf9ed795be953475e0d6df54c" target="_top" xlink:title="Converts a duration in seconds to a formatted string representation.">
+<g id="a_Node000003"><a xlink:href="../../d2/dcb/structchdr_1_1utils_acad2a572d66e0496dbb846b093aea3a6.html#acad2a572d66e0496dbb846b093aea3a6" target="_top" xlink:title="Converts a duration in seconds to a formatted string representation.">
 <polygon fill="white" stroke="#666666" points="79,-17 32,-17 32,0 79,0 79,-17"/>
 <text text-anchor="middle" x="55.5" y="-6.6" font-family="Helvetica,sans-Serif" font-size="8.00">to_string</text>
 </a>

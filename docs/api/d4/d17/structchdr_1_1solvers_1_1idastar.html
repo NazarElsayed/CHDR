@@ -115,12 +115,12 @@ struct chdr::solvers::idastar&lt; params_t &gt;</div><p>Iterative-deepening A* s
  It minimises memory usage by repeatedly traversing the search space with incrementing cost thresholds.<br  />
 <br  />
  Advantages:</p><ul>
-<li>Heuristic-driven search can improve search results when compared to IDDFS.</li>
-<li>Minimises memory usage when compared to the original A* algorithm.</li>
+<li>Heuristic-driven search can improve search times when compared to IDDFS.</li>
+<li>Minimises memory usage by not maintaining a record of the search state.</li>
 <li>Does not need a pre-pass, although performance can improve if the search space is pruned first.</li>
 </ul>
 <p>Limitations:</p><ul>
-<li>Low performance due to the repeated traversal of the search space.</li>
+<li>Low performance due to repeated traversal of the search space.</li>
 </ul>
 <p>Further Reading:</p><ul>
 <li><a href="https://en.wikipedia.org/wiki/Iterative_deepening_A*">Wikipedia Article</a></li>
@@ -139,9 +139,9 @@ struct chdr::solvers::idastar&lt; params_t &gt;</div><p>Iterative-deepening A* s
 <dd>
 <a class="el" href="../../df/d26/structchdr_1_1solvers_1_1gstar.html" title="Graveyard search algorithm.">gstar</a> </dd>
 <dd>
-iddfs </dd>
+<a class="el" href="../../d8/d5a/structchdr_1_1solvers_1_1iddfs.html" title="Iterative-deepening depth-first search algorithm.">iddfs</a> </dd>
 <dd>
-eidastar </dd></dl>
+<a class="el" href="../../d5/dfb/structchdr_1_1solvers_1_1eidastar.html" title="Enhanced Iterative-deepening A* search algorithm.">eidastar</a> </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="../../db/df9/idastar_8hpp_source.html#l00060">60</a> of file <a class="el" href="../../db/df9/idastar_8hpp_source.html">idastar.hpp</a>.</p>
 </div><div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">

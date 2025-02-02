@@ -9,6 +9,10 @@
 #ifndef CHDR_EIDASTAR_HPP
 #define CHDR_EIDASTAR_HPP
 
+/**
+ * @file eidastar.hpp
+ */
+
 #include <limits>
 #include <vector>
 
@@ -22,6 +26,35 @@
 
 namespace chdr::solvers {
 
+    /**
+     * @struct eidastar
+     * @brief Enhanced Iterative-deepening A* search algorithm.
+     * @details IDA*+ (Reinefeld, A. and Marsland, T. A., 1994) is an optimised variant of the IDA* algorithm.\n
+     *          It improves the performance of the original IDA* algorithm by introducing a transposition table to store
+     *          limited information about the search state between iterations. This significantly improves performance
+     *          at the cost of slightly higher memory usage.
+     *
+     * Advantages:
+     * - Heuristic-driven search can improve search times when compared to IDDFS+.
+     * - Low memory usage when compared to A*.
+     * - Improved performance by maintaining a record of the search state.
+     * - Does not need a pre-pass, although performance can improve if the search space is pruned first.
+     *
+     * Limitations:
+     * - Low performance due to repeated traversal of the search space.
+     * - Slightly higher memory usage than IDA*.
+     *
+     * References:
+     * - Reinefeld, A. and Marsland, T. A., 1994. Enhanced iterative-deepening search. IEEE Transactions on Pattern Analysis and Machine Intelligence, 16 (7), 701–710.
+     *
+     * @note Guarantees the optimal path if the heuristic is admissible (never overestimates the cost).
+     *
+     * @tparam params_t Type containing the search parameters.
+     *
+     * @see astar
+     * @see gstar
+     * @see idastar
+     */
     template<typename params_t>
     struct [[maybe_unused]] eidastar final {
 

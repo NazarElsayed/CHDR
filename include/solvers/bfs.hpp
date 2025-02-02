@@ -48,6 +48,8 @@ namespace chdr::solvers {
      * Further Reading:
      * - <a href="https://en.wikipedia.org/wiki/Breadth-first_search">Wikipedia Article</a>
      *
+     * @note If the search space is uniform-cost, the resulting path is optimal.
+     *
      * @tparam params_t Type containing the search parameters.
      */
     template<typename params_t>

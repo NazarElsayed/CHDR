@@ -209,7 +209,7 @@ $(document).ready(function(){initNavTree('d4/d99/monotonic__pool_8hpp_source.htm
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>                <span class="comment">// ReSharper disable once CppDFAConstantConditions</span></div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>                <span class="keywordflow">if</span> (result != <span class="keyword">nullptr</span>) {</div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>                    <span class="comment">// ReSharper disable once CppDFAUnreachableCode</span></div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>                    ::operator <span class="keyword">delete</span>(result, <span class="keyword">static_cast&lt;</span>std::align_val_t<span class="keyword">&gt;</span>(_alignment));</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>                    <span class="keyword">operator</span> <span class="keyword">delete</span>(result, <span class="keyword">static_cast&lt;</span>std::align_val_t<span class="keyword">&gt;</span>(_alignment));</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>                    result = <span class="keyword">nullptr</span>;</div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span> </div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>                    m_blocks.pop_back();</div>

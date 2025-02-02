@@ -574,29 +574,24 @@ namespace chdr {
                 const auto c0 = i * Kd;
                 const auto cn = c0 + (Kd - 1U);
 
-                while (i > 1U) {
+                while (i > 1U && c0 < c.size()) {
 
-                    if (c0 < c.size()) {
-                        size_t max = c0;
+                    size_t max = c0;
 
-                        if constexpr (Kd == 2U) {
-                            max = (cn < c.size() && comp(c[c0], c[cn])) ? cn : c0;
-                        }
-                        else {
-                            for (auto j = c0; j <= cn && j < c.size(); ++j) {
-                                if (comp(c[max], c[j])) {
-                                    max = j;
-                                }
+                    if constexpr (Kd == 2U) {
+                        max = (cn < c.size() && comp(c[c0], c[cn])) ? cn : c0;
+                    }
+                    else {
+                        for (auto j = c0; j <= cn && j < c.size(); ++j) {
+                            if (comp(c[max], c[j])) {
+                                max = j;
                             }
                         }
+                    }
 
-                        if (comp(value_to_insert, c[max])) {
-                            c[i] = std::move(c[max]);
-                            i = max;
-                        }
-                        else {
-                            break;
-                        }
+                    if (comp(value_to_insert, c[max])) {
+                        c[i] = std::move(c[max]);
+                        i = max;
                     }
                     else {
                         break;

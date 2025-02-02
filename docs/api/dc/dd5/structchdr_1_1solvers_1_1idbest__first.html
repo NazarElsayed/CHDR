@@ -115,13 +115,17 @@ struct chdr::solvers::idbest_first&lt; params_t &gt;</div><p>Iterative-deepening
  It minimises memory usage by repeatedly traversing the search space with incrementing cost thresholds.<br  />
 <br  />
  Advantages:</p><ul>
-<li>Heuristic-driven search can improve search results when compared to IDDFS.</li>
-<li>Minimises memory usage when compared to the original best-first search algorithm.</li>
+<li>Heuristic-driven search can improve search times when compared to IDDFS.</li>
+<li>Minimises memory usage by not maintaining a record of the search state.</li>
 <li>Does not need a pre-pass, although performance can improve if the search space is pruned first.</li>
 </ul>
 <p>Limitations:</p><ul>
 <li>Does not guarantee an optimal path according to the cost heuristic.</li>
-<li>Low performance due to the repeated traversal of the search space.</li>
+<li>Low performance due to repeated traversal of the search space.</li>
+</ul>
+<p>Further Reading:</p><ul>
+<li><a href="https://en.wikipedia.org/wiki/Iterative_deepening_depth-first_search">Wikipedia - Iterative Deepening Depth-First Search</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Best-first_search">Wikipedia - Best First Search</a></li>
 </ul>
 <p>References:</p><ul>
 <li>Korf, R. E., 1985. Depth-first iterative-deepening. Artificial Intelligence, 27 (1), 97–109.</li>
@@ -134,11 +138,11 @@ struct chdr::solvers::idbest_first&lt; params_t &gt;</div><p>Iterative-deepening
 </dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="../../de/d28/structchdr_1_1solvers_1_1best__first.html" title="Greedy best-first search algorithm.">best_first</a> </dd>
 <dd>
-iddfs </dd>
+<a class="el" href="../../d8/d5a/structchdr_1_1solvers_1_1iddfs.html" title="Iterative-deepening depth-first search algorithm.">iddfs</a> </dd>
 <dd>
-eidbest_first </dd></dl>
+<a class="el" href="../../d0/d86/structchdr_1_1solvers_1_1eidbest__first.html" title="Enhanced Iterative-deepening A* search algorithm.">eidbest_first</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d1/d3a/idbest__first_8hpp_source.html#l00056">56</a> of file <a class="el" href="../../d1/d3a/idbest__first_8hpp_source.html">idbest_first.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d1/d3a/idbest__first_8hpp_source.html#l00060">60</a> of file <a class="el" href="../../d1/d3a/idbest__first_8hpp_source.html">idbest_first.hpp</a>.</p>
 </div><div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Collaboration diagram for idbest_first&lt; params_t &gt;:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">

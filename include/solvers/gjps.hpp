@@ -227,7 +227,7 @@ namespace chdr::solvers {
                 const auto& neighbours = _maze.template get_neighbours<true>(_current);
                 const auto& map = s_lookup[static_cast<size_t>(_direction)];
 
-                const auto check_forced = [&neighbours, &map](size_t _a, size_t _b) ALWAYS_INLINE {
+                const auto check_forced = [&neighbours, &map](const size_t _a, const size_t _b) ALWAYS_INLINE {
                     return neighbours[map[_a]].first && !neighbours[map[_b]].first;
                 };
 

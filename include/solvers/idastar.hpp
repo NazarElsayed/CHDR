@@ -34,12 +34,12 @@ namespace chdr::solvers {
      *          It minimises memory usage by repeatedly traversing the search space with incrementing cost thresholds.\n\n
      *
      * Advantages:
-     * - Heuristic-driven search can improve search results when compared to IDDFS.
-     * - Minimises memory usage when compared to the original A* algorithm.
+     * - Heuristic-driven search can improve search times when compared to IDDFS.
+     * - Minimises memory usage by not maintaining a record of the search state.
      * - Does not need a pre-pass, although performance can improve if the search space is pruned first.
      *
      * Limitations:
-     * - Low performance due to the repeated traversal of the search space.
+     * - Low performance due to repeated traversal of the search space.
      *
      * Further Reading:
      * - <a href="https://en.wikipedia.org/wiki/Iterative_deepening_A*">Wikipedia Article</a>

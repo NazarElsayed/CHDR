@@ -6,8 +6,12 @@
  * https://creativecommons.org/licenses/by-nc-nd/4.0/
  */
 
-#ifndef CHDR_EIDBSTAR_HPP
-#define CHDR_EIDBSTAR_HPP
+#ifndef CHDR_EID_BEST_FIRST_HPP
+#define CHDR_EID_BEST_FIRST_HPP
+
+/**
+ * @file eidbest_first.hpp
+ */
 
 #include <limits>
 #include <vector>
@@ -22,6 +26,32 @@
 
 namespace chdr::solvers {
 
+    /**
+     * @struct eidbest_first
+     * @brief Enhanced Iterative-deepening A* search algorithm.
+     * @details Enhanced iterative-deepening best-first search is a best-first variant of the IDA*+ algorithm
+     *          (Reinefeld, A. and Marsland, T. A., 1994).\n
+     *
+     * Advantages:
+     * - Heuristic-driven search can improve search times when compared to IDDFS+.
+     * - Lower memory usage when compared to standard best-first search.
+     * - Improved performance by maintaining a record of the search state.
+     * - Does not need a pre-pass, although performance can improve if the search space is pruned first.
+     *
+     * Limitations:
+     * - Does not guarantee an optimal path according to the cost heuristic.
+     * - Low performance due to repeated traversal of the search space.
+     * - Slightly higher memory usage than iterative-deepening best-first search.
+     *
+     * References:
+     * - Reinefeld, A. and Marsland, T. A., 1994. Enhanced iterative-deepening search. IEEE Transactions on Pattern Analysis and Machine Intelligence, 16 (7), 701–710.
+     *
+     * @tparam params_t Type containing the search parameters.
+     *
+     * @see best_first
+     * @see eidastar
+     * @see eiddfs
+     */
     template<typename params_t>
     struct [[maybe_unused]] eidbest_first final {
 
@@ -167,4 +197,4 @@ namespace chdr::solvers {
 
 } //chdr::solvers
 
-#endif //CHDR_EIDBSTAR_HPP
+#endif //CHDR_EID_BEST_FIRST_HPP

@@ -6,8 +6,8 @@
  * https://creativecommons.org/licenses/by-nc-nd/4.0/
  */
 
-#ifndef CHDR_BSTAR_HPP
-#define CHDR_BSTAR_HPP
+#ifndef CHDR_BEST_FIRST_HPP
+#define CHDR_BEST_FIRST_HPP
 
 /**
  * @file best_first.hpp
@@ -175,4 +175,4 @@ namespace chdr::solvers {
 
 } //chdr::solvers
 
-#endif //CHDR_BSTAR_HPP
+#endif //CHDR_BEST_FIRST_HPP

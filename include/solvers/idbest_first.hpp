@@ -6,8 +6,8 @@
  * https://creativecommons.org/licenses/by-nc-nd/4.0/
  */
 
-#ifndef CHDR_IDBSTAR_HPP
-#define CHDR_IDBSTAR_HPP
+#ifndef CHDR_ID_BEST_FIRST_HPP
+#define CHDR_ID_BEST_FIRST_HPP
 
 /**
  * @file idbest_first.hpp
@@ -35,13 +35,17 @@ namespace chdr::solvers {
      *          It minimises memory usage by repeatedly traversing the search space with incrementing cost thresholds.\n\n
      *
      * Advantages:
-     * - Heuristic-driven search can improve search results when compared to IDDFS.
-     * - Minimises memory usage when compared to the original best-first search algorithm.
+     * - Heuristic-driven search can improve search times when compared to IDDFS.
+     * - Minimises memory usage by not maintaining a record of the search state.
      * - Does not need a pre-pass, although performance can improve if the search space is pruned first.
      *
      * Limitations:
      * - Does not guarantee an optimal path according to the cost heuristic.
-     * - Low performance due to the repeated traversal of the search space.
+     * - Low performance due to repeated traversal of the search space.
+     *
+     * Further Reading:
+     * - <a href="https://en.wikipedia.org/wiki/Iterative_deepening_depth-first_search">Wikipedia - Iterative Deepening Depth-First Search</a>
+     * - <a href="https://en.wikipedia.org/wiki/Best-first_search">Wikipedia - Best First Search</a>
      *
      * References:
      * - Korf, R. E., 1985. Depth-first iterative-deepening. Artificial Intelligence, 27 (1), 97–109.
@@ -184,4 +188,4 @@ namespace chdr::solvers {
 
 } //chdr::solvers
 
-#endif //CHDR_IDBSTAR_HPP
+#endif //CHDR_ID_BEST_FIRST_HPP

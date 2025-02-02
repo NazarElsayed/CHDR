@@ -6,8 +6,8 @@ var dir_949292de90bec6ca0ef87cb838b26113 =
     [ "bfs.hpp", "da/d36/bfs_8hpp.html", "da/d36/bfs_8hpp" ],
     [ "dfs.hpp", "d3/dec/dfs_8hpp.html", "d3/dec/dfs_8hpp" ],
     [ "dijkstra.hpp", "d3/d11/dijkstra_8hpp.html", "d3/d11/dijkstra_8hpp" ],
-    [ "eidastar.hpp", "d6/ded/eidastar_8hpp_source.html", null ],
-    [ "eidbest_first.hpp", "d8/d85/eidbest__first_8hpp_source.html", null ],
+    [ "eidastar.hpp", "d6/ded/eidastar_8hpp.html", "d6/ded/eidastar_8hpp" ],
+    [ "eidbest_first.hpp", "d8/d85/eidbest__first_8hpp.html", "d8/d85/eidbest__first_8hpp" ],
     [ "eiddfs.hpp", "dd/d95/eiddfs_8hpp_source.html", null ],
     [ "flood.hpp", "d8/d12/flood_8hpp.html", "d8/d12/flood_8hpp" ],
     [ "fstar.hpp", "d1/d5a/fstar_8hpp.html", "d1/d5a/fstar_8hpp" ],
@@ -17,6 +17,6 @@ var dir_949292de90bec6ca0ef87cb838b26113 =
     [ "gstar.hpp", "d1/def/gstar_8hpp.html", "d1/def/gstar_8hpp" ],
     [ "idastar.hpp", "db/df9/idastar_8hpp.html", "db/df9/idastar_8hpp" ],
     [ "idbest_first.hpp", "d1/d3a/idbest__first_8hpp.html", "d1/d3a/idbest__first_8hpp" ],
-    [ "iddfs.hpp", "df/d71/iddfs_8hpp_source.html", null ],
+    [ "iddfs.hpp", "df/d71/iddfs_8hpp.html", "df/d71/iddfs_8hpp" ],
     [ "jps.hpp", "d9/de6/jps_8hpp.html", "d9/de6/jps_8hpp" ]
 ];

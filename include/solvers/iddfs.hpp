@@ -9,6 +9,10 @@
 #ifndef CHDR_IDDFS_HPP
 #define CHDR_IDDFS_HPP
 
+/**
+ * @file iddfs.hpp
+ */
+
 #include <cstddef>
 #include <limits>
 #include <vector>
@@ -23,6 +27,33 @@
 
 namespace chdr::solvers {
 
+    /**
+     * @struct iddfs
+     * @brief Iterative-deepening depth-first search algorithm.
+     * @details IDDFS* (Korf, R. E., 1985) is a graph traversal and pathfinding algorithm that repeatedly explores
+     *          the search space in a depth-first manner with an incrementing depth limit.\n\n
+     *
+     * Advantages:
+     * - Minimises memory usage by not maintaining a record of the search state.
+     * - Does not need a pre-pass, although performance can improve if the search space is pruned first.
+     *
+     * Limitations:
+     * - Low performance due to repeated traversal of the search space.
+     *
+     * Further Reading:
+     * - <a href="https://en.wikipedia.org/wiki/Iterative_deepening_depth-first_search">Wikipedia Article</a>
+     *
+     * References:
+     * - Korf, R. E., 1985. Depth-first iterative-deepening. Artificial Intelligence, 27 (1), 97–109.
+     *
+     * @note Similarly to BFS, the resulting path is optimal if the search space is uniform-cost.
+     *
+     * @tparam params_t Type containing the search parameters.
+     *
+     * @see dfs
+     * @see bfs
+     * @see eiddfs
+     */
     template<typename params_t>
     struct [[maybe_unused]] iddfs final {
 

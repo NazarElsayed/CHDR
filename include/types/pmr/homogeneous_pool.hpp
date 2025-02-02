@@ -122,7 +122,7 @@ namespace chdr {
                 // ReSharper disable once CppDFAConstantConditions
                 if (result != nullptr) {
                     // ReSharper disable once CppDFAUnreachableCode
-                    ::operator delete(result, static_cast<std::align_val_t>(_alignment));
+                    operator delete(result, static_cast<std::align_val_t>(_alignment));
                     result = nullptr;
 
                     m_blocks.pop_back();

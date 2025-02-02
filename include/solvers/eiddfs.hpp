@@ -23,6 +23,32 @@
 
 namespace chdr::solvers {
 
+    /**
+     * @struct eiddfs
+     * @brief Enhanced Iterative-deepening depth-first search algorithm.
+     * @details IDDFS+ (Reinefeld, A. and Marsland, T. A., 1994) is an optimised variant of the IDDFS algorithm.\n
+     *          IDDFS+ improves performance over IDDFS by introducing a transposition table to allow the
+     *          cross-referencing of search states between iterations.
+     *
+     * Advantages:
+     * - Improved performance by maintaining a record of the search state.
+     * - Does not need a pre-pass, although performance can improve if the search space is pruned first.
+     *
+     * Limitations:
+     * - Low performance due to repeated traversal of the search space.
+     * - Slightly higher memory usage than iterative-deepening best-first search.
+     *
+     * References:
+     * - Reinefeld, A. and Marsland, T. A., 1994. Enhanced iterative-deepening search. IEEE Transactions on Pattern Analysis and Machine Intelligence, 16 (7), 701–710.
+     *
+     * @note Similarly to BFS, the resulting path is optimal if the search space is uniform-cost.
+     *
+     * @tparam params_t Type containing the search parameters.
+     *
+     * @see dfs
+     * @see bfs
+     * @see iddfs
+     */
     template<typename params_t>
     struct [[maybe_unused]] eiddfs final {
 

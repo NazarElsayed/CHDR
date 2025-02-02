@@ -12,6 +12,20 @@
     <inspection_tool class="CommaExpressionJS" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="ConstantConditionalExpressionJS" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="ContinueOrBreakFromFinallyBlockJS" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="CppDFAArrayIndexOutOfBounds" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="CppDFAConstantParameter" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="CppDFADeletedPointer" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="CppDFAEndlessLoop" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="CppDFAInfiniteRecursion" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="CppDFAInvalidatedMemory" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="CppDFALocalValueEscapesFunction" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="CppDFALocalValueEscapesScope" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="CppDFAMemoryLeak" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="CppDFANotInitializedField" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="CppDFANullDereference" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="CppDFATimeOver" enabled="true" level="TEXT ATTRIBUTES" enabled_by_default="true" />
+    <inspection_tool class="CppDFAUnreadVariable" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="CppDFAUnusedValue" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="CppEnforceCVQualifiersOrder" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="CppEnforceCVQualifiersPlacement" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="CppEnforceDoStatementBraces" enabled="true" level="WARNING" enabled_by_default="true" />
