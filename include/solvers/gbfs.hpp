@@ -28,6 +28,15 @@
 namespace chdr::solvers {
 
     /**
+     * @addtogroup Solvers
+     * @{
+     * @addtogroup Single-Target
+     * @{
+     * @addtogroup SingleTargetGraveyardOptimised Graveyard-Optimised
+     * @{
+     */
+
+    /**
      * @struct gbfs
      * @brief Graveyard-optimised variant of the breadth-first search algorithm.
      * @details G*-optimised variant of BFS, reducing memory usage by allowing for the dynamic
@@ -121,6 +130,12 @@ namespace chdr::solvers {
             return solve_internal(open, closed, capacity, _params);
         }
     };
+
+    /**
+     * @}
+     * @}
+     * @}
+     */
 
 } //chdr::solvers
 

@@ -28,6 +28,15 @@
 namespace chdr::solvers {
 
     /**
+     * @addtogroup Solvers
+     * @{
+     * @addtogroup Single-Target
+     * @{
+     * @addtogroup SingleTargetIterativeDeepening Iterative-Deepening
+     * @{
+     */
+
+    /**
      * @struct idbest_first
      * @brief Iterative-deepening best-first search algorithm.
      * @details Iterative-deepening best-first search is a heuristic-informed variant of the
@@ -185,6 +194,12 @@ namespace chdr::solvers {
             return solve_internal(open, _params);
         }
     };
+
+    /**
+     * @}
+     * @}
+     * @}
+     */
 
 } //chdr::solvers
 

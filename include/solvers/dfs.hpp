@@ -28,6 +28,15 @@
 namespace chdr::solvers {
 
     /**
+     * @addtogroup Solvers
+     * @{
+     * @addtogroup Single-Target
+     * @{
+     * @addtogroup SingleTargetStandard Standard
+     * @{
+     */
+
+    /**
      * @struct dfs
      * @brief Depth-first search algorithm.
      * @details A graph traversal and pathfinding algorithm that explores each branch of the search tree completely
@@ -124,6 +133,12 @@ namespace chdr::solvers {
             return solve_internal(open, closed, capacity, _params);
         }
     };
+
+    /**
+     * @}
+     * @}
+     * @}
+     */
 
 } //chdr::solvers
 

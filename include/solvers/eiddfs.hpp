@@ -28,6 +28,15 @@
 namespace chdr::solvers {
 
     /**
+     * @addtogroup Solvers
+     * @{
+     * @addtogroup Single-Target
+     * @{
+     * @addtogroup SingleTargetIterativeDeepening Iterative-Deepening
+     * @{
+     */
+
+    /**
      * @struct eiddfs
      * @brief Enhanced Iterative-deepening depth-first search algorithm.
      * @details IDDFS+ (Reinefeld, A. and Marsland, T. A., 1994) is an optimised variant of the IDDFS algorithm.\n
@@ -184,6 +193,12 @@ namespace chdr::solvers {
             return solve_internal(open, closed, capacity, _params);
         }
     };
+
+    /**
+     * @}
+     * @}
+     * @}
+     */
 
 } //chdr::solvers
 

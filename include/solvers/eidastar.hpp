@@ -27,6 +27,15 @@
 namespace chdr::solvers {
 
     /**
+     * @addtogroup Solvers
+     * @{
+     * @addtogroup Single-Target
+     * @{
+     * @addtogroup SingleTargetIterativeDeepening Iterative-Deepening
+     * @{
+     */
+
+    /**
      * @struct eidastar
      * @brief Enhanced Iterative-deepening A* search algorithm.
      * @details IDA*+ (Reinefeld, A. and Marsland, T. A., 1994) is an optimised variant of the IDA* algorithm.\n
@@ -202,6 +211,12 @@ namespace chdr::solvers {
             return solve_internal(open, _params);
         }
     };
+
+    /**
+     * @}
+     * @}
+     * @}
+     */
 
 } //chdr::solvers
 

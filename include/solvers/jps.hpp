@@ -32,6 +32,15 @@
 namespace chdr::solvers {
 
     /**
+     * @addtogroup Solvers
+     * @{
+     * @addtogroup Single-Target
+     * @{
+     * @addtogroup SingleTargetStandard Standard
+     * @{
+     */
+
+    /**
      * @struct jps
      * @brief Jump-point search algorithm.
      * @details JPS (Harabor, D. and Grastien, A., 2011) is a pathfinding algorithm for optimal routing through
@@ -375,6 +384,12 @@ namespace chdr::solvers {
             return solve_internal(open, closed, capacity, _params);
         }
     };
+
+    /**
+     * @}
+     * @}
+     * @}
+     */
 
 } //chdr::solvers
 

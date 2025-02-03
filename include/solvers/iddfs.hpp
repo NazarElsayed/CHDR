@@ -28,6 +28,15 @@
 namespace chdr::solvers {
 
     /**
+     * @addtogroup Solvers
+     * @{
+     * @addtogroup Single-Target
+     * @{
+     * @addtogroup SingleTargetIterativeDeepening Iterative-Deepening
+     * @{
+     */
+
+    /**
      * @struct iddfs
      * @brief Iterative-deepening depth-first search algorithm.
      * @details IDDFS* (Korf, R. E., 1985) is a graph traversal and pathfinding algorithm that repeatedly explores
@@ -176,6 +185,12 @@ namespace chdr::solvers {
             return solve_internal(open, _params);
         }
     };
+
+    /**
+     * @}
+     * @}
+     * @}
+     */
 
 } //chdr::solvers
 

@@ -29,6 +29,15 @@
 namespace chdr::solvers {
 
     /**
+     * @addtogroup Solvers
+     * @{
+     * @addtogroup Single-Target
+     * @{
+     * @addtogroup SingleTargetStandard Standard
+     * @{
+     */
+
+    /**
      * @struct best_first
      * @brief Greedy best-first search algorithm.
      * @details A heuristic-informed graph traversal and pathfinding algorithm that always prioritises its next move
@@ -172,6 +181,12 @@ namespace chdr::solvers {
             return solve_internal(open, closed, capacity, _params);
         }
     };
+
+    /**
+     * @}
+     * @}
+     * @}
+     */
 
 } //chdr::solvers
 

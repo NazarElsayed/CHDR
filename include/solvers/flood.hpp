@@ -27,6 +27,15 @@
 namespace chdr::solvers {
 
     /**
+     * @addtogroup Solvers
+     * @{
+     * @addtogroup Single-Target
+     * @{
+     * @addtogroup SingleTargetPreprocessing Preprocessing
+     * @{
+     */
+
+    /**
      * @struct flood
      * @brief Generalisation of breadth-first search for determining solvability.
      * @details A graph traversal algorithm that expands every search neighbour during an iteration.
@@ -132,6 +141,12 @@ namespace chdr::solvers {
             return std::vector<coord_t>{};
         }
     };
+
+    /**
+     * @}
+     * @}
+     * @}
+     */
 
 } //chdr::solvers
 

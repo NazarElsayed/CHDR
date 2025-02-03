@@ -28,6 +28,15 @@
 namespace chdr::solvers {
 
     /**
+     * @addtogroup Solvers
+     * @{
+     * @addtogroup Single-Target
+     * @{
+     * @addtogroup SingleTargetGraveyardOptimised Graveyard-Optimised
+     * @{
+     */
+
+    /**
      * @struct gstar
      * @brief Graveyard search algorithm.
      * @details G* (Eriksson, L. & Elsayed, N. 2025) is a heuristic-informed graph traversal and pathfinding algorithm.
@@ -56,7 +65,7 @@ namespace chdr::solvers {
 
         friend class solver<gstar, params_t>;
 
-    public:
+    private:
 
         using  index_t = typename params_t:: index_type;
         using scalar_t = typename params_t::scalar_type;
@@ -180,6 +189,12 @@ namespace chdr::solvers {
             return solve_internal(open, closed, capacity, _params);
         }
     };
+
+    /**
+     * @}
+     * @}
+     * @}
+     */
 
 } //chdr::solvers
 

@@ -28,6 +28,15 @@
 namespace chdr::solvers {
 
     /**
+     * @addtogroup Solvers
+     * @{
+     * @addtogroup Single-Target
+     * @{
+     * @addtogroup SingleTargetStandard Standard
+     * @{
+     */
+
+    /**
      * @struct fstar
      * @brief Frine search algorithm.
      * @details F* (Björnsson et al. 2005) is a graph traversal and pathfinding algorithm that iteratively advances
@@ -220,6 +229,12 @@ namespace chdr::solvers {
             return solve_internal(open, next, closed, capacity, _params);
         }
     };
+
+    /**
+     * @}
+     * @}
+     * @}
+     */
 
 } //chdr::solvers
 

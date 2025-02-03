@@ -27,6 +27,15 @@
 namespace chdr::solvers {
 
     /**
+     * @addtogroup Solvers
+     * @{
+     * @addtogroup Single-Target
+     * @{
+     * @addtogroup SingleTargetIterativeDeepening Iterative-Deepening
+     * @{
+     */
+
+    /**
      * @struct eidbest_first
      * @brief Enhanced Iterative-deepening A* search algorithm.
      * @details Enhanced iterative-deepening best-first search is a best-first variant of the IDA*+ algorithm
@@ -194,6 +203,12 @@ namespace chdr::solvers {
             return solve_internal(open, _params);
         }
     };
+
+    /**
+     * @}
+     * @}
+     * @}
+     */
 
 } //chdr::solvers
 

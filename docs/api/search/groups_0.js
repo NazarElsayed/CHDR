@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['constructors_0',['constructors',['../df/d60/group__Constructors.html',1,'']]]
+  ['deepening_0',['Iterative-Deepening',['../d5/d74/group__SingleTargetIterativeDeepening.html',1,'']]]
 ];

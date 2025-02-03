@@ -29,6 +29,15 @@
 namespace chdr::solvers {
 
     /**
+     * @addtogroup Solvers
+     * @{
+     * @addtogroup Single-Target
+     * @{
+     * @addtogroup SingleTargetStandard Standard
+     * @{
+     */
+
+    /**
      * @struct astar
      * @brief A* search algorithm.
      * @details A* (Hart et al. 1968) is a heuristic-informed graph traversal and pathfinding algorithm.
@@ -183,6 +192,12 @@ namespace chdr::solvers {
             return solve_internal(open, closed, capacity, _params);
         }
     };
+
+    /**
+     * @}
+     * @}
+     * @}
+     */
 
 } //chdr::solvers
 

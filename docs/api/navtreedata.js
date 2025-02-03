@@ -42,6 +42,7 @@ var NAVTREE =
       [ "Eikonal Solvers", "d5/da1/md_docs_2manual_2roadmap.html#eikonal-solvers", null ],
       [ "Computational", "d5/da1/md_docs_2manual_2roadmap.html#computational", null ]
     ] ],
+    [ "Topics", "topics.html", "topics" ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
@@ -65,7 +66,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"db/dc9/classchdr_1_1stack_add55c8b8d3e3d6419e57210d3313fd09.html#add55c8b8d3e3d6419e57210d3313fd09"
+"db/dc9/classchdr_1_1stack_a6d61c5c9644e44e79053bc7d841cdf63.html#a6d61c5c9644e44e79053bc7d841cdf63"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

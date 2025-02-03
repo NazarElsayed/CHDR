@@ -24,6 +24,15 @@
 namespace chdr::solvers {
 
     /**
+     * @addtogroup Solvers
+     * @{
+     * @addtogroup Multi-Target
+     * @{
+     * @addtogroup MultiTargetStandard Standard
+     * @{
+     */
+
+    /**
      * @struct dijkstra
      * @brief Dijkstra's algorithm [unfinished].
      * @details Dijkstra's algorithm (Dijkstra, E. W. 1959) is a graph traversal and pathfinding algorithm.
@@ -77,6 +86,12 @@ namespace chdr::solvers {
         }
 
     };
+
+    /**
+     * @}
+     * @}
+     * @}
+     */
 
 } //chdr::solvers
 

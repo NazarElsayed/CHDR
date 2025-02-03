@@ -1,4 +1,4 @@
 var topics =
 [
-    [ "constructors", "df/d60/group__Constructors.html", "df/d60/group__Constructors" ]
+    [ "Solvers", "d3/d24/group__Solvers.html", "d3/d24/group__Solvers" ]
 ];

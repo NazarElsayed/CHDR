@@ -28,6 +28,15 @@
 namespace chdr::solvers {
 
     /**
+     * @addtogroup Solvers
+     * @{
+     * @addtogroup Single-Target
+     * @{
+     * @addtogroup SingleTargetIterativeDeepening Iterative-Deepening
+     * @{
+     */
+
+    /**
      * @struct idastar
      * @brief Iterative-deepening A* search algorithm.
      * @details IDA* (Korf, R. E., 1985) is a heuristic-informed variant of the iterative-deepening DFS algorithm.\n
@@ -189,6 +198,12 @@ namespace chdr::solvers {
             return solve_internal(open, _params);
         }
     };
+
+    /**
+     * @}
+     * @}
+     * @}
+     */
 
 } //chdr::solvers
 
