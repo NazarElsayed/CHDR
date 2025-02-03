@@ -11,7 +11,6 @@ A comprehensive solution for pathfinding in K-dimensions.
 - [Manual](docs/manual/getting_started.md)
 - [Roadmap](docs/manual/roadmap.md)
 - [Licence](#licence)
-- [References](#references)
 
 
 ## Background
