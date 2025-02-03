@@ -141,6 +141,7 @@ template&lt;typename T &gt; </div>
 
 <p>Computes the power of an unsigned integral base raised to an unsigned integral exponent. </p>
 <p>This function calculates the result of raising the given base value to the power of the provided exponent. It utilises an iterative, optimised method (exponentiation by squaring), suitable for unsigned integral types that support arithmetic operations. The input must satisfy the constraints as enforced by the static assertion.</p>
+<dl class="section pre"><dt>Precondition</dt><dd>The requested operation must not cause an overflow. This is undefined behaviour.</dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">T</td><td>The type of the base and exponent values. Must be an unsigned integral type supporting arithmetic operations. Any type that does not satisfy these conditions will result in a static assertion failure.</td></tr>
@@ -157,7 +158,7 @@ template&lt;typename T &gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>The computed value of _base raised to the power of _exp. For example, powui(2, 3) would return 8.</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>The calculations assume that the result remains within the range of the provided unsigned integral type. Overflow behaviour is undefined and must be considered by the caller. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../df/d93/utils_8hpp_source.html#l00342">342</a> of file <a class="el" href="../../df/d93/utils_8hpp_source.html">utils.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../df/d93/utils_8hpp_source.html#l00344">344</a> of file <a class="el" href="../../df/d93/utils_8hpp_source.html">utils.hpp</a>.</p>
 
 </div>
 </div>

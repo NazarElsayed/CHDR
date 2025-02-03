@@ -39,7 +39,7 @@ namespace chdr {
      *
      * Further Reading:
      * - <a href="https://en.wikipedia.org/wiki/Heap_(data_structure)">Wikipedia Article</a>
-     * - https://stackoverflow.com/questions/6531543/efficient-implementation-of-binary-heaps
+     * - <a href="https://stackoverflow.com/questions/6531543/efficient-implementation-of-binary-heaps">Stack Overflow — Efficient Implementation of Binary Heaps</a>
      * - Skiena, S. S., 2020. The Algorithm Design Manual [online]. Cham: Springer International Publishing. 81-93, Available from: http://link.springer.com/10.1007/978-3-030-54256-6 [Accessed 28 Jan 2025].
      *
      * @tparam T The type of elements contained in the heap.
@@ -492,7 +492,6 @@ namespace chdr {
          * @warning Behaviour is undefined if called on an empty heap.
          */
         [[maybe_unused]] HOT constexpr void pop() noexcept {
-
             assert(!empty() && "Heap is empty");
 
             if (size() > 0U) {
@@ -513,7 +512,6 @@ namespace chdr {
          * @warning Behaviour is undefined if called on an empty heap.
          */
         [[maybe_unused]] HOT constexpr void pop_back() noexcept {
-
             assert(!empty() && "Heap is empty");
             c.pop_back();
         }

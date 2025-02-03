@@ -326,6 +326,8 @@ namespace chdr {
          *          It utilises an iterative, optimised method (exponentiation by squaring), suitable for unsigned integral
          *          types that support arithmetic operations. The input must satisfy the constraints as enforced by the static assertion.
          *
+         * @pre The requested operation must not cause an overflow. This is undefined behaviour.
+         *
          * @tparam T  The type of the base and exponent values. Must be an unsigned integral type supporting arithmetic operations.
          *            Any type that does not satisfy these conditions will result in a static assertion failure.
          *
@@ -348,8 +350,10 @@ namespace chdr {
 
             while (_exp > 0U) {
                 if (_exp % 2U == 1U) {
+                    assert(result <= std::numeric_limits<T>::max() / _base && "Multiplication would cause overflow.");
                     result *= _base;
                 }
+                assert(_base <= std::numeric_limits<T>::max() / _base && "Multiplication would cause overflow.");
                 _base *= _base;
                 _exp  /= 2U;
             }

@@ -84,35 +84,39 @@ namespace chdr {
         std::vector<block> m_blocks;
         std::vector<uint8_t*> m_free;
 
-        HOT uint8_t* expand(size_t _size, size_t _alignment) noexcept {
+        HOT uint8_t* expand(size_t _bytes, size_t _alignment) noexcept {
+
+            assert(_bytes > 0U && "Allocation size must be greater than zero.");
+            assert((_alignment & (_alignment - 1U)) == 0U && "Alignment must be a power of two.");
+            assert(_alignment != m_alignment && "Alignment mismatch.");
 
             uint8_t* result { nullptr };
 
             try {
-                const auto allocate_size = utils::max(m_block_width, _alignment);
+                const auto allocate_bytes = utils::max(m_block_width, _alignment);
 
-                result = static_cast<uint8_t*>(operator new(allocate_size, static_cast<std::align_val_t>(_alignment)));
+                result = static_cast<uint8_t*>(operator new(allocate_bytes, static_cast<std::align_val_t>(_alignment)));
 
                 m_blocks.emplace_back(
-                    allocate_size,
+                    allocate_bytes,
                     result
                 );
 
                 const auto result_num = reinterpret_cast<uintptr_t>(result);
 
                 // Alignment calculations:
-                const auto aligned_chunk_size = (     _size + _alignment - 1U) & ~(_alignment - 1U);
-                const auto aligned_base       = (result_num + _alignment - 1U) & ~(_alignment - 1U);
+                const auto aligned_chunk_bytes = (    _bytes + _alignment - 1U) & ~(_alignment - 1U);
+                const auto aligned_base        = (result_num + _alignment - 1U) & ~(_alignment - 1U);
 
                 // Divide into aligned chunks and distribute:
-                if (const auto num_chunks = (allocate_size - (aligned_base - result_num)) / aligned_chunk_size;
+                if (const auto num_chunks = (allocate_bytes - (aligned_base - result_num)) / aligned_chunk_bytes;
                     num_chunks > 1U
                 ) {
                     m_free.reserve(m_free.size() + num_chunks - 1U);
 
                     IVDEP
                     for (size_t i = 1U; i < num_chunks; ++i) {
-                        m_free.emplace_back(result + (aligned_chunk_size * i));
+                        m_free.emplace_back(result + (aligned_chunk_bytes * i));
                     }
                 }
 
@@ -182,17 +186,27 @@ namespace chdr {
          *          If none of the above options can satisfy the request, an exception of type `std::bad_alloc` is thrown.
          *          Alignment is guaranteed for both the stack and dynamic allocations as per the requested alignment.
          *
-         * @param [in] _bytes The size of the memory block to allocate, in bytes. Must be greater than zero.
+         * @param [in] _bytes The size of the memory block to allocate, in bytes. Must be greater than `0`.
          * @param [in] _alignment The alignment constraint for the start of the allocated memory block.
-         *                   Must be a power of two.
+         *                        Must be a power of `2`.
+         *
+         * @pre _bytes must be greater than zero.
+         * @pre _alignment must be the same for all calls. It must be a power of two.
          *
          * @warning All subsequent calls to this function must use the same value for _bytes and _alignment.
          *          Not doing so is undefined behaviour.
+         *
+         * @post If the operation succeeds, the result will be a pointer to the aligned memory block of requested size.
+         *       The user must not free this memory, as it belongs to the pool. Doing so will invoke undefined behaviour.
+         *
+         * @throws `std::bad_alloc` if the requested operation could not be completed.
          *
          * @return A pointer to the beginning of the allocated memory block.
          */
         [[nodiscard]] virtual HOT void* do_allocate(const size_t _bytes, const size_t _alignment) override {
             assert(_bytes > 0U && "Allocation size must be greater than zero.");
+            assert((_alignment & (_alignment - 1U)) == 0U && "Alignment must be a power of two.");
+            assert(_alignment != m_alignment && "Alignment mismatch.");
 
             m_alignment = _alignment;
 
@@ -234,18 +248,29 @@ namespace chdr {
          *          it in the internal free list for reuse.
          *
          * @param [in] _p Pointer to the memory block to be deallocated. Must not be null.
-         * @param [in] _bytes Size of the memory block to be deallocated, in bytes. Currently unused.
+         * @param [in] _bytes Size of the memory block to be deallocated, in bytes. Must be greater than `0`
+         *                    (currently unused).
          * @param [in] _alignment Alignment constraint for the start of the allocated memory block.
-         *                 Must be a power of two. Currently unused.
+         *                        Must be a power of `2` (currently unused).
          *
          * @remarks The deallocation does not free the memory back to the system but recycles it
          *          internally for subsequent allocations.
          *
-         * @warning Calling this function with a nullptr, or attempting to release memory not
-         *          owned by the pool is undefined behaviour.
+         * @pre _bytes must be greater than zero.
+         * @pre _alignment must be the same for all calls. It must be a power of two.
+         *
+         * @pre The values for `_bytes` and `_alignment` must match those given when the memory was allocated.
+         *      Otherwise, the operation may invoke undefined behaviour.
+         *
+         * @pre Calling this function with a nullptr, or attempting to release memory not
+         *      owned by the pool is undefined behaviour.
+         *
+         * @post After this operation, the memory should not be used. Doing so is undefined behaviour.
          */
         virtual HOT void do_deallocate([[maybe_unused]] void* _p, [[maybe_unused]] const size_t _bytes, [[maybe_unused]] size_t _alignment) override {
-            assert(_p != nullptr && "Cannot deallocate null pointer.");
+            assert(_bytes > 0U && "Allocation size must be greater than zero.");
+            assert((_alignment & (_alignment - 1U)) == 0U && "Alignment must be a power of two.");
+            assert(_alignment != m_alignment && "Alignment mismatch.");
 
             m_free.push_back(static_cast<uint8_t*>(_p));
         }
@@ -371,6 +396,9 @@ namespace chdr {
          *
          * @warning After calling this method, all previously allocated memory from the pool
          *          should be deemed inaccessible.
+         *
+         * @post It is undefined behaviour to use memory previously allocated within the pool
+         *       after calling of this function.
          *
          * @see release()
          */

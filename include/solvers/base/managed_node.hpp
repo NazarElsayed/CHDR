@@ -129,8 +129,8 @@ namespace chdr::solvers {
          *         the unmanaged_node class itself. It is the caller’s responsibility to ensure that
          *         the parent node remains valid for the lifetime of this object.
          *
-         * @warning If `_parent` is not `nullptr`, it must point to a valid and initialised
-         *          unmanaged_node. Failing to ensure this may lead to undefined behaviour.
+         * @pre If `_parent` is not `nullptr`, it must point to a valid and initialised unmanaged_node.
+         *      Failing to ensure this may lead to undefined behaviour.
          *
          * @see bnode
          * @see m_parent
@@ -170,8 +170,8 @@ namespace chdr::solvers {
          *          the root of the hierarchy is reached, or a node with a non-zero
          *          successor count is found.
          *
-         * @param [in, out] resource A pointer to the polymorphic memory resource used for deallocating nodes.
-         *                           It must manage the memory appropriately and be properly initialised.
+         * @param [in, out] _resource A pointer to the polymorphic memory resource used for deallocating nodes.
+         *                            It must manage the memory appropriately and be properly initialised.
          *
          * @warning Care should be taken to ensure that the hierarchy structure remains valid and
          *          consistency is maintained, as improper use can result in undefined behaviour due
@@ -181,7 +181,7 @@ namespace chdr::solvers {
          * @see managed_node
          */
         template <typename memory_resource_t>
-        HOT void expunge(memory_resource_t* resource) {
+        HOT void expunge(memory_resource_t* _resource) {
 
             while (m_parent != nullptr) {
 
@@ -192,10 +192,10 @@ namespace chdr::solvers {
                     --m_parent->m_successors;
                 }
 
-                if (m_parent->m_successors == 0U) {
+                if (m_parent->count() == 0U) {
                     auto* const RESTRICT d = m_parent;
                     m_parent = m_parent->m_parent;
-                    resource->deallocate(d, sizeof(managed_node), alignof(managed_node));
+                    _resource->deallocate(d, sizeof(managed_node), alignof(managed_node));
                 }
                 else {
                     break;

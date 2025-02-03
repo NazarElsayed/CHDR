@@ -151,12 +151,16 @@ template&lt;size_t StackSize = 4096U, size_t MaxStackAllocationSize = std::numer
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">_p</td><td>Pointer to the memory block to be deallocated. Must not be null. Currently unused. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">_bytes</td><td>Size of the memory block to be deallocated, in bytes. Currently unused. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">_alignment</td><td>Alignment constraint for the start of the allocated memory block. Must be a power of two. Currently unused. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">_alignment</td><td>Alignment constraint for the start of the allocated memory block. Must be a power of two. Currently unused.</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section post"><dt>Postcondition</dt><dd>This function is a no-op and calling it does nothing, as the pool only supports deallocating all memory at once. Consider using <code><a class="el" href="../../df/db2/classchdr_1_1monotonic__pool_a20194325f0380eb3bbc6bc6c8b2697d9.html#a20194325f0380eb3bbc6bc6c8b2697d9" title="Resets the memory pool state to its initial configuration.">reset()</a></code> or <code><a class="el" href="../../df/db2/classchdr_1_1monotonic__pool_a23b477d0e2d399f75d585d154c346591.html#a23b477d0e2d399f75d585d154c346591" title="Releases all memory resources and resets the internal state of the memory pool.">release()</a></code> instead.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="../../df/db2/classchdr_1_1monotonic__pool_a23b477d0e2d399f75d585d154c346591.html#a23b477d0e2d399f75d585d154c346591" title="Releases all memory resources and resets the internal state of the memory pool.">release()</a> </dd>
+<dd>
+<a class="el" href="../../df/db2/classchdr_1_1monotonic__pool_a20194325f0380eb3bbc6bc6c8b2697d9.html#a20194325f0380eb3bbc6bc6c8b2697d9" title="Resets the memory pool state to its initial configuration.">reset()</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/monotonic__pool_8hpp_source.html#l00235">235</a> of file <a class="el" href="../../d4/d99/monotonic__pool_8hpp_source.html">monotonic_pool.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/monotonic__pool_8hpp_source.html#l00254">254</a> of file <a class="el" href="../../d4/d99/monotonic__pool_8hpp_source.html">monotonic_pool.hpp</a>.</p>
 
 </div>
 </div>

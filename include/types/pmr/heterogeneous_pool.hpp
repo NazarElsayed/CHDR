@@ -94,6 +94,9 @@ namespace chdr {
 
         HOT uint8_t* expand(size_t _bytes, size_t _alignment) noexcept {
 
+            assert(_bytes > 0U && "Allocation size must be greater than zero.");
+            assert((_alignment & (_alignment - 1U)) == 0U && "Alignment must be a power of two.");
+
             const auto allocate_size = utils::max(m_block_width, _bytes);
 
             uint8_t* result { nullptr };
@@ -150,7 +153,9 @@ namespace chdr {
 
         HOT uint8_t* allocate_from_free(size_t _bytes) {
 
-            uint8_t* result;
+            assert(_bytes > 0U && "Allocation size must be greater than zero.");
+
+            uint8_t* result{};
 
             // Find the smallest free block that fits:
             if (auto it = m_free.lower_bound(_bytes);
@@ -210,9 +215,17 @@ namespace chdr {
          *          If none of the above options can satisfy the request, an exception of type `std::bad_alloc` is thrown.
          *          Alignment is guaranteed for both the stack and dynamic allocations as per the requested alignment.
          *
-         * @param _bytes The size of the memory block to allocate, in bytes. Must be greater than zero.
+         * @param _bytes The size of the memory block to allocate, in bytes. Must be greater than `0`.
          * @param _alignment The alignment constraint for the start of the allocated memory block.
-         *                   Must be a power of two.
+         *                   Must be a power of `2`.
+         *
+         * @pre _bytes must be greater than zero.
+         * @pre _alignment must be a power of two.
+         *
+         * @post If the operation succeeds, the result will be a pointer to the aligned memory block of requested size.
+         *       The user must not free this memory, as it belongs to the pool. Doing so will invoke undefined behaviour.
+         *
+         * @throws `std::bad_alloc` if the requested operation could not be completed.
          *
          * @return A pointer to the beginning of the allocated memory block.
          */
@@ -265,11 +278,18 @@ namespace chdr {
          * @remarks The deallocation does not free the memory back to the system but recycles it
          *          internally for subsequent allocations.
          *
-         * @warning Calling this function with a nullptr, or attempting to release memory not
-         *          owned by the pool is undefined behaviour.
+         * @pre _bytes must be greater than zero.
+         * @pre _alignment must be a power of two.
+         *
+         * @pre Calling this function with a nullptr, or attempting to release memory not
+         *      owned by the pool is undefined behaviour.
+
+         * @post After this operation, the memory should not be used. Doing so is undefined behaviour.
          */
         virtual HOT void do_deallocate(void* _p, size_t _bytes, size_t _alignment) override {
             assert(_p != nullptr && "Cannot deallocate null pointer.");
+            assert(_bytes > 0U && "Allocation size must be greater than zero.");
+            assert((_alignment & (_alignment - 1U)) == 0U && "Alignment must be a power of two.");
 
             if (((m_stack_write + (_bytes + _alignment - 1U)) & ~(_alignment - 1U)) > s_stack_block_size) {
 
@@ -417,6 +437,9 @@ namespace chdr {
          * @warning After calling this method, all previously allocated memory from the pool
          *          should be deemed inaccessible.
          *
+         * @post It is undefined behaviour to use memory previously allocated within the pool
+         *       after calling of this function.
+         *
          * @see release()
          */
         void reset() noexcept {
@@ -449,6 +472,9 @@ namespace chdr {
          * @warning After calling this method, all previously allocated memory from the pool
          *          is no longer accessible, and attempting to use such memory will result in undefined behaviour.
          *
+         * @post It is undefined behaviour to use memory previously allocated within the pool
+         *       after calling of this function.
+
          * @see reset()
          */
         void release() noexcept {

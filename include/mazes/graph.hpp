@@ -283,13 +283,14 @@ namespace chdr::mazes {
         /**
          * @brief Retrieves the vertex at a specified index.
          * @param _id Index of the vertex to retrieve.
-         * @warning If the specified index is out of bounds, calling this function is undefined behaviour.
+         * @pre `_id` must reference a valid node, which exists in the graph.
+         * @warning Calling this function is undefined behaviour if the specified index is out of bounds.
          * @return Vertex at a specified index within the grid.
          * @see contains()
          * @see operator[]()
          */
         [[nodiscard]] static constexpr const auto& at(const index_t& _id) {
-            assert(contains(_id) && "Error: The node with the specified ID does not exist in the graph.");
+            assert(contains(_id) && "Node with specified ID does not exist in the graph.");
             return reinterpret_cast<const id_node<index_t>&>(_id);
         }
 
@@ -451,6 +452,7 @@ namespace chdr::mazes {
          * This method fetches a constant reference to the neighbours of the vertex with the given identifier.
          *
          * @param _id [in] The index of the node whose neighbours are to be retrieved.
+         * @pre `_id` must reference a valid node, which exists in the graph.
          * @return A constant reference to the neighbours associated with the specified node ID.
          * @warning If the requested node does not exist within the graph, calling this function invokes undefined behaviour.
          * @see contains()
@@ -491,7 +493,8 @@ namespace chdr::mazes {
         /**
          * @brief Retrieves the vertex at a specified index.
          * @param _id Index of the vertex to retrieve.
-         * @warning If the specified index is out of bounds, calling this function is undefined behaviour.
+         * @pre `_id` must reference a valid node, which exists in the graph.
+         * @warning Calling this function is undefined behaviour if the specified index is out of bounds.
          * @return Vertex at a specified index within the grid.
          * @see contains()
          * @see at()

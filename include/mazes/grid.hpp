@@ -262,6 +262,7 @@ namespace chdr::mazes {
         /**
          * @brief Retrieves the node at a specified coordinate.
          * @param _id Coordinate of the node to retrieve.
+         * @pre `_id` must reference a valid node, which exists in the grid.
          * @warning If the specified coordinate is out of bounds, calling this function is undefined behaviour.
          * @return Node at a specified coordinate within the grid.
          * @see contains()
@@ -272,7 +273,8 @@ namespace chdr::mazes {
         /**
          * @brief Retrieves the node at a specified index.
          * @param _id Index of the node to retrieve.
-         * @warning If the specified index is out of bounds, calling this function is undefined behaviour.
+         * @pre `_id` must reference a valid node, which exists in the grid.
+         * @warning Calling this function is undefined behaviour if the specified index is out of bounds.
          * @return Node at a specified index within the grid.
          * @see contains()
          * @see operator[]()
@@ -368,7 +370,8 @@ namespace chdr::mazes {
          *          using a zero-based index.
          *
          * @param _id The index of the element to be accessed.
-         * @warning If the specified index is out of bounds, calling this function is undefined behaviour.
+         * @pre `_id` must reference a valid node, which exists in the grid.
+         * @warning Calling this function is undefined behaviour if the specified index is out of bounds.
          * @return A constant reference to the element at the given index.
          *
          * @see at()
@@ -665,6 +668,7 @@ namespace chdr::mazes {
         /**
          * @brief Retrieves the node at a specified coordinate.
          * @param [in] _id Coordinate of the node to retrieve.
+         * @pre `_id` must reference a valid node, which exists in the grid.
          * @warning If the specified coordinate is out of bounds, calling this function is undefined behaviour.
          * @return Node at a specified coordinate within the grid.
          * @see contains()
@@ -675,7 +679,8 @@ namespace chdr::mazes {
         /**
          * @brief Retrieves the node at a specified index.
          * @param _id Index of the node to retrieve.
-         * @warning If the specified index is out of bounds, calling this function is undefined behaviour.
+         * @pre `_id` must reference a valid node, which exists in the grid.
+         * @warning Calling this function is undefined behaviour if the specified index is out of bounds.
          * @return Node at a specified index within the grid.
          * @see contains()
          * @see operator[]()
@@ -769,7 +774,8 @@ namespace chdr::mazes {
          *          using a zero-based index.
          *
          * @param _id The index of the element to be accessed.
-         * @warning If the specified index is out of bounds, calling this function is undefined behaviour.
+         * @pre `_id` must reference a valid node, which exists in the grid.
+         * @warning Calling this function is undefined behaviour if the specified index is out of bounds.
          * @return A constant reference to the element at the given index.
          *
          * @see at()

@@ -132,56 +132,72 @@ namespace chdr {
         [[maybe_unused, nodiscard]] constexpr size_t size() const noexcept { return c.size(); }
 
         /**
-         * @brief Provides access to the first element in the queue.
+         * @brief Provides access to the first element in the container.
          *
          * @details Returns a reference to the element at the front of the queue.
          *          The queue must not be empty when this function is called.
          *
-         * @return A reference to the first element in the queue.
-         * @warning Invokes undefined behaviour if the queue is empty.
+         * @pre The container must not be empty before calling this function.
+         * @return A reference to the first element in the container.
+         * @warning Invokes undefined behaviour if the container is empty.
          *
          * @see empty()
          */
-        [[maybe_unused, nodiscard]] HOT constexpr T& front() noexcept { return top(); }
+        [[maybe_unused, nodiscard]] HOT constexpr T& front() noexcept {
+            assert(!empty() && "Container is empty");
+            return top();
+        }
 
         /**
-         * @brief Provides access to the first element in the queue.
+         * @brief Provides access to the first element in the container.
          *
          * @details Returns a reference to the element at the front of the queue.
          *          The queue must not be empty when this function is called.
          *
-         * @return An immutable reference to the first element in the queue.
-         * @warning Invokes undefined behaviour if the queue is empty.
+         * @pre The container must not be empty before calling this function.
+         * @return An immutable reference to the first element in the container.
+         * @warning Invokes undefined behaviour if the container is empty.
          *
          * @see empty()
          */
-        [[maybe_unused, nodiscard]] HOT constexpr const T& front() const noexcept { return top(); }
+        [[maybe_unused, nodiscard]] HOT constexpr const T& front() const noexcept {
+            assert(!empty() && "Container is empty");
+            return top();
+        }
 
         /**
-         * @brief Provides access to the first element in the queue.
+         * @brief Provides access to the first element in the container.
          *
          * @details Returns a reference to the element at the front of the queue.
          *          The queue must not be empty when this function is called.
          *
-         * @return A reference to the first element in the queue.
-         * @warning Invokes undefined behaviour if the queue is empty.
+         * @pre The container must not be empty before calling this function.
+         * @return A reference to the first element in the container.
+         * @warning Invokes undefined behaviour if the container is empty.
          *
          * @see empty()
          */
-        [[maybe_unused, nodiscard]] HOT constexpr T& top() noexcept { return c.front(); }
+        [[maybe_unused, nodiscard]] HOT constexpr T& top() noexcept {
+            assert(!empty() && "Container is empty");
+            return c.front();
+        }
 
         /**
-         * @brief Provides access to the first element in the queue.
+         * @brief Provides access to the first element in the container.
          *
          * @details Returns a reference to the element at the front of the queue.
          *          The queue must not be empty when this function is called.
          *
-         * @return An immutable reference to the first element in the queue.
-         * @warning Invokes undefined behaviour if the queue is empty.
+         * @pre The container must not be empty before calling this function.
+         * @return An immutable reference to the first element in the container.
+         * @warning Invokes undefined behaviour if the container is empty.
          *
          * @see empty()
          */
-        [[maybe_unused, nodiscard]] HOT constexpr const T& top() const noexcept { return c.front(); }
+        [[maybe_unused, nodiscard]] HOT constexpr const T& top() const noexcept {
+            assert(!empty() && "Container is empty");
+            return c.front();
+        }
 
         /**
          * @brief Adds an element to the queue.
@@ -218,9 +234,13 @@ namespace chdr {
          * @details Removes the first element from the queue, reducing the size of the queue by one.
          *          As queues maintain a FIFO ordering, this will be the least recently added item.
          *
-         * @warning Invokes undefined behaviour if the queue is empty.
+         * @pre The container must not be empty before calling this function.
+         * @warning Invokes undefined behaviour if the container is empty.
          */
-        [[maybe_unused]] HOT constexpr void pop() { c.pop_front(); }
+        [[maybe_unused]] HOT constexpr void pop() {
+            assert(!empty() && "Container is empty");
+            c.pop_front();
+        }
 
         /**
          * @brief Clears all elements from the queue.

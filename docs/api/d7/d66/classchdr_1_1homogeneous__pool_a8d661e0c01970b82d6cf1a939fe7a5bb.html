@@ -150,15 +150,22 @@ template&lt;size_t StackSize = 4096U, size_t MaxStackAllocationSize = std::numer
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">_p</td><td>Pointer to the memory block to be deallocated. Must not be null. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">_bytes</td><td>Size of the memory block to be deallocated, in bytes. Currently unused. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">_alignment</td><td>Alignment constraint for the start of the allocated memory block. Must be a power of two. Currently unused.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">_bytes</td><td>Size of the memory block to be deallocated, in bytes. Must be greater than <code>0</code> (currently unused). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">_alignment</td><td>Alignment constraint for the start of the allocated memory block. Must be a power of <code>2</code> (currently unused).</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section remark"><dt>Remarks</dt><dd>The deallocation does not free the memory back to the system but recycles it internally for subsequent allocations.</dd></dl>
-<dl class="section warning"><dt>Warning</dt><dd>Calling this function with a nullptr, or attempting to release memory not owned by the pool is undefined behaviour. </dd></dl>
+<dl class="section pre"><dt>Precondition</dt><dd>_bytes must be greater than zero. </dd>
+<dd>
+_alignment must be the same for all calls. It must be a power of two.</dd>
+<dd>
+The values for <code>_bytes</code> and <code>_alignment</code> must match those given when the memory was allocated. Otherwise, the operation may invoke undefined behaviour.</dd>
+<dd>
+Calling this function with a nullptr, or attempting to release memory not owned by the pool is undefined behaviour.</dd></dl>
+<dl class="section post"><dt>Postcondition</dt><dd>After this operation, the memory should not be used. Doing so is undefined behaviour. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d5/d3c/homogeneous__pool_8hpp_source.html#l00247">247</a> of file <a class="el" href="../../d5/d3c/homogeneous__pool_8hpp_source.html">homogeneous_pool.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d5/d3c/homogeneous__pool_8hpp_source.html#l00270">270</a> of file <a class="el" href="../../d5/d3c/homogeneous__pool_8hpp_source.html">homogeneous_pool.hpp</a>.</p>
 
 </div>
 </div>

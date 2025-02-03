@@ -55,8 +55,8 @@ namespace chdr::solvers {
      * - Low performance due to repeated traversal of the search space.
      *
      * Further Reading:
-     * - <a href="https://en.wikipedia.org/wiki/Iterative_deepening_depth-first_search">Wikipedia - Iterative Deepening Depth-First Search</a>
-     * - <a href="https://en.wikipedia.org/wiki/Best-first_search">Wikipedia - Best First Search</a>
+     * - <a href="https://en.wikipedia.org/wiki/Iterative_deepening_depth-first_search">Wikipedia — Iterative Deepening Depth-First Search</a>
+     * - <a href="https://en.wikipedia.org/wiki/Best-first_search">Wikipedia — Best First Search</a>
      *
      * References:
      * - Korf, R. E., 1985. Depth-first iterative-deepening. Artificial Intelligence, 27 (1), 97–109.

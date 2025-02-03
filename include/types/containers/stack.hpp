@@ -148,50 +148,66 @@ namespace chdr {
         /**
          * @brief Provides access to the top element of the stack.
          *
-         * @details Returns a reference to the most recently pushed element in the stack.
+         * @details Returns a reference to the most recently pushed element in the container.
          *          The stack must not be empty when this method is called.
          *
-         * @warning Invokes undefined behaviour if the queue is empty.
+         * @pre The container must not be empty before calling this function.
+         * @warning Invokes undefined behaviour if the container is empty.
          * @return A reference to the top element of the stack.
          * @see empty()
          */
-        [[maybe_unused, nodiscard]] HOT constexpr T& front() noexcept { return top(); }
+        [[maybe_unused, nodiscard]] HOT constexpr T& front() noexcept {
+            assert(!empty() && "Container is empty");
+            return top();
+        }
 
         /**
          * @brief Provides access to the top element of the stack.
          *
-         * @details Returns a reference to the most recently pushed element in the stack.
+         * @details Returns a reference to the most recently pushed element in the container.
          *          The stack must not be empty when this method is called.
          *
-         * @warning Invokes undefined behaviour if the queue is empty.
-         * @return An immutable reference to the top element of the stack.
+         * @pre The container must not be empty before calling this function.
+         * @warning Invokes undefined behaviour if the container is empty.
+         * @return An immutable reference to the top element of the container.
          * @see empty()
          */
-        [[maybe_unused, nodiscard]] HOT constexpr const T& front() const noexcept { return top(); }
+        [[maybe_unused, nodiscard]] HOT constexpr const T& front() const noexcept {
+            assert(!empty() && "Container is empty");
+            return top();
+        }
 
         /**
          * @brief Provides access to the top element of the stack.
          *
-         * @details Returns a reference to the most recently pushed element in the stack.
+         * @details Returns a reference to the most recently pushed element in the container.
          *          The stack must not be empty when this method is called.
          *
-         * @warning Invokes undefined behaviour if the queue is empty.
+         * @pre The container must not be empty before calling this function.
+         * @warning Invokes undefined behaviour if the container is empty.
          * @return A reference to the top element of the stack.
          * @see empty()
          */
-        [[maybe_unused, nodiscard]] HOT constexpr T& top() noexcept { return c.back(); }
+        [[maybe_unused, nodiscard]] HOT constexpr T& top() noexcept {
+            assert(!empty() && "Container is empty");
+            return c.back();
+        }
 
         /**
          * @brief Provides access to the top element of the stack.
          *
-         * @details Returns a reference to the most recently pushed element in the stack.
+         * @details Returns a reference to the most recently pushed element in the container.
          *          The stack must not be empty when this method is called.
          *
-         * @warning Invokes undefined behaviour if the queue is empty.
-         * @return An immutable reference to the top element of the stack.
+         * @pre The container must not be empty before calling this function.
+         * @warning Invokes undefined behaviour if the container is empty.
+         * @return An immutable reference to the top element of the container.
          * @see empty()
          */
-        [[maybe_unused, nodiscard]] HOT constexpr const T& top() const noexcept { return c.back(); }
+        [[maybe_unused, nodiscard]] HOT constexpr const T& top() const noexcept {
+            assert(!empty() && "Container is empty");
+            return c.back();
+        }
 
         /**
          * @brief Adds an element to the stack.
@@ -228,9 +244,13 @@ namespace chdr {
          * @details Removes the first element from the stack, reducing the size of the stack by one.
          *          As stacks maintain a FILO ordering, this will be the most recently added item.
          *
-         * @warning Invokes undefined behaviour if the stack is empty.
+         * @pre The container must not be empty before calling this function.
+         * @warning Invokes undefined behaviour if the container is empty.
          */
-        [[maybe_unused]] HOT constexpr void pop() { c.pop_back(); }
+        [[maybe_unused]] HOT constexpr void pop() {
+            assert(!empty() && "Container is empty");
+            c.pop_back();
+        }
 
         /**
          * @brief Clears all elements from the stack.

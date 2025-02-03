@@ -132,9 +132,10 @@ template&lt;size_t StackSize = 4096U, size_t MaxStackAllocationSize = std::numer
 <p>This method reinitialises the memory pool to its default state by resetting all internal bookkeeping measures. It also cleans up any allocated blocks and deallocates associated memory resources.</p>
 <p>The operation is designed to deallocate and clear the entire pool, making it ready for reuse without the need to destroy the object.</p>
 <dl class="section warning"><dt>Warning</dt><dd>After calling this method, all previously allocated memory from the pool is no longer accessible, and attempting to use such memory will result in undefined behaviour.</dd></dl>
+<dl class="section post"><dt>Postcondition</dt><dd>It is undefined behaviour to use memory previously allocated within the pool after calling of this function.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="../../d7/d3f/classchdr_1_1heterogeneous__pool_a20194325f0380eb3bbc6bc6c8b2697d9.html#a20194325f0380eb3bbc6bc6c8b2697d9" title="Resets the memory pool state to its initial configuration.">reset()</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d9/df8/heterogeneous__pool_8hpp_source.html#l00454">454</a> of file <a class="el" href="../../d9/df8/heterogeneous__pool_8hpp_source.html">heterogeneous_pool.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d9/df8/heterogeneous__pool_8hpp_source.html#l00480">480</a> of file <a class="el" href="../../d9/df8/heterogeneous__pool_8hpp_source.html">heterogeneous_pool.hpp</a>.</p>
 
 </div>
 </div>

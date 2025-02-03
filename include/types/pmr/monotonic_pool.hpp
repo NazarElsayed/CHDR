@@ -83,6 +83,9 @@ namespace chdr {
 
         HOT uint8_t* expand(size_t _bytes, size_t _alignment) {
 
+            assert(_bytes > 0U && "Allocation size must be greater than zero.");
+            assert((_alignment & (_alignment - 1U)) == 0U && "Alignment must be a power of two.");
+
             uint8_t* result { nullptr };
 
             try {
@@ -165,10 +168,20 @@ namespace chdr {
          * @param _bytes The size, in bytes, of the memory to allocate. Must be greater than `0`.
          * @param _alignment The alignment requirement for the memory to allocate. Must be a power of `2`.
          *
+         * @pre _bytes must be greater than zero.
+         * @pre _alignment must be a power of two.
+         *
+         * @post If the operation succeeds, the result will be a pointer to the aligned memory block of requested size.
+         *       The user must not free this memory, as it belongs to the pool. Doing so will invoke undefined behaviour.
+         *
+         * @throws `std::bad_alloc` if the requested operation could not be completed.
+         *
          * @returns A pointer to the aligned memory block of the requested size. The caller must not manually free this memory.
          */
         [[nodiscard]] virtual HOT void* do_allocate(const size_t _bytes, const size_t _alignment) override {
+
             assert(_bytes > 0U && "Allocation size must be greater than zero.");
+            assert((_alignment & (_alignment - 1U)) == 0U && "Alignment must be a power of two.");
 
             uint8_t* aligned_ptr { nullptr };
 
@@ -231,6 +244,12 @@ namespace chdr {
          * @param [in] _bytes Size of the memory block to be deallocated, in bytes. Currently unused.
          * @param [in] _alignment Alignment constraint for the start of the allocated memory block.
          *             Must be a power of two. Currently unused.
+         *
+         * @post This function is a no-op and calling it does nothing, as the pool only supports deallocating all
+         *       memory at once. Consider using `reset()` or `release()` instead.
+         *
+         * @see release()
+         * @see reset()
          */
         virtual HOT void do_deallocate([[maybe_unused]] void* _p, [[maybe_unused]] const size_t _bytes, [[maybe_unused]] size_t _alignment) override {
             // No-op.
@@ -277,7 +296,7 @@ namespace chdr {
          *          is cleaned up properly by invoking the internal `cleanup()` method.
          *
          * @warning Manual destruction is not recommended and may result in undefined behaviour.
-         *          Consider using `release()` or `reset()` instead.
+         *          Consider using `reset()` or `release()` instead.
          *
          * @see release()
          * @see reset()
@@ -337,6 +356,9 @@ namespace chdr {
          * @warning After calling this method, all previously allocated memory from the pool
          *          should be deemed inaccessible.
          *
+         * @post It is undefined behaviour to use memory previously allocated within the pool
+         *       after calling of this function.
+         *
          * @see release()
          */
         void reset() noexcept {
@@ -357,6 +379,9 @@ namespace chdr {
          *
          * @warning After calling this method, all previously allocated memory from the pool
          *          is no longer accessible, and attempting to use such memory will result in undefined behaviour.
+         *
+         * @post It is undefined behaviour to use memory previously allocated within the pool
+         *       after calling of this function.
          *
          * @see reset()
          */
