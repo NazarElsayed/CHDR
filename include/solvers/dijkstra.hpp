@@ -27,8 +27,10 @@ namespace chdr::solvers {
      * @addtogroup Solvers
      * @{
      * @addtogroup Multi-Target
+     * @brief Solvers which route to multiple destinations.
      * @{
-     * @addtogroup MultiTargetStandard Standard
+     * @addtogroup MultiTargetCommon Common
+     * @brief General-purpose solvers.
      * @{
      */
 

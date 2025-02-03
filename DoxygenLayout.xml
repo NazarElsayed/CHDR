@@ -183,70 +183,70 @@
 
   <!-- Layout definition for a group page -->
   <group>
-    <briefdescription visible="yes"/>
-    <groupgraph visible="yes"/>
+    <briefdescription visible="no"/>
+    <detaileddescription title="Description"/>
     <memberdecl>
-      <nestedgroups visible="yes" title=""/>
-      <modules visible="yes" title=""/>
-      <dirs visible="yes" title=""/>
-      <files visible="yes" title=""/>
-      <namespaces visible="yes" title=""/>
-      <concepts visible="yes" title=""/>
-      <classes visible="yes" title=""/>
-      <defines title=""/>
-      <typedefs title=""/>
-      <sequences title=""/>
-      <dictionaries title=""/>
-      <enums title=""/>
-      <enumvalues title=""/>
-      <functions title=""/>
-      <variables title=""/>
-      <signals title=""/>
-      <publicslots title=""/>
-      <protectedslots title=""/>
-      <privateslots title=""/>
-      <events title=""/>
-      <properties title=""/>
-      <friends title=""/>
       <membergroups visible="yes"/>
+      <nestedgroups visible="yes" title="Topics"/>
+      <namespaces visible="yes" title="Namespaces"/>
+      <classes visible="yes" title="Classes"/>
+      <modules visible="yes" title="Modules"/>
+      <dirs visible="yes" title="Directories"/>
+      <files visible="yes" title="Files"/>
+      <concepts visible="yes" title="Concepts"/>
+      <defines title="Defines"/>
+      <typedefs title="Types"/>
+      <sequences title="Sequences"/>
+      <dictionaries title="Dictionaries"/>
+      <enums title="Enums"/>
+      <enumvalues title="Enum Values"/>
+      <functions title="Functions"/>
+      <variables title="Variables"/>
+      <signals title="Signals"/>
+      <publicslots title="Slots"/>
+      <protectedslots title="Protected Slots"/>
+      <privateslots title="Private Slots"/>
+      <events title="Events"/>
+      <properties title="Properties"/>
+      <friends title="Friends"/>
     </memberdecl>
-    <detaileddescription title=""/>
     <memberdef>
       <pagedocs/>
-      <inlineclasses title=""/>
-      <defines title=""/>
-      <typedefs title=""/>
-      <sequences title=""/>
-      <dictionaries title=""/>
-      <enums title=""/>
-      <enumvalues title=""/>
-      <functions title=""/>
-      <variables title=""/>
-      <signals title=""/>
-      <publicslots title=""/>
-      <protectedslots title=""/>
-      <privateslots title=""/>
-      <events title=""/>
-      <properties title=""/>
-      <friends title=""/>
+      <inlineclasses title="Classes"/>
+      <defines title="Defines"/>
+      <typedefs title="Types"/>
+      <sequences title="Sequences"/>
+      <dictionaries title="Dictionaries"/>
+      <enums title="Enums"/>
+      <enumvalues title="Enum Values"/>
+      <functions title="Functions"/>
+      <variables title="Variables"/>
+      <signals title="Signals"/>
+      <publicslots title="Slots"/>
+      <protectedslots title="Protected Slots"/>
+      <privateslots title="Private Slots"/>
+      <events title="Events"/>
+      <properties title="Properties"/>
+      <friends title="Friends"/>
     </memberdef>
+    <groupgraph visible="yes"/>
     <authorsection visible="yes"/>
   </group>
 
   <!-- Layout definition for a C++20 module page -->
   <module>
-    <briefdescription visible="yes"/>
+    <briefdescription visible="no"/>
+    <detaileddescription title="Description"/>
     <exportedmodules visible="yes"/>
     <memberdecl>
-      <concepts visible="yes" title=""/>
-      <classes visible="yes" title=""/>
-      <enums title=""/>
-      <typedefs title=""/>
-      <functions title=""/>
-      <variables title=""/>
       <membergroups title=""/>
+      <concepts visible="yes" title="Concepts"/>
+      <classes visible="yes" title="Classes"/>
+      <enums title="Enums"/>
+      <typedefs title="Types"/>
+      <functions title="Functions"/>
+      <variables title="Variables"/>
     </memberdecl>
-    <detaileddescription title=""/>
     <memberdecl>
       <files visible="yes"/>
     </memberdecl>

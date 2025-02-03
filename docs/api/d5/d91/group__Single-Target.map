@@ -1,8 +1,8 @@
 <map id="Single&#45;Target" name="Single&#45;Target">
-<area shape="rect" id="Node000001" title=" " alt="" coords="111,76,196,99"/>
-<area shape="rect" id="Node000003" href="$d1/d47/group__SingleTargetGraveyardOptimised.html" title=" " alt="" coords="244,5,367,28"/>
-<area shape="rect" id="Node000004" href="$d5/d74/group__SingleTargetIterativeDeepening.html" title=" " alt="" coords="247,52,363,75"/>
-<area shape="rect" id="Node000005" href="$dd/df4/group__SingleTargetPreprocessing.html" title=" " alt="" coords="260,99,351,121"/>
-<area shape="rect" id="Node000006" href="$df/dda/group__SingleTargetStandard.html" title=" " alt="" coords="272,145,339,168"/>
+<area shape="rect" id="Node000001" title="Solvers which route to a single destination." alt="" coords="111,76,196,99"/>
+<area shape="rect" id="Node000003" href="$db/d80/group__SingleTargetCommon.html" title="General&#45;purpose solvers." alt="" coords="272,5,339,28"/>
+<area shape="rect" id="Node000004" href="$d1/d47/group__SingleTargetGraveyardOptimised.html" title="Graveyard solvers, which dynamically prune the search tree." alt="" coords="244,52,367,75"/>
+<area shape="rect" id="Node000005" href="$d5/d74/group__SingleTargetIterativeDeepening.html" title="Solvers which repeatedly traverse the search space at incrementally&#45;increasing depths." alt="" coords="247,99,363,121"/>
+<area shape="rect" id="Node000006" href="$dd/df4/group__SingleTargetPreprocessing.html" title="Solvers for pre&#45;processing the search space." alt="" coords="260,145,351,168"/>
 <area shape="rect" id="Node000002" href="$d3/d24/group__Solvers.html" title=" " alt="" coords="5,76,63,99"/>
 </map>

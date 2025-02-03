@@ -110,77 +110,38 @@ $(document).ready(function(){initNavTree('d2/df4/structchdr_1_1heuristics.html',
 </div><!--header-->
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">Description</h2>
-<div class="textblock"><p>A static utility class providing various distance metric calculations. </p>
-<p>This class provides static methods for computing different distances such as Euclidean, Manhattan, Chebyshev, Canberra, and Cosine distances.</p>
-<p>The heuristics class in this file aims to provide a comprehensive toolbox for calculating distances between n-dimensional points (e.g., nodes in a graph or grid). Below are the implemented distance metrics, each having its specific characteristics, use-cases, and calculations:</p>
-<ol type="1">
-<li><b>Euclidean Distance</b>:<ul>
-<li><b>Formula</b>: <code>sqrt(sum((b[i] - a[i])^2 for i in 1..n))</code></li>
-<li><b>Characteristics</b>: Commonly used to measure straight-line distance in continuous space.</li>
-<li><b>Use-case</b>: Ideal for scenarios where the relationship between points is considered in Euclidean space.</li>
-</ul>
-</li>
-<li><b>Squared Euclidean Distance</b>:<ul>
-<li><b>Formula</b>: <code>sum((b[i] - a[i])^2 for i in 1..n)</code></li>
-<li><b>Characteristics</b>: Avoids costly square root computation; often used as a quick comparison metric.</li>
-<li><b>Use-case</b>: Suitable for problems considered in Euclidean space, with a high degree of redundancy.</li>
-</ul>
-</li>
-<li><b>Manhattan Distance</b>:<ul>
-<li><b>Formula</b>: <code>sum(abs(b[i] - a[i]) for i in 1..n)</code></li>
-<li><b>Characteristics</b>: Measures distance traversed along grid axes, commonly used for block-based paths.</li>
-<li><b>Use-case</b>: Ideal for grid-search algorithms or scenarios with orthogonal movements.</li>
-</ul>
-</li>
-<li><b>Chebyshev Distance</b>:<ul>
-<li><b>Formula</b>: <code>max(abs(b[i] - a[i]) for i in 1..n)</code></li>
-<li><b>Characteristics</b>: Measures maximum displacement across all dimensions.</li>
-<li><b>Use-case</b>: Common in discrete spaces to represent diagonal or king-like moves in chess-like systems.</li>
-</ul>
-</li>
-<li><b>Canberra Distance</b>:<ul>
-<li><b>Formula</b>: <code>sum(abs(b[i] - a[i]) / (abs(a[i]) + abs(b[i])) for i in 1..n if denominator != 0)</code></li>
-<li><b>Characteristics</b>: Sensitive to small differences when values are close to zero.</li>
-<li><b>Use-case</b>: Useful for calculating distances where variation between values is significant.</li>
-</ul>
-</li>
-<li><b>Cosine Distance</b>:<ul>
-<li><b>Formula</b>: <code>1 - (dot(a, b) / (||a|| * ||b||))</code></li>
-<li><b>Characteristics</b>: Measures angle-based similarity, normalized by magnitude.</li>
-<li><b>Use-case</b>: Ideal for problems dealing with directions or high-dimensional data similarity.</li>
-</ul>
-</li>
-</ol>
+<div class="textblock"><p>A static utility class providing various cost heuristics. </p>
+<p>This class provides various cost heuristics suitable for use in pathfinding/graph traversal contexts.</p>
 <dl class="section remark"><dt>Remarks</dt><dd>Usage of this class is intended to be thread-safe as all methods are static and do not rely on any mutable state. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../df/d24/heuristics_8hpp_source.html#l00069">69</a> of file <a class="el" href="../../df/d24/heuristics_8hpp_source.html">heuristics.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../df/d24/heuristics_8hpp_source.html#l00035">35</a> of file <a class="el" href="../../df/d24/heuristics_8hpp_source.html">heuristics.hpp</a>.</p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Methods</h2></td></tr>
-<tr class="memitem:a697263d117f4f386b673e87854c02114" id="r_a697263d117f4f386b673e87854c02114"><td class="memTemplParams" colspan="2">template&lt;typename scalar_t , typename coord_t &gt; </td></tr>
-<tr class="memitem:a697263d117f4f386b673e87854c02114"><td class="memTemplItemLeft" align="right" valign="top">static auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/df4/structchdr_1_1heuristics_a697263d117f4f386b673e87854c02114.html#a697263d117f4f386b673e87854c02114">canberra_distance</a> (const coord_t &amp;_a, const coord_t &amp;_b) noexcept</td></tr>
-<tr class="memdesc:a697263d117f4f386b673e87854c02114"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the Canberra distance between two nodes.  <br /></td></tr>
-<tr class="separator:a697263d117f4f386b673e87854c02114"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a04c87d0bd2d9fd23e93ab7eada84f72c" id="r_a04c87d0bd2d9fd23e93ab7eada84f72c"><td class="memTemplParams" colspan="2">template&lt;typename scalar_t , typename coord_t &gt; </td></tr>
-<tr class="memitem:a04c87d0bd2d9fd23e93ab7eada84f72c"><td class="memTemplItemLeft" align="right" valign="top">static auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/df4/structchdr_1_1heuristics_a04c87d0bd2d9fd23e93ab7eada84f72c.html#a04c87d0bd2d9fd23e93ab7eada84f72c">chebyshev_distance</a> (const coord_t &amp;_a, const coord_t &amp;_b) noexcept</td></tr>
-<tr class="memdesc:a04c87d0bd2d9fd23e93ab7eada84f72c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the Chebyshev distance between two nodes.  <br /></td></tr>
-<tr class="separator:a04c87d0bd2d9fd23e93ab7eada84f72c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5fb3dbd83ab54f1935edc280461c87c" id="r_aa5fb3dbd83ab54f1935edc280461c87c"><td class="memTemplParams" colspan="2">template&lt;typename scalar_t , typename coord_t &gt; </td></tr>
-<tr class="memitem:aa5fb3dbd83ab54f1935edc280461c87c"><td class="memTemplItemLeft" align="right" valign="top">static auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/df4/structchdr_1_1heuristics_aa5fb3dbd83ab54f1935edc280461c87c.html#aa5fb3dbd83ab54f1935edc280461c87c">cosine_distance</a> (const coord_t &amp;_a, const coord_t &amp;_b) noexcept</td></tr>
-<tr class="memdesc:aa5fb3dbd83ab54f1935edc280461c87c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the Cosine distance between two nodes.  <br /></td></tr>
-<tr class="separator:aa5fb3dbd83ab54f1935edc280461c87c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9af3a430ef8b7efb6fec1dc3069a2e16" id="r_a9af3a430ef8b7efb6fec1dc3069a2e16"><td class="memTemplParams" colspan="2">template&lt;typename scalar_t , typename coord_t &gt; </td></tr>
-<tr class="memitem:a9af3a430ef8b7efb6fec1dc3069a2e16"><td class="memTemplItemLeft" align="right" valign="top">static auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/df4/structchdr_1_1heuristics_a9af3a430ef8b7efb6fec1dc3069a2e16.html#a9af3a430ef8b7efb6fec1dc3069a2e16">euclidean_distance</a> (const coord_t &amp;_a, const coord_t &amp;_b) noexcept</td></tr>
-<tr class="memdesc:a9af3a430ef8b7efb6fec1dc3069a2e16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the Euclidean distance between two nodes.  <br /></td></tr>
-<tr class="separator:a9af3a430ef8b7efb6fec1dc3069a2e16"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0ae5cd4c8261c2e6b92393ed5e4fb789" id="r_a0ae5cd4c8261c2e6b92393ed5e4fb789"><td class="memTemplParams" colspan="2">template&lt;typename scalar_t , typename coord_t &gt; </td></tr>
-<tr class="memitem:a0ae5cd4c8261c2e6b92393ed5e4fb789"><td class="memTemplItemLeft" align="right" valign="top">static auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/df4/structchdr_1_1heuristics_a0ae5cd4c8261c2e6b92393ed5e4fb789.html#a0ae5cd4c8261c2e6b92393ed5e4fb789">manhattan_distance</a> (const coord_t &amp;_a, const coord_t &amp;_b) noexcept</td></tr>
-<tr class="memdesc:a0ae5cd4c8261c2e6b92393ed5e4fb789"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the Manhattan distance between two nodes.  <br /></td></tr>
-<tr class="separator:a0ae5cd4c8261c2e6b92393ed5e4fb789"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2fe90d2468d08f5dc0157ff297b921ab" id="r_a2fe90d2468d08f5dc0157ff297b921ab"><td class="memTemplParams" colspan="2">template&lt;typename scalar_t , typename coord_t &gt; </td></tr>
-<tr class="memitem:a2fe90d2468d08f5dc0157ff297b921ab"><td class="memTemplItemLeft" align="right" valign="top">static auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/df4/structchdr_1_1heuristics_a2fe90d2468d08f5dc0157ff297b921ab.html#a2fe90d2468d08f5dc0157ff297b921ab">sqr_euclidean_distance</a> (const coord_t &amp;_a, const coord_t &amp;_b) noexcept</td></tr>
-<tr class="memdesc:a2fe90d2468d08f5dc0157ff297b921ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the squared Euclidean distance between two nodes.  <br /></td></tr>
-<tr class="separator:a2fe90d2468d08f5dc0157ff297b921ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga697263d117f4f386b673e87854c02114" id="r_ga697263d117f4f386b673e87854c02114"><td class="memTemplParams" colspan="2">template&lt;typename scalar_t , typename coord_t &gt; </td></tr>
+<tr class="memitem:ga697263d117f4f386b673e87854c02114"><td class="memTemplItemLeft" align="right" valign="top">static auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../de/d17/group__Heuristics_ga697263d117f4f386b673e87854c02114.html#ga697263d117f4f386b673e87854c02114">canberra_distance</a> (const coord_t &amp;_a, const coord_t &amp;_b) noexcept</td></tr>
+<tr class="memdesc:ga697263d117f4f386b673e87854c02114"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the Canberra distance between two nodes.  <br /></td></tr>
+<tr class="separator:ga697263d117f4f386b673e87854c02114"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga04c87d0bd2d9fd23e93ab7eada84f72c" id="r_ga04c87d0bd2d9fd23e93ab7eada84f72c"><td class="memTemplParams" colspan="2">template&lt;typename scalar_t , typename coord_t &gt; </td></tr>
+<tr class="memitem:ga04c87d0bd2d9fd23e93ab7eada84f72c"><td class="memTemplItemLeft" align="right" valign="top">static auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../de/d17/group__Heuristics_ga04c87d0bd2d9fd23e93ab7eada84f72c.html#ga04c87d0bd2d9fd23e93ab7eada84f72c">chebyshev_distance</a> (const coord_t &amp;_a, const coord_t &amp;_b) noexcept</td></tr>
+<tr class="memdesc:ga04c87d0bd2d9fd23e93ab7eada84f72c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the Chebyshev distance between two nodes.  <br /></td></tr>
+<tr class="separator:ga04c87d0bd2d9fd23e93ab7eada84f72c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa5fb3dbd83ab54f1935edc280461c87c" id="r_gaa5fb3dbd83ab54f1935edc280461c87c"><td class="memTemplParams" colspan="2">template&lt;typename scalar_t , typename coord_t &gt; </td></tr>
+<tr class="memitem:gaa5fb3dbd83ab54f1935edc280461c87c"><td class="memTemplItemLeft" align="right" valign="top">static auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../de/d17/group__Heuristics_gaa5fb3dbd83ab54f1935edc280461c87c.html#gaa5fb3dbd83ab54f1935edc280461c87c">cosine_distance</a> (const coord_t &amp;_a, const coord_t &amp;_b) noexcept</td></tr>
+<tr class="memdesc:gaa5fb3dbd83ab54f1935edc280461c87c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the Cosine distance between two nodes.  <br /></td></tr>
+<tr class="separator:gaa5fb3dbd83ab54f1935edc280461c87c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9af3a430ef8b7efb6fec1dc3069a2e16" id="r_ga9af3a430ef8b7efb6fec1dc3069a2e16"><td class="memTemplParams" colspan="2">template&lt;typename scalar_t , typename coord_t &gt; </td></tr>
+<tr class="memitem:ga9af3a430ef8b7efb6fec1dc3069a2e16"><td class="memTemplItemLeft" align="right" valign="top">static auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../de/d17/group__Heuristics_ga9af3a430ef8b7efb6fec1dc3069a2e16.html#ga9af3a430ef8b7efb6fec1dc3069a2e16">euclidean_distance</a> (const coord_t &amp;_a, const coord_t &amp;_b) noexcept</td></tr>
+<tr class="memdesc:ga9af3a430ef8b7efb6fec1dc3069a2e16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the Euclidean distance between two nodes.  <br /></td></tr>
+<tr class="separator:ga9af3a430ef8b7efb6fec1dc3069a2e16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0ae5cd4c8261c2e6b92393ed5e4fb789" id="r_ga0ae5cd4c8261c2e6b92393ed5e4fb789"><td class="memTemplParams" colspan="2">template&lt;typename scalar_t , typename coord_t &gt; </td></tr>
+<tr class="memitem:ga0ae5cd4c8261c2e6b92393ed5e4fb789"><td class="memTemplItemLeft" align="right" valign="top">static auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../de/d17/group__Heuristics_ga0ae5cd4c8261c2e6b92393ed5e4fb789.html#ga0ae5cd4c8261c2e6b92393ed5e4fb789">manhattan_distance</a> (const coord_t &amp;_a, const coord_t &amp;_b) noexcept</td></tr>
+<tr class="memdesc:ga0ae5cd4c8261c2e6b92393ed5e4fb789"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the Manhattan distance between two nodes.  <br /></td></tr>
+<tr class="separator:ga0ae5cd4c8261c2e6b92393ed5e4fb789"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2fe90d2468d08f5dc0157ff297b921ab" id="r_ga2fe90d2468d08f5dc0157ff297b921ab"><td class="memTemplParams" colspan="2">template&lt;typename scalar_t , typename coord_t &gt; </td></tr>
+<tr class="memitem:ga2fe90d2468d08f5dc0157ff297b921ab"><td class="memTemplItemLeft" align="right" valign="top">static auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../de/d17/group__Heuristics_ga2fe90d2468d08f5dc0157ff297b921ab.html#ga2fe90d2468d08f5dc0157ff297b921ab">sqr_euclidean_distance</a> (const coord_t &amp;_a, const coord_t &amp;_b) noexcept</td></tr>
+<tr class="memdesc:ga2fe90d2468d08f5dc0157ff297b921ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the squared Euclidean distance between two nodes.  <br /></td></tr>
+<tr class="separator:ga2fe90d2468d08f5dc0157ff297b921ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Collaboration diagram for heuristics:</div>

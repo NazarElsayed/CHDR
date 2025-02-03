@@ -11,7 +11,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="../../d5/d91/group__Single-Target.html" target="_top" xlink:title=" ">
+<g id="a_Node000002"><a xlink:href="../../d5/d91/group__Single-Target.html" target="_top" xlink:title="Solvers which route to a single destination.">
 <polygon fill="white" stroke="#666666" points="64,-17 0,-17 0,0 64,0 64,-17"/>
 <text text-anchor="middle" x="32" y="-6.6" font-family="Helvetica,sans-Serif" font-size="8.00">Single&#45;Target</text>
 </a>
@@ -20,7 +20,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title=" ">
+<g id="a_Node000001"><a xlink:title="Solvers for pre&#45;processing the search space.">
 <polygon fill="#999999" stroke="#666666" points="168,-17 100,-17 100,0 168,0 168,-17"/>
 <text text-anchor="middle" x="134" y="-6.6" font-family="Helvetica,sans-Serif" font-size="8.00">Preprocessing</text>
 </a>

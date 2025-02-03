@@ -5,5 +5,6 @@ var group__SingleTargetStandard =
     [ "bfs< params_t >", "d3/d8d/structchdr_1_1solvers_1_1bfs.html", null ],
     [ "dfs< params_t >", "d9/db9/structchdr_1_1solvers_1_1dfs.html", null ],
     [ "fstar< params_t >", "df/d41/structchdr_1_1solvers_1_1fstar.html", null ],
+    [ "gstar< params_t >", "df/d26/structchdr_1_1solvers_1_1gstar.html", null ],
     [ "jps< params_t >", "d8/d87/structchdr_1_1solvers_1_1jps.html", null ]
 ];

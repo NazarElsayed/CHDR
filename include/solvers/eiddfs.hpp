@@ -31,8 +31,10 @@ namespace chdr::solvers {
      * @addtogroup Solvers
      * @{
      * @addtogroup Single-Target
+     * @brief Solvers which route to a single destination.
      * @{
      * @addtogroup SingleTargetIterativeDeepening Iterative-Deepening
+     * @brief Solvers which repeatedly traverse the search space at incrementally-increasing depths.
      * @{
      */
 

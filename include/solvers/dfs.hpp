@@ -31,8 +31,10 @@ namespace chdr::solvers {
      * @addtogroup Solvers
      * @{
      * @addtogroup Single-Target
+     * @brief Solvers which route to a single destination.
      * @{
-     * @addtogroup SingleTargetStandard Standard
+     * @addtogroup SingleTargetCommon Common
+     * @brief General-purpose solvers.
      * @{
      */
 

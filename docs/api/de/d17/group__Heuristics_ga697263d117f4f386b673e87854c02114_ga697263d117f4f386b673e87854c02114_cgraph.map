@@ -1,0 +1,5 @@
+<map id="canberra_distance" name="canberra_distance">
+<area shape="rect" id="Node000001" title="Computes the Canberra distance between two nodes." alt="" coords="5,5,116,28"/>
+<area shape="rect" id="Node000002" href="$d2/dcb/structchdr_1_1utils_a5dbf4cb43cd80497753aa963c21fa0cf.html#a5dbf4cb43cd80497753aa963c21fa0cf" title="Computes the absolute value of a given arithmetic type." alt="" coords="164,5,255,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="116,14,150,14,150,19,116,19"/>
+</map>

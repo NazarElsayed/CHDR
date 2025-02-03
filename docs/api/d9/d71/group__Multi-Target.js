@@ -1,4 +1,4 @@
 var group__Multi_Target =
 [
-    [ "Standard", "d2/d61/group__MultiTargetStandard.html", "d2/d61/group__MultiTargetStandard" ]
+    [ "Common", "d1/d13/group__MultiTargetCommon.html", "d1/d13/group__MultiTargetCommon" ]
 ];

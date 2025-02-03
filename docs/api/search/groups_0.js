@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['deepening_0',['Iterative-Deepening',['../d5/d74/group__SingleTargetIterativeDeepening.html',1,'']]]
+  ['common_0',['common',['../db/d80/group__SingleTargetCommon.html',1,'Common'],['../d1/d13/group__MultiTargetCommon.html',1,'Common']]]
 ];

@@ -30,8 +30,10 @@ namespace chdr::solvers {
      * @addtogroup Solvers
      * @{
      * @addtogroup Single-Target
+     * @brief Solvers which route to a single destination.
      * @{
      * @addtogroup SingleTargetPreprocessing Preprocessing
+     * @brief Solvers for pre-processing the search space.
      * @{
      */
 

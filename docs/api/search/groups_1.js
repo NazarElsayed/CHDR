@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['graveyard_20optimised_0',['Graveyard-Optimised',['../d1/d47/group__SingleTargetGraveyardOptimised.html',1,'']]]
+  ['deepening_0',['Iterative-Deepening',['../d5/d74/group__SingleTargetIterativeDeepening.html',1,'']]]
 ];

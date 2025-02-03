@@ -11,11 +11,10 @@ var searchData=
   ['solvers_8',['solvers',['../d5/da1/md_docs_2manual_2roadmap.html#eikonal-solvers',1,'Eikonal Solvers'],['../d3/d24/group__Solvers.html',1,'Solvers'],['../d5/da1/md_docs_2manual_2roadmap.html#solvers',1,'Solvers']]],
   ['sort_5fdown_9',['sort_down',['../d3/d61/classchdr_1_1heap_a9bb7e9906ed7296a33c7c08c4d0ef800.html#a9bb7e9906ed7296a33c7c08c4d0ef800',1,'chdr::heap']]],
   ['sort_5fup_10',['sort_up',['../d3/d61/classchdr_1_1heap_ab3bf20f6c00b1d3c85593ed5a5c4c3a1.html#ab3bf20f6c00b1d3c85593ed5a5c4c3a1',1,'chdr::heap']]],
-  ['sqr_5feuclidean_5fdistance_11',['sqr_euclidean_distance',['../d2/df4/structchdr_1_1heuristics_a2fe90d2468d08f5dc0157ff297b921ab.html#a2fe90d2468d08f5dc0157ff297b921ab',1,'chdr::heuristics']]],
+  ['sqr_5feuclidean_5fdistance_11',['sqr_euclidean_distance',['../de/d17/group__Heuristics_ga2fe90d2468d08f5dc0157ff297b921ab.html#ga2fe90d2468d08f5dc0157ff297b921ab',1,'chdr::heuristics']]],
   ['sqrt_12',['sqrt',['../d2/dcb/structchdr_1_1utils_a4414bbea278f4bd180d1d579a4b2fcfa.html#a4414bbea278f4bd180d1d579a4b2fcfa',1,'chdr::utils']]],
   ['stack_13',['stack',['../db/dc9/classchdr_1_1stack_ad0d4b1c255a1e5a4f0bb77445959dfe9.html#ad0d4b1c255a1e5a4f0bb77445959dfe9',1,'chdr::stack::stack(std::pmr::memory_resource *_resource=std::pmr::get_default_resource())'],['../db/dc9/classchdr_1_1stack_a67fcf7ef68ab994652ddae18e742c1d2.html#a67fcf7ef68ab994652ddae18e742c1d2',1,'chdr::stack::stack(size_t _capacity, std::pmr::memory_resource *_resource=std::pmr::get_default_resource())'],['../db/dc9/classchdr_1_1stack_a6cc597428ece9f02fd3c1181acfd042e.html#a6cc597428ece9f02fd3c1181acfd042e',1,'chdr::stack::stack(const stack &amp;_other)'],['../db/dc9/classchdr_1_1stack_a959ceec6d30b79817a49b1c59d8927de.html#a959ceec6d30b79817a49b1c59d8927de',1,'chdr::stack::stack(stack &amp;&amp;_other) noexcept'],['../db/dc9/classchdr_1_1stack.html',1,'stack&lt; T &gt;']]],
   ['stack_2ehpp_14',['stack.hpp',['../df/d47/stack_8hpp.html',1,'']]],
-  ['standard_15',['standard',['../df/dda/group__SingleTargetStandard.html',1,'Standard'],['../d2/d61/group__MultiTargetStandard.html',1,'Standard']]],
-  ['started_16',['Getting Started',['../da/dc4/md_docs_2manual_2getting__started.html',1,'']]],
-  ['swap_17',['swap',['../d3/d61/classchdr_1_1heap_a21c6e46cc5c1398834091988e3bdb73c.html#a21c6e46cc5c1398834091988e3bdb73c',1,'chdr::heap']]]
+  ['started_15',['Getting Started',['../da/dc4/md_docs_2manual_2getting__started.html',1,'']]],
+  ['swap_16',['swap',['../d3/d61/classchdr_1_1heap_a21c6e46cc5c1398834091988e3bdb73c.html#a21c6e46cc5c1398834091988e3bdb73c',1,'chdr::heap']]]
 ];

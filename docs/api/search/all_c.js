@@ -6,7 +6,7 @@ var searchData=
   ['managed_5fnode_3',['managed_node',['../df/d64/structchdr_1_1solvers_1_1managed__node.html',1,'managed_node&lt; index_t, derived &gt;'],['../df/d64/structchdr_1_1solvers_1_1managed__node_a66205330f118f6d2bb86303fe4cc721c.html#a66205330f118f6d2bb86303fe4cc721c',1,'chdr::solvers::managed_node::managed_node(index_t _index, managed_node *restrict const _parent=nullptr) noexcept'],['../df/d64/structchdr_1_1solvers_1_1managed__node_aef9827bf89152bb2f4cd43c538e963bb.html#aef9827bf89152bb2f4cd43c538e963bb',1,'chdr::solvers::managed_node::managed_node() noexcept']]],
   ['managed_5fnode_2ehpp_4',['managed_node.hpp',['../da/deb/managed__node_8hpp.html',1,'']]],
   ['managed_5fnode_3c_20index_5ft_2c_20node_20_3e_5',['managed_node&lt; index_t, node &gt;',['../df/d64/structchdr_1_1solvers_1_1managed__node.html',1,'chdr::solvers']]],
-  ['manhattan_5fdistance_6',['manhattan_distance',['../d2/df4/structchdr_1_1heuristics_a0ae5cd4c8261c2e6b92393ed5e4fb789.html#a0ae5cd4c8261c2e6b92393ed5e4fb789',1,'chdr::heuristics']]],
+  ['manhattan_5fdistance_6',['manhattan_distance',['../de/d17/group__Heuristics_ga0ae5cd4c8261c2e6b92393ed5e4fb789.html#ga0ae5cd4c8261c2e6b92393ed5e4fb789',1,'chdr::heuristics']]],
   ['max_7',['max',['../d2/dcb/structchdr_1_1utils_a05e8953d59fd314cf105f52b0c1272dd.html#a05e8953d59fd314cf105f52b0c1272dd',1,'chdr::utils']]],
   ['maze_20types_8',['Maze Types',['../d5/da1/md_docs_2manual_2roadmap.html#maze-types',1,'']]],
   ['min_9',['min',['../d2/dcb/structchdr_1_1utils_a2287d696e022b9c172ac719c733627e3.html#a2287d696e022b9c172ac719c733627e3',1,'chdr::utils']]],

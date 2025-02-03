@@ -31,8 +31,10 @@ namespace chdr::solvers {
      * @addtogroup Solvers
      * @{
      * @addtogroup Single-Target
+     * @brief Solvers which route to a single destination.
      * @{
      * @addtogroup SingleTargetGraveyardOptimised Graveyard-Optimised
+     * @brief Graveyard solvers, which dynamically prune the search tree.
      * @{
      */
 

@@ -20,7 +20,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="../../d2/df4/structchdr_1_1heuristics_a697263d117f4f386b673e87854c02114.html#a697263d117f4f386b673e87854c02114" target="_top" xlink:title="Computes the Canberra distance between two nodes.">
+<g id="a_Node000002"><a xlink:href="../../de/d17/group__Heuristics_ga697263d117f4f386b673e87854c02114.html#ga697263d117f4f386b673e87854c02114" target="_top" xlink:title="Computes the Canberra distance between two nodes.">
 <polygon fill="white" stroke="#666666" points="327,-157 187,-157 187,-140 327,-140 327,-157"/>
 <text text-anchor="middle" x="257" y="-146.6" font-family="Helvetica,sans-Serif" font-size="8.00">chdr::heuristics::canberra_distance</text>
 </a>
@@ -38,7 +38,7 @@
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="../../d2/df4/structchdr_1_1heuristics_a04c87d0bd2d9fd23e93ab7eada84f72c.html#a04c87d0bd2d9fd23e93ab7eada84f72c" target="_top" xlink:title="Computes the Chebyshev distance between two nodes.">
+<g id="a_Node000003"><a xlink:href="../../de/d17/group__Heuristics_ga04c87d0bd2d9fd23e93ab7eada84f72c.html#ga04c87d0bd2d9fd23e93ab7eada84f72c" target="_top" xlink:title="Computes the Chebyshev distance between two nodes.">
 <polygon fill="white" stroke="#666666" points="330,-122 184,-122 184,-105 330,-105 330,-122"/>
 <text text-anchor="middle" x="257" y="-111.6" font-family="Helvetica,sans-Serif" font-size="8.00">chdr::heuristics::chebyshev_distance</text>
 </a>
@@ -56,7 +56,7 @@
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="../../d2/df4/structchdr_1_1heuristics_a0ae5cd4c8261c2e6b92393ed5e4fb789.html#a0ae5cd4c8261c2e6b92393ed5e4fb789" target="_top" xlink:title="Calculate the Manhattan distance between two nodes.">
+<g id="a_Node000004"><a xlink:href="../../de/d17/group__Heuristics_ga0ae5cd4c8261c2e6b92393ed5e4fb789.html#ga0ae5cd4c8261c2e6b92393ed5e4fb789" target="_top" xlink:title="Calculate the Manhattan distance between two nodes.">
 <polygon fill="white" stroke="#666666" points="330,-87 184,-87 184,-70 330,-70 330,-87"/>
 <text text-anchor="middle" x="257" y="-76.6" font-family="Helvetica,sans-Serif" font-size="8.00">chdr::heuristics::manhattan_distance</text>
 </a>
@@ -74,7 +74,7 @@
 <!-- Node5 -->
 <g id="Node000005" class="node">
 <title>Node5</title>
-<g id="a_Node000005"><a xlink:href="../../d2/df4/structchdr_1_1heuristics_a2fe90d2468d08f5dc0157ff297b921ab.html#a2fe90d2468d08f5dc0157ff297b921ab" target="_top" xlink:title="Computes the squared Euclidean distance between two nodes.">
+<g id="a_Node000005"><a xlink:href="../../de/d17/group__Heuristics_ga2fe90d2468d08f5dc0157ff297b921ab.html#ga2fe90d2468d08f5dc0157ff297b921ab" target="_top" xlink:title="Computes the squared Euclidean distance between two nodes.">
 <polygon fill="white" stroke="#666666" points="336,-52 178,-52 178,-35 336,-35 336,-52"/>
 <text text-anchor="middle" x="257" y="-41.6" font-family="Helvetica,sans-Serif" font-size="8.00">chdr::heuristics::sqr_euclidean_distance</text>
 </a>
@@ -110,7 +110,7 @@
 <!-- Node6 -->
 <g id="Node000006" class="node">
 <title>Node6</title>
-<g id="a_Node000006"><a xlink:href="../../d2/df4/structchdr_1_1heuristics_a9af3a430ef8b7efb6fec1dc3069a2e16.html#a9af3a430ef8b7efb6fec1dc3069a2e16" target="_top" xlink:title="Computes the Euclidean distance between two nodes.">
+<g id="a_Node000006"><a xlink:href="../../de/d17/group__Heuristics_ga9af3a430ef8b7efb6fec1dc3069a2e16.html#ga9af3a430ef8b7efb6fec1dc3069a2e16" target="_top" xlink:title="Computes the Euclidean distance between two nodes.">
 <polygon fill="white" stroke="#666666" points="142,-52 0,-52 0,-35 142,-35 142,-52"/>
 <text text-anchor="middle" x="71" y="-41.6" font-family="Helvetica,sans-Serif" font-size="8.00">chdr::heuristics::euclidean_distance</text>
 </a>

@@ -1,0 +1,5 @@
+<map id="Common" name="Common">
+<area shape="rect" id="Node000002" href="$d5/d91/group__Single-Target.html" title="Solvers which route to a single destination." alt="" coords="5,6,91,29"/>
+<area shape="rect" id="Node000001" title="General&#45;purpose solvers." alt="" coords="140,6,207,29"/>
+<area shape="rect" id="Node000003" href="$d1/d47/group__SingleTargetGraveyardOptimised.html" title="Graveyard solvers, which dynamically prune the search tree." alt="" coords="345,6,468,29"/>
+</map>

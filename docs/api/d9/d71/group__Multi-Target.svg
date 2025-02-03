@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title=" ">
+<g id="a_Node000001"><a xlink:title="Solvers which route to multiple destinations.">
 <polygon fill="#999999" stroke="#666666" points="138,-17 79,-17 79,0 138,0 138,-17"/>
 <text text-anchor="middle" x="108.5" y="-6.6" font-family="Helvetica,sans-Serif" font-size="8.00">Multi&#45;Target</text>
 </a>
@@ -20,9 +20,9 @@
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="../../d2/d61/group__MultiTargetStandard.html" target="_top" xlink:title=" ">
+<g id="a_Node000003"><a xlink:href="../../d1/d13/group__MultiTargetCommon.html" target="_top" xlink:title="General&#45;purpose solvers.">
 <polygon fill="white" stroke="#666666" points="224,-17 174,-17 174,0 224,0 224,-17"/>
-<text text-anchor="middle" x="199" y="-6.6" font-family="Helvetica,sans-Serif" font-size="8.00">Standard</text>
+<text text-anchor="middle" x="199" y="-6.6" font-family="Helvetica,sans-Serif" font-size="8.00">Common</text>
 </a>
 </g>
 </g>

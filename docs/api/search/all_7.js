@@ -4,7 +4,7 @@ var searchData=
   ['heap_2ehpp_1',['heap.hpp',['../da/d45/heap_8hpp.html',1,'']]],
   ['heterogeneous_5fpool_2',['heterogeneous_pool',['../d7/d3f/classchdr_1_1heterogeneous__pool.html',1,'heterogeneous_pool&lt; StackSize, MaxStackAllocationSize, MaxHeapBlockSize, Coalescing &gt;'],['../d7/d3f/classchdr_1_1heterogeneous__pool_a5a1f67f5f85d9b158192474d5848b31c.html#a5a1f67f5f85d9b158192474d5848b31c',1,'chdr::heterogeneous_pool::heterogeneous_pool()']]],
   ['heterogeneous_5fpool_2ehpp_3',['heterogeneous_pool.hpp',['../d9/df8/heterogeneous__pool_8hpp.html',1,'']]],
-  ['heuristics_4',['heuristics',['../d2/df4/structchdr_1_1heuristics.html',1,'chdr']]],
+  ['heuristics_4',['heuristics',['../d2/df4/structchdr_1_1heuristics.html',1,'heuristics'],['../de/d17/group__Heuristics.html',1,'Heuristics']]],
   ['heuristics_2ehpp_5',['heuristics.hpp',['../df/d24/heuristics_8hpp.html',1,'']]],
   ['homogeneous_5fpool_6',['homogeneous_pool',['../d7/d66/classchdr_1_1homogeneous__pool.html',1,'homogeneous_pool&lt; StackSize, MaxStackAllocationSize, MaxHeapBlockSize &gt;'],['../d7/d66/classchdr_1_1homogeneous__pool_ac7282a29216923fff4803e920bf80095.html#ac7282a29216923fff4803e920bf80095',1,'chdr::homogeneous_pool::homogeneous_pool()']]],
   ['homogeneous_5fpool_2ehpp_7',['homogeneous_pool.hpp',['../d5/d3c/homogeneous__pool_8hpp.html',1,'']]],
