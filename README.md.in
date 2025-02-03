@@ -56,9 +56,6 @@ If you encounter any issues or have suggestions for improvements, feel free to p
 
 CHDR is currently licenced under **[CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en)**. Please refer to the licence documentation for exact details. For permission regarding use in commercial or derivative works, please contact the developers.
 
-## References
-
-Reinefeld, A. and Marsland, T. A., 1994. Enhanced iterative-deepening search. IEEE Transactions on Pattern Analysis and Machine Intelligence, 16 (7), 701–710. Available at https://doi.org/10.1109/34.297950. [Accessed 3 Oct. 2024].
 
 <div class="section_buttons">
  
