@@ -85,8 +85,6 @@ namespace chdr::solvers {
 
             /**
              * @brief Constructs an uninitialized node.
-             *
-             * This constructor creates a node with uninitialized members.
              */
             // ReSharper disable once CppPossiblyUninitializedMember
             [[nodiscard]] constexpr node() noexcept : bnode<index_t>() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
@@ -139,7 +137,7 @@ namespace chdr::solvers {
 
             auto min = std::numeric_limits<scalar_t>::max();
 
-            const auto bound = _params.h(_params.start, _params.end) * _params.weight;
+            const auto bound = _params.h(_params.start, _params.end);
 
             _open.emplace_back(s, bound);
 
@@ -160,7 +158,7 @@ namespace chdr::solvers {
 
                     if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
 
-                        auto h = _params.h(n.coord, _params.end) * _params.weight;
+                        auto h = _params.h(n.coord, _params.end);
 
                         auto search = transposition_table.find(n.index);
                         if (!(search != transposition_table.end() && h >= search->second)) {

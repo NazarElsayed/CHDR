@@ -19,8 +19,10 @@
 #include "../types/containers/existence_set.hpp"
 #include "../types/containers/heap.hpp"
 #include "../utils/utils.hpp"
-#include "base/managed_node.hpp"
 #include "base/solver.hpp"
+
+// ReSharper disable once CppUnusedIncludeDirective
+#include "base/managed_node.hpp" // NOLINT(*-include-cleaner)
 
 // ReSharper disable once CppUnusedIncludeDirective
 #include "../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
@@ -88,8 +90,6 @@ namespace chdr::solvers {
 
             /**
              * @brief Constructs an uninitialized node.
-             *
-             * This constructor creates a node with uninitialized members.
              */
             // ReSharper disable once CppPossiblyUninitializedMember
             [[nodiscard]] constexpr node() noexcept : managed_node<index_t, node>() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)

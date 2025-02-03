@@ -50,6 +50,7 @@ namespace chdr::solvers {
      *
      * Advantages:
      * - Significantly reduced average memory usage when compared to JPS.
+     * - Capable of outperforming JPS if the overhead due to memory allocation is lower.
      *
      * Limitations:
      * - Higher constant factor than JPS makes it less effective in small searches.

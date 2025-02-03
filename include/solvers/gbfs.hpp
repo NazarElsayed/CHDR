@@ -46,6 +46,7 @@ namespace chdr::solvers {
      *
      * Advantages:
      * - Significantly reduced average memory usage when compared to BFS.
+     * - Capable of outperforming BFS if the overhead due to memory allocation is lower.
      *
      * Limitations:
      * - Higher constant factor than BFS makes it less effective in small searches.

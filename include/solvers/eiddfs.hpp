@@ -83,8 +83,6 @@ namespace chdr::solvers {
 
             /**
              * @brief Constructs an uninitialized node.
-             *
-             * This constructor creates a node with uninitialized members.
              */
             // ReSharper disable once CppPossiblyUninitializedMember
             [[nodiscard]] constexpr node() noexcept : bnode<index_t>() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)

@@ -187,7 +187,7 @@ namespace chdr {
             if (aligned_ptr == nullptr) {
 
                 // If the stack block is exhausted, fall back to dynamic blocks:
-                if (!m_blocks.empty()) {
+                if (LIKELY(!m_blocks.empty())) {
 
                     auto*  raw_ptr = static_cast<void*>(static_cast<uint8_t*>(m_blocks[m_active_block_index].data) + m_block_write);
                     size_t space   = m_blocks[m_active_block_index].size - m_block_write;
@@ -202,7 +202,7 @@ namespace chdr {
                 }
 
                 // Expand if no valid candidate for allocation was found.
-                if (aligned_ptr == nullptr) {
+                if (UNLIKELY(aligned_ptr == nullptr)) {
                     aligned_ptr = expand(_bytes, _alignment);
                 }
 
@@ -211,7 +211,7 @@ namespace chdr {
             }
 
             // ReSharper disable once CppDFAConstantConditions
-            if (aligned_ptr == nullptr) {
+            if (UNLIKELY(aligned_ptr == nullptr)) {
                 // ReSharper disable once CppDFAUnreachableCode
                 throw std::bad_alloc();
             }

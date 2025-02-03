@@ -46,6 +46,7 @@ namespace chdr::solvers {
      *
      * Advantages:
      * - Significantly reduced average memory usage when compared to DFS.
+     * - Capable of outperforming DFS if the overhead due to memory allocation is lower.
      *
      * Limitations:
      * - Higher constant factor than DFS makes it less effective in small searches.

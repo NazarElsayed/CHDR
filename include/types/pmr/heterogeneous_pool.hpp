@@ -125,7 +125,7 @@ namespace chdr {
                         }
                     }
 
-                    if (!success) {
+                    if (UNLIKELY(!success)) {
                         throw std::bad_alloc();
                     }
                 }
@@ -153,8 +153,10 @@ namespace chdr {
             uint8_t* result;
 
             // Find the smallest free block that fits:
-            auto it = m_free.lower_bound(_bytes);
-            if (it != m_free.end() && it->second.size >= _bytes) {
+            if (auto it = m_free.lower_bound(_bytes);
+                it != m_free.end() &&
+                it->second.size >= _bytes
+            ) {
 
                 result = it->second.data;
 
@@ -234,13 +236,13 @@ namespace chdr {
 
                 // Attempt to find a free block, or create one otherwise:
                 aligned_ptr = allocate_from_free(aligned_bytes);
-                if (aligned_ptr == nullptr) {
+                if (UNLIKELY(aligned_ptr == nullptr)) {
                     aligned_ptr = expand(_bytes, _alignment);
                 }
             }
 
             // ReSharper disable once CppDFAConstantConditions
-            if (aligned_ptr == nullptr) {
+            if (UNLIKELY(aligned_ptr == nullptr)) {
                 // ReSharper disable once CppDFAUnreachableCode
                 throw std::bad_alloc();
             }

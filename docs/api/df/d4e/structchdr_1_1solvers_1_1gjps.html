@@ -114,6 +114,7 @@ struct chdr::solvers::gjps&lt; params_t &gt;</div><p>Graveyard-optimised variant
 <p>G*-optimised variant of JPS, reducing memory usage by allowing for the dynamic pruning of redundant data from the search tree.</p>
 <p>Advantages:</p><ul>
 <li>Significantly reduced average memory usage when compared to JPS.</li>
+<li>Capable of outperforming JPS if the overhead due to memory allocation is lower.</li>
 </ul>
 <p>Limitations:</p><ul>
 <li>Higher constant factor than JPS makes it less effective in small searches.</li>
@@ -128,7 +129,7 @@ struct chdr::solvers::gjps&lt; params_t &gt;</div><p>Graveyard-optimised variant
 <dd>
 <a class="el" href="../../df/d26/structchdr_1_1solvers_1_1gstar.html" title="Graveyard search algorithm.">gstar</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d3/d3e/gjps_8hpp_source.html#l00062">62</a> of file <a class="el" href="../../d3/d3e/gjps_8hpp_source.html">gjps.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d3/d3e/gjps_8hpp_source.html#l00063">63</a> of file <a class="el" href="../../d3/d3e/gjps_8hpp_source.html">gjps.hpp</a>.</p>
 </div><div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Collaboration diagram for gjps&lt; params_t &gt;:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">

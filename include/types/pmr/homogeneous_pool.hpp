@@ -213,13 +213,13 @@ namespace chdr {
 
                 // Attempt to find a free block, or create one otherwise:
                 aligned_ptr = allocate_from_free();
-                if (aligned_ptr == nullptr) {
+                if (UNLIKELY(aligned_ptr == nullptr)) {
                     aligned_ptr = expand(_bytes, _alignment);
                 }
             }
 
             // ReSharper disable once CppDFAConstantConditions
-            if (aligned_ptr == nullptr) {
+            if (UNLIKELY(aligned_ptr == nullptr)) {
                 // ReSharper disable once CppDFAUnreachableCode
                 throw std::bad_alloc();
             }

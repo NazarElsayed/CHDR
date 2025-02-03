@@ -82,9 +82,7 @@ namespace chdr::solvers {
             scalar_t m_hScore;
 
             /**
-             * @brief Constructs an uninitialized BSNode.
-             *
-             * This constructor creates an BSNode with uninitialized members.
+             * @brief Constructs an uninitialized node.
              */
             // ReSharper disable once CppPossiblyUninitializedMember
             [[nodiscard]] constexpr node() noexcept {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
