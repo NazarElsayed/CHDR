@@ -4,5 +4,5 @@
 <area shape="rect" id="Node000004" href="$d1/d47/group__SingleTargetGraveyardOptimised.html" title="Graveyard solvers, which dynamically prune the search tree." alt="" coords="244,52,367,75"/>
 <area shape="rect" id="Node000005" href="$d5/d74/group__SingleTargetIterativeDeepening.html" title="Solvers which repeatedly traverse the search space at incrementally&#45;increasing depths." alt="" coords="247,99,363,121"/>
 <area shape="rect" id="Node000006" href="$dc/d80/group__SingleTargetSolutionChecking.html" title="Solvers for checking if a path to the target is possible." alt="" coords="252,145,359,168"/>
-<area shape="rect" id="Node000002" href="$d3/d24/group__Solvers.html" title=" " alt="" coords="5,76,63,99"/>
+<area shape="rect" id="Node000002" href="$d3/d24/group__Solvers.html" title="Graph traversal and pathfinding algorithms." alt="" coords="5,76,63,99"/>
 </map>

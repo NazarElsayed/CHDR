@@ -25,6 +25,7 @@ namespace chdr::solvers {
 
     /**
      * @addtogroup Solvers
+     * @brief Graph traversal and pathfinding algorithms.
      * @{
      * @addtogroup Multi-Target
      * @brief Solvers which route to multiple destinations.
