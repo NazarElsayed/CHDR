@@ -272,22 +272,26 @@ namespace chdr {
     /**
      * @brief Forces heap defragmentation and consolidation by the internal memory allocator.
      *
-     * @details
-     * This function attempts to trigger heap consolidation by:
-     * - Allocating a block of memory (default size: 4096 bytes).
-     * - Introducing a memory barrier to avoid compiler optimisations and ensure synchronisation.
-     * - Freeing the allocated memory block after the barrier.
+     * @details This function attempts to trigger heap consolidation by:
+     *          - Allocating a block of memory (default size: 4096 bytes).
+     *          - Freeing the allocated memory block.
+     *          - Memory barrier between the allocation and deallocation,
+     *            to help prevent the operation from being optimised out.
      *
      * @remarks Preprocessor directives are used to prevent the function from being optimised by various compilers.
      * @warning This function should generally be avoided in regular code and only used when necessary for testing
-     * or extreme performance tuning cases.
+     *          or extreme performance tuning cases.
      *
-     * @param _malloc (optional) The size of the memory block to allocate (default: 4096 bytes).
+     * @param _bytes The size of the memory block to allocate, in bytes. Must be greater than `0`
+     *               (optional, default: `4096` bytes).
+     *
+     * @pre _bytes must be greater than zero.
      * @note Using this function may have side effects. Do not call unless you know what you are doing.
      */
-    [[maybe_unused]] inline void malloc_consolidate(const size_t _malloc = 4096U) {
+    [[maybe_unused]] inline void malloc_consolidate(const size_t _bytes = 4096U) {
+        assert(_bytes > 0U && "Allocation size must be greater than zero.");
 
-        auto* tmp = malloc(_malloc);
+        auto* tmp = malloc(_bytes);
         std::atomic_thread_fence(std::memory_order_seq_cst);
         free(tmp);
     }

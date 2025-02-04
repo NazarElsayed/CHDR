@@ -104,7 +104,7 @@ $(document).ready(function(){initNavTree('dd/de3/classchdr_1_1mazes_1_1grid_a943
 
 <div class="contents">
 <a id="a943b441c52cc08ef04269321f14cc1f9" name="a943b441c52cc08ef04269321f14cc1f9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a943b441c52cc08ef04269321f14cc1f9">&#9670;&#160;</a></span>operator[]()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a943b441c52cc08ef04269321f14cc1f9">&#9670;&#160;</a></span>operator[]() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -129,25 +129,27 @@ template&lt;typename coord_t , typename weight_t &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Provides a reference access to the element at the specified index. </p>
-<p>This operator overload enables read-only access to elements of the grid-like structure using a zero-based index.</p>
+<p>Retrieves the node at a specified index. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">_id</td><td>The index of the element to be accessed. </td></tr>
+    <tr><td class="paramname">_id</td><td>Index of the node to retrieve. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section warning"><dt>Warning</dt><dd>If the specified index is out of bounds, calling this function is undefined behaviour. </dd></dl>
-<dl class="section return"><dt>Returns</dt><dd>A constant reference to the element at the given index.</dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="../../dd/de3/classchdr_1_1mazes_1_1grid_a2c953e28d925a8042220b3abe9023479.html#a2c953e28d925a8042220b3abe9023479" title="Retrieves the node at a specified coordinate.">at()</a> </dd></dl>
+<dl class="section pre"><dt>Precondition</dt><dd><code>_id</code> must reference a valid node, which exists in the grid. </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>Calling this function is undefined behaviour if the specified index is out of bounds. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Node at a specified index within the grid. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="../../dd/de3/classchdr_1_1mazes_1_1grid_a46e18201c09becda23eeaa0290ff1a21.html#a46e18201c09becda23eeaa0290ff1a21" title="Determines whether the provided coordinate is within the bounds of the grid.">contains()</a> </dd>
+<dd>
+<a class="el" href="../../dd/de3/classchdr_1_1mazes_1_1grid_ad8b85d86fc073f5557471a856975a9a2.html#ad8b85d86fc073f5557471a856975a9a2" title="Retrieves the node at a specified coordinate.">operator[]()</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/d8a/grid_8hpp_source.html#l00376">376</a> of file <a class="el" href="../../dc/d8a/grid_8hpp_source.html">grid.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/d8a/grid_8hpp_source.html#l00363">363</a> of file <a class="el" href="../../dc/d8a/grid_8hpp_source.html">grid.hpp</a>.</p>
 <div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../dd/de3/classchdr_1_1mazes_1_1grid_a943b441c52cc08ef04269321f14cc1f9_a943b441c52cc08ef04269321f14cc1f9_cgraph.svg" width="315" height="58"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../dd/de3/classchdr_1_1mazes_1_1grid_a943b441c52cc08ef04269321f14cc1f9_a943b441c52cc08ef04269321f14cc1f9_cgraph.svg" width="190" height="34"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>

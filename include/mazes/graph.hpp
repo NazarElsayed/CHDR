@@ -179,7 +179,7 @@ namespace chdr::mazes {
 
                     for (auto index = _start; index < _end; ++index) {
 
-                        if (const auto& element = _grid.at(index); element.is_active()) {
+                        if (const auto& element = _grid[index]; element.is_active()) {
 
                             global_closed.clear();
                             global_closed.insert(index);
@@ -279,20 +279,6 @@ namespace chdr::mazes {
         constexpr
 #endif
         graph& operator=(graph&&) noexcept = default;
-
-        /**
-         * @brief Retrieves the vertex at a specified index.
-         * @param _id Index of the vertex to retrieve.
-         * @pre `_id` must reference a valid node, which exists in the graph.
-         * @warning Calling this function is undefined behaviour if the specified index is out of bounds.
-         * @return Vertex at a specified index within the grid.
-         * @see contains()
-         * @see operator[]()
-         */
-        [[nodiscard]] static constexpr const auto& at(const index_t& _id) {
-            assert(contains(_id) && "Node with specified ID does not exist in the graph.");
-            return reinterpret_cast<const id_node<index_t>&>(_id);
-        }
 
         /**
          * @brief Adds a new vertex to the graph with the specified identifier.
@@ -497,10 +483,11 @@ namespace chdr::mazes {
          * @warning Calling this function is undefined behaviour if the specified index is out of bounds.
          * @return Vertex at a specified index within the grid.
          * @see contains()
-         * @see at()
+         * @see operator[]()
          */
-        [[nodiscard]] HOT constexpr auto& operator[](size_t _id) const noexcept {
-            return at(_id);
+        [[nodiscard]] HOT constexpr const auto& operator[](const index_t& _id) const noexcept {
+            assert(contains(_id) && "Node with specified ID does not exist in the graph.");
+            return reinterpret_cast<const id_node<index_t>&>(_id);
         }
 
         using       iterator_t = typename adjacency_set_t::      iterator;

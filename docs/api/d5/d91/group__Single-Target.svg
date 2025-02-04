@@ -65,9 +65,9 @@
 <!-- Node6 -->
 <g id="Node000006" class="node">
 <title>Node6</title>
-<g id="a_Node000006"><a xlink:href="../../dd/df4/group__SingleTargetPreprocessing.html" target="_top" xlink:title="Solvers for pre&#45;processing the search space.">
-<polygon fill="white" stroke="#666666" points="259,-17 191,-17 191,0 259,0 259,-17"/>
-<text text-anchor="middle" x="225" y="-6.6" font-family="Helvetica,sans-Serif" font-size="8.00">Preprocessing</text>
+<g id="a_Node000006"><a xlink:href="../../dc/d80/group__SingleTargetSolutionChecking.html" target="_top" xlink:title="Solvers for checking if a path to the target is possible.">
+<polygon fill="white" stroke="#666666" points="265,-17 185,-17 185,0 265,0 265,-17"/>
+<text text-anchor="middle" x="225" y="-6.6" font-family="Helvetica,sans-Serif" font-size="8.00">Solution Checking</text>
 </a>
 </g>
 </g>

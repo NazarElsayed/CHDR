@@ -1,0 +1,5 @@
+<map id="top" name="top">
+<area shape="rect" id="Node000001" title="Provides access to the top element of the stack." alt="" coords="5,5,44,28"/>
+<area shape="rect" id="Node000002" href="$db/dc9/classchdr_1_1stack_a3f6fc5de06a318920d84f3c3742db07f.html#a3f6fc5de06a318920d84f3c3742db07f" title="Checks if the stack is empty." alt="" coords="92,5,143,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="44,14,78,14,78,19,44,19"/>
+</map>

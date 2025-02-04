@@ -251,31 +251,31 @@ namespace chdr {
 
             T result{};
 
-        if constexpr (Kd == 1U) {
-            result = _indices[0U];
-        }
-        else if constexpr (Kd == 2U) {
-            result = (_indices[1U] * _sizes[0U]) + _indices[0U];
-        }
-        else if constexpr (Kd == 3U) {
-            result = (_indices[2U] * (_sizes[1U]  * _sizes[0U])) +
-                     (_indices[1U] *  _sizes[0U]) +
-                      _indices[0U];
-        }
-        else if constexpr (Kd == 4U) {
-            result = (_indices[3U] * (_sizes[2U]  * _sizes[1U]   * _sizes[0U])) +
-                     (_indices[2U] * (_sizes[1U]  * _sizes[0U])) +
-                     (_indices[1U] *  _sizes[0U]) +
-                      _indices[0U];
-        }
-        else {
-            result = 0;
-
-            IVDEP
-            for (size_t i = Kd; i != 0U; --i) {
-                result = (result * _sizes[i - 1UL]) + _indices[i - 1UL];
+            if constexpr (Kd == 1U) {
+                result = _indices[0U];
             }
-        }
+            else if constexpr (Kd == 2U) {
+                result = (_indices[1U] * _sizes[0U]) + _indices[0U];
+            }
+            else if constexpr (Kd == 3U) {
+                result = (_indices[2U] * (_sizes[1U]  * _sizes[0U])) +
+                         (_indices[1U] *  _sizes[0U]) +
+                          _indices[0U];
+            }
+            else if constexpr (Kd == 4U) {
+                result = (_indices[3U] * (_sizes[2U]  * _sizes[1U]   * _sizes[0U])) +
+                         (_indices[2U] * (_sizes[1U]  * _sizes[0U])) +
+                         (_indices[1U] *  _sizes[0U]) +
+                          _indices[0U];
+            }
+            else {
+                result = 0;
+
+                IVDEP
+                for (size_t i = Kd; i != 0U; --i) {
+                    result = (result * _sizes[i - 1UL]) + _indices[i - 1UL];
+                }
+            }
 
             return result;
         }

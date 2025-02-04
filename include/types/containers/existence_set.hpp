@@ -180,6 +180,56 @@ namespace chdr {
         }
 
         /**
+         * @brief Copy constructor.
+         *
+         * @details Creates a deep copy of the given existence_set.
+         *
+         * @param _other The existence_set to copy from.
+         */
+        existence_set(const existence_set& _other) : c(_other.c) {}
+
+        /**
+         * @brief Copy assignment operator.
+         *
+         * @details Assigns another existence_set to this one by performing a deep copy of the other existence_set.
+         *
+         * @param _other The existence_set to copy from.
+         * @return Reference to this existence_set after the assignment.
+         */
+        existence_set& operator=(const existence_set& _other) {
+            if (this != &_other) {
+                c = _other.c;
+            }
+            return *this;
+        }
+
+        /**
+         * @brief Move constructor.
+         *
+         * @details Transfers ownership of the resources of the given existence_set to this one,
+         * leaving the other existence_set in a valid but unspecified state.
+         *
+         * @param _other The existence_set to move from.
+         */
+        existence_set(existence_set&& _other) noexcept : c(std::move(_other.c)) {}
+
+        /**
+         * @brief Move assignment operator.
+         *
+         * @details Transfers ownership of the resources of the given existence_set to this one,
+         * leaving the other existence_set in a valid but unspecified state.
+         *
+         * @param _other The existence_set to move from.
+         * @return Reference to this existence_set after the assignment.
+         */
+        existence_set& operator=(existence_set&& _other) noexcept {
+            if (this != &_other) {
+                c = std::move(_other.c);
+            }
+            return *this;
+        }
+
+        /**
          * @}
          */
 

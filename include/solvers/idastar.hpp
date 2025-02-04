@@ -189,7 +189,7 @@ namespace chdr::solvers {
 
             const auto capacity = solver_t::solver_utils::determine_capacity(_params);
 
-            std::pmr::vector<node> open(_params.polytonic_pmr);
+            std::pmr::vector<node> open(_params.heterogeneous_pmr);
             try {
                 open.reserve(capacity / 8U);
             }

@@ -137,12 +137,6 @@ class chdr::mazes::grid&lt; coord_t, weight_t &gt;</div><p>Represents a uniform-
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Methods</h2></td></tr>
-<tr class="memitem:a2c953e28d925a8042220b3abe9023479" id="r_a2c953e28d925a8042220b3abe9023479"><td class="memItemLeft" align="right" valign="top">const auto &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/de3/classchdr_1_1mazes_1_1grid_a2c953e28d925a8042220b3abe9023479.html#a2c953e28d925a8042220b3abe9023479">at</a> (const coord_t &amp;_id) const noexcept</td></tr>
-<tr class="memdesc:a2c953e28d925a8042220b3abe9023479"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the node at a specified coordinate.  <br /></td></tr>
-<tr class="separator:a2c953e28d925a8042220b3abe9023479"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae9339187e855ce031aaac1203aaa8a09" id="r_ae9339187e855ce031aaac1203aaa8a09"><td class="memItemLeft" align="right" valign="top">const auto &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/de3/classchdr_1_1mazes_1_1grid_ae9339187e855ce031aaac1203aaa8a09.html#ae9339187e855ce031aaac1203aaa8a09">at</a> (size_t _id) const noexcept</td></tr>
-<tr class="memdesc:ae9339187e855ce031aaac1203aaa8a09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the node at a specified index.  <br /></td></tr>
-<tr class="separator:ae9339187e855ce031aaac1203aaa8a09"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46e18201c09becda23eeaa0290ff1a21" id="r_a46e18201c09becda23eeaa0290ff1a21"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/de3/classchdr_1_1mazes_1_1grid_a46e18201c09becda23eeaa0290ff1a21.html#a46e18201c09becda23eeaa0290ff1a21">contains</a> (const coord_t &amp;_id) const noexcept</td></tr>
 <tr class="memdesc:a46e18201c09becda23eeaa0290ff1a21"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether the provided coordinate is within the bounds of the grid.  <br /></td></tr>
 <tr class="separator:a46e18201c09becda23eeaa0290ff1a21"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -172,8 +166,11 @@ Methods</h2></td></tr>
 <tr class="memitem:a03f52122eda68167d9451df9e263e0c4" id="r_a03f52122eda68167d9451df9e263e0c4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/de3/classchdr_1_1mazes_1_1grid_a03f52122eda68167d9451df9e263e0c4.html#a03f52122eda68167d9451df9e263e0c4">nodes</a> (const std::vector&lt; weight_t &gt; &amp;_value) noexcept</td></tr>
 <tr class="memdesc:a03f52122eda68167d9451df9e263e0c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the nodes for the grid.  <br /></td></tr>
 <tr class="separator:a03f52122eda68167d9451df9e263e0c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8b85d86fc073f5557471a856975a9a2" id="r_ad8b85d86fc073f5557471a856975a9a2"><td class="memItemLeft" align="right" valign="top">auto &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/de3/classchdr_1_1mazes_1_1grid_ad8b85d86fc073f5557471a856975a9a2.html#ad8b85d86fc073f5557471a856975a9a2">operator[]</a> (const coord_t &amp;_id) const noexcept</td></tr>
+<tr class="memdesc:ad8b85d86fc073f5557471a856975a9a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the node at a specified coordinate.  <br /></td></tr>
+<tr class="separator:ad8b85d86fc073f5557471a856975a9a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a943b441c52cc08ef04269321f14cc1f9" id="r_a943b441c52cc08ef04269321f14cc1f9"><td class="memItemLeft" align="right" valign="top">auto &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/de3/classchdr_1_1mazes_1_1grid_a943b441c52cc08ef04269321f14cc1f9.html#a943b441c52cc08ef04269321f14cc1f9">operator[]</a> (size_t _id) const noexcept</td></tr>
-<tr class="memdesc:a943b441c52cc08ef04269321f14cc1f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides a reference access to the element at the specified index.  <br /></td></tr>
+<tr class="memdesc:a943b441c52cc08ef04269321f14cc1f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the node at a specified index.  <br /></td></tr>
 <tr class="separator:a943b441c52cc08ef04269321f14cc1f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a32d34adb7833cb15aa705c6c7ada57a8" id="r_a32d34adb7833cb15aa705c6c7ada57a8"><td class="memItemLeft" align="right" valign="top">const coord_t &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/de3/classchdr_1_1mazes_1_1grid_a32d34adb7833cb15aa705c6c7ada57a8.html#a32d34adb7833cb15aa705c6c7ada57a8">size</a> () const noexcept</td></tr>
 <tr class="memdesc:a32d34adb7833cb15aa705c6c7ada57a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the size of the grid.  <br /></td></tr>
@@ -190,7 +187,7 @@ Static Attributes</h2></td></tr>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../d0/dcb/classchdr_1_1mazes_1_1grid__coll__graph.svg" width="355" height="328"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../d0/dcb/classchdr_1_1mazes_1_1grid__coll__graph.svg" width="355" height="311"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="../../dc/d8a/grid_8hpp_source.html">grid.hpp</a></li>

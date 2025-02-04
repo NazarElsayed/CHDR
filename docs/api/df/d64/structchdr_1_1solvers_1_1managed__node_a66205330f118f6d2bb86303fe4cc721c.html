@@ -148,9 +148,8 @@ template&lt;typename index_t , typename derived  = void&gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="section warning"><dt>Warning</dt><dd>The memory associated with the parent node is not managed by this constructor or the <a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html" title="A hierarchical node in a pathfinding context, requires manual memory management.">unmanaged_node</a> class itself. It is the caller’s responsibility to ensure that the parent node remains valid for the lifetime of this object.</dd>
-<dd>
-If <code>_parent</code> is not <code>nullptr</code>, it must point to a valid and initialised <a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html" title="A hierarchical node in a pathfinding context, requires manual memory management.">unmanaged_node</a>. Failing to ensure this may lead to undefined behaviour.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>The memory associated with the parent node is not managed by this constructor or the <a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html" title="A hierarchical node in a pathfinding context, requires manual memory management.">unmanaged_node</a> class itself. It is the caller’s responsibility to ensure that the parent node remains valid for the lifetime of this object.</dd></dl>
+<dl class="section pre"><dt>Precondition</dt><dd>If <code>_parent</code> is not <code>nullptr</code>, it must point to a valid and initialised <a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html" title="A hierarchical node in a pathfinding context, requires manual memory management.">unmanaged_node</a>. Failing to ensure this may lead to undefined behaviour.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="../../da/d98/structchdr_1_1solvers_1_1bnode.html" title="Base class for pathfinding nodes.">bnode</a> </dd>
 <dd>
 <a class="el" href="../../df/d64/structchdr_1_1solvers_1_1managed__node_ab41bfb38b8d356173d7acea738bce82e.html#ab41bfb38b8d356173d7acea738bce82e" title="A pointer to the parent node in the hierarchical structure.">m_parent</a> </dd></dl>

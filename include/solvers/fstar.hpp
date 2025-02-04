@@ -214,13 +214,13 @@ namespace chdr::solvers {
             existence_set closed(_params.monotonic_pmr);
             closed.reserve(capacity);
 
-            std::pmr::vector<node> open(_params.polytonic_pmr);
+            std::pmr::vector<node> open(_params.heterogeneous_pmr);
             try {
                 open.reserve(capacity / 8U);
             }
             catch (...) {} // NOLINT(*-empty-catch)
 
-            std::pmr::vector<node> next(_params.polytonic_pmr);
+            std::pmr::vector<node> next(_params.heterogeneous_pmr);
             try {
                 open.reserve(capacity / 8U);
             }

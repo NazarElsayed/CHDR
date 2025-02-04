@@ -130,7 +130,7 @@ namespace chdr::solvers {
             existence_set closed(_params.monotonic_pmr);
             closed.reserve(capacity);
 
-            stack<node> open(_params.polytonic_pmr);
+            stack<node> open(_params.heterogeneous_pmr);
 
             return solve_internal(open, closed, capacity, _params);
         }

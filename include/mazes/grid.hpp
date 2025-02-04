@@ -260,31 +260,6 @@ namespace chdr::mazes {
         }
 
         /**
-         * @brief Retrieves the node at a specified coordinate.
-         * @param _id Coordinate of the node to retrieve.
-         * @pre `_id` must reference a valid node, which exists in the grid.
-         * @warning If the specified coordinate is out of bounds, calling this function is undefined behaviour.
-         * @return Node at a specified coordinate within the grid.
-         * @see contains()
-         * @see operator[]()
-         */
-        [[nodiscard]] constexpr const auto& at(const coord_t& _id) const noexcept { return at(utils::to_1d(_id, m_size)); }
-
-        /**
-         * @brief Retrieves the node at a specified index.
-         * @param _id Index of the node to retrieve.
-         * @pre `_id` must reference a valid node, which exists in the grid.
-         * @warning Calling this function is undefined behaviour if the specified index is out of bounds.
-         * @return Node at a specified index within the grid.
-         * @see contains()
-         * @see operator[]()
-         */
-        [[nodiscard]] HOT constexpr const auto& at(size_t _id) const noexcept {
-            assert(contains(_id) && "Out of bounds access.");
-            return reinterpret_cast<const weighted_node<weight_t>&>(m_nodes[_id]);
-        }
-
-        /**
          * @brief Determines whether the provided coordinate is within the bounds of the grid.
          *
          * @details Evaluates the provided coordinate against the dimensions of the grid to ensure that all of
@@ -364,19 +339,31 @@ namespace chdr::mazes {
         }
 
         /**
-         * @brief Provides a reference access to the element at the specified index.
-         *
-         * @details This operator overload enables read-only access to elements of the grid-like structure
-         *          using a zero-based index.
-         *
-         * @param _id The index of the element to be accessed.
+         * @brief Retrieves the node at a specified coordinate.
+         * @param _id Coordinate of the node to retrieve.
+         * @pre `_id` must reference a valid node, which exists in the grid.
+         * @warning If the specified coordinate is out of bounds, calling this function is undefined behaviour.
+         * @return Node at a specified coordinate within the grid.
+         * @see contains()
+         * @see operator[]()
+         */
+        [[nodiscard]] constexpr auto& operator[](const coord_t& _id) const noexcept {
+            return operator[](utils::to_1d(_id, m_size));
+        }
+
+        /**
+         * @brief Retrieves the node at a specified index.
+         * @param _id Index of the node to retrieve.
          * @pre `_id` must reference a valid node, which exists in the grid.
          * @warning Calling this function is undefined behaviour if the specified index is out of bounds.
-         * @return A constant reference to the element at the given index.
-         *
-         * @see at()
+         * @return Node at a specified index within the grid.
+         * @see contains()
+         * @see operator[]()
          */
-        [[nodiscard]] HOT constexpr auto& operator[](size_t _id) const noexcept { return at(_id); }
+        [[nodiscard]] HOT constexpr auto& operator[](size_t _id) const noexcept {
+            assert(contains(_id) && "Out of bounds access.");
+            return reinterpret_cast<const weighted_node<weight_t>&>(m_nodes[_id]);
+        }
 
         using               iterator_t = typename std::vector<weight_t>::              iterator;
         using         const_iterator_t = typename std::vector<weight_t>::        const_iterator;
@@ -433,7 +420,7 @@ namespace chdr::mazes {
                 }
             }
 
-            _output = { !oob && at(coord).is_active(), coord };
+            _output = { !oob && operator[](coord).is_active(), coord };
         }
 
         template<size_t Index>
@@ -445,8 +432,8 @@ namespace chdr::mazes {
             --nCoord[Index];
             ++pCoord[Index];
 
-            _negative = { _id[Index] > 0U                 && at(utils::to_1d(nCoord, m_size)).is_active(), nCoord };
-            _positive = { _id[Index] < m_size[Index] - 1U && at(utils::to_1d(pCoord, m_size)).is_active(), pCoord };
+            _negative = { _id[Index] > 0U                 && operator[](utils::to_1d(nCoord, m_size)).is_active(), nCoord };
+            _positive = { _id[Index] < m_size[Index] - 1U && operator[](utils::to_1d(pCoord, m_size)).is_active(), pCoord };
         }
     };
 
@@ -666,31 +653,6 @@ namespace chdr::mazes {
         }
 
         /**
-         * @brief Retrieves the node at a specified coordinate.
-         * @param [in] _id Coordinate of the node to retrieve.
-         * @pre `_id` must reference a valid node, which exists in the grid.
-         * @warning If the specified coordinate is out of bounds, calling this function is undefined behaviour.
-         * @return Node at a specified coordinate within the grid.
-         * @see contains()
-         * @see operator[]()
-         */
-        [[nodiscard]] constexpr auto at(const coord_t& _id) const { return at(utils::to_1d(_id, m_size)); }
-
-        /**
-         * @brief Retrieves the node at a specified index.
-         * @param _id Index of the node to retrieve.
-         * @pre `_id` must reference a valid node, which exists in the grid.
-         * @warning Calling this function is undefined behaviour if the specified index is out of bounds.
-         * @return Node at a specified index within the grid.
-         * @see contains()
-         * @see operator[]()
-         */
-        [[nodiscard]] HOT constexpr weighted_node<bool> at(size_t _id) const {
-            assert(contains(_id) && "Out of bounds access.");
-            return { m_nodes[_id] };
-        }
-
-        /**
          * @brief Determines whether the provided coordinate is within the bounds of the grid.
          *
          * @details Evaluates the provided coordinate against the dimensions of the grid to ensure that all of
@@ -768,19 +730,29 @@ namespace chdr::mazes {
         }
 
         /**
-         * @brief Provides a reference access to the element at the specified index.
-         *
-         * @details This operator overload enables read-only access to elements of the grid-like structure
-         *          using a zero-based index.
-         *
-         * @param _id The index of the element to be accessed.
+         * @brief Retrieves the node at a specified coordinate.
+         * @param [in] _id Coordinate of the node to retrieve.
+         * @pre `_id` must reference a valid node, which exists in the grid.
+         * @warning If the specified coordinate is out of bounds, calling this function is undefined behaviour.
+         * @return Node at a specified coordinate within the grid.
+         * @see contains()
+         * @see operator[]()
+         */
+        [[nodiscard]] constexpr auto operator[](const coord_t& _id) const { return operator[](utils::to_1d(_id, m_size)); }
+
+        /**
+         * @brief Retrieves the node at a specified index.
+         * @param _id Index of the node to retrieve.
          * @pre `_id` must reference a valid node, which exists in the grid.
          * @warning Calling this function is undefined behaviour if the specified index is out of bounds.
-         * @return A constant reference to the element at the given index.
-         *
-         * @see at()
+         * @return Node at a specified index within the grid.
+         * @see contains()
+         * @see operator[]()
          */
-        [[nodiscard]] HOT constexpr auto& operator[](size_t _id) const noexcept { return m_nodes[_id]; }
+        [[nodiscard]] HOT constexpr auto operator[](size_t _id) const {
+            assert(contains(_id) && "Out of bounds access.");
+            return weighted_node { m_nodes[_id] };
+        }
 
         using               iterator_t = std::vector<bool>::              iterator;
         using         const_iterator_t = std::vector<bool>::        const_iterator;
@@ -837,7 +809,7 @@ namespace chdr::mazes {
                 }
             }
 
-            _output = { !oob && at(coord).is_active(), coord };
+            _output = { !oob && operator[](coord).is_active(), coord };
         }
 
         template <size_t Index>
@@ -849,8 +821,8 @@ namespace chdr::mazes {
             --nCoord[Index];
             ++pCoord[Index];
 
-            _negative = { _id[Index] > 0U                 && at(utils::to_1d(nCoord, m_size)).is_active(), nCoord };
-            _positive = { _id[Index] < m_size[Index] - 1U && at(utils::to_1d(pCoord, m_size)).is_active(), pCoord };
+            _negative = { _id[Index] > 0U                 && operator[](utils::to_1d(nCoord, m_size)).is_active(), nCoord };
+            _positive = { _id[Index] < m_size[Index] - 1U && operator[](utils::to_1d(pCoord, m_size)).is_active(), pCoord };
         }
     };
 

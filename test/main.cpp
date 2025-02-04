@@ -88,13 +88,13 @@ namespace test {
 
             const auto grid = generator::grid::generate<weight_t>(start, end, _size, 0.0, 0.0, seed);
 
-            auto   monotonic = chdr::monotonic_pool();
-            auto   polytonic = chdr::heterogeneous_pool();
-            auto homogeneous = chdr::homogeneous_pool();
-
             const auto& test = grid;
-            //const auto test = chdr::mazes::graph<index_t, scalar_t>(grid, &polytonic);
+            //auto graph_pool = chdr::heterogeneous_pool(); const auto test = chdr::mazes::graph<index_t, scalar_t>(grid, &graph_pool);
             //const auto test = generator::graph::generate<weight_t, index_t, coord_t, scalar_t>(start, end, size, seed);
+
+            auto     monotonic = chdr::monotonic_pool();
+            auto heterogeneous = chdr::heterogeneous_pool();
+            auto   homogeneous = chdr::homogeneous_pool();
 
             struct params {
 
@@ -111,16 +111,16 @@ namespace test {
                 const     coord_type  size;
                          scalar_type  (*h)(const coord_type&, const coord_type&) noexcept;
 
-                decltype(  monotonic)*   monotonic_pmr;
-                decltype(  polytonic)*   polytonic_pmr;
-                decltype(homogeneous)* homogeneous_pmr;
+                decltype(    monotonic)*     monotonic_pmr;
+                decltype(heterogeneous)* heterogeneous_pmr;
+                decltype(  homogeneous)*   homogeneous_pmr;
 
                 const scalar_type weight       = 1U;
                 const      size_t capacity     = 0U;
                 const      size_t memoryLimit  = static_cast<size_t>(-1U);
             };
 
-            const params args { test, start, end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &polytonic, &homogeneous };
+            const params args { test, start, end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &heterogeneous, &homogeneous };
 
                  if (_solver == "astar"        ) { result = invoke<chdr::solvers::        astar, params>(args); }
             else if (_solver == "bfs"          ) { result = invoke<chdr::solvers::          bfs, params>(args); }
@@ -135,12 +135,12 @@ namespace test {
             else if (_solver == "gbest_first"  ) { result = invoke<chdr::solvers::  gbest_first, params>(args); }
             else if (_solver == "gbfs"         ) { result = invoke<chdr::solvers::         gbfs, params>(args); }
             else if (_solver == "gdfs"         ) { result = invoke<chdr::solvers::         gdfs, params>(args); }
-            else if (_solver == "gjps"         ) { result = invoke<chdr::solvers::         gjps, params>(args); }
+            //else if (_solver == "gjps"         ) { result = invoke<chdr::solvers::         gjps, params>(args); }
             else if (_solver == "gstar"        ) { result = invoke<chdr::solvers::        gstar, params>(args); }
             else if (_solver == "idastar"      ) { result = invoke<chdr::solvers::      idastar, params>(args); }
             else if (_solver == "idbest_first" ) { result = invoke<chdr::solvers:: idbest_first, params>(args); }
             else if (_solver == "iddfs"        ) { result = invoke<chdr::solvers::        iddfs, params>(args); }
-            else if (_solver == "jps"          ) { result = invoke<chdr::solvers::          jps, params>(args); }
+            //else if (_solver == "jps"          ) { result = invoke<chdr::solvers::          jps, params>(args); }
             else {
                 debug::log("ERROR: Unknown solver \"" + std::string(_solver) + "\"!", error);
             }

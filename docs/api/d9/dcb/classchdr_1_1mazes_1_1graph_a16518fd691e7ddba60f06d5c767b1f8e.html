@@ -136,13 +136,14 @@ template&lt;typename index_t , typename scalar_t &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="section warning"><dt>Warning</dt><dd>If the specified index is out of bounds, calling this function is undefined behaviour. </dd></dl>
+<dl class="section pre"><dt>Precondition</dt><dd><code>_id</code> must reference a valid node, which exists in the graph. </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>Calling this function is undefined behaviour if the specified index is out of bounds. </dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>Vertex at a specified index within the grid. </dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="../../d9/dcb/classchdr_1_1mazes_1_1graph_ab276ef23dd28f7f3f6a804f7a958141d.html#ab276ef23dd28f7f3f6a804f7a958141d">contains()</a> </dd>
 <dd>
 <a class="el" href="../../d9/dcb/classchdr_1_1mazes_1_1graph_a943b441c52cc08ef04269321f14cc1f9.html#a943b441c52cc08ef04269321f14cc1f9" title="Retrieves the vertex at a specified index.">operator[]()</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d9/de9/graph_8hpp_source.html#l00291">291</a> of file <a class="el" href="../../d9/de9/graph_8hpp_source.html">graph.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d9/de9/graph_8hpp_source.html#l00292">292</a> of file <a class="el" href="../../d9/de9/graph_8hpp_source.html">graph.hpp</a>.</p>
 <div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">

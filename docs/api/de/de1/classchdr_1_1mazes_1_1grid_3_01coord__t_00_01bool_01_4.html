@@ -122,7 +122,7 @@ class chdr::mazes::grid&lt; coord_t, bool &gt;</div><p>Specialization of grid fo
 <dl class="section note"><dt>Note</dt><dd>In this configuration, the grid is represented using a bitset. </dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="../../dd/de3/classchdr_1_1mazes_1_1grid.html" title="Represents a uniform-cost, bidirectional grid in K-dimensions.">grid</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/d8a/grid_8hpp_source.html#l00458">458</a> of file <a class="el" href="../../dc/d8a/grid_8hpp_source.html">grid.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/d8a/grid_8hpp_source.html#l00448">448</a> of file <a class="el" href="../../dc/d8a/grid_8hpp_source.html">grid.hpp</a>.</p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Constructors</h2></td></tr>
 <tr class="memitem:a928b0ddf94040b8aafd7a1d1146e2ecb" id="r_a928b0ddf94040b8aafd7a1d1146e2ecb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_a928b0ddf94040b8aafd7a1d1146e2ecb.html#a928b0ddf94040b8aafd7a1d1146e2ecb">grid</a> (const coord_t &amp;_size)</td></tr>
@@ -137,12 +137,6 @@ class chdr::mazes::grid&lt; coord_t, bool &gt;</div><p>Specialization of grid fo
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Methods</h2></td></tr>
-<tr class="memitem:acae1d695ad2f308980a748bce2a94fe0" id="r_acae1d695ad2f308980a748bce2a94fe0"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_acae1d695ad2f308980a748bce2a94fe0.html#acae1d695ad2f308980a748bce2a94fe0">at</a> (const coord_t &amp;_id) const</td></tr>
-<tr class="memdesc:acae1d695ad2f308980a748bce2a94fe0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the node at a specified coordinate.  <br /></td></tr>
-<tr class="separator:acae1d695ad2f308980a748bce2a94fe0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab58cfd52d8229de59597dfca35e037c6" id="r_ab58cfd52d8229de59597dfca35e037c6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../db/dc4/structchdr_1_1mazes_1_1weighted__node.html">weighted_node</a>&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_ab58cfd52d8229de59597dfca35e037c6.html#ab58cfd52d8229de59597dfca35e037c6">at</a> (size_t _id) const</td></tr>
-<tr class="memdesc:ab58cfd52d8229de59597dfca35e037c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the node at a specified index.  <br /></td></tr>
-<tr class="separator:ab58cfd52d8229de59597dfca35e037c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46e18201c09becda23eeaa0290ff1a21" id="r_a46e18201c09becda23eeaa0290ff1a21"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_a46e18201c09becda23eeaa0290ff1a21.html#a46e18201c09becda23eeaa0290ff1a21">contains</a> (const coord_t &amp;_id) const noexcept</td></tr>
 <tr class="memdesc:a46e18201c09becda23eeaa0290ff1a21"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether the provided coordinate is within the bounds of the grid.  <br /></td></tr>
 <tr class="separator:a46e18201c09becda23eeaa0290ff1a21"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -172,9 +166,12 @@ Methods</h2></td></tr>
 <tr class="memitem:ad3e7854f02faee6b530a4623907c67c2" id="r_ad3e7854f02faee6b530a4623907c67c2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_ad3e7854f02faee6b530a4623907c67c2.html#ad3e7854f02faee6b530a4623907c67c2">nodes</a> (const std::vector&lt; bool &gt; &amp;_value) noexcept</td></tr>
 <tr class="memdesc:ad3e7854f02faee6b530a4623907c67c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the nodes for the grid.  <br /></td></tr>
 <tr class="separator:ad3e7854f02faee6b530a4623907c67c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a943b441c52cc08ef04269321f14cc1f9" id="r_a943b441c52cc08ef04269321f14cc1f9"><td class="memItemLeft" align="right" valign="top">auto &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_a943b441c52cc08ef04269321f14cc1f9.html#a943b441c52cc08ef04269321f14cc1f9">operator[]</a> (size_t _id) const noexcept</td></tr>
-<tr class="memdesc:a943b441c52cc08ef04269321f14cc1f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides a reference access to the element at the specified index.  <br /></td></tr>
-<tr class="separator:a943b441c52cc08ef04269321f14cc1f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d575542c2bf3cf37dfbebf1d56a7bc9" id="r_a7d575542c2bf3cf37dfbebf1d56a7bc9"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_a7d575542c2bf3cf37dfbebf1d56a7bc9.html#a7d575542c2bf3cf37dfbebf1d56a7bc9">operator[]</a> (const coord_t &amp;_id) const</td></tr>
+<tr class="memdesc:a7d575542c2bf3cf37dfbebf1d56a7bc9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the node at a specified coordinate.  <br /></td></tr>
+<tr class="separator:a7d575542c2bf3cf37dfbebf1d56a7bc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5863ccd22a8132d40f1de39c92105115" id="r_a5863ccd22a8132d40f1de39c92105115"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_a5863ccd22a8132d40f1de39c92105115.html#a5863ccd22a8132d40f1de39c92105115">operator[]</a> (size_t _id) const</td></tr>
+<tr class="memdesc:a5863ccd22a8132d40f1de39c92105115"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the node at a specified index.  <br /></td></tr>
+<tr class="separator:a5863ccd22a8132d40f1de39c92105115"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a32d34adb7833cb15aa705c6c7ada57a8" id="r_a32d34adb7833cb15aa705c6c7ada57a8"><td class="memItemLeft" align="right" valign="top">const coord_t &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_a32d34adb7833cb15aa705c6c7ada57a8.html#a32d34adb7833cb15aa705c6c7ada57a8">size</a> () const noexcept</td></tr>
 <tr class="memdesc:a32d34adb7833cb15aa705c6c7ada57a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the size of the grid.  <br /></td></tr>
 <tr class="separator:a32d34adb7833cb15aa705c6c7ada57a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -190,7 +187,7 @@ Static Attributes</h2></td></tr>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../da/dd7/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4__coll__graph.svg" width="355" height="328"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../da/dd7/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4__coll__graph.svg" width="355" height="311"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="../../dc/d8a/grid_8hpp_source.html">grid.hpp</a></li>

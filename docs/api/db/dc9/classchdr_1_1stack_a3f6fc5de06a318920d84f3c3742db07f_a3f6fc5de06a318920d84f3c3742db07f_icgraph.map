@@ -1,5 +1,19 @@
 <map id="empty" name="empty">
-<area shape="rect" id="Node000001" title="Checks if the stack is empty." alt="" coords="201,5,252,28"/>
-<area shape="rect" id="Node000002" href="$d9/dcb/classchdr_1_1mazes_1_1graph_a5ca1351a03df5ff49f85cc4b5669cefc.html#a5ca1351a03df5ff49f85cc4b5669cefc" title="Constructs a graph instance from a grid structure." alt="" coords="5,5,153,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="187,19,153,19,153,14,187,14"/>
+<area shape="rect" id="Node000001" title="Checks if the stack is empty." alt="" coords="289,101,340,123"/>
+<area shape="rect" id="Node000002" href="$d9/dcb/classchdr_1_1mazes_1_1graph_a5ca1351a03df5ff49f85cc4b5669cefc.html#a5ca1351a03df5ff49f85cc4b5669cefc" title="Constructs a graph instance from a grid structure." alt="" coords="5,29,153,51"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="301,89,277,50,260,32,240,18,205,9,168,11,133,20,104,31,102,26,131,15,167,6,206,4,242,14,264,28,281,47,306,87"/>
+<area shape="rect" id="Node000003" href="$db/dc9/classchdr_1_1stack_a66ae5a391f699d2e564c2545ab9c6d82.html#a66ae5a391f699d2e564c2545ab9c6d82" title="Provides access to the top element of the stack." alt="" coords="57,101,101,123"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="276,115,102,115,102,109,276,109"/>
+<area shape="rect" id="Node000004" href="$db/dc9/classchdr_1_1stack_acbf9b62bac7333654c7862dc8cfd1e48.html#acbf9b62bac7333654c7862dc8cfd1e48" title="Provides access to the top element of the stack." alt="" coords="57,149,101,171"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="276,122,102,158,101,153,275,117"/>
+<area shape="rect" id="Node000005" href="$db/dc9/classchdr_1_1stack_a312e7f6c761a199c1369fbe651e084f0.html#a312e7f6c761a199c1369fbe651e084f0" title="Pops an element from the stack." alt="" coords="201,29,241,51"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="287,94,236,54,239,50,290,90"/>
+<area shape="rect" id="Node000006" href="$db/dc9/classchdr_1_1stack_a39b39a0753d600546b92d146681c30f5.html#a39b39a0753d600546b92d146681c30f5" title="Provides access to the top element of the stack." alt="" coords="202,225,241,247"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="299,136,233,226,229,223,295,133"/>
+<area shape="rect" id="Node000007" href="$db/dc9/classchdr_1_1stack_a20a753362275d34a67d855ce0105fab7.html#a20a753362275d34a67d855ce0105fab7" title="Provides access to the top element of the stack." alt="" coords="202,75,241,98"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="275,104,240,94,242,89,277,99"/>
+<area shape="poly" id="edge5_Node000005_Node000002" title=" " alt="" coords="188,43,154,43,154,37,188,37"/>
+<area shape="poly" id="edge8_Node000007_Node000002" title=" " alt="" coords="188,79,114,54,116,49,189,74"/>
+<area shape="poly" id="edge9_Node000007_Node000003" title=" " alt="" coords="189,95,102,111,101,105,188,90"/>
+<area shape="poly" id="edge10_Node000007_Node000004" title=" " alt="" coords="197,109,155,137,103,157,101,152,152,132,194,104"/>
 </map>

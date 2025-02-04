@@ -32,8 +32,8 @@ namespace chdr::solvers {
      * @addtogroup Single-Target
      * @brief Solvers which route to a single destination.
      * @{
-     * @addtogroup SingleTargetPreprocessing Preprocessing
-     * @brief Solvers for pre-processing the search space.
+     * @addtogroup SingleTargetSolutionChecking Solution Checking
+     * @brief Solvers for checking if a path to the target is possible.
      * @{
      */
 
@@ -117,8 +117,8 @@ namespace chdr::solvers {
             const auto s = static_cast<index_t>(utils::to_1d(_params.start, _params.size));
             const auto e = static_cast<index_t>(utils::to_1d(_params.end,   _params.size));
 
-            if (_params.maze.contains(s) && _params.maze.at(s).is_active() &&
-                _params.maze.contains(e) && _params.maze.at(e).is_active()
+            if (_params.maze.contains(s) && _params.maze[s].is_active() &&
+                _params.maze.contains(e) && _params.maze[e].is_active()
             ) {
 
                 bool success { s == e };
@@ -130,7 +130,7 @@ namespace chdr::solvers {
                     existence_set closed(_params.monotonic_pmr);
                     closed.reserve(capacity);
 
-                    queue<index_t> open(_params.polytonic_pmr);
+                    queue<index_t> open(_params.heterogeneous_pmr);
 
                     success = solve_internal(open, closed, capacity, _params);
                 }

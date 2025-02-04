@@ -1,0 +1,15 @@
+<map id="empty" name="empty">
+<area shape="rect" id="Node000001" title="Checks if the queue is empty." alt="" coords="185,76,236,99"/>
+<area shape="rect" id="Node000002" href="$d7/de5/classchdr_1_1queue_a66ae5a391f699d2e564c2545ab9c6d82.html#a66ae5a391f699d2e564c2545ab9c6d82" title="Provides access to the first element in the container." alt="" coords="5,5,49,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="192,66,168,40,136,19,114,13,91,11,50,15,49,9,91,6,115,8,138,14,171,36,196,63"/>
+<area shape="rect" id="Node000003" href="$d7/de5/classchdr_1_1queue_acbf9b62bac7333654c7862dc8cfd1e48.html#acbf9b62bac7333654c7862dc8cfd1e48" title="Provides access to the first element in the container." alt="" coords="5,100,49,123"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="196,112,171,139,138,161,110,164,82,155,58,140,39,125,42,121,61,136,84,150,110,159,136,155,168,135,192,109"/>
+<area shape="rect" id="Node000004" href="$d7/de5/classchdr_1_1queue_a312e7f6c761a199c1369fbe651e084f0.html#a312e7f6c761a199c1369fbe651e084f0" title="Pops an element from the queue." alt="" coords="97,76,137,99"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="171,90,138,90,138,85,171,85"/>
+<area shape="rect" id="Node000005" href="$d7/de5/classchdr_1_1queue_a39b39a0753d600546b92d146681c30f5.html#a39b39a0753d600546b92d146681c30f5" title="Provides access to the first element in the container." alt="" coords="98,123,137,145"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="176,108,138,127,136,122,173,103"/>
+<area shape="rect" id="Node000006" href="$d7/de5/classchdr_1_1queue_a20a753362275d34a67d855ce0105fab7.html#a20a753362275d34a67d855ce0105fab7" title="Provides access to the first element in the container." alt="" coords="98,29,137,52"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="173,72,136,53,138,48,176,67"/>
+<area shape="poly" id="edge6_Node000006_Node000002" title=" " alt="" coords="84,35,49,25,51,20,86,30"/>
+<area shape="poly" id="edge7_Node000006_Node000003" title=" " alt="" coords="93,63,45,102,41,98,90,58"/>
+</map>

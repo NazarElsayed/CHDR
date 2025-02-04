@@ -1,0 +1,5 @@
+<map id="pop" name="pop">
+<area shape="rect" id="Node000001" title="Pops an element from the stack." alt="" coords="5,5,45,28"/>
+<area shape="rect" id="Node000002" href="$db/dc9/classchdr_1_1stack_a3f6fc5de06a318920d84f3c3742db07f.html#a3f6fc5de06a318920d84f3c3742db07f" title="Checks if the stack is empty." alt="" coords="93,5,144,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="45,14,80,14,80,19,45,19"/>
+</map>

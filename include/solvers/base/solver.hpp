@@ -58,7 +58,7 @@ namespace chdr::solvers {
      *          scalar_type (*h)(const coord_type&, const coord_type&) noexcept;
      *
      *     ...*   monotonic_pmr;
-     *     ...*   polytonic_pmr;
+     *     ...*   heterogeneous_pmr;
      *     ...* homogeneous_pmr;
      *
      *     const scalar_type weight       = ...; // 1
@@ -554,7 +554,7 @@ namespace chdr::solvers {
          *
          * @note You must ensure that the given arguments are valid for constructing the parameters for your intended search.
          *
-         * @remarks Calling this will reset the state of `monotonic_pmr`, `polytonic_pmr`, and `homogeneous_pmr`, if they have a visible method `reset()`.
+         * @remarks Calling this will reset the state of `monotonic_pmr`, `heterogeneous_pmr`, and `homogeneous_pmr`, if they have a visible method `reset()`.
          *
          * @warning Aliasing the polymorphic memory resources as other types may hide the `reset()` method from this function.
          *          If you intend for this function to trigger a reset of these parameters, you must provide them as a type where the `reset()` method
@@ -579,7 +579,7 @@ namespace chdr::solvers {
          *
          * @param [in] _params The parameters object to solve with.
          *
-         * @remarks Calling this will reset the state of `monotonic_pmr`, `polytonic_pmr`, and `homogeneous_pmr`, if they have a visible method `reset()`.
+         * @remarks Calling this will reset the state of `monotonic_pmr`, `heterogeneous_pmr`, and `homogeneous_pmr`, if they have a visible method `reset()`.
          *
          * @warning Aliasing the polymorphic memory resources as other types may hide the `reset()` method from this function.
          *          If you intend for this function to trigger a reset of these parameters, you must provide them as a type where the `reset()` method
@@ -603,8 +603,8 @@ namespace chdr::solvers {
                 const auto s = static_cast<typename params_t::index_type>(utils::to_1d(_params.start, _params.size));
                 const auto e = static_cast<typename params_t::index_type>(utils::to_1d(_params.end,   _params.size));
 
-                if (_params.maze.contains(s) && _params.maze.at(s).is_active() &&
-                    _params.maze.contains(e) && _params.maze.at(e).is_active()
+                if (_params.maze.contains(s) && _params.maze[s].is_active() &&
+                    _params.maze.contains(e) && _params.maze[e].is_active()
                 ) {
                     result = s != e ?
                         solver_t<params_t>::invoke(_params) :
@@ -621,8 +621,8 @@ namespace chdr::solvers {
                 if constexpr (solver_utils::template has_method_reset_v<std::remove_pointer_t<std::decay_t<decltype(_params.monotonic_pmr)>>>) {
                     if (_params.monotonic_pmr != nullptr) { _params.monotonic_pmr->reset(); }
                 }
-                if constexpr (solver_utils::template has_method_reset_v<std::remove_pointer_t<std::decay_t<decltype(_params.polytonic_pmr)>>>) {
-                    if (_params.polytonic_pmr != nullptr) { _params.polytonic_pmr->reset(); }
+                if constexpr (solver_utils::template has_method_reset_v<std::remove_pointer_t<std::decay_t<decltype(_params.heterogeneous_pmr)>>>) {
+                    if (_params.heterogeneous_pmr != nullptr) { _params.heterogeneous_pmr->reset(); }
                 }
                 if constexpr (solver_utils::template has_method_reset_v<std::remove_pointer_t<std::decay_t<decltype(_params.homogeneous_pmr)>>>) {
                     if (_params.homogeneous_pmr != nullptr) { _params.homogeneous_pmr->reset(); }
@@ -648,7 +648,7 @@ namespace chdr::solvers {
          *
          * @note You must ensure that the given arguments are valid for constructing the parameters for your intended search.
          *
-         * @remarks Calling this will reset the state of `monotonic_pmr`, `polytonic_pmr`, and `homogeneous_pmr`, if they have a visible method `reset()`.
+         * @remarks Calling this will reset the state of `monotonic_pmr`, `heterogeneous_pmr`, and `homogeneous_pmr`, if they have a visible method `reset()`.
          *
          * @warning Aliasing the polymorphic memory resources as other types may hide the `reset()` method from this function.
          *          If you intend for this function to trigger a reset of these parameters, you must provide them as a type where the `reset()` method
@@ -673,7 +673,7 @@ namespace chdr::solvers {
          *
          * @param [in] _params The parameters object to solve with.
          *
-         * @remarks Calling this will reset the state of `monotonic_pmr`, `polytonic_pmr`, and `homogeneous_pmr`, if they have a visible method `reset()`.
+         * @remarks Calling this will reset the state of `monotonic_pmr`, `heterogeneous_pmr`, and `homogeneous_pmr`, if they have a visible method `reset()`.
          *
          * @warning Aliasing the polymorphic memory resources as other types may hide the `reset()` method from this function.
          *          If you intend for this function to trigger a reset of these parameters, you must provide them as a type where the `reset()` method

@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Provides access to the first element in the queue.">
+<g id="a_Node000001"><a xlink:title="Provides access to the first element in the container.">
 <polygon fill="#999999" stroke="#666666" points="98,-34 69,-34 69,-17 98,-17 98,-34"/>
 <text text-anchor="middle" x="83.5" y="-23.6" font-family="Helvetica,sans-Serif" font-size="8.00">top</text>
 </a>
@@ -20,7 +20,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="../../d7/de5/classchdr_1_1queue_a66ae5a391f699d2e564c2545ab9c6d82.html#a66ae5a391f699d2e564c2545ab9c6d82" target="_top" xlink:title="Provides access to the first element in the queue.">
+<g id="a_Node000002"><a xlink:href="../../d7/de5/classchdr_1_1queue_a66ae5a391f699d2e564c2545ab9c6d82.html#a66ae5a391f699d2e564c2545ab9c6d82" target="_top" xlink:title="Provides access to the first element in the container.">
 <polygon fill="white" stroke="#666666" points="33,-52 0,-52 0,-35 33,-35 33,-52"/>
 <text text-anchor="middle" x="16.5" y="-41.6" font-family="Helvetica,sans-Serif" font-size="8.00">front</text>
 </a>
@@ -38,7 +38,7 @@
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="../../d7/de5/classchdr_1_1queue_acbf9b62bac7333654c7862dc8cfd1e48.html#acbf9b62bac7333654c7862dc8cfd1e48" target="_top" xlink:title="Provides access to the first element in the queue.">
+<g id="a_Node000003"><a xlink:href="../../d7/de5/classchdr_1_1queue_acbf9b62bac7333654c7862dc8cfd1e48.html#acbf9b62bac7333654c7862dc8cfd1e48" target="_top" xlink:title="Provides access to the first element in the container.">
 <polygon fill="white" stroke="#666666" points="33,-17 0,-17 0,0 33,0 33,-17"/>
 <text text-anchor="middle" x="16.5" y="-6.6" font-family="Helvetica,sans-Serif" font-size="8.00">front</text>
 </a>
