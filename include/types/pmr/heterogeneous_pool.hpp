@@ -115,6 +115,9 @@ namespace chdr {
                     remaining_size != 0U
                 ) {
 
+                    block new_block { remaining_size, _alignment, result + utils::max(_bytes, _alignment) };
+                    PREFETCH(new_block.data, _MM_HINT_T0);
+
                     /*
                      * Attempt to insert new block into free list.
                      * Repeat with a smaller key upon collision.
@@ -122,7 +125,8 @@ namespace chdr {
                      */
                     bool success = false;
                     for (size_t i = 0U; i < remaining_size; ++i) {
-                        if (m_free.try_emplace(remaining_size - i, remaining_size, _alignment, result + utils::max(_bytes, _alignment)).second) {
+
+                        if (m_free.try_emplace(remaining_size - i, new_block).second) {
                             success = true;
                             break;
                         }
@@ -319,7 +323,10 @@ namespace chdr {
                     }
                 }
 
-                m_free.try_emplace(_bytes, _bytes, _alignment, static_cast<uint8_t*>(_p));
+                block free_block { _bytes, _alignment, static_cast<uint8_t*>(_p) };
+                if (m_free.try_emplace(_bytes, free_block).second) {
+                    PREFETCH(free_block.data, _MM_HINT_T0);
+                }
             }
         }
 
@@ -451,6 +458,10 @@ namespace chdr {
                 m_free.clear();
                 for (const auto& item : m_blocks) {
                     m_free.emplace(item.size, item);
+                }
+
+                if (!m_blocks.empty()) {
+                    PREFETCH(m_blocks.back().data, _MM_HINT_T0);
                 }
             }
             catch (...) {

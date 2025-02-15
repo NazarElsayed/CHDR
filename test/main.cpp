@@ -123,24 +123,24 @@ namespace test {
             const params args { test, start, end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &heterogeneous, &homogeneous };
 
                  if (_solver == "astar"        ) { result = invoke<chdr::solvers::        astar, params>(args); }
-            //else if (_solver == "bfs"          ) { result = invoke<chdr::solvers::          bfs, params>(args); }
-            //else if (_solver == "best_first"   ) { result = invoke<chdr::solvers::   best_first, params>(args); }
-            //else if (_solver == "dfs"          ) { result = invoke<chdr::solvers::          dfs, params>(args); }
-            //else if (_solver == "dijkstra"     ) { result = invoke<chdr::solvers::     dijkstra, params>(args); }
-            //else if (_solver == "eidastar"     ) { result = invoke<chdr::solvers::     eidastar, params>(args); }
-            //else if (_solver == "eidbest_first") { result = invoke<chdr::solvers::eidbest_first, params>(args); }
-            //else if (_solver == "eiddfs"       ) { result = invoke<chdr::solvers::       eiddfs, params>(args); }
-            //else if (_solver == "flood"        ) { result = invoke<chdr::solvers::        flood, params>(args); }
-            //else if (_solver == "fstar"        ) { result = invoke<chdr::solvers::        fstar, params>(args); }
-            //else if (_solver == "gbest_first"  ) { result = invoke<chdr::solvers::  gbest_first, params>(args); }
-            //else if (_solver == "gbfs"         ) { result = invoke<chdr::solvers::         gbfs, params>(args); }
-            //else if (_solver == "gdfs"         ) { result = invoke<chdr::solvers::         gdfs, params>(args); }
-            //else if (_solver == "gjps"         ) { result = invoke<chdr::solvers::         gjps, params>(args); }
+            else if (_solver == "bfs"          ) { result = invoke<chdr::solvers::          bfs, params>(args); }
+            else if (_solver == "best_first"   ) { result = invoke<chdr::solvers::   best_first, params>(args); }
+            else if (_solver == "dfs"          ) { result = invoke<chdr::solvers::          dfs, params>(args); }
+            else if (_solver == "dijkstra"     ) { result = invoke<chdr::solvers::     dijkstra, params>(args); }
+            else if (_solver == "eidastar"     ) { result = invoke<chdr::solvers::     eidastar, params>(args); }
+            else if (_solver == "eidbest_first") { result = invoke<chdr::solvers::eidbest_first, params>(args); }
+            else if (_solver == "eiddfs"       ) { result = invoke<chdr::solvers::       eiddfs, params>(args); }
+            else if (_solver == "flood"        ) { result = invoke<chdr::solvers::        flood, params>(args); }
+            else if (_solver == "fstar"        ) { result = invoke<chdr::solvers::        fstar, params>(args); }
+            else if (_solver == "gbest_first"  ) { result = invoke<chdr::solvers::  gbest_first, params>(args); }
+            else if (_solver == "gbfs"         ) { result = invoke<chdr::solvers::         gbfs, params>(args); }
+            else if (_solver == "gdfs"         ) { result = invoke<chdr::solvers::         gdfs, params>(args); }
+            else if (_solver == "gjps"         ) { result = invoke<chdr::solvers::         gjps, params>(args); }
             else if (_solver == "gstar"        ) { result = invoke<chdr::solvers::        gstar, params>(args); }
-            //else if (_solver == "idastar"      ) { result = invoke<chdr::solvers::      idastar, params>(args); }
-            //else if (_solver == "idbest_first" ) { result = invoke<chdr::solvers:: idbest_first, params>(args); }
-            //else if (_solver == "iddfs"        ) { result = invoke<chdr::solvers::        iddfs, params>(args); }
-            //else if (_solver == "jps"          ) { result = invoke<chdr::solvers::          jps, params>(args); }
+            else if (_solver == "idastar"      ) { result = invoke<chdr::solvers::      idastar, params>(args); }
+            else if (_solver == "idbest_first" ) { result = invoke<chdr::solvers:: idbest_first, params>(args); }
+            else if (_solver == "iddfs"        ) { result = invoke<chdr::solvers::        iddfs, params>(args); }
+            else if (_solver == "jps"          ) { result = invoke<chdr::solvers::          jps, params>(args); }
             else {
                 debug::log("ERROR: Unknown solver \"" + std::string(_solver) + "\"!", error);
             }
@@ -157,8 +157,8 @@ namespace test {
 
                 const std::string maze_format { _argv[MAZE_WEIGHT] };
 
-                //     if (maze_format == "bit"   ) { result = deduce_solver<bool>    ( { _argv[SOLVER] }, _coord); }
-                if (maze_format == "byte"  ) { result = deduce_solver<char>    ( { _argv[SOLVER] }, _coord); }
+                     if (maze_format == "bit"   ) { result = deduce_solver<bool>    ( { _argv[SOLVER] }, _coord); }
+                else if (maze_format == "byte"  ) { result = deduce_solver<char>    ( { _argv[SOLVER] }, _coord); }
                 //else if (maze_format == "int32" ) { result = deduce_solver<int32_t> ( { _argv[SOLVER] }, _coord); }
                 //else if (maze_format == "uint32") { result = deduce_solver<uint32_t>( { _argv[SOLVER] }, _coord); }
                 //else if (maze_format == "int64" ) { result = deduce_solver<int32_t> ( { _argv[SOLVER] }, _coord); }
@@ -177,8 +177,8 @@ namespace test {
 
             using index_t = unsigned long;
 
-            //     if (static_cast<size_t>(_argc - 1) == X) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 1U> { std::stoul(_argv[X]) }); }
-            if (static_cast<size_t>(_argc - 1) == Y) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 2U> { std::stoul(_argv[X]), std::stoul(_argv[Y]) }); }
+                 if (static_cast<size_t>(_argc - 1) == X) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 1U> { std::stoul(_argv[X]) }); }
+            else if (static_cast<size_t>(_argc - 1) == Y) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 2U> { std::stoul(_argv[X]), std::stoul(_argv[Y]) }); }
             //else if (static_cast<size_t>(_argc - 1) == Z) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 3U> { std::stoul(_argv[X]), std::stoul(_argv[Y]), std::stoul(_argv[Z]) }); }
             //else if (static_cast<size_t>(_argc - 1) == W) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 4U> { std::stoul(_argv[X]), std::stoul(_argv[Y]), std::stoul(_argv[Z]), std::stoul(_argv[W]) }); }
             else {

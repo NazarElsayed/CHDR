@@ -112,12 +112,16 @@ namespace chdr {
                 if (const auto num_chunks = (allocate_bytes - (aligned_base - result_num)) / aligned_chunk_bytes;
                     num_chunks > 1U
                 ) {
-                    m_free.resize(m_free.size() + num_chunks - 1U);
+                    m_free.resize(m_free.size() + num_chunks - 1U, {});
                     auto currentSize = m_free.size();
 
                     IVDEP
                     for (size_t i = 1U; i < num_chunks; ++i) {
                         m_free[currentSize - i] = result + (aligned_chunk_bytes * (num_chunks - i));
+                    }
+
+                    if (!m_free.empty()) {
+                        PREFETCH(m_free.back(), _MM_HINT_T0);
                     }
                 }
 
@@ -150,6 +154,10 @@ namespace chdr {
             }
             else {
                 result = nullptr;
+            }
+
+            if (!m_free.empty()) {
+                PREFETCH(m_free.back(), _MM_HINT_T0);
             }
 
             return result;
@@ -424,6 +432,10 @@ namespace chdr {
                     for (size_t j = 0U; j < chunk_size; ++j) {
                         m_free[j + current_size] = data + j * m_block_width;
                     }
+                }
+
+                if (!m_free.empty()) {
+                    PREFETCH(m_free.back(), _MM_HINT_T0);
                 }
             }
             catch (...) {

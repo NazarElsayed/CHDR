@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION ${CMAKE_VERSION})
 
 project(CHDR VERSION 0.0.0 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 message(NOTICE "NOTICE: Checking for local Git repository:")
@@ -139,7 +139,7 @@ endif()
 # DIFFERENT BUILD MODES:
 set(CMAKE_CXX_FLAGS_DEBUG        "${WARNINGS} -O0 -fsanitize=address,leak,undefined -fno-inline -fno-strict-aliasing -fno-omit-frame-pointer -fno-rtti -g")
 set(CMAKE_CXX_FLAGS_NOSANITIZERS "${WARNINGS} -O3                                   -fno-inline -fno-strict-aliasing -fno-omit-frame-pointer -fno-rtti -fno-verbose-asm -flto -g -gdwarf-5")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${WARNINGS} -Ofast -march=native -mtune=native -funroll-loops -ftree-vectorize -ffast-math -fstrict-aliasing -fno-strict-overflow -fdata-sections -ffunction-sections -fomit-frame-pointer -fno-rtti -DNDEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${WARNINGS} -O2 -march=native -mtune=native -funroll-loops -ftree-vectorize -ffast-math -fstrict-aliasing -fno-strict-overflow -fdata-sections -ffunction-sections -fomit-frame-pointer -fno-rtti -DNDEBUG")
 
 # DEFINE LIBRARIES:
 add_library(libdebug INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/test/external/debug.hpp)
