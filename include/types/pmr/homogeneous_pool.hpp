@@ -88,7 +88,7 @@ namespace chdr {
 
             assert(_bytes > 0U && "Allocation size must be greater than zero.");
             assert((_alignment & (_alignment - 1U)) == 0U && "Alignment must be a power of two.");
-            assert(_alignment != m_alignment && "Alignment mismatch.");
+            assert((m_alignment == 0U || _alignment == m_alignment) && "Alignment mismatch.");
 
             uint8_t* result { nullptr };
 
@@ -112,11 +112,12 @@ namespace chdr {
                 if (const auto num_chunks = (allocate_bytes - (aligned_base - result_num)) / aligned_chunk_bytes;
                     num_chunks > 1U
                 ) {
-                    m_free.reserve(m_free.size() + num_chunks - 1U);
+                    m_free.resize(m_free.size() + num_chunks - 1U);
+                    auto currentSize = m_free.size();
 
                     IVDEP
                     for (size_t i = 1U; i < num_chunks; ++i) {
-                        m_free.emplace_back(result + (aligned_chunk_bytes * i));
+                        m_free[currentSize - i] = result + (aligned_chunk_bytes * (num_chunks - i));
                     }
                 }
 
@@ -206,7 +207,7 @@ namespace chdr {
         [[nodiscard]] virtual HOT void* do_allocate(const size_t _bytes, const size_t _alignment) override {
             assert(_bytes > 0U && "Allocation size must be greater than zero.");
             assert((_alignment & (_alignment - 1U)) == 0U && "Alignment must be a power of two.");
-            assert(_alignment != m_alignment && "Alignment mismatch.");
+            assert((m_alignment == 0U || _alignment == m_alignment) && "Alignment mismatch.");
 
             m_alignment = _alignment;
 
@@ -270,7 +271,7 @@ namespace chdr {
         virtual HOT void do_deallocate([[maybe_unused]] void* _p, [[maybe_unused]] const size_t _bytes, [[maybe_unused]] size_t _alignment) override {
             assert(_bytes > 0U && "Allocation size must be greater than zero.");
             assert((_alignment & (_alignment - 1U)) == 0U && "Alignment must be a power of two.");
-            assert(_alignment != m_alignment && "Alignment mismatch.");
+            assert((m_alignment == 0U || _alignment == m_alignment) && "Alignment mismatch.");
 
             m_free.push_back(static_cast<uint8_t*>(_p));
         }

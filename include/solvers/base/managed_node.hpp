@@ -195,7 +195,7 @@ namespace chdr::solvers {
                 if (m_parent->count() == 0U) {
                     auto* const RESTRICT d = m_parent;
                     m_parent = m_parent->m_parent;
-                    _resource->deallocate(d, sizeof(managed_node), alignof(managed_node));
+                    _resource->deallocate(d, sizeof(derived), alignof(derived));
                 }
                 else {
                     break;
