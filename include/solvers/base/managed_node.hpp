@@ -14,6 +14,7 @@
  */
 
 #include <cassert>
+#include <cstdint>
 
 #include "bnode.hpp"
 #include "../../types/pmr/heterogeneous_pool.hpp"
@@ -213,9 +214,7 @@ namespace chdr::solvers {
          *
          * @returns The successor count.
          */
-        [[nodiscard]] count_t count() const noexcept {
-            return m_successors;
-        }
+        [[nodiscard]] HOT constexpr count_t count() const noexcept { return m_successors; }
     };
 
 } //chdr::solvers

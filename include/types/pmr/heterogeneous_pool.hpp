@@ -115,9 +115,6 @@ namespace chdr {
                     remaining_size != 0U
                 ) {
 
-                    block new_block { remaining_size, _alignment, result + utils::max(_bytes, _alignment) };
-                    PREFETCH(new_block.data, _MM_HINT_T0);
-
                     /*
                      * Attempt to insert new block into free list.
                      * Repeat with a smaller key upon collision.
@@ -126,7 +123,7 @@ namespace chdr {
                     bool success = false;
                     for (size_t i = 0U; i < remaining_size; ++i) {
 
-                        if (m_free.try_emplace(remaining_size - i, new_block).second) {
+                        if (m_free.try_emplace(remaining_size - i, remaining_size, _alignment, result + utils::max(_bytes, _alignment)).second) {
                             success = true;
                             break;
                         }
@@ -159,7 +156,7 @@ namespace chdr {
 
             assert(_bytes > 0U && "Allocation size must be greater than zero.");
 
-            uint8_t* result{};
+            uint8_t* result = nullptr;
 
             // Find the smallest free block that fits:
             if (auto it = m_free.lower_bound(_bytes);
@@ -179,9 +176,6 @@ namespace chdr {
                 else {
                     m_free.erase(it);
                 }
-            }
-            else {
-                result = nullptr;
             }
 
             return result;
@@ -264,6 +258,8 @@ namespace chdr {
                 throw std::bad_alloc();
             }
 
+            PREFETCH(aligned_ptr, _MM_HINT_T0);
+
             return aligned_ptr;
         }
 
@@ -323,10 +319,7 @@ namespace chdr {
                     }
                 }
 
-                block free_block { _bytes, _alignment, static_cast<uint8_t*>(_p) };
-                if (m_free.try_emplace(_bytes, free_block).second) {
-                    PREFETCH(free_block.data, _MM_HINT_T0);
-                }
+                m_free.try_emplace(_bytes, _bytes, _alignment, static_cast<uint8_t*>(_p));
             }
         }
 
@@ -370,7 +363,7 @@ namespace chdr {
             m_initial_block_width(utils::min(_initial_block_width, s_max_heap_block_size)),
             m_block_width        (m_initial_block_width)
         {
-            assert(_initial_block_width >= 2U && "Capacity must be at least 2.");
+            assert(_initial_block_width >= 2U && "Initial block width must be at least 2.");
 
             m_blocks.reserve(_capacity);
         }
@@ -458,10 +451,6 @@ namespace chdr {
                 m_free.clear();
                 for (const auto& item : m_blocks) {
                     m_free.emplace(item.size, item);
-                }
-
-                if (!m_blocks.empty()) {
-                    PREFETCH(m_blocks.back().data, _MM_HINT_T0);
                 }
             }
             catch (...) {

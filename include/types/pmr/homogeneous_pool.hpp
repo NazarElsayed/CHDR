@@ -112,16 +112,12 @@ namespace chdr {
                 if (const auto num_chunks = (allocate_bytes - (aligned_base - result_num)) / aligned_chunk_bytes;
                     num_chunks > 1U
                 ) {
-                    m_free.resize(m_free.size() + num_chunks - 1U, {});
-                    auto currentSize = m_free.size();
+                    size_t free_size;
+                    m_free.resize((free_size = (m_free.size() + num_chunks - 1U)), {});
 
                     IVDEP
                     for (size_t i = 1U; i < num_chunks; ++i) {
-                        m_free[currentSize - i] = result + (aligned_chunk_bytes * (num_chunks - i));
-                    }
-
-                    if (!m_free.empty()) {
-                        PREFETCH(m_free.back(), _MM_HINT_T0);
+                        m_free[free_size - i] = result + (aligned_chunk_bytes * (num_chunks - i));
                     }
                 }
 
@@ -139,25 +135,6 @@ namespace chdr {
 
                     m_blocks.pop_back();
                 }
-            }
-
-            return result;
-        }
-
-        HOT uint8_t* allocate_from_free() noexcept {
-
-            uint8_t* result{};
-
-            if (!m_free.empty()) {
-                result = m_free.back();
-                m_free.pop_back();
-            }
-            else {
-                result = nullptr;
-            }
-
-            if (!m_free.empty()) {
-                PREFETCH(m_free.back(), _MM_HINT_T0);
             }
 
             return result;
@@ -235,8 +212,11 @@ namespace chdr {
             if (aligned_ptr == nullptr) {
 
                 // Attempt to find a free block, or create one otherwise:
-                aligned_ptr = allocate_from_free();
-                if (UNLIKELY(aligned_ptr == nullptr)) {
+                if (LIKELY(!m_free.empty())) {
+                    aligned_ptr = m_free.back();
+                    m_free.pop_back();
+                }
+                else {
                     aligned_ptr = expand(_bytes, _alignment);
                 }
             }
@@ -246,6 +226,8 @@ namespace chdr {
                 // ReSharper disable once CppDFAUnreachableCode
                 throw std::bad_alloc();
             }
+
+            PREFETCH(aligned_ptr, _MM_HINT_T0);
 
             return aligned_ptr;
         }
@@ -325,7 +307,7 @@ namespace chdr {
             m_initial_block_width(utils::min(_initial_block_width, s_max_heap_block_size)),
             m_block_width        (m_initial_block_width)
         {
-            assert(_initial_block_width >= 2U && "Capacity must be at least 2.");
+            assert(_initial_block_width >= 2U && "Initial block width must be at least 2.");
 
             m_blocks.reserve(_capacity);
               m_free.reserve(_capacity);
@@ -432,10 +414,6 @@ namespace chdr {
                     for (size_t j = 0U; j < chunk_size; ++j) {
                         m_free[j + current_size] = data + j * m_block_width;
                     }
-                }
-
-                if (!m_free.empty()) {
-                    PREFETCH(m_free.back(), _MM_HINT_T0);
                 }
             }
             catch (...) {
