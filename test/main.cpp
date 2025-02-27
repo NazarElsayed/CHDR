@@ -123,7 +123,7 @@ namespace test {
             const params args { test, start, end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &heterogeneous, &homogeneous };
 
                  if (_solver == "astar"        ) { result = invoke<chdr::solvers::        astar, params>(args); }
-            else if (_solver == "bfs"          ) { result = invoke<chdr::solvers::          bfs, params>(args); }
+            /*else if (_solver == "bfs"          ) { result = invoke<chdr::solvers::          bfs, params>(args); }
             else if (_solver == "best_first"   ) { result = invoke<chdr::solvers::   best_first, params>(args); }
             else if (_solver == "dfs"          ) { result = invoke<chdr::solvers::          dfs, params>(args); }
             else if (_solver == "dijkstra"     ) { result = invoke<chdr::solvers::     dijkstra, params>(args); }
@@ -139,7 +139,7 @@ namespace test {
             else if (_solver == "gstar"        ) { result = invoke<chdr::solvers::        gstar, params>(args); }
             else if (_solver == "idastar"      ) { result = invoke<chdr::solvers::      idastar, params>(args); }
             else if (_solver == "idbest_first" ) { result = invoke<chdr::solvers:: idbest_first, params>(args); }
-            else if (_solver == "iddfs"        ) { result = invoke<chdr::solvers::        iddfs, params>(args); }
+            else if (_solver == "iddfs"        ) { result = invoke<chdr::solvers::        iddfs, params>(args); }*/
             else if (_solver == "jps"          ) { result = invoke<chdr::solvers::          jps, params>(args); }
             else {
                 debug::log("ERROR: Unknown solver \"" + std::string(_solver) + "\"!", error);

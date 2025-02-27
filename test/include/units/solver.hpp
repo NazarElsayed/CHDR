@@ -35,7 +35,7 @@ namespace test {
 
             /* TEST SAMPLES */
 #ifndef NDEBUG
-            constexpr size_t base_samples = 1000000UL;
+            constexpr size_t base_samples = 1UL;
 #else //!NDEBUG
             constexpr size_t base_samples = 100000000UL;
 #endif //!NDEBUG

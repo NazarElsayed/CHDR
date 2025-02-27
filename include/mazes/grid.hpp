@@ -26,6 +26,7 @@
 
 // ReSharper disable once CppUnusedIncludeDirective
 #include "../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
+#include "include/types/containers/coord.hpp"
 
 namespace chdr::mazes {
 
@@ -259,6 +260,27 @@ namespace chdr::mazes {
             return get_neighbours<IncludeDiagonals>(utils::to_nd(_id, size()));
         }
 
+        constexpr auto check_neighbour(const coord_t& _id, const coord_t& _direction) const {
+
+            neighbour_t output;
+
+            coord_t coord = _id;
+            bool oob = false;
+
+            for (size_t i = 0U; i < s_rank; ++i) {
+                coord[i] += (_direction[i] - 1U);
+
+                if (coord[i] >= m_size[i]) {
+                    oob = true;
+                    break;
+                }
+            }
+
+            output = { !oob && operator[](coord).is_active(), coord };
+
+            return output;
+        }
+
         /**
          * @brief Determines whether the provided coordinate is within the bounds of the grid.
          *
@@ -405,16 +427,16 @@ namespace chdr::mazes {
         template<size_t Index>
         constexpr void compute_single_diagonal(const coord_t& _id, neighbour_t& _output) const noexcept {
 
-            constexpr  size_t sampleIndex = (Index >= s_neighbour_count / 2U) ? (Index + 1U) : Index;
+            constexpr  size_t sampleIndex = (Index >= s_neighbour_count / 2U) ? (Index + 1U) : Index; // Skips the middle value
             constexpr coord_t direction   = utils::to_nd(sampleIndex, coord_t { 3U });
 
             bool oob = false;
             coord_t coord = _id;
 
-            for (size_t j = 0U; j < s_rank; ++j) {
-                coord[j] += (direction[j] - 1U);
+            for (size_t i = 0U; i < s_rank; ++i) {
+                coord[i] += (direction[i] - 1U);
 
-                if (coord[j] >= m_size[j]) {
+                if (coord[i] >= m_size[i]) {
                     oob = true;
                     break;
                 }
@@ -432,8 +454,8 @@ namespace chdr::mazes {
             --nCoord[Index];
             ++pCoord[Index];
 
-            _negative = { _id[Index] > 0U                 && operator[](utils::to_1d(nCoord, m_size)).is_active(), nCoord };
-            _positive = { _id[Index] < m_size[Index] - 1U && operator[](utils::to_1d(pCoord, m_size)).is_active(), pCoord };
+            _negative = { _id[Index] > 0U                 && operator[](nCoord).is_active(), nCoord };
+            _positive = { _id[Index] < m_size[Index] - 1U && operator[](pCoord).is_active(), pCoord };
         }
     };
 
@@ -650,6 +672,27 @@ namespace chdr::mazes {
         template <bool IncludeDiagonals = false>
         [[nodiscard]] HOT constexpr auto get_neighbours(size_t _id) const noexcept {
             return get_neighbours<IncludeDiagonals>(utils::to_nd(_id, size()));
+        }
+
+        constexpr auto check_neighbour(const coord_t& _id, const coord_t& _direction) const {
+
+            neighbour_t output;
+
+            coord_t coord = _id;
+            bool oob = false;
+
+            for (size_t i = 0U; i < s_rank; ++i) {
+                coord[i] += (_direction[i] - 1U);
+
+                if (coord[i] >= m_size[i]) {
+                    oob = true;
+                    break;
+                }
+            }
+
+            output = { !oob && operator[](coord).is_active(), coord };
+
+            return output;
         }
 
         /**
