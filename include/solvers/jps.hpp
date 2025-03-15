@@ -304,7 +304,8 @@ namespace chdr::solvers {
             }
             else { // SEARCH FOR SOLUTION...
 
-                const auto& neighbours = _maze.template get_neighbours<true>(_current);
+                neighbours_t neighbours;
+
                 const auto& map = s_lookup[static_cast<size_t>(_direction)];
 
                 const auto check_forced = [&neighbours, &map](const size_t _a, const size_t _b) ALWAYS_INLINE {
@@ -313,31 +314,51 @@ namespace chdr::solvers {
 
                 if (is_straight(_direction)) { // STRAIGHT...
 
+                    neighbours[map[TR]] = _maze.check_neighbour(_current, s_direction_map[map[TR]]);
+                    neighbours[map[TM]] = _maze.check_neighbour(_current, s_direction_map[map[TM]]);
+                    neighbours[map[BR]] = _maze.check_neighbour(_current, s_direction_map[map[BR]]);
+                    neighbours[map[BM]] = _maze.check_neighbour(_current, s_direction_map[map[BM]]);
+
                     if (check_forced(TR, TM) || check_forced(BR, BM)) { // FORCED:
                         return { true, _current };
                     }
-                    else if (neighbours[map[MR]].first) { // NATURAL:
+
+                    neighbours[map[MR]] = _maze.check_neighbour(_current, s_direction_map[map[MR]]);
+                    if (neighbours[map[MR]].first) { // NATURAL:
                         return jump(_maze, neighbours[map[MR]].second, _direction, _end);
                     }
                 }
-                else if (neighbours[map[TM]].first || neighbours[map[ML]].first) { // DIAGONAL (if not blocked)...
+                else {
+                    neighbours[map[TM]] = _maze.check_neighbour(_current, s_direction_map[map[TM]]);
+                    neighbours[map[ML]] = _maze.check_neighbour(_current, s_direction_map[map[ML]]);
 
-                    if (check_forced(TR, TM) || check_forced(BL, ML)) { // FORCED:
-                        return { true, _current };
-                    }
-                    else { // NATURAL:
+                    if (neighbours[map[TM]].first || neighbours[map[ML]].first) {
+                        // DIAGONAL (if not blocked)...
 
-                        for (const auto& i : { MR, BM }) {
+                        neighbours[map[TR]] = _maze.check_neighbour(_current, s_direction_map[map[TR]]);
+                        neighbours[map[BL]] = _maze.check_neighbour(_current, s_direction_map[map[BL]]);
 
-                            if (neighbours[map[i]].first) {
-                                if (jump(_maze, neighbours[map[i]].second, _current, _end).first) {
-                                    return { true, _current };
+                        if (check_forced(TR, TM) || check_forced(BL, ML)) { // FORCED:
+                            return { true, _current };
+                        }
+                        else { // NATURAL:
+
+                            neighbours[map[MR]] = _maze.check_neighbour(_current, s_direction_map[map[MR]]);
+                            neighbours[map[BM]] = _maze.check_neighbour(_current, s_direction_map[map[BM]]);
+
+                            for (const auto& i : { MR, BM }) {
+
+                                if (neighbours[map[i]].first) {
+                                    if (jump(_maze, neighbours[map[i]].second, _current, _end).first) {
+                                        return { true, _current };
+                                    }
                                 }
                             }
-                        }
 
-                        if (neighbours[map[BR]].first) {
-                            return jump(_maze, neighbours[map[BR]].second, _direction, _end);
+                            neighbours[map[BR]] = _maze.check_neighbour(_current, s_direction_map[map[BR]]);
+                            if (neighbours[map[BR]].first) {
+                                return jump(_maze, neighbours[map[BR]].second, _direction, _end);
+                            }
                         }
                     }
                 }
