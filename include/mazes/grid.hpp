@@ -260,9 +260,9 @@ namespace chdr::mazes {
             return get_neighbours<IncludeDiagonals>(utils::to_nd(_id, size()));
         }
 
-        constexpr auto check_neighbour(const coord_t& _id, const coord_t& _direction) const {
+        constexpr auto check_neighbour(const coord_t& _id, const coord_t& _direction) const noexcept {
 
-            neighbour_t output;
+            neighbour_t output{};
 
             coord_t coord = _id;
             bool oob = false;
@@ -674,9 +674,9 @@ namespace chdr::mazes {
             return get_neighbours<IncludeDiagonals>(utils::to_nd(_id, size()));
         }
 
-        constexpr auto check_neighbour(const coord_t& _id, const coord_t& _direction) const {
+        constexpr auto check_neighbour(const coord_t& _id, const coord_t& _direction) const noexcept {
 
-            neighbour_t output;
+            neighbour_t output{};
 
             coord_t coord = _id;
             bool oob = false;

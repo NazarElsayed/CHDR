@@ -209,19 +209,10 @@ namespace chdr::solvers {
 
             constexpr auto null_v = std::make_pair(false, coord_t{});
 
-            neighbours_t neighbours;
-
             // START NODE:
             if (UNLIKELY(_direction == zero_direction_v)) {
 
-                neighbours[TL] = _maze.check_neighbour(_current, s_direction_map[TL]);
-                neighbours[TM] = _maze.check_neighbour(_current, s_direction_map[TM]);
-                neighbours[TR] = _maze.check_neighbour(_current, s_direction_map[TR]);
-                neighbours[ML] = _maze.check_neighbour(_current, s_direction_map[ML]);
-                neighbours[MR] = _maze.check_neighbour(_current, s_direction_map[MR]);
-                neighbours[BL] = _maze.check_neighbour(_current, s_direction_map[BL]);
-                neighbours[BM] = _maze.check_neighbour(_current, s_direction_map[BM]);
-                neighbours[BR] = _maze.check_neighbour(_current, s_direction_map[BR]);
+                const auto& neighbours = _maze.template get_neighbours<true>(_current);
 
                 return {
                     neighbours[TL].first ? jump(_maze, neighbours[TL].second, _current, _end) : null_v,
@@ -234,6 +225,8 @@ namespace chdr::solvers {
                     neighbours[BR].first ? jump(_maze, neighbours[TL].second, _current, _end) : null_v
                 };
             }
+
+            neighbours_t neighbours;
 
             // STRAIGHT:
             const auto& map = s_lookup[static_cast<size_t>(_direction)];
@@ -304,8 +297,7 @@ namespace chdr::solvers {
             }
             else { // SEARCH FOR SOLUTION...
 
-                neighbours_t neighbours;
-
+                const auto& neighbours = _maze.template get_neighbours<true>(_current);
                 const auto& map = s_lookup[static_cast<size_t>(_direction)];
 
                 const auto check_forced = [&neighbours, &map](const size_t _a, const size_t _b) ALWAYS_INLINE {
@@ -314,51 +306,31 @@ namespace chdr::solvers {
 
                 if (is_straight(_direction)) { // STRAIGHT...
 
-                    neighbours[map[TR]] = _maze.check_neighbour(_current, s_direction_map[map[TR]]);
-                    neighbours[map[TM]] = _maze.check_neighbour(_current, s_direction_map[map[TM]]);
-                    neighbours[map[BR]] = _maze.check_neighbour(_current, s_direction_map[map[BR]]);
-                    neighbours[map[BM]] = _maze.check_neighbour(_current, s_direction_map[map[BM]]);
-
                     if (check_forced(TR, TM) || check_forced(BR, BM)) { // FORCED:
                         return { true, _current };
                     }
-
-                    neighbours[map[MR]] = _maze.check_neighbour(_current, s_direction_map[map[MR]]);
-                    if (neighbours[map[MR]].first) { // NATURAL:
+                    else if (neighbours[map[MR]].first) { // NATURAL:
                         return jump(_maze, neighbours[map[MR]].second, _direction, _end);
                     }
                 }
-                else {
-                    neighbours[map[TM]] = _maze.check_neighbour(_current, s_direction_map[map[TM]]);
-                    neighbours[map[ML]] = _maze.check_neighbour(_current, s_direction_map[map[ML]]);
+                else if (neighbours[map[TM]].first || neighbours[map[ML]].first) { // DIAGONAL (if not blocked)...
 
-                    if (neighbours[map[TM]].first || neighbours[map[ML]].first) {
-                        // DIAGONAL (if not blocked)...
+                    if (check_forced(TR, TM) || check_forced(BL, ML)) { // FORCED:
+                        return { true, _current };
+                    }
+                    else { // NATURAL:
 
-                        neighbours[map[TR]] = _maze.check_neighbour(_current, s_direction_map[map[TR]]);
-                        neighbours[map[BL]] = _maze.check_neighbour(_current, s_direction_map[map[BL]]);
+                        for (const auto& i : { MR, BM }) {
 
-                        if (check_forced(TR, TM) || check_forced(BL, ML)) { // FORCED:
-                            return { true, _current };
-                        }
-                        else { // NATURAL:
-
-                            neighbours[map[MR]] = _maze.check_neighbour(_current, s_direction_map[map[MR]]);
-                            neighbours[map[BM]] = _maze.check_neighbour(_current, s_direction_map[map[BM]]);
-
-                            for (const auto& i : { MR, BM }) {
-
-                                if (neighbours[map[i]].first) {
-                                    if (jump(_maze, neighbours[map[i]].second, _current, _end).first) {
-                                        return { true, _current };
-                                    }
+                            if (neighbours[map[i]].first) {
+                                if (jump(_maze, neighbours[map[i]].second, _current, _end).first) {
+                                    return { true, _current };
                                 }
                             }
+                        }
 
-                            neighbours[map[BR]] = _maze.check_neighbour(_current, s_direction_map[map[BR]]);
-                            if (neighbours[map[BR]].first) {
-                                return jump(_maze, neighbours[map[BR]].second, _direction, _end);
-                            }
+                        if (neighbours[map[BR]].first) {
+                            return jump(_maze, neighbours[map[BR]].second, _direction, _end);
                         }
                     }
                 }
