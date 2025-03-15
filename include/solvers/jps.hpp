@@ -209,58 +209,86 @@ namespace chdr::solvers {
 
             constexpr auto null_v = std::make_pair(false, coord_t{});
 
-            const auto& neighbours = _maze.template get_neighbours<true>(_current);
+            neighbours_t neighbours;
 
-            auto testres = _maze.check_neighbour(_current, s_direction_map[TL]);
-            std::cout << std::to_string(testres.second[0]) << std::to_string(testres.second[1]) << "\n";
+            // START NODE:
+            if (UNLIKELY(_direction == zero_direction_v)) {
 
-            if (UNLIKELY(_direction == zero_direction_v)) { // START NODE:
+                neighbours[TL] = _maze.check_neighbour(_current, s_direction_map[TL]);
+                neighbours[TM] = _maze.check_neighbour(_current, s_direction_map[TM]);
+                neighbours[TR] = _maze.check_neighbour(_current, s_direction_map[TR]);
+                neighbours[ML] = _maze.check_neighbour(_current, s_direction_map[ML]);
+                neighbours[MR] = _maze.check_neighbour(_current, s_direction_map[MR]);
+                neighbours[BL] = _maze.check_neighbour(_current, s_direction_map[BL]);
+                neighbours[BM] = _maze.check_neighbour(_current, s_direction_map[BM]);
+                neighbours[BR] = _maze.check_neighbour(_current, s_direction_map[BR]);
 
                 return {
-                    neighbours[TL].first ? jump(_maze, neighbours[TL].second, _current, _end) : null_v, // FORCED
-                    neighbours[TM].first ? jump(_maze, neighbours[TM].second, _current, _end) : null_v, // FORCED
-                    neighbours[TR].first ? jump(_maze, neighbours[TR].second, _current, _end) : null_v, // FORCED
-                    neighbours[ML].first ? jump(_maze, neighbours[ML].second, _current, _end) : null_v, // FORCED
-                    neighbours[MR].first ? jump(_maze, neighbours[MR].second, _current, _end) : null_v, // FORCED
-                    neighbours[BL].first ? jump(_maze, neighbours[BL].second, _current, _end) : null_v, // FORCED
-                    neighbours[BM].first ? jump(_maze, neighbours[BM].second, _current, _end) : null_v, // FORCED
-                    neighbours[BR].first ? jump(_maze, neighbours[BR].second, _current, _end) : null_v  // FORCED
+                    neighbours[TL].first ? jump(_maze, neighbours[TL].second, _current, _end) : null_v,
+                    neighbours[TM].first ? jump(_maze, neighbours[TM].second, _current, _end) : null_v,
+                    neighbours[TR].first ? jump(_maze, neighbours[TR].second, _current, _end) : null_v,
+                    neighbours[ML].first ? jump(_maze, neighbours[ML].second, _current, _end) : null_v,
+                    neighbours[MR].first ? jump(_maze, neighbours[MR].second, _current, _end) : null_v,
+                    neighbours[BL].first ? jump(_maze, neighbours[BL].second, _current, _end) : null_v,
+                    neighbours[BM].first ? jump(_maze, neighbours[BM].second, _current, _end) : null_v,
+                    neighbours[BR].first ? jump(_maze, neighbours[TL].second, _current, _end) : null_v
                 };
             }
-            else {
 
-                const auto& map = s_lookup[static_cast<size_t>(_direction)];
+            // STRAIGHT:
+            const auto& map = s_lookup[static_cast<size_t>(_direction)];
+            if (is_straight(_direction)) {
 
-                if (is_straight(_direction)) { // STRAIGHT:
-
-                    return {
-                        neighbours[map[TR]].first && !neighbours[map[TM]].first ? jump(_maze, neighbours[map[TR]].second,   _current, _end) : null_v, // FORCED
-                        neighbours[map[BR]].first && !neighbours[map[BM]].first ? jump(_maze, neighbours[map[BR]].second,   _current, _end) : null_v, // FORCED
-                        neighbours[map[MR]].first                               ? jump(_maze, neighbours[map[MR]].second, _direction, _end) : null_v, // NATURAL
-                        null_v,                                                                                                                       // NULL
-                        null_v,                                                                                                                       // NULL
-                        null_v,                                                                                                                       // NULL
-                        null_v,                                                                                                                       // NULL
-                        null_v                                                                                                                        // NULL
-                    };
+                neighbours[map[TR]] = _maze.check_neighbour(_current, s_direction_map[map[TR]]);
+                if (neighbours[map[TR]].first) {
+                    neighbours[map[TM]] = _maze.check_neighbour(_current, s_direction_map[map[TM]]);
                 }
-                else if (neighbours[map[TM]].first || neighbours[map[ML]].first) { // DIAGONAL (if not blocked):
 
-                    return {
-                        neighbours[map[TR]].first && !neighbours[map[TM]].first ? jump(_maze, neighbours[map[TR]].second,   _current, _end) : null_v, // FORCED
-                        neighbours[map[BL]].first && !neighbours[map[ML]].first ? jump(_maze, neighbours[map[BL]].second,   _current, _end) : null_v, // FORCED
-                        neighbours[map[MR]].first                               ? jump(_maze, neighbours[map[MR]].second,   _current, _end) : null_v, // NATURAL
-                        neighbours[map[BM]].first                               ? jump(_maze, neighbours[map[BM]].second,   _current, _end) : null_v, // NATURAL
-                        neighbours[map[BR]].first                               ? jump(_maze, neighbours[map[BR]].second, _direction, _end) : null_v, // NATURAL
-                        null_v,                                                                                                                       // NULL
-                        null_v,                                                                                                                       // NULL
-                        null_v                                                                                                                        // NULL
-                    };
+                neighbours[map[BR]] = _maze.check_neighbour(_current, s_direction_map[map[BR]]);
+                if (neighbours[map[BR]].first) {
+                    neighbours[map[BM]] = _maze.check_neighbour(_current, s_direction_map[map[BM]]);
                 }
-                else {
-                    return { null_v };
-                }
+
+                neighbours[map[MR]] = _maze.check_neighbour(_current, s_direction_map[map[MR]]);
+
+                return {
+                    neighbours[map[TR]].first && !neighbours[map[TM]].first ? jump(_maze, neighbours[map[TR]].second,   _current, _end) : null_v, // FORCED
+                    neighbours[map[BR]].first && !neighbours[map[BM]].first ? jump(_maze, neighbours[map[BR]].second,   _current, _end) : null_v, // FORCED
+                    neighbours[map[MR]].first                               ? jump(_maze, neighbours[map[MR]].second, _direction, _end) : null_v, // NATURAL
+                    null_v,                                                                                                                       // NULL
+                    null_v,                                                                                                                       // NULL
+                    null_v,                                                                                                                       // NULL
+                    null_v,                                                                                                                       // NULL
+                    null_v                                                                                                                        // NULL
+                };
             }
+
+            // DIAGONALS (if not blocked):
+            neighbours[map[TM]] = _maze.check_neighbour(_current, s_direction_map[map[TM]]);
+            neighbours[map[ML]] = _maze.check_neighbour(_current, s_direction_map[map[ML]]);
+
+            if (neighbours[map[TM]].first || neighbours[map[ML]].first) { // Check if blocked
+
+                neighbours[map[TR]] = _maze.check_neighbour(_current, s_direction_map[map[TR]]);
+                neighbours[map[BL]] = _maze.check_neighbour(_current, s_direction_map[map[BL]]);
+
+                neighbours[map[MR]] = _maze.check_neighbour(_current, s_direction_map[map[MR]]);
+                neighbours[map[BM]] = _maze.check_neighbour(_current, s_direction_map[map[BM]]);
+                neighbours[map[BR]] = _maze.check_neighbour(_current, s_direction_map[map[BR]]);
+
+                return {
+                    neighbours[map[TR]].first && !neighbours[map[TM]].first ? jump(_maze, neighbours[map[TR]].second,   _current, _end) : null_v, // FORCED
+                    neighbours[map[BL]].first && !neighbours[map[ML]].first ? jump(_maze, neighbours[map[BL]].second,   _current, _end) : null_v, // FORCED
+                    neighbours[map[MR]].first                               ? jump(_maze, neighbours[map[MR]].second,   _current, _end) : null_v, // NATURAL
+                    neighbours[map[BM]].first                               ? jump(_maze, neighbours[map[BM]].second,   _current, _end) : null_v, // NATURAL
+                    neighbours[map[BR]].first                               ? jump(_maze, neighbours[map[BR]].second, _direction, _end) : null_v, // NATURAL
+                    null_v,                                                                                                                       // NULL
+                    null_v,                                                                                                                       // NULL
+                    null_v                                                                                                                        // NULL
+                };
+            }
+
+            return { null_v };
         }
 
         template <typename maze_t>
