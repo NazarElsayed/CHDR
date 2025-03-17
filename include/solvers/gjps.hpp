@@ -354,7 +354,7 @@ namespace chdr::solvers {
                         else {
                             _open = open_set_t{};
                         }
-                         _closed = closed_set_t{};
+                        _closed = closed_set_t{};
 
                         return solver_t::solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);
                     }
