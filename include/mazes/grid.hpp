@@ -438,7 +438,10 @@ namespace chdr::mazes {
 
                 if (coord[i] >= m_size[i]) {
                     oob = true;
-                    break;
+
+                    if constexpr (s_rank > 4U) {
+                        break;
+                    }
                 }
             }
 
@@ -834,21 +837,24 @@ namespace chdr::mazes {
             return result;
         }
 
-        template <size_t Index>
+        template<size_t Index>
         constexpr void compute_single_diagonal(const coord_t& _id, neighbour_t& _output) const noexcept {
 
-            constexpr  size_t sampleIndex = (Index >= s_neighbour_count / 2U) ? (Index + 1U) : Index;
+            constexpr  size_t sampleIndex = (Index >= s_neighbour_count / 2U) ? (Index + 1U) : Index; // Skips the middle value
             constexpr coord_t direction   = utils::to_nd(sampleIndex, coord_t { 3U });
 
             bool oob = false;
             coord_t coord = _id;
 
-            for (size_t j = 0U; j < s_rank; ++j) {
-                coord[j] += (direction[j] - 1U);
+            for (size_t i = 0U; i < s_rank; ++i) {
+                coord[i] += (direction[i] - 1U);
 
-                if (coord[j] >= m_size[j]) {
+                if (coord[i] >= m_size[i]) {
                     oob = true;
-                    break;
+
+                    if constexpr (s_rank > 4U) {
+                        break;
+                    }
                 }
             }
 
