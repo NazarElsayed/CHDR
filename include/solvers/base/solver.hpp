@@ -629,10 +629,12 @@ namespace chdr::solvers {
                 }
             }
             catch (...) { // NOLINT(*-empty-catch)
-                if (exception != nullptr) {
+                if (exception == nullptr) {
                     exception = std::current_exception();
                 }
+            }
 
+            if (exception != nullptr) {
                 std::rethrow_exception(exception);
             }
 

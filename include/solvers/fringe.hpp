@@ -10,7 +10,7 @@
 #define CHDR_FRINGE_HPP
 
 /**
- * @file fstar.hpp
+ * @file fringe.hpp
  */
 
 #include <cstddef>
@@ -40,7 +40,7 @@ namespace chdr::solvers {
      */
 
     /**
-     * @struct fstar
+     * @struct fringe
      * @brief Frine search algorithm.
      * @details F* (Björnsson et al. 2005) is a graph traversal and pathfinding algorithm that iteratively advances
      *          the search fringe using two 'fringe lists' instead of a priority queue.
@@ -71,16 +71,16 @@ namespace chdr::solvers {
      * @tparam params_t Type containing the search parameters.
      */
     template<typename params_t>
-    struct [[maybe_unused]] fstar final {
+    struct [[maybe_unused]] fringe final {
 
-        friend class solver<fstar, params_t>;
+        friend class solver<fringe, params_t>;
 
     private:
 
         using  index_t = typename params_t:: index_type;
         using scalar_t = typename params_t::scalar_type;
         using  coord_t = typename params_t:: coord_type;
-        using solver_t = solver<fstar, params_t>;
+        using solver_t = solver<fringe, params_t>;
 
         static_assert(std::is_arithmetic_v<scalar_t>, "scalar_t must be an integral or floating point type.");
         static_assert(std::numeric_limits<scalar_t>::is_specialized, "scalar_t must be a numeric type with defined numeric limits.");

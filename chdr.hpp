@@ -22,7 +22,7 @@
  */
 
 /** @brief Full version string of the CHDR library. */
-#define CHDR_VERSION          "0.1.0-dev+930c340d"
+#define CHDR_VERSION          "0.1.0-dev+6b466c9b"
 
 /** @brief CHDR major version number. */
 #define CHDR_VERSION_MAJOR     0
@@ -37,7 +37,7 @@
 #define CHDR_VERSION_TWEAK    "dev"
 
 /** @brief CHDR version metadata string. */
-#define CHDR_VERSION_METADATA "930c340d"
+#define CHDR_VERSION_METADATA "6b466c9b"
 
 /* ReSharper enable CppUnusedIncludeDirective */
 // NOLINTBEGIN(*-include-cleaner)
@@ -59,7 +59,7 @@
 #include "include/solvers/eidbest_first.hpp"
 #include "include/solvers/eiddfs.hpp"
 #include "include/solvers/flood.hpp"
-#include "include/solvers/fstar.hpp"
+#include "include/solvers/fringe.hpp"
 #include "include/solvers/gbest_first.hpp"
 #include "include/solvers/gbfs.hpp"
 #include "include/solvers/gdfs.hpp"
