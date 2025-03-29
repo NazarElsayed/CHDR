@@ -1,5 +1,6 @@
 var NAVTREEINDEX1 =
 {
+"db/dc9/classchdr_1_1stack_a20a753362275d34a67d855ce0105fab7.html#a20a753362275d34a67d855ce0105fab7":[4,0,0,9,16],
 "db/dc9/classchdr_1_1stack_a312e7f6c761a199c1369fbe651e084f0.html#a312e7f6c761a199c1369fbe651e084f0":[4,0,0,9,11],
 "db/dc9/classchdr_1_1stack_a3308cdbb1bf9a87283c8a9ef2e16bdc2.html#a3308cdbb1bf9a87283c8a9ef2e16bdc2":[4,0,0,9,10],
 "db/dc9/classchdr_1_1stack_a39b39a0753d600546b92d146681c30f5.html#a39b39a0753d600546b92d146681c30f5":[4,0,0,9,15],
@@ -74,7 +75,6 @@ var NAVTREEINDEX1 =
 "df/d24/heuristics_8hpp_source.html":[5,0,0,3,0],
 "df/d26/structchdr_1_1solvers_1_1gstar.html":[3,1,1,1,4],
 "df/d26/structchdr_1_1solvers_1_1gstar.html":[3,1,1,0,5],
-"df/d41/structchdr_1_1solvers_1_1fstar.html":[3,1,1,0,4],
 "df/d47/stack_8hpp.html":[5,0,0,2,0,4],
 "df/d47/stack_8hpp_source.html":[5,0,0,2,0,4],
 "df/d4e/structchdr_1_1solvers_1_1gjps.html":[3,1,1,1,3],
@@ -115,8 +115,8 @@ var NAVTREEINDEX1 =
 "functions_d.html":[4,3,0,3],
 "functions_e.html":[4,3,0,4],
 "functions_f.html":[4,3,0,5],
-"functions_func.html":[4,3,1],
 "functions_func.html":[4,3,1,0],
+"functions_func.html":[4,3,1],
 "functions_func_b.html":[4,3,1,1],
 "functions_func_c.html":[4,3,1,2],
 "functions_func_d.html":[4,3,1,3],

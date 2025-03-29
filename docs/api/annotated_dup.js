@@ -19,7 +19,7 @@ var annotated_dup =
         [ "eidbest_first", "d0/d86/structchdr_1_1solvers_1_1eidbest__first.html", null ],
         [ "eiddfs", "df/dc2/structchdr_1_1solvers_1_1eiddfs.html", null ],
         [ "flood", "d7/da2/structchdr_1_1solvers_1_1flood.html", null ],
-        [ "fstar", "df/d41/structchdr_1_1solvers_1_1fstar.html", null ],
+        [ "fringe", "d3/dd9/structchdr_1_1solvers_1_1fringe.html", null ],
         [ "gbest_first", "d9/d32/structchdr_1_1solvers_1_1gbest__first.html", null ],
         [ "gbfs", "d5/d28/structchdr_1_1solvers_1_1gbfs.html", null ],
         [ "gdfs", "d1/df6/structchdr_1_1solvers_1_1gdfs.html", null ],

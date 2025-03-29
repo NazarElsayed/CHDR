@@ -1,0 +1,17 @@
+digraph "front"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=8,labelfontname=Helvetica,labelfontsize=8];
+  node [fontname=Helvetica,fontsize=8,shape=box,height=0.2,width=0.4];
+  rankdir="LR";
+  Node1 [id="Node000001",label="front",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip="Retrieves a constant reference to the front element of the heap."];
+  Node1 -> Node2 [id="edge1_Node000001_Node000002",color="steelblue1",style="solid",tooltip=" "];
+  Node2 [id="Node000002",label="top",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$d3/d61/classchdr_1_1heap_a20a753362275d34a67d855ce0105fab7.html#a20a753362275d34a67d855ce0105fab7",tooltip="Retrieves a reference to the top element of the heap."];
+  Node2 -> Node3 [id="edge2_Node000002_Node000003",color="steelblue1",style="solid",tooltip=" "];
+  Node3 [id="Node000003",label="empty",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$d3/d61/classchdr_1_1heap_a3f6fc5de06a318920d84f3c3742db07f.html#a3f6fc5de06a318920d84f3c3742db07f",tooltip="Checks if the heap is empty."];
+  Node3 -> Node4 [id="edge3_Node000003_Node000004",color="steelblue1",style="solid",tooltip=" "];
+  Node4 [id="Node000004",label="size",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$d3/d61/classchdr_1_1heap_a3caedb145a667c26028740417dcf32c3.html#a3caedb145a667c26028740417dcf32c3",tooltip="Retrieves the number of elements currently stored in the heap."];
+  Node4 -> Node5 [id="edge4_Node000004_Node000005",color="steelblue1",style="solid",tooltip=" "];
+  Node5 [id="Node000005",label="chdr::utils::max",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$d2/dcb/structchdr_1_1utils_a05e8953d59fd314cf105f52b0c1272dd.html#a05e8953d59fd314cf105f52b0c1272dd",tooltip="Determines the maximum of two comparable values."];
+}

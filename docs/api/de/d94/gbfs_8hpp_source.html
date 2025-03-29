@@ -163,14 +163,14 @@ $(document).ready(function(){initNavTree('de/d94/gbfs_8hpp_source.html','../../'
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>            <span class="comment">// Main loop:</span></div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>            <span class="keywordflow">while</span> (<a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_affde14445f49f65ff4f5b592e44ee71a.html#affde14445f49f65ff4f5b592e44ee71a">LIKELY</a>(!_open.empty())) {</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>                <span class="keyword">auto</span> curr(std::move(_open.front()));</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>                <span class="keyword">auto</span> curr(std::move(_open.top()));</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>                _open.pop();</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>                <span class="keywordflow">if</span> (curr.m_index != e) { <span class="comment">// SEARCH FOR SOLUTION...</span></div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>                    <a class="code hl_struct" href="../../df/d64/structchdr_1_1solvers_1_1managed__node.html">node</a>* <a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_aae3356b63849abbe8789dd41648ee90a.html#aae3356b63849abbe8789dd41648ee90a">RESTRICT</a> curr_ptr(<span class="keyword">nullptr</span>);</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>                    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; n_data: _params.maze.get_neighbours(curr.m_index)) {</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>                    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; n_data : _params.maze.get_neighbours(curr.m_index)) {</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>                        <span class="keywordflow">if</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; n = solver_t::get_data(n_data, _params); n.active) {</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>

@@ -1,0 +1,19 @@
+digraph "Single-Target"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  rankdir=LR;
+  Node1 [id="Node000001",label="Single-Target",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip="Solvers which route to a single destination."];
+  Node3 [id="Node000003",label="Common",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$db/d80/group__SingleTargetCommon.html",tooltip="General-purpose solvers."];
+  Node4 [id="Node000004",label="Graveyard-Optimised",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$d1/d47/group__SingleTargetGraveyardOptimised.html",tooltip="Graveyard solvers, which dynamically prune the search tree."];
+  Node5 [id="Node000005",label="Iterative-Deepening",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$d5/d74/group__SingleTargetIterativeDeepening.html",tooltip="Solvers which repeatedly traverse the search space at incrementally-increasing depths."];
+  Node6 [id="Node000006",label="Solution Checking",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$dc/d80/group__SingleTargetSolutionChecking.html",tooltip="Solvers for checking if a path to the target is possible."];
+  Node2 [id="Node000002",label="Solvers",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$d3/d24/group__Solvers.html",tooltip="Graph traversal and pathfinding algorithms."];
+  Node2->Node1 [shape=plaintext, dir="back", style="solid"];
+  Node1->Node3 [shape=plaintext, dir="back", style="solid"];
+  Node1->Node4 [shape=plaintext, dir="back", style="solid"];
+  Node1->Node5 [shape=plaintext, dir="back", style="solid"];
+  Node1->Node6 [shape=plaintext, dir="back", style="solid"];
+}

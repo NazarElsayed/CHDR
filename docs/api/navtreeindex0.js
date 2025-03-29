@@ -12,8 +12,6 @@ var NAVTREEINDEX0 =
 "d1/d3a/idbest__first_8hpp.html":[5,0,0,1,17],
 "d1/d3a/idbest__first_8hpp_source.html":[5,0,0,1,17],
 "d1/d47/group__SingleTargetGraveyardOptimised.html":[3,1,1,1],
-"d1/d5a/fstar_8hpp.html":[5,0,0,1,10],
-"d1/d5a/fstar_8hpp_source.html":[5,0,0,1,10],
 "d1/def/gstar_8hpp.html":[5,0,0,1,15],
 "d1/def/gstar_8hpp_source.html":[5,0,0,1,15],
 "d1/df6/structchdr_1_1solvers_1_1gdfs.html":[3,1,1,1,2],
@@ -80,6 +78,7 @@ var NAVTREEINDEX0 =
 "d3/d77/best__first_8hpp.html":[5,0,0,1,2],
 "d3/d77/best__first_8hpp_source.html":[5,0,0,1,2],
 "d3/d8d/structchdr_1_1solvers_1_1bfs.html":[3,1,1,0,2],
+"d3/dd9/structchdr_1_1solvers_1_1fringe.html":[3,1,1,0,4],
 "d3/dec/dfs_8hpp.html":[5,0,0,1,4],
 "d3/dec/dfs_8hpp_source.html":[5,0,0,1,4],
 "d3/df4/classchdr_1_1solvers_1_1solver.html":[4,0,0,1,21],
@@ -187,6 +186,8 @@ var NAVTREEINDEX0 =
 "d8/d85/eidbest__first_8hpp.html":[5,0,0,1,7],
 "d8/d85/eidbest__first_8hpp_source.html":[5,0,0,1,7],
 "d8/d87/structchdr_1_1solvers_1_1jps.html":[3,1,1,0,6],
+"d8/dd5/fringe_8hpp.html":[5,0,0,1,10],
+"d8/dd5/fringe_8hpp_source.html":[5,0,0,1,10],
 "d9/d32/structchdr_1_1solvers_1_1gbest__first.html":[3,1,1,1,0],
 "d9/d71/group__Multi-Target.html":[3,1,0],
 "d9/d96/chdr_8hpp.html":[5,0,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX0 =
 "db/dc4/structchdr_1_1mazes_1_1weighted__node_a62fb7a2e242a85d1a1191b2ee9cb4e4e.html#a62fb7a2e242a85d1a1191b2ee9cb4e4e":[4,0,0,0,4,3],
 "db/dc4/structchdr_1_1mazes_1_1weighted__node_a9756943f9da99f348748229a17ab28ed.html#a9756943f9da99f348748229a17ab28ed":[4,0,0,0,4,0],
 "db/dc4/structchdr_1_1mazes_1_1weighted__node_a9a9d24859a5366d0b48f6496ed3574b5.html#a9a9d24859a5366d0b48f6496ed3574b5":[4,0,0,0,4,2],
-"db/dc9/classchdr_1_1stack.html":[4,0,0,9],
-"db/dc9/classchdr_1_1stack_a20a753362275d34a67d855ce0105fab7.html#a20a753362275d34a67d855ce0105fab7":[4,0,0,9,16]
+"db/dc9/classchdr_1_1stack.html":[4,0,0,9]
 };

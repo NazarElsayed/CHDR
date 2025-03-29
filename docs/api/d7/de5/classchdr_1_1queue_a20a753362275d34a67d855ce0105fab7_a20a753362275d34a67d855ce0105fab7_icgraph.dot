@@ -1,0 +1,13 @@
+digraph "top"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=8,labelfontname=Helvetica,labelfontsize=8];
+  node [fontname=Helvetica,fontsize=8,shape=box,height=0.2,width=0.4];
+  rankdir="RL";
+  Node1 [id="Node000001",label="top",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip="Provides access to the first element in the container."];
+  Node1 -> Node2 [id="edge1_Node000001_Node000002",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node2 [id="Node000002",label="front",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$d7/de5/classchdr_1_1queue_a66ae5a391f699d2e564c2545ab9c6d82.html#a66ae5a391f699d2e564c2545ab9c6d82",tooltip="Provides access to the first element in the container."];
+  Node1 -> Node3 [id="edge2_Node000001_Node000003",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node3 [id="Node000003",label="front",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$d7/de5/classchdr_1_1queue_acbf9b62bac7333654c7862dc8cfd1e48.html#acbf9b62bac7333654c7862dc8cfd1e48",tooltip="Provides access to the first element in the container."];
+}

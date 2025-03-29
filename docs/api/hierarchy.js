@@ -15,7 +15,7 @@ var hierarchy =
     [ "eiddfs< params_t >", "df/dc2/structchdr_1_1solvers_1_1eiddfs.html", null ],
     [ "existence_set< width_t >", "d6/db9/classchdr_1_1existence__set.html", null ],
     [ "flood< params_t >", "d7/da2/structchdr_1_1solvers_1_1flood.html", null ],
-    [ "fstar< params_t >", "df/d41/structchdr_1_1solvers_1_1fstar.html", null ],
+    [ "fringe< params_t >", "d3/dd9/structchdr_1_1solvers_1_1fringe.html", null ],
     [ "gbest_first< params_t >", "d9/d32/structchdr_1_1solvers_1_1gbest__first.html", null ],
     [ "gbfs< params_t >", "d5/d28/structchdr_1_1solvers_1_1gbfs.html", null ],
     [ "gdfs< params_t >", "d1/df6/structchdr_1_1solvers_1_1gdfs.html", null ],
