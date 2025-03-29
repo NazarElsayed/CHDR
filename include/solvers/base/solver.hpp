@@ -599,6 +599,10 @@ namespace chdr::solvers {
 
             std::exception_ptr exception { nullptr };
 
+            /*
+             * Run solver:
+             */
+
             try {
                 const auto s = static_cast<typename params_t::index_type>(utils::to_1d(_params.start, _params.size));
                 const auto e = static_cast<typename params_t::index_type>(utils::to_1d(_params.end,   _params.size));
@@ -617,23 +621,38 @@ namespace chdr::solvers {
                 exception = std::current_exception();
             }
 
+            /*
+             * Release resources with deferred exception handling:
+             */
+
             try {
                 if constexpr (solver_utils::template has_method_reset_v<std::remove_pointer_t<std::decay_t<decltype(_params.monotonic_pmr)>>>) {
                     if (_params.monotonic_pmr != nullptr) { _params.monotonic_pmr->reset(); }
                 }
+            }
+            catch (...) { // NOLINT(*-empty-catch)
+                if (exception == nullptr) { exception = std::current_exception(); }
+            }
+
+            try {
                 if constexpr (solver_utils::template has_method_reset_v<std::remove_pointer_t<std::decay_t<decltype(_params.heterogeneous_pmr)>>>) {
                     if (_params.heterogeneous_pmr != nullptr) { _params.heterogeneous_pmr->reset(); }
                 }
+            }
+            catch (...) { // NOLINT(*-empty-catch)
+                if (exception == nullptr) { exception = std::current_exception(); }
+            }
+
+            try {
                 if constexpr (solver_utils::template has_method_reset_v<std::remove_pointer_t<std::decay_t<decltype(_params.homogeneous_pmr)>>>) {
                     if (_params.homogeneous_pmr != nullptr) { _params.homogeneous_pmr->reset(); }
                 }
             }
             catch (...) { // NOLINT(*-empty-catch)
-                if (exception == nullptr) {
-                    exception = std::current_exception();
-                }
+                if (exception == nullptr) { exception = std::current_exception(); }
             }
 
+            // Report first exception to occur:
             if (exception != nullptr) {
                 std::rethrow_exception(exception);
             }
