@@ -21,6 +21,8 @@
 #include "../../utils/utils.hpp"
 
 // ReSharper disable once CppUnusedIncludeDirective
+#include <iostream>
+
 #include "../../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
 
 namespace chdr::solvers {
@@ -620,6 +622,12 @@ namespace chdr::solvers {
                 // ReSharper disable once CppDFAUnusedValue
                 exception = std::current_exception();
             }
+
+            std::cout << "Peak Memory: " << (
+                (_params.monotonic_pmr != nullptr ? _params.    monotonic_pmr->peak_allocated : 0U) +
+                (_params.monotonic_pmr != nullptr ? _params.heterogeneous_pmr->peak_allocated : 0U) +
+                (_params.monotonic_pmr != nullptr ? _params.  homogeneous_pmr->peak_allocated : 0U)
+            ) << " bytes" << std::endl;
 
             /*
              * Release resources with deferred exception handling:

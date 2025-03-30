@@ -158,6 +158,12 @@ namespace chdr {
             }
         }
 
+    public:
+
+        // TODO: REMOVE
+        size_t  num_allocated { 0U };
+        size_t peak_allocated { 0U };
+
     protected:
 
         /**
@@ -229,6 +235,9 @@ namespace chdr {
 
             PREFETCH(aligned_ptr, _MM_HINT_T0);
 
+             num_allocated += _bytes;
+            peak_allocated  = utils::max(peak_allocated, num_allocated);
+
             return aligned_ptr;
         }
 
@@ -264,6 +273,8 @@ namespace chdr {
             assert((m_alignment == 0U || _alignment == m_alignment) && "Alignment mismatch.");
 
             m_free.push_back(static_cast<uint8_t*>(_p));
+
+            num_allocated -= _bytes;
         }
 
         /**
@@ -420,6 +431,9 @@ namespace chdr {
                 m_blocks.clear();
                   m_free.clear();
             }
+
+             num_allocated = 0U;
+            peak_allocated = 0U;
         }
 
         /**
@@ -450,6 +464,9 @@ namespace chdr {
             {
                 m_free = {};
             }
+
+             num_allocated = 0U;
+            peak_allocated = 0U;
         }
     };
 

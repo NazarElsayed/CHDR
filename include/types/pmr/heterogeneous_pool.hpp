@@ -202,6 +202,12 @@ namespace chdr {
             }
         }
 
+    public:
+
+        // TODO: REMOVE
+        size_t  num_allocated { 0U };
+        size_t peak_allocated { 0U };
+
     protected:
 
         /**
@@ -262,6 +268,9 @@ namespace chdr {
             }
 
             PREFETCH(aligned_ptr, _MM_HINT_T0);
+
+             num_allocated += _bytes;
+            peak_allocated  = utils::max(peak_allocated, num_allocated);
 
             return aligned_ptr;
         }
@@ -324,6 +333,8 @@ namespace chdr {
 
                 m_free.try_emplace(_bytes, _bytes, _alignment, static_cast<uint8_t*>(_p));
             }
+
+            num_allocated -= _bytes;
         }
 
         /**

@@ -152,6 +152,12 @@ namespace chdr {
             }
         }
 
+    public:
+
+        // TODO: REMOVE
+        size_t  num_allocated { 0U };
+        size_t peak_allocated { 0U };
+
     protected:
 
         /**
@@ -228,6 +234,9 @@ namespace chdr {
                 // ReSharper disable once CppDFAUnreachableCode
                 throw std::bad_alloc();
             }
+
+             num_allocated += _bytes;
+            peak_allocated  = utils::max(peak_allocated, num_allocated);
 
             return aligned_ptr;
         }
@@ -365,6 +374,9 @@ namespace chdr {
             m_stack_write        = 0U;
             m_block_write        = 0U;
             m_active_block_index = 0U;
+
+             num_allocated = 0U;
+            peak_allocated = 0U;
         }
 
         /**
@@ -395,6 +407,9 @@ namespace chdr {
             cleanup();
             decltype(m_blocks) temp{};
             m_blocks = std::move(temp);
+
+             num_allocated = 0U;
+            peak_allocated = 0U;
         }
     };
 

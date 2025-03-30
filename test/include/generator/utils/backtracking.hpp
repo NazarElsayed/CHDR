@@ -251,6 +251,8 @@ namespace test::generator::utils {
                 }
 
                 _end = farthest.first;
+
+                debug::log("\tSolution Depth (d) = " + std::to_string(farthest.second * 2U));
             }
             catch (const std::exception& e) {
                 debug::log(e);

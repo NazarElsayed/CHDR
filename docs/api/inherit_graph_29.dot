@@ -2,8 +2,8 @@ digraph "Graphical Class Hierarchy"
 {
  // LATEX_PDF_SIZE
   bgcolor="transparent";
-  edge [fontname=Helvetica,fontsize=8,labelfontname=Helvetica,labelfontsize=8];
-  node [fontname=Helvetica,fontsize=8,shape=box,height=0.2,width=0.4];
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
   rankdir="LR";
   Node0 [id="Node000000",label="monotonic_pool\< StackSize,\l MaxStackAllocationSize,\l MaxHeapBlockSize \>",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$df/db2/classchdr_1_1monotonic__pool.html",tooltip="A pooled memory resource that manages memory blocks in a monotonic allocation scheme."];
 }

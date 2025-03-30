@@ -2,8 +2,8 @@ digraph "Single-Target"
 {
  // LATEX_PDF_SIZE
   bgcolor="transparent";
-  edge [fontname=Helvetica,fontsize=8,labelfontname=Helvetica,labelfontsize=8];
-  node [fontname=Helvetica,fontsize=8,shape=box,height=0.2,width=0.4];
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
   rankdir=LR;
   Node1 [id="Node000001",label="Single-Target",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip="Solvers which route to a single destination."];
   Node3 [id="Node000003",label="Common",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$db/d80/group__SingleTargetCommon.html",tooltip="General-purpose solvers."];
