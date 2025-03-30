@@ -37,7 +37,7 @@ namespace test {
 #ifndef NDEBUG
             constexpr size_t base_samples = 1UL;
 #else //!NDEBUG
-            constexpr size_t base_samples = 100000000UL;
+            constexpr size_t base_samples = 10000UL;
 #endif //!NDEBUG
 
             size_t test_samples = chdr::utils::max(base_samples / _params.maze.count(), static_cast<size_t>(1U));

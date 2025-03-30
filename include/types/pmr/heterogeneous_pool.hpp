@@ -159,22 +159,25 @@ namespace chdr {
             uint8_t* result = nullptr;
 
             // Find the smallest free block that fits:
-            if (auto it = m_free.lower_bound(_bytes);
-                it != m_free.end() &&
-                it->second.size >= _bytes
-            ) {
+            auto it = m_free.lower_bound(_bytes);
 
-                result = it->second.data;
+            if (it != m_free.end() && it->second.size >= _bytes) {
 
-                // Consume the block, or modify it in-place:
-                auto remaining_size = it->second.size - _bytes;
+                // Extract the matching block without performing a full tree rebalance:
+                typename std::map<size_t, block>::node_type node = m_free.extract(it);
+
+                result = node.mapped().data;
+
+                // Consume block or adjust the remaining size:
+                size_t remaining_size = node.mapped().size - _bytes;
                 if (remaining_size != 0U) {
 
-                    it->second.size  = remaining_size;
-                    it->second.data += utils::max(_bytes, it->second.alignment);
-                }
-                else {
-                    m_free.erase(it);
+                    // Update with adjusted size:
+                    node.key() = remaining_size;
+                    node.mapped().size = remaining_size;
+                    node.mapped().data += utils::max(_bytes, node.mapped().alignment);
+
+                    m_free.insert(std::move(node)); // Reinsert (node is consumed otherwise).
                 }
             }
 

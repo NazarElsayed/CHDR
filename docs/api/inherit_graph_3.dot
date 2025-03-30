@@ -2,8 +2,8 @@ digraph "Graphical Class Hierarchy"
 {
  // LATEX_PDF_SIZE
   bgcolor="transparent";
-  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
-  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  edge [fontname=Helvetica,fontsize=8,labelfontname=Helvetica,labelfontsize=8];
+  node [fontname=Helvetica,fontsize=8,shape=box,height=0.2,width=0.4];
   rankdir="LR";
   Node0 [id="Node000000",label="bnode\< index_t \>",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$da/d98/structchdr_1_1solvers_1_1bnode.html",tooltip="Base class for pathfinding nodes."];
   Node0 -> Node1 [id="edge1_Node000000_Node000001",dir="back",color="steelblue1",style="solid",tooltip=" "];
