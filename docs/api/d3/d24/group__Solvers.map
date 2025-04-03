@@ -1,5 +1,5 @@
 <map id="Solvers" name="Solvers">
-<area shape="rect" id="Node000002" href="$d9/d71/group__Multi-Target.html" title="Solvers which route to multiple destinations." alt="" coords="114,5,193,28"/>
-<area shape="rect" id="Node000003" href="$d5/d91/group__Single-Target.html" title="Solvers which route to a single destination." alt="" coords="111,52,196,75"/>
-<area shape="rect" id="Node000001" title="Graph traversal and pathfinding algorithms." alt="" coords="5,29,63,52"/>
+<area shape="rect" id="Node000002" href="$d9/d71/group__Multi-Target.html" title="Solvers which route to multiple destinations." alt="" coords="120,5,205,28"/>
+<area shape="rect" id="Node000003" href="$d5/d91/group__Single-Target.html" title="Solvers which route to a single destination." alt="" coords="116,52,209,75"/>
+<area shape="rect" id="Node000001" title="Graph traversal and pathfinding algorithms." alt="" coords="5,29,68,52"/>
 </map>

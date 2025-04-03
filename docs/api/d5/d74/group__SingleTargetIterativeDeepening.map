@@ -1,4 +1,4 @@
 <map id="Iterative&#45;Deepening" name="Iterative&#45;Deepening">
-<area shape="rect" id="Node000002" href="$d5/d91/group__Single-Target.html" title="Solvers which route to a single destination." alt="" coords="5,5,91,28"/>
-<area shape="rect" id="Node000001" title="Solvers which repeatedly traverse the search space at incrementally&#45;increasing depths." alt="" coords="139,5,255,28"/>
+<area shape="rect" id="Node000002" href="$d5/d91/group__Single-Target.html" title="Solvers which route to a single destination." alt="" coords="5,5,99,28"/>
+<area shape="rect" id="Node000001" title="Solvers which repeatedly traverse the search space at incrementally&#45;increasing depths." alt="" coords="147,5,277,28"/>
 </map>

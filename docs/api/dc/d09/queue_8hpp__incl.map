@@ -1,16 +1,16 @@
 <map id="queue.hpp" name="queue.hpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="63,5,137,28"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="71,147,127,169"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="72,30,38,49,23,62,12,77,8,86,9,95,19,112,37,126,59,139,57,143,34,131,15,115,4,97,3,86,7,75,19,58,35,44,69,26"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="22,76,74,99"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="94,30,66,67,62,64,90,26"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="99,76,208,99"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="110,26,139,64,135,67,106,30"/>
-<area shape="rect" id="Node000005" href="$d7/d65/intrinsics_8hpp.html" title=" " alt="" coords="232,76,355,99"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="129,26,253,69,251,74,128,31"/>
-<area shape="poly" id="edge6_Node000005_Node000002" title=" " alt="" coords="265,101,141,145,139,140,264,96"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="228,147,281,169"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="290,100,269,136,265,133,285,97"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="305,147,356,169"/>
-<area shape="poly" id="edge7_Node000005_Node000007" title=" " alt="" coords="301,97,321,133,316,136,296,100"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="66,5,148,28"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="77,147,140,169"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,30,49,42,24,58,10,77,8,87,12,97,35,123,66,140,63,145,32,127,7,100,3,87,5,75,21,54,47,38,75,26"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="22,76,80,99"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="101,30,70,67,66,64,97,26"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="104,76,222,99"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="117,26,148,64,144,67,113,30"/>
+<area shape="rect" id="Node000005" href="$d7/d65/intrinsics_8hpp.html" title=" " alt="" coords="246,76,389,99"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="139,25,274,69,273,74,137,31"/>
+<area shape="poly" id="edge6_Node000005_Node000002" title=" " alt="" coords="288,101,153,145,151,140,286,96"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="247,147,306,169"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="314,100,292,136,287,134,309,97"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="330,147,388,169"/>
+<area shape="poly" id="edge7_Node000005_Node000007" title=" " alt="" coords="326,97,348,134,344,136,321,100"/>
 </map>

@@ -623,11 +623,11 @@ namespace chdr::solvers {
                 exception = std::current_exception();
             }
 
-            std::cout << "Peak Memory: " << (
-                (_params.monotonic_pmr != nullptr ? _params.    monotonic_pmr->peak_allocated : 0U) +
-                (_params.monotonic_pmr != nullptr ? _params.heterogeneous_pmr->peak_allocated : 0U) +
-                (_params.monotonic_pmr != nullptr ? _params.  homogeneous_pmr->peak_allocated : 0U)
-            ) << " bytes" << std::endl;
+            // std::cout << "Peak Memory: " << (
+            //     (_params.monotonic_pmr != nullptr ? _params.    monotonic_pmr->peak_allocated : 0U) +
+            //     (_params.monotonic_pmr != nullptr ? _params.heterogeneous_pmr->peak_allocated : 0U) +
+            //     (_params.monotonic_pmr != nullptr ? _params.  homogeneous_pmr->peak_allocated : 0U)
+            // ) << " bytes\n";
 
             /*
              * Release resources with deferred exception handling:

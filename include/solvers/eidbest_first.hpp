@@ -102,14 +102,12 @@ namespace chdr::solvers {
         struct state final {
 
             node curr;
-            scalar_t bound;
 
             neighbours_t neighbours;
             index_t      neighbours_idx;
 
-            [[nodiscard]] state(const node& _curr, scalar_t _bound, const params_t& _params) :
+            [[nodiscard]] state(const node& _curr, const params_t& _params) :
                 curr(_curr.m_index, _curr.m_hScore),
-                bound(_bound),
                 neighbours(_params.maze.get_neighbours(_curr.m_index)),
                 neighbours_idx(0U) {}
 
@@ -136,57 +134,71 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
-            auto min = std::numeric_limits<scalar_t>::max();
-
-            const auto bound = _params.h(_params.start, _params.end);
+            auto bound = _params.h(_params.start, _params.end) * _params.weight;
 
             _open.emplace_back(s, bound);
 
             stack<state<neighbours_t>> stack{};
-            stack.emplace(_open.back(), bound, _params);
 
             transposition_table_t transposition_table;
-            transposition_table[_open.back().m_index] = bound;
 
-            // Main loop:
-            while (!stack.empty()) {
+            do {
 
-                auto& _ = stack.top();
-                auto& curr = _.curr;
+                stack.emplace(_open.back(), _params);
+                transposition_table[_open.back().m_index] = bound;
 
-                if (_.neighbours_idx != _.neighbours.size()) {
-                    const auto& n_data = _.neighbours[_.neighbours_idx++];
+                auto min = std::numeric_limits<scalar_t>::max();
 
-                    if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
+                // Main loop:
+                while (!stack.empty()) {
 
-                        auto h = _params.h(n.coord, _params.end);
+                    auto& _    = stack.top();
+                    auto& curr = _.curr;
 
-                        auto search = transposition_table.find(n.index);
-                        if (!(search != transposition_table.end() && h >= search->second)) {
-                            transposition_table[n.index] = h;
+                    if (curr.m_hScore <= bound) {
 
-                            _open.emplace_back(n.index, h);
+                        if (_.neighbours_idx != _.neighbours.size()) {
 
-                            if (n.index != e) { // SEARCH FOR SOLUTION...
-                                stack.emplace(_open.back(), _.bound, _params);
-                            }
-                            else { // SOLUTION REACHED ...
+                            if (const auto& n = solver_t::get_data(_.neighbours[(_.neighbours.size() - 1U) - (_.neighbours_idx++)], _params); n.active) {
 
-                                // ReSharper disable once CppDFAUnusedValue
-                                transposition_table = {};
+                                auto h = _params.h(n.coord, _params.end) * _params.weight;
 
-                                return solver_t::solver_utils::ibacktrack(_open, _params.size);
+                                auto search = transposition_table.find(n.index);
+                                if (!(search != transposition_table.end() && h >= search->second)) {
+                                    transposition_table[n.index] = h;
+
+                                    _open.emplace_back(n.index, h);
+
+                                    if (n.index != e) { // SEARCH FOR SOLUTION...
+                                        stack.emplace(_open.back(), _params);
+                                    }
+                                    else { // SOLUTION REACHED ...
+
+                                        // ReSharper disable once CppDFAUnusedValue
+                                        transposition_table = {};
+
+                                        return solver_t::solver_utils::ibacktrack(_open, _params.size);
+                                    }
+                                }
                             }
                         }
+                        else {
+                            _open.pop_back();
+                            stack.pop();
+                        }
+                    }
+                    else {
+                        min = utils::min(min, curr.m_hScore);
                     }
                 }
-                else {
-                    min = utils::min(min, curr.m_hScore);
 
-                    _open.pop_back();
-                    stack.pop();
-                }
+                _open.erase(_open.begin() + 1U, _open.end());
+                stack.clear();
+                transposition_table.clear();
+
+                bound = min;
             }
+            while (bound != std::numeric_limits<scalar_t>::max());
 
             return std::vector<coord_t>{};
         }

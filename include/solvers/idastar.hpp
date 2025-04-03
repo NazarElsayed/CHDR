@@ -110,14 +110,12 @@ namespace chdr::solvers {
         struct state final {
 
             node curr;
-            scalar_t bound;
 
             neighbours_t neighbours;
             size_t       neighbours_idx;
 
-            [[nodiscard]] state(const node& _curr, scalar_t _bound, const params_t& _params) :
-                curr(_curr.m_index, _curr.m_fScore, _curr.m_gScore),
-                bound(_bound),
+            [[nodiscard]] state(const node& _curr, const params_t& _params) :
+                curr(_curr.m_index, _curr.m_gScore, _curr.m_fScore),
                 neighbours(_params.maze.get_neighbours(_curr.m_index)),
                 neighbours_idx(0U) {}
 
@@ -142,46 +140,62 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
-            auto min = std::numeric_limits<scalar_t>::max();
-
             auto bound = _params.h(_params.start, _params.end) * _params.weight;
 
-            _open.emplace_back(s, static_cast<scalar_t>(0), bound);
+            _open.emplace_back(s, 0, bound);
 
             stack<state<neighbours_t>> stack{};
-            stack.emplace(_open.back(), bound, _params);
 
-            // Main loop:
-            while (!stack.empty()) {
+            do {
 
-                auto& _ = stack.top();
-                auto& curr = _.curr;
+                stack.emplace(_open.back(), _params);
 
-                if (_.neighbours_idx != _.neighbours.size()) {
-                    const auto& n_data = _.neighbours[_.neighbours_idx++];
+                auto min = std::numeric_limits<scalar_t>::max();
 
-                    if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
+                // Main loop:
+                while (!stack.empty()) {
 
-                        if (std::none_of(_open.begin(), _open.end(), [&n](const auto& _item) ALWAYS_INLINE { return _item.m_index == n.index; })) {
+                    auto& _    = stack.top();
+                    auto& curr = _.curr;
 
-                            _open.emplace_back(n.index, curr.m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight);
+                    if (curr.m_fScore <= bound) {
 
-                            if (n.index != e) { // SEARCH FOR SOLUTION...
-                                stack.emplace(_open.back(), _.bound, _params);
-                            }
-                            else { // SOLUTION REACHED ...
-                                return solver_t::solver_utils::ibacktrack(_open, _params.size);
+                        if (_.neighbours_idx != _.neighbours.size()) {
+
+                            if (const auto& n = solver_t::get_data(_.neighbours[(_.neighbours.size() - 1U) - (_.neighbours_idx++)], _params); n.active) {
+
+                                if (std::none_of(_open.begin(), _open.end(), [&n](const auto& _item) ALWAYS_INLINE { return _item.m_index == n.index; })) {
+
+                                    auto g = curr.m_gScore + n.distance;
+                                    auto f = g + (_params.h(n.coord, _params.end) * _params.weight);
+
+                                    _open.emplace_back(n.index, g, f);
+
+                                    if (n.index != e) { // SEARCH FOR SOLUTION...
+                                        stack.emplace(_open.back(), _params);
+                                    }
+                                    else { // SOLUTION REACHED ...
+                                        return solver_t::solver_utils::ibacktrack(_open, _params.size);
+                                    }
+                                }
                             }
                         }
+                        else {
+                            _open.pop_back();
+                            stack.pop();
+                        }
+                    }
+                    else {
+                        min = utils::min(min, curr.m_fScore);
                     }
                 }
-                else {
-                    min = utils::min(min, curr.m_fScore);
 
-                    _open.pop_back();
-                    stack.pop();
-                }
+                _open.erase(_open.begin() + 1U, _open.end());
+                stack.clear();
+
+                bound = min;
             }
+            while (bound != std::numeric_limits<scalar_t>::max());
 
             return std::vector<coord_t>{};
         }

@@ -86,7 +86,16 @@ namespace test {
             constexpr coord_t start {};
                       coord_t end;
 
-            const auto grid = generator::grid::generate<weight_t>(start, end, _size, 0.0, 0.0, seed);
+            for (size_t i = 0U; i < _size.size(); ++i) {
+                end[i] = _size[i] - 1U;
+            }
+
+            const std::vector<weight_t> nodes(chdr::utils::product<size_t>(_size), std::numeric_limits<weight_t>::lowest());
+            const auto grid = chdr::mazes::grid<coord_t, weight_t>(_size, nodes);
+
+            //const auto grid = generator::grid::generate<weight_t>(start, end, _size, 0.0, 0.0, seed);
+
+            //debug::log(_size[0] + _size[1] - 2U);
 
             const auto& test = grid;
             //auto graph_pool = chdr::heterogeneous_pool(); const auto test = chdr::mazes::graph<index_t, scalar_t>(grid, &graph_pool);
