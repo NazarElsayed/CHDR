@@ -334,7 +334,7 @@ namespace chdr {
                 m_free.try_emplace(_bytes, _bytes, _alignment, static_cast<uint8_t*>(_p));
             }
 
-            num_allocated -= _bytes;
+            num_allocated = (_bytes > num_allocated) ? 0U : (num_allocated - _bytes);
         }
 
         /**

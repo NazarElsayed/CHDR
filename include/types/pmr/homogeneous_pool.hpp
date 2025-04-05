@@ -274,7 +274,7 @@ namespace chdr {
 
             m_free.push_back(static_cast<uint8_t*>(_p));
 
-            num_allocated -= _bytes;
+            num_allocated = (_bytes > num_allocated) ? 0U : (num_allocated - _bytes);
         }
 
         /**

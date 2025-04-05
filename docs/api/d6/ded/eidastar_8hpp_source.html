@@ -197,7 +197,7 @@ $(document).ready(function(){initNavTree('d6/ded/eidastar_8hpp_source.html','../
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>            state&amp; operator=(state&amp;&amp;) <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        };</div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>        <span class="keyword">using </span>transposition_table_t = std::unordered_map&lt;index_t, scalar_t&gt;;</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>        <span class="keyword">using </span>transposition_table_t = std::pmr::unordered_map&lt;index_t, scalar_t&gt;;</div>
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span> </div>
 <div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> open_set_t&gt;</div>
 <div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>        [[nodiscard]] <a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_a1eb14cc432874ddacd1934791dbe12a3.html#a1eb14cc432874ddacd1934791dbe12a3">HOT</a> <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> solve_internal(open_set_t&amp; _open, <span class="keyword">const</span> params_t&amp; _params) {</div>
@@ -213,7 +213,7 @@ $(document).ready(function(){initNavTree('d6/ded/eidastar_8hpp_source.html','../
 <div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span> </div>
 <div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>            <a class="code hl_class" href="../../db/dc9/classchdr_1_1stack.html">stack&lt;state&lt;neighbours_t&gt;</a>&gt; <a class="code hl_class" href="../../db/dc9/classchdr_1_1stack.html">stack</a>{};</div>
 <div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span> </div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>            transposition_table_t transposition_table;</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>            transposition_table_t transposition_table(_params.heterogeneous_pmr);</div>
 <div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span> </div>
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>            <span class="keywordflow">do</span> {</div>
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span> </div>

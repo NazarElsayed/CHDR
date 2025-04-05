@@ -90,10 +90,10 @@ namespace test {
                 end[i] = _size[i] - 1U;
             }
 
-            const std::vector<weight_t> nodes(chdr::utils::product<size_t>(_size), std::numeric_limits<weight_t>::lowest());
-            const auto grid = chdr::mazes::grid<coord_t, weight_t>(_size, nodes);
+            // const std::vector<weight_t> nodes(chdr::utils::product<size_t>(_size), std::numeric_limits<weight_t>::lowest());
+            // const auto grid = chdr::mazes::grid<coord_t, weight_t>(_size, nodes);
 
-            // const auto grid = generator::grid::generate<weight_t>(start, end, _size, 0.0, 0.0, seed);
+            const auto grid = generator::grid::generate<weight_t>(start, end, _size, 0.0, 0.0, seed);
 
             //debug::log(_size[0] + _size[1] - 2U);
 

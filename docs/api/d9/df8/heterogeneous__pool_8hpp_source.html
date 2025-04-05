@@ -360,7 +360,7 @@ $(document).ready(function(){initNavTree('d9/df8/heterogeneous__pool_8hpp_source
 <div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>                m_free.try_emplace(_bytes, _bytes, _alignment, <span class="keyword">static_cast&lt;</span>uint8_t*<span class="keyword">&gt;</span>(_p));</div>
 <div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>            }</div>
 <div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span> </div>
-<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>            num_allocated -= _bytes;</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>            num_allocated = (_bytes &gt; num_allocated) ? 0U : (num_allocated - _bytes);</div>
 <div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>        }</div>
 </div>
 <div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span> </div>
