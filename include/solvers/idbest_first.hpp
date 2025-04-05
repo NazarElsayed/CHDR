@@ -182,6 +182,8 @@ namespace chdr::solvers {
                     }
                     else {
                         min = utils::min(min, curr.m_hScore);
+                        _open.pop_back();
+                        stack.pop();
                     }
                 }
 

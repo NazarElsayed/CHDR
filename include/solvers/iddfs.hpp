@@ -144,7 +144,7 @@ namespace chdr::solvers {
 
                     if (curr.m_depth <= bound && _.neighbours_idx != _.neighbours.size()) {
 
-                        if (const auto& n = solver_t::get_data(_.neighbours[_.neighbours_idx++], _params); n.active) {
+                        if (const auto& n = solver_t::get_data(_.neighbours[(_.neighbours.size() - 1U) - (_.neighbours_idx++)], _params); n.active) {
 
                             if (std::none_of(_open.begin(), _open.end(), [&n](const auto& _item) ALWAYS_INLINE { return _item.m_index == n.index; })) {
 

@@ -445,35 +445,41 @@ $(document).ready(function(){initNavTree('d9/df8/heterogeneous__pool_8hpp_source
 <div class="line"><a id="l00471" name="l00471"></a><span class="lineno">  471</span>                  m_free.clear();</div>
 <div class="line"><a id="l00472" name="l00472"></a><span class="lineno">  472</span>                m_blocks.clear();</div>
 <div class="line"><a id="l00473" name="l00473"></a><span class="lineno">  473</span>            }</div>
-<div class="line"><a id="l00474" name="l00474"></a><span class="lineno">  474</span>        }</div>
+<div class="line"><a id="l00474" name="l00474"></a><span class="lineno">  474</span> </div>
+<div class="line"><a id="l00475" name="l00475"></a><span class="lineno">  475</span>             num_allocated = 0U;</div>
+<div class="line"><a id="l00476" name="l00476"></a><span class="lineno">  476</span>            peak_allocated = 0U;</div>
+<div class="line"><a id="l00477" name="l00477"></a><span class="lineno">  477</span>        }</div>
 </div>
-<div class="line"><a id="l00475" name="l00475"></a><span class="lineno">  475</span> </div>
-<div class="foldopen" id="foldopen00494" data-start="{" data-end="}">
-<div class="line"><a id="l00494" name="l00494"></a><span class="lineno"><a class="line" href="../../d7/d3f/classchdr_1_1heterogeneous__pool_a4fd0fa43d212f9effc3366b8bce40fb5.html#a4fd0fa43d212f9effc3366b8bce40fb5">  494</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="../../d7/d3f/classchdr_1_1heterogeneous__pool_a4fd0fa43d212f9effc3366b8bce40fb5.html#a4fd0fa43d212f9effc3366b8bce40fb5">release</a>() noexcept {</div>
-<div class="line"><a id="l00495" name="l00495"></a><span class="lineno">  495</span> </div>
-<div class="line"><a id="l00496" name="l00496"></a><span class="lineno">  496</span>            m_stack_write = 0U;</div>
-<div class="line"><a id="l00497" name="l00497"></a><span class="lineno">  497</span>            m_block_width = m_initial_block_width;</div>
+<div class="line"><a id="l00478" name="l00478"></a><span class="lineno">  478</span> </div>
+<div class="foldopen" id="foldopen00497" data-start="{" data-end="}">
+<div class="line"><a id="l00497" name="l00497"></a><span class="lineno"><a class="line" href="../../d7/d3f/classchdr_1_1heterogeneous__pool_a4fd0fa43d212f9effc3366b8bce40fb5.html#a4fd0fa43d212f9effc3366b8bce40fb5">  497</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="../../d7/d3f/classchdr_1_1heterogeneous__pool_a4fd0fa43d212f9effc3366b8bce40fb5.html#a4fd0fa43d212f9effc3366b8bce40fb5">release</a>() noexcept {</div>
 <div class="line"><a id="l00498" name="l00498"></a><span class="lineno">  498</span> </div>
-<div class="line"><a id="l00499" name="l00499"></a><span class="lineno">  499</span>            {</div>
-<div class="line"><a id="l00500" name="l00500"></a><span class="lineno">  500</span>                cleanup();</div>
-<div class="line"><a id="l00501" name="l00501"></a><span class="lineno">  501</span>                <span class="keyword">decltype</span>(m_blocks) temp{};</div>
-<div class="line"><a id="l00502" name="l00502"></a><span class="lineno">  502</span>                m_blocks = std::move(temp);</div>
-<div class="line"><a id="l00503" name="l00503"></a><span class="lineno">  503</span>            }</div>
-<div class="line"><a id="l00504" name="l00504"></a><span class="lineno">  504</span>            {</div>
-<div class="line"><a id="l00505" name="l00505"></a><span class="lineno">  505</span>                <span class="keyword">decltype</span>(m_free) temp{};</div>
-<div class="line"><a id="l00506" name="l00506"></a><span class="lineno">  506</span>                m_free = std::move(temp);</div>
-<div class="line"><a id="l00507" name="l00507"></a><span class="lineno">  507</span>            }</div>
-<div class="line"><a id="l00508" name="l00508"></a><span class="lineno">  508</span>        }</div>
-</div>
-<div class="line"><a id="l00509" name="l00509"></a><span class="lineno">  509</span> </div>
-<div class="line"><a id="l00510" name="l00510"></a><span class="lineno">  510</span>    };</div>
-</div>
+<div class="line"><a id="l00499" name="l00499"></a><span class="lineno">  499</span>            m_stack_write = 0U;</div>
+<div class="line"><a id="l00500" name="l00500"></a><span class="lineno">  500</span>            m_block_width = m_initial_block_width;</div>
+<div class="line"><a id="l00501" name="l00501"></a><span class="lineno">  501</span> </div>
+<div class="line"><a id="l00502" name="l00502"></a><span class="lineno">  502</span>            {</div>
+<div class="line"><a id="l00503" name="l00503"></a><span class="lineno">  503</span>                cleanup();</div>
+<div class="line"><a id="l00504" name="l00504"></a><span class="lineno">  504</span>                <span class="keyword">decltype</span>(m_blocks) temp{};</div>
+<div class="line"><a id="l00505" name="l00505"></a><span class="lineno">  505</span>                m_blocks = std::move(temp);</div>
+<div class="line"><a id="l00506" name="l00506"></a><span class="lineno">  506</span>            }</div>
+<div class="line"><a id="l00507" name="l00507"></a><span class="lineno">  507</span>            {</div>
+<div class="line"><a id="l00508" name="l00508"></a><span class="lineno">  508</span>                <span class="keyword">decltype</span>(m_free) temp{};</div>
+<div class="line"><a id="l00509" name="l00509"></a><span class="lineno">  509</span>                m_free = std::move(temp);</div>
+<div class="line"><a id="l00510" name="l00510"></a><span class="lineno">  510</span>            }</div>
 <div class="line"><a id="l00511" name="l00511"></a><span class="lineno">  511</span> </div>
-<div class="line"><a id="l00512" name="l00512"></a><span class="lineno">  512</span>} <span class="comment">//chdr</span></div>
-<div class="line"><a id="l00513" name="l00513"></a><span class="lineno">  513</span> </div>
-<div class="line"><a id="l00514" name="l00514"></a><span class="lineno">  514</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_HETEROGENEOUS_POOL_HPP</span></div>
+<div class="line"><a id="l00512" name="l00512"></a><span class="lineno">  512</span>             num_allocated = 0U;</div>
+<div class="line"><a id="l00513" name="l00513"></a><span class="lineno">  513</span>            peak_allocated = 0U;</div>
+<div class="line"><a id="l00514" name="l00514"></a><span class="lineno">  514</span>        }</div>
+</div>
+<div class="line"><a id="l00515" name="l00515"></a><span class="lineno">  515</span> </div>
+<div class="line"><a id="l00516" name="l00516"></a><span class="lineno">  516</span>    };</div>
+</div>
+<div class="line"><a id="l00517" name="l00517"></a><span class="lineno">  517</span> </div>
+<div class="line"><a id="l00518" name="l00518"></a><span class="lineno">  518</span>} <span class="comment">//chdr</span></div>
+<div class="line"><a id="l00519" name="l00519"></a><span class="lineno">  519</span> </div>
+<div class="line"><a id="l00520" name="l00520"></a><span class="lineno">  520</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_HETEROGENEOUS_POOL_HPP</span></div>
 <div class="ttc" id="aclasschdr_1_1heterogeneous__pool_a20194325f0380eb3bbc6bc6c8b2697d9_html_a20194325f0380eb3bbc6bc6c8b2697d9"><div class="ttname"><a href="../../d7/d3f/classchdr_1_1heterogeneous__pool_a20194325f0380eb3bbc6bc6c8b2697d9.html#a20194325f0380eb3bbc6bc6c8b2697d9">chdr::heterogeneous_pool::reset</a></div><div class="ttdeci">void reset() noexcept</div><div class="ttdoc">Resets the memory pool state to its initial configuration.</div><div class="ttdef"><b>Definition</b> <a href="../../d9/df8/heterogeneous__pool_8hpp_source.html#l00459">heterogeneous_pool.hpp:459</a></div></div>
-<div class="ttc" id="aclasschdr_1_1heterogeneous__pool_a4fd0fa43d212f9effc3366b8bce40fb5_html_a4fd0fa43d212f9effc3366b8bce40fb5"><div class="ttname"><a href="../../d7/d3f/classchdr_1_1heterogeneous__pool_a4fd0fa43d212f9effc3366b8bce40fb5.html#a4fd0fa43d212f9effc3366b8bce40fb5">chdr::heterogeneous_pool::release</a></div><div class="ttdeci">void release() noexcept</div><div class="ttdoc">Releases all memory resources and resets the internal state of the memory pool.</div><div class="ttdef"><b>Definition</b> <a href="../../d9/df8/heterogeneous__pool_8hpp_source.html#l00494">heterogeneous_pool.hpp:494</a></div></div>
+<div class="ttc" id="aclasschdr_1_1heterogeneous__pool_a4fd0fa43d212f9effc3366b8bce40fb5_html_a4fd0fa43d212f9effc3366b8bce40fb5"><div class="ttname"><a href="../../d7/d3f/classchdr_1_1heterogeneous__pool_a4fd0fa43d212f9effc3366b8bce40fb5.html#a4fd0fa43d212f9effc3366b8bce40fb5">chdr::heterogeneous_pool::release</a></div><div class="ttdeci">void release() noexcept</div><div class="ttdoc">Releases all memory resources and resets the internal state of the memory pool.</div><div class="ttdef"><b>Definition</b> <a href="../../d9/df8/heterogeneous__pool_8hpp_source.html#l00497">heterogeneous_pool.hpp:497</a></div></div>
 <div class="ttc" id="aclasschdr_1_1heterogeneous__pool_a5a1f67f5f85d9b158192474d5848b31c_html_a5a1f67f5f85d9b158192474d5848b31c"><div class="ttname"><a href="../../d7/d3f/classchdr_1_1heterogeneous__pool_a5a1f67f5f85d9b158192474d5848b31c.html#a5a1f67f5f85d9b158192474d5848b31c">chdr::heterogeneous_pool::heterogeneous_pool</a></div><div class="ttdeci">heterogeneous_pool(size_t _initial_block_width=s_default_heap_block_size, size_t _capacity=32U) noexcept</div><div class="ttdoc">Constructs a memory pool.</div><div class="ttdef"><b>Definition</b> <a href="../../d9/df8/heterogeneous__pool_8hpp_source.html#l00374">heterogeneous_pool.hpp:374</a></div></div>
 <div class="ttc" id="aclasschdr_1_1heterogeneous__pool_a60b95ec3a295b4bbf62220a20c043580_html_a60b95ec3a295b4bbf62220a20c043580"><div class="ttname"><a href="../../d7/d3f/classchdr_1_1heterogeneous__pool_a60b95ec3a295b4bbf62220a20c043580.html#a60b95ec3a295b4bbf62220a20c043580">chdr::heterogeneous_pool::do_deallocate</a></div><div class="ttdeci">virtual void do_deallocate(void *_p, size_t _bytes, size_t _alignment) override</div><div class="ttdoc">Deallocates memory and returns it to the pool for future use.</div><div class="ttdef"><b>Definition</b> <a href="../../d9/df8/heterogeneous__pool_8hpp_source.html#l00301">heterogeneous_pool.hpp:301</a></div></div>
 <div class="ttc" id="aclasschdr_1_1heterogeneous__pool_a7a2a35372e1ba70bd12d8d769bbdfb19_html_a7a2a35372e1ba70bd12d8d769bbdfb19"><div class="ttname"><a href="../../d7/d3f/classchdr_1_1heterogeneous__pool_a7a2a35372e1ba70bd12d8d769bbdfb19.html#a7a2a35372e1ba70bd12d8d769bbdfb19">chdr::heterogeneous_pool::~heterogeneous_pool</a></div><div class="ttdeci">virtual ~heterogeneous_pool() override</div><div class="ttdoc">Destroys the object and releases all allocated memory.</div><div class="ttdef"><b>Definition</b> <a href="../../d9/df8/heterogeneous__pool_8hpp_source.html#l00397">heterogeneous_pool.hpp:397</a></div></div>

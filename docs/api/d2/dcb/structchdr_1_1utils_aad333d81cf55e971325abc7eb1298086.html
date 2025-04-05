@@ -13,6 +13,10 @@
 <script type="text/javascript" src="../../doxygen-awesome-paragraph-link.js"></script>
 <script type="text/javascript" src="../../doxygen-awesome-darkmode-toggle.js"></script>
 <script type="text/javascript" src="../../doxygen-awesome-fragment-copy-button.js"></script>
+<link href="../../navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="../../resize.js"></script>
+<script type="text/javascript" src="../../navtreedata.js"></script>
+<script type="text/javascript" src="../../navtree.js"></script>
 <link href="../../search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../search/searchdata.js"></script>
 <script type="text/javascript" src="../../search/search.js"></script>
@@ -60,6 +64,23 @@ $(function() {
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('d2/dcb/structchdr_1_1utils_aad333d81cf55e971325abc7eb1298086.html','../../'); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -81,33 +102,7 @@ $(function() {
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><b>chdr</b></li><li class="navelem"><a class="el" href="../../d2/dcb/structchdr_1_1utils.html">utils</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="contents">
-<table cellspacing="0" cellpadding="0" border="0">
-  <tr>
-   <td valign="top">
-      <div class="navtab">
-        <table>
-          <tr><td class="navtab"><a class="navtab" href="../../d2/dcb/structchdr_1_1utils_a74840adb2609dc7fc5e997ec315a5119.html#a74840adb2609dc7fc5e997ec315a5119">abs</a></td></tr>
-          <tr><td class="navtab"><a class="navtab" href="../../d2/dcb/structchdr_1_1utils_a7bb7757356f5effe4dfa2037c1393caf.html#a7bb7757356f5effe4dfa2037c1393caf">clamp</a></td></tr>
-          <tr><td class="navtab"><a class="navtab" href="../../d2/dcb/structchdr_1_1utils_a531a1ec1c53860fd0b547184d8b9e20c.html#a531a1ec1c53860fd0b547184d8b9e20c">max</a></td></tr>
-          <tr><td class="navtabHL"><a class="navtab" href="../../d2/dcb/structchdr_1_1utils_aad333d81cf55e971325abc7eb1298086.html#aad333d81cf55e971325abc7eb1298086">min</a></td></tr>
-          <tr><td class="navtab"><a class="navtab" href="../../d2/dcb/structchdr_1_1utils_a88b47febe37e9b6c92922824dcb0f672.html#a88b47febe37e9b6c92922824dcb0f672">powui</a></td></tr>
-          <tr><td class="navtab"><a class="navtab" href="../../d2/dcb/structchdr_1_1utils_aff797e60b956941ec5bcd9b2e8579dd1.html#aff797e60b956941ec5bcd9b2e8579dd1">product</a></td></tr>
-          <tr><td class="navtab"><a class="navtab" href="../../d2/dcb/structchdr_1_1utils_a95de21ed13a7027d1c07fa28404bd4c4.html#a95de21ed13a7027d1c07fa28404bd4c4">sign</a></td></tr>
-          <tr><td class="navtab"><a class="navtab" href="../../d2/dcb/structchdr_1_1utils_a4dedc1630ec2ece0da95aea738d2357b.html#a4dedc1630ec2ece0da95aea738d2357b">sqrt</a></td></tr>
-          <tr><td class="navtab"><a class="navtab" href="../../d2/dcb/structchdr_1_1utils_ae058109b5e8bcba39eb6b7434d7ea183.html#ae058109b5e8bcba39eb6b7434d7ea183">to_1d</a></td></tr>
-          <tr><td class="navtab"><a class="navtab" href="../../d2/dcb/structchdr_1_1utils_a8626929faa2650afe5c38516a65408d4.html#a8626929faa2650afe5c38516a65408d4">to_nd</a></td></tr>
-          <tr><td class="navtab"><a class="navtab" href="../../d2/dcb/structchdr_1_1utils_acad2a572d66e0496dbb846b093aea3a6.html#acad2a572d66e0496dbb846b093aea3a6">to_string</a></td></tr>
-          <tr><td class="navtab"><a class="navtab" href="../../d2/dcb/structchdr_1_1utils_a28a782853c92df109e951592c838e5e9.html#a28a782853c92df109e951592c838e5e9">trim_trailing_zeros</a></td></tr>
-        </table>
-      </div>
-   </td>
-   <td valign="top" class="mempage">
 <a id="aad333d81cf55e971325abc7eb1298086" name="aad333d81cf55e971325abc7eb1298086"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aad333d81cf55e971325abc7eb1298086">&#9670;&#160;</a></span>min()</h2>
 
@@ -159,11 +154,23 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-    </td>
-  </tr>
-</table>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- HTML footer for doxygen -->
 <!-- Start footer part -->
+<div id="nav-path" class="navpath">
+    <!-- id is needed for treeview function! -->
+    <ul>
+      <li class="footer">
+        See the <a href="https://github.com/NazarElsayed/CHDR/tree/main">Official Repository</a>
+      </li>
+    </ul>
+</div>
+<footer class="custom-doxygen-footer">
+  <div>
+    <small>
+    </small>
+  </div>
+</footer>
 </body>
 </html>

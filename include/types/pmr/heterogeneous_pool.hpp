@@ -471,6 +471,9 @@ namespace chdr {
                   m_free.clear();
                 m_blocks.clear();
             }
+
+             num_allocated = 0U;
+            peak_allocated = 0U;
         }
 
         /**
@@ -505,6 +508,9 @@ namespace chdr {
                 decltype(m_free) temp{};
                 m_free = std::move(temp);
             }
+
+             num_allocated = 0U;
+            peak_allocated = 0U;
         }
 
     };

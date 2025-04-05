@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CHDR: chdr::mazes::graph::graph</title>
+<title>CHDR: chdr::solvers::solver::solve</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -77,7 +77,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('d9/dcb/classchdr_1_1mazes_1_1graph_a1a245e54aae46eb9b5ac3395d396a7e0.html','../../'); initResizable(); });
+$(document).ready(function(){initNavTree('d3/df4/classchdr_1_1solvers_1_1solver_aad3cb0997344b5b2e464d7b06ce4d926.html','../../'); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -103,42 +103,62 @@ $(document).ready(function(){initNavTree('d9/dcb/classchdr_1_1mazes_1_1graph_a1a
 </div>
 
 <div class="contents">
-<a id="a1a245e54aae46eb9b5ac3395d396a7e0" name="a1a245e54aae46eb9b5ac3395d396a7e0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1a245e54aae46eb9b5ac3395d396a7e0">&#9670;&#160;</a></span>graph() <span class="overload">[1/3]</span></h2>
+<a id="aad3cb0997344b5b2e464d7b06ce4d926" name="aad3cb0997344b5b2e464d7b06ce4d926"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad3cb0997344b5b2e464d7b06ce4d926">&#9670;&#160;</a></span>solve() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename index_t , typename scalar_t &gt; </div>
+template&lt;template&lt; typename params_t &gt; typename solver_t, typename params_t &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr <a class="el" href="../../d9/dcb/classchdr_1_1mazes_1_1graph.html">graph</a> </td>
+          <td class="memname">static auto solve </td>
           <td>(</td>
-          <td class="paramtype">std::pmr::memory_resource *&#160;</td>
-          <td class="paramname"><em>_resource</em> = <code>std::pmr::get_default_resource()</code></td><td>)</td>
+          <td class="paramtype">const params_t &amp;&#160;</td>
+          <td class="paramname"><em>_params</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>_print_memory</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Constructs a <code>graph</code> instance with default initialisation. </p>
-<p>Creates an empty graph.</p>
+<p>Executes the solver with the provided parameters. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">_resource</td><td>A pointer to a memory resource for allocator usage. Defaults to <code>std::pmr::get_default_resource</code>. (optional) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">_params</td><td>The parameters object to solve with.</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section remark"><dt>Remarks</dt><dd>Calling this will reset the state of <code>monotonic_pmr</code>, <code>heterogeneous_pmr</code>, and <code>homogeneous_pmr</code>, if they have a visible method <code>reset()</code>.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>Aliasing the polymorphic memory resources as other types may hide the <code>reset()</code> method from this function. If you intend for this function to trigger a reset of these parameters, you must provide them as a type where the <code>reset()</code> method is visible.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A std::vector containing the result of the search. If the search fails, the vector will be empty.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="../../d3/df4/classchdr_1_1solvers_1_1solver_a096fe8cb528641fed6813df1f40bd347.html#a096fe8cb528641fed6813df1f40bd347" title="Executes the solver with the provided parameters. Parameters are constructed using perfect forwarding...">solve</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d9/de9/graph_8hpp_source.html#l00091">91</a> of file <a class="el" href="../../d9/de9/graph_8hpp_source.html">graph.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d2/d1c/solver_8hpp_source.html#l00598">598</a> of file <a class="el" href="../../d2/d1c/solver_8hpp_source.html">solver.hpp</a>.</p>
+<div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-0-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-0-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../d3/df4/classchdr_1_1solvers_1_1solver_aad3cb0997344b5b2e464d7b06ce4d926_aad3cb0997344b5b2e464d7b06ce4d926_cgraph.svg" width="224" height="34"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>

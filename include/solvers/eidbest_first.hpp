@@ -124,7 +124,7 @@ namespace chdr::solvers {
             state& operator=(state&&) noexcept = default;
         };
 
-        using transposition_table_t = std::unordered_map<index_t, scalar_t>;
+        using transposition_table_t = std::pmr::unordered_map<index_t, scalar_t>;
 
         template <typename open_set_t>
         [[nodiscard]] HOT static constexpr auto solve_internal(open_set_t& _open, const params_t& _params) {
@@ -140,7 +140,7 @@ namespace chdr::solvers {
 
             stack<state<neighbours_t>> stack{};
 
-            transposition_table_t transposition_table;
+            transposition_table_t transposition_table(_params.heterogeneous_pmr);
 
             do {
 
@@ -189,6 +189,8 @@ namespace chdr::solvers {
                     }
                     else {
                         min = utils::min(min, curr.m_hScore);
+                        _open.pop_back();
+                        stack.pop();
                     }
                 }
 

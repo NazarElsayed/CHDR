@@ -142,9 +142,8 @@ namespace chdr::solvers {
                     auto& curr = _open.back();
 
                     if (curr.m_depth <= bound && _.neighbours_idx != _.neighbours.size()) {
-                        const auto& n_data = _.neighbours[_.neighbours_idx++];
 
-                        if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
+                        if (const auto& n = solver_t::get_data(_.neighbours[(_.neighbours.size() - 1U) - (_.neighbours_idx++)], _params); n.active) {
 
                             if (!_closed.contains(n.index)) {
                                 solver_t::solver_utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());

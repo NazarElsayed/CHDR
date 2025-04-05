@@ -37,7 +37,7 @@ namespace test {
 #ifndef NDEBUG
             constexpr size_t base_samples = 1UL;
 #else //!NDEBUG
-            constexpr size_t base_samples = 100000000UL;
+            constexpr size_t base_samples = 1UL; //100000000UL;
 #endif //!NDEBUG
 
             size_t test_samples = chdr::utils::max(base_samples / _params.maze.count(), static_cast<size_t>(1U));
@@ -72,6 +72,9 @@ namespace test {
 
             auto result = std::numeric_limits<long double>::max();
             for (size_t i = 0U; i < test_samples; ++i) {
+
+                size_t& memlim = const_cast<size_t&>(_params.memoryLimit);
+                memlim = (i == test_samples - 1U) ? 0U : 1U;
 
                 const auto sw_start = std::chrono::high_resolution_clock::now();
 

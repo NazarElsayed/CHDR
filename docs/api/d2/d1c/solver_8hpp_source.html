@@ -398,82 +398,87 @@ $(document).ready(function(){initNavTree('d2/d1c/solver_8hpp_source.html','../..
 <div class="line"><a id="l00623" name="l00623"></a><span class="lineno">  623</span>                exception = std::current_exception();</div>
 <div class="line"><a id="l00624" name="l00624"></a><span class="lineno">  624</span>            }</div>
 <div class="line"><a id="l00625" name="l00625"></a><span class="lineno">  625</span> </div>
-<div class="line"><a id="l00626" name="l00626"></a><span class="lineno">  626</span>            <span class="comment">// std::cout &lt;&lt; &quot;Peak Memory: &quot; &lt;&lt; (</span></div>
-<div class="line"><a id="l00627" name="l00627"></a><span class="lineno">  627</span>            <span class="comment">//     (_params.monotonic_pmr != nullptr ? _params.    monotonic_pmr-&gt;peak_allocated : 0U) +</span></div>
-<div class="line"><a id="l00628" name="l00628"></a><span class="lineno">  628</span>            <span class="comment">//     (_params.monotonic_pmr != nullptr ? _params.heterogeneous_pmr-&gt;peak_allocated : 0U) +</span></div>
-<div class="line"><a id="l00629" name="l00629"></a><span class="lineno">  629</span>            <span class="comment">//     (_params.monotonic_pmr != nullptr ? _params.  homogeneous_pmr-&gt;peak_allocated : 0U)</span></div>
-<div class="line"><a id="l00630" name="l00630"></a><span class="lineno">  630</span>            <span class="comment">// ) &lt;&lt; &quot; bytes\n&quot;;</span></div>
-<div class="line"><a id="l00631" name="l00631"></a><span class="lineno">  631</span> </div>
-<div class="line"><a id="l00632" name="l00632"></a><span class="lineno">  632</span>            <span class="comment">/*</span></div>
-<div class="line"><a id="l00633" name="l00633"></a><span class="lineno">  633</span><span class="comment">             * Release resources with deferred exception handling:</span></div>
-<div class="line"><a id="l00634" name="l00634"></a><span class="lineno">  634</span><span class="comment">             */</span></div>
-<div class="line"><a id="l00635" name="l00635"></a><span class="lineno">  635</span> </div>
-<div class="line"><a id="l00636" name="l00636"></a><span class="lineno">  636</span>            <span class="keywordflow">try</span> {</div>
-<div class="line"><a id="l00637" name="l00637"></a><span class="lineno">  637</span>                <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (solver_utils::template has_method_reset_v&lt;std::remove_pointer_t&lt;std::decay_t&lt;<span class="keyword">decltype</span>(_params.monotonic_pmr)&gt;&gt;&gt;) {</div>
-<div class="line"><a id="l00638" name="l00638"></a><span class="lineno">  638</span>                    <span class="keywordflow">if</span> (_params.monotonic_pmr != <span class="keyword">nullptr</span>) { _params.monotonic_pmr-&gt;reset(); }</div>
-<div class="line"><a id="l00639" name="l00639"></a><span class="lineno">  639</span>                }</div>
-<div class="line"><a id="l00640" name="l00640"></a><span class="lineno">  640</span>            }</div>
-<div class="line"><a id="l00641" name="l00641"></a><span class="lineno">  641</span>            <span class="keywordflow">catch</span> (...) { <span class="comment">// NOLINT(*-empty-catch)</span></div>
-<div class="line"><a id="l00642" name="l00642"></a><span class="lineno">  642</span>                <span class="keywordflow">if</span> (exception == <span class="keyword">nullptr</span>) { exception = std::current_exception(); }</div>
-<div class="line"><a id="l00643" name="l00643"></a><span class="lineno">  643</span>            }</div>
-<div class="line"><a id="l00644" name="l00644"></a><span class="lineno">  644</span> </div>
-<div class="line"><a id="l00645" name="l00645"></a><span class="lineno">  645</span>            <span class="keywordflow">try</span> {</div>
-<div class="line"><a id="l00646" name="l00646"></a><span class="lineno">  646</span>                <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (solver_utils::template has_method_reset_v&lt;std::remove_pointer_t&lt;std::decay_t&lt;<span class="keyword">decltype</span>(_params.heterogeneous_pmr)&gt;&gt;&gt;) {</div>
-<div class="line"><a id="l00647" name="l00647"></a><span class="lineno">  647</span>                    <span class="keywordflow">if</span> (_params.heterogeneous_pmr != <span class="keyword">nullptr</span>) { _params.heterogeneous_pmr-&gt;reset(); }</div>
-<div class="line"><a id="l00648" name="l00648"></a><span class="lineno">  648</span>                }</div>
-<div class="line"><a id="l00649" name="l00649"></a><span class="lineno">  649</span>            }</div>
-<div class="line"><a id="l00650" name="l00650"></a><span class="lineno">  650</span>            <span class="keywordflow">catch</span> (...) { <span class="comment">// NOLINT(*-empty-catch)</span></div>
-<div class="line"><a id="l00651" name="l00651"></a><span class="lineno">  651</span>                <span class="keywordflow">if</span> (exception == <span class="keyword">nullptr</span>) { exception = std::current_exception(); }</div>
-<div class="line"><a id="l00652" name="l00652"></a><span class="lineno">  652</span>            }</div>
-<div class="line"><a id="l00653" name="l00653"></a><span class="lineno">  653</span> </div>
-<div class="line"><a id="l00654" name="l00654"></a><span class="lineno">  654</span>            <span class="keywordflow">try</span> {</div>
-<div class="line"><a id="l00655" name="l00655"></a><span class="lineno">  655</span>                <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (solver_utils::template has_method_reset_v&lt;std::remove_pointer_t&lt;std::decay_t&lt;<span class="keyword">decltype</span>(_params.homogeneous_pmr)&gt;&gt;&gt;) {</div>
-<div class="line"><a id="l00656" name="l00656"></a><span class="lineno">  656</span>                    <span class="keywordflow">if</span> (_params.homogeneous_pmr != <span class="keyword">nullptr</span>) { _params.homogeneous_pmr-&gt;reset(); }</div>
-<div class="line"><a id="l00657" name="l00657"></a><span class="lineno">  657</span>                }</div>
-<div class="line"><a id="l00658" name="l00658"></a><span class="lineno">  658</span>            }</div>
-<div class="line"><a id="l00659" name="l00659"></a><span class="lineno">  659</span>            <span class="keywordflow">catch</span> (...) { <span class="comment">// NOLINT(*-empty-catch)</span></div>
-<div class="line"><a id="l00660" name="l00660"></a><span class="lineno">  660</span>                <span class="keywordflow">if</span> (exception == <span class="keyword">nullptr</span>) { exception = std::current_exception(); }</div>
-<div class="line"><a id="l00661" name="l00661"></a><span class="lineno">  661</span>            }</div>
-<div class="line"><a id="l00662" name="l00662"></a><span class="lineno">  662</span> </div>
-<div class="line"><a id="l00663" name="l00663"></a><span class="lineno">  663</span>            <span class="comment">// Report first exception to occur:</span></div>
-<div class="line"><a id="l00664" name="l00664"></a><span class="lineno">  664</span>            <span class="keywordflow">if</span> (exception != <span class="keyword">nullptr</span>) {</div>
-<div class="line"><a id="l00665" name="l00665"></a><span class="lineno">  665</span>                std::rethrow_exception(exception);</div>
+<div class="line"><a id="l00626" name="l00626"></a><span class="lineno">  626</span>            <span class="keywordflow">if</span> (_params.memoryLimit == 0U) {</div>
+<div class="line"><a id="l00627" name="l00627"></a><span class="lineno">  627</span> </div>
+<div class="line"><a id="l00628" name="l00628"></a><span class="lineno">  628</span>                <span class="comment">// TODO: (temporary) Print peak memory usage:</span></div>
+<div class="line"><a id="l00629" name="l00629"></a><span class="lineno">  629</span>                <span class="keyword">const</span> <span class="keyword">auto</span> peak_memory_bytes =</div>
+<div class="line"><a id="l00630" name="l00630"></a><span class="lineno">  630</span>                    (_params.    monotonic_pmr != <span class="keyword">nullptr</span> ?     _params.monotonic_pmr-&gt;peak_allocated : 0U) +</div>
+<div class="line"><a id="l00631" name="l00631"></a><span class="lineno">  631</span>                    (_params.heterogeneous_pmr != <span class="keyword">nullptr</span> ? _params.heterogeneous_pmr-&gt;peak_allocated : 0U) +</div>
+<div class="line"><a id="l00632" name="l00632"></a><span class="lineno">  632</span>                    (_params.  homogeneous_pmr != <span class="keyword">nullptr</span> ?   _params.homogeneous_pmr-&gt;peak_allocated : 0U);</div>
+<div class="line"><a id="l00633" name="l00633"></a><span class="lineno">  633</span> </div>
+<div class="line"><a id="l00634" name="l00634"></a><span class="lineno">  634</span>                std::cout &lt;&lt; <span class="stringliteral">&quot;Peak Memory: &quot;</span> + std::to_string(peak_memory_bytes) + <span class="stringliteral">&quot; bytes\n&quot;</span>;</div>
+<div class="line"><a id="l00635" name="l00635"></a><span class="lineno">  635</span>            }</div>
+<div class="line"><a id="l00636" name="l00636"></a><span class="lineno">  636</span> </div>
+<div class="line"><a id="l00637" name="l00637"></a><span class="lineno">  637</span>            <span class="comment">/*</span></div>
+<div class="line"><a id="l00638" name="l00638"></a><span class="lineno">  638</span><span class="comment">             * Release resources with deferred exception handling:</span></div>
+<div class="line"><a id="l00639" name="l00639"></a><span class="lineno">  639</span><span class="comment">             */</span></div>
+<div class="line"><a id="l00640" name="l00640"></a><span class="lineno">  640</span> </div>
+<div class="line"><a id="l00641" name="l00641"></a><span class="lineno">  641</span>            <span class="keywordflow">try</span> {</div>
+<div class="line"><a id="l00642" name="l00642"></a><span class="lineno">  642</span>                <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (solver_utils::template has_method_reset_v&lt;std::remove_pointer_t&lt;std::decay_t&lt;<span class="keyword">decltype</span>(_params.monotonic_pmr)&gt;&gt;&gt;) {</div>
+<div class="line"><a id="l00643" name="l00643"></a><span class="lineno">  643</span>                    <span class="keywordflow">if</span> (_params.monotonic_pmr != <span class="keyword">nullptr</span>) { _params.monotonic_pmr-&gt;reset(); }</div>
+<div class="line"><a id="l00644" name="l00644"></a><span class="lineno">  644</span>                }</div>
+<div class="line"><a id="l00645" name="l00645"></a><span class="lineno">  645</span>            }</div>
+<div class="line"><a id="l00646" name="l00646"></a><span class="lineno">  646</span>            <span class="keywordflow">catch</span> (...) { <span class="comment">// NOLINT(*-empty-catch)</span></div>
+<div class="line"><a id="l00647" name="l00647"></a><span class="lineno">  647</span>                <span class="keywordflow">if</span> (exception == <span class="keyword">nullptr</span>) { exception = std::current_exception(); }</div>
+<div class="line"><a id="l00648" name="l00648"></a><span class="lineno">  648</span>            }</div>
+<div class="line"><a id="l00649" name="l00649"></a><span class="lineno">  649</span> </div>
+<div class="line"><a id="l00650" name="l00650"></a><span class="lineno">  650</span>            <span class="keywordflow">try</span> {</div>
+<div class="line"><a id="l00651" name="l00651"></a><span class="lineno">  651</span>                <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (solver_utils::template has_method_reset_v&lt;std::remove_pointer_t&lt;std::decay_t&lt;<span class="keyword">decltype</span>(_params.heterogeneous_pmr)&gt;&gt;&gt;) {</div>
+<div class="line"><a id="l00652" name="l00652"></a><span class="lineno">  652</span>                    <span class="keywordflow">if</span> (_params.heterogeneous_pmr != <span class="keyword">nullptr</span>) { _params.heterogeneous_pmr-&gt;reset(); }</div>
+<div class="line"><a id="l00653" name="l00653"></a><span class="lineno">  653</span>                }</div>
+<div class="line"><a id="l00654" name="l00654"></a><span class="lineno">  654</span>            }</div>
+<div class="line"><a id="l00655" name="l00655"></a><span class="lineno">  655</span>            <span class="keywordflow">catch</span> (...) { <span class="comment">// NOLINT(*-empty-catch)</span></div>
+<div class="line"><a id="l00656" name="l00656"></a><span class="lineno">  656</span>                <span class="keywordflow">if</span> (exception == <span class="keyword">nullptr</span>) { exception = std::current_exception(); }</div>
+<div class="line"><a id="l00657" name="l00657"></a><span class="lineno">  657</span>            }</div>
+<div class="line"><a id="l00658" name="l00658"></a><span class="lineno">  658</span> </div>
+<div class="line"><a id="l00659" name="l00659"></a><span class="lineno">  659</span>            <span class="keywordflow">try</span> {</div>
+<div class="line"><a id="l00660" name="l00660"></a><span class="lineno">  660</span>                <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (solver_utils::template has_method_reset_v&lt;std::remove_pointer_t&lt;std::decay_t&lt;<span class="keyword">decltype</span>(_params.homogeneous_pmr)&gt;&gt;&gt;) {</div>
+<div class="line"><a id="l00661" name="l00661"></a><span class="lineno">  661</span>                    <span class="keywordflow">if</span> (_params.homogeneous_pmr != <span class="keyword">nullptr</span>) { _params.homogeneous_pmr-&gt;reset(); }</div>
+<div class="line"><a id="l00662" name="l00662"></a><span class="lineno">  662</span>                }</div>
+<div class="line"><a id="l00663" name="l00663"></a><span class="lineno">  663</span>            }</div>
+<div class="line"><a id="l00664" name="l00664"></a><span class="lineno">  664</span>            <span class="keywordflow">catch</span> (...) { <span class="comment">// NOLINT(*-empty-catch)</span></div>
+<div class="line"><a id="l00665" name="l00665"></a><span class="lineno">  665</span>                <span class="keywordflow">if</span> (exception == <span class="keyword">nullptr</span>) { exception = std::current_exception(); }</div>
 <div class="line"><a id="l00666" name="l00666"></a><span class="lineno">  666</span>            }</div>
 <div class="line"><a id="l00667" name="l00667"></a><span class="lineno">  667</span> </div>
-<div class="line"><a id="l00668" name="l00668"></a><span class="lineno">  668</span>            <span class="keywordflow">return</span> result;</div>
-<div class="line"><a id="l00669" name="l00669"></a><span class="lineno">  669</span>        }</div>
+<div class="line"><a id="l00668" name="l00668"></a><span class="lineno">  668</span>            <span class="comment">// Report first exception to occur:</span></div>
+<div class="line"><a id="l00669" name="l00669"></a><span class="lineno">  669</span>            <span class="keywordflow">if</span> (exception != <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a id="l00670" name="l00670"></a><span class="lineno">  670</span>                std::rethrow_exception(exception);</div>
+<div class="line"><a id="l00671" name="l00671"></a><span class="lineno">  671</span>            }</div>
+<div class="line"><a id="l00672" name="l00672"></a><span class="lineno">  672</span> </div>
+<div class="line"><a id="l00673" name="l00673"></a><span class="lineno">  673</span>            <span class="keywordflow">return</span> result;</div>
+<div class="line"><a id="l00674" name="l00674"></a><span class="lineno">  674</span>        }</div>
 </div>
-<div class="line"><a id="l00670" name="l00670"></a><span class="lineno">  670</span> </div>
-<div class="line"><a id="l00691" name="l00691"></a><span class="lineno">  691</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Args&gt;</div>
-<div class="line"><a id="l00692" name="l00692"></a><span class="lineno">  692</span>        [[maybe_unused, nodiscard]]</div>
-<div class="line"><a id="l00693" name="l00693"></a><span class="lineno">  693</span><span class="preprocessor">#if __cplusplus &gt;= 202003L</span></div>
-<div class="line"><a id="l00694" name="l00694"></a><span class="lineno">  694</span>        <span class="keyword">constexpr</span></div>
-<div class="line"><a id="l00695" name="l00695"></a><span class="lineno">  695</span><span class="preprocessor">#endif </span><span class="comment">// __cplusplus &gt;= 202003L</span></div>
-<div class="foldopen" id="foldopen00696" data-start="{" data-end="}">
-<div class="line"><a id="l00696" name="l00696"></a><span class="lineno"><a class="line" href="../../d3/df4/classchdr_1_1solvers_1_1solver_a6721174d30d2100eef1e9faed0942eb2.html#a6721174d30d2100eef1e9faed0942eb2">  696</a></span>        <span class="keyword">auto</span> <a class="code hl_function" href="../../d3/df4/classchdr_1_1solvers_1_1solver_a6721174d30d2100eef1e9faed0942eb2.html#a6721174d30d2100eef1e9faed0942eb2">operator()</a>(Args&amp;&amp;... _args) {</div>
-<div class="line"><a id="l00697" name="l00697"></a><span class="lineno">  697</span>            <span class="keywordflow">return</span> <a class="code hl_function" href="../../d3/df4/classchdr_1_1solvers_1_1solver_a6721174d30d2100eef1e9faed0942eb2.html#a6721174d30d2100eef1e9faed0942eb2">operator()</a>({ std::forward&lt;Args&gt;(_args)... });</div>
-<div class="line"><a id="l00698" name="l00698"></a><span class="lineno">  698</span>        }</div>
+<div class="line"><a id="l00675" name="l00675"></a><span class="lineno">  675</span> </div>
+<div class="line"><a id="l00696" name="l00696"></a><span class="lineno">  696</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Args&gt;</div>
+<div class="line"><a id="l00697" name="l00697"></a><span class="lineno">  697</span>        [[maybe_unused, nodiscard]]</div>
+<div class="line"><a id="l00698" name="l00698"></a><span class="lineno">  698</span><span class="preprocessor">#if __cplusplus &gt;= 202003L</span></div>
+<div class="line"><a id="l00699" name="l00699"></a><span class="lineno">  699</span>        <span class="keyword">constexpr</span></div>
+<div class="line"><a id="l00700" name="l00700"></a><span class="lineno">  700</span><span class="preprocessor">#endif </span><span class="comment">// __cplusplus &gt;= 202003L</span></div>
+<div class="foldopen" id="foldopen00701" data-start="{" data-end="}">
+<div class="line"><a id="l00701" name="l00701"></a><span class="lineno"><a class="line" href="../../d3/df4/classchdr_1_1solvers_1_1solver_a6721174d30d2100eef1e9faed0942eb2.html#a6721174d30d2100eef1e9faed0942eb2">  701</a></span>        <span class="keyword">auto</span> <a class="code hl_function" href="../../d3/df4/classchdr_1_1solvers_1_1solver_a6721174d30d2100eef1e9faed0942eb2.html#a6721174d30d2100eef1e9faed0942eb2">operator()</a>(Args&amp;&amp;... _args) {</div>
+<div class="line"><a id="l00702" name="l00702"></a><span class="lineno">  702</span>            <span class="keywordflow">return</span> <a class="code hl_function" href="../../d3/df4/classchdr_1_1solvers_1_1solver_a6721174d30d2100eef1e9faed0942eb2.html#a6721174d30d2100eef1e9faed0942eb2">operator()</a>({ std::forward&lt;Args&gt;(_args)... });</div>
+<div class="line"><a id="l00703" name="l00703"></a><span class="lineno">  703</span>        }</div>
 </div>
-<div class="line"><a id="l00699" name="l00699"></a><span class="lineno">  699</span> </div>
-<div class="line"><a id="l00715" name="l00715"></a><span class="lineno">  715</span>        [[maybe_unused, nodiscard]]</div>
-<div class="line"><a id="l00716" name="l00716"></a><span class="lineno">  716</span><span class="preprocessor">#if __cplusplus &gt;= 202003L</span></div>
-<div class="line"><a id="l00717" name="l00717"></a><span class="lineno">  717</span>        <span class="keyword">constexpr</span></div>
-<div class="line"><a id="l00718" name="l00718"></a><span class="lineno">  718</span><span class="preprocessor">#endif </span><span class="comment">// __cplusplus &gt;= 202003L</span></div>
-<div class="foldopen" id="foldopen00719" data-start="{" data-end="}">
-<div class="line"><a id="l00719" name="l00719"></a><span class="lineno"><a class="line" href="../../d3/df4/classchdr_1_1solvers_1_1solver_ad64d7208d682691a4776aeabf905c8c9.html#ad64d7208d682691a4776aeabf905c8c9">  719</a></span>        <span class="keyword">auto</span> <a class="code hl_function" href="../../d3/df4/classchdr_1_1solvers_1_1solver_ad64d7208d682691a4776aeabf905c8c9.html#ad64d7208d682691a4776aeabf905c8c9">operator()</a>(<span class="keyword">const</span> params_t&amp; _params) {</div>
-<div class="line"><a id="l00720" name="l00720"></a><span class="lineno">  720</span>            <span class="keywordflow">return</span> <a class="code hl_function" href="../../d3/df4/classchdr_1_1solvers_1_1solver_a096fe8cb528641fed6813df1f40bd347.html#a096fe8cb528641fed6813df1f40bd347">solve</a>(_params);</div>
-<div class="line"><a id="l00721" name="l00721"></a><span class="lineno">  721</span>        }</div>
+<div class="line"><a id="l00704" name="l00704"></a><span class="lineno">  704</span> </div>
+<div class="line"><a id="l00720" name="l00720"></a><span class="lineno">  720</span>        [[maybe_unused, nodiscard]]</div>
+<div class="line"><a id="l00721" name="l00721"></a><span class="lineno">  721</span><span class="preprocessor">#if __cplusplus &gt;= 202003L</span></div>
+<div class="line"><a id="l00722" name="l00722"></a><span class="lineno">  722</span>        <span class="keyword">constexpr</span></div>
+<div class="line"><a id="l00723" name="l00723"></a><span class="lineno">  723</span><span class="preprocessor">#endif </span><span class="comment">// __cplusplus &gt;= 202003L</span></div>
+<div class="foldopen" id="foldopen00724" data-start="{" data-end="}">
+<div class="line"><a id="l00724" name="l00724"></a><span class="lineno"><a class="line" href="../../d3/df4/classchdr_1_1solvers_1_1solver_ad64d7208d682691a4776aeabf905c8c9.html#ad64d7208d682691a4776aeabf905c8c9">  724</a></span>        <span class="keyword">auto</span> <a class="code hl_function" href="../../d3/df4/classchdr_1_1solvers_1_1solver_ad64d7208d682691a4776aeabf905c8c9.html#ad64d7208d682691a4776aeabf905c8c9">operator()</a>(<span class="keyword">const</span> params_t&amp; _params) {</div>
+<div class="line"><a id="l00725" name="l00725"></a><span class="lineno">  725</span>            <span class="keywordflow">return</span> <a class="code hl_function" href="../../d3/df4/classchdr_1_1solvers_1_1solver_a096fe8cb528641fed6813df1f40bd347.html#a096fe8cb528641fed6813df1f40bd347">solve</a>(_params);</div>
+<div class="line"><a id="l00726" name="l00726"></a><span class="lineno">  726</span>        }</div>
 </div>
-<div class="line"><a id="l00722" name="l00722"></a><span class="lineno">  722</span>    };</div>
+<div class="line"><a id="l00727" name="l00727"></a><span class="lineno">  727</span>    };</div>
 </div>
-<div class="line"><a id="l00723" name="l00723"></a><span class="lineno">  723</span> </div>
-<div class="line"><a id="l00724" name="l00724"></a><span class="lineno">  724</span>} <span class="comment">//chdr::solvers</span></div>
-<div class="line"><a id="l00725" name="l00725"></a><span class="lineno">  725</span> </div>
-<div class="line"><a id="l00726" name="l00726"></a><span class="lineno">  726</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_SOLVER_HPP</span></div>
+<div class="line"><a id="l00728" name="l00728"></a><span class="lineno">  728</span> </div>
+<div class="line"><a id="l00729" name="l00729"></a><span class="lineno">  729</span>} <span class="comment">//chdr::solvers</span></div>
+<div class="line"><a id="l00730" name="l00730"></a><span class="lineno">  730</span> </div>
+<div class="line"><a id="l00731" name="l00731"></a><span class="lineno">  731</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_SOLVER_HPP</span></div>
 <div class="ttc" id="aclasschdr_1_1solvers_1_1solver_a096fe8cb528641fed6813df1f40bd347_html_a096fe8cb528641fed6813df1f40bd347"><div class="ttname"><a href="../../d3/df4/classchdr_1_1solvers_1_1solver_a096fe8cb528641fed6813df1f40bd347.html#a096fe8cb528641fed6813df1f40bd347">chdr::solvers::solver::solve</a></div><div class="ttdeci">static auto solve(Args &amp;&amp;... _args)</div><div class="ttdoc">Executes the solver with the provided parameters. Parameters are constructed using perfect forwarding...</div><div class="ttdef"><b>Definition</b> <a href="../../d2/d1c/solver_8hpp_source.html#l00575">solver.hpp:575</a></div></div>
-<div class="ttc" id="aclasschdr_1_1solvers_1_1solver_a6721174d30d2100eef1e9faed0942eb2_html_a6721174d30d2100eef1e9faed0942eb2"><div class="ttname"><a href="../../d3/df4/classchdr_1_1solvers_1_1solver_a6721174d30d2100eef1e9faed0942eb2.html#a6721174d30d2100eef1e9faed0942eb2">chdr::solvers::solver::operator()</a></div><div class="ttdeci">auto operator()(Args &amp;&amp;... _args)</div><div class="ttdoc">Executes the solver with the provided parameters. Parameters are constructed using perfect forwarding...</div><div class="ttdef"><b>Definition</b> <a href="../../d2/d1c/solver_8hpp_source.html#l00696">solver.hpp:696</a></div></div>
+<div class="ttc" id="aclasschdr_1_1solvers_1_1solver_a6721174d30d2100eef1e9faed0942eb2_html_a6721174d30d2100eef1e9faed0942eb2"><div class="ttname"><a href="../../d3/df4/classchdr_1_1solvers_1_1solver_a6721174d30d2100eef1e9faed0942eb2.html#a6721174d30d2100eef1e9faed0942eb2">chdr::solvers::solver::operator()</a></div><div class="ttdeci">auto operator()(Args &amp;&amp;... _args)</div><div class="ttdoc">Executes the solver with the provided parameters. Parameters are constructed using perfect forwarding...</div><div class="ttdef"><b>Definition</b> <a href="../../d2/d1c/solver_8hpp_source.html#l00701">solver.hpp:701</a></div></div>
 <div class="ttc" id="aclasschdr_1_1solvers_1_1solver_aa62632bf43d0cf6db6a9f6de5e76b0ba_html_aa62632bf43d0cf6db6a9f6de5e76b0ba"><div class="ttname"><a href="../../d3/df4/classchdr_1_1solvers_1_1solver_aa62632bf43d0cf6db6a9f6de5e76b0ba.html#aa62632bf43d0cf6db6a9f6de5e76b0ba">chdr::solvers::solver::solve</a></div><div class="ttdeci">static auto solve(const params_t &amp;_params)</div><div class="ttdoc">Executes the solver with the provided parameters.</div><div class="ttdef"><b>Definition</b> <a href="../../d2/d1c/solver_8hpp_source.html#l00598">solver.hpp:598</a></div></div>
-<div class="ttc" id="aclasschdr_1_1solvers_1_1solver_ad64d7208d682691a4776aeabf905c8c9_html_ad64d7208d682691a4776aeabf905c8c9"><div class="ttname"><a href="../../d3/df4/classchdr_1_1solvers_1_1solver_ad64d7208d682691a4776aeabf905c8c9.html#ad64d7208d682691a4776aeabf905c8c9">chdr::solvers::solver::operator()</a></div><div class="ttdeci">auto operator()(const params_t &amp;_params)</div><div class="ttdoc">Executes the solver with the provided parameters.</div><div class="ttdef"><b>Definition</b> <a href="../../d2/d1c/solver_8hpp_source.html#l00719">solver.hpp:719</a></div></div>
+<div class="ttc" id="aclasschdr_1_1solvers_1_1solver_ad64d7208d682691a4776aeabf905c8c9_html_ad64d7208d682691a4776aeabf905c8c9"><div class="ttname"><a href="../../d3/df4/classchdr_1_1solvers_1_1solver_ad64d7208d682691a4776aeabf905c8c9.html#ad64d7208d682691a4776aeabf905c8c9">chdr::solvers::solver::operator()</a></div><div class="ttdeci">auto operator()(const params_t &amp;_params)</div><div class="ttdoc">Executes the solver with the provided parameters.</div><div class="ttdef"><b>Definition</b> <a href="../../d2/d1c/solver_8hpp_source.html#l00724">solver.hpp:724</a></div></div>
 <div class="ttc" id="aclasschdr_1_1solvers_1_1solver_afd9ac73f57f4eae43f130211d9b95d86_html_afd9ac73f57f4eae43f130211d9b95d86"><div class="ttname"><a href="../../d3/df4/classchdr_1_1solvers_1_1solver_afd9ac73f57f4eae43f130211d9b95d86.html#afd9ac73f57f4eae43f130211d9b95d86">chdr::solvers::solver::solver</a></div><div class="ttdeci">solver() noexcept=default</div><div class="ttdoc">Constructor for the solver class.</div></div>
 <div class="ttc" id="aclasschdr_1_1solvers_1_1solver_html"><div class="ttname"><a href="../../d3/df4/classchdr_1_1solvers_1_1solver.html">chdr::solvers::solver</a></div><div class="ttdoc">A static class serving as the core entry point for the CHDR library.</div><div class="ttdef"><b>Definition</b> <a href="../../d2/d1c/solver_8hpp_source.html#l00088">solver.hpp:88</a></div></div>
 <div class="ttc" id="acoord_8hpp_a5a89553aa616ec03af46b4681aabbca3_html_a5a89553aa616ec03af46b4681aabbca3"><div class="ttname"><a href="../../d9/dfc/coord_8hpp_a5a89553aa616ec03af46b4681aabbca3.html#a5a89553aa616ec03af46b4681aabbca3">chdr::coord</a></div><div class="ttdeci">std::array&lt; T, Kd &gt; coord</div><div class="ttdoc">A K-dimensional coordinate type.</div><div class="ttdef"><b>Definition</b> <a href="../../d9/dfc/coord_8hpp_source.html#l00033">coord.hpp:33</a></div></div>
