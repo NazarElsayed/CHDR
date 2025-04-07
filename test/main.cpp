@@ -72,6 +72,63 @@ namespace test {
             return application::main<solver_t, params_t>(_params);
         }
 
+        template <typename weight_t, typename coord_t, typename scalar_t, typename index_t>
+        static chdr::mazes::grid<coord_t, weight_t> make_solvable_random_grid_maze(const coord_t& _start, const coord_t& _end, const coord_t& _size, size_t _seed = 0U) {
+
+            auto     monotonic = chdr::monotonic_pool();
+            auto heterogeneous = chdr::heterogeneous_pool();
+            auto   homogeneous = chdr::homogeneous_pool();
+
+            struct params {
+
+                using  weight_type [[maybe_unused]] = weight_t;
+                using  scalar_type [[maybe_unused]] = scalar_t;
+                using   index_type [[maybe_unused]] =  index_t;
+                using   coord_type [[maybe_unused]] =  coord_t;
+
+                using lazy_sorting [[maybe_unused]] = std::true_type;
+
+                const chdr::mazes::grid<coord_t, weight_t>& maze;
+                const     coord_type  start;
+                const     coord_type  end;
+                const     coord_type  size;
+                scalar_type  (*h)(const coord_type&, const coord_type&) noexcept;
+
+                decltype(    monotonic)*     monotonic_pmr;
+                decltype(heterogeneous)* heterogeneous_pmr;
+                decltype(  homogeneous)*   homogeneous_pmr;
+
+                const scalar_type weight       = 1U;
+                const      size_t capacity     = 0U;
+                const      size_t memoryLimit  = static_cast<size_t>(-1U);
+            };
+
+            for (size_t i = 0U; i < std::numeric_limits<size_t>::max(); ++i) {
+
+                // Seed the random number generator.
+                generator::utils::lcg lcg { _seed + i };
+
+                constexpr size_t obstacle_threshold = std::numeric_limits<size_t>::max() / 10UL; // 1/10 chance.
+
+                // Create a random maze using the given threshold for obstacles:
+                std::vector<weight_t> nodes(chdr::utils::product<size_t>(_size));
+                for (size_t j = 1U; j < nodes.size() - 1UL; ++j) {
+                    nodes[j] = lcg.operator()() < obstacle_threshold ?
+                        std::numeric_limits<weight_t>::max() :
+                        std::numeric_limits<weight_t>::lowest();
+                }
+
+                auto result = chdr::mazes::grid<coord_t, weight_t>(_size, nodes);
+
+                // Check if maze is solvable:
+                if (!(chdr::solvers::solver<chdr::solvers::gbest_first, params>::solve({ result, _start, _end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &heterogeneous, &homogeneous }).empty())) {
+                    return result; // Return if solvable.
+                }
+            }
+
+            throw std::runtime_error("ERROR: Could not create a solvable maze!");
+        }
+
         template <typename weight_t, typename coord_t>
         static int deduce_solver(const std::string_view& _solver, const coord_t& _size) {
 
@@ -93,7 +150,9 @@ namespace test {
             // const std::vector<weight_t> nodes(chdr::utils::product<size_t>(_size), std::numeric_limits<weight_t>::lowest());
             // const auto grid = chdr::mazes::grid<coord_t, weight_t>(_size, nodes);
 
-            const auto grid = generator::grid::generate<weight_t>(start, end, _size, 0.0, 0.0, seed);
+            const auto grid = make_solvable_random_grid_maze<weight_t, coord_t, scalar_t, index_t>(start, end, _size, seed);
+
+            // const auto grid = generator::grid::generate<weight_t>(start, end, _size, 0.0, 0.0, seed);
 
             //debug::log(_size[0] + _size[1] - 2U);
 
@@ -130,6 +189,7 @@ namespace test {
             };
 
             const params args { test, start, end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &heterogeneous, &homogeneous };
+
 
                  if (_solver == "astar"        ) { result = invoke<chdr::solvers::        astar, params>(args); }
             else if (_solver == "bfs"          ) { result = invoke<chdr::solvers::          bfs, params>(args); }
