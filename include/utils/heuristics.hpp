@@ -58,7 +58,7 @@ namespace chdr {
          */
         template <typename scalar_t, typename coord_t>
         [[maybe_unused, nodiscard]] HOT static constexpr auto euclidean_distance(const coord_t& _a, const coord_t& _b) noexcept {
-            return static_cast<scalar_t>(sqrt(sqr_euclidean_distance(_a, _b)));
+            return static_cast<scalar_t>(sqrt(sqr_euclidean_distance<scalar_t, coord_t>(_a, _b)));
         }
 
         /**

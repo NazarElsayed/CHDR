@@ -140,8 +140,8 @@ namespace test {
             /* GENERATE MAZE */
             constexpr size_t seed { 0U };
 
-            constexpr coord_t start {};
-                      coord_t end;
+            coord_t end   {};
+            coord_t start {};
 
             for (size_t i = 0U; i < _size.size(); ++i) {
                 end[i] = _size[i] - 1U;
@@ -188,8 +188,7 @@ namespace test {
                 const      size_t memoryLimit  = static_cast<size_t>(-1U);
             };
 
-            const params args { test, start, end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &heterogeneous, &homogeneous };
-
+            const params args { test, end, start, _size, chdr::heuristics::euclidean_distance<scalar_t, coord_t>, &monotonic, &heterogeneous, &homogeneous };
 
                  if (_solver == "astar"        ) { result = invoke<chdr::solvers::        astar, params>(args); }
             else if (_solver == "bfs"          ) { result = invoke<chdr::solvers::          bfs, params>(args); }

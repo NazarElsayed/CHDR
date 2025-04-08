@@ -116,6 +116,10 @@ namespace chdr::solvers {
             }
         };
 
+        static constexpr std::array<coord_t, 8U> s_direction_map { coord_t{ 0U, 0U }, coord_t{ 1U, 0U }, coord_t{ 2U, 0U },
+                                                                   coord_t{ 0U, 1U },                    coord_t{ 2U, 1U },
+                                                                   coord_t{ 0U, 2U }, coord_t{ 1U, 2U }, coord_t{ 2U, 2U } };
+
         static constexpr direction_t TL { 0U };
         static constexpr direction_t TM { 1U };
         static constexpr direction_t TR { 2U };
@@ -124,6 +128,8 @@ namespace chdr::solvers {
         static constexpr direction_t BL { 5U };
         static constexpr direction_t BM { 6U };
         static constexpr direction_t BR { 7U };
+
+        static constexpr direction_t ZZ { 8U }; // ZERO DIRECTION
 
         static constexpr rotation_t s_identity { TL, TM, TR,
                                                  ML,     MR,
@@ -141,25 +147,23 @@ namespace chdr::solvers {
                                                  BM,     TM,
                                                  BR, MR, TR };
 
-        static constexpr direction_t zero_direction_v { 3U };
-
         static constexpr std::array<rotation_t, 9U> s_lookup {
-            /*  { -1, -1 }  :  0  */ s_rotate_2, // 0
-            /*  {  0, -1 }  :  1  */ s_rotate_r, // 1
-            /*  { -1,  0 }  :  2  */ s_rotate_2, // 2
-            /*  {  0,  0 }  :  3  */ s_identity, // 3
-            /*  {  1,  0 }  :  4  */ s_identity, // 4
-            /*  {  0,  1 }  :  5  */ s_rotate_l, // 5
-            /*  {  1,  1 }  :  6  */ s_identity, // 6
-            /*  {  1, -1 }  :  2  */ s_rotate_r, // 7
-            /*  { -1,  1 }  :  4  */ s_rotate_l, // 8
+            /* {  1, -1 } */ s_rotate_2, // 0 //
+            /* {  1,  0 } */ s_rotate_r, // 1 //
+            /* {  1,  1 } */ s_rotate_l, // 2
+            /* {  0, -1 } */ s_rotate_2, // 3 //
+            /* {  0,  1 } */ s_identity, // 4 //
+            /* { -1, -1 } */ s_rotate_2, // 5
+            /* { -1,  0 } */ s_rotate_l, // 6 //
+            /* { -1,  1 } */ s_identity, // 7 //
+            /* {  0,  0 } */ s_identity, // 8 //
         };
 
         static constexpr bool is_straight(const direction_t& _direction) noexcept {
-            return _direction == 1U ||
-                   _direction == 2U ||
-                   _direction == 4U ||
-                   _direction == 5U;
+            return _direction == TM ||
+                   _direction == ML ||
+                   _direction == MR ||
+                   _direction == BM;
         }
 
         [[nodiscard]] static constexpr auto get_direction(const coord_t& _from, const coord_t& _to) {
@@ -171,10 +175,16 @@ namespace chdr::solvers {
 
             direction_t result{};
 
-                 if (dir[0U] == 2U && dir[1U] == 0U) { result = 7U; }
-            else if (dir[0U] == 0U && dir[1U] == 2U) { result = 8U; }
+                 if (dir[0U] == 0U && dir[1U] == 0U) { result = TL; }
+            else if (dir[0U] == 1U && dir[1U] == 0U) { result = TM; }
+            else if (dir[0U] == 2U && dir[1U] == 0U) { result = TR; }
+            else if (dir[0U] == 0U && dir[1U] == 1U) { result = ML; }
+            else if (dir[0U] == 2U && dir[1U] == 1U) { result = MR; }
+            else if (dir[0U] == 0U && dir[1U] == 2U) { result = BL; }
+            else if (dir[0U] == 1U && dir[1U] == 2U) { result = BM; }
+            else if (dir[0U] == 2U && dir[1U] == 2U) { result = BR; }
             else {
-                result = static_cast<direction_t>(utils::to_1d(dir, coord_t { Kd }));
+                result = ZZ;
             }
 
             return result;
@@ -187,7 +197,7 @@ namespace chdr::solvers {
 
             const auto& neighbours = _maze.template get_neighbours<true>(_current);
 
-            if (UNLIKELY(_direction == zero_direction_v)) { // START NODE:
+            if (UNLIKELY(_direction == ZZ)) { // START NODE:
 
                 return {
                     neighbours[TL].first ? jump(_maze, neighbours[TL].second, _current, _end) : null_v, // FORCED
@@ -302,7 +312,7 @@ namespace chdr::solvers {
                 const auto s = utils::to_1d(_params.start, _params.size);
                 const auto e = utils::to_1d(_params.end  , _params.size);
 
-                  _open.emplace_nosort(s, zero_direction_v, static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
+                  _open.emplace_nosort(s, ZZ, static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
                 _closed.emplace(s);
 
                 // Main loop:
@@ -323,7 +333,7 @@ namespace chdr::solvers {
 
                                 const auto n = utils::to_1d(nCoord, _params.size);
 
-                                constexpr scalar_t nDistance{1};
+                                const scalar_t nDistance = _params.h(coord, nCoord) * _params.weight;
 
                                 if (!_closed.contains(n)) {
                                     solver_t::solver_utils::preallocate_emplace(_closed, n, _capacity, _params.maze.count());
@@ -332,12 +342,12 @@ namespace chdr::solvers {
                                         curr_ptr = new (_params.homogeneous_pmr->allocate(sizeof(node), alignof(node))) node(std::move(curr));
                                     }
 
-                                    if constexpr (params_t::lazy_sorting::value) {
-                                        _open.emplace_nosort(n, get_direction(coord, nCoord), curr_ptr->m_gScore + nDistance, _params.h(nCoord, _params.end) * _params.weight, curr_ptr);
-                                    }
-                                    else {
+                                    // if constexpr (params_t::lazy_sorting::value) {
+                                    //     _open.emplace_nosort(n, get_direction(coord, nCoord), curr_ptr->m_gScore + nDistance, _params.h(nCoord, _params.end) * _params.weight, curr_ptr);
+                                    // }
+                                    //else {
                                         _open.emplace(n, get_direction(coord, nCoord), curr_ptr->m_gScore + nDistance, _params.h(nCoord, _params.end) * _params.weight, curr_ptr);
-                                    }
+                                    //}
                                 }
                             }
                         }
