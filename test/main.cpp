@@ -174,8 +174,8 @@ namespace test {
                 using lazy_sorting [[maybe_unused]] = std::true_type;
 
                 const decltype(test)& maze;
-                const     coord_type  start;
-                const     coord_type  end;
+                     coord_type  start;
+                     coord_type  end;
                 const     coord_type  size;
                          scalar_type  (*h)(const coord_type&, const coord_type&) noexcept;
 
@@ -188,7 +188,7 @@ namespace test {
                 const      size_t memoryLimit  = static_cast<size_t>(-1U);
             };
 
-            const params args { test, end, start, _size, chdr::heuristics::euclidean_distance<scalar_t, coord_t>, &monotonic, &heterogeneous, &homogeneous };
+            const params args { test, start, end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &heterogeneous, &homogeneous };
 
                  if (_solver == "astar"        ) { result = invoke<chdr::solvers::        astar, params>(args); }
             else if (_solver == "bfs"          ) { result = invoke<chdr::solvers::          bfs, params>(args); }
