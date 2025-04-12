@@ -149,8 +149,6 @@ namespace chdr::solvers {
         static constexpr direction_t BM { 6U };
         static constexpr direction_t BR { 7U };
 
-        static constexpr direction_t ZZ { 8U }; // ZERO DIRECTION
-
         static constexpr rotation_t s_identity { TL, TM, TR,
                                                  ML,     MR,
                                                  BL, BM, BR };
@@ -167,17 +165,25 @@ namespace chdr::solvers {
                                                  BM,     TM,
                                                  BR, MR, TR };
 
-        static constexpr std::array<rotation_t, 9U> s_lookup {
-            /* {  1, -1 } */ s_rotate_2, // 0 //
-            /* {  1,  0 } */ s_rotate_r, // 1 //
-            /* {  1,  1 } */ s_rotate_l, // 2
-            /* {  0, -1 } */ s_rotate_2, // 3 //
-            /* {  0,  1 } */ s_identity, // 4 //
-            /* { -1, -1 } */ s_rotate_2, // 5
-            /* { -1,  0 } */ s_rotate_l, // 6 //
-            /* { -1,  1 } */ s_identity, // 7 //
-            /* {  0,  0 } */ s_identity, // 8 //
+        static constexpr direction_t ZZ { 8U };
+
+        inline static std::array<rotation_t, 9U> s_lookup {
+            /* 0 { -1, -1} */ s_rotate_2, //
+            /* 1 {  0, -1} */ s_rotate_r, //
+            /* 2 {  1, -1} */ s_rotate_r, //
+            /* 3 { -1,  0} */ s_rotate_2, //
+            /* 4 {  1,  0} */ s_identity, //
+            /* 5 { -1,  1} */ s_rotate_l, //
+            /* 6 {  0,  1} */ s_rotate_l, //
+            /* 7 {  1,  1} */ s_identity, //
+            /* 8 {  0,  0} */ s_identity, //
         };
+
+        /*
+         * { -1, -1 }, { 0, -1 }, { 1, -1 }
+         * { -1,  0 }, { 0,  0 }, { 1,  0 }
+         * { -1,  1 }, { 0,  1 }, { 1,  1 }
+         */
 
         static constexpr bool is_straight(const direction_t& _direction) noexcept {
             return _direction == TM ||
@@ -199,6 +205,7 @@ namespace chdr::solvers {
             else if (dir[0U] == 1U && dir[1U] == 0U) { result = TM; }
             else if (dir[0U] == 2U && dir[1U] == 0U) { result = TR; }
             else if (dir[0U] == 0U && dir[1U] == 1U) { result = ML; }
+         // else if (dir[0U] == 1U && dir[1U] == 1U) { result = ZZ; }
             else if (dir[0U] == 2U && dir[1U] == 1U) { result = MR; }
             else if (dir[0U] == 0U && dir[1U] == 2U) { result = BL; }
             else if (dir[0U] == 1U && dir[1U] == 2U) { result = BM; }
