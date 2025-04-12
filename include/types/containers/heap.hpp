@@ -588,7 +588,7 @@ namespace chdr {
                     }
 
                     if (comp(value_to_insert, c[max])) {
-                        c[i] = std::move(c[max]);
+                        std::swap(c[i], c[max]);
                         i = max;
                     }
                     else {
