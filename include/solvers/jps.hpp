@@ -28,6 +28,7 @@
 
 // ReSharper disable once CppUnusedIncludeDirective
 #include "../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
+#include "include/utils/heuristics.hpp"
 
 namespace chdr::solvers {
 
@@ -360,7 +361,7 @@ namespace chdr::solvers {
 
                                 const auto n = utils::to_1d(nCoord, _params.size);
 
-                                const scalar_t nDistance = _params.h(coord, nCoord) * _params.weight;
+                                const scalar_t nDistance = heuristics::chebyshev_distance<scalar_t>(coord, nCoord);
 
                                 if (!_closed.contains(n)) {
                                     solver_t::solver_utils::preallocate_emplace(_closed, n, _capacity, _params.maze.count());
