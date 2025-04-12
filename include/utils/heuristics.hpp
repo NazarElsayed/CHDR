@@ -85,6 +85,38 @@ namespace chdr {
         }
 
         /**
+         * @brief Computes the squared Euclidean distance between two nodes.
+         * @details Avoids costly square root computation; often used as a quick comparison metric.
+         * @param _a The first node.
+         * @param _b The second node.
+         * @return The squared Euclidean distance between _a and _b.
+         */
+        template <typename scalar_t, typename coord_t>
+        [[maybe_unused, nodiscard]] HOT static constexpr auto octile_distance(const coord_t& _a, const coord_t& _b) noexcept {
+
+            constexpr auto Kd = std::tuple_size_v<std::decay_t<coord_t>>;
+
+            scalar_t result = chebyshev_distance<scalar_t, coord_t>(_a, _b);
+
+            bool straight = false;
+            for (size_t i = 0U; i < Kd; ++i) {
+
+                if (_a[0] == _b[0]) {
+                    straight = true;
+
+                    if constexpr (Kd > 4U) { break; }
+                }
+            }
+
+            if (!straight) {
+                constexpr auto sqrt2 = utils::sqrt<scalar_t>(2.0);
+                result *= sqrt2;
+            }
+
+            return result;
+        }
+
+        /**
          * @brief Calculate the Manhattan distance between two nodes.
          * @details Measures distance traversed along grid axes, commonly used for block-based paths.
          * @remarks Useful for grid-search algorithms or scenarios with orthogonal movements.

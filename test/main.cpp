@@ -140,12 +140,8 @@ namespace test {
             /* GENERATE MAZE */
             constexpr size_t seed { 0U };
 
-            coord_t end   {};
-            coord_t start {};
-
-            for (size_t i = 0U; i < _size.size(); ++i) {
-                end[i] = _size[i] - 1U;
-            }
+            coord_t end   { _size[1] - 1U, 0 };
+            coord_t start { 0, _size[1] - 1U };
 
             // const std::vector<weight_t> nodes(chdr::utils::product<size_t>(_size), std::numeric_limits<weight_t>::lowest());
             // const auto grid = chdr::mazes::grid<coord_t, weight_t>(_size, nodes);
@@ -160,6 +156,112 @@ namespace test {
             //auto graph_pool = chdr::heterogeneous_pool(); const auto test = chdr::mazes::graph<index_t, scalar_t>(grid, &graph_pool);
             //const auto test = generator::graph::generate<weight_t, index_t, coord_t, scalar_t>(start, end, size, seed);
 
+            chdr::heap<int> myHeap;
+
+
+            {
+                // Unit test suite for chdr::heap<int>
+                // The goal is to intensely test the heap's functionality as a priority queue.
+
+                try {
+                    chdr::heap<int, std::greater<int>> testHeap;
+
+                    // 1. Test basic push and pop operations.
+                    testHeap.push(10);
+                    testHeap.push(5);
+                    testHeap.push(20);
+
+                    assert(testHeap.top() == 5); // Ensure the top is min (heap property should hold).
+                    testHeap.pop();
+
+                    auto first = testHeap.top();
+                    assert(testHeap.top() == 10); // Next min after pop.
+                    testHeap.pop();
+                    assert(testHeap.top() == 20); // Final element.
+
+                    testHeap.pop();           // Should leave the heap empty.
+                    assert(testHeap.empty()); // Ensure heap is empty.
+
+                    // 2. Test inserting duplicate elements.
+                    testHeap.push(15);
+                    testHeap.push(15);
+                    testHeap.push(10);
+
+                    assert(testHeap.top() == 10); // Min should still be 10.
+                    testHeap.pop();               // Remove 10.
+                    assert(testHeap.top() == 15); // Min is now 15.
+
+                    // 3. Test heap size after multiple operations.
+                    assert(testHeap.size() == 2); // Remaining: 15 and 15.
+                    testHeap.pop();
+                    testHeap.pop();
+                    assert(testHeap.size() == 0); // After popping all elements.
+
+                    // 4. Test bulk insertion to stress the heap.
+                    constexpr int stressTestSize = 100000;
+                    for (int i = stressTestSize; i > 0; --i) {
+                        testHeap.push(i);
+                    }
+
+                    assert(testHeap.size() == stressTestSize); // Ensure size matches insertion count.
+                    assert(testHeap.top() == 1);               // Ensure the top of the heap is correct (smallest value).
+
+                    // Pop all elements to test the order remains correct.
+                    int prev = testHeap.top();
+                    while (!testHeap.empty()) {
+                        int current = testHeap.top();
+                        assert(current >= prev); // Ensure each extracted element is greater than or equal to the previous.
+                        prev = current;
+                        testHeap.pop();
+                    }
+
+                    // 6. Test under high churn conditions: alternating push and pop.
+                    constexpr int churnTestSize = 100000;
+                    for (int i = 0; i < churnTestSize; ++i) {
+                        testHeap.push(i);
+                        assert(testHeap.top() <= i); // Ensure heap property holds after each push.
+                        if (i % 2 == 0) {
+                            testHeap.pop(); // Remove an element on even iterations.
+                        }
+                    }
+
+                    // Final checks after churn operations.
+                    while (!testHeap.empty()) {
+                        int current = testHeap.top();
+                        assert(current >= prev); // Ensure elements are in correct order after churn.
+                        prev = current;
+                        testHeap.pop();
+                    }
+
+                    assert(testHeap.empty()); // Ensure the heap is empty after final cleanup.
+
+                    // 5. Test edge cases, such as empty pop and top.
+                    try {
+                        testHeap.pop(); // Should handle gracefully without crashing.
+                        assert(false && "Calling pop on an empty heap should throw or handle gracefully.");
+                    }
+                    catch (...) {
+                        // Expected.
+                    }
+
+                    try {
+                        [[maybe_unused]] auto topElement = testHeap.top(); // Should handle gracefully.
+                        assert(false && "Calling top on an empty heap should throw or handle gracefully.");
+                    }
+                    catch (...) {
+                        // Expected.
+                    }
+
+                    // All tests passed.
+                    debug::log("All unit tests for chdr::heap<int> passed successfully!", info);
+                }
+                catch (const std::exception& e) {
+                    debug::log("A unit test failed: " + std::string(e.what()), error);
+                } catch (...) {
+                    debug::log("A unit test encountered an unknown failure!", error);
+                }
+            }
+
             auto     monotonic = chdr::monotonic_pool();
             auto heterogeneous = chdr::heterogeneous_pool();
             auto   homogeneous = chdr::homogeneous_pool();
@@ -171,11 +273,11 @@ namespace test {
                 using   index_type [[maybe_unused]] =  index_t;
                 using   coord_type [[maybe_unused]] =  coord_t;
 
-                using lazy_sorting [[maybe_unused]] = std::true_type;
+                using lazy_sorting [[maybe_unused]] = std::false_type;
 
                 const decltype(test)& maze;
-                     coord_type  start;
-                     coord_type  end;
+                const     coord_type  start;
+                const     coord_type  end;
                 const     coord_type  size;
                          scalar_type  (*h)(const coord_type&, const coord_type&) noexcept;
 
@@ -245,8 +347,8 @@ namespace test {
 
             using index_t = unsigned long;
 
-                 if (static_cast<size_t>(_argc - 1) == X) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 1U> { std::stoul(_argv[X]) }); }
-            else if (static_cast<size_t>(_argc - 1) == Y) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 2U> { std::stoul(_argv[X]), std::stoul(_argv[Y]) }); }
+            //     if (static_cast<size_t>(_argc - 1) == X) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 1U> { std::stoul(_argv[X]) }); }
+            if (static_cast<size_t>(_argc - 1) == Y) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 2U> { std::stoul(_argv[X]), std::stoul(_argv[Y]) }); }
             //else if (static_cast<size_t>(_argc - 1) == Z) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 3U> { std::stoul(_argv[X]), std::stoul(_argv[Y]), std::stoul(_argv[Z]) }); }
             //else if (static_cast<size_t>(_argc - 1) == W) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 4U> { std::stoul(_argv[X]), std::stoul(_argv[Y]), std::stoul(_argv[Z]), std::stoul(_argv[W]) }); }
             else {

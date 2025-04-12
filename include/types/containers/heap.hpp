@@ -71,7 +71,7 @@ namespace chdr {
          * @return size_t The zero-based index of the provided item within the heap container.
          */
         [[nodiscard]] HOT constexpr size_t index_of(const T& _item) const noexcept {
-            return static_cast<size_t>(&(_item) - &(c[1U]));
+            return static_cast<size_t>(&(_item) - &(c[0U]));
         }
 
     public:
@@ -427,7 +427,7 @@ namespace chdr {
 
             auto i = index_of(_item);
 
-            assert(i < size() && "(Out of Bounds) Item does not exist in Heap.");
+            assert(i < c.size() && "(Out of Bounds) Item does not exist in Heap.");
 
             if (i < size()) {
 
@@ -531,7 +531,7 @@ namespace chdr {
 
                 auto i = index_of(_item);
 
-                assert(i < size() && "(Out of Bounds) Item does not exist in Heap.");
+                assert(i < c.size() && "(Out of Bounds) Item does not exist in Heap.");
 
                 auto value_to_insert = std::move(c[i]);
 
@@ -565,14 +565,14 @@ namespace chdr {
             if (size() > 1U) {
 
                 auto i = index_of(_item);
-                assert(i < size() && "(Out of Bounds) Item does not exist in Heap.");
+                assert(i < c.size() && "(Out of Bounds) Item does not exist in Heap.");
 
                 auto value_to_insert = std::move(c[i]);
 
                 const auto c0 = i * Kd;
                 const auto cn = c0 + (Kd - 1U);
 
-                while (i > 1U && c0 < c.size()) {
+                while (i > 0U && c0 < c.size()) {
 
                     size_t max = c0;
 
@@ -617,7 +617,7 @@ namespace chdr {
             if (result) {
                 const auto& i = index_of(_item);
 
-                assert(i < size() && "(Out of Bounds) Item does not exist in Heap.");
+                assert(i < c.size() && "(Out of Bounds) Item does not exist in Heap.");
 
                 result = i < c.size() && _item == c[i];
             }
