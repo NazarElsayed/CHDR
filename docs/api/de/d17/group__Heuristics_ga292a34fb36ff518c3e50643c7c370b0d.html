@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CHDR: CHDR_VERSION_METADATA</title>
+<title>CHDR: chdr::heuristics::octile_distance</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -77,7 +77,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('d9/d96/chdr_8hpp_abb7af28218922ef312a42cc437d0011c.html','../../'); initResizable(); });
+$(document).ready(function(){initNavTree('de/d17/group__Heuristics_ga292a34fb36ff518c3e50643c7c370b0d.html','../../'); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -103,21 +103,53 @@ $(document).ready(function(){initNavTree('d9/d96/chdr_8hpp_abb7af28218922ef312a4
 </div>
 
 <div class="contents">
-<a id="abb7af28218922ef312a42cc437d0011c" name="abb7af28218922ef312a42cc437d0011c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abb7af28218922ef312a42cc437d0011c">&#9670;&#160;</a></span>CHDR_VERSION_METADATA</h2>
+<a id="ga292a34fb36ff518c3e50643c7c370b0d" name="ga292a34fb36ff518c3e50643c7c370b0d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga292a34fb36ff518c3e50643c7c370b0d">&#9670;&#160;</a></span>octile_distance()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename scalar_t , typename coord_t &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">#define CHDR_VERSION_METADATA&#160;&#160;&#160;&quot;2a2b96c7&quot;</td>
+          <td class="memname">static auto octile_distance </td>
+          <td>(</td>
+          <td class="paramtype">const coord_t &amp;&#160;</td>
+          <td class="paramname"><em>_a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const coord_t &amp;&#160;</td>
+          <td class="paramname"><em>_b</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>CHDR version metadata string. </p>
+<p>Computes the octile distance between two points in multidimensional discrete space. </p>
+<p>A hybrid heuristic combining Chebyshev distance for axial alignment and an adjustment for diagonal movement. It considers diagonal movement to be slightly costlier than straight movement by approximating it with a factor of sqrt(2). </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">_a</td><td>The first coordinate point. </td></tr>
+    <tr><td class="paramname">_b</td><td>The second coordinate point. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The octile distance between _a and _b. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d9/d96/chdr_8hpp_source.html#l00040">40</a> of file <a class="el" href="../../d9/d96/chdr_8hpp_source.html">chdr.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../df/d24/heuristics_8hpp_source.html#l00096">96</a> of file <a class="el" href="../../df/d24/heuristics_8hpp_source.html">heuristics.hpp</a>.</p>
 
 </div>
 </div>

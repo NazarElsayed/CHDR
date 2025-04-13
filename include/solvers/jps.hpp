@@ -169,22 +169,16 @@ namespace chdr::solvers {
         static constexpr direction_t ZZ { 8U };
 
         inline static std::array<rotation_t, 9U> s_lookup {
-            /* 0 { -1, -1} */ s_rotate_2, //
-            /* 1 {  0, -1} */ s_rotate_r, //
-            /* 2 {  1, -1} */ s_rotate_r, //
-            /* 3 { -1,  0} */ s_rotate_2, //
-            /* 4 {  1,  0} */ s_identity, //
-            /* 5 { -1,  1} */ s_rotate_l, //
-            /* 6 {  0,  1} */ s_rotate_l, //
-            /* 7 {  1,  1} */ s_identity, //
-            /* 8 {  0,  0} */ s_identity, //
+            /*  0  { -1, -1 }  */ s_rotate_2,
+            /*  1  {  0, -1 }  */ s_rotate_r,
+            /*  2  {  1, -1 }  */ s_rotate_r,
+            /*  3  { -1,  0 }  */ s_rotate_2,
+            /*  4  {  1,  0 }  */ s_identity,
+            /*  5  { -1,  1 }  */ s_rotate_l,
+            /*  6  {  0,  1 }  */ s_rotate_l,
+            /*  7  {  1,  1 }  */ s_identity,
+            /*  8  {  0,  0 }  */ s_identity,
         };
-
-        /*
-         * { -1, -1 }, { 0, -1 }, { 1, -1 }
-         * { -1,  0 }, { 0,  0 }, { 1,  0 }
-         * { -1,  1 }, { 0,  1 }, { 1,  1 }
-         */
 
         static constexpr bool is_straight(const direction_t& _direction) noexcept {
             return _direction == TM ||
@@ -206,7 +200,6 @@ namespace chdr::solvers {
             else if (dir[0U] == 1U && dir[1U] == 0U) { result = TM; }
             else if (dir[0U] == 2U && dir[1U] == 0U) { result = TR; }
             else if (dir[0U] == 0U && dir[1U] == 1U) { result = ML; }
-         // else if (dir[0U] == 1U && dir[1U] == 1U) { result = ZZ; }
             else if (dir[0U] == 2U && dir[1U] == 1U) { result = MR; }
             else if (dir[0U] == 0U && dir[1U] == 2U) { result = BL; }
             else if (dir[0U] == 1U && dir[1U] == 2U) { result = BM; }
@@ -370,12 +363,12 @@ namespace chdr::solvers {
                                         curr_ptr = new (_params.monotonic_pmr->allocate(sizeof(node), alignof(node))) node(std::move(curr));
                                     }
 
-                                    // if constexpr (params_t::lazy_sorting::value) {
-                                    //     _open.emplace_nosort(n, get_direction(coord, nCoord), curr_ptr->m_gScore + nDistance, _params.h(nCoord, _params.end) * _params.weight, curr_ptr);
-                                    // }
-                                    // else {
+                                    if constexpr (params_t::lazy_sorting::value) {
+                                        _open.emplace_nosort(n, get_direction(coord, nCoord), curr_ptr->m_gScore + nDistance, _params.h(nCoord, _params.end) * _params.weight, curr_ptr);
+                                    }
+                                    else {
                                         _open.emplace(n, get_direction(coord, nCoord), curr_ptr->m_gScore + nDistance, _params.h(nCoord, _params.end) * _params.weight, curr_ptr);
-                                    // }
+                                    }
                                 }
                             }
                         }

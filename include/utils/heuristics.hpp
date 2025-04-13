@@ -85,11 +85,12 @@ namespace chdr {
         }
 
         /**
-         * @brief Computes the squared Euclidean distance between two nodes.
-         * @details Avoids costly square root computation; often used as a quick comparison metric.
-         * @param _a The first node.
-         * @param _b The second node.
-         * @return The squared Euclidean distance between _a and _b.
+         * @brief Computes the octile distance between two points in multidimensional discrete space.
+         * @details A hybrid heuristic combining Chebyshev distance for axial alignment and an adjustment for diagonal movement.
+         *          It considers diagonal movement to be slightly costlier than straight movement by approximating it with a factor of sqrt(2).
+         * @param _a The first coordinate point.
+         * @param _b The second coordinate point.
+         * @return The octile distance between _a and _b.
          */
         template <typename scalar_t, typename coord_t>
         [[maybe_unused, nodiscard]] HOT static constexpr auto octile_distance(const coord_t& _a, const coord_t& _b) noexcept {

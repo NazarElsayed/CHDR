@@ -149,7 +149,7 @@ $(document).ready(function(){initNavTree('da/d45/heap_8hpp_source.html','../../'
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keyword">private</span>:</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        [[nodiscard]] <a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_a1eb14cc432874ddacd1934791dbe12a3.html#a1eb14cc432874ddacd1934791dbe12a3">HOT</a> <span class="keyword">constexpr</span> <span class="keywordtype">size_t</span> index_of(<span class="keyword">const</span> T&amp; _item) <span class="keyword">const</span> <span class="keyword">noexcept</span> {</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>            <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(&amp;(_item) - &amp;(c[1U]));</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>            <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(&amp;(_item) - &amp;(c[0U]));</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        }</div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keyword">public</span>:</div>
@@ -341,7 +341,7 @@ $(document).ready(function(){initNavTree('da/d45/heap_8hpp_source.html','../../'
 <div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span> </div>
 <div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>            <span class="keyword">auto</span> i = index_of(_item);</div>
 <div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span> </div>
-<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>            assert(i &lt; <a class="code hl_function" href="../../d3/d61/classchdr_1_1heap_a3caedb145a667c26028740417dcf32c3.html#a3caedb145a667c26028740417dcf32c3">size</a>() &amp;&amp; <span class="stringliteral">&quot;(Out of Bounds) Item does not exist in Heap.&quot;</span>);</div>
+<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>            assert(i &lt; c.size() &amp;&amp; <span class="stringliteral">&quot;(Out of Bounds) Item does not exist in Heap.&quot;</span>);</div>
 <div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span> </div>
 <div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span>            <span class="keywordflow">if</span> (i &lt; <a class="code hl_function" href="../../d3/d61/classchdr_1_1heap_a3caedb145a667c26028740417dcf32c3.html#a3caedb145a667c26028740417dcf32c3">size</a>()) {</div>
 <div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span> </div>
@@ -411,7 +411,7 @@ $(document).ready(function(){initNavTree('da/d45/heap_8hpp_source.html','../../'
 <div class="line"><a id="l00531" name="l00531"></a><span class="lineno">  531</span> </div>
 <div class="line"><a id="l00532" name="l00532"></a><span class="lineno">  532</span>                <span class="keyword">auto</span> i = index_of(_item);</div>
 <div class="line"><a id="l00533" name="l00533"></a><span class="lineno">  533</span> </div>
-<div class="line"><a id="l00534" name="l00534"></a><span class="lineno">  534</span>                assert(i &lt; <a class="code hl_function" href="../../d3/d61/classchdr_1_1heap_a3caedb145a667c26028740417dcf32c3.html#a3caedb145a667c26028740417dcf32c3">size</a>() &amp;&amp; <span class="stringliteral">&quot;(Out of Bounds) Item does not exist in Heap.&quot;</span>);</div>
+<div class="line"><a id="l00534" name="l00534"></a><span class="lineno">  534</span>                assert(i &lt; c.size() &amp;&amp; <span class="stringliteral">&quot;(Out of Bounds) Item does not exist in Heap.&quot;</span>);</div>
 <div class="line"><a id="l00535" name="l00535"></a><span class="lineno">  535</span> </div>
 <div class="line"><a id="l00536" name="l00536"></a><span class="lineno">  536</span>                <span class="keyword">auto</span> value_to_insert = std::move(c[i]);</div>
 <div class="line"><a id="l00537" name="l00537"></a><span class="lineno">  537</span> </div>
@@ -438,14 +438,14 @@ $(document).ready(function(){initNavTree('da/d45/heap_8hpp_source.html','../../'
 <div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="../../d3/d61/classchdr_1_1heap_a3caedb145a667c26028740417dcf32c3.html#a3caedb145a667c26028740417dcf32c3">size</a>() &gt; 1U) {</div>
 <div class="line"><a id="l00566" name="l00566"></a><span class="lineno">  566</span> </div>
 <div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span>                <span class="keyword">auto</span> i = index_of(_item);</div>
-<div class="line"><a id="l00568" name="l00568"></a><span class="lineno">  568</span>                assert(i &lt; <a class="code hl_function" href="../../d3/d61/classchdr_1_1heap_a3caedb145a667c26028740417dcf32c3.html#a3caedb145a667c26028740417dcf32c3">size</a>() &amp;&amp; <span class="stringliteral">&quot;(Out of Bounds) Item does not exist in Heap.&quot;</span>);</div>
+<div class="line"><a id="l00568" name="l00568"></a><span class="lineno">  568</span>                assert(i &lt; c.size() &amp;&amp; <span class="stringliteral">&quot;(Out of Bounds) Item does not exist in Heap.&quot;</span>);</div>
 <div class="line"><a id="l00569" name="l00569"></a><span class="lineno">  569</span> </div>
 <div class="line"><a id="l00570" name="l00570"></a><span class="lineno">  570</span>                <span class="keyword">auto</span> value_to_insert = std::move(c[i]);</div>
 <div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span> </div>
 <div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span>                <span class="keyword">const</span> <span class="keyword">auto</span> c0 = i * Kd;</div>
 <div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span>                <span class="keyword">const</span> <span class="keyword">auto</span> cn = c0 + (Kd - 1U);</div>
 <div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span> </div>
-<div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span>                <span class="keywordflow">while</span> (i &gt; 1U &amp;&amp; c0 &lt; c.size()) {</div>
+<div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span>                <span class="keywordflow">while</span> (i &gt; 0U &amp;&amp; c0 &lt; c.size()) {</div>
 <div class="line"><a id="l00576" name="l00576"></a><span class="lineno">  576</span> </div>
 <div class="line"><a id="l00577" name="l00577"></a><span class="lineno">  577</span>                    <span class="keywordtype">size_t</span> max = c0;</div>
 <div class="line"><a id="l00578" name="l00578"></a><span class="lineno">  578</span> </div>
@@ -461,7 +461,7 @@ $(document).ready(function(){initNavTree('da/d45/heap_8hpp_source.html','../../'
 <div class="line"><a id="l00588" name="l00588"></a><span class="lineno">  588</span>                    }</div>
 <div class="line"><a id="l00589" name="l00589"></a><span class="lineno">  589</span> </div>
 <div class="line"><a id="l00590" name="l00590"></a><span class="lineno">  590</span>                    <span class="keywordflow">if</span> (comp(value_to_insert, c[max])) {</div>
-<div class="line"><a id="l00591" name="l00591"></a><span class="lineno">  591</span>                        c[i] = std::move(c[max]);</div>
+<div class="line"><a id="l00591" name="l00591"></a><span class="lineno">  591</span>                        std::swap(c[i], c[max]);</div>
 <div class="line"><a id="l00592" name="l00592"></a><span class="lineno">  592</span>                        i = max;</div>
 <div class="line"><a id="l00593" name="l00593"></a><span class="lineno">  593</span>                    }</div>
 <div class="line"><a id="l00594" name="l00594"></a><span class="lineno">  594</span>                    <span class="keywordflow">else</span> {</div>
@@ -482,7 +482,7 @@ $(document).ready(function(){initNavTree('da/d45/heap_8hpp_source.html','../../'
 <div class="line"><a id="l00617" name="l00617"></a><span class="lineno">  617</span>            <span class="keywordflow">if</span> (result) {</div>
 <div class="line"><a id="l00618" name="l00618"></a><span class="lineno">  618</span>                <span class="keyword">const</span> <span class="keyword">auto</span>&amp; i = index_of(_item);</div>
 <div class="line"><a id="l00619" name="l00619"></a><span class="lineno">  619</span> </div>
-<div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>                assert(i &lt; <a class="code hl_function" href="../../d3/d61/classchdr_1_1heap_a3caedb145a667c26028740417dcf32c3.html#a3caedb145a667c26028740417dcf32c3">size</a>() &amp;&amp; <span class="stringliteral">&quot;(Out of Bounds) Item does not exist in Heap.&quot;</span>);</div>
+<div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>                assert(i &lt; c.size() &amp;&amp; <span class="stringliteral">&quot;(Out of Bounds) Item does not exist in Heap.&quot;</span>);</div>
 <div class="line"><a id="l00621" name="l00621"></a><span class="lineno">  621</span> </div>
 <div class="line"><a id="l00622" name="l00622"></a><span class="lineno">  622</span>                result = i &lt; c.size() &amp;&amp; _item == c[i];</div>
 <div class="line"><a id="l00623" name="l00623"></a><span class="lineno">  623</span>            }</div>
