@@ -25,10 +25,10 @@
 #include "../utils/utils.hpp"
 #include "base/solver.hpp"
 #include "base/unmanaged_node.hpp"
+#include "include/utils/heuristics.hpp"
 
 // ReSharper disable once CppUnusedIncludeDirective
 #include "../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
-#include "include/utils/heuristics.hpp"
 
 namespace chdr::solvers {
 

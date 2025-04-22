@@ -25,6 +25,7 @@
 #include "../utils/utils.hpp"
 #include "base/managed_node.hpp"
 #include "base/solver.hpp"
+#include "include/utils/heuristics.hpp"
 
 // ReSharper disable once CppUnusedIncludeDirective
 #include "../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
@@ -333,13 +334,13 @@ namespace chdr::solvers {
 
                                 const auto n = utils::to_1d(nCoord, _params.size);
 
-                                const scalar_t nDistance = _params.h(coord, nCoord) * _params.weight;
+                                const scalar_t nDistance = heuristics::octile_distance<scalar_t>(coord, nCoord);
 
                                 if (!_closed.contains(n)) {
                                     solver_t::solver_utils::preallocate_emplace(_closed, n, _capacity, _params.maze.count());
 
                                     if (curr_ptr == nullptr) {
-                                        curr_ptr = new (_params.homogeneous_pmr->allocate(sizeof(node), alignof(node))) node(std::move(curr));
+                                        curr_ptr = new (_params.monotonic_pmr->allocate(sizeof(node), alignof(node))) node(std::move(curr));
                                     }
 
                                     if constexpr (params_t::lazy_sorting::value) {
