@@ -143,7 +143,7 @@ namespace test {
             const coord_t start {};
                   coord_t end;
 
-            for (size_t i = 0U; i < _size[0] - 1U; ++i) {
+            for (size_t i = 0U; i < _size.size(); ++i) {
                 end[i] = _size[i] - 1U;
             }
 
