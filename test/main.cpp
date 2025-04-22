@@ -140,8 +140,12 @@ namespace test {
             /* GENERATE MAZE */
             constexpr size_t seed { 0U };
 
-            coord_t end   { _size[1] - 1U, 0 };
-            coord_t start { 0, _size[1] - 1U };
+            const coord_t start {};
+                  coord_t end;
+
+            for (size_t i = 0U; i < _size[0] - 1U; ++i) {
+                end[i] = _size[i] - 1U;
+            }
 
             // const std::vector<weight_t> nodes(chdr::utils::product<size_t>(_size), std::numeric_limits<weight_t>::lowest());
             // const auto grid = chdr::mazes::grid<coord_t, weight_t>(_size, nodes);
