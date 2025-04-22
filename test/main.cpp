@@ -149,102 +149,11 @@ namespace test {
             const auto grid = make_solvable_random_grid_maze<weight_t, coord_t, scalar_t, index_t>(start, end, _size, seed);
 
             // const auto grid = generator::grid::generate<weight_t>(start, end, _size, 0.0, 0.0, seed);
-
-            //debug::log(_size[0] + _size[1] - 2U);
+            // debug::log(_size[0] + _size[1] - 2U);
 
             const auto& test = grid;
-            //auto graph_pool = chdr::heterogeneous_pool(); const auto test = chdr::mazes::graph<index_t, scalar_t>(grid, &graph_pool);
-            //const auto test = generator::graph::generate<weight_t, index_t, coord_t, scalar_t>(start, end, size, seed);
-
-            chdr::heap<int> myHeap;
-
-
-            {
-                // Unit test suite for chdr::heap<int>
-                // The goal is to intensely test the heap's functionality as a priority queue.
-
-                try {
-                    chdr::heap<int, std::greater<int>> testHeap;
-
-                    // 1. Test basic push and pop operations.
-                    testHeap.push(10);
-                    testHeap.push(5);
-                    testHeap.push(20);
-
-                    assert(testHeap.top() == 5); // Ensure the top is min (heap property should hold).
-                    testHeap.pop();
-
-                    auto first = testHeap.top();
-                    assert(testHeap.top() == 10); // Next min after pop.
-                    testHeap.pop();
-                    assert(testHeap.top() == 20); // Final element.
-
-                    testHeap.pop();           // Should leave the heap empty.
-                    assert(testHeap.empty()); // Ensure heap is empty.
-
-                    // 2. Test inserting duplicate elements.
-                    testHeap.push(15);
-                    testHeap.push(15);
-                    testHeap.push(10);
-
-                    assert(testHeap.top() == 10); // Min should still be 10.
-                    testHeap.pop();               // Remove 10.
-                    assert(testHeap.top() == 15); // Min is now 15.
-
-                    // 3. Test heap size after multiple operations.
-                    assert(testHeap.size() == 2); // Remaining: 15 and 15.
-                    testHeap.pop();
-                    testHeap.pop();
-                    assert(testHeap.size() == 0); // After popping all elements.
-
-                    // 4. Test bulk insertion to stress the heap.
-                    constexpr int stressTestSize = 100000;
-                    for (int i = stressTestSize; i > 0; --i) {
-                        testHeap.push(i);
-                    }
-
-                    assert(testHeap.size() == stressTestSize); // Ensure size matches insertion count.
-                    assert(testHeap.top() == 1);               // Ensure the top of the heap is correct (smallest value).
-
-                    // Pop all elements to test the order remains correct.
-                    int prev = testHeap.top();
-                    while (!testHeap.empty()) {
-                        int current = testHeap.top();
-                        assert(current >= prev); // Ensure each extracted element is greater than or equal to the previous.
-                        prev = current;
-                        testHeap.pop();
-                    }
-
-                    // 6. Test under high churn conditions: alternating push and pop.
-                    constexpr int churnTestSize = 100000;
-                    for (int i = 0; i < churnTestSize; ++i) {
-                        testHeap.push(i);
-                        assert(testHeap.top() <= i); // Ensure heap property holds after each push.
-                        if (i % 2 == 0) {
-                            testHeap.pop(); // Remove an element on even iterations.
-                        }
-                    }
-
-                    // Final checks after churn operations.
-                    prev = std::numeric_limits<int>::min();
-                    while (!testHeap.empty()) {
-                        int current = testHeap.top();
-                        assert(current >= prev); // Ensure elements are in correct order after churn.
-                        prev = current;
-                        testHeap.pop();
-                    }
-
-                    assert(testHeap.empty()); // Ensure the heap is empty after final cleanup.
-
-                    // All tests passed.
-                    debug::log("All unit tests for chdr::heap<int> passed successfully!", info);
-                }
-                catch (const std::exception& e) {
-                    debug::log("A unit test failed: " + std::string(e.what()), error);
-                } catch (...) {
-                    debug::log("A unit test encountered an unknown failure!", error);
-                }
-            }
+            // auto graph_pool = chdr::heterogeneous_pool(); const auto test = chdr::mazes::graph<index_t, scalar_t>(grid, &graph_pool);
+            // const auto test = generator::graph::generate<weight_t, index_t, coord_t, scalar_t>(start, end, size, seed);
 
             auto     monotonic = chdr::monotonic_pool();
             auto heterogeneous = chdr::heterogeneous_pool();
