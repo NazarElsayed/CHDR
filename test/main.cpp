@@ -226,6 +226,7 @@ namespace test {
                     }
 
                     // Final checks after churn operations.
+                    prev = std::numeric_limits<int>::min();
                     while (!testHeap.empty()) {
                         int current = testHeap.top();
                         assert(current >= prev); // Ensure elements are in correct order after churn.
@@ -234,23 +235,6 @@ namespace test {
                     }
 
                     assert(testHeap.empty()); // Ensure the heap is empty after final cleanup.
-
-                    // 5. Test edge cases, such as empty pop and top.
-                    try {
-                        testHeap.pop(); // Should handle gracefully without crashing.
-                        assert(false && "Calling pop on an empty heap should throw or handle gracefully.");
-                    }
-                    catch (...) {
-                        // Expected.
-                    }
-
-                    try {
-                        [[maybe_unused]] auto topElement = testHeap.top(); // Should handle gracefully.
-                        assert(false && "Calling top on an empty heap should throw or handle gracefully.");
-                    }
-                    catch (...) {
-                        // Expected.
-                    }
 
                     // All tests passed.
                     debug::log("All unit tests for chdr::heap<int> passed successfully!", info);

@@ -567,36 +567,46 @@ namespace chdr {
                 auto i = index_of(_item);
                 assert(i < c.size() && "(Out of Bounds) Item does not exist in Heap.");
 
-                auto value_to_insert = std::move(c[i]);
+                auto value_to_insert = std::move(c[i]); // Save the value to reposition
 
-                const auto c0 = i * Kd;
-                const auto cn = c0 + (Kd - 1U);
+                while (true) {
 
-                while (i > 0U && c0 < c.size()) {
+                    // Calculate child range for the current index:
+                    const size_t c0 = i * Kd;               // First child index
+                    const size_t cn = c0 + (Kd - 1U);       // Last child index in range
 
-                    size_t max = c0;
+                    if (c0 < c.size()) {
 
-                    if constexpr (Kd == 2U) {
-                        max = (cn < c.size() && comp(c[c0], c[cn])) ? cn : c0;
-                    }
-                    else {
-                        for (auto j = c0; j <= cn && j < c.size(); ++j) {
-                            if (comp(c[max], c[j])) {
-                                max = j;
+                        // Find the best candidate child to swap with:
+                        size_t best_child = c0;
+
+                        // Use best case for binary or d-ary heap:
+                        if constexpr (Kd == 2U) {
+                            best_child = (cn < c.size() && comp(c[c0], c[cn])) ? cn : c0;
+                        }
+                        else {
+                            for (size_t j = c0 + 1; j <= cn && j < c.size(); ++j) {
+                                if (comp(c[best_child], c[j])) {
+                                    best_child = j;
+                                }
                             }
                         }
-                    }
 
-                    if (comp(value_to_insert, c[max])) {
-                        std::swap(c[i], c[max]);
-                        i = max;
+                        // If value to insert is less favorable than the best child:
+                        if (comp(value_to_insert, c[best_child])) {
+                            c[i] = std::move(c[best_child]);
+                            i = best_child;
+                        }
+                        else {
+                            c[i] = std::move(value_to_insert);
+                            break;
+                        }
                     }
                     else {
+                        c[i] = std::move(value_to_insert);
                         break;
                     }
                 }
-
-                c[i] = std::move(value_to_insert);
             }
         }
 
