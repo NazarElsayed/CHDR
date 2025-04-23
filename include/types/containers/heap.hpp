@@ -567,28 +567,22 @@ namespace chdr {
                 auto i = index_of(_item);
                 assert(i < c.size() && "(Out of Bounds) Item does not exist in Heap.");
 
-                auto value_to_insert = std::move(c[i]); // Save the value to reposition
+                auto value_to_insert = std::move(c[i]); // Save value to reposition.
 
                 while (true) {
 
-                    // Calculate child range for the current index:
-                    const size_t c0 = i * Kd;               // First child index
-                    const size_t cn = c0 + (Kd - 1U);       // Last child index in range
+                    const size_t c0 = i * Kd;         // First child index
+                    const size_t cn = c0 + (Kd - 1U); // Last child index in range
 
                     if (c0 < c.size()) {
+                        PREFETCH(&c[c0], _MM_HINT_NTA);
+                        PREFETCH(&c[cn], _MM_HINT_NTA);
 
-                        // Find the best candidate child to swap with:
+                        // Find best candidate child to swap with:
                         size_t best_child = c0;
-
-                        // Use best case for binary or d-ary heap:
-                        if constexpr (Kd == 2U) {
-                            best_child = (cn < c.size() && comp(c[c0], c[cn])) ? cn : c0;
-                        }
-                        else {
-                            for (size_t j = c0 + 1; j <= cn && j < c.size(); ++j) {
-                                if (comp(c[best_child], c[j])) {
-                                    best_child = j;
-                                }
+                        for (size_t j = c0 + 1U; j <= cn && j < c.size(); ++j) {
+                            if (comp(c[best_child], c[j])) {
+                                best_child = j;
                             }
                         }
 
@@ -596,16 +590,12 @@ namespace chdr {
                         if (comp(value_to_insert, c[best_child])) {
                             c[i] = std::move(c[best_child]);
                             i = best_child;
-                        }
-                        else {
-                            c[i] = std::move(value_to_insert);
-                            break;
+                            continue;
                         }
                     }
-                    else {
-                        c[i] = std::move(value_to_insert);
-                        break;
-                    }
+
+                    c[i] = std::move(value_to_insert);
+                    break;
                 }
             }
         }
@@ -623,12 +613,9 @@ namespace chdr {
         [[maybe_unused, nodiscard]] constexpr bool contains(T& _item) noexcept {
 
             bool result = !empty();
-
             if (result) {
                 const auto& i = index_of(_item);
-
                 assert(i < c.size() && "(Out of Bounds) Item does not exist in Heap.");
-
                 result = i < c.size() && _item == c[i];
             }
 
@@ -793,6 +780,51 @@ namespace chdr {
         }
 
         /**
+         * @brief Finds the first element in the heap greater than the specified value.
+         *
+         * @details This function performs a search within the heap structure to locate the first
+         *          element that is greater than the given value `_value`. The search starts
+         *          from the root node and traverses the heap, comparing elements based on
+         *          the provided comparator and utilising the K-dimensional structure.
+         *          If no such element is found, a `end()` iterator is returned.
+         *
+         * @param _value [in] The value to find the upper bound for within the heap container.
+         * @return iterator_t An iterator pointing to the first element greater than `_value`,
+         *         or `end()` if no such element exists.
+         */
+        [[maybe_unused, nodiscard]] constexpr iterator_t upper_bounds(const T& _value) noexcept {
+
+            if (!empty()) {
+
+                for (size_t i = 1U; i < c.size();) { // Start from index 1 to skip the super element.
+
+                    if (comp(_value, c[i])) {
+                        return c.begin() + i; // Return the first element greater than the given value.
+                    }
+
+                    // Iterate through child nodes based on the Kd dimension.
+                    const size_t child_start = i * Kd;
+                    const size_t child_end   = std::min(child_start + Kd, c.size());
+
+                    bool traversed = false;
+                    for (size_t j = child_start; j < child_end; ++j) {
+                        if (j < c.size() && comp(_value, c[j])) {
+                            i = j; // Traverse to the first valid child node.
+                            traversed = true;
+                            break;
+                        }
+                    }
+
+                    if (!traversed) {
+                        break; // Exit loop if no valid traversal path exists.
+                    }
+                }
+            }
+
+            return c.end(); // Return end if no matching element is found.
+        }
+
+        /**
          * @brief Inserts an element into the heap while maintaining the heap property.
          *
          * @param _position The iterator position where the element should be inserted.
@@ -885,16 +917,16 @@ namespace chdr {
         [[maybe_unused, nodiscard]] constexpr const_iterator_t  begin() const noexcept { return c.begin()  + 1U; }
         [[maybe_unused, nodiscard]] constexpr const_iterator_t cbegin() const noexcept { return c.cbegin() + 1U; }
 
-        [[maybe_unused, nodiscard]] constexpr iterator_t        end()       noexcept { return c.end(); }
-        [[maybe_unused, nodiscard]] constexpr const_iterator_t  end() const noexcept { return c.end(); }
+        [[maybe_unused, nodiscard]] constexpr iterator_t        end()       noexcept { return c.end();  }
+        [[maybe_unused, nodiscard]] constexpr const_iterator_t  end() const noexcept { return c.end();  }
         [[maybe_unused, nodiscard]] constexpr const_iterator_t cend() const noexcept { return c.cend(); }
 
-        [[maybe_unused, nodiscard]] constexpr reverse_iterator_t        rbegin()       noexcept { return c.rbegin(); }
-        [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t  rbegin() const noexcept { return c.rbegin(); }
+        [[maybe_unused, nodiscard]] constexpr reverse_iterator_t        rbegin()       noexcept { return c.rbegin();  }
+        [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t  rbegin() const noexcept { return c.rbegin();  }
         [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t crbegin() const noexcept { return c.crbegin(); }
 
-        [[maybe_unused, nodiscard]] constexpr reverse_iterator_t        rend()       noexcept { return c.rend(); }
-        [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t  rend() const noexcept { return c.rend(); }
+        [[maybe_unused, nodiscard]] constexpr reverse_iterator_t        rend()       noexcept { return c.rend();  }
+        [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t  rend() const noexcept { return c.rend();  }
         [[maybe_unused, nodiscard]] constexpr const_reverse_iterator_t crend() const noexcept { return c.crend(); }
 
     };

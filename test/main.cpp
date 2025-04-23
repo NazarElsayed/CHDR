@@ -147,12 +147,15 @@ namespace test {
                 end[i] = _size[i] - 1U;
             }
 
+            // Empty grid:
             // const std::vector<weight_t> nodes(chdr::utils::product<size_t>(_size), std::numeric_limits<weight_t>::lowest());
             // const auto grid = chdr::mazes::grid<coord_t, weight_t>(_size, nodes);
 
+            // Random grid:
             const auto grid = make_solvable_random_grid_maze<weight_t, coord_t, scalar_t, index_t>(start, end, _size, seed);
 
-            // const auto grid = generator::grid::generate<weight_t>(start, end, _size, 0.0, 0.0, seed);
+            // Maze grid:
+            //const auto grid = generator::grid::generate<weight_t>(start, end, _size, 0.0, 0.0, seed);
             // debug::log(_size[0] + _size[1] - 2U);
 
             const auto& test = grid;

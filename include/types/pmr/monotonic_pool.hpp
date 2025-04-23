@@ -235,6 +235,8 @@ namespace chdr {
                 throw std::bad_alloc();
             }
 
+            PREFETCH(aligned_ptr, _MM_HINT_T0);
+
              num_allocated += _bytes;
             peak_allocated  = utils::max(peak_allocated, num_allocated);
 
