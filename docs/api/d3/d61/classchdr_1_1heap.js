@@ -47,5 +47,6 @@ var classchdr_1_1heap =
     [ "swap", "d3/d61/classchdr_1_1heap_a21c6e46cc5c1398834091988e3bdb73c.html#a21c6e46cc5c1398834091988e3bdb73c", null ],
     [ "top", "d3/d61/classchdr_1_1heap_a39b39a0753d600546b92d146681c30f5.html#a39b39a0753d600546b92d146681c30f5", null ],
     [ "top", "d3/d61/classchdr_1_1heap_a20a753362275d34a67d855ce0105fab7.html#a20a753362275d34a67d855ce0105fab7", null ],
+    [ "upper_bounds", "d3/d61/classchdr_1_1heap_ae7e6fc4739ca4f4f74e4f8384106548e.html#ae7e6fc4739ca4f4f74e4f8384106548e", null ],
     [ "wipe", "d3/d61/classchdr_1_1heap_a83b875431bb873f05931dd160a2858a5.html#a83b875431bb873f05931dd160a2858a5", null ]
 ];

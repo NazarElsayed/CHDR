@@ -35,6 +35,7 @@ var hierarchy =
     [ "jps< params_t >", "d8/d87/structchdr_1_1solvers_1_1jps.html", null ],
     [ "monotonic_pool< StackSize, MaxStackAllocationSize, MaxHeapBlockSize >", "df/db2/classchdr_1_1monotonic__pool.html", null ],
     [ "queue< T >", "d7/de5/classchdr_1_1queue.html", null ],
+    [ "smastar< params_t >", "dc/dca/structchdr_1_1solvers_1_1smastar.html", null ],
     [ "solver< solver_t, params_t >", "d3/df4/classchdr_1_1solvers_1_1solver.html", null ],
     [ "stack< T >", "db/dc9/classchdr_1_1stack.html", null ],
     [ "utils", "d2/dcb/structchdr_1_1utils.html", null ],

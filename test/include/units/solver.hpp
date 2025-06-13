@@ -73,9 +73,6 @@ namespace test {
             auto result = std::numeric_limits<long double>::max();
             for (size_t i = 0U; i < test_samples; ++i) {
 
-                size_t& memlim = const_cast<size_t&>(_params.memoryLimit);
-                memlim = (i == test_samples - 1U) ? 0U : 1U;
-
                 const auto sw_start = std::chrono::high_resolution_clock::now();
 
                 /* INVOKE SOLVE */

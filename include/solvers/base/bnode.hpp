@@ -60,8 +60,8 @@ namespace chdr::solvers {
 
         HOT constexpr bnode(index_t _index) noexcept : m_index(_index) {}
 
-        constexpr bnode           (const bnode&) noexcept = delete;
-        constexpr bnode& operator=(const bnode&) noexcept = delete;
+        constexpr bnode           (const bnode&) noexcept = default;
+        constexpr bnode& operator=(const bnode&) noexcept = default;
 
         [[nodiscard]] HOT constexpr bnode(bnode&&) noexcept = default;
 

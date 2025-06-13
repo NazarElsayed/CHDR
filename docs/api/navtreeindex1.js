@@ -1,5 +1,7 @@
 var NAVTREEINDEX1 =
 {
+"db/dc4/structchdr_1_1mazes_1_1weighted__node_a9a9d24859a5366d0b48f6496ed3574b5.html#a9a9d24859a5366d0b48f6496ed3574b5":[4,0,0,0,4,2],
+"db/dc9/classchdr_1_1stack.html":[4,0,0,9],
 "db/dc9/classchdr_1_1stack_a20a753362275d34a67d855ce0105fab7.html#a20a753362275d34a67d855ce0105fab7":[4,0,0,9,16],
 "db/dc9/classchdr_1_1stack_a312e7f6c761a199c1369fbe651e084f0.html#a312e7f6c761a199c1369fbe651e084f0":[4,0,0,9,11],
 "db/dc9/classchdr_1_1stack_a3308cdbb1bf9a87283c8a9ef2e16bdc2.html#a3308cdbb1bf9a87283c8a9ef2e16bdc2":[4,0,0,9,10],
@@ -26,7 +28,10 @@ var NAVTREEINDEX1 =
 "dc/d8a/grid_8hpp_source.html":[5,0,0,0,2],
 "dc/da9/astar_8hpp.html":[5,0,0,1,1],
 "dc/da9/astar_8hpp_source.html":[5,0,0,1,1],
+"dc/dca/structchdr_1_1solvers_1_1smastar.html":[3,1,1,0,7],
 "dc/dd5/structchdr_1_1solvers_1_1idbest__first.html":[3,1,1,2,4],
+"dd/d57/smastar_8hpp.html":[5,0,0,1,20],
+"dd/d57/smastar_8hpp_source.html":[5,0,0,1,20],
 "dd/d95/eiddfs_8hpp.html":[5,0,0,1,8],
 "dd/d95/eiddfs_8hpp_source.html":[5,0,0,1,8],
 "dd/de3/classchdr_1_1mazes_1_1grid.html":[4,0,0,0,1],
@@ -116,8 +121,8 @@ var NAVTREEINDEX1 =
 "functions_d.html":[4,3,0,3],
 "functions_e.html":[4,3,0,4],
 "functions_f.html":[4,3,0,5],
-"functions_func.html":[4,3,1],
 "functions_func.html":[4,3,1,0],
+"functions_func.html":[4,3,1],
 "functions_func_b.html":[4,3,1,1],
 "functions_func_c.html":[4,3,1,2],
 "functions_func_d.html":[4,3,1,3],

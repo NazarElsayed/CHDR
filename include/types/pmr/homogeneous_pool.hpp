@@ -57,7 +57,17 @@ namespace chdr {
     template <size_t StackSize = 4096U, size_t MaxStackAllocationSize = std::numeric_limits<size_t>::max(), size_t MaxHeapBlockSize = 65536U>
     class homogeneous_pool final : public std::pmr::memory_resource {
 
+        template <template <typename params_t> typename solver_t, typename params_t>
+        friend class solvers::solver;
+
     private:
+
+#if CHDR_DIAGNOSTICS == 1
+
+        size_t  num_allocated { 0U };
+        size_t peak_allocated { 0U };
+
+#endif
 
         struct block final {
 
@@ -157,12 +167,6 @@ namespace chdr {
                 operator delete(item.data, static_cast<std::align_val_t>(m_alignment));
             }
         }
-
-    public:
-
-        // TODO: REMOVE
-        size_t  num_allocated { 0U };
-        size_t peak_allocated { 0U };
 
     protected:
 

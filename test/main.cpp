@@ -152,11 +152,11 @@ namespace test {
             // const auto grid = chdr::mazes::grid<coord_t, weight_t>(_size, nodes);
 
             // Random grid:
-            const auto grid = make_solvable_random_grid_maze<weight_t, coord_t, scalar_t, index_t>(start, end, _size, seed);
+            //const auto grid = make_solvable_random_grid_maze<weight_t, coord_t, scalar_t, index_t>(start, end, _size, seed);
 
             // Maze grid:
-            //const auto grid = generator::grid::generate<weight_t>(start, end, _size, 0.0, 0.0, seed);
-            // debug::log(_size[0] + _size[1] - 2U);
+            const auto grid = generator::grid::generate<weight_t>(start, end, _size, 0.0, 0.0, seed);
+            //debug::log(_size[0] + _size[1] - 2U);
 
             const auto& test = grid;
             // auto graph_pool = chdr::heterogeneous_pool(); const auto test = chdr::mazes::graph<index_t, scalar_t>(grid, &graph_pool);
@@ -187,13 +187,14 @@ namespace test {
 
                 const scalar_type weight       = 1U;
                 const      size_t capacity     = 0U;
-                const      size_t memoryLimit  = static_cast<size_t>(-1U);
+                const      size_t memory_limit = static_cast<size_t>(-1U);
             };
 
             const params args { test, start, end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &heterogeneous, &homogeneous };
 
                  if (_solver == "astar"        ) { result = invoke<chdr::solvers::        astar, params>(args); }
             else if (_solver == "bfs"          ) { result = invoke<chdr::solvers::          bfs, params>(args); }
+            else if (_solver == "smastar"      ) { result = invoke<chdr::solvers::      smastar, params>(args); }
             else if (_solver == "best_first"   ) { result = invoke<chdr::solvers::   best_first, params>(args); }
             else if (_solver == "dfs"          ) { result = invoke<chdr::solvers::          dfs, params>(args); }
             else if (_solver == "dijkstra"     ) { result = invoke<chdr::solvers::     dijkstra, params>(args); }

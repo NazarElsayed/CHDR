@@ -19,5 +19,6 @@ var dir_949292de90bec6ca0ef87cb838b26113 =
     [ "idastar.hpp", "db/df9/idastar_8hpp.html", null ],
     [ "idbest_first.hpp", "d1/d3a/idbest__first_8hpp.html", null ],
     [ "iddfs.hpp", "df/d71/iddfs_8hpp.html", null ],
-    [ "jps.hpp", "d9/de6/jps_8hpp.html", null ]
+    [ "jps.hpp", "d9/de6/jps_8hpp.html", null ],
+    [ "smastar.hpp", "dd/d57/smastar_8hpp.html", null ]
 ];

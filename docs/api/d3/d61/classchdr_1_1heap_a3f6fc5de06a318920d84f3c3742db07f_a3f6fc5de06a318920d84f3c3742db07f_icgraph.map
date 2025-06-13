@@ -1,34 +1,36 @@
 <map id="empty" name="empty">
-<area shape="rect" id="Node000001" title="Checks if the heap is empty." alt="" coords="255,264,305,287"/>
-<area shape="rect" id="Node000002" href="$d3/d61/classchdr_1_1heap_adf4e3bffff56ce9f6c2ca6a36d40a725.html#adf4e3bffff56ce9f6c2ca6a36d40a725" title="Constructs a heap from a collection of elements." alt="" coords="139,5,185,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="275,250,269,207,258,151,237,93,222,66,205,41,184,26,187,22,209,37,227,63,242,91,263,150,275,206,280,250"/>
-<area shape="rect" id="Node000003" href="$d3/d61/classchdr_1_1heap_a115a6b02da0ef70b6e9cf66736b45b27.html#a115a6b02da0ef70b6e9cf66736b45b27" title="Constructs a heap from a collection of elements with move semantics." alt="" coords="139,52,185,75"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="272,251,265,215,252,172,232,128,205,88,184,73,187,69,209,84,237,125,257,170,270,214,278,250"/>
-<area shape="rect" id="Node000004" href="$d3/d61/classchdr_1_1heap_ade547b1803d6a18f179000b440e7ac01.html#ade547b1803d6a18f179000b440e7ac01" title="Retrieves a constant reference to the last element in the heap container." alt="" coords="140,99,184,121"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="269,252,246,194,227,163,205,135,183,120,186,115,208,131,232,160,250,192,274,250"/>
-<area shape="rect" id="Node000005" href="$d3/d61/classchdr_1_1heap_a7637c774c4326957055fa9634f92f728.html#a7637c774c4326957055fa9634f92f728" title="Retrieves a reference to the last element in the heap container." alt="" coords="140,145,184,168"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="263,254,238,217,205,181,183,168,186,163,208,177,243,214,268,251"/>
-<area shape="rect" id="Node000006" href="$d3/d61/classchdr_1_1heap_aec43d6ff800e89019bacb468a3ca4c2b.html#aec43d6ff800e89019bacb468a3ca4c2b" title="Checks whether the specified item exists in the heap container." alt="" coords="131,192,193,215"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="250,258,205,228,185,217,188,213,208,224,253,254"/>
-<area shape="rect" id="Node000007" href="$d3/d61/classchdr_1_1heap_acc864476d3a1311f187c3290d0b161aa.html#acc864476d3a1311f187c3290d0b161aa" title="Removes and returns the top element from the heap." alt="" coords="5,371,69,393"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="242,286,182,302,119,327,82,350,53,372,50,368,79,345,116,322,181,297,240,281"/>
-<area shape="rect" id="Node000008" href="$d3/d61/classchdr_1_1heap_a5ff8da78f62646f1ca68dae37f04ed8f.html#a5ff8da78f62646f1ca68dae37f04ed8f" title="Removes a specified item from the heap, restoring the heap property after removal." alt="" coords="137,239,187,261"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="240,270,186,258,188,253,241,264"/>
-<area shape="rect" id="Node000010" href="$d3/d61/classchdr_1_1heap_a2adc794fbb932e87602833ccd8c84e67.html#a2adc794fbb932e87602833ccd8c84e67" title="Finds the first element in the heap not less than the specified value." alt="" coords="117,337,207,360"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="250,296,183,340,180,335,248,292"/>
-<area shape="rect" id="Node000011" href="$d3/d61/classchdr_1_1heap_a274dca2a1d2c68ff3249f37b3ae410d5.html#a274dca2a1d2c68ff3249f37b3ae410d5" title="Removes the top element from the heap and maintains the heap property." alt="" coords="142,384,182,407"/>
-<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="267,300,242,337,208,373,184,389,181,385,205,369,238,333,263,297"/>
-<area shape="rect" id="Node000012" href="$d3/d61/classchdr_1_1heap_a90957d02dbdc1afa0c6dc61861842f4e.html#a90957d02dbdc1afa0c6dc61861842f4e" title="Removes the last element from the heap." alt="" coords="128,431,196,453"/>
-<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="274,301,251,359,232,392,209,421,193,433,190,428,205,417,228,389,246,357,269,299"/>
-<area shape="rect" id="Node000013" href="$d3/d61/classchdr_1_1heap_a39b39a0753d600546b92d146681c30f5.html#a39b39a0753d600546b92d146681c30f5" title="Retrieves a constant element to the top element of the heap." alt="" coords="143,477,181,500"/>
-<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="278,301,270,337,257,381,237,427,209,468,183,485,180,480,205,464,232,424,252,379,265,336,272,300"/>
-<area shape="rect" id="Node000014" href="$d3/d61/classchdr_1_1heap_a20a753362275d34a67d855ce0105fab7.html#a20a753362275d34a67d855ce0105fab7" title="Retrieves a reference to the top element of the heap." alt="" coords="143,524,181,547"/>
-<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="280,301,275,345,263,401,242,460,227,489,209,514,196,525,183,532,180,527,193,521,205,511,222,486,237,458,258,399,269,344,275,300"/>
-<area shape="rect" id="Node000009" href="$d3/d61/classchdr_1_1heap_acb6d4e6f53bcd4c93d386def0bd8be31.html#acb6d4e6f53bcd4c93d386def0bd8be31" title="Removes all elements in a given range from the heap while maintaining the heap property." alt="" coords="13,239,62,261"/>
-<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="123,253,62,253,62,247,123,247"/>
-<area shape="poly" id="edge14_Node000014_Node000007" title=" " alt="" coords="129,524,116,515,89,484,67,450,41,395,45,392,72,448,93,481,119,511,132,520"/>
-<area shape="rect" id="Node000015" href="$d3/d61/classchdr_1_1heap_a66ae5a391f699d2e564c2545ab9c6d82.html#a66ae5a391f699d2e564c2545ab9c6d82" title="Retrieves a constant reference to the front element of the heap." alt="" coords="15,500,59,523"/>
-<area shape="poly" id="edge15_Node000014_Node000015" title=" " alt="" coords="129,532,59,518,60,513,130,527"/>
-<area shape="rect" id="Node000016" href="$d3/d61/classchdr_1_1heap_acbf9b62bac7333654c7862dc8cfd1e48.html#acbf9b62bac7333654c7862dc8cfd1e48" title="Retrieves a reference to the front element of the heap." alt="" coords="15,547,59,569"/>
-<area shape="poly" id="edge16_Node000014_Node000016" title=" " alt="" coords="130,544,60,557,59,551,129,539"/>
+<area shape="rect" id="Node000001" title="Checks if the heap is empty." alt="" coords="272,288,328,311"/>
+<area shape="rect" id="Node000002" href="$d3/d61/classchdr_1_1heap_adf4e3bffff56ce9f6c2ca6a36d40a725.html#adf4e3bffff56ce9f6c2ca6a36d40a725" title="Constructs a heap from a collection of elements." alt="" coords="149,5,199,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="295,275,291,227,280,165,258,100,242,69,222,41,211,32,199,26,201,21,214,28,226,38,247,66,263,97,285,164,297,226,301,274"/>
+<area shape="rect" id="Node000003" href="$d3/d61/classchdr_1_1heap_a115a6b02da0ef70b6e9cf66736b45b27.html#a115a6b02da0ef70b6e9cf66736b45b27" title="Constructs a heap from a collection of elements with move semantics." alt="" coords="149,52,199,75"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="294,275,287,235,274,185,253,134,222,88,198,72,201,68,226,84,258,131,279,184,292,234,299,274"/>
+<area shape="rect" id="Node000004" href="$d3/d61/classchdr_1_1heap_ade547b1803d6a18f179000b440e7ac01.html#ade547b1803d6a18f179000b440e7ac01" title="Retrieves a constant reference to the last element in the heap container." alt="" coords="150,99,198,121"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="291,275,268,206,248,168,222,135,197,119,200,115,226,131,253,165,273,204,296,274"/>
+<area shape="rect" id="Node000005" href="$d3/d61/classchdr_1_1heap_a7637c774c4326957055fa9634f92f728.html#a7637c774c4326957055fa9634f92f728" title="Retrieves a reference to the last element in the heap container." alt="" coords="150,145,198,168"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="286,277,261,229,243,204,222,181,197,166,200,162,226,177,247,200,266,226,291,274"/>
+<area shape="rect" id="Node000006" href="$d3/d61/classchdr_1_1heap_aec43d6ff800e89019bacb468a3ca4c2b.html#aec43d6ff800e89019bacb468a3ca4c2b" title="Checks whether the specified item exists in the heap container." alt="" coords="139,192,209,215"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="278,279,253,253,222,228,203,217,205,212,226,224,256,249,282,275"/>
+<area shape="rect" id="Node000007" href="$d3/d61/classchdr_1_1heap_acc864476d3a1311f187c3290d0b161aa.html#acc864476d3a1311f187c3290d0b161aa" title="Removes and returns the top element from the heap." alt="" coords="5,383,76,405"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="259,302,194,308,159,315,125,327,103,339,84,355,54,384,50,381,80,351,100,335,123,322,157,310,193,302,258,296"/>
+<area shape="rect" id="Node000008" href="$d3/d61/classchdr_1_1heap_a5ff8da78f62646f1ca68dae37f04ed8f.html#a5ff8da78f62646f1ca68dae37f04ed8f" title="Removes a specified item from the heap, restoring the heap property after removal." alt="" coords="147,239,201,261"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="258,286,200,263,202,258,260,281"/>
+<area shape="rect" id="Node000010" href="$d3/d61/classchdr_1_1heap_a2adc794fbb932e87602833ccd8c84e67.html#a2adc794fbb932e87602833ccd8c84e67" title="Finds the first element in the heap not less than the specified value." alt="" coords="125,337,223,360"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="260,318,205,340,203,335,258,313"/>
+<area shape="rect" id="Node000011" href="$d3/d61/classchdr_1_1heap_a274dca2a1d2c68ff3249f37b3ae410d5.html#a274dca2a1d2c68ff3249f37b3ae410d5" title="Removes the top element from the heap and maintains the heap property." alt="" coords="153,384,195,407"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="282,323,256,348,225,374,197,389,194,385,223,369,253,344,278,319"/>
+<area shape="rect" id="Node000012" href="$d3/d61/classchdr_1_1heap_a90957d02dbdc1afa0c6dc61861842f4e.html#a90957d02dbdc1afa0c6dc61861842f4e" title="Removes the last element from the heap." alt="" coords="137,431,211,453"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="291,325,266,373,247,398,226,421,208,433,205,428,222,417,243,395,261,370,286,322"/>
+<area shape="rect" id="Node000013" href="$d3/d61/classchdr_1_1heap_a39b39a0753d600546b92d146681c30f5.html#a39b39a0753d600546b92d146681c30f5" title="Retrieves a constant element to the top element of the heap." alt="" coords="154,477,194,500"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="296,325,273,394,253,433,226,468,211,479,195,486,193,481,208,474,222,464,248,430,268,392,291,323"/>
+<area shape="rect" id="Node000014" href="$d3/d61/classchdr_1_1heap_a20a753362275d34a67d855ce0105fab7.html#a20a753362275d34a67d855ce0105fab7" title="Retrieves a reference to the top element of the heap." alt="" coords="154,524,194,547"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="299,325,292,365,279,415,258,467,226,514,211,526,195,533,193,528,209,521,222,511,253,465,274,413,287,364,294,324"/>
+<area shape="rect" id="Node000017" href="$d3/d61/classchdr_1_1heap_ae7e6fc4739ca4f4f74e4f8384106548e.html#ae7e6fc4739ca4f4f74e4f8384106548e" title="Finds the first element in the heap greater than the specified value." alt="" coords="124,571,224,593"/>
+<area shape="poly" id="edge17_Node000001_Node000017" title=" " alt="" coords="301,324,297,373,285,435,263,501,247,533,226,561,212,573,208,568,222,557,242,530,258,499,280,434,291,372,295,324"/>
+<area shape="rect" id="Node000009" href="$d3/d61/classchdr_1_1heap_acb6d4e6f53bcd4c93d386def0bd8be31.html#acb6d4e6f53bcd4c93d386def0bd8be31" title="Removes all elements in a given range from the heap while maintaining the heap property." alt="" coords="14,239,67,261"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="133,253,68,253,68,247,133,247"/>
+<area shape="poly" id="edge14_Node000014_Node000007" title=" " alt="" coords="140,526,122,515,96,488,74,457,45,407,50,404,78,455,100,484,126,511,143,522"/>
+<area shape="rect" id="Node000015" href="$d3/d61/classchdr_1_1heap_a66ae5a391f699d2e564c2545ab9c6d82.html#a66ae5a391f699d2e564c2545ab9c6d82" title="Retrieves a constant reference to the front element of the heap." alt="" coords="17,501,65,524"/>
+<area shape="poly" id="edge15_Node000014_Node000015" title=" " alt="" coords="140,532,65,519,66,514,141,527"/>
+<area shape="rect" id="Node000016" href="$d3/d61/classchdr_1_1heap_acbf9b62bac7333654c7862dc8cfd1e48.html#acbf9b62bac7333654c7862dc8cfd1e48" title="Retrieves a reference to the front element of the heap." alt="" coords="17,548,65,571"/>
+<area shape="poly" id="edge16_Node000014_Node000016" title=" " alt="" coords="141,544,66,558,65,552,140,539"/>
 </map>

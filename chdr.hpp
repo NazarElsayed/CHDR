@@ -22,7 +22,7 @@
  */
 
 /** @brief Full version string of the CHDR library. */
-#define CHDR_VERSION          "0.1.0-dev+2518b9f2"
+#define CHDR_VERSION          "0.1.0-dev+0478fbc7"
 
 /** @brief CHDR major version number. */
 #define CHDR_VERSION_MAJOR     0
@@ -37,7 +37,12 @@
 #define CHDR_VERSION_TWEAK    "dev"
 
 /** @brief CHDR version metadata string. */
-#define CHDR_VERSION_METADATA "2518b9f2"
+#define CHDR_VERSION_METADATA "0478fbc7"
+
+/** @brief Flag indicating whether or not diagnostics should be output by the library (0 = off, 1 = on). */
+#ifndef CHDR_DIAGNOSTICS
+#define CHDR_DIAGNOSTICS 1
+#endif
 
 /* ReSharper enable CppUnusedIncludeDirective */
 // NOLINTBEGIN(*-include-cleaner)
@@ -69,6 +74,7 @@
 #include "include/solvers/idbest_first.hpp"
 #include "include/solvers/iddfs.hpp"
 #include "include/solvers/jps.hpp"
+#include "include/solvers/smastar.hpp"
 #include "include/types/containers/coord.hpp"
 #include "include/types/containers/existence_set.hpp"
 #include "include/types/containers/heap.hpp"
