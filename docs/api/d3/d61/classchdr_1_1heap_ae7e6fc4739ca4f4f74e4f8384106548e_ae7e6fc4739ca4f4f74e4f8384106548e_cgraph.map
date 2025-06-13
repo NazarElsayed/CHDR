@@ -1,0 +1,9 @@
+<map id="upper_bounds" name="upper_bounds">
+<area shape="rect" id="Node000001" title="Finds the first element in the heap greater than the specified value." alt="" coords="5,5,105,28"/>
+<area shape="rect" id="Node000002" href="$d3/d61/classchdr_1_1heap_a3f6fc5de06a318920d84f3c3742db07f.html#a3f6fc5de06a318920d84f3c3742db07f" title="Checks if the heap is empty." alt="" coords="153,5,209,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="105,14,140,14,140,19,105,19"/>
+<area shape="rect" id="Node000003" href="$d3/d61/classchdr_1_1heap_a3caedb145a667c26028740417dcf32c3.html#a3caedb145a667c26028740417dcf32c3" title="Retrieves the number of elements currently stored in the heap." alt="" coords="257,5,301,28"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="210,14,244,14,244,19,210,19"/>
+<area shape="rect" id="Node000004" href="$d2/dcb/structchdr_1_1utils_a05e8953d59fd314cf105f52b0c1272dd.html#a05e8953d59fd314cf105f52b0c1272dd" title="Determines the maximum of two comparable values." alt="" coords="349,5,457,28"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="302,14,336,14,336,19,302,19"/>
+</map>

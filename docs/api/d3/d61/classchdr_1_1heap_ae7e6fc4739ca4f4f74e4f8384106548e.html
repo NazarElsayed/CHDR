@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CHDR: existence_set.hpp File Reference</title>
+<title>CHDR: chdr::heap::upper_bounds</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -77,7 +77,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('d8/d62/existence__set_8hpp.html','../../'); initResizable(); });
+$(document).ready(function(){initNavTree('d3/d61/classchdr_1_1heap_ae7e6fc4739ca4f4f74e4f8384106548e.html','../../'); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -102,36 +102,55 @@ $(document).ready(function(){initNavTree('d8/d62/existence__set_8hpp.html','../.
 </div>
 </div>
 
-<div class="header">
-  <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
-  <div class="headertitle"><div class="title">existence_set.hpp File Reference</div></div>
-</div><!--header-->
 <div class="contents">
+<a id="ae7e6fc4739ca4f4f74e4f8384106548e" name="ae7e6fc4739ca4f4f74e4f8384106548e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7e6fc4739ca4f4f74e4f8384106548e">&#9670;&#160;</a></span>upper_bounds()</h2>
 
-<p><a href="../../d8/d62/existence__set_8hpp_source.html">Go to the source code of this file.</a></p>
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/db9/classchdr_1_1existence__set.html">existence_set&lt; width_t &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a container for tracking the existence of elements.  <a href="../../d6/db9/classchdr_1_1existence__set.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename Compare  = std::less&lt;T&gt;, typename Container  = std::pmr::vector&lt;T&gt;, size_t Kd = 2U&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">iterator_t upper_bounds </td>
+          <td>(</td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>_value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
 </table>
-<div class="textblock"><div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Include dependency graph for existence_set.hpp:</div>
+</div><div class="memdoc">
+
+<p>Finds the first element in the heap greater than the specified value. </p>
+<p>This function performs a search within the heap structure to locate the first element that is greater than the given value <code>_value</code>. The search starts from the root node and traverses the heap, comparing elements based on the provided comparator and utilising the K-dimensional structure. If no such element is found, a <code>end()</code> iterator is returned.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">_value</td><td>[in] The value to find the upper bound for within the heap container. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>iterator_t An iterator pointing to the first element greater than <code>_value</code>, or <code>end()</code> if no such element exists. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="../../da/d45/heap_8hpp_source.html#l00795">795</a> of file <a class="el" href="../../da/d45/heap_8hpp_source.html">heap.hpp</a>.</p>
+<div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../da/dd9/existence__set_8hpp__incl.svg" width="734" height="246"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../d3/d61/classchdr_1_1heap_ae7e6fc4739ca4f4f74e4f8384106548e_ae7e6fc4739ca4f4f74e4f8384106548e_cgraph.svg" width="463" height="34"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
-</div><div class="textblock"><div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-1-trigger" src="../../closed.png" alt="+"/> This graph shows which files directly or indirectly include this file:</div>
-<div id="dynsection-1-summary" class="dynsummary" style="display:block;">
+
 </div>
-<div id="dynsection-1-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../dd/dde/existence__set_8hpp__dep__incl.svg" width="1227" height="175"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
-</div></div><!-- contents -->
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen -->
 <!-- Start footer part -->
