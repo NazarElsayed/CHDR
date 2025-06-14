@@ -401,8 +401,6 @@ namespace chdr::solvers {
 
                 size_t i = 0U;
                 for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent)) {
-
-                    std::cout << i << "/" << result.size() << "\n";
                     result[(result.size() - 1U) - i] = utils::to_nd(t->m_index, _size);
                     ++i;
                 }

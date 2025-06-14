@@ -114,7 +114,7 @@ namespace chdr::solvers {
             {
                 auto& start_node = all_nodes[static_cast<index_t>(s)];
                 start_node = node(static_cast<index_t>(0), static_cast<index_t>(s), static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
-                //start_node.m_in_open = true;
+                start_node.m_in_open = true;
 
                 _open.emplace(start_node);
             }
@@ -123,35 +123,41 @@ namespace chdr::solvers {
             while (LIKELY(!_open.empty())) {
 
                 node curr(std::move(_open.extract(_open.begin()).value()));
+                curr.m_in_open = false;
 
                 std::cout << "Iteration: " << curr.m_index << "\n";
 
                 if (curr.m_index == e) { // SOLUTION REACHED ...
+
+                    const auto parent = curr.m_parent;
+                    std::cout << parent->m_index << "\n";
+
                     return solver_t::solver_utils::rbacktrack(curr, _params.size);
                 }
                 else { // SEARCH FOR SOLUTION...
 
                     if (curr.m_successors.empty()) {
 
-                        for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
+                        auto [it, inserted] = all_nodes.try_emplace(curr.m_index, std::move(curr));
+                        node& stored_curr = it->second;
+
+                        for (const auto& n_data : _params.maze.get_neighbours(stored_curr.m_index)) {
 
                             if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
 
-                                scalar_t g = curr.m_gScore + n.distance;
-                                scalar_t h = _params.h(n.coord, _params.end) * _params.weight;
-                                scalar_t f = g + h;
+                                const auto g = stored_curr.m_gScore + n.distance;
+                                const auto h = _params.h(n.coord, _params.end) * _params.weight;
+                                const auto f = g + h;
 
-                                auto& child_node = all_nodes[n.index];
-                                if (child_node.m_index == 0 || g < child_node.m_gScore) {
-
-                                    auto itr = all_nodes.emplace(curr.m_index, std::move(curr)).first;
-                                    curr = itr->second;
-
-                                    child_node = node(curr.m_depth + 1U, n.index, g, f, &curr);
-                                    curr.m_successors.push_back(&child_node);
+                                auto& child_node = all_nodes.try_emplace(n.index, node()).first->second;
+                                if ((child_node.m_index == 0 || g < child_node.m_gScore) && (!child_node.m_in_open || g < child_node.m_gScore)) {
+                                    child_node = node(stored_curr.m_depth + 1U, n.index, g, f, &stored_curr);
                                 }
+                                stored_curr.m_successors.push_back(&child_node);
                             }
                         }
+
+                        curr = stored_curr;
                     }
 
                     node* best_successor = nullptr;
@@ -164,6 +170,7 @@ namespace chdr::solvers {
                     if (best_successor != nullptr) {
                         best_successor->m_in_open = true;
                         _open.emplace(*best_successor);
+                        best_successor->m_in_open = true;
                     }
                     else {
                         scalar_t min_f = std::numeric_limits<scalar_t>::infinity();
@@ -175,8 +182,9 @@ namespace chdr::solvers {
 
                     if (_open.size() > _params.memory_limit) {
                         auto& worst = *const_cast<node*>(&*std::prev(_open.end()));
-                        _open.erase(std::prev(_open.end()));
                         worst.m_in_open = false;
+
+                        _open.erase(std::prev(_open.end()));
                     }
                 }
             }
@@ -185,6 +193,7 @@ namespace chdr::solvers {
         }
 
         [[maybe_unused, nodiscard]] static auto invoke(const params_t& _params) {
+
             assert(_params.memory_limit > 0U && "memory_limit must be greater than zero.");
 
             if (_params.memory_limit > 0U) {
