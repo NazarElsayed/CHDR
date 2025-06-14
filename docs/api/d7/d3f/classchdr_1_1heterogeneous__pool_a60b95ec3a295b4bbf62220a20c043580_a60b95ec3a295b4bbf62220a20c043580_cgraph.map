@@ -1,0 +1,5 @@
+<map id="do_deallocate" name="do_deallocate">
+<area shape="rect" id="Node000001" title="Deallocates memory and returns it to the pool for future use." alt="" coords="5,5,104,28"/>
+<area shape="rect" id="Node000002" href="$d2/dcb/structchdr_1_1utils_a05e8953d59fd314cf105f52b0c1272dd.html#a05e8953d59fd314cf105f52b0c1272dd" title="Determines the maximum of two comparable values." alt="" coords="152,5,260,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,14,138,14,138,19,104,19"/>
+</map>

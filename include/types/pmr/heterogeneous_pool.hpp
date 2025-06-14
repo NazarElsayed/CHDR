@@ -274,8 +274,12 @@ namespace chdr {
 
             PREFETCH(aligned_ptr, _MM_HINT_T0);
 
+#if CHDR_DIAGNOSTICS == 1
+
              num_allocated += _bytes;
             peak_allocated  = utils::max(peak_allocated, num_allocated);
+
+#endif
 
             return aligned_ptr;
         }
@@ -339,7 +343,11 @@ namespace chdr {
                 m_free.try_emplace(_bytes, _bytes, _alignment, static_cast<uint8_t*>(_p));
             }
 
+#if CHDR_DIAGNOSTICS == 1
+
             num_allocated = (_bytes > num_allocated) ? 0U : (num_allocated - _bytes);
+
+#endif
         }
 
         /**
@@ -477,8 +485,12 @@ namespace chdr {
                 m_blocks.clear();
             }
 
+#if CHDR_DIAGNOSTICS == 1
+
              num_allocated = 0U;
             peak_allocated = 0U;
+
+#endif
         }
 
         /**
@@ -514,8 +526,12 @@ namespace chdr {
                 m_free = std::move(temp);
             }
 
+#if CHDR_DIAGNOSTICS == 1
+
              num_allocated = 0U;
             peak_allocated = 0U;
+
+#endif
         }
 
     };

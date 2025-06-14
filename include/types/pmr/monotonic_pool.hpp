@@ -243,8 +243,12 @@ namespace chdr {
 
             PREFETCH(aligned_ptr, _MM_HINT_T0);
 
+#if CHDR_DIAGNOSTICS == 1
+
              num_allocated += _bytes;
             peak_allocated  = utils::max(peak_allocated, num_allocated);
+
+#endif
 
             return aligned_ptr;
         }
@@ -383,8 +387,12 @@ namespace chdr {
             m_block_write        = 0U;
             m_active_block_index = 0U;
 
+#if CHDR_DIAGNOSTICS == 1
+
              num_allocated = 0U;
             peak_allocated = 0U;
+
+#endif
         }
 
         /**
@@ -416,8 +424,12 @@ namespace chdr {
             decltype(m_blocks) temp{};
             m_blocks = std::move(temp);
 
+#if CHDR_DIAGNOSTICS == 1
+
              num_allocated = 0U;
             peak_allocated = 0U;
+
+#endif
         }
     };
 

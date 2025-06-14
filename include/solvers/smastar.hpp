@@ -63,12 +63,12 @@ namespace chdr::solvers {
 
         struct node final : unmanaged_node<index_t> {
 
-                bool m_enqueued;
-             index_t m_depth;
+            bool m_in_open;
+
+              index_t m_depth;
             scalar_t m_gScore;
             scalar_t m_fScore;
 
-            std::vector<node*> m_parents;
             std::vector<node*> m_successors;
 
             /**
@@ -77,12 +77,11 @@ namespace chdr::solvers {
             // ReSharper disable once CppPossiblyUninitializedMember
             [[nodiscard]] HOT constexpr node() noexcept : unmanaged_node<index_t>() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] HOT constexpr node(bool _enqueued, index_t _depth, index_t _index, scalar_t _gScore, scalar_t _hScore, const unmanaged_node<index_t>* RESTRICT const _parent = nullptr) noexcept : unmanaged_node<index_t>(_index, _parent),
-                m_enqueued  (_enqueued        ),
+            [[nodiscard]] HOT constexpr node(index_t _depth, index_t _index, scalar_t _gScore, scalar_t _hScore, const unmanaged_node<index_t>* RESTRICT const _parent = nullptr) noexcept : unmanaged_node<index_t>(_index, _parent),
+                m_in_open   (false),
                 m_depth     (_depth           ),
                 m_gScore    (_gScore          ),
                 m_fScore    (_gScore + _hScore),
-                m_parents   (),
                 m_successors() {}
 
             ~node() = default;
@@ -110,12 +109,14 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
-            std::unordered_map<index_t, node> generated;
+            std::unordered_map<index_t, node> all_nodes;
 
             {
-                node start(true, static_cast<index_t>(0), static_cast<index_t>(s), static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
-                _open.emplace(start);
-                generated.emplace(s, start);
+                auto& start_node = all_nodes[static_cast<index_t>(s)];
+                start_node = node(static_cast<index_t>(0), static_cast<index_t>(s), static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
+                //start_node.m_in_open = true;
+
+                _open.emplace(start_node);
             }
 
             // Main loop:
@@ -126,147 +127,56 @@ namespace chdr::solvers {
                 std::cout << "Iteration: " << curr.m_index << "\n";
 
                 if (curr.m_index == e) { // SOLUTION REACHED ...
-
-                    if constexpr (std::is_same_v<std::decay_t<decltype(_open)>, heap<node>>) {
-                        _open.wipe();
-                    }
-                    else {
-                        _open = open_set_t{};
-                    }
-
-                    return solver_t::solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);
+                    return solver_t::solver_utils::rbacktrack(curr, _params.size);
                 }
                 else { // SEARCH FOR SOLUTION...
 
-                    // Expand (generate successors of curr):
                     if (curr.m_successors.empty()) {
+
                         for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
+
                             if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
-                                node* n_ptr(nullptr);
 
-                                auto search = generated.find(n.index);
-                                if (search == generated.end()) {
-                                    auto [it, success] = generated.try_emplace(
-                                        n.index,
-                                        false,
-                                        curr.m_depth + 1U,
-                                        n.index,
-                                        curr.m_gScore + n.distance,
-                                        _params.h(n.coord, _params.end) * _params.weight,
-                                        &curr
-                                    );
+                                scalar_t g = curr.m_gScore + n.distance;
+                                scalar_t h = _params.h(n.coord, _params.end) * _params.weight;
+                                scalar_t f = g + h;
 
-                                    n_ptr = &(it->second);
-                                    n_ptr->m_parents.push_back(&curr);
+                                auto& child_node = all_nodes[n.index];
+                                if (child_node.m_index == 0 || g < child_node.m_gScore) {
+
+                                    auto itr = all_nodes.emplace(curr.m_index, std::move(curr)).first;
+                                    curr = itr->second;
+
+                                    child_node = node(curr.m_depth + 1U, n.index, g, f, &curr);
+                                    curr.m_successors.push_back(&child_node);
                                 }
-                                else {
-                                    n_ptr = &(search->second);
-                                    if (std::find(n_ptr->m_parents.begin(), n_ptr->m_parents.end(), &curr) == n_ptr->m_parents.end()) {
-                                        n_ptr->m_parents.push_back(&curr);
-                                    }
-                                }
-
-                                curr.m_successors.push_back(n_ptr);
                             }
                         }
                     }
 
-                    node* succ(nullptr);
-                    for (auto* successor : curr.m_successors) {
-                        if (!successor->m_enqueued) {
-                            succ = successor;
-                            break;
+                    node* best_successor = nullptr;
+                    for (auto* succ : curr.m_successors) {
+                        if (!succ->m_in_open && (best_successor == nullptr || succ->m_fScore < best_successor->m_fScore)) {
+                            best_successor = succ;
                         }
                     }
 
-                    if (succ != nullptr) {
-                        if (succ->m_index != e && succ->m_depth == _params.memory_limit) {
-                            succ->m_fScore = std::numeric_limits<scalar_t>::infinity();
-                        }
-                        else {
-                            const auto sCoord = utils::to_nd(succ->m_index, _params.size);
-                            succ->m_fScore    = std::max(succ->m_fScore, succ->m_gScore + _params.h(sCoord, _params.end) * _params.weight);
-                        }
+                    if (best_successor != nullptr) {
+                        best_successor->m_in_open = true;
+                        _open.emplace(*best_successor);
                     }
                     else {
-                        // Update current node's f-cost to minimum of successor f-costs.
-                        if (!curr.m_successors.empty()) {
-                            auto min_successor_f = std::numeric_limits<scalar_t>::infinity();
-                            for (const auto* successor : curr.m_successors) {
-                                min_successor_f = std::min(min_successor_f, successor->m_fScore);
-                            }
-                            curr.m_fScore = std::max(curr.m_fScore, min_successor_f);
+                        scalar_t min_f = std::numeric_limits<scalar_t>::infinity();
+                        for (auto* succ : curr.m_successors) {
+                            min_f = std::min(min_f, succ->m_fScore);
                         }
-
-                        // Propagate cost updates to parent nodes if needed.
-                        for (auto* parent : curr.m_parents) {
-                            // Calculate what the parent's f-cost should be based on current node's updated cost.
-                            scalar_t new_parent_f = std::numeric_limits<scalar_t>::infinity();
-
-                            // Find minimum f-cost among all of parent's successors:
-                            for (const auto* successor : parent->m_successors) {
-                                new_parent_f = std::min(new_parent_f, successor->m_fScore);
-                            }
-
-                            // Update parent's f-cost if the new minimum is higher than current:
-                            if (new_parent_f > parent->m_fScore) {
-                                // Find the parent in the open set:
-                                auto parent_it = _open.find(*parent);
-                                if (parent_it != _open.end()) {
-                                    // Remove from set, and re-insert with updated cost.
-                                    _open.erase(parent_it);
-                                    parent->m_fScore = new_parent_f;
-                                    _open.emplace(*parent);
-                                }
-                                else {
-                                    // Parent not in open set, just update the cost.
-                                    parent->m_fScore = new_parent_f;
-                                }
-                            }
-                        }
+                        curr.m_fScore = std::max(curr.m_fScore, min_f);
                     }
 
-                    bool all_successors_in_queue = true;
-                    for (auto* successor : curr.m_successors) {
-                        if (!successor->m_enqueued) {
-                            all_successors_in_queue = false;
-                            break;
-                        }
-                    }
-                    if (all_successors_in_queue) {
-                        curr.m_enqueued = false;
-                    }
-
-                    // memory management
-                    if (_open.size() >= _params.memory_limit) {
-
-                        // Find shallowest node with highest f-cost.
-                        // Remove it and update parents:
-
-                        const auto& bad      = *std::prev(_open.end());
-                        const auto& bad_node = bad;
-
-                        for (auto* parent : bad_node.m_parents) {
-                            parent->m_successors.erase(
-                                std::remove_if(
-                                    parent->m_successors.begin(),
-                                    parent->m_successors.end(),
-                                    [&bad_node](const node* n) { return n == &bad_node; }
-                                ),
-                                parent->m_successors.end()
-                            );
-
-                            if (parent->m_successors.empty()) {
-                                _open.emplace(*parent);
-                            }
-                        }
-
-                        _open.erase(bad);
-                    }
-
-                    if (succ != nullptr && !succ->m_enqueued) {
-                        succ->m_enqueued = true;
-                        _open.emplace(*succ);
+                    if (_open.size() > _params.memory_limit) {
+                        auto& worst = *const_cast<node*>(&*std::prev(_open.end()));
+                        _open.erase(std::prev(_open.end()));
+                        worst.m_in_open = false;
                     }
                 }
             }
@@ -275,11 +185,9 @@ namespace chdr::solvers {
         }
 
         [[maybe_unused, nodiscard]] static auto invoke(const params_t& _params) {
-
             assert(_params.memory_limit > 0U && "memory_limit must be greater than zero.");
 
             if (_params.memory_limit > 0U) {
-
                 std::pmr::set<node> open(_params.heterogeneous_pmr);
 
                 return solve_internal(open, _params);
@@ -295,6 +203,7 @@ namespace chdr::solvers {
      * @}
      * @}
      */
+
 } //chdr::solvers
 
 #endif //CHDR_ASTAR_HPP
