@@ -102,7 +102,7 @@ namespace chdr::solvers {
                             }
                         }
                     }
-                    else { // SOLUTION REACHED ...
+                    else { // SOLUTION REACHED...
                         return true;
                     }
                 }

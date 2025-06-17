@@ -110,7 +110,7 @@ namespace chdr::solvers {
                         curr.expunge(_params.homogeneous_pmr);
                     }
                 }
-                else { // SOLUTION REACHED ...
+                else { // SOLUTION REACHED...
 
                     _open   =   open_set_t{};
                     _closed = closed_set_t{};

@@ -160,7 +160,7 @@ namespace chdr::solvers {
                         }
                     }
                 }
-                else { // SOLUTION REACHED ...
+                else { // SOLUTION REACHED...
 
                     if constexpr (std::is_same_v<std::decay_t<decltype(_open)>, heap<node>>) {
                         _open.wipe();

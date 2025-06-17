@@ -188,7 +188,7 @@ namespace chdr::solvers {
                             }
                         }
                     }
-                    else { // SOLUTION REACHED ...
+                    else { // SOLUTION REACHED...
 
                         _next   = std::move(open_set_t());
                         _closed = closed_set_t{};

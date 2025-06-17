@@ -114,7 +114,7 @@ namespace chdr::solvers {
                         }
                     }
                 }
-                else { // SOLUTION REACHED ...
+                else { // SOLUTION REACHED...
 
                     _open   =   open_set_t{};
                     _closed = closed_set_t{};

@@ -18,7 +18,6 @@
 #include <vector>
 #include <set>
 
-#include "../types/containers/heap.hpp"
 #include "../utils/utils.hpp"
 #include "base/solver.hpp"
 #include "base/unmanaged_node.hpp"
@@ -63,13 +62,13 @@ namespace chdr::solvers {
 
         struct node final : unmanaged_node<index_t> {
 
-            bool m_in_open;
+            bool m_in_path;
 
-              index_t m_depth;
+             index_t m_depth;
             scalar_t m_gScore;
             scalar_t m_fScore;
 
-            std::vector<node*> m_successors;
+            std::vector<index_t> m_successors;
 
             /**
              * @brief Constructs an uninitialized node.
@@ -78,7 +77,7 @@ namespace chdr::solvers {
             [[nodiscard]] HOT constexpr node() noexcept : unmanaged_node<index_t>() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
             [[nodiscard]] HOT constexpr node(index_t _depth, index_t _index, scalar_t _gScore, scalar_t _hScore, const unmanaged_node<index_t>* RESTRICT const _parent = nullptr) noexcept : unmanaged_node<index_t>(_index, _parent),
-                m_in_open   (false),
+                m_in_path   (false),
                 m_depth     (_depth           ),
                 m_gScore    (_gScore          ),
                 m_fScore    (_gScore + _hScore),
@@ -114,7 +113,7 @@ namespace chdr::solvers {
             {
                 auto& start_node = all_nodes[static_cast<index_t>(s)];
                 start_node = node(static_cast<index_t>(0), static_cast<index_t>(s), static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
-                start_node.m_in_open = true;
+                start_node.m_in_path = true;
 
                 _open.emplace(start_node);
             }
@@ -123,68 +122,95 @@ namespace chdr::solvers {
             while (LIKELY(!_open.empty())) {
 
                 node curr(std::move(_open.extract(_open.begin()).value()));
-                curr.m_in_open = false;
 
-                std::cout << "Iteration: " << curr.m_index << "\n";
-
-                if (curr.m_index == e) { // SOLUTION REACHED ...
-
-                    const auto parent = curr.m_parent;
-                    std::cout << parent->m_index << "\n";
-
-                    return solver_t::solver_utils::rbacktrack(curr, _params.size);
+                if (curr.m_index == e) { // SOLUTION REACHED...
+                    return solver_t::solver_utils::rbacktrack(curr, _params.size, curr.m_depth);
                 }
                 else { // SEARCH FOR SOLUTION...
 
                     if (curr.m_successors.empty()) {
 
-                        auto [it, inserted] = all_nodes.try_emplace(curr.m_index, std::move(curr));
-                        node& stored_curr = it->second;
+                        {
+                            node* stored_curr = nullptr;
 
-                        for (const auto& n_data : _params.maze.get_neighbours(stored_curr.m_index)) {
+                            auto search = all_nodes.find(curr.m_index);
+                            if (search != all_nodes.end()) {
+                                stored_curr = &search->second;
+                            }
+                            else {
+                                auto [it, inserted] = all_nodes.try_emplace(curr.m_index, std::move(curr));
+                                stored_curr = &it->second;
+                            }
+
+                            curr = *stored_curr;
+                        }
+
+                        auto curr_coord = utils::to_nd(curr.m_index, _params.size);
+                        std::cout << "stored_curr: " << curr.m_index << ": " << curr_coord[0U] << ", " << curr_coord[1U] << "\n";
+
+                        // if (curr.m_index == 31) {
+                        //     std::cout << ":think:\n";
+                        //     std::cout << &_params.maze << "\n";
+                        // }
+
+                        for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
 
                             if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
 
-                                const auto g = stored_curr.m_gScore + n.distance;
+                                const auto g = curr.m_gScore + n.distance;
                                 const auto h = _params.h(n.coord, _params.end) * _params.weight;
-                                const auto f = g + h;
 
-                                auto& child_node = all_nodes.try_emplace(n.index, node()).first->second;
-                                if ((child_node.m_index == 0 || g < child_node.m_gScore) && (!child_node.m_in_open || g < child_node.m_gScore)) {
-                                    child_node = node(stored_curr.m_depth + 1U, n.index, g, f, &stored_curr);
+                                // Create or update node with best values.
+                                auto child_search = all_nodes.find(n.index);
+                                if (child_search == all_nodes.end()) {
+                                    all_nodes[n.index] = node(curr.m_depth + 1U, n.index, g, h, &curr);
                                 }
-                                stored_curr.m_successors.push_back(&child_node);
+                                else {
+                                    auto& child_node = child_search->second;
+                                    if (!child_node.m_in_path && g < child_node.m_gScore) {
+
+                                         child_node.m_depth  = curr.m_depth + 1U;
+                                         child_node.m_gScore = g;
+                                         child_node.m_fScore = g + h;
+                                         child_node.m_parent = &curr;
+                                    }
+                                }
+
+                                curr.m_successors.push_back(n.index);
                             }
                         }
-
-                        curr = stored_curr;
                     }
 
+                    // Select best successor from available:
                     node* best_successor = nullptr;
-                    for (auto* succ : curr.m_successors) {
-                        if (!succ->m_in_open && (best_successor == nullptr || succ->m_fScore < best_successor->m_fScore)) {
-                            best_successor = succ;
+                    for (const auto& succ_idx : curr.m_successors) {
+                        auto& succ = all_nodes[succ_idx];
+                        if (!succ.m_in_path && (best_successor == nullptr || succ.m_fScore < best_successor->m_fScore)) {
+                            best_successor = &succ;
                         }
                     }
 
+                    // Add best successor to open set, or back-up the f-cost to the parent if not.
                     if (best_successor != nullptr) {
-                        best_successor->m_in_open = true;
+                        best_successor->m_in_path = true;
                         _open.emplace(*best_successor);
-                        best_successor->m_in_open = true;
                     }
                     else {
                         scalar_t min_f = std::numeric_limits<scalar_t>::infinity();
-                        for (auto* succ : curr.m_successors) {
-                            min_f = std::min(min_f, succ->m_fScore);
+                        for (const auto& succ_idx : curr.m_successors) {
+                            auto& succ = all_nodes[succ_idx];
+                            min_f = std::min(min_f, succ.m_fScore);
                         }
                         curr.m_fScore = std::max(curr.m_fScore, min_f);
                     }
 
+                    // If memory is exhausted, purge worst node:
                     if (_open.size() > _params.memory_limit) {
-                        auto& worst = *const_cast<node*>(&*std::prev(_open.end()));
-                        worst.m_in_open = false;
+                        auto worst_itr = std::prev(_open.end());
+                        auto& worst = *const_cast<node*>(&*worst_itr);
+                        worst.m_in_path = false;
 
-                        _open.erase(std::prev(_open.end()));
+                        _open.erase(worst_itr);
                     }
                 }
             }
