@@ -6,6 +6,7 @@ var hierarchy =
     [ "bnode< index_t >", "da/d98/structchdr_1_1solvers_1_1bnode.html", [
       [ "managed_node< index_t, node >", "df/d64/structchdr_1_1solvers_1_1managed__node.html", null ],
       [ "managed_node< index_t, derived >", "df/d64/structchdr_1_1solvers_1_1managed__node.html", null ],
+      [ "mutable_node< index_t >", "da/d36/structchdr_1_1solvers_1_1mutable__node.html", null ],
       [ "unmanaged_node< index_t >", "d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html", null ]
     ] ],
     [ "dfs< params_t >", "d9/db9/structchdr_1_1solvers_1_1dfs.html", null ],

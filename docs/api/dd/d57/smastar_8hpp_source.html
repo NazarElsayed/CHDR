@@ -130,7 +130,7 @@ $(document).ready(function(){initNavTree('dd/d57/smastar_8hpp_source.html','../.
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &quot;../types/containers/heap.hpp&quot;</span></div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;../utils/utils.hpp&quot;</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &quot;<a class="code" href="../../d2/d1c/solver_8hpp.html">base/solver.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;<a class="code" href="../../d0/def/unmanaged__node_8hpp.html">base/unmanaged_node.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;<a class="code" href="../../d5/d14/mutable__node_8hpp.html">base/mutable_node.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment">// ReSharper disable once CppUnusedIncludeDirective</span></div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;../utils/intrinsics.hpp&quot;</span> <span class="comment">// NOLINT(*-include-cleaner)</span></div>
@@ -153,21 +153,21 @@ $(document).ready(function(){initNavTree('dd/d57/smastar_8hpp_source.html','../.
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="keyword">static_assert</span>(std::is_arithmetic_v&lt;scalar_t&gt;, <span class="stringliteral">&quot;scalar_t must be an integral or floating point type.&quot;</span>);</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="keyword">static_assert</span>(std::is_integral_v&lt;index_t&gt;, <span class="stringliteral">&quot;index_t must be an integral type.&quot;</span>);</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        <span class="keyword">struct </span>node final : <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">unmanaged_node</a>&lt;index_t&gt; {</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        <span class="keyword">struct </span>node final : <a class="code hl_struct" href="../../da/d36/structchdr_1_1solvers_1_1mutable__node.html">mutable_node</a>&lt;index_t&gt; {</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>            <span class="keywordtype">bool</span> m_in_open;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>            <span class="keywordtype">bool</span> m_in_path;</div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>              index_t m_depth;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>             index_t m_depth;</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>            scalar_t m_gScore;</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>            scalar_t m_fScore;</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>            std::vector&lt;index_t&gt; m_successors;</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>            <span class="comment">// ReSharper disable once CppPossiblyUninitializedMember</span></div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>            [[nodiscard]] <a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_a1eb14cc432874ddacd1934791dbe12a3.html#a1eb14cc432874ddacd1934791dbe12a3">HOT</a> <span class="keyword">constexpr</span> node() noexcept : <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">unmanaged_node&lt;index_t&gt;</a>() {} <span class="comment">// NOLINT(*-pro-type-member-init, *-use-equals-default)</span></div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>            [[nodiscard]] <a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_a1eb14cc432874ddacd1934791dbe12a3.html#a1eb14cc432874ddacd1934791dbe12a3">HOT</a> <span class="keyword">constexpr</span> node() noexcept : <a class="code hl_struct" href="../../da/d36/structchdr_1_1solvers_1_1mutable__node.html">mutable_node&lt;index_t&gt;</a>() {} <span class="comment">// NOLINT(*-pro-type-member-init, *-use-equals-default)</span></div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            [[nodiscard]] <a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_a1eb14cc432874ddacd1934791dbe12a3.html#a1eb14cc432874ddacd1934791dbe12a3">HOT</a> <span class="keyword">constexpr</span> node(index_t _depth, index_t _index, scalar_t _gScore, scalar_t _hScore, <span class="keyword">const</span> <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">unmanaged_node&lt;index_t&gt;</a>* <a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_aae3356b63849abbe8789dd41648ee90a.html#aae3356b63849abbe8789dd41648ee90a">RESTRICT</a> <span class="keyword">const</span> _parent = <span class="keyword">nullptr</span>) noexcept : <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">unmanaged_node&lt;index_t&gt;</a>(_index, _parent),</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>                m_in_open   (<span class="keyword">false</span>),</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            [[nodiscard]] <a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_a1eb14cc432874ddacd1934791dbe12a3.html#a1eb14cc432874ddacd1934791dbe12a3">HOT</a> <span class="keyword">constexpr</span> node(index_t _depth, index_t _index, scalar_t _gScore, scalar_t _hScore, <a class="code hl_struct" href="../../da/d36/structchdr_1_1solvers_1_1mutable__node.html">mutable_node&lt;index_t&gt;</a>* <a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_aae3356b63849abbe8789dd41648ee90a.html#aae3356b63849abbe8789dd41648ee90a">RESTRICT</a> <span class="keyword">const</span> _parent = <span class="keyword">nullptr</span>) noexcept : <a class="code hl_struct" href="../../da/d36/structchdr_1_1solvers_1_1mutable__node.html">mutable_node&lt;index_t&gt;</a>(_index, _parent),</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>                m_in_path   (<span class="keyword">false</span>),</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>                m_depth     (_depth           ),</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>                m_gScore    (_gScore          ),</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>                m_fScore    (_gScore + _hScore),</div>
@@ -203,7 +203,7 @@ $(document).ready(function(){initNavTree('dd/d57/smastar_8hpp_source.html','../.
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>            {</div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>                <span class="keyword">auto</span>&amp; start_node = all_nodes[<span class="keyword">static_cast&lt;</span>index_t<span class="keyword">&gt;</span>(s)];</div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>                start_node = node(<span class="keyword">static_cast&lt;</span>index_t<span class="keyword">&gt;</span>(0), <span class="keyword">static_cast&lt;</span>index_t<span class="keyword">&gt;</span>(s), <span class="keyword">static_cast&lt;</span>scalar_t<span class="keyword">&gt;</span>(0), _params.h(_params.start, _params.end) * _params.weight);</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>                start_node.m_in_open = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>                start_node.m_in_path = <span class="keyword">true</span>;</div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>                _open.emplace(start_node);</div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>            }</div>
@@ -211,118 +211,134 @@ $(document).ready(function(){initNavTree('dd/d57/smastar_8hpp_source.html','../.
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>            <span class="comment">// Main loop:</span></div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>            <span class="keywordflow">while</span> (<a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_affde14445f49f65ff4f5b592e44ee71a.html#affde14445f49f65ff4f5b592e44ee71a">LIKELY</a>(!_open.empty())) {</div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>                node curr(std::move(_open.extract(_open.begin()).value()));</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>                curr.m_in_open = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>                <span class="keyword">auto</span> curr(std::move(_open.top()));</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>                _open.pop();</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>                <span class="keyword">auto</span> curr_coord = utils::to_nd(curr.m_index, _params.size);</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>                std::cout &lt;&lt; <span class="stringliteral">&quot;Iteration: &quot;</span> &lt;&lt; curr.m_index &lt;&lt; <span class="stringliteral">&quot;: &quot;</span> &lt;&lt; curr_coord[0U] &lt;&lt; <span class="stringliteral">&quot;, &quot;</span> &lt;&lt; curr_coord[1U] &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>                <span class="keywordflow">if</span> (curr.m_index == e) { <span class="comment">// SOLUTION REACHED...</span></div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>                    <span class="keywordflow">return</span> solver_t::solver_utils::rbacktrack(curr, _params.size, curr.m_depth);</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>                }</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>                <span class="keywordflow">else</span> { <span class="comment">// SEARCH FOR SOLUTION...</span></div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span> </div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>                <span class="keywordflow">if</span> (curr.m_index == e) { <span class="comment">// SOLUTION REACHED...</span></div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>                    <span class="keywordflow">return</span> solver_t::solver_utils::rbacktrack(curr, _params.size, curr.m_depth);</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>                }</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>                <span class="keywordflow">else</span> { <span class="comment">// SEARCH FOR SOLUTION...</span></div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> </div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>                    std::cout &lt;&lt; <span class="stringliteral">&quot;Current node index: &quot;</span> &lt;&lt; curr.m_index &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>;</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span> </div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>                    <span class="comment">// Expand successors only if not already expanded:</span></div>
 <div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>                    <span class="keywordflow">if</span> (curr.m_successors.empty()) {</div>
 <div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>                        <span class="keyword">auto</span> [it, inserted] = all_nodes.try_emplace(curr.m_index, std::move(curr));</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>                        <span class="keyword">auto</span>&amp; stored_curr = it-&gt;second;</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>                        <span class="comment">// Generate successors based on the maze environment:</span></div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>                        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; n_data : _params.maze.get_neighbours(curr.m_index)) {</div>
 <div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span> </div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>                        <span class="keywordflow">if</span> (stored_curr.m_index == 30) {</div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>                            std::cout &lt;&lt; <span class="stringliteral">&quot;:think:\n&quot;</span>;</div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>                            std::cout &lt;&lt; &amp;_params.maze &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>                        }</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>                            <span class="keywordflow">if</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; n = solver_t::get_data(n_data, _params); n.active) {</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span> </div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>                                <span class="keyword">auto</span> g = curr.m_gScore + n.distance;</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>                                <span class="keyword">auto</span> h = _params.h(n.coord, _params.end) * _params.weight;</div>
 <div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span> </div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>                        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; n_data : _params.maze.get_neighbours(stored_curr.m_index)) {</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span> </div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>                            <span class="keywordflow">if</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; n = solver_t::get_data(n_data, _params); n.active) {</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span> </div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>                                <span class="keyword">const</span> <span class="keyword">auto</span> g = stored_curr.m_gScore + n.distance;</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>                                <span class="keyword">const</span> <span class="keyword">auto</span> h = _params.h(n.coord, _params.end) * _params.weight;</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span> </div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>                                <span class="comment">// Create or update node with best values.</span></div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>                                <span class="keyword">auto</span> child_search = all_nodes.find(n.index);</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>                                <span class="keywordflow">if</span> (child_search == all_nodes.end()) {</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>                                    all_nodes[n.index] = node(stored_curr.m_depth + 1U, n.index, g, h, &amp;stored_curr);</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>                                }</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>                                <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>                                    <span class="keyword">auto</span>&amp; child_node = child_search-&gt;second;</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>                                    <span class="keywordflow">if</span> (!child_node.m_in_open &amp;&amp; g &lt; child_node.m_gScore) {</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span> </div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>                                         child_node.m_depth  = stored_curr.m_depth + 1U;</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>                                         child_node.m_gScore = g;</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>                                         child_node.m_fScore = g + h;</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>                                         child_node.m_parent = &amp;stored_curr;</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>                                    }</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>                                }</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span> </div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>                                stored_curr.m_successors.push_back(n.index);</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>                            }</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>                                <span class="comment">// Create or update successor node:</span></div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>                                <span class="keyword">auto</span> child_search = all_nodes.find(n.index);</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>                                <span class="keywordflow">if</span> (child_search == all_nodes.end()) {</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>                                    all_nodes[n.index] = node(curr.m_depth + 1, n.index, g, h, &amp;curr);</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>                                }</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>                                <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>                                    <span class="keyword">auto</span>&amp; child_node = child_search-&gt;second;</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>                                    <span class="keywordflow">if</span> (!child_node.m_in_path &amp;&amp; g &lt; child_node.m_gScore) {</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>                                        child_node.m_gScore = g; <span class="comment">// Update cost</span></div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>                                        child_node.m_fScore = g + h;</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>                                        child_node.m_parent = &amp;curr;</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>                                    }</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>                                }</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span> </div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>                                curr.m_successors.push_back(n.index);</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>                            }</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>                        }</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>                    }</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span> </div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>                    <span class="comment">// Select Best Successor:</span></div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>                    node* best_successor = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>                    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; succ_idx : curr.m_successors) {</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>                        <span class="keyword">auto</span>&amp; succ = all_nodes[succ_idx];</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>                        <span class="keywordflow">if</span> (!succ.m_in_path &amp;&amp; (best_successor == <span class="keyword">nullptr</span> || succ.m_fScore &lt; best_successor-&gt;m_fScore)) {</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>                            best_successor = &amp;succ;</div>
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>                        }</div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span> </div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>                        curr = stored_curr;</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>                    }</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span> </div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>                    node* best_successor = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span> </div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>                    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; succ_idx : curr.m_successors) {</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>                        <span class="keyword">auto</span>&amp; succ = all_nodes[succ_idx];</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>                        <span class="keywordflow">if</span> (!succ.m_in_open &amp;&amp; (best_successor == <span class="keyword">nullptr</span> || succ.m_fScore &lt; best_successor-&gt;m_fScore)) {</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>                            best_successor = &amp;succ;</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>                        }</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>                    }</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span> </div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>                    <span class="keywordflow">if</span> (best_successor != <span class="keyword">nullptr</span>) {</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>                        best_successor-&gt;m_in_open = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>                        _open.emplace(*best_successor);</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>                    }</div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>                    <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>                        scalar_t min_f = std::numeric_limits&lt;scalar_t&gt;::infinity();</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>                        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; succ_idx : curr.m_successors) {</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>                            node&amp; succ = all_nodes[succ_idx];</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>                            min_f = std::min(min_f, succ.m_fScore);</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>                        }</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>                        curr.m_fScore = std::max(curr.m_fScore, min_f);</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>                    }</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span> </div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>                    <span class="keywordflow">if</span> (_open.size() &gt; _params.memory_limit) {</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>                        <span class="keyword">auto</span>&amp; worst = *<span class="keyword">const_cast&lt;</span>node*<span class="keyword">&gt;</span>(&amp;*std::prev(_open.end()));</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>                        worst.m_in_open = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span> </div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>                        _open.erase(std::prev(_open.end()));</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>                    }</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>                }</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>            }</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span> </div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>            <span class="keywordflow">return</span> std::vector&lt;coord_t&gt;{};</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>        }</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span> </div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>        [[maybe_unused, nodiscard]] <span class="keyword">static</span> <span class="keyword">auto</span> invoke(<span class="keyword">const</span> params_t&amp; _params) {</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span> </div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>            assert(_params.memory_limit &gt; 0U &amp;&amp; <span class="stringliteral">&quot;memory_limit must be greater than zero.&quot;</span>);</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span> </div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>            <span class="keywordflow">if</span> (_params.memory_limit &gt; 0U) {</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>                std::pmr::set&lt;node&gt; open(_params.heterogeneous_pmr);</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span> </div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>                <span class="keywordflow">return</span> solve_internal(open, _params);</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>            }</div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>            <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>                <span class="keywordflow">return</span> std::vector&lt;coord_t&gt;{};</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>            }</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>        }</div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    };</div>
-</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>                    }</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span> </div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>                    <span class="comment">// If a valid successor is found, add it to the open set:</span></div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>                    <span class="keywordflow">if</span> (best_successor != <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>                        best_successor-&gt;m_in_path = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>                        _open.emplace(*best_successor);</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>                    }</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>                    <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span> </div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>                        <span class="comment">// Back up fScore to the parent if no valid successor is available:</span></div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>                        scalar_t min_f = std::numeric_limits&lt;scalar_t&gt;::max();</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>                        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; succ_idx : curr.m_successors) {</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>                            <span class="keyword">auto</span>&amp; succ = all_nodes[succ_idx];</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>                            min_f = std::min(min_f, succ.m_fScore);</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>                        }</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>                        curr.m_fScore = std::max(curr.m_fScore, min_f);</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span> </div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>                        <span class="comment">// Propagate to the parent (if exists):</span></div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>                        <span class="keywordflow">if</span> (curr.m_parent != <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>                            <span class="keyword">auto</span>* p = <span class="keyword">static_cast&lt;</span>node*<span class="keyword">&gt;</span>(curr.m_parent);</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>                            p-&gt;m_fScore = std::max(p-&gt;m_fScore, curr.m_fScore);</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>                        }</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>                    }</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span> </div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>                    <span class="comment">// Control memory usage:</span></div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>                    <span class="keywordflow">if</span> (_open.size() &gt; _params.memory_limit) {</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span> </div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>                        <span class="comment">// Purge the worst node (highest fScore outside the current path):</span></div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>                        <span class="keyword">auto</span> worst_itr = std::max_element(</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>                            _open.cbegin(),</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>                            _open.cend(),</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>                            [](<span class="keyword">const</span> node&amp; a, <span class="keyword">const</span> node&amp; b) {</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>                                return a.m_fScore &lt; b.m_fScore;</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>                            }</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>                        );</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span> </div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>                        node* worst_node = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>                        <span class="keywordflow">if</span> (worst_itr != _open.end()) {</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>                            worst_node = <span class="keyword">const_cast&lt;</span>node*<span class="keyword">&gt;</span>(&amp;*worst_itr);</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>                        }</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span> </div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>                        <span class="comment">// Ensure the worst node is not part of the path before erasing:</span></div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>                        <span class="keywordflow">if</span> (worst_node != <span class="keyword">nullptr</span> &amp;&amp; !worst_node-&gt;m_in_path) {</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>                            _open.erase(*worst_node);</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>                            all_nodes.erase(worst_node-&gt;m_index);</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>                        }</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>                    }</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>                }</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>            }</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span> </div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>            <span class="keywordflow">return</span> std::vector&lt;coord_t&gt;{};</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>        }</div>
 <div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span> </div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>} <span class="comment">//chdr::solvers</span></div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span> </div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_ASTAR_HPP</span></div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>        [[maybe_unused, nodiscard]] <span class="keyword">static</span> <span class="keyword">auto</span> invoke(<span class="keyword">const</span> params_t&amp; _params) {</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span> </div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>            assert(_params.memory_limit &gt; 0U &amp;&amp; <span class="stringliteral">&quot;memory_limit must be greater than zero.&quot;</span>);</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span> </div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>            <span class="keywordflow">if</span> (_params.memory_limit &gt; 0U) {</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>                <a class="code hl_class" href="../../d3/d61/classchdr_1_1heap.html">heap&lt;node&gt;</a> open(_params.heterogeneous_pmr);</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span> </div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>                <span class="keywordflow">return</span> solve_internal(open, _params);</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>            }</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>            <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>                <span class="keywordflow">return</span> std::vector&lt;coord_t&gt;{};</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>            }</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>        }</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    };</div>
+</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span> </div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>} <span class="comment">//chdr::solvers</span></div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span> </div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_ASTAR_HPP</span></div>
+<div class="ttc" id="aclasschdr_1_1heap_html"><div class="ttname"><a href="../../d3/d61/classchdr_1_1heap.html">chdr::heap</a></div><div class="ttdoc">A generic heap implementation with configurable properties.</div><div class="ttdef"><b>Definition</b> <a href="../../da/d45/heap_8hpp_source.html#l00053">heap.hpp:53</a></div></div>
 <div class="ttc" id="aclasschdr_1_1solvers_1_1solver_html"><div class="ttname"><a href="../../d3/df4/classchdr_1_1solvers_1_1solver.html">chdr::solvers::solver</a></div><div class="ttdoc">A static class serving as the core entry point for the CHDR library.</div><div class="ttdef"><b>Definition</b> <a href="../../d2/d1c/solver_8hpp_source.html#l00088">solver.hpp:88</a></div></div>
 <div class="ttc" id="aintrinsics_8hpp_a1eb14cc432874ddacd1934791dbe12a3_html_a1eb14cc432874ddacd1934791dbe12a3"><div class="ttname"><a href="../../d7/d65/intrinsics_8hpp_a1eb14cc432874ddacd1934791dbe12a3.html#a1eb14cc432874ddacd1934791dbe12a3">HOT</a></div><div class="ttdeci">#define HOT</div><div class="ttdoc">Marks a function as performance-critical (platform-specific).</div><div class="ttdef"><b>Definition</b> <a href="../../d7/d65/intrinsics_8hpp_source.html#l00254">intrinsics.hpp:254</a></div></div>
 <div class="ttc" id="aintrinsics_8hpp_aae3356b63849abbe8789dd41648ee90a_html_aae3356b63849abbe8789dd41648ee90a"><div class="ttname"><a href="../../d7/d65/intrinsics_8hpp_aae3356b63849abbe8789dd41648ee90a.html#aae3356b63849abbe8789dd41648ee90a">RESTRICT</a></div><div class="ttdeci">#define RESTRICT</div><div class="ttdoc">Specifies pointer aliasing restrictions to improve optimisation (platform-specific).</div><div class="ttdef"><b>Definition</b> <a href="../../d7/d65/intrinsics_8hpp_source.html#l00248">intrinsics.hpp:248</a></div></div>
 <div class="ttc" id="aintrinsics_8hpp_affde14445f49f65ff4f5b592e44ee71a_html_affde14445f49f65ff4f5b592e44ee71a"><div class="ttname"><a href="../../d7/d65/intrinsics_8hpp_affde14445f49f65ff4f5b592e44ee71a.html#affde14445f49f65ff4f5b592e44ee71a">LIKELY</a></div><div class="ttdeci">#define LIKELY(x)</div><div class="ttdoc">Hints to the compiler that the condition is likely to be true (platform-specific).</div><div class="ttdef"><b>Definition</b> <a href="../../d7/d65/intrinsics_8hpp_source.html#l00239">intrinsics.hpp:239</a></div></div>
+<div class="ttc" id="amutable__node_8hpp_html"><div class="ttname"><a href="../../d5/d14/mutable__node_8hpp.html">mutable_node.hpp</a></div></div>
 <div class="ttc" id="asolver_8hpp_html"><div class="ttname"><a href="../../d2/d1c/solver_8hpp.html">solver.hpp</a></div></div>
+<div class="ttc" id="astructchdr_1_1solvers_1_1mutable__node_html"><div class="ttname"><a href="../../da/d36/structchdr_1_1solvers_1_1mutable__node.html">chdr::solvers::mutable_node</a></div><div class="ttdoc">A hierarchical node in a pathfinding context, requires manual memory management.</div><div class="ttdef"><b>Definition</b> <a href="../../d5/d14/mutable__node_8hpp_source.html#l00044">mutable_node.hpp:44</a></div></div>
 <div class="ttc" id="astructchdr_1_1solvers_1_1smastar_html"><div class="ttname"><a href="../../dc/dca/structchdr_1_1solvers_1_1smastar.html">chdr::solvers::smastar</a></div><div class="ttdoc">SMA* search algorithm.</div><div class="ttdef"><b>Definition</b> <a href="../../dd/d57/smastar_8hpp_source.html#l00050">smastar.hpp:50</a></div></div>
-<div class="ttc" id="astructchdr_1_1solvers_1_1unmanaged__node_html"><div class="ttname"><a href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">chdr::solvers::unmanaged_node</a></div><div class="ttdoc">A hierarchical node in a pathfinding context, requires manual memory management.</div><div class="ttdef"><b>Definition</b> <a href="../../d0/def/unmanaged__node_8hpp_source.html#l00039">unmanaged_node.hpp:39</a></div></div>
-<div class="ttc" id="aunmanaged__node_8hpp_html"><div class="ttname"><a href="../../d0/def/unmanaged__node_8hpp.html">unmanaged_node.hpp</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen -->

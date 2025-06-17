@@ -22,7 +22,7 @@
  */
 
 /** @brief Full version string of the CHDR library. */
-#define CHDR_VERSION          "0.1.0-dev+3396d0f2"
+#define CHDR_VERSION          "0.1.0-dev+e23f60a4"
 
 /** @brief CHDR major version number. */
 #define CHDR_VERSION_MAJOR     0
@@ -37,7 +37,7 @@
 #define CHDR_VERSION_TWEAK    "dev"
 
 /** @brief CHDR version metadata string. */
-#define CHDR_VERSION_METADATA "3396d0f2"
+#define CHDR_VERSION_METADATA "e23f60a4"
 
 /** @brief Flag indicating whether or not diagnostics should be output by the library (0 = off, 1 = on). */
 #ifndef CHDR_DIAGNOSTICS
@@ -54,6 +54,7 @@
 #include "include/solvers/astar.hpp"
 #include "include/solvers/base/bnode.hpp"
 #include "include/solvers/base/managed_node.hpp"
+#include "include/solvers/base/mutable_node.hpp"
 #include "include/solvers/base/solver.hpp"
 #include "include/solvers/base/unmanaged_node.hpp"
 #include "include/solvers/best_first.hpp"

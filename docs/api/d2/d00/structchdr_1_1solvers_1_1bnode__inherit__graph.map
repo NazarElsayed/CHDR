@@ -1,9 +1,11 @@
 <map id="bnode&lt; index_t &gt;" name="bnode&lt; index_t &gt;">
-<area shape="rect" id="Node000001" title="Base class for pathfinding nodes." alt="" coords="726,5,849,63"/>
+<area shape="rect" id="Node000001" title="Base class for pathfinding nodes." alt="" coords="987,5,1110,63"/>
 <area shape="rect" id="Node000002" href="$df/d64/structchdr_1_1solvers_1_1managed__node.html" title=" " alt="" coords="5,111,511,255"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="713,59,511,114,510,109,712,53"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="974,46,770,72,646,91,523,113,511,116,510,110,521,108,645,85,769,66,973,41"/>
 <area shape="rect" id="Node000003" href="$df/d64/structchdr_1_1solvers_1_1managed__node.html" title="A hierarchical node in a pathfinding context, with a clean&#45;up mechanism." alt="" coords="535,128,1040,237"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="790,76,790,128,785,128,785,76"/>
-<area shape="rect" id="Node000004" href="$d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html" title="A hierarchical node in a pathfinding context, requires manual memory management." alt="" coords="1064,128,1631,237"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="863,52,1143,125,1142,131,862,57"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="989,72,884,130,882,126,986,67"/>
+<area shape="rect" id="Node000004" href="$da/d36/structchdr_1_1solvers_1_1mutable__node.html" title="A hierarchical node in a pathfinding context, requires manual memory management." alt="" coords="1065,128,1555,237"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="1111,67,1216,126,1213,130,1109,72"/>
+<area shape="rect" id="Node000005" href="$d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html" title="A hierarchical node in a pathfinding context, requires manual memory management." alt="" coords="1580,128,2147,237"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="1124,41,1325,68,1568,108,1651,125,1649,131,1567,113,1324,73,1123,47"/>
 </map>
