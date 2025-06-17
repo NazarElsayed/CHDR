@@ -18,7 +18,6 @@
 #include <vector>
 #include <set>
 
-#include "../types/containers/heap.hpp"
 #include "../utils/utils.hpp"
 #include "base/solver.hpp"
 #include "base/mutable_node.hpp"
@@ -112,26 +111,25 @@ namespace chdr::solvers {
             std::unordered_map<index_t, node> all_nodes;
 
             {
+                // Create the start node and store a pointer to it in _open.
                 auto& start_node = all_nodes[static_cast<index_t>(s)];
                 start_node = node(static_cast<index_t>(0), static_cast<index_t>(s), static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
                 start_node.m_in_path = true;
 
-                _open.emplace(start_node.m_index);
+                _open.emplace(&start_node); // Store a pointer to the start node.
             }
 
             // Main loop:
             while (LIKELY(!_open.empty())) {
 
-                auto& curr = all_nodes[_open.top()];
-                _open.pop();
+                auto& curr = *(_open.extract(_open.begin()).value());
 
                 if (curr.m_index == e) { // SOLUTION REACHED...
                     return solver_t::solver_utils::rbacktrack(curr, _params.size, curr.m_depth);
                 }
-                else {
-                    // SEARCH FOR SOLUTION...
+                else { // SEARCH FOR SOLUTION...
 
-                    // TODO:
+                    // Debug output:
                     std::cout << "Current node index: " << curr.m_index << '\n';
 
                     // Expand successors if not already expanded:
@@ -141,30 +139,34 @@ namespace chdr::solvers {
 
                             if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
 
-                                auto g = curr.m_gScore + n.distance;
-                                auto h = _params.h(n.coord, _params.end) * _params.weight;
-
                                 // Create or update successor node:
-                                auto child_search = all_nodes.find(n.index);
-                                if (child_search == all_nodes.end()) {
-                                    all_nodes[n.index] = node(curr.m_depth + 1, n.index, g, h, &curr);
-                                }
-                                else {
-                                    auto& child_node = child_search->second;
-                                    if (!child_node.m_in_path && g < child_node.m_gScore) {
-                                         child_node.m_gScore = g;
-                                         child_node.m_fScore = g + h;
-                                         child_node.m_parent = &curr;
+                                node* child_node = nullptr;
+                                {
+                                    const auto g = curr.m_gScore + n.distance;
+                                    const auto h = _params.h(n.coord, _params.end) * _params.weight;
+
+                                    auto child_search = all_nodes.find(n.index);
+                                    if (child_search == all_nodes.end()) {
+                                        child_node = &(all_nodes[n.index] = node(curr.m_depth + 1U, n.index, g, h, &curr));
+                                    }
+                                    else {
+                                        child_node = &child_search->second;
+                                        if (!child_node->m_in_path && g < child_node->m_gScore) {
+                                            child_node->m_depth  = curr.m_depth + 1U;
+                                            child_node->m_gScore = g;
+                                            child_node->m_fScore = g + h;
+                                            child_node->m_parent = &curr;
+                                        }
                                     }
                                 }
 
                                 curr.m_successors.push_back(n.index);
-                                _open.emplace(n.index);
+                                _open.emplace(child_node);
                             }
                         }
                     }
 
-                    // Select the best successor
+                    // Linear search for best successor:
                     node* best_successor = nullptr;
                     for (const auto& succ_idx : curr.m_successors) {
 
@@ -174,12 +176,13 @@ namespace chdr::solvers {
                         }
                     }
 
-                    if (best_successor != nullptr) {
+                    if (best_successor != nullptr) { // VALID SUCCESSOR...
                         best_successor->m_in_path = true;
                     }
-                    else {
+                    else { // NO VALID SUCCESSOR...
 
-                        // No valid successor found, back up fScore.
+                        /* BACK-UP F-SCORE TO PARENT */
+
                         scalar_t min_f = std::numeric_limits<scalar_t>::max();
                         for (const auto& succ_idx : curr.m_successors) {
                             auto& succ = all_nodes[succ_idx];
@@ -193,28 +196,20 @@ namespace chdr::solvers {
                         }
                     }
 
-                    // TODO:
-                    std::cout << "Open set size: " << _open.size() << '\n';
+                    // Debug output:
+                    // std::cout << "Open set size: " << _open.size() << '\n';
 
-                    // If memory is exhausted, purge worst node.
-                    if (_open.size() > _params.memory_limit) {
-                        auto worst_itr = std::max_element(
-                            _open.cbegin(),
-                            _open.cend(),
-                            [&](const index_t& a_idx, const index_t& b_idx) {
-                                const auto& a = all_nodes.at(a_idx);
-                                const auto& b = all_nodes.at(b_idx);
-                                return a.m_fScore < b.m_fScore;
-                            }
-                        );
+                    if (_open.size() > _params.memory_limit) { // MEMORY EXHAUSTED ...
 
-                        if (worst_itr != _open.end()) {
-                            const index_t worst_idx = *worst_itr;
-                            node& worst_node = all_nodes[worst_idx];
+                        auto worst_itr = _open.end();
+                        while (worst_itr != _open.begin()) {
+                            worst_itr = std::prev(worst_itr);
 
-                            if (!worst_node.m_in_path) {
-                                _open.erase(worst_idx);      // Remove index from open set
-                                all_nodes.erase(worst_idx);  // Remove node from all_nodes
+                            auto* worst_node = *worst_itr;
+                            if (!worst_node->m_in_path) {
+                                _open.erase(worst_node);
+                                all_nodes.erase(worst_node->m_index);
+                                break;
                             }
                         }
                     }
@@ -229,7 +224,13 @@ namespace chdr::solvers {
             assert(_params.memory_limit > 0U && "memory_limit must be greater than zero.");
 
             if (_params.memory_limit > 0U) {
-                heap<index_t> open(_params.heterogeneous_pmr);
+
+                std::pmr::set<
+                    node*,
+                    decltype([](node* _a, node* _b) {
+                        return !(*_a < *_b);    // Ensure correct sort order.
+                    })
+                > open(_params.heterogeneous_pmr);
 
                 return solve_internal(open, _params);
             }
