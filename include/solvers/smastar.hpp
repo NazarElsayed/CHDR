@@ -60,13 +60,15 @@ namespace chdr::solvers {
         static_assert(std::is_arithmetic_v<scalar_t>, "scalar_t must be an integral or floating point type.");
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
-        struct node final : mutable_node<index_t> {
+        static constexpr auto null_v = std::numeric_limits<index_t>::max();
 
-            bool m_in_path;
+        struct node final {
 
              index_t m_depth;
+             index_t m_index;
             scalar_t m_gScore;
             scalar_t m_fScore;
+             index_t m_parent;
 
             std::vector<index_t> m_successors;
 
@@ -74,14 +76,15 @@ namespace chdr::solvers {
              * @brief Constructs an uninitialized node.
              */
             // ReSharper disable once CppPossiblyUninitializedMember
-            [[nodiscard]] HOT constexpr node() noexcept : mutable_node<index_t>() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
+            [[nodiscard]] HOT constexpr node() noexcept {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] HOT constexpr node(index_t _depth, index_t _index, scalar_t _gScore, scalar_t _hScore, mutable_node<index_t>* RESTRICT const _parent = nullptr) noexcept : mutable_node<index_t>(_index, _parent),
-                m_in_path   (false),
+            [[nodiscard]] HOT constexpr node(index_t _depth, index_t _index, scalar_t _gScore, scalar_t _hScore, index_t _parent = null_v) noexcept :
                 m_depth     (_depth           ),
+                m_index     (_index           ),
                 m_gScore    (_gScore          ),
                 m_fScore    (_gScore + _hScore),
-                m_successors() {}
+                m_parent    (_parent          ),
+                m_successors(                 ) {}
 
             ~node() = default;
 
@@ -102,115 +105,189 @@ namespace chdr::solvers {
             }
         };
 
-        template <typename open_set_t>
-        [[nodiscard]] HOT static constexpr auto solve_internal(open_set_t& _open, const params_t& _params) {
+        template <typename open_set_t, typename all_nodes_t>
+        static size_t memory_usage(const open_set_t& _open, const all_nodes_t& _all_nodes) {
+            return _all_nodes.size();
+        }
 
-            const auto s = utils::to_1d(_params.start, _params.size);
-            const auto e = utils::to_1d(_params.end,   _params.size);
+        template <typename open_set_t, typename all_nodes_t>
+        static void remove_weakest(open_set_t& _open, all_nodes_t& _all_nodes) {
 
-            std::unordered_map<index_t, node> all_nodes;
-
-            {
-                // Create the start node and store a pointer to it in _open.
-                auto& start_node = all_nodes[static_cast<index_t>(s)];
-                start_node = node(static_cast<index_t>(0), static_cast<index_t>(s), static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
-                start_node.m_in_path = true;
-
-                _open.emplace(&start_node); // Store a pointer to the start node.
+            // Find shallowest node (minimum depth) instead of worst f-score.
+            auto shallowest_it = _open.begin();
+            for (auto it = _open.begin(); it != _open.end(); ++it) {
+                if (_all_nodes[*it].m_depth < _all_nodes[*shallowest_it].m_depth) {
+                    shallowest_it = it;
+                }
             }
 
-            // Main loop:
-            while (LIKELY(!_open.empty())) {
+            // Backup f-values before removing:
+            const auto& removed_node = _all_nodes[*shallowest_it];
+            backup_f_values(removed_node, _all_nodes);
 
-                auto& curr = *(_open.extract(_open.begin()).value());
+            _open.erase(shallowest_it);
+            _all_nodes.erase(removed_node.m_index);
+        }
 
-                if (curr.m_index == e) { // SOLUTION REACHED...
-                    return solver_t::solver_utils::rbacktrack(curr, _params.size, curr.m_depth);
+        template <typename all_nodes_t>
+        static void backup_f_values(const node& _removed_node, all_nodes_t& _all_nodes) {
+
+            auto current_parent = _removed_node.m_parent;
+            while (current_parent != null_v) {
+
+                auto parent_it = _all_nodes.find(current_parent);
+                if (parent_it == _all_nodes.end()) {
+                    break;
                 }
-                else { // SEARCH FOR SOLUTION...
 
-                    // Debug output:
-                    std::cout << "Current node index: " << curr.m_index << '\n';
+                auto& parent_node = parent_it->second;
+                auto min_child_f  = std::numeric_limits<scalar_t>::max();
+                bool has_children = false;
 
-                    // Expand successors if not already expanded:
-                    if (curr.m_successors.empty()) {
+                // Find minimum f-value amongst children.
+                for (const auto& child_idx : parent_node.m_successors) {
+                    auto child_it = _all_nodes.find(child_idx);
+                    if (child_it != _all_nodes.end()) {
+                        min_child_f  = std::min(min_child_f, child_it->second.m_fScore);
+                        has_children = true;
+                    }
+                }
 
-                        for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
+                // Update parent's f-value if we found children.
+                if (has_children && min_child_f > parent_node.m_fScore) {
+                    parent_node.m_fScore = min_child_f;
+                    current_parent = parent_node.m_parent; // Move up the chain
+                }
+                else {
+                    break;
+                }
+            }
+        }
 
-                            if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
+        [[nodiscard]] HOT static constexpr auto solve_internal(const params_t& _params) {
 
-                                // Create or update successor node:
-                                node* child_node = nullptr;
-                                {
-                                    const auto g = curr.m_gScore + n.distance;
-                                    const auto h = _params.h(n.coord, _params.end) * _params.weight;
+            if (_params.memory_limit > 0U) {
 
-                                    auto child_search = all_nodes.find(n.index);
-                                    if (child_search == all_nodes.end()) {
-                                        child_node = &(all_nodes[n.index] = node(curr.m_depth + 1U, n.index, g, h, &curr));
-                                    }
-                                    else {
-                                        child_node = &child_search->second;
-                                        if (!child_node->m_in_path && g < child_node->m_gScore) {
-                                            child_node->m_depth  = curr.m_depth + 1U;
-                                            child_node->m_gScore = g;
-                                            child_node->m_fScore = g + h;
-                                            child_node->m_parent = &curr;
+                const auto s = utils::to_1d(_params.start, _params.size);
+                const auto e = utils::to_1d(_params.end,   _params.size);
+
+                std::unordered_map<index_t, node> all_nodes;
+
+                // Create comparator that captures all_nodes reference
+                auto node_comparator = [&all_nodes](index_t _a, index_t _b) {
+
+                    // Find nodes in map
+                    auto it_a = all_nodes.find(_a);
+                    auto it_b = all_nodes.find(_b);
+
+#ifndef NDEBUG
+                    // Safety check - this shouldn't happen in normal operation
+                    if (it_a == all_nodes.end() || it_b == all_nodes.end()) {
+                        return _a < _b; // Fallback to index comparison
+                    }
+#endif //!NDEBUG
+
+                    return !(it_a->second < it_b->second); // Inverted for min-heap behavior
+                };
+
+                std::set<index_t, decltype(node_comparator)> open(node_comparator);
+
+                // Add start node
+                all_nodes[s] = node(
+                    static_cast<index_t>(0),
+                    static_cast<index_t>(s),
+                    static_cast<scalar_t>(0),
+                    _params.h(_params.start, _params.end) * _params.weight
+                );
+                open.emplace(static_cast<index_t>(s));
+
+                // Main loop:
+                while (LIKELY(!open.empty())) {
+
+                    // Handle memory management:
+                    while (open.size() > 1U && memory_usage(open, all_nodes) > _params.memory_limit) {
+                        remove_weakest(open, all_nodes);
+                    }
+
+                    // Get current node index and remove from open set
+                    auto curr_idx = *open.begin();
+                    open.erase(open.begin());
+
+                    auto& curr = all_nodes[curr_idx];
+                    std::cout << curr.m_index << "\n";
+
+                    if (curr.m_index == e) { // SOLUTION REACHED...
+                        //return solver_t::solver_utils::rbacktrack(curr, _params.size, curr.m_depth);
+
+                        std::vector<coord_t> result(curr.m_depth);
+
+                        size_t i = 0U;
+                        for (auto p = curr.m_parent; p != null_v; p = all_nodes[p].m_parent) {
+                            result[(result.size() - 1U) - i] = utils::to_nd(all_nodes[p].m_index, _params.size);
+                            ++i;
+                        }
+
+                        return result;
+                    }
+                    else { // SEARCH FOR SOLUTION...
+
+                        // Expand successors if not already:
+                        bool expanded = !curr.m_successors.empty() || curr.m_fScore == std::numeric_limits<scalar_t>::max();
+                        if (!expanded) {
+
+                            if (curr.m_depth == _params.memory_limit) {
+                                curr.m_fScore = std::numeric_limits<scalar_t>::max();
+                            }
+                            else {
+
+                                for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
+
+                                    if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
+
+                                        curr.m_successors.push_back(n.index);
+
+                                        // Create or update successor node:
+                                        const auto g = curr.m_gScore + n.distance;
+                                        const auto h = _params.h(n.coord, _params.end) * _params.weight;
+
+                                        auto child_search = all_nodes.find(n.index);
+                                        if (child_search == all_nodes.end()) {
+
+                                            while (memory_usage(open, all_nodes) > _params.memory_limit) {
+                                                remove_weakest(open, all_nodes);
+                                            }
+
+                                            // Create new node
+                                            all_nodes[n.index] = node(curr.m_depth + 1U, n.index, g, h, curr.m_index);
+                                            open.emplace(n.index);
+                                        }
+                                        else {
+                                            // Update existing node if we found a better path
+                                            auto& child_node = child_search->second;
+                                            if (g < child_node.m_gScore) {
+                                                // Remove from open set if it's there (for re-insertion with updated priority)
+                                                open.erase(n.index);
+
+                                                child_node.m_depth  = curr.m_depth + 1U;
+                                                child_node.m_gScore = g;
+                                                child_node.m_fScore = std::max(g + h, curr.m_fScore);
+                                                child_node.m_parent = curr.m_index;
+
+                                                open.emplace(n.index);
+                                            }
                                         }
                                     }
                                 }
-
-                                curr.m_successors.push_back(n.index);
-                                _open.emplace(child_node);
                             }
                         }
-                    }
 
-                    // Linear search for best successor:
-                    node* best_successor = nullptr;
-                    for (const auto& succ_idx : curr.m_successors) {
-
-                        auto& succ = all_nodes[succ_idx];
-                        if (!succ.m_in_path && (best_successor == nullptr || succ.m_fScore < best_successor->m_fScore)) {
-                            best_successor = &succ;
+                        // Handle case where node has no successors (dead end):
+                        if (curr.m_successors.empty()) {
+                            curr.m_fScore = std::numeric_limits<scalar_t>::max();
+                            backup_f_values(curr, all_nodes);
                         }
-                    }
-
-                    if (best_successor != nullptr) { // VALID SUCCESSOR...
-                        best_successor->m_in_path = true;
-                    }
-                    else { // NO VALID SUCCESSOR...
-
-                        /* BACK-UP F-SCORE TO PARENT */
-
-                        scalar_t min_f = std::numeric_limits<scalar_t>::max();
-                        for (const auto& succ_idx : curr.m_successors) {
-                            auto& succ = all_nodes[succ_idx];
-                            min_f = std::min(min_f, succ.m_fScore);
-                        }
-                        curr.m_fScore = std::max(curr.m_fScore, min_f);
-
-                        if (curr.m_parent != nullptr) {
-                            auto* p = static_cast<node*>(curr.m_parent);
-                            p->m_fScore = std::max(p->m_fScore, curr.m_fScore);
-                        }
-                    }
-
-                    // Debug output:
-                    // std::cout << "Open set size: " << _open.size() << '\n';
-
-                    if (_open.size() > _params.memory_limit) { // MEMORY EXHAUSTED ...
-
-                        auto worst_itr = _open.end();
-                        while (worst_itr != _open.begin()) {
-                            worst_itr = std::prev(worst_itr);
-
-                            auto* worst_node = *worst_itr;
-                            if (!worst_node->m_in_path) {
-                                _open.erase(worst_node);
-                                all_nodes.erase(worst_node->m_index);
-                                break;
-                            }
+                        else if (!expanded && memory_usage(open, all_nodes) < _params.memory_limit) {
+                            open.emplace(curr_idx);
                         }
                     }
                 }
@@ -221,18 +298,8 @@ namespace chdr::solvers {
 
         [[maybe_unused, nodiscard]] static auto invoke(const params_t& _params) {
 
-            assert(_params.memory_limit > 0U && "memory_limit must be greater than zero.");
-
             if (_params.memory_limit > 0U) {
-
-                std::pmr::set<
-                    node*,
-                    decltype([](node* _a, node* _b) {
-                        return !(*_a < *_b);    // Ensure correct sort order.
-                    })
-                > open(_params.heterogeneous_pmr);
-
-                return solve_internal(open, _params);
+                return solve_internal(_params);
             }
             else {
                 return std::vector<coord_t>{};
