@@ -187,7 +187,7 @@ namespace test {
 
                 const scalar_type weight       = 1U;
                 const      size_t capacity     = 0U;
-                const      size_t memory_limit = static_cast<size_t>(70U);
+                const      size_t memory_limit = static_cast<size_t>(30U);
             };
 
             const params args { test, start, end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &heterogeneous, &homogeneous };

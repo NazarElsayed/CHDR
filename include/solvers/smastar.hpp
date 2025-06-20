@@ -84,7 +84,7 @@ namespace chdr::solvers {
                 m_gScore    (_gScore          ),
                 m_fScore    (_gScore + _hScore),
                 m_parent    (_parent          ),
-                m_successors(                 ) {}
+                m_successors() {}
 
             ~node() = default;
 
@@ -107,26 +107,33 @@ namespace chdr::solvers {
 
         template <typename open_set_t, typename all_nodes_t>
         static size_t memory_usage(const open_set_t& _open, const all_nodes_t& _all_nodes) {
-            return _all_nodes.size();
+            return _open.size();
         }
 
         template <typename open_set_t, typename all_nodes_t>
         static void remove_weakest(open_set_t& _open, all_nodes_t& _all_nodes) {
 
-            // Find shallowest node (minimum depth) instead of worst f-score.
-            auto shallowest_it = _open.begin();
+            assert(!     _open.empty() && "_open is empty!");
+            assert(!_all_nodes.empty() && "_all_nodes is empty!");
+
+            // Find least-useful node.
+            //const auto weakest_open = std::prev(_open.end());
+
+            // Find deepest node (maximum depth) with highest f-score.
+            auto weakest_open = _open.begin();
             for (auto it = _open.begin(); it != _open.end(); ++it) {
-                if (_all_nodes[*it].m_depth < _all_nodes[*shallowest_it].m_depth) {
-                    shallowest_it = it;
+                if (_all_nodes[*it].m_depth > _all_nodes[*weakest_open].m_depth) {
+                    weakest_open = it;
                 }
             }
+            const auto weakest_all = _all_nodes.find(*weakest_open);
 
-            // Backup f-values before removing:
-            const auto& removed_node = _all_nodes[*shallowest_it];
-            backup_f_values(removed_node, _all_nodes);
+            std::cout << "Open Size: " << _open.size() << "Removing: " << weakest_all->second.m_index << "\n";
 
-            _open.erase(shallowest_it);
-            _all_nodes.erase(removed_node.m_index);
+            backup_f_values(weakest_all->second, _all_nodes);
+
+                 _open.erase(weakest_open);
+            _all_nodes.erase(weakest_all);
         }
 
         template <typename all_nodes_t>
@@ -166,129 +173,120 @@ namespace chdr::solvers {
 
         [[nodiscard]] HOT static constexpr auto solve_internal(const params_t& _params) {
 
-            if (_params.memory_limit > 0U) {
+            const auto s = utils::to_1d(_params.start, _params.size);
+            const auto e = utils::to_1d(_params.end,   _params.size);
 
-                const auto s = utils::to_1d(_params.start, _params.size);
-                const auto e = utils::to_1d(_params.end,   _params.size);
+            std::unordered_map<index_t, node> all_nodes;
 
-                std::unordered_map<index_t, node> all_nodes;
+            const static auto node_comparator = [&all_nodes](index_t _a, index_t _b) {
 
-                // Create comparator that captures all_nodes reference
-                auto node_comparator = [&all_nodes](index_t _a, index_t _b) {
+                auto it_a = all_nodes.find(_a);
+                auto it_b = all_nodes.find(_b);
 
-                    // Find nodes in map
-                    auto it_a = all_nodes.find(_a);
-                    auto it_b = all_nodes.find(_b);
+                assert(!(it_a == all_nodes.end() || it_b == all_nodes.end()) && "Node lookup failed in comparator");
 
-#ifndef NDEBUG
-                    // Safety check - this shouldn't happen in normal operation
-                    if (it_a == all_nodes.end() || it_b == all_nodes.end()) {
-                        return _a < _b; // Fallback to index comparison
+                return !(it_a->second < it_b->second);
+            };
+
+            std::set<index_t, decltype(node_comparator)> open(node_comparator);
+
+            // Add start node
+            all_nodes[s] = node(
+                static_cast<index_t>(0),
+                static_cast<index_t>(s),
+                static_cast<scalar_t>(0),
+                _params.h(_params.start, _params.end) * _params.weight
+            );
+            open.emplace(static_cast<index_t>(s));
+
+            // Main loop:
+            while (LIKELY(!open.empty())) {
+
+                // Handle memory management:
+                while (open.size() > 1U && memory_usage(open, all_nodes) > _params.memory_limit) {
+                    remove_weakest(open, all_nodes);
+                }
+
+                // Get current node index and remove from open set
+                auto curr_idx = *open.begin();
+                open.erase(open.begin());
+
+                auto& curr = all_nodes[curr_idx];
+                //std::cout << curr.m_index << "\n";
+
+                if (curr.m_index == e) { // SOLUTION REACHED...
+
+                    std::vector<coord_t> result(curr.m_depth);
+
+                    size_t i = 0U;
+                    for (auto p = curr.m_parent; p != null_v; p = all_nodes[p].m_parent) {
+                        result[(result.size() - 1U) - i] = utils::to_nd(all_nodes[p].m_index, _params.size);
+                        ++i;
                     }
-#endif //!NDEBUG
 
-                    return !(it_a->second < it_b->second); // Inverted for min-heap behavior
-                };
+                    return result;
+                }
+                else { // SEARCH FOR SOLUTION...
 
-                std::set<index_t, decltype(node_comparator)> open(node_comparator);
+                    // Expand successors if not already:
+                    bool expanded = !curr.m_successors.empty() || curr.m_fScore == std::numeric_limits<scalar_t>::max();
+                    if (!expanded) {
 
-                // Add start node
-                all_nodes[s] = node(
-                    static_cast<index_t>(0),
-                    static_cast<index_t>(s),
-                    static_cast<scalar_t>(0),
-                    _params.h(_params.start, _params.end) * _params.weight
-                );
-                open.emplace(static_cast<index_t>(s));
-
-                // Main loop:
-                while (LIKELY(!open.empty())) {
-
-                    // Handle memory management:
-                    while (open.size() > 1U && memory_usage(open, all_nodes) > _params.memory_limit) {
-                        remove_weakest(open, all_nodes);
-                    }
-
-                    // Get current node index and remove from open set
-                    auto curr_idx = *open.begin();
-                    open.erase(open.begin());
-
-                    auto& curr = all_nodes[curr_idx];
-                    std::cout << curr.m_index << "\n";
-
-                    if (curr.m_index == e) { // SOLUTION REACHED...
-                        //return solver_t::solver_utils::rbacktrack(curr, _params.size, curr.m_depth);
-
-                        std::vector<coord_t> result(curr.m_depth);
-
-                        size_t i = 0U;
-                        for (auto p = curr.m_parent; p != null_v; p = all_nodes[p].m_parent) {
-                            result[(result.size() - 1U) - i] = utils::to_nd(all_nodes[p].m_index, _params.size);
-                            ++i;
+                        if (curr.m_depth == _params.memory_limit) {
+                            curr.m_fScore = std::numeric_limits<scalar_t>::max();
                         }
+                        else {
 
-                        return result;
-                    }
-                    else { // SEARCH FOR SOLUTION...
+                            for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
 
-                        // Expand successors if not already:
-                        bool expanded = !curr.m_successors.empty() || curr.m_fScore == std::numeric_limits<scalar_t>::max();
-                        if (!expanded) {
+                                if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
 
-                            if (curr.m_depth == _params.memory_limit) {
-                                curr.m_fScore = std::numeric_limits<scalar_t>::max();
-                            }
-                            else {
+                                    curr.m_successors.push_back(n.index);
 
-                                for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
+                                    const auto g = curr.m_gScore + n.distance;
+                                    const auto h = _params.h(n.coord, _params.end) * _params.weight;
 
-                                    if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
+                                    // Create or update successor node:
+                                    auto child_search = all_nodes.find(n.index);
+                                    if (child_search == all_nodes.end()) {
 
-                                        curr.m_successors.push_back(n.index);
-
-                                        // Create or update successor node:
-                                        const auto g = curr.m_gScore + n.distance;
-                                        const auto h = _params.h(n.coord, _params.end) * _params.weight;
-
-                                        auto child_search = all_nodes.find(n.index);
-                                        if (child_search == all_nodes.end()) {
-
-                                            while (memory_usage(open, all_nodes) > _params.memory_limit) {
-                                                remove_weakest(open, all_nodes);
-                                            }
-
-                                            // Create new node
-                                            all_nodes[n.index] = node(curr.m_depth + 1U, n.index, g, h, curr.m_index);
-                                            open.emplace(n.index);
+                                        // Create room for new node if necessary:
+                                        while (!open.empty() && memory_usage(open, all_nodes) > _params.memory_limit) {
+                                            remove_weakest(open, all_nodes);
                                         }
-                                        else {
-                                            // Update existing node if we found a better path
-                                            auto& child_node = child_search->second;
-                                            if (g < child_node.m_gScore) {
-                                                // Remove from open set if it's there (for re-insertion with updated priority)
-                                                open.erase(n.index);
 
-                                                child_node.m_depth  = curr.m_depth + 1U;
-                                                child_node.m_gScore = g;
-                                                child_node.m_fScore = std::max(g + h, curr.m_fScore);
-                                                child_node.m_parent = curr.m_index;
+                                        // Create new node:
+                                        all_nodes[n.index] = node(curr.m_depth + 1U, n.index, g, h, curr.m_index);
+                                        open.emplace(n.index);
+                                    }
+                                    else {
 
-                                                open.emplace(n.index);
-                                            }
+                                        // Update existing node and reinsert:
+                                        auto& child_node = child_search->second;
+                                        if (g < child_node.m_gScore) {
+
+                                            open.erase(n.index);
+
+                                            child_node.m_depth  = curr.m_depth + 1U;
+                                            child_node.m_gScore = g;
+                                            child_node.m_fScore = std::max(g + h, curr.m_fScore);
+                                            child_node.m_parent = curr.m_index;
+
+                                            open.emplace(n.index);
                                         }
                                     }
                                 }
                             }
                         }
+                    }
 
-                        // Handle case where node has no successors (dead end):
-                        if (curr.m_successors.empty()) {
-                            curr.m_fScore = std::numeric_limits<scalar_t>::max();
-                            backup_f_values(curr, all_nodes);
-                        }
-                        else if (!expanded && memory_usage(open, all_nodes) < _params.memory_limit) {
-                            open.emplace(curr_idx);
-                        }
+                    // Handle case where node has no successors (dead end):
+                    if (curr.m_successors.empty()) {
+                        curr.m_fScore = std::numeric_limits<scalar_t>::max();
+                        backup_f_values(curr, all_nodes);
+                    }
+                    else if (!expanded && memory_usage(open, all_nodes) < _params.memory_limit) {
+                        open.emplace(curr_idx);
                     }
                 }
             }
