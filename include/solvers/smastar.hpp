@@ -107,32 +107,40 @@ namespace chdr::solvers {
 
         template <typename open_set_t, typename all_nodes_t>
         static size_t memory_usage(const open_set_t& _open, const all_nodes_t& _all_nodes) {
-            return _open.size();
+            return _all_nodes.size();
         }
 
         template <typename open_set_t, typename all_nodes_t>
         static void remove_weakest(open_set_t& _open, all_nodes_t& _all_nodes) {
 
-            assert(!     _open.empty() && "_open is empty!");
             assert(!_all_nodes.empty() && "_all_nodes is empty!");
 
             // Find least-useful node.
             //const auto weakest_open = std::prev(_open.end());
 
             // Find deepest node (maximum depth) with highest f-score.
-            auto weakest_open = _open.begin();
-            for (auto it = _open.begin(); it != _open.end(); ++it) {
-                if (_all_nodes[*it].m_depth > _all_nodes[*weakest_open].m_depth) {
-                    weakest_open = it;
+            auto weakest_all = _all_nodes.begin();
+            for (auto it = _all_nodes.begin(); it != _all_nodes.end(); ++it) {
+                if (it->second.m_depth > weakest_all->second.m_depth ||
+                   (it->second.m_depth == weakest_all->second.m_depth &&
+                    it->second.m_fScore > weakest_all->second.m_fScore)
+                ) {
+                    weakest_all = it;
                 }
             }
-            const auto weakest_all = _all_nodes.find(*weakest_open);
 
-            std::cout << "Open Size: " << _open.size() << "Removing: " << weakest_all->second.m_index << "\n";
+            std::cout << "Memory usage: " << memory_usage(_open, _all_nodes) << "\tRemoving: " << weakest_all->second.m_index << "\n";
+
+            auto weakest = weakest_all->second;
+
+            auto it = std::find_if(
+                _open.begin(),
+                _open.end(),
+                [&weakest](const auto& item) { return item == weakest.m_index; }
+            );
+            if (it != _open.end()) { _open.erase(it); }
 
             backup_f_values(weakest_all->second, _all_nodes);
-
-                 _open.erase(weakest_open);
             _all_nodes.erase(weakest_all);
         }
 
@@ -183,7 +191,7 @@ namespace chdr::solvers {
                 auto it_a = all_nodes.find(_a);
                 auto it_b = all_nodes.find(_b);
 
-                assert(!(it_a == all_nodes.end() || it_b == all_nodes.end()) && "Node lookup failed in comparator");
+                //assert(!(it_a == all_nodes.end() || it_b == all_nodes.end()) && "Node lookup failed in comparator");
 
                 return !(it_a->second < it_b->second);
             };
@@ -224,6 +232,8 @@ namespace chdr::solvers {
                         ++i;
                     }
 
+                    std::cout << "Final path length: " << result.size() << "\n";
+
                     return result;
                 }
                 else { // SEARCH FOR SOLUTION...
@@ -251,7 +261,7 @@ namespace chdr::solvers {
                                     if (child_search == all_nodes.end()) {
 
                                         // Create room for new node if necessary:
-                                        while (!open.empty() && memory_usage(open, all_nodes) > _params.memory_limit) {
+                                        while (memory_usage(open, all_nodes) > _params.memory_limit) {
                                             remove_weakest(open, all_nodes);
                                         }
 
