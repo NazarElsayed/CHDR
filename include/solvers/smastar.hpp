@@ -117,58 +117,61 @@ namespace chdr::solvers {
 
             // Priority: Remove worst node from open set first, then worst leaf nodes.
             auto weakest_it = _all_nodes.end();
-            scalar_t worst_f = std::numeric_limits<scalar_t>::lowest();
-            scalar_t best_g_for_worst_f = std::numeric_limits<scalar_t>::max();
+            auto worst_f = std::numeric_limits<scalar_t>::lowest();
+            auto best_g_for_worst_f = std::numeric_limits<scalar_t>::max();
             bool prefer_open_nodes = true;
 
             // First pass: try to find worst node in open set:
             for (auto it = _all_nodes.begin(); it != _all_nodes.end(); ++it) {
-                if (it->second.m_index == _forbidden) continue;
+                if (it->second.m_index != _forbidden) {
 
-                bool in_open = _open.find(it->second.m_index) != _open.end();
-                if (!in_open && prefer_open_nodes) continue;
+                    bool in_open = _open.find(it->second.m_index) != _open.end();
+                    if (in_open || !prefer_open_nodes) {
 
-                const auto& node = it->second;
-                if (node.m_fScore > worst_f ||
-                    (node.m_fScore == worst_f && node.m_gScore < best_g_for_worst_f)) {
-                    worst_f = node.m_fScore;
-                    best_g_for_worst_f = node.m_gScore;
-                    weakest_it = it;
+                        const auto& node = it->second;
+                        if (node.m_fScore > worst_f || (node.m_fScore == worst_f && node.m_gScore < best_g_for_worst_f)) {
+                            worst_f            = node.m_fScore;
+                            best_g_for_worst_f = node.m_gScore;
+                            weakest_it         = it;
+                        }
+                    }
                 }
             }
 
             // Second pass: if no open nodes found, look at all nodes:
             if (weakest_it == _all_nodes.end()) {
+
                 prefer_open_nodes = false;
                 worst_f = std::numeric_limits<scalar_t>::lowest();
 
                 for (auto it = _all_nodes.begin(); it != _all_nodes.end(); ++it) {
-                    if (it->second.m_index == _forbidden) continue;
 
-                    const auto& node = it->second;
+                    if (it->second.m_index != _forbidden) {
 
-                    // Prefer leaf nodes (no children in memory) for removal:
-                    bool is_leaf = true;
-                    for (const auto& child_idx : node.m_successors) {
-                        if (_all_nodes.find(child_idx) != _all_nodes.end()) {
-                            is_leaf = false;
-                            break;
+                        const auto& node = it->second;
+
+                        // Prefer leaf nodes (no children in memory) for removal:
+                        bool is_leaf = true;
+                        for (const auto& child_idx : node.m_successors) {
+                            if (_all_nodes.find(child_idx) != _all_nodes.end()) {
+                                is_leaf = false;
+                                break;
+                            }
                         }
-                    }
 
-                    if (is_leaf && (node.m_fScore > worst_f ||
-                        (node.m_fScore == worst_f && node.m_gScore < best_g_for_worst_f))) {
-                        worst_f = node.m_fScore;
-                        best_g_for_worst_f = node.m_gScore;
-                        weakest_it = it;
+                        if (is_leaf && (node.m_fScore > worst_f || (node.m_fScore == worst_f && node.m_gScore < best_g_for_worst_f))) {
+                            worst_f            = node.m_fScore;
+                            best_g_for_worst_f = node.m_gScore;
+                            weakest_it         = it;
+                        }
                     }
                 }
             }
 
             if (weakest_it != _all_nodes.end()) {
 
-                std::cout << "Memory usage: " << memory_usage(_open, _all_nodes)
-                          << "\tRemoving: " << weakest_it->second.m_index << "\n";
+                // std::cout << "Memory usage: " << memory_usage(_open, _all_nodes)
+                //           << "\tRemoving: " << weakest_it->second.m_index << "\n";
 
                 // Remove from open set if present
                 //auto open_it = _open.find(weakest_it->second.m_index);
@@ -178,9 +181,7 @@ namespace chdr::solvers {
                     _open.end(),
                     [&weakest_it](const auto& _item) { return _item == weakest_it->second.m_index; }
                 );
-                if (open_it != _open.end()) {
-                    _open.erase(open_it);
-                }
+                if (open_it != _open.end()) { _open.erase(open_it); }
 
                 backup_f_values(weakest_it->second, _all_nodes);
                 _all_nodes.erase(weakest_it);
