@@ -107,50 +107,19 @@ namespace chdr::solvers {
 
         template <typename open_set_t, typename all_nodes_t>
         static size_t memory_usage(const open_set_t& _open, const all_nodes_t& _all_nodes) {
-            return _all_nodes.size();
+            return _open.size();
         }
 
         template <typename open_set_t, typename all_nodes_t>
-        static auto remove_weakest(open_set_t& _open, all_nodes_t& _all_nodes, index_t _forbidden = null_v) {
+        static void remove_weakest(open_set_t& _open, all_nodes_t& _all_nodes) {
 
             assert(!_all_nodes.empty() && "_all_nodes is empty!");
 
             // Find least-useful node.
-            //const auto weakest_open = std::prev(_open.end());
+            const auto weakest_open = std::prev(_open.end());
 
-            // Find deepest node (maximum depth) with highest f-score.
-            auto weakest_all = _all_nodes.begin();
-            for (auto it = _all_nodes.begin(); it != _all_nodes.end(); ++it) {
-                if (it->second.m_index != _forbidden &&
-                    (
-                         it->second.m_depth > weakest_all->second.m_depth ||
-                        (it->second.m_depth == weakest_all->second.m_depth &&
-                         it->second.m_fScore > weakest_all->second.m_fScore)
-                    )
-                ) {
-                    weakest_all = it;
-                }
-            }
-
-            auto weakest = weakest_all->second;
-            if (weakest.m_index != _forbidden) {
-
-                std::cout << "Memory usage: " << memory_usage(_open, _all_nodes) << "\tRemoving: " << weakest_all->second.m_index << "\n";
-
-                auto it = std::find_if(
-                    _open.begin(),
-                    _open.end(),
-                    [&weakest](const auto& item) { return item == weakest.m_index; }
-                );
-                if (it != _open.end()) { _open.erase(it); }
-
-                backup_f_values(weakest_all->second, _all_nodes);
-                _all_nodes.erase(weakest_all);
-
-                return true;
-            }
-
-            return false;
+            _all_nodes.erase(*weakest_open);
+            _open.erase(weakest_open);
         }
 
         template <typename all_nodes_t>
@@ -219,8 +188,6 @@ namespace chdr::solvers {
             // Main loop:
             while (LIKELY(!open.empty())) {
 
-                std::cout << "Memory usage: " << memory_usage(open, all_nodes) << "\n";
-
                 // Handle memory management:
                 while (open.size() > 1U && memory_usage(open, all_nodes) >= _params.memory_limit) {
                     remove_weakest(open, all_nodes);
@@ -241,8 +208,6 @@ namespace chdr::solvers {
                         result[(result.size() - 1U) - i] = utils::to_nd(p, _params.size);
                         ++i;
                     }
-
-                    std::cout << "Final path length: " << result.size() << "\n";
 
                     return result;
                 }
@@ -271,18 +236,12 @@ namespace chdr::solvers {
                                     if (child_search == all_nodes.end()) {
 
                                         // Attempt to create room for new node (if necessary):
-                                        bool success = true;
-                                        while (memory_usage(open, all_nodes) >= _params.memory_limit) {
-                                            if (!remove_weakest(open, all_nodes, curr_idx)) {
-                                                success = false;
-                                                break;
-                                            }
+                                        if (open.size() > 1 && memory_usage(open, all_nodes) >= _params.memory_limit) {
+                                            remove_weakest(open, all_nodes);
                                         }
 
-                                        if (success) {
-                                            all_nodes[n.index] = node(curr.m_depth + 1U, n.index, g, h, curr.m_index);
-                                            open.emplace(n.index);
-                                        }
+                                        all_nodes[n.index] = node(curr.m_depth + 1U, n.index, g, h, curr.m_index);
+                                        open.emplace(n.index);
                                     }
                                     else {
 
