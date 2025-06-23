@@ -59,8 +59,6 @@ namespace chdr::mazes {
          */
         static constexpr auto s_rank = std::tuple_size_v<std::decay_t<coord_t>>;
 
-    private:
-
         /**
          * @brief Represents the total number of neighbouring cells in a multidimensional grid.
          *
@@ -72,6 +70,8 @@ namespace chdr::mazes {
          * @remarks This value is `constexpr`.
          */
         static constexpr auto s_neighbour_count { utils::powui(static_cast<size_t>(3U), s_rank) - 1U };
+
+    private:
 
         coord_t m_size;
         size_t m_count;
@@ -485,8 +485,6 @@ namespace chdr::mazes {
          */
         static constexpr auto s_rank = std::tuple_size_v<std::decay_t<coord_t>>;
 
-    private:
-
         /**
          * @brief Represents the total number of neighbouring cells in a multidimensional grid.
          *
@@ -498,6 +496,8 @@ namespace chdr::mazes {
          * @remarks This value is `constexpr`.
          */
         static constexpr auto s_neighbour_count { utils::powui(static_cast<size_t>(3U), s_rank) - 1U };
+
+    private:
 
         coord_t m_size;
         size_t  m_count;
