@@ -125,14 +125,14 @@ namespace chdr::solvers {
 
                 for (auto p = _all_nodes.find(p_index); p != _all_nodes.end(); p_index = p->second.m_parent) {
 
-                    auto min_child_f = std::numeric_limits<scalar_t>::max();
                     bool has_children = false;
+                    auto min_child_f = std::numeric_limits<scalar_t>::max();
 
                     for (const auto& child_idx : p->second.m_successors) {
-                        auto child_it = _all_nodes.find(child_idx);
-                        if (child_it != _all_nodes.end()) {
-                            min_child_f = std::min(min_child_f, child_it->second.m_fScore);
+
+                        if (auto child_it = _all_nodes.find(child_idx); child_it != _all_nodes.end()) {
                             has_children = true;
+                            min_child_f = std::min(min_child_f, child_it->second.m_fScore);
                         }
                     }
 
@@ -171,9 +171,7 @@ namespace chdr::solvers {
                     remove_worst(_open, all_nodes);
                 }
 
-                auto curr_it = _open.begin();
-                auto curr = *curr_it;
-                _open.erase(curr_it);
+                auto curr = _open.extract(_open.begin()).value();
 
                 if (curr.m_index == e) { // SOLUTION FOUND...
 
@@ -202,11 +200,8 @@ namespace chdr::solvers {
                                 auto child_search = all_nodes.find(n.index);
                                 if (child_search == all_nodes.end()) {
 
-                                    if (_open.size() > 0U && all_nodes.size() >= _params.memory_limit) {
-                                        auto worst_node = std::prev(_open.end()); // Remove "worst" node if memory limit is exceeded
-                                        backup_f_values(*worst_node, all_nodes);
-                                        all_nodes.erase(worst_node->m_index);
-                                        _open.erase(worst_node);
+                                    if (!_open.empty() && all_nodes.size() >= _params.memory_limit) {
+                                        remove_worst(_open, all_nodes);
                                     }
 
                                     all_nodes[n.index] = node(curr.m_depth + 1U, n.index, g, h, curr.m_index);
@@ -215,7 +210,7 @@ namespace chdr::solvers {
                                 else if (g < child_search->second.m_gScore) {
 
                                     _open.erase(child_search->second);
-                                    child_search->second = node(curr.m_depth + 1U, n.index, g, h, curr.m_index); // Update node
+                                    child_search->second = node(curr.m_depth + 1U, n.index, g, h, curr.m_index);
                                     _open.emplace(child_search->second);
                                 }
                             }
@@ -230,11 +225,10 @@ namespace chdr::solvers {
                     else if (!expanded && all_nodes.size() < _params.memory_limit) {
                         _open.emplace(curr);
                     }
-
                 }
             }
 
-            return std::vector<coord_t>{}; // No solution found
+            return std::vector<coord_t>{};
         }
 
         [[maybe_unused, nodiscard]] static auto invoke(const params_t& _params) {
