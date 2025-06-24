@@ -72,8 +72,6 @@ namespace chdr::solvers {
             scalar_t m_fScore;
              index_t m_parent;
 
-            std::vector<index_t> m_successors;
-
             /**
              * @brief Constructs an uninitialized node.
              */
@@ -85,8 +83,7 @@ namespace chdr::solvers {
                 m_index     (_index           ),
                 m_gScore    (_gScore          ),
                 m_fScore    (_gScore + _hScore),
-                m_parent    (_parent          ),
-                m_successors() {}
+                m_parent    (_parent          ) {}
 
             ~node() = default;
 
@@ -102,24 +99,24 @@ namespace chdr::solvers {
 
             [[nodiscard]] HOT friend constexpr bool operator < (const node& a, const node& b) noexcept {
                 return a.m_fScore == b.m_fScore ?
-                       a.m_gScore > b.m_gScore :
-                       a.m_fScore < b.m_fScore;
+                       a.m_gScore >  b.m_gScore :
+                       a.m_fScore <  b.m_fScore;
             }
         };
 
         template<typename open_set_t, typename all_nodes_t>
-        static void remove_worst(open_set_t& _open, all_nodes_t& _all_nodes) {
+        static void remove_worst(open_set_t& _open, all_nodes_t& _all_nodes, const params_t& _params) {
 
             assert(!_open.empty() && "_open cannot be empty.");
 
             auto worst_node = std::prev(_open.end());
-            backup_f_values(*worst_node, _all_nodes);
+            backup_f_values(*worst_node, _all_nodes, _params);
             _all_nodes.erase(worst_node->m_index);
             _open.erase(worst_node);
         }
 
         template<typename all_nodes_t>
-        static void backup_f_values(const node& _removed_node, all_nodes_t& _all_nodes) {
+        static void backup_f_values(const node& _removed_node, all_nodes_t& _all_nodes, const params_t& _params) {
 
             if (auto p_index = _removed_node.m_parent; p_index != null_v) {
 
@@ -128,11 +125,14 @@ namespace chdr::solvers {
                     bool has_children = false;
                     auto min_child_f = std::numeric_limits<scalar_t>::max();
 
-                    for (const auto& child_idx : p->second.m_successors) {
+                    for (const auto& n_data : _params.maze.get_neighbours(p->second.m_index)) {
 
-                        if (auto child_it = _all_nodes.find(child_idx); child_it != _all_nodes.end()) {
-                            has_children = true;
-                            min_child_f = std::min(min_child_f, child_it->second.m_fScore);
+                        if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
+
+                            if (auto child_it = _all_nodes.find(n.index); child_it != _all_nodes.end()) {
+                                has_children = true;
+                                min_child_f = std::min(min_child_f, child_it->second.m_fScore);
+                            }
                         }
                     }
 
@@ -146,7 +146,6 @@ namespace chdr::solvers {
                 }
             }
         }
-
 
         template <typename open_set_t>
         [[nodiscard]] HOT static constexpr auto solve_internal(open_set_t& _open, const params_t& _params) {
@@ -167,10 +166,6 @@ namespace chdr::solvers {
 
             while (!_open.empty()) {
 
-                if (_open.size() > 1U && all_nodes.size() >= _params.memory_limit) {
-                    remove_worst(_open, all_nodes);
-                }
-
                 auto curr = _open.extract(_open.begin()).value();
 
                 if (curr.m_index == e) { // SOLUTION FOUND...
@@ -186,13 +181,15 @@ namespace chdr::solvers {
                 }
                 else { // SEARCH FOR SOLUTION...
 
-                    // Expand successors if not already:
-                    bool expanded = !curr.m_successors.empty() || curr.m_fScore == std::numeric_limits<scalar_t>::max();
-                    if (!expanded) {
+                    size_t successor_count = 0U;
+
+                    if (curr.m_fScore != std::numeric_limits<scalar_t>::max()) {
 
                         for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
 
                             if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
+
+                                successor_count++;
 
                                 const auto g = curr.m_gScore + n.distance;
                                 const auto h = _params.h(n.coord, _params.end) * _params.weight;
@@ -200,12 +197,25 @@ namespace chdr::solvers {
                                 auto child_search = all_nodes.find(n.index);
                                 if (child_search == all_nodes.end()) {
 
+                                    // Attempt to make room for the new node:
                                     if (!_open.empty() && all_nodes.size() >= _params.memory_limit) {
-                                        remove_worst(_open, all_nodes);
+                                        remove_worst(_open, all_nodes, _params);
                                     }
 
-                                    all_nodes[n.index] = node(curr.m_depth + 1U, n.index, g, h, curr.m_index);
-                                    _open.emplace(all_nodes[n.index]);
+                                    // assert(all_nodes.size() < _params.memory_limit && "SMA* memory overflow detected.");
+
+                                    // if (all_nodes.size() < _params.memory_limit) {
+                                        _open.emplace(all_nodes[n.index] = node(curr.m_depth + 1U, n.index, g, h, curr.m_index));
+                                    // }
+                                    // else { // NOT FULLY EXPANDED...
+                                    //     if (_open.empty()) {
+                                    //         return std::vector<coord_t>{}; // Impossible.
+                                    //     }
+                                    //     else {
+                                    //         _open.emplace(curr);
+                                    //         break;
+                                    //     }
+                                    // }
                                 }
                                 else if (g < child_search->second.m_gScore) {
 
@@ -217,13 +227,9 @@ namespace chdr::solvers {
                         }
                     }
 
-                    // Handle case where node has no successors (dead end):
-                    if (UNLIKELY(curr.m_successors.empty())) {
+                    if (UNLIKELY(successor_count == 0U)) { // DEAD END...
                         curr.m_fScore = std::numeric_limits<scalar_t>::max();
-                        backup_f_values(curr, all_nodes);
-                    }
-                    else if (!expanded && all_nodes.size() < _params.memory_limit) {
-                        _open.emplace(curr);
+                        backup_f_values(curr, all_nodes, _params);
                     }
                 }
             }
