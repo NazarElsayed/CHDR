@@ -14,9 +14,9 @@
  */
 
 #include <cstddef>
+#include <set>
 #include <type_traits>
 #include <vector>
-#include <set>
 
 #include "../utils/utils.hpp"
 #include "base/solver.hpp"
@@ -60,7 +60,8 @@ namespace chdr::solvers {
         static_assert(std::is_arithmetic_v<scalar_t>, "scalar_t must be an integral or floating point type.");
         static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
 
-        static constexpr auto null_v = std::numeric_limits<index_t>::max();
+        static constexpr auto null_v = std::numeric_limits< index_t>::max();
+        static constexpr auto  inf_v = std::numeric_limits<scalar_t>::max();
 
         static constexpr auto Kd = std::tuple_size_v<std::decay_t<typename params_t::coord_type>>;
 
@@ -123,7 +124,7 @@ namespace chdr::solvers {
                 for (auto p = _all_nodes.find(p_index); p != _all_nodes.end(); p_index = p->second.m_parent) {
 
                     bool has_children = false;
-                    auto min_child_f = std::numeric_limits<scalar_t>::max();
+                    auto min_child_f = inf_v;
 
                     for (const auto& n_data : _params.maze.get_neighbours(p->second.m_index)) {
 
@@ -157,8 +158,8 @@ namespace chdr::solvers {
 
             _open.emplace(
                 all_nodes[static_cast<index_t>(s)] = node(
-                    static_cast<index_t>(0),
-                    static_cast<index_t>(s),
+                    static_cast< index_t>(0),
+                    static_cast< index_t>(s),
                     static_cast<scalar_t>(0),
                     _params.h(_params.start, _params.end) * _params.weight
                 )
@@ -166,11 +167,15 @@ namespace chdr::solvers {
 
             while (!_open.empty()) {
 
+                std::cout << all_nodes.size() << "\n";
+
                 auto curr = _open.extract(_open.begin()).value();
 
                 if (curr.m_index == e) { // SOLUTION FOUND...
 
                     std::vector<coord_t> result(curr.m_depth);
+
+                    std::cout << result.size() << "\n";
 
                     size_t i = 0U;
                     for (auto p = curr.m_parent; p != null_v; p = all_nodes[p].m_parent, ++i) {
@@ -183,13 +188,11 @@ namespace chdr::solvers {
 
                     size_t successor_count = 0U;
 
-                    if (curr.m_fScore != std::numeric_limits<scalar_t>::max()) {
+                    if (curr.m_fScore != inf_v) {
 
                         for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
 
                             if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
-
-                                successor_count++;
 
                                 const auto g = curr.m_gScore + n.distance;
                                 const auto h = _params.h(n.coord, _params.end) * _params.weight;
@@ -203,33 +206,26 @@ namespace chdr::solvers {
                                     }
 
                                     // assert(all_nodes.size() < _params.memory_limit && "SMA* memory overflow detected.");
+                                    _open.emplace(all_nodes[n.index] = node(curr.m_depth + 1U, n.index, g, h, curr.m_index));
 
-                                    // if (all_nodes.size() < _params.memory_limit) {
-                                        _open.emplace(all_nodes[n.index] = node(curr.m_depth + 1U, n.index, g, h, curr.m_index));
-                                    // }
-                                    // else { // NOT FULLY EXPANDED...
-                                    //     if (_open.empty()) {
-                                    //         return std::vector<coord_t>{}; // Impossible.
-                                    //     }
-                                    //     else {
-                                    //         _open.emplace(curr);
-                                    //         break;
-                                    //     }
-                                    // }
+                                    successor_count++;
                                 }
-                                else if (g < child_search->second.m_gScore) {
+                                else if (g < child_search->second.m_gScore && child_search->second.m_fScore != inf_v) {
 
                                     _open.erase(child_search->second);
                                     child_search->second = node(curr.m_depth + 1U, n.index, g, h, curr.m_index);
                                     _open.emplace(child_search->second);
+
+                                    successor_count++;
                                 }
                             }
                         }
                     }
 
                     if (UNLIKELY(successor_count == 0U)) { // DEAD END...
-                        curr.m_fScore = std::numeric_limits<scalar_t>::max();
+                        curr.m_fScore = inf_v;
                         backup_f_values(curr, all_nodes, _params);
+                        all_nodes[curr.m_index] = curr;
                     }
                 }
             }
