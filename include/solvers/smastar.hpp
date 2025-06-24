@@ -67,7 +67,6 @@ namespace chdr::solvers {
 
         struct node final {
 
-             index_t m_depth;
              index_t m_index;
             scalar_t m_gScore;
             scalar_t m_fScore;
@@ -79,8 +78,7 @@ namespace chdr::solvers {
             // ReSharper disable once CppPossiblyUninitializedMember
             [[nodiscard]] HOT constexpr node() noexcept {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] HOT constexpr node(index_t _depth, index_t _index, scalar_t _gScore, scalar_t _hScore, index_t _parent = null_v) noexcept :
-                m_depth     (_depth           ),
+            [[nodiscard]] HOT constexpr node(index_t _index, scalar_t _gScore, scalar_t _hScore, index_t _parent = null_v) noexcept :
                 m_index     (_index           ),
                 m_gScore    (_gScore          ),
                 m_fScore    (_gScore + _hScore),
@@ -107,39 +105,38 @@ namespace chdr::solvers {
 
         template<typename open_set_t, typename all_nodes_t>
         static void remove_worst(open_set_t& _open, all_nodes_t& _all_nodes, const params_t& _params) {
-
             assert(!_open.empty() && "_open cannot be empty.");
 
-            auto worst_node = std::prev(_open.end());
-            backup_f_values(*worst_node, _all_nodes, _params);
-            _all_nodes.erase(worst_node->m_index);
-            _open.erase(worst_node);
+            if (_open.size() > 1U) {
+                auto worst_node = std::prev(_open.end());
+                backup_f_values(*worst_node, _all_nodes, _params);
+                _all_nodes.erase(worst_node->m_index);
+                     _open.erase(worst_node);
+            }
         }
 
-        template<typename all_nodes_t>
+        template <typename all_nodes_t>
         static void backup_f_values(const node& _removed_node, all_nodes_t& _all_nodes, const params_t& _params) {
 
             if (auto p_index = _removed_node.m_parent; p_index != null_v) {
 
                 for (auto p = _all_nodes.find(p_index); p != _all_nodes.end(); p_index = p->second.m_parent) {
 
-                    bool has_children = false;
-                    auto min_child_f = inf_v;
+                    auto min_f = inf_v;
 
                     for (const auto& n_data : _params.maze.get_neighbours(p->second.m_index)) {
 
                         if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
 
                             if (auto child_it = _all_nodes.find(n.index); child_it != _all_nodes.end()) {
-                                has_children = true;
-                                min_child_f = std::min(min_child_f, child_it->second.m_fScore);
+                                min_f = std::min(min_f, child_it->second.m_fScore);
                             }
                         }
                     }
 
                     // If there are children and updating the parent's f-value is necessary:
-                    if (has_children && min_child_f > p->second.m_fScore) {
-                        p->second.m_fScore = min_child_f;
+                    if (min_f > p->second.m_fScore) {
+                        p->second.m_fScore = min_f;
                     }
                     else {
                         break;
@@ -158,7 +155,6 @@ namespace chdr::solvers {
 
             _open.emplace(
                 all_nodes[static_cast<index_t>(s)] = node(
-                    static_cast< index_t>(0),
                     static_cast< index_t>(s),
                     static_cast<scalar_t>(0),
                     _params.h(_params.start, _params.end) * _params.weight
@@ -167,15 +163,20 @@ namespace chdr::solvers {
 
             while (!_open.empty()) {
 
-                std::cout << all_nodes.size() << "\n";
-
                 auto curr = _open.extract(_open.begin()).value();
 
                 if (curr.m_index == e) { // SOLUTION FOUND...
 
-                    std::vector<coord_t> result(curr.m_depth);
+                    std::vector<coord_t> result{};
 
-                    std::cout << result.size() << "\n";
+                    {
+                        size_t depth = 0U;
+                        for (auto p = curr.m_parent; p != null_v; p = all_nodes[p].m_parent) {
+                            ++depth;
+                        }
+
+                        result.resize(depth);
+                    }
 
                     size_t i = 0U;
                     for (auto p = curr.m_parent; p != null_v; p = all_nodes[p].m_parent, ++i) {
@@ -205,15 +206,14 @@ namespace chdr::solvers {
                                         remove_worst(_open, all_nodes, _params);
                                     }
 
-                                    // assert(all_nodes.size() < _params.memory_limit && "SMA* memory overflow detected.");
-                                    _open.emplace(all_nodes[n.index] = node(curr.m_depth + 1U, n.index, g, h, curr.m_index));
+                                    _open.emplace(all_nodes[n.index] = node(n.index, g, h, curr.m_index));
 
                                     successor_count++;
                                 }
                                 else if (g < child_search->second.m_gScore && child_search->second.m_fScore != inf_v) {
 
                                     _open.erase(child_search->second);
-                                    child_search->second = node(curr.m_depth + 1U, n.index, g, h, curr.m_index);
+                                    child_search->second = node(n.index, g, h, curr.m_index);
                                     _open.emplace(child_search->second);
 
                                     successor_count++;
