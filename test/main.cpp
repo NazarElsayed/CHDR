@@ -73,7 +73,7 @@ namespace test {
         }
 
         template <typename weight_t, typename coord_t, typename scalar_t, typename index_t>
-        static chdr::mazes::grid<coord_t, weight_t> make_solvable_random_grid_maze(const coord_t& _start, const coord_t& _end, const coord_t& _size, size_t _seed = 0U) {
+        static chdr::mazes::grid<coord_t, weight_t> make_solvable_random_grid_maze(const coord_t& _start, const coord_t& _end, const coord_t& _size, size_t _seed = 0U, size_t _iterations = std::numeric_limits<size_t>::max()) {
 
             auto     monotonic = chdr::monotonic_pool();
             auto heterogeneous = chdr::heterogeneous_pool();
@@ -103,27 +103,35 @@ namespace test {
                 const      size_t memoryLimit  = static_cast<size_t>(-1U);
             };
 
-            for (size_t i = 0U; i < std::numeric_limits<size_t>::max(); ++i) {
+            if (_size.size() >= 2U && _size[0U] > 1U && _size[1U] > 1U) {
 
-                // Seed the random number generator.
-                generator::utils::lcg lcg { _seed + i };
+                // Generate random 2-KD mazes:
+                for (size_t i = 0U; i < _iterations; ++i) {
 
-                constexpr size_t obstacle_threshold = std::numeric_limits<size_t>::max() / 10UL; // 1/10 chance.
+                    // Seed the random number generator.
+                    generator::utils::lcg lcg { _seed + i };
 
-                // Create a random maze using the given threshold for obstacles:
-                std::vector<weight_t> nodes(chdr::utils::product<size_t>(_size));
-                for (size_t j = 1U; j < nodes.size() - 1UL; ++j) {
-                    nodes[j] = lcg.operator()() < obstacle_threshold ?
-                        std::numeric_limits<weight_t>::max() :
-                        std::numeric_limits<weight_t>::lowest();
+                    constexpr size_t obstacle_threshold = std::numeric_limits<size_t>::max() / 10UL; // 1/10 chance.
+
+                    // Create a random maze using the given threshold for obstacles:
+                    std::vector<weight_t> nodes(chdr::utils::product<size_t>(_size));
+                    for (size_t j = 1U; j < nodes.size() - 1UL; ++j) {
+                        nodes[j] = lcg.operator()() < obstacle_threshold ?
+                                       std::numeric_limits<weight_t>::max() :
+                                       std::numeric_limits<weight_t>::lowest();
+                    }
+
+                    auto result = chdr::mazes::grid<coord_t, weight_t>(_size, nodes);
+
+                    // Check if maze is solvable:
+                    if (!(chdr::solvers::solver<chdr::solvers::gbest_first, params>::solve({ result, _start, _end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &heterogeneous, &homogeneous }).empty())) {
+                        return result; // Return if solvable.
+                    }
                 }
-
-                auto result = chdr::mazes::grid<coord_t, weight_t>(_size, nodes);
-
-                // Check if maze is solvable:
-                if (!(chdr::solvers::solver<chdr::solvers::gbest_first, params>::solve({ result, _start, _end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &heterogeneous, &homogeneous }).empty())) {
-                    return result; // Return if solvable.
-                }
+            }
+            else {
+                // Edge case for 0D & 1D mazes.
+                return chdr::mazes::grid<coord_t, weight_t>(_size, std::vector<weight_t>(chdr::utils::product<size_t>(_size)));
             }
 
             throw std::runtime_error("ERROR: Could not create a solvable maze!");
