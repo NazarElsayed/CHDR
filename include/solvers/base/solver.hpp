@@ -636,7 +636,7 @@ namespace chdr::solvers {
                 (_params.  homogeneous_pmr != nullptr ?   _params.homogeneous_pmr->peak_allocated : 0UL);
 
             std::cout << "Peak Memory: " << peak_memory_bytes << " bytes\n";
-#endif
+#endif //CHDR_DIAGNOSTICS == 1
 
             /*
              * Release resources with deferred exception handling:

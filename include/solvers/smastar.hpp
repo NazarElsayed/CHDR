@@ -151,7 +151,9 @@ namespace chdr::solvers {
 
             std::unordered_map<index_t, node> all_nodes;
 
+#if CHDR_DIAGNOSTICS == 1:
             size_t peak_memory_usage = 0U;
+#endif //CHDR_DIAGNOSTICS == 1
 
             _open.emplace(
                 all_nodes[static_cast<index_t>(s)] = node(
@@ -183,13 +185,15 @@ namespace chdr::solvers {
                         result[(result.size() - 1U) - i] = utils::to_nd(p, _params.size);
                     }
 
+#if CHDR_DIAGNOSTICS == 1:
                     std::cout << "Peak Memory Usage: " << peak_memory_usage << "\n";
+#endif //CHDR_DIAGNOSTICS == 1
 
                     return result;
                 }
                 else { // SEARCH FOR SOLUTION...
 
-                    size_t successor_count = 0U;
+                    bool expanded = false;
 
                     if (curr.m_fScore != inf_v) {
 
@@ -203,22 +207,24 @@ namespace chdr::solvers {
                                 auto child_search = all_nodes.find(n.index);
                                 if (child_search == all_nodes.end()) {
 
+                                    expanded = true;
+
                                     // Attempt to make room for the new node:
                                     if (!_open.empty() && all_nodes.size() >= _params.memory_limit) {
                                         remove_worst(_open, all_nodes, _params);
                                     }
 
                                     /*
-                                     * Only instantiate a new node if there is room in memory.
+                                     * Only instantiate when there is room in memory.
                                      * Otherwise, break from the loop completely.
                                      */
 
                                     if (all_nodes.size() < _params.memory_limit) {
                                         _open.emplace(all_nodes[n.index] = node(n.index, g, h, curr.m_index));
 
+#if CHDR_DIAGNOSTICS == 1
                                         peak_memory_usage = utils::max(peak_memory_usage, all_nodes.size());
-
-                                        successor_count++;
+#endif //CHDR_DIAGNOSTICS == 1
                                     }
                                     else {
                                         break;
@@ -229,13 +235,13 @@ namespace chdr::solvers {
                                     _open.erase(child_search->second);
                                     _open.emplace(node(n.index, g, h, curr.m_index));
 
-                                    successor_count++;
+                                    expanded = true;
                                 }
                             }
                         }
                     }
 
-                    if (UNLIKELY(successor_count == 0U)) { // DEAD END...
+                    if (UNLIKELY(!expanded)) { // DEAD END...
                         curr.m_fScore = inf_v;
                         backup_f_values(curr, all_nodes, _params);
                         all_nodes[curr.m_index] = curr;
@@ -243,7 +249,9 @@ namespace chdr::solvers {
                 }
             }
 
+#if CHDR_DIAGNOSTICS == 1
             std::cout << "Peak Memory Usage: " << peak_memory_usage << "\n";
+#endif //CHDR_DIAGNOSTICS == 1
 
             return std::vector<coord_t>{};
         }

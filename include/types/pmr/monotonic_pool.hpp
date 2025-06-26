@@ -60,7 +60,7 @@ namespace chdr {
         size_t  num_allocated { 0U };
         size_t peak_allocated { 0U };
 
-#endif
+#endif //CHDR_DIAGNOSTICS == 1
 
         struct block final {
 
@@ -248,7 +248,7 @@ namespace chdr {
              num_allocated += _bytes;
             peak_allocated  = utils::max(peak_allocated, num_allocated);
 
-#endif
+#endif //CHDR_DIAGNOSTICS == 1
 
             return aligned_ptr;
         }
@@ -392,7 +392,7 @@ namespace chdr {
              num_allocated = 0U;
             peak_allocated = 0U;
 
-#endif
+#endif //CHDR_DIAGNOSTICS == 1
         }
 
         /**
@@ -429,7 +429,7 @@ namespace chdr {
              num_allocated = 0U;
             peak_allocated = 0U;
 
-#endif
+#endif //CHDR_DIAGNOSTICS == 1
         }
     };
 
