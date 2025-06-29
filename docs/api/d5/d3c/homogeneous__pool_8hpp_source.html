@@ -154,7 +154,7 @@ $(document).ready(function(){initNavTree('d5/d3c/homogeneous__pool_8hpp_source.h
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <span class="keywordtype">size_t</span>  num_allocated { 0U };</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        <span class="keywordtype">size_t</span> peak_allocated { 0U };</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_DIAGNOSTICS == 1</span></div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        <span class="keyword">struct </span>block final {</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
@@ -291,7 +291,7 @@ $(document).ready(function(){initNavTree('d5/d3c/homogeneous__pool_8hpp_source.h
 <div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>             num_allocated += _bytes;</div>
 <div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>            peak_allocated  = <a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_a05e8953d59fd314cf105f52b0c1272dd.html#a05e8953d59fd314cf105f52b0c1272dd">utils::max</a>(peak_allocated, num_allocated);</div>
 <div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span> </div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_DIAGNOSTICS == 1</span></div>
 <div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span> </div>
 <div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>            <span class="keywordflow">return</span> aligned_ptr;</div>
 <div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>        }</div>
@@ -309,7 +309,7 @@ $(document).ready(function(){initNavTree('d5/d3c/homogeneous__pool_8hpp_source.h
 <div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span> </div>
 <div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>            num_allocated = (_bytes &gt; num_allocated) ? 0U : (num_allocated - _bytes);</div>
 <div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span> </div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_DIAGNOSTICS == 1</span></div>
 <div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>        }</div>
 </div>
 <div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span> </div>
@@ -420,7 +420,7 @@ $(document).ready(function(){initNavTree('d5/d3c/homogeneous__pool_8hpp_source.h
 <div class="line"><a id="l00449" name="l00449"></a><span class="lineno">  449</span>             num_allocated = 0U;</div>
 <div class="line"><a id="l00450" name="l00450"></a><span class="lineno">  450</span>            peak_allocated = 0U;</div>
 <div class="line"><a id="l00451" name="l00451"></a><span class="lineno">  451</span> </div>
-<div class="line"><a id="l00452" name="l00452"></a><span class="lineno">  452</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00452" name="l00452"></a><span class="lineno">  452</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_DIAGNOSTICS == 1</span></div>
 <div class="line"><a id="l00453" name="l00453"></a><span class="lineno">  453</span>        }</div>
 </div>
 <div class="line"><a id="l00454" name="l00454"></a><span class="lineno">  454</span> </div>
@@ -444,7 +444,7 @@ $(document).ready(function(){initNavTree('d5/d3c/homogeneous__pool_8hpp_source.h
 <div class="line"><a id="l00486" name="l00486"></a><span class="lineno">  486</span>             num_allocated = 0U;</div>
 <div class="line"><a id="l00487" name="l00487"></a><span class="lineno">  487</span>            peak_allocated = 0U;</div>
 <div class="line"><a id="l00488" name="l00488"></a><span class="lineno">  488</span> </div>
-<div class="line"><a id="l00489" name="l00489"></a><span class="lineno">  489</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00489" name="l00489"></a><span class="lineno">  489</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_DIAGNOSTICS == 1</span></div>
 <div class="line"><a id="l00490" name="l00490"></a><span class="lineno">  490</span>        }</div>
 </div>
 <div class="line"><a id="l00491" name="l00491"></a><span class="lineno">  491</span>    };</div>

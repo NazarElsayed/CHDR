@@ -96,10 +96,10 @@ namespace chdr::solvers {
 #endif
             HOT node& operator=(node&& _other) noexcept = default;
 
-            [[nodiscard]] HOT friend constexpr bool operator < (const node& a, const node& b) noexcept {
-                return a.m_fScore == b.m_fScore ?
-                       a.m_gScore >  b.m_gScore :
-                       a.m_fScore <  b.m_fScore;
+            [[nodiscard]] HOT friend constexpr bool operator < (const node& _a, const node& _b) noexcept {
+                return _a.m_fScore == _b.m_fScore ?
+                       _a.m_gScore >  _b.m_gScore :
+                       _a.m_fScore <  _b.m_fScore;
             }
         };
 
@@ -151,7 +151,7 @@ namespace chdr::solvers {
 
             std::unordered_map<index_t, node> all_nodes;
 
-#if CHDR_DIAGNOSTICS == 1:
+#if CHDR_DIAGNOSTICS == 1
             size_t peak_memory_usage = 0U;
 #endif //CHDR_DIAGNOSTICS == 1
 
@@ -185,7 +185,7 @@ namespace chdr::solvers {
                         result[(result.size() - 1U) - i] = utils::to_nd(p, _params.size);
                     }
 
-#if CHDR_DIAGNOSTICS == 1:
+#if CHDR_DIAGNOSTICS == 1
                     std::cout << "Peak Memory Usage: " << peak_memory_usage << "\n";
 #endif //CHDR_DIAGNOSTICS == 1
 
@@ -233,7 +233,7 @@ namespace chdr::solvers {
                                 else if (g < child_search->second.m_gScore && child_search->second.m_fScore != inf_v) {
 
                                     _open.erase(child_search->second);
-                                    _open.emplace(node(n.index, g, h, curr.m_index));
+                                    _open.emplace(all_nodes[n.index] = node(n.index, g, h, curr.m_index));
 
                                     expanded = true;
                                 }
