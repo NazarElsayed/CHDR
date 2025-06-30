@@ -147,7 +147,7 @@ namespace chdr::solvers {
         HOT static auto rbacktrack(const node& _curr, const all_nodes_t& _all_nodes, const params_t& _params) {
 
             /*
-             * Warnings regarding potential null-pointer dereferencing are paranoid in this situation.
+             * (Bounds-checking is disabled in release builds.)
              */
 
 #if defined(__GNUC__) || defined(__clang__) // __GNUC__ || __clang__
@@ -167,23 +167,31 @@ namespace chdr::solvers {
 
             if constexpr (solver_t::solver_utils::template is_graph_v<decltype(_params.maze)>) { // GRAPH...
 
-                // Solution depth obtained using recursion...
+                // Solution depth calculated using recursion...
                 size_t depth = 0U;
-                for (auto p = _curr.m_parent; p != null_v; p = _all_nodes.find(p)->second.m_parent) {
-                    ++depth;
+                for (auto p = _curr.m_parent; p != null_v; ++depth) {
+
+                    auto p_itr = _all_nodes.find(p);
+                    assert(p_itr != _all_nodes.end() && "Out of bounds access during SMA* path reconstruction.");
+                    p = p_itr->second.m_parent;
                 }
 
                 result.resize(depth);
             }
             else { // GRID...
 
-                // Uniform space; solution depth can be calculated from g-score.
+                // Uniform space; solution depth obtained from g-score.
                 result.resize(static_cast<size_t>(_curr.m_gScore));
             }
 
             size_t i = 0U;
-            for (auto p = _curr.m_parent; p != null_v; p = _all_nodes.find(p)->second.m_parent, ++i) {
+            for (auto p = _curr.m_parent; p != null_v; ++i) {
+
                 result[(result.size() - 1U) - i] = utils::to_nd(p, _params.size);
+
+                auto p_itr = _all_nodes.find(p);
+                assert(p_itr != _all_nodes.end() && "Out of bounds access during SMA* path reconstruction.");
+                p = p_itr->second.m_parent;
             }
 
 #if defined(__GNUC__) || defined(__clang__) // __GNUC__ || __clang__
