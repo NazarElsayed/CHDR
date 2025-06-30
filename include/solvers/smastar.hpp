@@ -13,7 +13,6 @@
  * @file smastar.hpp
  */
 
-#include <cstddef>
 #include <set>
 #include <type_traits>
 #include <vector>

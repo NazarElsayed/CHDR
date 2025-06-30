@@ -298,7 +298,7 @@ $(document).ready(function(){initNavTree('dd/d57/smastar_8hpp_source.html','../.
 <div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>            <span class="keyword">const</span> <span class="keyword">auto</span> s = utils::to_1d(_params.start, _params.size);</div>
 <div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>            <span class="keyword">const</span> <span class="keyword">auto</span> e = utils::to_1d(_params.end,   _params.size);</div>
 <div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span> </div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>            std::unordered_map&lt;index_t, node&gt; all_nodes;</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>            std::pmr::unordered_map&lt;index_t, node&gt; all_nodes(_params.homogeneous_pmr);</div>
 <div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span> </div>
 <div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span><span class="preprocessor">#if CHDR_DIAGNOSTICS == 1</span></div>
 <div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>            <span class="keywordtype">size_t</span> peak_memory_usage = 0U;</div>
