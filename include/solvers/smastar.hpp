@@ -303,15 +303,9 @@ namespace chdr::solvers {
 
         [[maybe_unused, nodiscard]] static auto invoke(const params_t& _params) {
 
-            if (_params.memory_limit > 0U) {
+            std::pmr::multiset<node> _open(_params.homogeneous_pmr);
 
-                std::pmr::multiset<node> _open(_params.homogeneous_pmr);
-
-                return solve_internal(_open, _params);
-            }
-            else {
-                return std::vector<coord_t>{};
-            }
+            return solve_internal(_open, _params);
         }
     };
 

@@ -256,7 +256,7 @@ $(document).ready(function(){initNavTree('dd/d57/smastar_8hpp_source.html','../.
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span> </div>
 <div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (solver_t::solver_utils::template is_graph_v&lt;<span class="keyword">decltype</span>(_params.maze)&gt;) { <span class="comment">// GRAPH...</span></div>
 <div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span> </div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>                <span class="comment">// Solution depth obtained using recursion...</span></div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>                <span class="comment">// Solution depth calculated using recursion...</span></div>
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>                <span class="keywordtype">size_t</span> depth = 0U;</div>
 <div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>                <span class="keywordflow">for</span> (<span class="keyword">auto</span> p = _curr.m_parent; p != null_v; ++depth) {</div>
 <div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span> </div>
@@ -269,7 +269,7 @@ $(document).ready(function(){initNavTree('dd/d57/smastar_8hpp_source.html','../.
 <div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>            }</div>
 <div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>            <span class="keywordflow">else</span> { <span class="comment">// GRID...</span></div>
 <div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span> </div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>                <span class="comment">// Uniform space; solution depth can be calculated from g-score.</span></div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>                <span class="comment">// Uniform space; solution depth obtained from g-score.</span></div>
 <div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>                result.resize(<span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(_curr.m_gScore));</div>
 <div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>            }</div>
 <div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span> </div>
@@ -392,22 +392,16 @@ $(document).ready(function(){initNavTree('dd/d57/smastar_8hpp_source.html','../.
 <div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span> </div>
 <div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>        [[maybe_unused, nodiscard]] <span class="keyword">static</span> <span class="keyword">auto</span> invoke(<span class="keyword">const</span> params_t&amp; _params) {</div>
 <div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span> </div>
-<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>            <span class="keywordflow">if</span> (_params.memory_limit &gt; 0U) {</div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>            std::pmr::multiset&lt;node&gt; _open(_params.homogeneous_pmr);</div>
 <div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span> </div>
-<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>                std::pmr::multiset&lt;node&gt; _open(_params.homogeneous_pmr);</div>
-<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span> </div>
-<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>                <span class="keywordflow">return</span> solve_internal(_open, _params);</div>
-<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>            }</div>
-<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>            <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>                <span class="keywordflow">return</span> std::vector&lt;coord_t&gt;{};</div>
-<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>            }</div>
-<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>        }</div>
-<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>    };</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>            <span class="keywordflow">return</span> solve_internal(_open, _params);</div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>        }</div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>    };</div>
 </div>
-<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span> </div>
-<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>} <span class="comment">//chdr::solvers</span></div>
-<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span> </div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_ASTAR_HPP</span></div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span> </div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>} <span class="comment">//chdr::solvers</span></div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span> </div>
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_ASTAR_HPP</span></div>
 <div class="ttc" id="aclasschdr_1_1solvers_1_1solver_html"><div class="ttname"><a href="../../d3/df4/classchdr_1_1solvers_1_1solver.html">chdr::solvers::solver</a></div><div class="ttdoc">A static class serving as the core entry point for the CHDR library.</div><div class="ttdef"><b>Definition</b> <a href="../../d2/d1c/solver_8hpp_source.html#l00088">solver.hpp:88</a></div></div>
 <div class="ttc" id="aintrinsics_8hpp_a1eb14cc432874ddacd1934791dbe12a3_html_a1eb14cc432874ddacd1934791dbe12a3"><div class="ttname"><a href="../../d7/d65/intrinsics_8hpp_a1eb14cc432874ddacd1934791dbe12a3.html#a1eb14cc432874ddacd1934791dbe12a3">HOT</a></div><div class="ttdeci">#define HOT</div><div class="ttdoc">Marks a function as performance-critical (platform-specific).</div><div class="ttdef"><b>Definition</b> <a href="../../d7/d65/intrinsics_8hpp_source.html#l00254">intrinsics.hpp:254</a></div></div>
 <div class="ttc" id="aintrinsics_8hpp_ab10d0a221f4d7a706701b806c8135fd7_html_ab10d0a221f4d7a706701b806c8135fd7"><div class="ttname"><a href="../../d7/d65/intrinsics_8hpp_ab10d0a221f4d7a706701b806c8135fd7.html#ab10d0a221f4d7a706701b806c8135fd7">UNLIKELY</a></div><div class="ttdeci">#define UNLIKELY(x)</div><div class="ttdoc">Hints to the compiler that the condition is likely to be false (platform-specific).</div><div class="ttdef"><b>Definition</b> <a href="../../d7/d65/intrinsics_8hpp_source.html#l00242">intrinsics.hpp:242</a></div></div>
