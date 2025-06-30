@@ -239,18 +239,28 @@ namespace chdr::solvers {
 
                                 // Check if the neighbour 'exists', or update its parent if the current route is better.
                                 auto search = all_nodes.find(n.index);
-                                if (search == all_nodes.end()) {
+                                if (search != all_nodes.end()) {
+                                    if (search->second.m_fScore != inf_v) {
+                                        if (const auto g = curr.m_gScore + n.distance; g < search->second.m_gScore) {
+                                            const auto h = _params.h(n.coord, _params.end) * _params.weight;
 
+                                            _open.erase(search->second);
+                                            _open.emplace(all_nodes[n.index] = node(n.index, g, g + h, curr.m_index));
+
+                                            has_neighbours = true;
+                                        }
+                                    }
+                                }
+                                else {
                                     has_neighbours = true;
 
-                                    // Attempt to make room for the new node:
+                                    // Attempt to clear space for a new node:
                                     if (!_open.empty() && all_nodes.size() >= _params.memory_limit) {
                                         remove_worst(_open, all_nodes, _params);
                                     }
 
                                     // Only instantiate if there is room in memory. Otherwise, break.
                                     if (all_nodes.size() < _params.memory_limit) {
-
                                         const auto g = curr.m_gScore + n.distance;
                                         const auto h = _params.h(n.coord, _params.end) * _params.weight;
 
@@ -262,17 +272,6 @@ namespace chdr::solvers {
                                     }
                                     else {
                                         break;
-                                    }
-                                }
-                                else if (search->second.m_fScore != inf_v) {
-
-                                    if (const auto g = curr.m_gScore + n.distance; g < search->second.m_gScore) {
-                                        const auto h = _params.h(n.coord, _params.end) * _params.weight;
-
-                                        _open.erase(search->second);
-                                        _open.emplace(all_nodes[n.index] = node(n.index, g, g + h, curr.m_index));
-
-                                        has_neighbours = true;
                                     }
                                 }
                             }
