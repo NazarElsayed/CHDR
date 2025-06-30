@@ -104,7 +104,7 @@ namespace chdr::solvers {
         };
 
         template<typename open_set_t, typename all_nodes_t>
-        HOT static void remove_worst(open_set_t& _open, all_nodes_t& _all_nodes, const params_t& _params) {
+        HOT static void remove_worst(open_set_t& _open, all_nodes_t& _all_nodes, const params_t& _params) noexcept {
             assert(!_open.empty() && "_open cannot be empty.");
 
             auto worst_node = std::prev(_open.end());
@@ -114,7 +114,7 @@ namespace chdr::solvers {
         }
 
         template <typename all_nodes_t>
-        HOT static void backup_f_values(const node& _removed_node, all_nodes_t& _all_nodes, const params_t& _params) {
+        HOT static void backup_f_values(const node& _removed_node, all_nodes_t& _all_nodes, const params_t& _params) noexcept {
 
             if (auto p_index = _removed_node.m_parent; p_index != null_v) {
 
