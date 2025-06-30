@@ -78,11 +78,11 @@ namespace chdr::solvers {
             // ReSharper disable once CppPossiblyUninitializedMember
             [[nodiscard]] HOT constexpr node() noexcept {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] HOT constexpr node(index_t _index, scalar_t _gScore, scalar_t _hScore, index_t _parent = null_v) noexcept :
-                m_index     (_index           ),
-                m_gScore    (_gScore          ),
-                m_fScore    (_gScore + _hScore),
-                m_parent    (_parent          ) {}
+            [[nodiscard]] HOT constexpr node(index_t _index, scalar_t _gScore, scalar_t _fScore, index_t _parent = null_v) noexcept :
+                m_index     (_index ),
+                m_gScore    (_gScore),
+                m_fScore    (_fScore),
+                m_parent    (_parent) {}
 
             ~node() = default;
 
@@ -104,7 +104,7 @@ namespace chdr::solvers {
         };
 
         template<typename open_set_t, typename all_nodes_t>
-        static void remove_worst(open_set_t& _open, all_nodes_t& _all_nodes, const params_t& _params) {
+        HOT static void remove_worst(open_set_t& _open, all_nodes_t& _all_nodes, const params_t& _params) {
             assert(!_open.empty() && "_open cannot be empty.");
 
             auto worst_node = std::prev(_open.end());
@@ -114,7 +114,7 @@ namespace chdr::solvers {
         }
 
         template <typename all_nodes_t>
-        static void backup_f_values(const node& _removed_node, all_nodes_t& _all_nodes, const params_t& _params) {
+        HOT static void backup_f_values(const node& _removed_node, all_nodes_t& _all_nodes, const params_t& _params) {
 
             if (auto p_index = _removed_node.m_parent; p_index != null_v) {
 
@@ -132,7 +132,7 @@ namespace chdr::solvers {
                         }
                     }
 
-                    // If there are children and updating the parent's f-value is necessary:
+                    // If updating the parent's f-value is necessary:
                     if (min_f > p->second.m_fScore) {
                         p->second.m_fScore = min_f;
                     }
@@ -141,6 +141,58 @@ namespace chdr::solvers {
                     }
                 }
             }
+        }
+
+        template<typename all_nodes_t>
+        HOT static auto rbacktrack(const node& _curr, const all_nodes_t& _all_nodes, const params_t& _params) {
+
+            /*
+             * Warnings regarding potential null-pointer dereferencing are paranoid in this situation.
+             */
+
+#if defined(__GNUC__) || defined(__clang__) // __GNUC__ || __clang__
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wnull-dereference"
+#elif defined(_MSC_VER) // !(__GNUC__ || __clang__) && _MSC_VER
+    #pragma warning(push)
+    #pragma warning(disable: 6011)
+#endif // !(__GNUC__ || __clang__) && _MSC_VER
+
+            std::vector<coord_t> result{};
+
+            /*
+             * Determine the size of the final path prior to backtracking.
+             * If the maze is a graph, then the size must be determined through recursion.
+             */
+
+            if constexpr (solver_t::solver_utils::template is_graph_v<decltype(_params.maze)>) { // GRAPH...
+
+                // Solution depth obtained using recursion...
+                size_t depth = 0U;
+                for (auto p = _curr.m_parent; p != null_v; p = _all_nodes.find(p)->second.m_parent) {
+                    ++depth;
+                }
+
+                result.resize(depth);
+            }
+            else { // GRID...
+
+                // Uniform space; solution depth can be calculated from g-score.
+                result.resize(static_cast<size_t>(_curr.m_gScore));
+            }
+
+            size_t i = 0U;
+            for (auto p = _curr.m_parent; p != null_v; p = _all_nodes.find(p)->second.m_parent, ++i) {
+                result[(result.size() - 1U) - i] = utils::to_nd(p, _params.size);
+            }
+
+#if defined(__GNUC__) || defined(__clang__) // __GNUC__ || __clang__
+    #pragma GCC diagnostic pop
+#elif defined(_MSC_VER) // !(__GNUC__ || __clang__) && _MSC_VER
+    #pragma warning(pop)
+#endif // !(__GNUC__ || __clang__) && _MSC_VER
+
+            return result;
         }
 
         template <typename open_set_t>
@@ -169,31 +221,15 @@ namespace chdr::solvers {
 
                 if (curr.m_index == e) { // SOLUTION FOUND...
 
-                    std::vector<coord_t> result{};
-
-                    {
-                        size_t depth = 0U;
-                        for (auto p = curr.m_parent; p != null_v; p = all_nodes[p].m_parent) {
-                            ++depth;
-                        }
-
-                        result.resize(depth);
-                    }
-
-                    size_t i = 0U;
-                    for (auto p = curr.m_parent; p != null_v; p = all_nodes[p].m_parent, ++i) {
-                        result[(result.size() - 1U) - i] = utils::to_nd(p, _params.size);
-                    }
-
 #if CHDR_DIAGNOSTICS == 1
                     std::cout << "Peak Memory Usage: " << peak_memory_usage << "\n";
 #endif //CHDR_DIAGNOSTICS == 1
 
-                    return result;
+                    return rbacktrack(curr, all_nodes, _params);
                 }
                 else { // SEARCH FOR SOLUTION...
 
-                    bool expanded = false;
+                    bool has_neighbours = false;
 
                     if (curr.m_fScore != inf_v) {
 
@@ -201,26 +237,24 @@ namespace chdr::solvers {
 
                             if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
 
-                                const auto g = curr.m_gScore + n.distance;
-                                const auto h = _params.h(n.coord, _params.end) * _params.weight;
+                                // Check if the neighbour 'exists', or update its parent if the current route is better.
+                                auto search = all_nodes.find(n.index);
+                                if (search == all_nodes.end()) {
 
-                                auto child_search = all_nodes.find(n.index);
-                                if (child_search == all_nodes.end()) {
-
-                                    expanded = true;
+                                    has_neighbours = true;
 
                                     // Attempt to make room for the new node:
                                     if (!_open.empty() && all_nodes.size() >= _params.memory_limit) {
                                         remove_worst(_open, all_nodes, _params);
                                     }
 
-                                    /*
-                                     * Only instantiate when there is room in memory.
-                                     * Otherwise, break from the loop completely.
-                                     */
-
+                                    // Only instantiate if there is room in memory. Otherwise, break.
                                     if (all_nodes.size() < _params.memory_limit) {
-                                        _open.emplace(all_nodes[n.index] = node(n.index, g, h, curr.m_index));
+
+                                        const auto g = curr.m_gScore + n.distance;
+                                        const auto h = _params.h(n.coord, _params.end) * _params.weight;
+
+                                        _open.emplace(all_nodes[n.index] = node(n.index, g, g + h, curr.m_index));
 
 #if CHDR_DIAGNOSTICS == 1
                                         peak_memory_usage = utils::max(peak_memory_usage, all_nodes.size());
@@ -230,18 +264,22 @@ namespace chdr::solvers {
                                         break;
                                     }
                                 }
-                                else if (g < child_search->second.m_gScore && child_search->second.m_fScore != inf_v) {
+                                else if (search->second.m_fScore != inf_v) {
 
-                                    _open.erase(child_search->second);
-                                    _open.emplace(all_nodes[n.index] = node(n.index, g, h, curr.m_index));
+                                    if (const auto g = curr.m_gScore + n.distance; g < search->second.m_gScore) {
+                                        const auto h = _params.h(n.coord, _params.end) * _params.weight;
 
-                                    expanded = true;
+                                        _open.erase(search->second);
+                                        _open.emplace(all_nodes[n.index] = node(n.index, g, g + h, curr.m_index));
+
+                                        has_neighbours = true;
+                                    }
                                 }
                             }
                         }
                     }
 
-                    if (UNLIKELY(!expanded)) { // DEAD END...
+                    if (UNLIKELY(!has_neighbours)) { // DEAD END...
                         curr.m_fScore = inf_v;
                         backup_f_values(curr, all_nodes, _params);
                         all_nodes[curr.m_index] = curr;
