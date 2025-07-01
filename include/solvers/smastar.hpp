@@ -33,15 +33,42 @@ namespace chdr::solvers {
      * @addtogroup Single-Target
      * @brief Solvers which route to a single destination.
      * @{
-     * @addtogroup SingleTargetCommon Common
-     * @brief General-purpose solvers.
+     * @addtogroup Memory-Bounded
+     * @brief Solvers which enforce an arbitrary limit on memory usage.
      * @{
      */
 
     /**
      * @struct smastar
      * @brief SMA* search algorithm.
+     * @details SMA* (Russell, S., 1992) is a heuristic-informed graph traversal and pathfinding algorithm for
+     *          "single-source, single-target" (SSST) pathfinding problems.
+     *          SMA* maintains the number of expanded nodes in memory beneath an arbitrary limit, which it enforces
+     *          through temporarily abandoning the worst-case search nodes to prioritise more promising candidates.
      *
+     * Advantages:
+     * - Able to find solutions to search problems in memory-constrained contexts.
+     * - Able to modulate between a breadth-first and a best-first approach.
+     * - Does not need a pre-pass, although performance can improve if the search space is pruned first.
+     * - High performance in bounded (finite) search scenarios.
+     *
+     * Limitations:
+     * - Typically slower than A*.
+     * - May not find the optimal solution if the memory limit is too restrictive.
+     * - Inefficient or complex search heuristics can reduce performance.
+     * - Poor performance when searches lack solutions.
+     *
+     * Further Reading:
+     * - <a href="https://en.wikipedia.org/wiki/SMA*">Wikipedia Article</a>
+     *
+     * References:
+     * - Chakrabarti, P. P., Ghose, S., Acharya, A. and Sarkar, S. C. de, 1989. Heuristic search in restricted memory.
+     *   Artificial Intelligence, 41 (2), 197–221.
+     * - Russell, S., 1992. Efficient Memory-Bounded Search Methods.
+     *   In: Neumann, B., ed. 10th European Conference on Artificial Intelligence, ECAI 92, Vienna, Austria, August 3-7, 1992. Proceedings [online]. John Wiley and Sons, 1–5. Available from: https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=388c0a934934a9e60da1c22c050566dbcd995702.
+     *
+     * @note SMA* does not guarantee solution optimality unless the memory limit is sufficient to contain the entire search tree.
+     * @remarks SMA* is an improvement of the original Memory-Bounded A* (MA*) design by Chakrabarti et al. (1989).
      * @tparam params_t Type containing the search parameters.
      */
     template<typename params_t>

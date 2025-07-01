@@ -43,7 +43,7 @@ namespace chdr::solvers {
     /**
      * @struct astar
      * @brief A* search algorithm.
-     * @details A* (Hart et al. 1968) is a heuristic-informed graph traversal and pathfinding algorithm.
+     * @details A* (Hart et al., 1968) is a heuristic-informed graph traversal and pathfinding algorithm.
      *          A* can be seen as an extension of Dijkstra's algorithm for determining the optimal solution in
      *          "single-source, single-target" (SSST) pathfinding problems, and is one of the most widely used
      *          search algorithms owing to its completeness and efficiency.\n\n

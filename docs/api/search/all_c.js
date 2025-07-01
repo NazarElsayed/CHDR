@@ -9,10 +9,11 @@ var searchData=
   ['manhattan_5fdistance_6',['manhattan_distance',['../de/d17/group__Heuristics_ga0ae5cd4c8261c2e6b92393ed5e4fb789.html#ga0ae5cd4c8261c2e6b92393ed5e4fb789',1,'chdr::heuristics']]],
   ['max_7',['max',['../d2/dcb/structchdr_1_1utils_a05e8953d59fd314cf105f52b0c1272dd.html#a05e8953d59fd314cf105f52b0c1272dd',1,'chdr::utils']]],
   ['maze_20types_8',['Maze Types',['../d5/da1/md_docs_2manual_2roadmap.html#maze-types',1,'']]],
-  ['min_9',['min',['../d2/dcb/structchdr_1_1utils_a2287d696e022b9c172ac719c733627e3.html#a2287d696e022b9c172ac719c733627e3',1,'chdr::utils']]],
-  ['monotonic_5fpool_10',['monotonic_pool',['../df/db2/classchdr_1_1monotonic__pool_a8d8d1a09629a36930c4f137b135f1800.html#a8d8d1a09629a36930c4f137b135f1800',1,'chdr::monotonic_pool::monotonic_pool()'],['../df/db2/classchdr_1_1monotonic__pool.html',1,'monotonic_pool&lt; StackSize, MaxStackAllocationSize, MaxHeapBlockSize &gt;']]],
-  ['monotonic_5fpool_2ehpp_11',['monotonic_pool.hpp',['../d4/d99/monotonic__pool_8hpp.html',1,'']]],
-  ['multi_20target_12',['Multi-Target',['../d9/d71/group__Multi-Target.html',1,'']]],
-  ['mutable_5fnode_13',['mutable_node',['../da/d36/structchdr_1_1solvers_1_1mutable__node.html',1,'mutable_node&lt; index_t &gt;'],['../da/d36/structchdr_1_1solvers_1_1mutable__node_a7021a84fe1c894b1219c5cebd4c7387f.html#a7021a84fe1c894b1219c5cebd4c7387f',1,'chdr::solvers::mutable_node::mutable_node() noexcept'],['../da/d36/structchdr_1_1solvers_1_1mutable__node_ac4d33511b91b1c0ca7ffbb0ce24e4d64.html#ac4d33511b91b1c0ca7ffbb0ce24e4d64',1,'chdr::solvers::mutable_node::mutable_node(index_t _index, mutable_node *restrict const _parent=nullptr) noexcept']]],
-  ['mutable_5fnode_2ehpp_14',['mutable_node.hpp',['../d5/d14/mutable__node_8hpp.html',1,'']]]
+  ['memory_20bounded_9',['Memory-Bounded',['../d9/d70/group__Memory-Bounded.html',1,'']]],
+  ['min_10',['min',['../d2/dcb/structchdr_1_1utils_a2287d696e022b9c172ac719c733627e3.html#a2287d696e022b9c172ac719c733627e3',1,'chdr::utils']]],
+  ['monotonic_5fpool_11',['monotonic_pool',['../df/db2/classchdr_1_1monotonic__pool_a8d8d1a09629a36930c4f137b135f1800.html#a8d8d1a09629a36930c4f137b135f1800',1,'chdr::monotonic_pool::monotonic_pool()'],['../df/db2/classchdr_1_1monotonic__pool.html',1,'monotonic_pool&lt; StackSize, MaxStackAllocationSize, MaxHeapBlockSize &gt;']]],
+  ['monotonic_5fpool_2ehpp_12',['monotonic_pool.hpp',['../d4/d99/monotonic__pool_8hpp.html',1,'']]],
+  ['multi_20target_13',['Multi-Target',['../d9/d71/group__Multi-Target.html',1,'']]],
+  ['mutable_5fnode_14',['mutable_node',['../da/d36/structchdr_1_1solvers_1_1mutable__node.html',1,'mutable_node&lt; index_t &gt;'],['../da/d36/structchdr_1_1solvers_1_1mutable__node_a7021a84fe1c894b1219c5cebd4c7387f.html#a7021a84fe1c894b1219c5cebd4c7387f',1,'chdr::solvers::mutable_node::mutable_node() noexcept'],['../da/d36/structchdr_1_1solvers_1_1mutable__node_ac4d33511b91b1c0ca7ffbb0ce24e4d64.html#ac4d33511b91b1c0ca7ffbb0ce24e4d64',1,'chdr::solvers::mutable_node::mutable_node(index_t _index, mutable_node *restrict const _parent=nullptr) noexcept']]],
+  ['mutable_5fnode_2ehpp_15',['mutable_node.hpp',['../d5/d14/mutable__node_8hpp.html',1,'']]]
 ];

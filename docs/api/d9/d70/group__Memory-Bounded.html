@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CHDR: smastar&lt; params_t &gt;</title>
+<title>CHDR: Memory-Bounded</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -77,7 +77,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('dc/dca/structchdr_1_1solvers_1_1smastar.html','../../'); initResizable(); });
+$(document).ready(function(){initNavTree('d9/d70/group__Memory-Bounded.html','../../'); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -104,53 +104,26 @@ $(document).ready(function(){initNavTree('dc/dca/structchdr_1_1solvers_1_1smasta
 
 <div class="header">
   <div class="summary">
-<a href="../../d8/d95/structchdr_1_1solvers_1_1smastar-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">smastar&lt; params_t &gt;<span class="mlabels"><span class="mlabel">final</span></span><div class="ingroups"><a class="el" href="../../d3/d24/group__Solvers.html">Solvers</a> &raquo; <a class="el" href="../../d5/d91/group__Single-Target.html">Single-Target</a> &raquo; <a class="el" href="../../d9/d70/group__Memory-Bounded.html">Memory-Bounded</a></div></div></div>
+<a href="#nested-classes">Classes</a>  </div>
+  <div class="headertitle"><div class="title">Memory-Bounded<div class="ingroups"><a class="el" href="../../d3/d24/group__Solvers.html">Solvers</a> &raquo; <a class="el" href="../../d5/d91/group__Single-Target.html">Single-Target</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;typename params_t&gt;<br />
-struct chdr::solvers::smastar&lt; params_t &gt;</div><p>SMA* search algorithm. </p>
-<p>SMA* (Russell, S., 1992) is a heuristic-informed graph traversal and pathfinding algorithm for "single-source, single-target" (SSST) pathfinding problems. SMA* maintains the number of expanded nodes in memory beneath an arbitrary limit, which it enforces through temporarily abandoning the worst-case search nodes to prioritise more promising candidates.</p>
-<p>Advantages:</p><ul>
-<li>Able to find solutions to search problems in memory-constrained contexts.</li>
-<li>Able to modulate between a breadth-first and a best-first approach.</li>
-<li>Does not need a pre-pass, although performance can improve if the search space is pruned first.</li>
-<li>High performance in bounded (finite) search scenarios.</li>
-</ul>
-<p>Limitations:</p><ul>
-<li>Typically slower than A*.</li>
-<li>May not find the optimal solution if the memory limit is too restrictive.</li>
-<li>Inefficient or complex search heuristics can reduce performance.</li>
-<li>Poor performance when searches lack solutions.</li>
-</ul>
-<p>Further Reading:</p><ul>
-<li><a href="https://en.wikipedia.org/wiki/SMA*">Wikipedia Article</a></li>
-</ul>
-<p>References:</p><ul>
-<li>Chakrabarti, P. P., Ghose, S., Acharya, A. and Sarkar, S. C. de, 1989. Heuristic search in restricted memory. Artificial Intelligence, 41 (2), 197–221.</li>
-<li>Russell, S., 1992. Efficient Memory-Bounded Search Methods. In: Neumann, B., ed. 10th European Conference on Artificial Intelligence, ECAI 92, Vienna, Austria, August 3-7, 1992. Proceedings [online]. John Wiley and Sons, 1–5. Available from: <a href="https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=388c0a934934a9e60da1c22c050566dbcd995702">https://citeseerx.ist.psu.edu/document?repid=rep1&amp;type=pdf&amp;doi=388c0a934934a9e60da1c22c050566dbcd995702</a>.</li>
-</ul>
-<dl class="section note"><dt>Note</dt><dd>SMA* does not guarantee solution optimality unless the memory limit is sufficient to contain the entire search tree. </dd></dl>
-<dl class="section remark"><dt>Remarks</dt><dd>SMA* is an improvement of the original Memory-Bounded A* (MA*) design by Chakrabarti et al. (1989). </dd></dl>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">params_t</td><td>Type containing the search parameters. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="definition">Definition at line <a class="el" href="../../dd/d57/smastar_8hpp_source.html#l00075">75</a> of file <a class="el" href="../../dd/d57/smastar_8hpp_source.html">smastar.hpp</a>.</p>
-</div><div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Collaboration diagram for smastar&lt; params_t &gt;:</div>
+<p>Solvers which enforce an arbitrary limit on memory usage. </p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/dca/structchdr_1_1solvers_1_1smastar.html">smastar&lt; params_t &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">SMA* search algorithm.  <a href="../../dc/dca/structchdr_1_1solvers_1_1smastar.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Collaboration diagram for Memory-Bounded:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../d8/d6b/structchdr_1_1solvers_1_1smastar__coll__graph.svg" width="143" height="68"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../d9/d70/group__Memory-Bounded.svg" width="270" height="34"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
-<hr/>The documentation for this struct was generated from the following file:<ul>
-<li><a class="el" href="../../dd/d57/smastar_8hpp_source.html">smastar.hpp</a></li>
-</ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen -->

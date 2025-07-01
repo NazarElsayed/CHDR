@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['optimised_0',['Graveyard-Optimised',['../d1/d47/group__SingleTargetGraveyardOptimised.html',1,'']]]
+  ['memory_20bounded_0',['Memory-Bounded',['../d9/d70/group__Memory-Bounded.html',1,'']]],
+  ['multi_20target_1',['Multi-Target',['../d9/d71/group__Multi-Target.html',1,'']]]
 ];

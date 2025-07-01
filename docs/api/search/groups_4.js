@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['iterative_20deepening_0',['Iterative-Deepening',['../d5/d74/group__SingleTargetIterativeDeepening.html',1,'']]]
+  ['heuristics_0',['Heuristics',['../de/d17/group__Heuristics.html',1,'']]]
 ];

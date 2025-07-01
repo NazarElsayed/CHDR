@@ -161,7 +161,7 @@ var NAVTREEINDEX0 =
 "d7/d66/classchdr_1_1homogeneous__pool_abda3c8300680a2838ef5ae8640772bb4.html#abda3c8300680a2838ef5ae8640772bb4":[4,0,0,6,4],
 "d7/d66/classchdr_1_1homogeneous__pool_ac7282a29216923fff4803e920bf80095.html#ac7282a29216923fff4803e920bf80095":[4,0,0,6,0],
 "d7/d66/classchdr_1_1homogeneous__pool_aca258878a71f1169ccbc5cf8904ea5a5.html#aca258878a71f1169ccbc5cf8904ea5a5":[4,0,0,6,1],
-"d7/da2/structchdr_1_1solvers_1_1flood.html":[3,1,1,3,0],
+"d7/da2/structchdr_1_1solvers_1_1flood.html":[3,1,1,4,0],
 "d7/de5/classchdr_1_1queue.html":[4,0,0,8],
 "d7/de5/classchdr_1_1queue_a0687f51a790ea11cde810842abc182cd.html#a0687f51a790ea11cde810842abc182cd":[4,0,0,8,2],
 "d7/de5/classchdr_1_1queue_a20a753362275d34a67d855ce0105fab7.html#a20a753362275d34a67d855ce0105fab7":[4,0,0,8,15],
@@ -192,6 +192,7 @@ var NAVTREEINDEX0 =
 "d8/dd5/fringe_8hpp.html":[5,0,0,1,10],
 "d8/dd5/fringe_8hpp_source.html":[5,0,0,1,10],
 "d9/d32/structchdr_1_1solvers_1_1gbest__first.html":[3,1,1,1,0],
+"d9/d70/group__Memory-Bounded.html":[3,1,1,3],
 "d9/d71/group__Multi-Target.html":[3,1,0],
 "d9/d96/chdr_8hpp.html":[5,0,1],
 "d9/d96/chdr_8hpp_a1015152449bc7ba844e1bb31d8505301.html#a1015152449bc7ba844e1bb31d8505301":[5,0,1,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX0 =
 "da/deb/managed__node_8hpp.html":[5,0,0,1,0,1],
 "da/deb/managed__node_8hpp_source.html":[5,0,0,1,0,1],
 "db/d4a/classchdr_1_1mazes_1_1id__node.html":[4,0,0,0,3],
-"db/d4a/classchdr_1_1mazes_1_1id__node_a7244d075866ff55bc57ce4a06e524576.html#a7244d075866ff55bc57ce4a06e524576":[4,0,0,0,3,2],
-"db/d4a/classchdr_1_1mazes_1_1id__node_a81af35dcfa30f8ceaffb56ca11327648.html#a81af35dcfa30f8ceaffb56ca11327648":[4,0,0,0,3,1]
+"db/d4a/classchdr_1_1mazes_1_1id__node_a7244d075866ff55bc57ce4a06e524576.html#a7244d075866ff55bc57ce4a06e524576":[4,0,0,0,3,2]
 };
