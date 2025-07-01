@@ -238,6 +238,11 @@ namespace chdr::solvers {
 
             std::unordered_map<index_t, node> all_nodes;
 
+            // Define heuristic for quantifying memory usage:
+            const auto memory_usage = [&all_nodes, &_open]() ALWAYS_INLINE {
+                return all_nodes.size() + _open.size();
+            };
+
 #if CHDR_DIAGNOSTICS == 1
             size_t peak_memory_usage = 0U;
 #endif //CHDR_DIAGNOSTICS == 1
@@ -290,19 +295,19 @@ namespace chdr::solvers {
                                     complete = false;
 
                                     // Attempt to clear space for a new node:
-                                    if (!_open.empty() && all_nodes.size() >= _params.memory_limit) {
+                                    if (!_open.empty() && memory_usage() >= _params.memory_limit - 1U) {
                                         remove_worst(_open, all_nodes, _params);
                                     }
 
                                     // Only instantiate if there is room in memory. Otherwise, break.
-                                    if (all_nodes.size() < _params.memory_limit) {
+                                    if (memory_usage() < _params.memory_limit) {
                                         const auto g = curr.m_gScore + n.distance;
                                         const auto h = _params.h(n.coord, _params.end) * _params.weight;
 
                                         _open.emplace(all_nodes[n.index] = node(n.index, g, g + h, curr.m_index));
 
 #if CHDR_DIAGNOSTICS == 1
-                                        peak_memory_usage = utils::max(peak_memory_usage, all_nodes.size());
+                                        peak_memory_usage = utils::max(peak_memory_usage, memory_usage());
 #endif //CHDR_DIAGNOSTICS == 1
                                     }
                                     else {
