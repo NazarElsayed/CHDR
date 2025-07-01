@@ -13,6 +13,7 @@
  * @file smastar.hpp
  */
 
+#include <limits>
 #include <set>
 #include <type_traits>
 #include <vector>
@@ -78,10 +79,10 @@ namespace chdr::solvers {
             [[nodiscard]] HOT constexpr node() noexcept {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
             [[nodiscard]] HOT constexpr node(index_t _index, scalar_t _gScore, scalar_t _fScore, index_t _parent = null_v) noexcept :
-                m_index     (_index ),
-                m_gScore    (_gScore),
-                m_fScore    (_fScore),
-                m_parent    (_parent) {}
+                m_index (_index ),
+                m_gScore(_gScore),
+                m_fScore(_fScore),
+                m_parent(_parent) {}
 
             ~node() = default;
 
@@ -236,7 +237,7 @@ namespace chdr::solvers {
                 }
                 else { // SEARCH FOR SOLUTION...
 
-                    bool has_neighbours = false;
+                    bool complete = true;
 
                     if (curr.m_fScore != inf_v) {
 
@@ -254,12 +255,12 @@ namespace chdr::solvers {
                                             _open.erase(search->second);
                                             _open.emplace(all_nodes[n.index] = node(n.index, g, g + h, curr.m_index));
 
-                                            has_neighbours = true;
+                                            complete = false;
                                         }
                                     }
                                 }
                                 else {
-                                    has_neighbours = true;
+                                    complete = false;
 
                                     // Attempt to clear space for a new node:
                                     if (!_open.empty() && all_nodes.size() >= _params.memory_limit) {
@@ -285,7 +286,7 @@ namespace chdr::solvers {
                         }
                     }
 
-                    if (UNLIKELY(!has_neighbours)) { // DEAD END...
+                    if (UNLIKELY(complete)) { // DEAD END...
                         curr.m_fScore = inf_v;
                         backup_f_values(curr, all_nodes, _params);
                         all_nodes[curr.m_index] = curr;
