@@ -34,6 +34,7 @@ var hierarchy =
     [ "idbest_first< params_t >", "dc/dd5/structchdr_1_1solvers_1_1idbest__first.html", null ],
     [ "iddfs< params_t >", "d8/d5a/structchdr_1_1solvers_1_1iddfs.html", null ],
     [ "jps< params_t >", "d8/d87/structchdr_1_1solvers_1_1jps.html", null ],
+    [ "mgstar< params_t >", "d5/d1b/structchdr_1_1solvers_1_1mgstar.html", null ],
     [ "monotonic_pool< StackSize, MaxStackAllocationSize, MaxHeapBlockSize >", "df/db2/classchdr_1_1monotonic__pool.html", null ],
     [ "queue< T >", "d7/de5/classchdr_1_1queue.html", null ],
     [ "smastar< params_t >", "dc/dca/structchdr_1_1solvers_1_1smastar.html", null ],

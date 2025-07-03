@@ -216,6 +216,7 @@ namespace test {
             else if (_solver == "gdfs"         ) { result = invoke<chdr::solvers::         gdfs, params>(args); }
             else if (_solver == "gjps"         ) { result = invoke<chdr::solvers::         gjps, params>(args); }
             else if (_solver == "gstar"        ) { result = invoke<chdr::solvers::        gstar, params>(args); }
+            else if (_solver == "mgstar"       ) { result = invoke<chdr::solvers::       mgstar, params>(args); }
             else if (_solver == "idastar"      ) { result = invoke<chdr::solvers::      idastar, params>(args); }
             else if (_solver == "idbest_first" ) { result = invoke<chdr::solvers:: idbest_first, params>(args); }
             else if (_solver == "iddfs"        ) { result = invoke<chdr::solvers::        iddfs, params>(args); }

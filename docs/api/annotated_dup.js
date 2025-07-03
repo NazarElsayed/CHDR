@@ -30,6 +30,7 @@ var annotated_dup =
         [ "iddfs", "d8/d5a/structchdr_1_1solvers_1_1iddfs.html", null ],
         [ "jps", "d8/d87/structchdr_1_1solvers_1_1jps.html", null ],
         [ "managed_node", "df/d64/structchdr_1_1solvers_1_1managed__node.html", "df/d64/structchdr_1_1solvers_1_1managed__node" ],
+        [ "mgstar", "d5/d1b/structchdr_1_1solvers_1_1mgstar.html", null ],
         [ "mutable_node", "da/d36/structchdr_1_1solvers_1_1mutable__node.html", "da/d36/structchdr_1_1solvers_1_1mutable__node" ],
         [ "smastar", "dc/dca/structchdr_1_1solvers_1_1smastar.html", null ],
         [ "solver", "d3/df4/classchdr_1_1solvers_1_1solver.html", "d3/df4/classchdr_1_1solvers_1_1solver" ],
