@@ -109,7 +109,15 @@ namespace chdr::solvers {
               _open.emplace_nosort(s, static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
             _closed.emplace(s);
 
-            size_t allocated(1U);
+            size_t dynamic_allocations(0U);
+            size_t  closed_allocations(1U);
+
+            // Define heuristic for quantifying memory usage:
+            const auto memory_usage = [&_open, &closed_allocations, &dynamic_allocations]() ALWAYS_INLINE {
+                return _open.size() + closed_allocations + dynamic_allocations;
+            };
+
+            scalar_t min_g = std::numeric_limits<scalar_t>::max();
 
             std::vector<node*> expunct{};
 
@@ -122,7 +130,6 @@ namespace chdr::solvers {
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
                     node* RESTRICT curr_ptr(nullptr);
-                    allocated--;
 
                     for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
 
@@ -131,21 +138,20 @@ namespace chdr::solvers {
                             // Check if node is not already visited:
                             if (!_closed.contains(n.index)) {
 
-                                if (allocated >= _params.memory_limit && !expunct.empty()) {
-                                    allocated--;
+                                bool full = memory_usage() >= _params.memory_limit;
 
-                                    _params.homogeneous_pmr->deallocate(std::move(expunct.back()), sizeof(node), alignof(node));
+                                if (full && !expunct.empty()) {
+                                    full = false;
+
+                                    _params.homogeneous_pmr->deallocate(std::move(expunct.back()), sizeof(node), alignof(node)); dynamic_allocations--;
                                     expunct.pop_back();
                                 }
 
-                                if (allocated < _params.memory_limit) {
-                                    allocated++;
-
+                                if (!full) {
                                     solver_t::solver_utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());
 
                                     if (curr_ptr == nullptr) {
-                                        curr_ptr = new (_params.homogeneous_pmr->allocate(sizeof(node), alignof(node))) node(std::move(curr));
-                                        allocated++;
+                                        curr_ptr = new (_params.homogeneous_pmr->allocate(sizeof(node), alignof(node))) node(std::move(curr)); dynamic_allocations++;
                                     }
 
                                     if constexpr (params_t::lazy_sorting::value) {
@@ -160,8 +166,9 @@ namespace chdr::solvers {
                     }
 
                     if (curr_ptr == nullptr) {
-                        auto* p = curr.expunge_one();
-                        if (p != nullptr) {
+
+                        if (auto* p = curr.expunge_one(); p != nullptr) {
+                            _closed.erase(curr.m_index);
                             expunct.push_back(static_cast<node*>(p));
                         }
                     }
