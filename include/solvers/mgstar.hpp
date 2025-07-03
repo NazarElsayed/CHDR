@@ -109,6 +109,10 @@ namespace chdr::solvers {
               _open.emplace_nosort(s, static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
             _closed.emplace(s);
 
+            size_t allocated(1U);
+
+            std::vector<node*> expunct{};
+
             // Main loop:
             while (LIKELY(!_open.empty())) {
 
@@ -118,6 +122,7 @@ namespace chdr::solvers {
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
                     node* RESTRICT curr_ptr(nullptr);
+                    allocated--;
 
                     for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
 
@@ -125,24 +130,40 @@ namespace chdr::solvers {
 
                             // Check if node is not already visited:
                             if (!_closed.contains(n.index)) {
-                                solver_t::solver_utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());
 
-                                if (curr_ptr == nullptr) {
-                                    curr_ptr = new (_params.homogeneous_pmr->allocate(sizeof(node), alignof(node))) node(std::move(curr));
+                                if (allocated >= _params.memory_limit && !expunct.empty()) {
+                                    allocated--;
+
+                                    _params.homogeneous_pmr->deallocate(std::move(expunct.back()), sizeof(node), alignof(node));
+                                    expunct.pop_back();
                                 }
 
-                                if constexpr (params_t::lazy_sorting::value) {
-                                    _open.emplace_nosort(n.index, curr_ptr->m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight, curr_ptr);
-                                }
-                                else {
-                                    _open.emplace(n.index, curr_ptr->m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight, curr_ptr);
+                                if (allocated < _params.memory_limit) {
+                                    allocated++;
+
+                                    solver_t::solver_utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());
+
+                                    if (curr_ptr == nullptr) {
+                                        curr_ptr = new (_params.homogeneous_pmr->allocate(sizeof(node), alignof(node))) node(std::move(curr));
+                                        allocated++;
+                                    }
+
+                                    if constexpr (params_t::lazy_sorting::value) {
+                                        _open.emplace_nosort(n.index, curr_ptr->m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight, curr_ptr);
+                                    }
+                                    else {
+                                        _open.emplace(n.index, curr_ptr->m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight, curr_ptr);
+                                    }
                                 }
                             }
                         }
                     }
 
                     if (curr_ptr == nullptr) {
-                        curr.expunge(_params.homogeneous_pmr);
+                        auto* p = curr.expunge_one();
+                        if (p != nullptr) {
+                            expunct.push_back(static_cast<node*>(p));
+                        }
                     }
                 }
                 else { // SOLUTION REACHED...

@@ -47,7 +47,7 @@ namespace chdr::solvers {
 
     private:
 
-        using node_t = std::conditional_t<std::is_void_v<derived>, managed_node<index_t>, derived>;
+        using  node_t = std::conditional_t<std::is_void_v<derived>, managed_node<index_t>, derived>;
         using count_t = uint8_t;
 
     public:
@@ -202,6 +202,27 @@ namespace chdr::solvers {
                     break;
                 }
             }
+        }
+
+        HOT managed_node* expunge_one() {
+
+            managed_node* result{nullptr};
+
+            if (m_parent != nullptr) {
+
+                { // Decrement:
+                    assert(m_parent != nullptr && "Dereferencing of nullptr.");
+                    assert(m_parent->m_successors != static_cast<decltype(m_successors)>(0U) && "Underflow detected!");
+
+                    --m_parent->m_successors;
+                }
+
+                if (m_parent->count() == 0U) {
+                    result = m_parent;
+                }
+            }
+
+            return result;
         }
 
         /**
