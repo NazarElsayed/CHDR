@@ -117,8 +117,6 @@ namespace chdr::solvers {
                 return _open.size() + closed_allocations + dynamic_allocations;
             };
 
-            scalar_t min_g = std::numeric_limits<scalar_t>::max();
-
             std::vector<node*> expunct{};
 
             // Main loop:
