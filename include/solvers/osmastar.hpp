@@ -317,8 +317,11 @@ namespace chdr::solvers {
             std::cout << "Peak Memory Usage: " << peak_memory_usage << "\n";
 #endif //CHDR_DIAGNOSTICS == 1
 
-            auto end = all_nodes.find(e);
-            return end != all_nodes.end() ? rbacktrack(end->second, all_nodes, _params) : std::vector<coord_t>{};
+            auto end = all_nodes.find(static_cast<index_t>(e));
+
+            return end != all_nodes.end() ?
+                rbacktrack(end->second, all_nodes, _params) :
+                std::vector<coord_t>{};
         }
 
         [[maybe_unused, nodiscard]] static auto invoke(const params_t& _params) {
