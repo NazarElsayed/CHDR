@@ -225,7 +225,7 @@ namespace chdr::solvers {
          * @see m_successors
          * @see count()
          */
-        HOT auto* expunge_one() {
+        HOT auto* forget_one() {
 
             managed_node* result { nullptr };
 

@@ -117,7 +117,7 @@ namespace chdr::solvers {
                 return _open.size() + closed_allocations + dynamic_allocations;
             };
 
-            std::vector<node*> expunct;
+            stack<node*> expunct(_params.homogeneous_pmr);
 
             // Main loop:
             while (LIKELY(!_open.empty())) {
@@ -141,8 +141,8 @@ namespace chdr::solvers {
                                 if (full && !expunct.empty()) {
                                     full = false;
 
-                                    _params.homogeneous_pmr->deallocate(std::move(expunct.back()), sizeof(node), alignof(node)); dynamic_allocations--;
-                                    expunct.pop_back();
+                                    _params.homogeneous_pmr->deallocate(std::move(expunct.top()), sizeof(node), alignof(node)); dynamic_allocations--;
+                                    expunct.pop();
 
                                     // If still full, merge back extraneous leaves with their parents.
                                 }
@@ -167,8 +167,8 @@ namespace chdr::solvers {
 
                     if (curr_ptr == nullptr) {
 
-                        if (auto* p = curr.expunge_one(); p != nullptr) {
-                            expunct.push_back(static_cast<node*>(p));
+                        if (auto* p = curr.forget_one(); p != nullptr) {
+                            expunct.emplace(static_cast<node*>(p));
                         }
                     }
                 }

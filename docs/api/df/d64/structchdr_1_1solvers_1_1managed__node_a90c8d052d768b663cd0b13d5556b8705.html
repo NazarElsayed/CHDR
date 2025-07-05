@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CHDR: chdr::solvers::managed_node::count</title>
+<title>CHDR: chdr::solvers::managed_node::forget_one</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -77,7 +77,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('df/d64/structchdr_1_1solvers_1_1managed__node_acda8e1a76bed4a71e36efa61a9f3c59e.html','../../'); initResizable(); });
+$(document).ready(function(){initNavTree('df/d64/structchdr_1_1solvers_1_1managed__node_a90c8d052d768b663cd0b13d5556b8705.html','../../'); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -103,8 +103,8 @@ $(document).ready(function(){initNavTree('df/d64/structchdr_1_1solvers_1_1manage
 </div>
 
 <div class="contents">
-<a id="acda8e1a76bed4a71e36efa61a9f3c59e" name="acda8e1a76bed4a71e36efa61a9f3c59e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acda8e1a76bed4a71e36efa61a9f3c59e">&#9670;&#160;</a></span>count()</h2>
+<a id="a90c8d052d768b663cd0b13d5556b8705" name="a90c8d052d768b663cd0b13d5556b8705"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a90c8d052d768b663cd0b13d5556b8705">&#9670;&#160;</a></span>forget_one()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -115,33 +115,37 @@ template&lt;typename index_t , typename derived  = void&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">count_t count </td>
+          <td class="memname">auto * forget_one </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns the current successor count. </p>
-<p>Returns the current successor count, which is updated when the node is expanded or collapsed.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="../../df/d64/structchdr_1_1solvers_1_1managed__node_a347b686b64792776a7fe77145d90f928.html#a347b686b64792776a7fe77145d90f928" title="Recursively releases dead nodes from the parent hierarchy.">expunge</a> </dd>
+<p>Decrements parent's successor count and checks if it can be released. </p>
+<p>This function decrements the successor count of the parent node if one exists. If the parent's successor count reaches zero after decrementing, the parent node is marked for potential release by returning a pointer to it. If there is no parent node, nullptr is returned.</p>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to the parent node if it can be released (has zero successors), nullptr otherwise.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>The actual release/deallocation of the returned node must be handled by the caller. This function only indicates which node is eligible for release.</dd></dl>
+<dl class="section pre"><dt>Precondition</dt><dd>The parent node's successor count must be greater than 0 before decrementing. This is checked via assertion.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="../../df/d64/structchdr_1_1solvers_1_1managed__node_ab41bfb38b8d356173d7acea738bce82e.html#ab41bfb38b8d356173d7acea738bce82e" title="A pointer to the parent node in the hierarchical structure.">m_parent</a> </dd>
 <dd>
-<a class="el" href="../../df/d64/structchdr_1_1solvers_1_1managed__node.html" title="A hierarchical node in a pathfinding context, with a clean-up mechanism.">managed_node</a></dd></dl>
-<dl class="section return"><dt>Returns</dt><dd>The successor count. </dd></dl>
+m_successors </dd>
+<dd>
+<a class="el" href="../../df/d64/structchdr_1_1solvers_1_1managed__node_acda8e1a76bed4a71e36efa61a9f3c59e.html#acda8e1a76bed4a71e36efa61a9f3c59e" title="Returns the current successor count.">count()</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../da/deb/managed__node_8hpp_source.html#l00259">259</a> of file <a class="el" href="../../da/deb/managed__node_8hpp_source.html">managed_node.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../da/deb/managed__node_8hpp_source.html#l00228">228</a> of file <a class="el" href="../../da/deb/managed__node_8hpp_source.html">managed_node.hpp</a>.</p>
 <div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
+  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../df/d64/structchdr_1_1solvers_1_1managed__node_acda8e1a76bed4a71e36efa61a9f3c59e_acda8e1a76bed4a71e36efa61a9f3c59e_icgraph.svg" width="194" height="80"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../df/d64/structchdr_1_1solvers_1_1managed__node_a90c8d052d768b663cd0b13d5556b8705_a90c8d052d768b663cd0b13d5556b8705_cgraph.svg" width="194" height="34"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
