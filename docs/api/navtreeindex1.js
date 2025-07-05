@@ -1,5 +1,8 @@
 var NAVTREEINDEX1 =
 {
+"da/dc4/md_docs_2manual_2getting__started.html#example-cmake":[1,0,0],
+"da/dc4/md_docs_2manual_2getting__started.html#installation":[1,0],
+"da/dc4/md_docs_2manual_2getting__started.html#other-languages":[1,2,0],
 "da/deb/managed__node_8hpp.html":[5,0,0,1,0,1],
 "da/deb/managed__node_8hpp_source.html":[5,0,0,1,0,1],
 "db/d4a/classchdr_1_1mazes_1_1id__node.html":[4,0,0,0,3],
@@ -40,10 +43,10 @@ var NAVTREEINDEX1 =
 "dc/d8a/grid_8hpp_source.html":[5,0,0,0,2],
 "dc/da9/astar_8hpp.html":[5,0,0,1,1],
 "dc/da9/astar_8hpp_source.html":[5,0,0,1,1],
-"dc/dca/structchdr_1_1solvers_1_1smastar.html":[3,1,1,3,1],
+"dc/dca/structchdr_1_1solvers_1_1smastar.html":[3,1,1,3,2],
 "dc/dd5/structchdr_1_1solvers_1_1idbest__first.html":[3,1,1,2,4],
-"dd/d57/smastar_8hpp.html":[5,0,0,1,21],
-"dd/d57/smastar_8hpp_source.html":[5,0,0,1,21],
+"dd/d57/smastar_8hpp.html":[5,0,0,1,22],
+"dd/d57/smastar_8hpp_source.html":[5,0,0,1,22],
 "dd/d95/eiddfs_8hpp.html":[5,0,0,1,8],
 "dd/d95/eiddfs_8hpp_source.html":[5,0,0,1,8],
 "dd/de3/classchdr_1_1mazes_1_1grid.html":[4,0,0,0,1],

@@ -22,7 +22,7 @@
  */
 
 /** @brief Full version string of the CHDR library. */
-#define CHDR_VERSION          "0.1.0-dev+8506dc87"
+#define CHDR_VERSION          "0.1.0-dev+39156d34"
 
 /** @brief CHDR major version number. */
 #define CHDR_VERSION_MAJOR     0
@@ -37,7 +37,7 @@
 #define CHDR_VERSION_TWEAK    "dev"
 
 /** @brief CHDR version metadata string. */
-#define CHDR_VERSION_METADATA "8506dc87"
+#define CHDR_VERSION_METADATA "39156d34"
 
 /** @brief Flag indicating whether or not diagnostics should be output by the library (0 = off, 1 = on). */
 #ifndef CHDR_DIAGNOSTICS
@@ -76,6 +76,7 @@
 #include "include/solvers/iddfs.hpp"
 #include "include/solvers/jps.hpp"
 #include "include/solvers/mgstar.hpp"
+#include "include/solvers/osmastar.hpp"
 #include "include/solvers/smastar.hpp"
 #include "include/types/containers/coord.hpp"
 #include "include/types/containers/existence_set.hpp"

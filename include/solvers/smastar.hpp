@@ -40,7 +40,7 @@ namespace chdr::solvers {
 
     /**
      * @struct smastar
-     * @brief SMA* search algorithm.
+     * @brief Simplified Memory-Bounded A* search algorithm.
      * @details SMA* (Russell, S., 1992) is a heuristic-informed graph traversal and pathfinding algorithm for
      *          "single-source, single-target" (SSST) pathfinding problems.
      *          SMA* maintains the number of expanded nodes in memory beneath an arbitrary limit, which it enforces
@@ -349,4 +349,4 @@ namespace chdr::solvers {
 
 } //chdr::solvers
 
-#endif //CHDR_ASTAR_HPP
+#endif //CHDR_SMASTAR_HPP

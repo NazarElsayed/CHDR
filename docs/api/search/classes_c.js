@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['unmanaged_5fnode_0',['unmanaged_node',['../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html',1,'chdr::solvers']]],
-  ['utils_1',['utils',['../d2/dcb/structchdr_1_1utils.html',1,'chdr']]]
+  ['smastar_0',['smastar',['../dc/dca/structchdr_1_1solvers_1_1smastar.html',1,'chdr::solvers']]],
+  ['solver_1',['solver',['../d3/df4/classchdr_1_1solvers_1_1solver.html',1,'chdr::solvers']]],
+  ['stack_2',['stack',['../db/dc9/classchdr_1_1stack.html',1,'chdr']]]
 ];

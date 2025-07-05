@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['queue_0',['queue',['../d7/de5/classchdr_1_1queue.html',1,'chdr']]]
+  ['osmastar_0',['osmastar',['../d6/db7/structchdr_1_1solvers_1_1osmastar.html',1,'chdr::solvers']]]
 ];
