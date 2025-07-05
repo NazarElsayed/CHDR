@@ -1,5 +1,7 @@
 <map id="count" name="count">
-<area shape="rect" id="Node000001" title="Returns the current successor count." alt="" coords="116,5,164,28"/>
-<area shape="rect" id="Node000002" href="$df/d64/structchdr_1_1solvers_1_1managed__node_a347b686b64792776a7fe77145d90f928.html#a347b686b64792776a7fe77145d90f928" title="Recursively releases dead nodes from the parent hierarchy." alt="" coords="5,5,68,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,19,68,19,68,14,102,14"/>
+<area shape="rect" id="Node000001" title="Returns the current successor count." alt="" coords="148,29,201,52"/>
+<area shape="rect" id="Node000002" href="$df/d64/structchdr_1_1solvers_1_1managed__node_a347b686b64792776a7fe77145d90f928.html#a347b686b64792776a7fe77145d90f928" title="Recursively releases dead nodes from the parent hierarchy." alt="" coords="18,5,87,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,35,87,26,88,21,135,30"/>
+<area shape="rect" id="Node000003" href="$df/d64/structchdr_1_1solvers_1_1managed__node_af042ef493f0f7f37852f2ac61c6292f7.html#af042ef493f0f7f37852f2ac61c6292f7" title="Decrements parent&#39;s successor count and checks if it can be released." alt="" coords="5,52,100,75"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="135,51,101,57,100,52,134,45"/>
 </map>

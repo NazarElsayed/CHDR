@@ -204,9 +204,30 @@ namespace chdr::solvers {
             }
         }
 
-        HOT managed_node* expunge_one() {
+        /**
+         * @brief Decrements parent's successor count and checks if it can be released.
+         *
+         * @details This function decrements the successor count of the parent node if one exists.
+         *          If the parent's successor count reaches zero after decrementing, the parent
+         *          node is marked for potential release by returning a pointer to it.
+         *          If there is no parent node, nullptr is returned.
+         *
+         * @return A pointer to the parent node if it can be released (has zero successors),
+         *         nullptr otherwise.
+         *
+         * @warning The actual release/deallocation of the returned node must be handled by
+         *          the caller. This function only indicates which node is eligible for release.
+         *
+         * @pre The parent node's successor count must be greater than 0 before decrementing.
+         *      This is checked via assertion.
+         *
+         * @see m_parent
+         * @see m_successors
+         * @see count()
+         */
+        HOT auto* expunge_one() {
 
-            managed_node* result{nullptr};
+            managed_node* result { nullptr };
 
             if (m_parent != nullptr) {
 
