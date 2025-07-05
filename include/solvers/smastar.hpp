@@ -335,9 +335,9 @@ namespace chdr::solvers {
 
         [[maybe_unused, nodiscard]] static auto invoke(const params_t& _params) {
 
-            std::pmr::multiset<node> _open(_params.homogeneous_pmr);
+            std::pmr::multiset<node> open(_params.homogeneous_pmr);
 
-            return solve_internal(_open, _params);
+            return solve_internal(open, _params);
         }
     };
 

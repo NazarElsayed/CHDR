@@ -397,9 +397,9 @@ $(document).ready(function(){initNavTree('dd/d57/smastar_8hpp_source.html','../.
 <div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span> </div>
 <div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>        [[maybe_unused, nodiscard]] <span class="keyword">static</span> <span class="keyword">auto</span> invoke(<span class="keyword">const</span> params_t&amp; _params) {</div>
 <div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span> </div>
-<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>            std::pmr::multiset&lt;node&gt; _open(_params.homogeneous_pmr);</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>            std::pmr::multiset&lt;node&gt; open(_params.homogeneous_pmr);</div>
 <div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span> </div>
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>            <span class="keywordflow">return</span> solve_internal(_open, _params);</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>            <span class="keywordflow">return</span> solve_internal(open, _params);</div>
 <div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>        }</div>
 <div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>    };</div>
 </div>

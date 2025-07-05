@@ -149,8 +149,8 @@ namespace chdr::solvers {
             }
         }
 
-        constexpr managed_node           (const managed_node&) = delete;
-        constexpr managed_node& operator=(const managed_node&) = delete;
+        constexpr managed_node           (const managed_node&) = default;
+        constexpr managed_node& operator=(const managed_node&) = default;
 
         [[nodiscard]] HOT constexpr managed_node(managed_node&&) noexcept = default;
 

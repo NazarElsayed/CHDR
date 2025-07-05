@@ -83,8 +83,8 @@ namespace chdr::solvers {
 
             ~node() = default;
 
-            node           (const node&) = delete;
-            node& operator=(const node&) = delete;
+            node           (const node&) = default;
+            node& operator=(const node&) = default;
 
             [[nodiscard]] HOT constexpr node(node&& _other) noexcept = default;
 
@@ -119,6 +119,8 @@ namespace chdr::solvers {
 
             stack<node*> expunct(_params.homogeneous_pmr);
 
+            std::optional<node> final;
+
             // Main loop:
             while (LIKELY(!_open.empty())) {
 
@@ -129,36 +131,59 @@ namespace chdr::solvers {
 
                     node* RESTRICT curr_ptr(nullptr);
 
-                    for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
+                    if (!final.has_value() || curr.m_gScore < final->m_gScore) {
 
-                        if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
+                        for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
 
-                            // Check if node is not already visited:
-                            if (!_closed.contains(n.index)) {
+                            if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
 
-                                bool full = memory_usage() >= _params.memory_limit;
+                                // Check if node is not already visited:
+                                if (!_closed.contains(n.index)) {
 
-                                if (full && !expunct.empty()) {
-                                    full = false;
+                                    bool full = memory_usage() >= _params.memory_limit;
+                                    if (full) {
 
-                                    _params.homogeneous_pmr->deallocate(std::move(expunct.top()), sizeof(node), alignof(node)); dynamic_allocations--;
-                                    expunct.pop();
+                                        if (!expunct.empty()) {
+                                            full = false;
 
-                                    // If still full, merge back extraneous leaves with their parents.
-                                }
+                                            _params.homogeneous_pmr->deallocate(std::move(expunct.top()), sizeof(node), alignof(node)); dynamic_allocations--;
+                                            expunct.pop();
+                                        }
+                                        else if (!_open.empty()) {
+                                            full = false;
 
-                                if (!full) {
-                                    solver_t::solver_utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());
+                                            auto worst_itr = _open.begin(); // node with highest f-cost in _open.
+                                            for (auto it = _open.begin(); it != _open.end(); ++it) {
+                                                if (it->m_fScore > worst_itr->m_fScore) {
+                                                    worst_itr = it;
+                                                }
+                                            }
 
-                                    if (curr_ptr == nullptr) {
-                                        curr_ptr = new (_params.homogeneous_pmr->allocate(sizeof(node), alignof(node))) node(std::move(curr)); dynamic_allocations++;
+                                            _closed.erase(worst_itr->m_index);
+                                              _open.erase(worst_itr);
+                                        }
                                     }
 
-                                    if constexpr (params_t::lazy_sorting::value) {
-                                        _open.emplace_nosort(n.index, curr_ptr->m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight, curr_ptr);
+                                    if (!full) {
+                                        solver_t::solver_utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());
+
+                                        if (curr_ptr == nullptr) {
+                                            curr_ptr = new (_params.homogeneous_pmr->allocate(sizeof(node), alignof(node))) node(std::move(curr)); dynamic_allocations++;
+                                        }
+
+                                        if constexpr (params_t::lazy_sorting::value) {
+                                            _open.emplace_nosort(n.index, curr_ptr->m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight, curr_ptr);
+                                        }
+                                        else {
+                                            _open.emplace(n.index, curr_ptr->m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight, curr_ptr);
+                                        }
                                     }
                                     else {
-                                        _open.emplace(n.index, curr_ptr->m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight, curr_ptr);
+                                        if (auto p = curr.m_parent; p != nullptr) {
+                                            _closed.erase(curr.m_index);
+                                            _open.emplace(*static_cast<node*>(p));
+                                        }
+                                        break;
                                     }
                                 }
                             }
@@ -174,19 +199,23 @@ namespace chdr::solvers {
                 }
                 else { // SOLUTION REACHED...
 
-                    if constexpr (std::is_same_v<std::decay_t<decltype(_open)>, heap<node>>) {
-                        _open.wipe();
+                    if (!final.has_value() || curr.m_gScore < final->m_gScore) {
+                        final.emplace(std::move(curr));
                     }
-                    else {
-                        _open = open_set_t{};
-                    }
-                    _closed = closed_set_t{};
-
-                    return solver_t::solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);
                 }
             }
 
-            return std::vector<coord_t>{};
+            if constexpr (std::is_same_v<std::decay_t<decltype(_open)>, heap<node>>) {
+                _open.wipe();
+            }
+            else {
+                _open = open_set_t{};
+            }
+            _closed = closed_set_t{};
+
+            return final.has_value() ?
+                solver_t::solver_utils::rbacktrack(final.value(), _params.size, final.value().m_gScore) :
+                std::vector<coord_t>{};
         }
 
         [[maybe_unused, nodiscard]] static auto invoke(const params_t& _params) {

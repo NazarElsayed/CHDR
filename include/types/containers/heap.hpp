@@ -860,7 +860,7 @@ namespace chdr {
          */
         constexpr iterator_t erase(iterator_t _position) {
 
-            const auto distance_from_start = std::distance(c.begin(), _position);
+            const auto distance_from_start = static_cast<unsigned>(std::distance(c.begin(), _position));
             const auto size_before = size();
 
             if (distance_from_start < size() + 1U) { // Offset for super element.
