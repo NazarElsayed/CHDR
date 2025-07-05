@@ -259,15 +259,7 @@ namespace chdr::solvers {
 
                 auto curr = _open.extract(_open.begin()).value();
 
-                if (curr.m_index == e) { // SOLUTION FOUND...
-
-#if CHDR_DIAGNOSTICS == 1
-                    std::cout << "Peak Memory Usage: " << peak_memory_usage << "\n";
-#endif //CHDR_DIAGNOSTICS == 1
-
-                    return rbacktrack(curr, all_nodes, _params);
-                }
-                else { // SEARCH FOR SOLUTION...
+                if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
                     bool complete = true;
 
@@ -323,6 +315,14 @@ namespace chdr::solvers {
                         backup_f_values(curr, all_nodes, _params);
                         all_nodes[curr.m_index] = curr;
                     }
+                }
+                else { // SOLUTION FOUND...
+
+#if CHDR_DIAGNOSTICS == 1
+                    std::cout << "Peak Memory Usage: " << peak_memory_usage << "\n";
+#endif //CHDR_DIAGNOSTICS == 1
+
+                    return rbacktrack(curr, all_nodes, _params);
                 }
             }
 

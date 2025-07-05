@@ -251,10 +251,7 @@ namespace chdr::solvers {
 
                 auto curr = _open.extract(_open.begin()).value();
 
-                if (curr.m_index == e) { // SOLUTION FOUND...
-                    min_g = utils::min(curr.m_gScore, min_g);
-                }
-                else { // SEARCH FOR SOLUTION...
+                if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
                     bool complete = true;
 
@@ -310,6 +307,9 @@ namespace chdr::solvers {
                         backup_f_values(curr, all_nodes, _params);
                         all_nodes[curr.m_index] = curr;
                     }
+                }
+                else { // SOLUTION FOUND...
+                    min_g = utils::min(curr.m_gScore, min_g);
                 }
             }
 
