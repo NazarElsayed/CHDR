@@ -96,7 +96,7 @@ namespace chdr::solvers {
 
             [[nodiscard]] HOT friend constexpr bool operator < (const node& _a, const node& _b) noexcept {
                 return _a.m_fScore == _b.m_fScore ?
-                       _a.m_gScore >  _b.m_gScore :
+                       _a.m_gScore <  _b.m_gScore :
                        _a.m_fScore <  _b.m_fScore;
             }
         };
@@ -130,6 +130,10 @@ namespace chdr::solvers {
             stack<node*> expunct(_params.homogeneous_pmr);
 
             std::optional<node> best_solution;
+
+#if CHDR_DIAGNOSTICS == 1
+            size_t peak_memory_usage = 0U;
+#endif //CHDR_DIAGNOSTICS == 1
 
             // Main loop:
             while (LIKELY(!_open.empty())) {
@@ -167,11 +171,6 @@ namespace chdr::solvers {
                                             _closed.erase(worst_node->m_index);
                                               _open.erase(worst_node);
                                         }
-                                        else {
-                                            // Node cannot fit in memory. Backup losslessly...
-                                            lossless_backup(curr.m_parent, _closed);
-                                            break;
-                                        }
                                     }
 
                                     if (!full) {
@@ -182,6 +181,15 @@ namespace chdr::solvers {
                                         }
 
                                         _open.emplace(n.index, curr_ptr->m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight, curr_ptr);
+
+#if CHDR_DIAGNOSTICS == 1
+                                        peak_memory_usage = utils::max(peak_memory_usage, memory_usage());
+#endif //CHDR_DIAGNOSTICS == 1
+                                    }
+                                    else {
+                                        // Memory saturated. Backup losslessly...
+                                        lossless_backup(curr.m_parent, _closed);
+                                        break;
                                     }
                                 }
                             }
@@ -200,7 +208,14 @@ namespace chdr::solvers {
                     if (!best_solution.has_value() || curr.m_gScore < best_solution->m_gScore) {
                         best_solution.emplace(std::move(curr));
 
-                        _open.emplace(s, static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
+                        bool full = memory_usage() >= _params.memory_limit;
+                        if (full && (full = !_open.empty())) {
+                            _open.clear();
+                        }
+
+                        if (!full) {
+                            _open.emplace(s, static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
+                        }
                     }
                 }
             }
@@ -212,6 +227,10 @@ namespace chdr::solvers {
                 _open = open_set_t{};
             }
             _closed = closed_set_t{};
+
+#if CHDR_DIAGNOSTICS == 1
+            std::cout << "Peak Memory Usage: " << peak_memory_usage << "\n";
+#endif //CHDR_DIAGNOSTICS == 1
 
             return best_solution.has_value() ?
                 solver_t::solver_utils::rbacktrack(best_solution.value(), _params.size, best_solution.value().m_gScore) :
