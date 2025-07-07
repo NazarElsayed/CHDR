@@ -615,7 +615,6 @@ namespace chdr {
             bool result = !empty();
             if (result) {
                 const auto& i = index_of(_item);
-                assert(i < c.size() && "(Out of Bounds) Item does not exist in Heap.");
                 result = i < c.size() && _item == c[i];
             }
 

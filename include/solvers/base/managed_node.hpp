@@ -257,6 +257,19 @@ namespace chdr::solvers {
          * @returns The successor count.
          */
         [[nodiscard]] HOT constexpr count_t count() const noexcept { return m_successors; }
+
+        /**
+         * @brief Sets the current successor count.
+         *
+         * @details Manually changes the current successor count.
+         *
+         * @see expunge
+         * @see managed_node
+         *
+         * @warning Performing manual reference management can break the node and lead to memory leaks.
+         *          Only use this function if you know what you are doing!
+         */
+        HOT constexpr void count(count_t _count) noexcept { m_successors = _count; }
     };
 
 } //chdr::solvers

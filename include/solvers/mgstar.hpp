@@ -14,6 +14,7 @@
  */
 
 #include <cstddef>
+#include <set>
 
 #include "../solvers/base/managed_node.hpp"
 #include "../types/containers/existence_set.hpp"
@@ -96,9 +97,18 @@ namespace chdr::solvers {
             [[nodiscard]] HOT friend constexpr bool operator < (const node& _a, const node& _b) noexcept {
                 return _a.m_fScore == _b.m_fScore ?
                        _a.m_gScore >  _b.m_gScore :
-                       _a.m_fScore >  _b.m_fScore;
+                       _a.m_fScore <  _b.m_fScore;
             }
         };
+
+        template <typename closed_set_t>
+        HOT static void lossless_backup(const managed_node<index_t, node>* _parent, closed_set_t& _closed) {
+            auto* p = _parent;
+            while (p != nullptr) {
+                _closed.erase(p->m_index);
+                p = p->m_parent;
+            }
+        }
 
         template <typename open_set_t, typename closed_set_t>
         [[maybe_unused, nodiscard]] HOT static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, size_t _capacity, const params_t& _params) {
@@ -106,7 +116,7 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
-              _open.emplace_nosort(s, static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
+              _open.emplace(s, static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
             _closed.emplace(s);
 
             size_t dynamic_allocations(0U);
@@ -119,19 +129,18 @@ namespace chdr::solvers {
 
             stack<node*> expunct(_params.homogeneous_pmr);
 
-            std::optional<node> final;
+            std::optional<node> best_solution;
 
             // Main loop:
             while (LIKELY(!_open.empty())) {
 
-                auto curr(std::move(_open.top()));
-                _open.pop();
+                auto curr(_open.extract(_open.begin()).value());
 
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
                     node* RESTRICT curr_ptr(nullptr);
 
-                    if (!final.has_value() || curr.m_gScore < final->m_gScore) {
+                    if (!best_solution.has_value() || curr.m_gScore < best_solution->m_gScore) {
 
                         for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
 
@@ -140,27 +149,28 @@ namespace chdr::solvers {
                                 // Check if node is not already visited:
                                 if (!_closed.contains(n.index)) {
 
+                                    // Attempt to resolve the issue of memory saturation.
                                     bool full = memory_usage() >= _params.memory_limit;
                                     if (full) {
 
-                                        if (!expunct.empty()) {
+                                        if (!expunct.empty()) { // LOSSLESS:
                                             full = false;
 
                                             _params.homogeneous_pmr->deallocate(std::move(expunct.top()), sizeof(node), alignof(node)); dynamic_allocations--;
                                             expunct.pop();
                                         }
-                                        else if (!_open.empty()) {
+                                        else if (!_open.empty()) { // LOSSY:
                                             full = false;
 
-                                            auto worst_itr = _open.begin(); // node with highest f-cost in _open.
-                                            for (auto it = _open.begin(); it != _open.end(); ++it) {
-                                                if (it->m_fScore > worst_itr->m_fScore) {
-                                                    worst_itr = it;
-                                                }
-                                            }
-
-                                            _closed.erase(worst_itr->m_index);
-                                              _open.erase(worst_itr);
+                                            auto worst_node = std::prev(_open.end());
+                                            lossless_backup(worst_node->m_parent, _closed);
+                                            _closed.erase(worst_node->m_index);
+                                              _open.erase(worst_node);
+                                        }
+                                        else {
+                                            // Node cannot fit in memory. Backup losslessly...
+                                            lossless_backup(curr.m_parent, _closed);
+                                            break;
                                         }
                                     }
 
@@ -171,19 +181,7 @@ namespace chdr::solvers {
                                             curr_ptr = new (_params.homogeneous_pmr->allocate(sizeof(node), alignof(node))) node(std::move(curr)); dynamic_allocations++;
                                         }
 
-                                        if constexpr (params_t::lazy_sorting::value) {
-                                            _open.emplace_nosort(n.index, curr_ptr->m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight, curr_ptr);
-                                        }
-                                        else {
-                                            _open.emplace(n.index, curr_ptr->m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight, curr_ptr);
-                                        }
-                                    }
-                                    else {
-                                        if (auto p = curr.m_parent; p != nullptr) {
-                                            _closed.erase(curr.m_index);
-                                            _open.emplace(*static_cast<node*>(p));
-                                        }
-                                        break;
+                                        _open.emplace(n.index, curr_ptr->m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight, curr_ptr);
                                     }
                                 }
                             }
@@ -199,8 +197,10 @@ namespace chdr::solvers {
                 }
                 else { // SOLUTION REACHED...
 
-                    if (!final.has_value() || curr.m_gScore < final->m_gScore) {
-                        final.emplace(std::move(curr));
+                    if (!best_solution.has_value() || curr.m_gScore < best_solution->m_gScore) {
+                        best_solution.emplace(std::move(curr));
+
+                        _open.emplace(s, static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
                     }
                 }
             }
@@ -213,8 +213,8 @@ namespace chdr::solvers {
             }
             _closed = closed_set_t{};
 
-            return final.has_value() ?
-                solver_t::solver_utils::rbacktrack(final.value(), _params.size, final.value().m_gScore) :
+            return best_solution.has_value() ?
+                solver_t::solver_utils::rbacktrack(best_solution.value(), _params.size, best_solution.value().m_gScore) :
                 std::vector<coord_t>{};
         }
 
@@ -225,11 +225,7 @@ namespace chdr::solvers {
             existence_set closed(_params.monotonic_pmr);
             closed.reserve(capacity);
 
-            heap<node> open(_params.heterogeneous_pmr);
-            try {
-                open.reserve(capacity / 8U);
-            }
-            catch (...) {} // NOLINT(*-empty-catch)
+            std::multiset<node> open;
 
             return solve_internal(open, closed, capacity, _params);
         }

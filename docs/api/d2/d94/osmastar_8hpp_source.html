@@ -321,7 +321,7 @@ $(document).ready(function(){initNavTree('d2/d94/osmastar_8hpp_source.html','../
 <div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span> </div>
 <div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>            <span class="keywordflow">while</span> (!_open.empty()) {</div>
 <div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span> </div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>                <span class="keyword">auto</span> curr = _open.extract(_open.begin()).value();</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>                <span class="keyword">auto</span> curr(_open.extract(_open.begin()).value());</div>
 <div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span> </div>
 <div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>                <span class="keywordflow">if</span> (curr.m_index != e) { <span class="comment">// SEARCH FOR SOLUTION...</span></div>
 <div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span> </div>

@@ -319,7 +319,7 @@ $(document).ready(function(){initNavTree('dd/d57/smastar_8hpp_source.html','../.
 <div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span> </div>
 <div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>            <span class="keywordflow">while</span> (!_open.empty()) {</div>
 <div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span> </div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>                <span class="keyword">auto</span> curr = _open.extract(_open.begin()).value();</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>                <span class="keyword">auto</span> curr(_open.extract(_open.begin()).value());</div>
 <div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span> </div>
 <div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>                <span class="keywordflow">if</span> (curr.m_index != e) { <span class="comment">// SEARCH FOR SOLUTION...</span></div>
 <div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span> </div>

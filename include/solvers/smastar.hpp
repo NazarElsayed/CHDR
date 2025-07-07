@@ -257,7 +257,7 @@ namespace chdr::solvers {
 
             while (!_open.empty()) {
 
-                auto curr = _open.extract(_open.begin()).value();
+                auto curr(_open.extract(_open.begin()).value());
 
                 if (curr.m_index != e) { // SEARCH FOR SOLUTION...
 
