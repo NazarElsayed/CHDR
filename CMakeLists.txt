@@ -119,12 +119,12 @@ message(NOTICE "NOTICE: Building test application:")
 # EXTREME WARNINGS:
 set(WARNINGS_BASE "-Wall -Wextra -Wpedantic -Wformat-security -Wconversion -Wsign-conversion -Wimplicit-fallthrough -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Woverloaded-virtual -Wnull-dereference -Wdouble-promotion -Wvla -Wformat=2 -Wmissing-declarations -Wsuggest-override -Wstrict-overflow=5 -Wuninitialized -Wswitch-enum -Wswitch-default -Wcast-qual -Wwrite-strings -Wpointer-arith -Wfloat-equal -Wtrampolines") # -Wbidi-chars=any") # -Wc++20-extensions
 
-#if (DEFINED SUPER_PEDANTIC)
+if (DEFINED SUPER_PEDANTIC)
     message(WARNING "WARNING: \"SUPER_PEDANTIC\" enabled. Build system may catch warnings as errors.")
     set(WARNINGS "${WARNINGS_BASE} -pedantic -Werror")
-#else ()
+else ()
     set(WARNINGS "${WARNINGS_BASE}")
-#endif ()
+endif ()
 
 # HIGHLIGHTING FOR COMPILER ERRORS:
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")

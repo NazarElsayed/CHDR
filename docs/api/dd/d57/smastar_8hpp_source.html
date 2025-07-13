@@ -187,7 +187,7 @@ $(document).ready(function(){initNavTree('dd/d57/smastar_8hpp_source.html','../.
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span> </div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>            [[nodiscard]] <a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_a1eb14cc432874ddacd1934791dbe12a3.html#a1eb14cc432874ddacd1934791dbe12a3">HOT</a> <span class="keyword">friend</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> operator &lt; (<span class="keyword">const</span> node&amp; _a, <span class="keyword">const</span> node&amp; _b) <span class="keyword">noexcept</span> {</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>                <span class="keywordflow">return</span> _a.m_fScore == _b.m_fScore ?</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>                       _a.m_gScore &gt;  _b.m_gScore :</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>                       _a.m_gScore &lt;  _b.m_gScore :</div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>                       _a.m_fScore &lt;  _b.m_fScore;</div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>            }</div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        };</div>

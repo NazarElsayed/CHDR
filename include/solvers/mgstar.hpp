@@ -102,12 +102,35 @@ namespace chdr::solvers {
         };
 
         template <typename closed_set_t>
-        HOT static void lossless_backup(const managed_node<index_t, node>* _parent, closed_set_t& _closed) {
+        HOT static void bitwise_regression(const managed_node<index_t, node>* _parent, closed_set_t& _closed) {
             auto* p = _parent;
-            while (p != nullptr) {
+            while (p != nullptr && _closed.contains(p->m_index)) {
                 _closed.erase(p->m_index);
                 p = p->m_parent;
             }
+        }
+
+        template <typename open_set_t, typename closed_set_t, typename expunct_set_t>
+        HOT static auto desaturate(open_set_t& _open, closed_set_t& _closed, expunct_set_t& _expunct, size_t& _dynamic_allocations, const params_t& _params) {
+
+            bool result = false;
+            if (!_expunct.empty()) { // LOSSLESS:
+
+                _params.homogeneous_pmr->deallocate(std::move(_expunct.top()), sizeof(node), alignof(node)); _dynamic_allocations--;
+                _expunct.pop();
+            }
+            else if (!_open.empty()) { // LOSSY:
+
+                auto worst_node = std::prev(_open.end());
+                bitwise_regression(worst_node->m_parent, _closed);
+                _closed.erase(worst_node->m_index);
+                  _open.erase(worst_node);
+            }
+            else {
+                result = true;
+            }
+
+            return result;
         }
 
         template <typename open_set_t, typename closed_set_t>
@@ -156,21 +179,7 @@ namespace chdr::solvers {
                                     // Attempt to resolve the issue of memory saturation.
                                     bool full = memory_usage() >= _params.memory_limit;
                                     if (full) {
-
-                                        if (!expunct.empty()) { // LOSSLESS:
-                                            full = false;
-
-                                            _params.homogeneous_pmr->deallocate(std::move(expunct.top()), sizeof(node), alignof(node)); dynamic_allocations--;
-                                            expunct.pop();
-                                        }
-                                        else if (!_open.empty()) { // LOSSY:
-                                            full = false;
-
-                                            auto worst_node = std::prev(_open.end());
-                                            lossless_backup(worst_node->m_parent, _closed);
-                                            _closed.erase(worst_node->m_index);
-                                              _open.erase(worst_node);
-                                        }
+                                        full = desaturate(_open, _closed, expunct, dynamic_allocations, _params);
                                     }
 
                                     if (!full) {
@@ -188,7 +197,7 @@ namespace chdr::solvers {
                                     }
                                     else {
                                         // Memory saturated. Backup losslessly...
-                                        lossless_backup(curr.m_parent, _closed);
+                                        bitwise_regression(curr.m_parent, _closed);
                                         break;
                                     }
                                 }

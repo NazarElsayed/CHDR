@@ -231,14 +231,11 @@ namespace chdr::solvers {
 
             if (m_parent != nullptr) {
 
-                { // Decrement:
-                    assert(m_parent != nullptr && "Dereferencing of nullptr.");
-                    assert(m_parent->m_successors != static_cast<decltype(m_successors)>(0U) && "Underflow detected!");
+                assert(m_parent != nullptr && "Dereferencing of nullptr.");
+                assert(m_parent->m_successors != static_cast<decltype(m_successors)>(0U) && "Underflow detected!");
 
-                    --m_parent->m_successors;
-                }
-
-                if (m_parent->count() == 0U) {
+                // Decrement:
+                if (--m_parent->m_successors == 0U) {
                     result = m_parent;
                 }
             }
