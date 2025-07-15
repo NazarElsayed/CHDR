@@ -111,7 +111,7 @@ namespace chdr::solvers {
         }
 
         template <typename open_set_t, typename closed_set_t, typename expunct_set_t>
-        HOT static auto desaturate(open_set_t& _open, closed_set_t& _closed, expunct_set_t& _expunct, size_t& _dynamic_allocations, const params_t& _params) {
+        [[nodiscard]] HOT static auto desaturate(open_set_t& _open, closed_set_t& _closed, expunct_set_t& _expunct, size_t& _dynamic_allocations, const params_t& _params) {
 
             bool result = false;
             if (!_expunct.empty()) { // LOSSLESS:
