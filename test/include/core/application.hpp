@@ -226,6 +226,8 @@ namespace test {
                 debug::log("Application Terminated Normally.", info);
             }
 
+            s_initialised = false;
+
             return EXIT_SUCCESS;
         }
 

@@ -11,6 +11,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <filesystem>
 #include <iostream>
 #include <string_view>
 
@@ -140,8 +141,99 @@ namespace test {
             throw std::runtime_error("ERROR: Could not create a solvable maze!");
         }
 
+        template <typename weight_t, typename coord_t, typename scalar_t, typename index_t>
+        static auto run_gppc_benchmarks(const std::string_view& _solver) {
+
+            int result = EXIT_FAILURE;
+
+            const auto gppc_dir = std::filesystem::current_path() / "gppc";
+            if (std::filesystem::exists(gppc_dir)) {
+
+                for (const auto& subdir : std::filesystem::directory_iterator(gppc_dir)) {
+
+                    for (const auto& entry : std::filesystem::directory_iterator(subdir)) {
+
+                        try {
+                            auto scenarios_path = std::filesystem::path { entry.path().string() + ".scen" };
+
+                            auto data = generator::gppc::generate<weight_t, coord_t, scalar_t>(entry.path(), scenarios_path);
+                            const auto& map       = data.first;
+                            const auto& scenarios = data.second;
+
+                            auto     monotonic = chdr::monotonic_pool();
+                            auto heterogeneous = chdr::heterogeneous_pool();
+                            auto   homogeneous = chdr::homogeneous_pool();
+
+                            struct params {
+
+                                using  weight_type [[maybe_unused]] = weight_t;
+                                using  scalar_type [[maybe_unused]] = scalar_t;
+                                using   index_type [[maybe_unused]] =  index_t;
+                                using   coord_type [[maybe_unused]] =  coord_t;
+
+                                using lazy_sorting [[maybe_unused]] = std::false_type;
+
+                                const decltype(map.maze)& maze;
+                                const         coord_type  start;
+                                const         coord_type  end;
+                                const         coord_type  size;
+                                scalar_type  (*h)(const coord_type&, const coord_type&) noexcept;
+
+                                decltype(    monotonic)*     monotonic_pmr;
+                                decltype(heterogeneous)* heterogeneous_pmr;
+                                decltype(  homogeneous)*   homogeneous_pmr;
+
+                                const scalar_type weight       = 1U;
+                                const      size_t capacity     = 0U;
+                                const      size_t memory_limit = static_cast<size_t>(90U);
+                            };
+
+                            for (const auto& scenario : scenarios) {
+
+                                const params args { map.maze, scenario.start, scenario.end, map.metadata.size, &chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &heterogeneous, &homogeneous };
+
+                                     if (_solver == "astar"        ) { result = invoke<chdr::solvers::        astar, params>(args); }
+                                else if (_solver == "best_first"   ) { result = invoke<chdr::solvers::   best_first, params>(args); }
+                                else if (_solver == "bfs"          ) { result = invoke<chdr::solvers::          bfs, params>(args); }
+                                else if (_solver == "dfs"          ) { result = invoke<chdr::solvers::          dfs, params>(args); }
+                                else if (_solver == "dijkstra"     ) { result = invoke<chdr::solvers::     dijkstra, params>(args); }
+                                else if (_solver == "eidastar"     ) { result = invoke<chdr::solvers::     eidastar, params>(args); }
+                                else if (_solver == "eidbest_first") { result = invoke<chdr::solvers::eidbest_first, params>(args); }
+                                else if (_solver == "eiddfs"       ) { result = invoke<chdr::solvers::       eiddfs, params>(args); }
+                                else if (_solver == "flood"        ) { result = invoke<chdr::solvers::        flood, params>(args); }
+                                else if (_solver == "fringe"       ) { result = invoke<chdr::solvers::       fringe, params>(args); }
+                                else if (_solver == "gbest_first"  ) { result = invoke<chdr::solvers::  gbest_first, params>(args); }
+                                else if (_solver == "gbfs"         ) { result = invoke<chdr::solvers::         gbfs, params>(args); }
+                                else if (_solver == "gdfs"         ) { result = invoke<chdr::solvers::         gdfs, params>(args); }
+                                else if (_solver == "gjps"         ) { result = invoke<chdr::solvers::         gjps, params>(args); }
+                                else if (_solver == "gstar"        ) { result = invoke<chdr::solvers::        gstar, params>(args); }
+                                else if (_solver == "idastar"      ) { result = invoke<chdr::solvers::      idastar, params>(args); }
+                                else if (_solver == "idbest_first" ) { result = invoke<chdr::solvers:: idbest_first, params>(args); }
+                                else if (_solver == "iddfs"        ) { result = invoke<chdr::solvers::        iddfs, params>(args); }
+                                else if (_solver == "jps"          ) { result = invoke<chdr::solvers::          jps, params>(args); }
+                                else if (_solver == "mgstar"       ) { result = invoke<chdr::solvers::       mgstar, params>(args); }
+                                else if (_solver == "osmastar"     ) { result = invoke<chdr::solvers::     osmastar, params>(args); }
+                                else if (_solver == "smastar"      ) { result = invoke<chdr::solvers::      smastar, params>(args); }
+                                else {
+                                    debug::log("ERROR: Unknown solver \"" + std::string(_solver) + "\"!", error);
+                                }
+                            }
+
+                        }
+                        catch (const std::exception& e) {
+                            debug::log(e);
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
         template <typename weight_t, typename coord_t>
         static int deduce_solver(const std::string_view& _solver, const coord_t& _size) {
+
+            //return run_gppc_benchmarks<weight_t, coord_t, scalar_t, index_t>(_solver);
 
             int result = EXIT_FAILURE;
 
