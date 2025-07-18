@@ -93,7 +93,7 @@ namespace test::generator {
 
                 char c;
                 while (fs.get(c)) {
-                    if (c != '\n') {
+                    if (c != '\r' && c != '\n') {
                         maze_data.push_back(
                             c == '.' || c == 'G'?
                                 std::numeric_limits<weight_t>::lowest() :
@@ -172,6 +172,8 @@ namespace test::generator {
 
                 fs.close();
             }
+
+            debug::log("\t[FINISHED] \t(~" + chdr::utils::trim_trailing_zeros(std::to_string(chdr::utils::product<size_t>(map.maze.size()) / 1000000000.0l)) + "b total candidate nodes)");
 
             return std::pair<gppc::map<weight_t, coord_t>, std::vector<scenario<coord_t, scalar_t>>> {
                 std::move(map),

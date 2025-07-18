@@ -218,7 +218,6 @@ namespace test {
                                     debug::log("ERROR: Unknown solver \"" + std::string(_solver) + "\"!", error);
                                 }
                             }
-
                         }
                         catch (const std::exception& e) {
                             debug::log(e);
@@ -233,12 +232,12 @@ namespace test {
         template <typename weight_t, typename coord_t>
         static int deduce_solver(const std::string_view& _solver, const coord_t& _size) {
 
-            //return run_gppc_benchmarks<weight_t, coord_t, scalar_t, index_t>(_solver);
-
             int result = EXIT_FAILURE;
 
             using scalar_t = uint32_t;
             using  index_t = uint32_t;
+
+            return run_gppc_benchmarks<weight_t, coord_t, scalar_t, index_t>(_solver);
 
             /* GENERATE MAZE */
             constexpr size_t seed { 0U };

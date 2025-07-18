@@ -250,7 +250,7 @@ namespace chdr::solvers {
 
             const auto capacity = solver_t::solver_utils::determine_capacity(_params);
 
-            existence_set closed;
+            existence_set closed(_params.homogeneous_pmr);
             closed.reserve(capacity);
 
             std::multiset<node> open;

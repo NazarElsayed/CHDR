@@ -35,7 +35,7 @@ namespace test::generator {
 
             const auto maze = backtracking_t::generate(_start, _end, _size, _loops, _obstacles, _seed);
 
-            debug::log("\t[FINISHED] \t(~" + chdr::utils::trim_trailing_zeros(std::to_string(chdr::utils::product<size_t>(_size) / 1000000000.0l)) + "b total candidate nodes)");
+            debug::log("\t[FINISHED] \t(~" + chdr::utils::trim_trailing_zeros(std::to_string(chdr::utils::product<size_t>(_size) / 1000000000.0L)) + "b total candidate nodes)");
 
             if constexpr (std::is_same_v<weight_t, bool>) {
                 return chdr::mazes::grid<coord_t, weight_t>(_size, maze);

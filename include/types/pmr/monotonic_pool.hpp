@@ -79,7 +79,7 @@ namespace chdr {
         };
 
         static constexpr size_t        s_stack_block_size { StackSize        };
-        static constexpr size_t s_default_heap_block_size {  4096U           };
+        static constexpr size_t s_default_heap_block_size { 4096U            };
         static constexpr size_t     s_max_heap_block_size { MaxHeapBlockSize };
 
         // Fixed stack memory block:
@@ -212,7 +212,7 @@ namespace chdr {
             if (aligned_ptr == nullptr) {
 
                 // If the stack block is exhausted, fall back to dynamic blocks:
-                if (LIKELY(!m_blocks.empty())) {
+                if (LIKELY(!m_blocks.empty() && m_blocks[m_active_block_index].size >= m_block_width)) {
 
                     auto*  raw_ptr = static_cast<void*>(static_cast<uint8_t*>(m_blocks[m_active_block_index].data) + m_block_write);
                     size_t space   = m_blocks[m_active_block_index].size - m_block_write;
@@ -367,12 +367,10 @@ namespace chdr {
         }
 
         /**
-         * @brief Resets the memory pool state to its initial configuration.
+         * @brief Releases all memory resources and resets the internal state of the memory pool.
          *
-         * @details Resets internal counters and indices, restoring the pool to a
-         *          state as if no memory has been allocated. All blocks remain allocated,
-         *          but any previously allocated data is effectively invalidated. This method
-         *          does not deallocate or release memory already held by the pool.
+         * @details It is generally impractical to efficiently reset bucketed monotonic allocators.
+         *          Therefore, this function call redirects to release().
          *
          * @warning After calling this method, all previously allocated memory from the pool
          *          should be deemed inaccessible.
@@ -383,16 +381,7 @@ namespace chdr {
          * @see release()
          */
         void reset() noexcept {
-            m_stack_write        = 0U;
-            m_block_write        = 0U;
-            m_active_block_index = 0U;
-
-#if CHDR_DIAGNOSTICS == 1
-
-             num_allocated = 0U;
-            peak_allocated = 0U;
-
-#endif //CHDR_DIAGNOSTICS == 1
+            return release();
         }
 
         /**
