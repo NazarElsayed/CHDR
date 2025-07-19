@@ -154,10 +154,6 @@ namespace chdr::solvers {
 
             std::optional<node> best_solution;
 
-#if CHDR_DIAGNOSTICS == 1
-            size_t peak_memory_usage = 0U;
-#endif //CHDR_DIAGNOSTICS == 1
-
             // Main loop:
             while (LIKELY(!_open.empty())) {
 
@@ -190,10 +186,6 @@ namespace chdr::solvers {
                                         }
 
                                         _open.emplace(n.index, curr_ptr->m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight, curr_ptr);
-
-#if CHDR_DIAGNOSTICS == 1
-                                        peak_memory_usage = utils::max(peak_memory_usage, memory_usage());
-#endif //CHDR_DIAGNOSTICS == 1
                                     }
                                     else {
                                         // Memory saturated. Backup losslessly...
@@ -237,10 +229,6 @@ namespace chdr::solvers {
             }
             _closed = closed_set_t{};
 
-#if CHDR_DIAGNOSTICS == 1
-            std::cout << "Peak Memory Usage: " << peak_memory_usage << "\n";
-#endif //CHDR_DIAGNOSTICS == 1
-
             return best_solution.has_value() ?
                 solver_t::solver_utils::rbacktrack(best_solution.value(), _params.size, best_solution.value().m_gScore) :
                 std::vector<coord_t>{};
@@ -250,7 +238,7 @@ namespace chdr::solvers {
 
             const auto capacity = solver_t::solver_utils::determine_capacity(_params);
 
-            existence_set closed(_params.homogeneous_pmr);
+            existence_set closed(_params.monotonic_pmr);
             closed.reserve(capacity);
 
             std::multiset<node> open;

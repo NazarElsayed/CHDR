@@ -297,10 +297,6 @@ namespace chdr::solvers {
                                         const auto h = _params.h(n.coord, _params.end) * _params.weight;
 
                                         _open.emplace(all_nodes[n.index] = node(n.index, g, g + h, curr.m_index));
-
-#if CHDR_DIAGNOSTICS == 1
-                                        peak_memory_usage = utils::max(peak_memory_usage, memory_usage());
-#endif //CHDR_DIAGNOSTICS == 1
                                     }
                                     else {
                                         break;

@@ -141,10 +141,169 @@ namespace test {
             throw std::runtime_error("ERROR: Could not create a solvable maze!");
         }
 
-        template <typename weight_t, typename coord_t, typename scalar_t, typename index_t>
-        static auto run_gppc_benchmarks(const std::string_view& _solver) {
+        template <typename instanced_solver_t, typename params_t>
+        static auto invoke_benchmark(const params_t& _params) {
 
-            int result = EXIT_FAILURE;
+            auto result = std::numeric_limits<long double>::max();
+
+            try {
+
+                /* TEST SAMPLES */
+    #ifndef NDEBUG
+                constexpr size_t base_samples = 1UL;
+    #else //!NDEBUG
+                constexpr size_t base_samples = 100000000UL;
+    #endif //!NDEBUG
+
+                size_t test_samples = chdr::utils::max(base_samples / _params.maze.count(), static_cast<size_t>(1U));
+
+                // Graphs are generally more sparse than grids, require fewer samples:
+                if constexpr (std::is_same_v<
+                    std::decay_t<decltype(_params.maze)>,
+                    chdr::mazes::graph<typename params_t::index_type, typename params_t::scalar_type>>
+                ) {
+                    test_samples = chdr::utils::sqrt(test_samples);
+                }
+
+                /* CAPTURE SYSTEM NOISE */
+                auto noise_floor_min = std::numeric_limits<long double>::max();
+                for (size_t i = 0U; i < test_samples; ++i) {
+
+                    const auto sw_start = std::chrono::high_resolution_clock::now();
+
+                    noise_floor_min = chdr::utils::min(
+                        noise_floor_min,
+                        std::chrono::duration_cast<std::chrono::duration<long double>>(
+                            std::chrono::high_resolution_clock::now() - sw_start
+                        ).count()
+                    );
+                }
+
+                /* TEST ALGORITHM */
+                chdr::malloc_consolidate();
+
+                decltype(instanced_solver_t::solve(_params)) path;
+
+                for (size_t i = 0U; i < test_samples; ++i) {
+
+                    const auto sw_start = std::chrono::high_resolution_clock::now();
+
+                    /* INVOKE SOLVE */
+                    (void)instanced_solver_t::solve(_params);
+
+                    result = chdr::utils::min(
+                        result,
+                        std::chrono::duration_cast<std::chrono::duration<long double>>(
+                            std::chrono::high_resolution_clock::now() - sw_start
+                        ).count()
+                    );
+                }
+
+                result = chdr::utils::max(result - noise_floor_min, std::numeric_limits<long double>::epsilon());
+            }
+            catch (const std::exception& e) {
+                result = std::numeric_limits<long double>::max();
+
+                debug::log(e);
+            }
+
+            return result;
+        }
+
+        template <typename weight_t, typename coord_t, typename scalar_t, typename index_t>
+        static auto run_gppc_benchmarks() {
+
+            auto result = EXIT_FAILURE;
+
+            struct params {
+
+                using weight_type [[maybe_unused]] = weight_t;
+                using scalar_type [[maybe_unused]] = scalar_t;
+                using  index_type [[maybe_unused]] = index_t;
+                using  coord_type [[maybe_unused]] = coord_t;
+
+                using lazy_sorting [[maybe_unused]] = std::false_type;
+
+                const decltype(generator::gppc::map<weight_t, coord_t>::maze)& maze;
+
+                const coord_type start;
+                const coord_type end;
+                const coord_type size;
+
+                scalar_type (*h)(const coord_type&, const coord_type&) noexcept;
+
+                chdr::    monotonic_pool<>*     monotonic_pmr;
+                chdr::heterogeneous_pool<>* heterogeneous_pmr;
+                chdr::  homogeneous_pool<>*   homogeneous_pmr;
+
+                const scalar_type weight       = 1U;
+                const size_t      capacity     = 0U;
+                const size_t      memory_limit = static_cast<size_t>(90U);
+            };
+
+            using variant_t = std::variant<
+                chdr::solvers::solver<chdr::solvers::        astar, params>,
+                chdr::solvers::solver<chdr::solvers::   best_first, params>,
+                chdr::solvers::solver<chdr::solvers::          bfs, params>,
+                chdr::solvers::solver<chdr::solvers::          dfs, params>,
+                chdr::solvers::solver<chdr::solvers::     dijkstra, params>,
+                chdr::solvers::solver<chdr::solvers::     eidastar, params>,
+                chdr::solvers::solver<chdr::solvers::eidbest_first, params>,
+                chdr::solvers::solver<chdr::solvers::       eiddfs, params>,
+                chdr::solvers::solver<chdr::solvers::        flood, params>,
+                chdr::solvers::solver<chdr::solvers::       fringe, params>,
+                chdr::solvers::solver<chdr::solvers::  gbest_first, params>,
+                chdr::solvers::solver<chdr::solvers::         gbfs, params>,
+                chdr::solvers::solver<chdr::solvers::         gdfs, params>,
+                chdr::solvers::solver<chdr::solvers::         gjps, params>,
+                chdr::solvers::solver<chdr::solvers::        gstar, params>,
+                chdr::solvers::solver<chdr::solvers::      idastar, params>,
+                chdr::solvers::solver<chdr::solvers:: idbest_first, params>,
+                chdr::solvers::solver<chdr::solvers::        iddfs, params>,
+                chdr::solvers::solver<chdr::solvers::          jps, params>,
+                chdr::solvers::solver<chdr::solvers::       mgstar, params>,
+                chdr::solvers::solver<chdr::solvers::     osmastar, params>,
+                chdr::solvers::solver<chdr::solvers::      smastar, params>>;
+
+            struct test {
+                const std::string name;
+                const variant_t   variant;
+            };
+
+            #define MAKE_TEST_VARIANT(name) test { #name, variant_t { std::in_place_type<chdr::solvers::solver<chdr::solvers::name, params>> } }
+
+            const std::array tests {
+                MAKE_TEST_VARIANT(        astar),
+                MAKE_TEST_VARIANT(   best_first),
+                MAKE_TEST_VARIANT(          bfs),
+                MAKE_TEST_VARIANT(          dfs),
+                // MAKE_TEST_VARIANT(     dijkstra),
+                MAKE_TEST_VARIANT(     eidastar),
+                MAKE_TEST_VARIANT(eidbest_first),
+                MAKE_TEST_VARIANT(       eiddfs),
+                MAKE_TEST_VARIANT(        flood),
+                MAKE_TEST_VARIANT(       fringe),
+                MAKE_TEST_VARIANT(  gbest_first),
+                MAKE_TEST_VARIANT(         gbfs),
+                MAKE_TEST_VARIANT(         gdfs),
+                MAKE_TEST_VARIANT(         gjps),
+                MAKE_TEST_VARIANT(        gstar),
+                MAKE_TEST_VARIANT(      idastar),
+                MAKE_TEST_VARIANT( idbest_first),
+                MAKE_TEST_VARIANT(        iddfs),
+                MAKE_TEST_VARIANT(          jps),
+                MAKE_TEST_VARIANT(       mgstar),
+                MAKE_TEST_VARIANT(     osmastar),
+                MAKE_TEST_VARIANT(      smastar)
+            };
+
+            #undef MAKE_TEST_VARIANT
+
+            // Find the longest solver's name (for text alignment in readouts):
+            size_t longest_solver_name { 0U };
+            for (const auto& [name, variant] : tests) {
+                longest_solver_name = std::max(longest_solver_name, name.size());
+            }
 
             const auto gppc_dir = std::filesystem::current_path() / "gppc";
             if (std::filesystem::exists(gppc_dir)) {
@@ -154,68 +313,46 @@ namespace test {
                     for (const auto& entry : std::filesystem::directory_iterator(subdir)) {
 
                         try {
-                            auto scenarios_path = std::filesystem::path { entry.path().string() + ".scen" };
+                            const auto scenarios_path = std::filesystem::path { entry.path().string() + ".scen" };
 
-                            auto data = generator::gppc::generate<weight_t, coord_t, scalar_t>(entry.path(), scenarios_path);
-                            const auto& map       = data.first;
-                            const auto& scenarios = data.second;
+                            const auto [map, scenarios] = generator::gppc::generate<weight_t, coord_t, scalar_t>(entry.path(), scenarios_path);
 
-                            auto     monotonic = chdr::monotonic_pool();
-                            auto heterogeneous = chdr::heterogeneous_pool();
-                            auto   homogeneous = chdr::homogeneous_pool();
+                            std::cout << map.metadata.name << ":\n";
 
-                            struct params {
+                            for (size_t i = 0U; i != scenarios.size(); ++i) {
 
-                                using  weight_type [[maybe_unused]] = weight_t;
-                                using  scalar_type [[maybe_unused]] = scalar_t;
-                                using   index_type [[maybe_unused]] =  index_t;
-                                using   coord_type [[maybe_unused]] =  coord_t;
+                                const auto& scenario = scenarios[i];
 
-                                using lazy_sorting [[maybe_unused]] = std::false_type;
+                                std::cout << "\tScenario " << (i + 1U) << " (Length: " << scenario.distance << "):\n";
 
-                                const decltype(map.maze)& maze;
-                                const         coord_type  start;
-                                const         coord_type  end;
-                                const         coord_type  size;
-                                scalar_type  (*h)(const coord_type&, const coord_type&) noexcept;
+                                for (const auto& [name, variant] : tests) {
 
-                                decltype(    monotonic)*     monotonic_pmr;
-                                decltype(heterogeneous)* heterogeneous_pmr;
-                                decltype(  homogeneous)*   homogeneous_pmr;
+                                    // Right-aligned print:
+                                    std::cout << "\t\t";
+                                    for (size_t j = 0U; j < longest_solver_name - name.size(); ++j) {
+                                        std::cout << " ";
+                                    }
+                                    std::cout << name << ": " << std::flush;
 
-                                const scalar_type weight       = 1U;
-                                const      size_t capacity     = 0U;
-                                const      size_t memory_limit = static_cast<size_t>(90U);
-                            };
+                                    size_t peak_memory_usage { 0U };
+                                    {
+                                        auto monotonic     = chdr::    monotonic_pool();
+                                        auto heterogeneous = chdr::heterogeneous_pool();
+                                        auto homogeneous   = chdr::  homogeneous_pool();
 
-                            for (const auto& scenario : scenarios) {
+                                        auto time = std::visit(
+                                            [&](const auto& _t) -> long double {
+                                                return invoke_benchmark<std::decay_t<decltype(_t)>>( params { map.maze, scenario.start, scenario.end, map.metadata.size, &chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &heterogeneous, &homogeneous });
+                                            },
+                                            variant
+                                        );
 
-                                const params args { map.maze, scenario.start, scenario.end, map.metadata.size, &chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &heterogeneous, &homogeneous };
+                                        peak_memory_usage = monotonic.__get_diagnostic_data().peak_allocated +
+                                                        heterogeneous.__get_diagnostic_data().peak_allocated +
+                                                          homogeneous.__get_diagnostic_data().peak_allocated;
+                                    }
 
-                                     if (_solver == "astar"        ) { result = invoke<chdr::solvers::        astar, params>(args); }
-                                else if (_solver == "best_first"   ) { result = invoke<chdr::solvers::   best_first, params>(args); }
-                                else if (_solver == "bfs"          ) { result = invoke<chdr::solvers::          bfs, params>(args); }
-                                else if (_solver == "dfs"          ) { result = invoke<chdr::solvers::          dfs, params>(args); }
-                                else if (_solver == "dijkstra"     ) { result = invoke<chdr::solvers::     dijkstra, params>(args); }
-                                else if (_solver == "eidastar"     ) { result = invoke<chdr::solvers::     eidastar, params>(args); }
-                                else if (_solver == "eidbest_first") { result = invoke<chdr::solvers::eidbest_first, params>(args); }
-                                else if (_solver == "eiddfs"       ) { result = invoke<chdr::solvers::       eiddfs, params>(args); }
-                                else if (_solver == "flood"        ) { result = invoke<chdr::solvers::        flood, params>(args); }
-                                else if (_solver == "fringe"       ) { result = invoke<chdr::solvers::       fringe, params>(args); }
-                                else if (_solver == "gbest_first"  ) { result = invoke<chdr::solvers::  gbest_first, params>(args); }
-                                else if (_solver == "gbfs"         ) { result = invoke<chdr::solvers::         gbfs, params>(args); }
-                                else if (_solver == "gdfs"         ) { result = invoke<chdr::solvers::         gdfs, params>(args); }
-                                else if (_solver == "gjps"         ) { result = invoke<chdr::solvers::         gjps, params>(args); }
-                                else if (_solver == "gstar"        ) { result = invoke<chdr::solvers::        gstar, params>(args); }
-                                else if (_solver == "idastar"      ) { result = invoke<chdr::solvers::      idastar, params>(args); }
-                                else if (_solver == "idbest_first" ) { result = invoke<chdr::solvers:: idbest_first, params>(args); }
-                                else if (_solver == "iddfs"        ) { result = invoke<chdr::solvers::        iddfs, params>(args); }
-                                else if (_solver == "jps"          ) { result = invoke<chdr::solvers::          jps, params>(args); }
-                                else if (_solver == "mgstar"       ) { result = invoke<chdr::solvers::       mgstar, params>(args); }
-                                else if (_solver == "osmastar"     ) { result = invoke<chdr::solvers::     osmastar, params>(args); }
-                                else if (_solver == "smastar"      ) { result = invoke<chdr::solvers::      smastar, params>(args); }
-                                else {
-                                    debug::log("ERROR: Unknown solver \"" + std::string(_solver) + "\"!", error);
+                                    std::cout << " " << std::fixed << std::setprecision(9) << time << " " << peak_memory_usage << "\n";
                                 }
                             }
                         }
@@ -232,12 +369,12 @@ namespace test {
         template <typename weight_t, typename coord_t>
         static int deduce_solver(const std::string_view& _solver, const coord_t& _size) {
 
-            int result = EXIT_FAILURE;
+            auto result = EXIT_FAILURE;
 
             using scalar_t = uint32_t;
             using  index_t = uint32_t;
 
-            return run_gppc_benchmarks<weight_t, coord_t, scalar_t, index_t>(_solver);
+            return run_gppc_benchmarks<weight_t, coord_t, scalar_t, index_t>();
 
             /* GENERATE MAZE */
             constexpr size_t seed { 0U };
@@ -326,7 +463,7 @@ namespace test {
         template <typename coord_t>
         static int deduce_weight(int _argc, const char* const _argv[], const coord_t& _coord) {
 
-            int result = EXIT_FAILURE;
+            auto result = EXIT_FAILURE;
 
             if (_argc > 0 && static_cast<size_t>(_argc) > MAZE_WEIGHT) {
 
@@ -348,7 +485,7 @@ namespace test {
 
         static int deduce_coord(int _argc, const char* const _argv[]) {
 
-            int result = EXIT_FAILURE;
+            auto result = EXIT_FAILURE;
 
             using index_t = unsigned long;
 
@@ -385,7 +522,7 @@ namespace test {
  */
 int main(const int _argc, const char* const _argv[]) noexcept {
 
-    int result = EXIT_FAILURE;
+    auto result = EXIT_FAILURE;
 
     try {
         debug::log("CHDR " CHDR_VERSION);

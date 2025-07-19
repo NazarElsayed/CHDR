@@ -235,10 +235,6 @@ namespace chdr::solvers {
 
             scalar_t min_g = std::numeric_limits<scalar_t>::max();
 
-#if CHDR_DIAGNOSTICS == 1
-            size_t peak_memory_usage = 0U;
-#endif //CHDR_DIAGNOSTICS == 1
-
             _open.emplace(
                 all_nodes[static_cast<index_t>(s)] = node(
                     static_cast< index_t>(s),
@@ -289,10 +285,6 @@ namespace chdr::solvers {
                                         const auto h = _params.h(n.coord, _params.end) * _params.weight;
 
                                         _open.emplace(all_nodes[n.index] = node(n.index, g, g + h, curr.m_index));
-
-#if CHDR_DIAGNOSTICS == 1
-                                        peak_memory_usage = utils::max(peak_memory_usage, memory_usage());
-#endif //CHDR_DIAGNOSTICS == 1
                                     }
                                     else {
                                         break;
@@ -312,10 +304,6 @@ namespace chdr::solvers {
                     min_g = utils::min(curr.m_gScore, min_g);
                 }
             }
-
-#if CHDR_DIAGNOSTICS == 1
-            std::cout << "Peak Memory Usage: " << peak_memory_usage << "\n";
-#endif //CHDR_DIAGNOSTICS == 1
 
             auto end = all_nodes.find(static_cast<index_t>(e));
 

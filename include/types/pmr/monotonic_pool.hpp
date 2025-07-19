@@ -57,8 +57,12 @@ namespace chdr {
 
 #if CHDR_DIAGNOSTICS == 1
 
-        size_t  num_allocated { 0U };
-        size_t peak_allocated { 0U };
+        struct __chdr_internal_diagnostics {
+            size_t  num_allocated { 0U };
+            size_t peak_allocated { 0U };
+        };
+
+        __chdr_internal_diagnostics __diagnostic_data;
 
 #endif //CHDR_DIAGNOSTICS == 1
 
@@ -245,8 +249,8 @@ namespace chdr {
 
 #if CHDR_DIAGNOSTICS == 1
 
-             num_allocated += _bytes;
-            peak_allocated  = utils::max(peak_allocated, num_allocated);
+            __diagnostic_data. num_allocated += _bytes;
+            __diagnostic_data.peak_allocated  = utils::max(__diagnostic_data.peak_allocated, __diagnostic_data.num_allocated);
 
 #endif //CHDR_DIAGNOSTICS == 1
 
@@ -414,12 +418,15 @@ namespace chdr {
             m_blocks = std::move(temp);
 
 #if CHDR_DIAGNOSTICS == 1
-
-             num_allocated = 0U;
-            peak_allocated = 0U;
-
+            __diagnostic_data. num_allocated = 0U;
+            __diagnostic_data.peak_allocated = 0U;
 #endif //CHDR_DIAGNOSTICS == 1
         }
+
+#if CHDR_DIAGNOSTICS == 1
+        constexpr const auto& __get_diagnostic_data() { return __diagnostic_data; };
+#endif //CHDR_DIAGNOSTICS == 1
+
     };
 
 } //chdr

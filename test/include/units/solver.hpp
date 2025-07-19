@@ -43,7 +43,7 @@ namespace test {
 
             size_t test_samples = chdr::utils::max(base_samples / _params.maze.count(), static_cast<size_t>(1U));
 
-            // Modified code block
+            // Graphs are generally more sparse than grids, require fewer samples:
             if constexpr (std::is_same_v<
                 std::decay_t<decltype(_params.maze)>,
                 chdr::mazes::graph<typename params_t::index_type, typename params_t::scalar_type>>
