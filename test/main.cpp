@@ -363,7 +363,7 @@ namespace test {
                                                     &homogeneous,
                                                     1U,
                                                     0U,
-                                                    1024U
+                                                    (map.metadata.size[0U] / 2U) * (map.metadata.size[1U] / 2U)
                                                 });
                                         },
                                         variant
