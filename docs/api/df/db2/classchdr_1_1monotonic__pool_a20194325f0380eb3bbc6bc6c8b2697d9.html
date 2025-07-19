@@ -128,13 +128,13 @@ template&lt;size_t StackSize = 4096U, size_t MaxStackAllocationSize = std::numer
 </table>
 </div><div class="memdoc">
 
-<p>Resets the memory pool state to its initial configuration. </p>
-<p>Resets internal counters and indices, restoring the pool to a state as if no memory has been allocated. All blocks remain allocated, but any previously allocated data is effectively invalidated. This method does not deallocate or release memory already held by the pool.</p>
+<p>Releases all memory resources and resets the internal state of the memory pool. </p>
+<p>It is generally impractical to efficiently reset bucketed monotonic allocators. Therefore, this function call redirects to <a class="el" href="../../df/db2/classchdr_1_1monotonic__pool_a23b477d0e2d399f75d585d154c346591.html#a23b477d0e2d399f75d585d154c346591" title="Releases all memory resources and resets the internal state of the memory pool.">release()</a>.</p>
 <dl class="section warning"><dt>Warning</dt><dd>After calling this method, all previously allocated memory from the pool should be deemed inaccessible.</dd></dl>
 <dl class="section post"><dt>Postcondition</dt><dd>It is undefined behaviour to use memory previously allocated within the pool after calling of this function.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="../../df/db2/classchdr_1_1monotonic__pool_a23b477d0e2d399f75d585d154c346591.html#a23b477d0e2d399f75d585d154c346591" title="Releases all memory resources and resets the internal state of the memory pool.">release()</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d4/d99/monotonic__pool_8hpp_source.html#l00385">385</a> of file <a class="el" href="../../d4/d99/monotonic__pool_8hpp_source.html">monotonic_pool.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d4/d99/monotonic__pool_8hpp_source.html#l00387">387</a> of file <a class="el" href="../../d4/d99/monotonic__pool_8hpp_source.html">monotonic_pool.hpp</a>.</p>
 
 </div>
 </div>

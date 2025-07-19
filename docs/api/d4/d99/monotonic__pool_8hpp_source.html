@@ -151,289 +151,284 @@ $(document).ready(function(){initNavTree('d4/d99/monotonic__pool_8hpp_source.htm
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="preprocessor">#if CHDR_DIAGNOSTICS == 1</span></div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="keywordtype">size_t</span>  num_allocated { 0U };</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="keywordtype">size_t</span> peak_allocated { 0U };</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_DIAGNOSTICS == 1</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="keyword">struct </span>__chdr_internal_diagnostics {</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>            <span class="keywordtype">size_t</span>  num_allocated { 0U };</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>            <span class="keywordtype">size_t</span> peak_allocated { 0U };</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        };</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        <span class="keyword">struct </span>block final {</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        __chdr_internal_diagnostics __diagnostic_data;</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>            <span class="keywordtype">size_t</span>   size;</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>            <span class="keywordtype">size_t</span>   alignment;</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>            uint8_t* data;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_DIAGNOSTICS == 1</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        <span class="keyword">struct </span>block final {</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>            [[nodiscard]] <a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_a1eb14cc432874ddacd1934791dbe12a3.html#a1eb14cc432874ddacd1934791dbe12a3">HOT</a> <span class="keyword">constexpr</span> block(<span class="keywordtype">size_t</span> _size, <span class="keywordtype">size_t</span> _alignment, uint8_t* _data) noexcept :</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>                size     (_size     ),</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>                alignment(_alignment),</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>                data     (_data     ) {}</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>            [[nodiscard]] <span class="keyword">friend</span> <a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_a1eb14cc432874ddacd1934791dbe12a3.html#a1eb14cc432874ddacd1934791dbe12a3">HOT</a> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> operator &lt;(<span class="keyword">const</span> block&amp; _lhs, <span class="keyword">const</span> block&amp; _rhs) <span class="keyword">noexcept</span> {</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>                <span class="keywordflow">return</span> _lhs.size &lt; _rhs.size;</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>            }</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        };</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">size_t</span>        s_stack_block_size { StackSize        };</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">size_t</span> s_default_heap_block_size { 4096U            };</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">size_t</span>     s_max_heap_block_size { MaxHeapBlockSize };</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>            <span class="keywordtype">size_t</span>   size;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>            <span class="keywordtype">size_t</span>   alignment;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>            uint8_t* data;</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>            [[nodiscard]] <a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_a1eb14cc432874ddacd1934791dbe12a3.html#a1eb14cc432874ddacd1934791dbe12a3">HOT</a> <span class="keyword">constexpr</span> block(<span class="keywordtype">size_t</span> _size, <span class="keywordtype">size_t</span> _alignment, uint8_t* _data) noexcept :</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>                size     (_size     ),</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>                alignment(_alignment),</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>                data     (_data     ) {}</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            [[nodiscard]] <span class="keyword">friend</span> <a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_a1eb14cc432874ddacd1934791dbe12a3.html#a1eb14cc432874ddacd1934791dbe12a3">HOT</a> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> operator &lt;(<span class="keyword">const</span> block&amp; _lhs, <span class="keyword">const</span> block&amp; _rhs) <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>                <span class="keywordflow">return</span> _lhs.size &lt; _rhs.size;</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>            }</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        };</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        <span class="comment">// Fixed stack memory block:</span></div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        <span class="keyword">alignas</span>(max_align_t) uint8_t m_stack_block[s_stack_block_size]; <span class="comment">//NOLINT(*-avoid-c-arrays)</span></div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        <span class="keywordtype">size_t</span> m_stack_write;         <span class="comment">// Current write position for the stack block.</span></div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        <span class="keywordtype">size_t</span> m_block_write;         <span class="comment">// Current write position in the active block.</span></div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        <span class="keywordtype">size_t</span> m_active_block_index;  <span class="comment">// Index of the current active block.</span></div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        <span class="keywordtype">size_t</span> m_initial_block_width; <span class="comment">// Width of the first allocated block.</span></div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        <span class="keywordtype">size_t</span> m_block_width;         <span class="comment">// Size of the current block.</span></div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        std::vector&lt;block&gt; m_blocks;</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        <a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_a1eb14cc432874ddacd1934791dbe12a3.html#a1eb14cc432874ddacd1934791dbe12a3">HOT</a> uint8_t* expand(<span class="keywordtype">size_t</span> _bytes, <span class="keywordtype">size_t</span> _alignment) {</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">size_t</span>        s_stack_block_size { StackSize        };</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">size_t</span> s_default_heap_block_size { 4096U            };</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">size_t</span>     s_max_heap_block_size { MaxHeapBlockSize };</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        <span class="comment">// Fixed stack memory block:</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        <span class="keyword">alignas</span>(max_align_t) uint8_t m_stack_block[s_stack_block_size]; <span class="comment">//NOLINT(*-avoid-c-arrays)</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        <span class="keywordtype">size_t</span> m_stack_write;         <span class="comment">// Current write position for the stack block.</span></div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        <span class="keywordtype">size_t</span> m_block_write;         <span class="comment">// Current write position in the active block.</span></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        <span class="keywordtype">size_t</span> m_active_block_index;  <span class="comment">// Index of the current active block.</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        <span class="keywordtype">size_t</span> m_initial_block_width; <span class="comment">// Width of the first allocated block.</span></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        <span class="keywordtype">size_t</span> m_block_width;         <span class="comment">// Size of the current block.</span></div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>            assert(_bytes &gt; 0U &amp;&amp; <span class="stringliteral">&quot;Allocation size must be greater than zero.&quot;</span>);</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>            assert((_alignment &amp; (_alignment - 1U)) == 0U &amp;&amp; <span class="stringliteral">&quot;Alignment must be a power of two.&quot;</span>);</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>            uint8_t* result { <span class="keyword">nullptr</span> };</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>            <span class="keywordflow">try</span> {</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        std::vector&lt;block&gt; m_blocks;</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        <a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_a1eb14cc432874ddacd1934791dbe12a3.html#a1eb14cc432874ddacd1934791dbe12a3">HOT</a> uint8_t* expand(<span class="keywordtype">size_t</span> _bytes, <span class="keywordtype">size_t</span> _alignment) {</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>            assert(_bytes &gt; 0U &amp;&amp; <span class="stringliteral">&quot;Allocation size must be greater than zero.&quot;</span>);</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>            assert((_alignment &amp; (_alignment - 1U)) == 0U &amp;&amp; <span class="stringliteral">&quot;Alignment must be a power of two.&quot;</span>);</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>                <span class="keywordflow">if</span> (m_active_block_index + 1U &lt; m_blocks.size()) { <span class="comment">// Reuse an existing block:</span></div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>            uint8_t* result { <span class="keyword">nullptr</span> };</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>                    <span class="keyword">auto</span>&amp; recycled_block = m_blocks[++m_active_block_index];</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>            <span class="keywordflow">try</span> {</div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>                    m_block_width = recycled_block.size;</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>                    result = recycled_block.data;</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>                }</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>                <span class="keywordflow">else</span> { <span class="comment">// Allocate a new, larger block:</span></div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>                    m_block_width = <a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_a05e8953d59fd314cf105f52b0c1272dd.html#a05e8953d59fd314cf105f52b0c1272dd">utils::max</a>(</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>                        m_initial_block_width,</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>                        <a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_a05e8953d59fd314cf105f52b0c1272dd.html#a05e8953d59fd314cf105f52b0c1272dd">utils::max</a>(<a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_a2287d696e022b9c172ac719c733627e3.html#a2287d696e022b9c172ac719c733627e3">utils::min</a>((m_block_width * 3U) / 2U, s_max_heap_block_size), _bytes)</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>                    );</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>                    result = <span class="keyword">static_cast&lt;</span>uint8_t*<span class="keyword">&gt;</span>(<span class="keyword">operator</span> <span class="keyword">new</span>(m_block_width, <span class="keyword">static_cast&lt;</span>std::align_val_t<span class="keyword">&gt;</span>(_alignment)));</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span> </div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>                    m_blocks.emplace_back(</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>                        m_block_width,</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>                        _alignment,</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>                        result</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>                    );</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>                    m_active_block_index = m_blocks.size() - 1U;</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>                }</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>                m_block_write = 0U; <span class="comment">// Reset write head to beginning.</span></div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>            }</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>            <span class="keywordflow">catch</span> (...) {</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>                <span class="keywordflow">if</span> (m_active_block_index + 1U &lt; m_blocks.size()) { <span class="comment">// Reuse an existing block:</span></div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>                    <span class="keyword">auto</span>&amp; recycled_block = m_blocks[++m_active_block_index];</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>                    m_block_width = recycled_block.size;</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>                    result = recycled_block.data;</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>                }</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>                <span class="keywordflow">else</span> { <span class="comment">// Allocate a new, larger block:</span></div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>                    m_block_width = <a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_a05e8953d59fd314cf105f52b0c1272dd.html#a05e8953d59fd314cf105f52b0c1272dd">utils::max</a>(</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>                        m_initial_block_width,</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>                        <a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_a05e8953d59fd314cf105f52b0c1272dd.html#a05e8953d59fd314cf105f52b0c1272dd">utils::max</a>(<a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_a2287d696e022b9c172ac719c733627e3.html#a2287d696e022b9c172ac719c733627e3">utils::min</a>((m_block_width * 3U) / 2U, s_max_heap_block_size), _bytes)</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>                    );</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>                    result = <span class="keyword">static_cast&lt;</span>uint8_t*<span class="keyword">&gt;</span>(<span class="keyword">operator</span> <span class="keyword">new</span>(m_block_width, <span class="keyword">static_cast&lt;</span>std::align_val_t<span class="keyword">&gt;</span>(_alignment)));</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>                    m_blocks.emplace_back(</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>                        m_block_width,</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>                        _alignment,</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>                        result</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>                    );</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>                    m_active_block_index = m_blocks.size() - 1U;</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>                }</div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>                <span class="comment">/* Catch any errors that occur during allocation. */</span></div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span> </div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>                <span class="comment">// ReSharper disable once CppDFAConstantConditions</span></div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>                <span class="keywordflow">if</span> (result != <span class="keyword">nullptr</span>) {</div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>                    <span class="comment">// ReSharper disable once CppDFAUnreachableCode</span></div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>                    <span class="keyword">operator</span> <span class="keyword">delete</span>(result, <span class="keyword">static_cast&lt;</span>std::align_val_t<span class="keyword">&gt;</span>(_alignment));</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>                    result = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span> </div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>                    m_blocks.pop_back();</div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>                }</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>            }</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>                m_block_write = 0U; <span class="comment">// Reset write head to beginning.</span></div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>            }</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>            <span class="keywordflow">catch</span> (...) {</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>                <span class="comment">/* Catch any errors that occur during allocation. */</span></div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span> </div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>                <span class="comment">// ReSharper disable once CppDFAConstantConditions</span></div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>                <span class="keywordflow">if</span> (result != <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>                    <span class="comment">// ReSharper disable once CppDFAUnreachableCode</span></div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>                    <span class="keyword">operator</span> <span class="keyword">delete</span>(result, <span class="keyword">static_cast&lt;</span>std::align_val_t<span class="keyword">&gt;</span>(_alignment));</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>                    result = <span class="keyword">nullptr</span>;</div>
 <div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span> </div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>            <span class="keywordflow">return</span> result;</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>        }</div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span> </div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>        <span class="keywordtype">void</span> cleanup() noexcept {</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; item : m_blocks) {</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>                <span class="keyword">operator</span> <span class="keyword">delete</span>(item.data, <span class="keyword">static_cast&lt;</span>std::align_val_t<span class="keyword">&gt;</span>(item.alignment));</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>            }</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>        }</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span> </div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    <span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span> </div>
-<div class="foldopen" id="foldopen00193" data-start="{" data-end="}">
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno"><a class="line" href="../../df/db2/classchdr_1_1monotonic__pool_a7df84a2e107640ba5385112b3b6f8504.html#a7df84a2e107640ba5385112b3b6f8504">  193</a></span>        [[nodiscard]] <span class="keyword">virtual</span> <a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_a1eb14cc432874ddacd1934791dbe12a3.html#a1eb14cc432874ddacd1934791dbe12a3">HOT</a> <span class="keywordtype">void</span>* <a class="code hl_function" href="../../df/db2/classchdr_1_1monotonic__pool_a7df84a2e107640ba5385112b3b6f8504.html#a7df84a2e107640ba5385112b3b6f8504">do_allocate</a>(<span class="keyword">const</span> <span class="keywordtype">size_t</span> _bytes, <span class="keyword">const</span> <span class="keywordtype">size_t</span> _alignment)<span class="keyword"> override </span>{</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span> </div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>            assert(_bytes &gt; 0U &amp;&amp; <span class="stringliteral">&quot;Allocation size must be greater than zero.&quot;</span>);</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>            assert((_alignment &amp; (_alignment - 1U)) == 0U &amp;&amp; <span class="stringliteral">&quot;Alignment must be a power of two.&quot;</span>);</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span> </div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>            uint8_t* aligned_ptr { <span class="keyword">nullptr</span> };</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span> </div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>            <span class="comment">// Attempt to allocate from the stack block:</span></div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>            <span class="keywordflow">if</span> (m_stack_write &lt; StackSize) {</div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span> </div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>                <span class="keywordflow">if</span> (<span class="keyword">const</span> <span class="keywordtype">size_t</span> aligned_bytes = (_bytes + _alignment - 1U) &amp; ~(_alignment - 1U);</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>                    aligned_bytes &lt; MaxStackAllocationSize &amp;&amp;</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>                    m_stack_write + aligned_bytes &lt;= s_stack_block_size</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>                ) {</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>                    aligned_ptr = m_stack_block + ((m_stack_write + _alignment - 1U) &amp; ~(_alignment - 1U));</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>                    m_stack_write = <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(aligned_ptr - m_stack_block) + aligned_bytes;</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>                }</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>            }</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span> </div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>            <span class="keywordflow">if</span> (aligned_ptr == <span class="keyword">nullptr</span>) {</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span> </div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>                <span class="comment">// If the stack block is exhausted, fall back to dynamic blocks:</span></div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>                <span class="keywordflow">if</span> (<a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_affde14445f49f65ff4f5b592e44ee71a.html#affde14445f49f65ff4f5b592e44ee71a">LIKELY</a>(!m_blocks.empty() &amp;&amp; m_blocks[m_active_block_index].size &gt;= m_block_width)) {</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span> </div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>                    <span class="keyword">auto</span>*  raw_ptr = <span class="keyword">static_cast&lt;</span><span class="keywordtype">void</span>*<span class="keyword">&gt;</span>(<span class="keyword">static_cast&lt;</span>uint8_t*<span class="keyword">&gt;</span>(m_blocks[m_active_block_index].data) + m_block_write);</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>                    <span class="keywordtype">size_t</span> space   = m_blocks[m_active_block_index].size - m_block_write;</div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span> </div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>                    aligned_ptr = <span class="keyword">static_cast&lt;</span>uint8_t*<span class="keyword">&gt;</span>(std::align(_alignment, _bytes, raw_ptr, space));</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>                    <span class="keywordflow">if</span> (aligned_ptr != <span class="keyword">nullptr</span>) {</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>                        m_block_write = <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(<span class="keyword">static_cast&lt;</span>uint8_t*<span class="keyword">&gt;</span>(aligned_ptr) - <span class="keyword">static_cast&lt;</span>uint8_t*<span class="keyword">&gt;</span>(m_blocks[m_active_block_index].data)) + _bytes;</div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>                    }</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>                }</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>                <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>                    aligned_ptr = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>                }</div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span> </div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>                <span class="comment">// Expand if no valid candidate for allocation was found.</span></div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>                <span class="keywordflow">if</span> (<a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_ab10d0a221f4d7a706701b806c8135fd7.html#ab10d0a221f4d7a706701b806c8135fd7">UNLIKELY</a>(aligned_ptr == <span class="keyword">nullptr</span>)) {</div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>                    aligned_ptr = expand(_bytes, _alignment);</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>                }</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span> </div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>                <span class="comment">// Update write position.</span></div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>                m_block_write += <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(aligned_ptr + _bytes - (m_blocks[m_active_block_index].data + m_block_write));</div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>            }</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>                    m_blocks.pop_back();</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>                }</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>            }</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span> </div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>            <span class="keywordflow">return</span> result;</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>        }</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span> </div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>        <span class="keywordtype">void</span> cleanup() noexcept {</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; item : m_blocks) {</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>                <span class="keyword">operator</span> <span class="keyword">delete</span>(item.data, <span class="keyword">static_cast&lt;</span>std::align_val_t<span class="keyword">&gt;</span>(item.alignment));</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>            }</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>        }</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span> </div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    <span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span> </div>
+<div class="foldopen" id="foldopen00197" data-start="{" data-end="}">
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno"><a class="line" href="../../df/db2/classchdr_1_1monotonic__pool_a7df84a2e107640ba5385112b3b6f8504.html#a7df84a2e107640ba5385112b3b6f8504">  197</a></span>        [[nodiscard]] <span class="keyword">virtual</span> <a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_a1eb14cc432874ddacd1934791dbe12a3.html#a1eb14cc432874ddacd1934791dbe12a3">HOT</a> <span class="keywordtype">void</span>* <a class="code hl_function" href="../../df/db2/classchdr_1_1monotonic__pool_a7df84a2e107640ba5385112b3b6f8504.html#a7df84a2e107640ba5385112b3b6f8504">do_allocate</a>(<span class="keyword">const</span> <span class="keywordtype">size_t</span> _bytes, <span class="keyword">const</span> <span class="keywordtype">size_t</span> _alignment)<span class="keyword"> override </span>{</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span> </div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>            assert(_bytes &gt; 0U &amp;&amp; <span class="stringliteral">&quot;Allocation size must be greater than zero.&quot;</span>);</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>            assert((_alignment &amp; (_alignment - 1U)) == 0U &amp;&amp; <span class="stringliteral">&quot;Alignment must be a power of two.&quot;</span>);</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span> </div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>            uint8_t* aligned_ptr { <span class="keyword">nullptr</span> };</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span> </div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>            <span class="comment">// Attempt to allocate from the stack block:</span></div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>            <span class="keywordflow">if</span> (m_stack_write &lt; StackSize) {</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span> </div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>                <span class="keywordflow">if</span> (<span class="keyword">const</span> <span class="keywordtype">size_t</span> aligned_bytes = (_bytes + _alignment - 1U) &amp; ~(_alignment - 1U);</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>                    aligned_bytes &lt; MaxStackAllocationSize &amp;&amp;</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>                    m_stack_write + aligned_bytes &lt;= s_stack_block_size</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>                ) {</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>                    aligned_ptr = m_stack_block + ((m_stack_write + _alignment - 1U) &amp; ~(_alignment - 1U));</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>                    m_stack_write = <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(aligned_ptr - m_stack_block) + aligned_bytes;</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>                }</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>            }</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span> </div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>            <span class="keywordflow">if</span> (aligned_ptr == <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span> </div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>                <span class="comment">// If the stack block is exhausted, fall back to dynamic blocks:</span></div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>                <span class="keywordflow">if</span> (<a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_affde14445f49f65ff4f5b592e44ee71a.html#affde14445f49f65ff4f5b592e44ee71a">LIKELY</a>(!m_blocks.empty() &amp;&amp; m_blocks[m_active_block_index].size &gt;= m_block_width)) {</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span> </div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>                    <span class="keyword">auto</span>*  raw_ptr = <span class="keyword">static_cast&lt;</span><span class="keywordtype">void</span>*<span class="keyword">&gt;</span>(<span class="keyword">static_cast&lt;</span>uint8_t*<span class="keyword">&gt;</span>(m_blocks[m_active_block_index].data) + m_block_write);</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>                    <span class="keywordtype">size_t</span> space   = m_blocks[m_active_block_index].size - m_block_write;</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span> </div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>                    aligned_ptr = <span class="keyword">static_cast&lt;</span>uint8_t*<span class="keyword">&gt;</span>(std::align(_alignment, _bytes, raw_ptr, space));</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>                    <span class="keywordflow">if</span> (aligned_ptr != <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>                        m_block_write = <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(<span class="keyword">static_cast&lt;</span>uint8_t*<span class="keyword">&gt;</span>(aligned_ptr) - <span class="keyword">static_cast&lt;</span>uint8_t*<span class="keyword">&gt;</span>(m_blocks[m_active_block_index].data)) + _bytes;</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>                    }</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>                }</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>                <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>                    aligned_ptr = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>                }</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span> </div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>                <span class="comment">// Expand if no valid candidate for allocation was found.</span></div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>                <span class="keywordflow">if</span> (<a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_ab10d0a221f4d7a706701b806c8135fd7.html#ab10d0a221f4d7a706701b806c8135fd7">UNLIKELY</a>(aligned_ptr == <span class="keyword">nullptr</span>)) {</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>                    aligned_ptr = expand(_bytes, _alignment);</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>                }</div>
 <div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span> </div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>            <span class="comment">// ReSharper disable once CppDFAConstantConditions</span></div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>            <span class="keywordflow">if</span> (<a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_ab10d0a221f4d7a706701b806c8135fd7.html#ab10d0a221f4d7a706701b806c8135fd7">UNLIKELY</a>(aligned_ptr == <span class="keyword">nullptr</span>)) {</div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>                <span class="comment">// ReSharper disable once CppDFAUnreachableCode</span></div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>                <span class="keywordflow">throw</span> std::bad_alloc();</div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>            }</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span> </div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>            <a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_a52741d1d1278f94b08fdb0cb045027be.html#a52741d1d1278f94b08fdb0cb045027be">PREFETCH</a>(aligned_ptr, _MM_HINT_T0);</div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span> </div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span><span class="preprocessor">#if CHDR_DIAGNOSTICS == 1</span></div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>                <span class="comment">// Update write position.</span></div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>                m_block_write += <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(aligned_ptr + _bytes - (m_blocks[m_active_block_index].data + m_block_write));</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>            }</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span> </div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>            <span class="comment">// ReSharper disable once CppDFAConstantConditions</span></div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>            <span class="keywordflow">if</span> (<a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_ab10d0a221f4d7a706701b806c8135fd7.html#ab10d0a221f4d7a706701b806c8135fd7">UNLIKELY</a>(aligned_ptr == <span class="keyword">nullptr</span>)) {</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>                <span class="comment">// ReSharper disable once CppDFAUnreachableCode</span></div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>                <span class="keywordflow">throw</span> std::bad_alloc();</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>            }</div>
 <div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span> </div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>             num_allocated += _bytes;</div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>            peak_allocated  = <a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_a05e8953d59fd314cf105f52b0c1272dd.html#a05e8953d59fd314cf105f52b0c1272dd">utils::max</a>(peak_allocated, num_allocated);</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span> </div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_DIAGNOSTICS == 1</span></div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span> </div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>            <span class="keywordflow">return</span> aligned_ptr;</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>        }</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>            <a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_a52741d1d1278f94b08fdb0cb045027be.html#a52741d1d1278f94b08fdb0cb045027be">PREFETCH</a>(aligned_ptr, _MM_HINT_T0);</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span> </div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span><span class="preprocessor">#if CHDR_DIAGNOSTICS == 1</span></div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span> </div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>            __diagnostic_data. num_allocated += _bytes;</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>            __diagnostic_data.peak_allocated  = <a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_a05e8953d59fd314cf105f52b0c1272dd.html#a05e8953d59fd314cf105f52b0c1272dd">utils::max</a>(__diagnostic_data.peak_allocated, __diagnostic_data.num_allocated);</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span> </div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_DIAGNOSTICS == 1</span></div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span> </div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>            <span class="keywordflow">return</span> aligned_ptr;</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>        }</div>
 </div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span> </div>
-<div class="foldopen" id="foldopen00275" data-start="{" data-end="}">
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno"><a class="line" href="../../df/db2/classchdr_1_1monotonic__pool_a8d661e0c01970b82d6cf1a939fe7a5bb.html#a8d661e0c01970b82d6cf1a939fe7a5bb">  275</a></span>        <span class="keyword">virtual</span> <a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_a1eb14cc432874ddacd1934791dbe12a3.html#a1eb14cc432874ddacd1934791dbe12a3">HOT</a> <span class="keywordtype">void</span> <a class="code hl_function" href="../../df/db2/classchdr_1_1monotonic__pool_a8d661e0c01970b82d6cf1a939fe7a5bb.html#a8d661e0c01970b82d6cf1a939fe7a5bb">do_deallocate</a>([[maybe_unused]] <span class="keywordtype">void</span>* _p, [[maybe_unused]] <span class="keyword">const</span> <span class="keywordtype">size_t</span> _bytes, [[maybe_unused]] <span class="keywordtype">size_t</span> _alignment)<span class="keyword"> override </span>{</div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>            <span class="comment">// No-op.</span></div>
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>        }</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span> </div>
+<div class="foldopen" id="foldopen00279" data-start="{" data-end="}">
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno"><a class="line" href="../../df/db2/classchdr_1_1monotonic__pool_a8d661e0c01970b82d6cf1a939fe7a5bb.html#a8d661e0c01970b82d6cf1a939fe7a5bb">  279</a></span>        <span class="keyword">virtual</span> <a class="code hl_define" href="../../d7/d65/intrinsics_8hpp_a1eb14cc432874ddacd1934791dbe12a3.html#a1eb14cc432874ddacd1934791dbe12a3">HOT</a> <span class="keywordtype">void</span> <a class="code hl_function" href="../../df/db2/classchdr_1_1monotonic__pool_a8d661e0c01970b82d6cf1a939fe7a5bb.html#a8d661e0c01970b82d6cf1a939fe7a5bb">do_deallocate</a>([[maybe_unused]] <span class="keywordtype">void</span>* _p, [[maybe_unused]] <span class="keyword">const</span> <span class="keywordtype">size_t</span> _bytes, [[maybe_unused]] <span class="keywordtype">size_t</span> _alignment)<span class="keyword"> override </span>{</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>            <span class="comment">// No-op.</span></div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>        }</div>
 </div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span> </div>
-<div class="foldopen" id="foldopen00289" data-start="{" data-end="}">
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno"><a class="line" href="../../df/db2/classchdr_1_1monotonic__pool_abda3c8300680a2838ef5ae8640772bb4.html#abda3c8300680a2838ef5ae8640772bb4">  289</a></span>        [[nodiscard]] <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="../../df/db2/classchdr_1_1monotonic__pool_abda3c8300680a2838ef5ae8640772bb4.html#abda3c8300680a2838ef5ae8640772bb4">do_is_equal</a>(<span class="keyword">const</span> memory_resource&amp; _other) <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="keyword">override</span> {</div>
-<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>            <span class="keywordflow">return</span> <span class="keyword">this</span> == &amp;_other;</div>
-<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>        }</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span> </div>
+<div class="foldopen" id="foldopen00293" data-start="{" data-end="}">
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno"><a class="line" href="../../df/db2/classchdr_1_1monotonic__pool_abda3c8300680a2838ef5ae8640772bb4.html#abda3c8300680a2838ef5ae8640772bb4">  293</a></span>        [[nodiscard]] <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="../../df/db2/classchdr_1_1monotonic__pool_abda3c8300680a2838ef5ae8640772bb4.html#abda3c8300680a2838ef5ae8640772bb4">do_is_equal</a>(<span class="keyword">const</span> memory_resource&amp; _other) <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="keyword">override</span> {</div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>            <span class="keywordflow">return</span> <span class="keyword">this</span> == &amp;_other;</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>        }</div>
 </div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span> </div>
-<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span> </div>
-<div class="foldopen" id="foldopen00305" data-start="{" data-end="}">
-<div class="line"><a id="l00305" name="l00305"></a><span class="lineno"><a class="line" href="../../df/db2/classchdr_1_1monotonic__pool_a8d8d1a09629a36930c4f137b135f1800.html#a8d8d1a09629a36930c4f137b135f1800">  305</a></span>        <a class="code hl_function" href="../../df/db2/classchdr_1_1monotonic__pool_a8d8d1a09629a36930c4f137b135f1800.html#a8d8d1a09629a36930c4f137b135f1800">monotonic_pool</a>(<span class="keywordtype">size_t</span> _initial_block_width = s_default_heap_block_size) noexcept :</div>
-<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>            m_stack_block        (),</div>
-<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>            m_stack_write        (0U),</div>
-<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>            m_block_write        (0U),</div>
-<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>            m_active_block_index (0U),</div>
-<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>            m_initial_block_width(<a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_a2287d696e022b9c172ac719c733627e3.html#a2287d696e022b9c172ac719c733627e3">utils::min</a>(_initial_block_width, s_max_heap_block_size)),</div>
-<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>            m_block_width        (m_initial_block_width) {}</div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span> </div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span> </div>
+<div class="foldopen" id="foldopen00309" data-start="{" data-end="}">
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno"><a class="line" href="../../df/db2/classchdr_1_1monotonic__pool_a8d8d1a09629a36930c4f137b135f1800.html#a8d8d1a09629a36930c4f137b135f1800">  309</a></span>        <a class="code hl_function" href="../../df/db2/classchdr_1_1monotonic__pool_a8d8d1a09629a36930c4f137b135f1800.html#a8d8d1a09629a36930c4f137b135f1800">monotonic_pool</a>(<span class="keywordtype">size_t</span> _initial_block_width = s_default_heap_block_size) noexcept :</div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>            m_stack_block        (),</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>            m_stack_write        (0U),</div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>            m_block_write        (0U),</div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>            m_active_block_index (0U),</div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>            m_initial_block_width(<a class="code hl_function" href="../../d2/dcb/structchdr_1_1utils_a2287d696e022b9c172ac719c733627e3.html#a2287d696e022b9c172ac719c733627e3">utils::min</a>(_initial_block_width, s_max_heap_block_size)),</div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>            m_block_width        (m_initial_block_width) {}</div>
 </div>
-<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span> </div>
-<div class="foldopen" id="foldopen00325" data-start="{" data-end="}">
-<div class="line"><a id="l00325" name="l00325"></a><span class="lineno"><a class="line" href="../../df/db2/classchdr_1_1monotonic__pool_a46d99ef5f169cf648372a2d7ff61ff15.html#a46d99ef5f169cf648372a2d7ff61ff15">  325</a></span>        <span class="keyword">virtual</span> <a class="code hl_function" href="../../df/db2/classchdr_1_1monotonic__pool_a46d99ef5f169cf648372a2d7ff61ff15.html#a46d99ef5f169cf648372a2d7ff61ff15">~monotonic_pool</a>() noexcept<span class="keyword"> override </span>{</div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>            cleanup();</div>
-<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>        }</div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span> </div>
+<div class="foldopen" id="foldopen00329" data-start="{" data-end="}">
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno"><a class="line" href="../../df/db2/classchdr_1_1monotonic__pool_a46d99ef5f169cf648372a2d7ff61ff15.html#a46d99ef5f169cf648372a2d7ff61ff15">  329</a></span>        <span class="keyword">virtual</span> <a class="code hl_function" href="../../df/db2/classchdr_1_1monotonic__pool_a46d99ef5f169cf648372a2d7ff61ff15.html#a46d99ef5f169cf648372a2d7ff61ff15">~monotonic_pool</a>() noexcept<span class="keyword"> override </span>{</div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>            cleanup();</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>        }</div>
 </div>
-<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span> </div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>        <span class="keyword">constexpr</span> <a class="code hl_class" href="../../df/db2/classchdr_1_1monotonic__pool.html">monotonic_pool</a>           (<span class="keyword">const</span> <a class="code hl_class" href="../../df/db2/classchdr_1_1monotonic__pool.html">monotonic_pool</a>&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>        <span class="keyword">constexpr</span> <a class="code hl_class" href="../../df/db2/classchdr_1_1monotonic__pool.html">monotonic_pool</a>&amp; operator=(<span class="keyword">const</span> <a class="code hl_class" href="../../df/db2/classchdr_1_1monotonic__pool.html">monotonic_pool</a>&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span> </div>
-<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>        [[nodiscard]]</div>
-<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span><span class="preprocessor">#if __cplusplus &gt;= 202002L</span></div>
-<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>        <span class="keyword">constexpr</span></div>
-<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>        <a class="code hl_class" href="../../df/db2/classchdr_1_1monotonic__pool.html">monotonic_pool</a>(<a class="code hl_class" href="../../df/db2/classchdr_1_1monotonic__pool.html">monotonic_pool</a>&amp;&amp; _other) noexcept :</div>
-<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>            m_stack_block        (),</div>
-<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>            m_stack_write        (_other.m_stack_write        ),</div>
-<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>            m_block_write        (_other.m_block_write        ),</div>
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>            m_active_block_index (_other.m_active_block_index ),</div>
-<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>            m_initial_block_width(_other.m_initial_block_width),</div>
-<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>            m_block_width        (_other.m_block_width        ),</div>
-<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>            m_blocks             (std::move(_other.m_blocks)  )</div>
-<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>        {</div>
-<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>            _other.<a class="code hl_function" href="../../df/db2/classchdr_1_1monotonic__pool_a23b477d0e2d399f75d585d154c346591.html#a23b477d0e2d399f75d585d154c346591">release</a>();</div>
-<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>        }</div>
-<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span> </div>
-<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span><span class="preprocessor">#if __cplusplus &gt;= 202002L</span></div>
-<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>        <span class="keyword">constexpr</span></div>
-<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>        monotonic_pool&amp; operator=(monotonic_pool&amp;&amp; _other) <span class="keyword">noexcept</span> {</div>
-<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span> </div>
-<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>            <span class="keywordflow">if</span> (<span class="keyword">this</span> != &amp;_other) {</div>
-<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span> </div>
-<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>                cleanup();</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span> </div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>        <span class="keyword">constexpr</span> <a class="code hl_class" href="../../df/db2/classchdr_1_1monotonic__pool.html">monotonic_pool</a>           (<span class="keyword">const</span> <a class="code hl_class" href="../../df/db2/classchdr_1_1monotonic__pool.html">monotonic_pool</a>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>        <span class="keyword">constexpr</span> <a class="code hl_class" href="../../df/db2/classchdr_1_1monotonic__pool.html">monotonic_pool</a>&amp; operator=(<span class="keyword">const</span> <a class="code hl_class" href="../../df/db2/classchdr_1_1monotonic__pool.html">monotonic_pool</a>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span> </div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>        [[nodiscard]]</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span><span class="preprocessor">#if __cplusplus &gt;= 202002L</span></div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>        <span class="keyword">constexpr</span></div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>        <a class="code hl_class" href="../../df/db2/classchdr_1_1monotonic__pool.html">monotonic_pool</a>(<a class="code hl_class" href="../../df/db2/classchdr_1_1monotonic__pool.html">monotonic_pool</a>&amp;&amp; _other) noexcept :</div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>            m_stack_block        (),</div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>            m_stack_write        (_other.m_stack_write        ),</div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>            m_block_write        (_other.m_block_write        ),</div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>            m_active_block_index (_other.m_active_block_index ),</div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>            m_initial_block_width(_other.m_initial_block_width),</div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>            m_block_width        (_other.m_block_width        ),</div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>            m_blocks             (std::move(_other.m_blocks)  )</div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>        {</div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>            _other.<a class="code hl_function" href="../../df/db2/classchdr_1_1monotonic__pool_a23b477d0e2d399f75d585d154c346591.html#a23b477d0e2d399f75d585d154c346591">release</a>();</div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>        }</div>
+<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span> </div>
+<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span><span class="preprocessor">#if __cplusplus &gt;= 202002L</span></div>
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>        <span class="keyword">constexpr</span></div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>        monotonic_pool&amp; operator=(monotonic_pool&amp;&amp; _other) <span class="keyword">noexcept</span> {</div>
 <div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span> </div>
-<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>                m_stack_write         = _other.m_stack_write;</div>
-<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>                m_block_write         = _other.m_block_write;</div>
-<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>                m_active_block_index  = _other.m_active_block_index;</div>
-<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>                m_initial_block_width = _other.m_initial_block_width;</div>
-<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>                m_block_width         = _other.m_block_width;</div>
-<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>                m_blocks              = std::move(_other.m_blocks);</div>
-<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span> </div>
-<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>                _other.release();</div>
-<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>            }</div>
-<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>            <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>        }</div>
-<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span> </div>
-<div class="foldopen" id="foldopen00385" data-start="{" data-end="}">
-<div class="line"><a id="l00385" name="l00385"></a><span class="lineno"><a class="line" href="../../df/db2/classchdr_1_1monotonic__pool_a20194325f0380eb3bbc6bc6c8b2697d9.html#a20194325f0380eb3bbc6bc6c8b2697d9">  385</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="../../df/db2/classchdr_1_1monotonic__pool_a20194325f0380eb3bbc6bc6c8b2697d9.html#a20194325f0380eb3bbc6bc6c8b2697d9">reset</a>() noexcept {</div>
-<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span> </div>
-<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>            <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span> </div>
-<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>            m_stack_write        = 0U;</div>
-<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>            m_block_write        = 0U;</div>
-<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>            m_active_block_index = 0U;</div>
-<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span> </div>
-<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span><span class="preprocessor">#if CHDR_DIAGNOSTICS == 1</span></div>
-<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span> </div>
-<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>             num_allocated = 0U;</div>
-<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>            peak_allocated = 0U;</div>
-<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span> </div>
-<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_DIAGNOSTICS == 1</span></div>
-<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>        }</div>
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>            <span class="keywordflow">if</span> (<span class="keyword">this</span> != &amp;_other) {</div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span> </div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>                cleanup();</div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span> </div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>                m_stack_write         = _other.m_stack_write;</div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>                m_block_write         = _other.m_block_write;</div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>                m_active_block_index  = _other.m_active_block_index;</div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>                m_initial_block_width = _other.m_initial_block_width;</div>
+<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>                m_block_width         = _other.m_block_width;</div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>                m_blocks              = std::move(_other.m_blocks);</div>
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span> </div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>                _other.release();</div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>            }</div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>            <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>        }</div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span> </div>
+<div class="foldopen" id="foldopen00387" data-start="{" data-end="}">
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno"><a class="line" href="../../df/db2/classchdr_1_1monotonic__pool_a20194325f0380eb3bbc6bc6c8b2697d9.html#a20194325f0380eb3bbc6bc6c8b2697d9">  387</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="../../df/db2/classchdr_1_1monotonic__pool_a20194325f0380eb3bbc6bc6c8b2697d9.html#a20194325f0380eb3bbc6bc6c8b2697d9">reset</a>() noexcept {</div>
+<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>            <span class="keywordflow">return</span> release();</div>
+<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>        }</div>
 </div>
-<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span> </div>
-<div class="foldopen" id="foldopen00419" data-start="{" data-end="}">
-<div class="line"><a id="l00419" name="l00419"></a><span class="lineno"><a class="line" href="../../df/db2/classchdr_1_1monotonic__pool_a23b477d0e2d399f75d585d154c346591.html#a23b477d0e2d399f75d585d154c346591">  419</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="../../df/db2/classchdr_1_1monotonic__pool_a23b477d0e2d399f75d585d154c346591.html#a23b477d0e2d399f75d585d154c346591">release</a>() {</div>
-<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span> </div>
-<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>            m_block_width        = m_initial_block_width;</div>
-<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>            m_stack_write        = 0U;</div>
-<div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span>            m_block_write        = 0U;</div>
-<div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span>            m_active_block_index = 0U;</div>
+<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span> </div>
+<div class="foldopen" id="foldopen00409" data-start="{" data-end="}">
+<div class="line"><a id="l00409" name="l00409"></a><span class="lineno"><a class="line" href="../../df/db2/classchdr_1_1monotonic__pool_a23b477d0e2d399f75d585d154c346591.html#a23b477d0e2d399f75d585d154c346591">  409</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="../../df/db2/classchdr_1_1monotonic__pool_a23b477d0e2d399f75d585d154c346591.html#a23b477d0e2d399f75d585d154c346591">release</a>() {</div>
+<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span> </div>
+<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>            m_block_width        = m_initial_block_width;</div>
+<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span>            m_stack_write        = 0U;</div>
+<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>            m_block_write        = 0U;</div>
+<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>            m_active_block_index = 0U;</div>
+<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span> </div>
+<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>            cleanup();</div>
+<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>            <span class="keyword">decltype</span>(m_blocks) temp{};</div>
+<div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>            m_blocks = std::move(temp);</div>
+<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span> </div>
+<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span><span class="preprocessor">#if CHDR_DIAGNOSTICS == 1</span></div>
+<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>            __diagnostic_data. num_allocated = 0U;</div>
+<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>            __diagnostic_data.peak_allocated = 0U;</div>
+<div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_DIAGNOSTICS == 1</span></div>
+<div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span>        }</div>
+</div>
 <div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span> </div>
-<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span>            cleanup();</div>
-<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>            <span class="keyword">decltype</span>(m_blocks) temp{};</div>
-<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>            m_blocks = std::move(temp);</div>
+<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span><span class="preprocessor">#if CHDR_DIAGNOSTICS == 1</span></div>
+<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>        <span class="keyword">constexpr</span> <span class="keyword">const</span> <span class="keyword">auto</span>&amp; __get_diagnostic_data() { <span class="keywordflow">return</span> __diagnostic_data; };</div>
+<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_DIAGNOSTICS == 1</span></div>
 <div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span> </div>
-<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span><span class="preprocessor">#if CHDR_DIAGNOSTICS == 1</span></div>
+<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>    };</div>
+</div>
 <div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span> </div>
-<div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span>             num_allocated = 0U;</div>
-<div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span>            peak_allocated = 0U;</div>
-<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span> </div>
-<div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_DIAGNOSTICS == 1</span></div>
-<div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span>        }</div>
-</div>
-<div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span>    };</div>
-</div>
-<div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span> </div>
-<div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span>} <span class="comment">//chdr</span></div>
-<div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span> </div>
-<div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span><span class="preprocessor">#endif </span><span class="comment">// CHDR_GROWING_MONOTONIC_RESOURCE_HPP</span></div>
-<div class="ttc" id="aclasschdr_1_1monotonic__pool_a20194325f0380eb3bbc6bc6c8b2697d9_html_a20194325f0380eb3bbc6bc6c8b2697d9"><div class="ttname"><a href="../../df/db2/classchdr_1_1monotonic__pool_a20194325f0380eb3bbc6bc6c8b2697d9.html#a20194325f0380eb3bbc6bc6c8b2697d9">chdr::monotonic_pool::reset</a></div><div class="ttdeci">void reset() noexcept</div><div class="ttdoc">Resets the memory pool state to its initial configuration.</div><div class="ttdef"><b>Definition</b> <a href="../../d4/d99/monotonic__pool_8hpp_source.html#l00385">monotonic_pool.hpp:385</a></div></div>
-<div class="ttc" id="aclasschdr_1_1monotonic__pool_a23b477d0e2d399f75d585d154c346591_html_a23b477d0e2d399f75d585d154c346591"><div class="ttname"><a href="../../df/db2/classchdr_1_1monotonic__pool_a23b477d0e2d399f75d585d154c346591.html#a23b477d0e2d399f75d585d154c346591">chdr::monotonic_pool::release</a></div><div class="ttdeci">void release()</div><div class="ttdoc">Releases all memory resources and resets the internal state of the memory pool.</div><div class="ttdef"><b>Definition</b> <a href="../../d4/d99/monotonic__pool_8hpp_source.html#l00419">monotonic_pool.hpp:419</a></div></div>
-<div class="ttc" id="aclasschdr_1_1monotonic__pool_a46d99ef5f169cf648372a2d7ff61ff15_html_a46d99ef5f169cf648372a2d7ff61ff15"><div class="ttname"><a href="../../df/db2/classchdr_1_1monotonic__pool_a46d99ef5f169cf648372a2d7ff61ff15.html#a46d99ef5f169cf648372a2d7ff61ff15">chdr::monotonic_pool::~monotonic_pool</a></div><div class="ttdeci">virtual ~monotonic_pool() noexcept override</div><div class="ttdoc">Destroys the object and releases all allocated memory.</div><div class="ttdef"><b>Definition</b> <a href="../../d4/d99/monotonic__pool_8hpp_source.html#l00325">monotonic_pool.hpp:325</a></div></div>
-<div class="ttc" id="aclasschdr_1_1monotonic__pool_a7df84a2e107640ba5385112b3b6f8504_html_a7df84a2e107640ba5385112b3b6f8504"><div class="ttname"><a href="../../df/db2/classchdr_1_1monotonic__pool_a7df84a2e107640ba5385112b3b6f8504.html#a7df84a2e107640ba5385112b3b6f8504">chdr::monotonic_pool::do_allocate</a></div><div class="ttdeci">virtual void * do_allocate(const size_t _bytes, const size_t _alignment) override</div><div class="ttdoc">Allocates memory with the specified size and alignment.</div><div class="ttdef"><b>Definition</b> <a href="../../d4/d99/monotonic__pool_8hpp_source.html#l00193">monotonic_pool.hpp:193</a></div></div>
-<div class="ttc" id="aclasschdr_1_1monotonic__pool_a8d661e0c01970b82d6cf1a939fe7a5bb_html_a8d661e0c01970b82d6cf1a939fe7a5bb"><div class="ttname"><a href="../../df/db2/classchdr_1_1monotonic__pool_a8d661e0c01970b82d6cf1a939fe7a5bb.html#a8d661e0c01970b82d6cf1a939fe7a5bb">chdr::monotonic_pool::do_deallocate</a></div><div class="ttdeci">virtual void do_deallocate(void *_p, const size_t _bytes, size_t _alignment) override</div><div class="ttdoc">Does nothing. Deallocation is a no-op in monotonic allocation schemes.</div><div class="ttdef"><b>Definition</b> <a href="../../d4/d99/monotonic__pool_8hpp_source.html#l00275">monotonic_pool.hpp:275</a></div></div>
-<div class="ttc" id="aclasschdr_1_1monotonic__pool_a8d8d1a09629a36930c4f137b135f1800_html_a8d8d1a09629a36930c4f137b135f1800"><div class="ttname"><a href="../../df/db2/classchdr_1_1monotonic__pool_a8d8d1a09629a36930c4f137b135f1800.html#a8d8d1a09629a36930c4f137b135f1800">chdr::monotonic_pool::monotonic_pool</a></div><div class="ttdeci">monotonic_pool(size_t _initial_block_width=s_default_heap_block_size) noexcept</div><div class="ttdoc">Constructs a memory pool.</div><div class="ttdef"><b>Definition</b> <a href="../../d4/d99/monotonic__pool_8hpp_source.html#l00305">monotonic_pool.hpp:305</a></div></div>
-<div class="ttc" id="aclasschdr_1_1monotonic__pool_abda3c8300680a2838ef5ae8640772bb4_html_abda3c8300680a2838ef5ae8640772bb4"><div class="ttname"><a href="../../df/db2/classchdr_1_1monotonic__pool_abda3c8300680a2838ef5ae8640772bb4.html#abda3c8300680a2838ef5ae8640772bb4">chdr::monotonic_pool::do_is_equal</a></div><div class="ttdeci">virtual bool do_is_equal(const memory_resource &amp;_other) const noexcept override</div><div class="ttdoc">Compares the equality of two memory resources.</div><div class="ttdef"><b>Definition</b> <a href="../../d4/d99/monotonic__pool_8hpp_source.html#l00289">monotonic_pool.hpp:289</a></div></div>
+<div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span>} <span class="comment">//chdr</span></div>
+<div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span> </div>
+<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span><span class="preprocessor">#endif </span><span class="comment">// CHDR_GROWING_MONOTONIC_RESOURCE_HPP</span></div>
+<div class="ttc" id="aclasschdr_1_1monotonic__pool_a20194325f0380eb3bbc6bc6c8b2697d9_html_a20194325f0380eb3bbc6bc6c8b2697d9"><div class="ttname"><a href="../../df/db2/classchdr_1_1monotonic__pool_a20194325f0380eb3bbc6bc6c8b2697d9.html#a20194325f0380eb3bbc6bc6c8b2697d9">chdr::monotonic_pool::reset</a></div><div class="ttdeci">void reset() noexcept</div><div class="ttdoc">Releases all memory resources and resets the internal state of the memory pool.</div><div class="ttdef"><b>Definition</b> <a href="../../d4/d99/monotonic__pool_8hpp_source.html#l00387">monotonic_pool.hpp:387</a></div></div>
+<div class="ttc" id="aclasschdr_1_1monotonic__pool_a23b477d0e2d399f75d585d154c346591_html_a23b477d0e2d399f75d585d154c346591"><div class="ttname"><a href="../../df/db2/classchdr_1_1monotonic__pool_a23b477d0e2d399f75d585d154c346591.html#a23b477d0e2d399f75d585d154c346591">chdr::monotonic_pool::release</a></div><div class="ttdeci">void release()</div><div class="ttdoc">Releases all memory resources and resets the internal state of the memory pool.</div><div class="ttdef"><b>Definition</b> <a href="../../d4/d99/monotonic__pool_8hpp_source.html#l00409">monotonic_pool.hpp:409</a></div></div>
+<div class="ttc" id="aclasschdr_1_1monotonic__pool_a46d99ef5f169cf648372a2d7ff61ff15_html_a46d99ef5f169cf648372a2d7ff61ff15"><div class="ttname"><a href="../../df/db2/classchdr_1_1monotonic__pool_a46d99ef5f169cf648372a2d7ff61ff15.html#a46d99ef5f169cf648372a2d7ff61ff15">chdr::monotonic_pool::~monotonic_pool</a></div><div class="ttdeci">virtual ~monotonic_pool() noexcept override</div><div class="ttdoc">Destroys the object and releases all allocated memory.</div><div class="ttdef"><b>Definition</b> <a href="../../d4/d99/monotonic__pool_8hpp_source.html#l00329">monotonic_pool.hpp:329</a></div></div>
+<div class="ttc" id="aclasschdr_1_1monotonic__pool_a7df84a2e107640ba5385112b3b6f8504_html_a7df84a2e107640ba5385112b3b6f8504"><div class="ttname"><a href="../../df/db2/classchdr_1_1monotonic__pool_a7df84a2e107640ba5385112b3b6f8504.html#a7df84a2e107640ba5385112b3b6f8504">chdr::monotonic_pool::do_allocate</a></div><div class="ttdeci">virtual void * do_allocate(const size_t _bytes, const size_t _alignment) override</div><div class="ttdoc">Allocates memory with the specified size and alignment.</div><div class="ttdef"><b>Definition</b> <a href="../../d4/d99/monotonic__pool_8hpp_source.html#l00197">monotonic_pool.hpp:197</a></div></div>
+<div class="ttc" id="aclasschdr_1_1monotonic__pool_a8d661e0c01970b82d6cf1a939fe7a5bb_html_a8d661e0c01970b82d6cf1a939fe7a5bb"><div class="ttname"><a href="../../df/db2/classchdr_1_1monotonic__pool_a8d661e0c01970b82d6cf1a939fe7a5bb.html#a8d661e0c01970b82d6cf1a939fe7a5bb">chdr::monotonic_pool::do_deallocate</a></div><div class="ttdeci">virtual void do_deallocate(void *_p, const size_t _bytes, size_t _alignment) override</div><div class="ttdoc">Does nothing. Deallocation is a no-op in monotonic allocation schemes.</div><div class="ttdef"><b>Definition</b> <a href="../../d4/d99/monotonic__pool_8hpp_source.html#l00279">monotonic_pool.hpp:279</a></div></div>
+<div class="ttc" id="aclasschdr_1_1monotonic__pool_a8d8d1a09629a36930c4f137b135f1800_html_a8d8d1a09629a36930c4f137b135f1800"><div class="ttname"><a href="../../df/db2/classchdr_1_1monotonic__pool_a8d8d1a09629a36930c4f137b135f1800.html#a8d8d1a09629a36930c4f137b135f1800">chdr::monotonic_pool::monotonic_pool</a></div><div class="ttdeci">monotonic_pool(size_t _initial_block_width=s_default_heap_block_size) noexcept</div><div class="ttdoc">Constructs a memory pool.</div><div class="ttdef"><b>Definition</b> <a href="../../d4/d99/monotonic__pool_8hpp_source.html#l00309">monotonic_pool.hpp:309</a></div></div>
+<div class="ttc" id="aclasschdr_1_1monotonic__pool_abda3c8300680a2838ef5ae8640772bb4_html_abda3c8300680a2838ef5ae8640772bb4"><div class="ttname"><a href="../../df/db2/classchdr_1_1monotonic__pool_abda3c8300680a2838ef5ae8640772bb4.html#abda3c8300680a2838ef5ae8640772bb4">chdr::monotonic_pool::do_is_equal</a></div><div class="ttdeci">virtual bool do_is_equal(const memory_resource &amp;_other) const noexcept override</div><div class="ttdoc">Compares the equality of two memory resources.</div><div class="ttdef"><b>Definition</b> <a href="../../d4/d99/monotonic__pool_8hpp_source.html#l00293">monotonic_pool.hpp:293</a></div></div>
 <div class="ttc" id="aclasschdr_1_1monotonic__pool_html"><div class="ttname"><a href="../../df/db2/classchdr_1_1monotonic__pool.html">chdr::monotonic_pool</a></div><div class="ttdoc">A pooled memory resource that manages memory blocks in a monotonic allocation scheme.</div><div class="ttdef"><b>Definition</b> <a href="../../d4/d99/monotonic__pool_8hpp_source.html#l00051">monotonic_pool.hpp:51</a></div></div>
 <div class="ttc" id="aintrinsics_8hpp_a1eb14cc432874ddacd1934791dbe12a3_html_a1eb14cc432874ddacd1934791dbe12a3"><div class="ttname"><a href="../../d7/d65/intrinsics_8hpp_a1eb14cc432874ddacd1934791dbe12a3.html#a1eb14cc432874ddacd1934791dbe12a3">HOT</a></div><div class="ttdeci">#define HOT</div><div class="ttdoc">Marks a function as performance-critical (platform-specific).</div><div class="ttdef"><b>Definition</b> <a href="../../d7/d65/intrinsics_8hpp_source.html#l00254">intrinsics.hpp:254</a></div></div>
 <div class="ttc" id="aintrinsics_8hpp_a52741d1d1278f94b08fdb0cb045027be_html_a52741d1d1278f94b08fdb0cb045027be"><div class="ttname"><a href="../../d7/d65/intrinsics_8hpp_a52741d1d1278f94b08fdb0cb045027be.html#a52741d1d1278f94b08fdb0cb045027be">PREFETCH</a></div><div class="ttdeci">#define PREFETCH(P, I)</div><div class="ttdoc">Provides a compiler hint to prefetch memory (platform-specific).</div><div class="ttdef"><b>Definition</b> <a href="../../d7/d65/intrinsics_8hpp_source.html#l00245">intrinsics.hpp:245</a></div></div>
