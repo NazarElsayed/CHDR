@@ -145,7 +145,7 @@ namespace chdr::solvers {
 
             _open.emplace_back(s, static_cast<scalar_t>(0), bound);
 
-            stack<state<neighbours_t>> stack{};
+            stack<state<neighbours_t>> stack(_params.heterogeneous_pmr);
 
             transposition_table_t transposition_table(_params.heterogeneous_pmr);
 
@@ -202,11 +202,16 @@ namespace chdr::solvers {
                     }
                 }
 
-                _open.erase(_open.begin() + 1U, _open.end());
-                stack.clear();
-                transposition_table.clear();
+                if (!_open.empty()) {
+                    _open.erase(_open.begin() + 1U, _open.end());
+                    stack.clear();
+                    transposition_table.clear();
 
-                bound = min;
+                    bound = min;
+                }
+                else {
+                    break;
+                }
             }
             while (bound != std::numeric_limits<scalar_t>::max());
 
@@ -217,7 +222,7 @@ namespace chdr::solvers {
 
             const auto capacity = solver_t::solver_utils::determine_capacity(_params);
 
-            std::pmr::vector<node> open(_params.heterogeneous_pmr);
+            std::pmr::vector<node> open(_params.homogeneous_pmr);
             try {
                 open.reserve(capacity / 8U);
             }

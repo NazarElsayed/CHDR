@@ -236,16 +236,12 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
-            std::unordered_map<index_t, node> all_nodes;
+            std::pmr::unordered_map<index_t, node> all_nodes(_params.heterogeneous_pmr);
 
             // Define heuristic for quantifying memory usage:
             const auto memory_usage = [&all_nodes, &_open]() ALWAYS_INLINE {
                 return all_nodes.size() + _open.size();
             };
-
-#if CHDR_DIAGNOSTICS == 1
-            size_t peak_memory_usage = 0U;
-#endif //CHDR_DIAGNOSTICS == 1
 
             _open.emplace(
                 all_nodes[static_cast<index_t>(s)] = node(
@@ -313,18 +309,9 @@ namespace chdr::solvers {
                     }
                 }
                 else { // SOLUTION FOUND...
-
-#if CHDR_DIAGNOSTICS == 1
-                    std::cout << "Peak Memory Usage: " << peak_memory_usage << "\n";
-#endif //CHDR_DIAGNOSTICS == 1
-
                     return rbacktrack(curr, all_nodes, _params);
                 }
             }
-
-#if CHDR_DIAGNOSTICS == 1
-            std::cout << "Peak Memory Usage: " << peak_memory_usage << "\n";
-#endif //CHDR_DIAGNOSTICS == 1
 
             return std::vector<coord_t>{};
         }

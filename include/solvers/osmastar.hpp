@@ -226,7 +226,7 @@ namespace chdr::solvers {
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
-            std::unordered_map<index_t, node> all_nodes;
+            std::pmr::unordered_map<index_t, node> all_nodes(_params.heterogeneous_pmr);
 
             // Define heuristic for quantifying memory usage:
             const auto memory_usage = [&all_nodes, &_open]() ALWAYS_INLINE {

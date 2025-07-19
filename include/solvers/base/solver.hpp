@@ -624,49 +624,38 @@ namespace chdr::solvers {
                 exception = std::current_exception();
             }
 
-// #if CHDR_DIAGNOSTICS == 1
-//
-//             /*
-//              * Report peak memory usage:
-//              */
-//
-//             const size_t peak_memory_bytes =
-//                 (_params.    monotonic_pmr != nullptr ?     _params.monotonic_pmr->__get_diagnostic_data().peak_allocated : 0UL) +
-//                 (_params.heterogeneous_pmr != nullptr ? _params.heterogeneous_pmr->__get_diagnostic_data().peak_allocated : 0UL) +
-//                 (_params.  homogeneous_pmr != nullptr ?   _params.homogeneous_pmr->__get_diagnostic_data().peak_allocated : 0UL);
-//
-//             std::cout << "Peak Memory: " << peak_memory_bytes << " bytes\n";
-// #endif //CHDR_DIAGNOSTICS == 1
-
             /*
              * Release resources with deferred exception handling:
              */
 
-            try {
-                if constexpr (solver_utils::template has_method_reset_v<std::remove_pointer_t<std::decay_t<decltype(_params.monotonic_pmr)>>>) {
-                    if (_params.monotonic_pmr != nullptr) { _params.monotonic_pmr->reset(); }
-                }
-            }
-            catch (...) { // NOLINT(*-empty-catch)
-                if (exception == nullptr) { exception = std::current_exception(); }
-            }
+            if constexpr (!params_t::no_cleanup::value) {
 
-            try {
-                if constexpr (solver_utils::template has_method_reset_v<std::remove_pointer_t<std::decay_t<decltype(_params.heterogeneous_pmr)>>>) {
-                    if (_params.heterogeneous_pmr != nullptr) { _params.heterogeneous_pmr->reset(); }
+                try {
+                    if constexpr (solver_utils::template has_method_reset_v<std::remove_pointer_t<std::decay_t<decltype(_params.monotonic_pmr)>>>) {
+                        if (_params.monotonic_pmr != nullptr) { _params.monotonic_pmr->reset(); }
+                    }
                 }
-            }
-            catch (...) { // NOLINT(*-empty-catch)
-                if (exception == nullptr) { exception = std::current_exception(); }
-            }
+                catch (...) { // NOLINT(*-empty-catch)
+                    if (exception == nullptr) { exception = std::current_exception(); }
+                }
 
-            try {
-                if constexpr (solver_utils::template has_method_reset_v<std::remove_pointer_t<std::decay_t<decltype(_params.homogeneous_pmr)>>>) {
-                    if (_params.homogeneous_pmr != nullptr) { _params.homogeneous_pmr->reset(); }
+                try {
+                    if constexpr (solver_utils::template has_method_reset_v<std::remove_pointer_t<std::decay_t<decltype(_params.heterogeneous_pmr)>>>) {
+                        if (_params.heterogeneous_pmr != nullptr) { _params.heterogeneous_pmr->reset(); }
+                    }
                 }
-            }
-            catch (...) { // NOLINT(*-empty-catch)
-                if (exception == nullptr) { exception = std::current_exception(); }
+                catch (...) { // NOLINT(*-empty-catch)
+                    if (exception == nullptr) { exception = std::current_exception(); }
+                }
+
+                try {
+                    if constexpr (solver_utils::template has_method_reset_v<std::remove_pointer_t<std::decay_t<decltype(_params.homogeneous_pmr)>>>) {
+                        if (_params.homogeneous_pmr != nullptr) { _params.homogeneous_pmr->reset(); }
+                    }
+                }
+                catch (...) { // NOLINT(*-empty-catch)
+                    if (exception == nullptr) { exception = std::current_exception(); }
+                }
             }
 
             // Report first exception to occur:

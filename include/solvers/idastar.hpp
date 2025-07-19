@@ -144,7 +144,7 @@ namespace chdr::solvers {
 
             _open.emplace_back(s, 0, bound);
 
-            stack<state<neighbours_t>> stack{};
+            stack<state<neighbours_t>> stack(_params.heterogeneous_pmr);
 
             do {
 
@@ -192,10 +192,14 @@ namespace chdr::solvers {
                     }
                 }
 
-                _open.erase(_open.begin() + 1U, _open.end());
-                stack.clear();
-
-                bound = min;
+                if (_open.size() > 1U) {
+                    _open.erase(_open.begin() + 1U, _open.end());
+                    stack.clear();
+                    bound = min;
+                }
+                else {
+                    break;
+                }
             }
             while (bound != std::numeric_limits<scalar_t>::max());
 
@@ -206,7 +210,7 @@ namespace chdr::solvers {
 
             const auto capacity = solver_t::solver_utils::determine_capacity(_params);
 
-            std::pmr::vector<node> open(_params.heterogeneous_pmr);
+            std::pmr::vector<node> open(_params.homogeneous_pmr);
             try {
                 open.reserve(capacity / 8U);
             }

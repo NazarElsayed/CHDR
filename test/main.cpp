@@ -91,6 +91,7 @@ namespace test {
                 using   coord_type [[maybe_unused]] =  coord_t;
 
                 using lazy_sorting [[maybe_unused]] = std::true_type;
+                using   no_cleanup [[maybe_unused]] = std::false_type;
 
                 const chdr::mazes::grid<coord_t, weight_t>& maze;
                 const     coord_type  start;
@@ -197,6 +198,14 @@ namespace test {
                             std::chrono::high_resolution_clock::now() - sw_start
                         ).count()
                     );
+
+                    if (i != test_samples - 1U) {
+                        _params.    monotonic_pmr->reset();
+                        _params.heterogeneous_pmr->reset();
+                        _params.  homogeneous_pmr->reset();
+
+                        std::cout << "resetting\n";
+                    }
                 }
 
                 result = chdr::utils::max(result - noise_floor_min, std::numeric_limits<long double>::epsilon());
@@ -223,6 +232,7 @@ namespace test {
                 using  coord_type [[maybe_unused]] = coord_t;
 
                 using lazy_sorting [[maybe_unused]] = std::false_type;
+                using   no_cleanup [[maybe_unused]] = std::true_type;
 
                 const decltype(generator::gppc::map<weight_t, coord_t>::maze)& maze;
 
@@ -274,26 +284,26 @@ namespace test {
 
             const std::array tests {
                 MAKE_TEST_VARIANT(        astar),
-                MAKE_TEST_VARIANT(   best_first),
-                MAKE_TEST_VARIANT(          bfs),
-                MAKE_TEST_VARIANT(          dfs),
+                // MAKE_TEST_VARIANT(   best_first),
+                // MAKE_TEST_VARIANT(          bfs),
+                // MAKE_TEST_VARIANT(          dfs),
                 // MAKE_TEST_VARIANT(     dijkstra),
                 MAKE_TEST_VARIANT(     eidastar),
-                MAKE_TEST_VARIANT(eidbest_first),
-                MAKE_TEST_VARIANT(       eiddfs),
-                MAKE_TEST_VARIANT(        flood),
-                MAKE_TEST_VARIANT(       fringe),
-                MAKE_TEST_VARIANT(  gbest_first),
-                MAKE_TEST_VARIANT(         gbfs),
-                MAKE_TEST_VARIANT(         gdfs),
-                MAKE_TEST_VARIANT(         gjps),
-                MAKE_TEST_VARIANT(        gstar),
-                MAKE_TEST_VARIANT(      idastar),
-                MAKE_TEST_VARIANT( idbest_first),
-                MAKE_TEST_VARIANT(        iddfs),
+                // MAKE_TEST_VARIANT(eidbest_first),
+                // MAKE_TEST_VARIANT(       eiddfs),
+                // MAKE_TEST_VARIANT(        flood),
+                // MAKE_TEST_VARIANT(       fringe),
+                // MAKE_TEST_VARIANT(  gbest_first),
+                // MAKE_TEST_VARIANT(         gbfs),
+                // MAKE_TEST_VARIANT(         gdfs),
+                // MAKE_TEST_VARIANT(         gjps),
+                // MAKE_TEST_VARIANT(        gstar),
+                // MAKE_TEST_VARIANT(      idastar),
+                // MAKE_TEST_VARIANT( idbest_first),
+                // MAKE_TEST_VARIANT(        iddfs),
                 MAKE_TEST_VARIANT(          jps),
                 MAKE_TEST_VARIANT(       mgstar),
-                MAKE_TEST_VARIANT(     osmastar),
+                // MAKE_TEST_VARIANT(     osmastar),
                 MAKE_TEST_VARIANT(      smastar)
             };
 
@@ -307,6 +317,9 @@ namespace test {
 
             const auto gppc_dir = std::filesystem::current_path() / "gppc";
             if (std::filesystem::exists(gppc_dir)) {
+
+                std::cout << "~ Running Diagnostics (GPPC) ~\n"
+                          << "FORMAT = [SECONDS, BYTES]\n";
 
                 for (const auto& subdir : std::filesystem::directory_iterator(gppc_dir)) {
 
@@ -334,25 +347,29 @@ namespace test {
                                     }
                                     std::cout << name << ": " << std::flush;
 
+                                    auto monotonic     = chdr::    monotonic_pool();
+                                    auto heterogeneous = chdr::heterogeneous_pool();
+                                    auto homogeneous   = chdr::  homogeneous_pool();
+
+                                    auto time = std::visit(
+                                        [&](const auto& _t) -> long double {
+                                            return invoke_benchmark<std::decay_t<decltype(_t)>>( params { map.maze, scenario.start, scenario.end, map.metadata.size, &chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &heterogeneous, &homogeneous });
+                                        },
+                                        variant
+                                    );
+
                                     size_t peak_memory_usage { 0U };
-                                    {
-                                        auto monotonic     = chdr::    monotonic_pool();
-                                        auto heterogeneous = chdr::heterogeneous_pool();
-                                        auto homogeneous   = chdr::  homogeneous_pool();
+#ifdef CHDR_DIAGNOSTICS
+                                    peak_memory_usage = monotonic.__get_diagnostic_data().peak_allocated +
+                                                    heterogeneous.__get_diagnostic_data().peak_allocated +
+                                                      homogeneous.__get_diagnostic_data().peak_allocated;
+#endif //CHDR_DIAGNOSTICS
 
-                                        auto time = std::visit(
-                                            [&](const auto& _t) -> long double {
-                                                return invoke_benchmark<std::decay_t<decltype(_t)>>( params { map.maze, scenario.start, scenario.end, map.metadata.size, &chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &heterogeneous, &homogeneous });
-                                            },
-                                            variant
-                                        );
+                                        monotonic.reset();
+                                    heterogeneous.reset();
+                                      homogeneous.reset();
 
-                                        peak_memory_usage = monotonic.__get_diagnostic_data().peak_allocated +
-                                                        heterogeneous.__get_diagnostic_data().peak_allocated +
-                                                          homogeneous.__get_diagnostic_data().peak_allocated;
-                                    }
-
-                                    std::cout << " " << std::fixed << std::setprecision(9) << time << " " << peak_memory_usage << "\n";
+                                    std::cout << " " << std::fixed << std::setprecision(9) << time << ", " << peak_memory_usage << "\n";
                                 }
                             }
                         }
@@ -413,6 +430,7 @@ namespace test {
                 using   coord_type [[maybe_unused]] =  coord_t;
 
                 using lazy_sorting [[maybe_unused]] = std::false_type;
+                using   no_cleanup [[maybe_unused]] = std::false_type;
 
                 const decltype(test)& maze;
                 const     coord_type  start;
