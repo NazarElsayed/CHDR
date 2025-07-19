@@ -150,7 +150,7 @@ namespace chdr::solvers {
                 return _open.size() + closed_allocations + dynamic_allocations;
             };
 
-            stack<node*> expunct(_params.homogeneous_pmr);
+            stack<node*> expunct;
 
             std::optional<node> best_solution;
 

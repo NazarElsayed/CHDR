@@ -203,8 +203,6 @@ namespace test {
                         _params.    monotonic_pmr->reset();
                         _params.heterogeneous_pmr->reset();
                         _params.  homogeneous_pmr->reset();
-
-                        std::cout << "resetting\n";
                     }
                 }
 
@@ -248,7 +246,7 @@ namespace test {
 
                 const scalar_type weight       = 1U;
                 const size_t      capacity     = 0U;
-                const size_t      memory_limit = static_cast<size_t>(90U);
+                const size_t      memory_limit = 0U;
             };
 
             using variant_t = std::variant<
@@ -353,17 +351,30 @@ namespace test {
 
                                     auto time = std::visit(
                                         [&](const auto& _t) -> long double {
-                                            return invoke_benchmark<std::decay_t<decltype(_t)>>( params { map.maze, scenario.start, scenario.end, map.metadata.size, &chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &heterogeneous, &homogeneous });
+                                            return invoke_benchmark<std::decay_t<decltype(_t)>>(
+                                                params {
+                                                    map.maze,
+                                                    scenario.start,
+                                                    scenario.end,
+                                                    map.metadata.size,
+                                                    &chdr::heuristics::manhattan_distance<scalar_t, coord_t>,
+                                                    &monotonic,
+                                                    &heterogeneous,
+                                                    &homogeneous,
+                                                    1U,
+                                                    0U,
+                                                    1024U
+                                                });
                                         },
                                         variant
                                     );
 
                                     size_t peak_memory_usage { 0U };
-#ifdef CHDR_DIAGNOSTICS
+#if CHDR_DIAGNOSTICS == 1
                                     peak_memory_usage = monotonic.__get_diagnostic_data().peak_allocated +
                                                     heterogeneous.__get_diagnostic_data().peak_allocated +
                                                       homogeneous.__get_diagnostic_data().peak_allocated;
-#endif //CHDR_DIAGNOSTICS
+#endif //CHDR_DIAGNOSTICS == 1
 
                                         monotonic.reset();
                                     heterogeneous.reset();
@@ -442,12 +453,12 @@ namespace test {
                 decltype(heterogeneous)* heterogeneous_pmr;
                 decltype(  homogeneous)*   homogeneous_pmr;
 
-                const scalar_type weight       = 1U;
-                const      size_t capacity     = 0U;
-                const      size_t memory_limit = static_cast<size_t>(90U);
+                const scalar_type weight       =  1U;
+                const      size_t capacity     =  0U;
+                const      size_t memory_limit = 90U;
             };
 
-            const params args { test, start, end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &heterogeneous, &homogeneous };
+            const params args { test, start, end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &heterogeneous, &homogeneous};
 
                  if (_solver == "astar"        ) { result = invoke<chdr::solvers::        astar, params>(args); }
             else if (_solver == "best_first"   ) { result = invoke<chdr::solvers::   best_first, params>(args); }
