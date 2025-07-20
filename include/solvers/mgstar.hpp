@@ -150,7 +150,7 @@ namespace chdr::solvers {
                 return _open.size() + closed_allocations + dynamic_allocations;
             };
 
-            stack<node*> expunct;
+            stack<node*> expunct(_params.heterogeneous_pmr);
 
             std::optional<node> best_solution;
 
@@ -241,7 +241,7 @@ namespace chdr::solvers {
             existence_set closed(_params.monotonic_pmr);
             closed.reserve(capacity);
 
-            std::pmr::multiset<node> open(_params.heterogeneous_pmr);
+            std::pmr::multiset<node> open(_params.homogeneous_pmr);
 
             return solve_internal(open, closed, capacity, _params);
         }

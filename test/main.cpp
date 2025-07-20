@@ -280,6 +280,7 @@ namespace test {
 
             #define MAKE_TEST_VARIANT(name) test { #name, variant_t { std::in_place_type<chdr::solvers::solver<chdr::solvers::name, params>> } }
 
+            // Comment or uncomment as needed:
             const std::array tests {
                 MAKE_TEST_VARIANT(        astar),
                 // MAKE_TEST_VARIANT(   best_first),
@@ -316,8 +317,15 @@ namespace test {
             const auto gppc_dir = std::filesystem::current_path() / "gppc";
             if (std::filesystem::exists(gppc_dir)) {
 
-                std::cout << "~ Running Diagnostics (GPPC) ~\n"
+                std::ofstream log("output.txt");
+
+                std::cout << std::fixed << std::setprecision(9)
+                          << "~ Running Diagnostics (GPPC) ~\n\n"
                           << "FORMAT = [SECONDS, BYTES]\n";
+
+                log << std::fixed << std::setprecision(9)
+                    << "~ Running Diagnostics (GPPC) ~\n\n"
+                    << "FORMAT = [SECONDS, BYTES]\n";
 
                 for (const auto& subdir : std::filesystem::directory_iterator(gppc_dir)) {
 
@@ -329,21 +337,26 @@ namespace test {
                             const auto [map, scenarios] = generator::gppc::generate<weight_t, coord_t, scalar_t>(entry.path(), scenarios_path);
 
                             std::cout << map.metadata.name << ":\n";
+                                  log << map.metadata.name << ":\n";
 
                             for (size_t i = 0U; i != scenarios.size(); ++i) {
 
                                 const auto& scenario = scenarios[i];
 
-                                std::cout << "\tScenario " << (i + 1U) << " (Length: " << scenario.distance << "):\n";
+                                std::cout << "Scenario " << (i + 1U) << " (Length: " << scenario.distance << "):\n";
+                                      log << "Scenario " << (i + 1U) << " (Length: " << scenario.distance << "):\n";
 
                                 for (const auto& [name, variant] : tests) {
 
                                     // Right-aligned print:
-                                    std::cout << "\t\t";
+                                    std::cout << "\t";
+                                          log << "\t";
                                     for (size_t j = 0U; j < longest_solver_name - name.size(); ++j) {
                                         std::cout << " ";
+                                              log << " ";
                                     }
                                     std::cout << name << ": " << std::flush;
+                                          log << name << ": ";
 
                                     auto monotonic     = chdr::    monotonic_pool();
                                     auto heterogeneous = chdr::heterogeneous_pool();
@@ -380,12 +393,14 @@ namespace test {
                                     heterogeneous.reset();
                                       homogeneous.reset();
 
-                                    std::cout << " " << std::fixed << std::setprecision(9) << time << ", " << peak_memory_usage << "\n";
+                                    std::cout << " " << time << ", " << peak_memory_usage << "\n";
+                                          log << " " << time << ", " << peak_memory_usage << "\n";
                                 }
                             }
                         }
                         catch (const std::exception& e) {
-                            debug::log(e);
+                            std::cout << e.what() << "\n";
+                                  log << e.what() << "\n";
                         }
                     }
                 }
