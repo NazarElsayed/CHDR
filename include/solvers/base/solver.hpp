@@ -349,11 +349,8 @@ namespace chdr::solvers {
              *          that occurs during resource release while attempting to release all resources.
              *
              * @param [in] _params The parameter object containing the resources to reset.
-             * @param [in] _force If true, forces resource reset even when no_cleanup is set (defaults to false).
              *
              * @throws Rethrows any exception that occurred during resource release.
-             *
-             * @note Resource release is skipped if params_t::no_cleanup is true and _force is false.
              *
              * @warning The method expects the memory resources to have a visible release() method.
              *          Aliasing the resources as other types may hide this method and prevent proper cleanup.
@@ -412,16 +409,13 @@ namespace chdr::solvers {
              *          that occurs during resource release while attempting to release all resources.
              *
              * @param [in] _params The parameter object containing the resources to be released.
-             * @param [in] _force If true, forces resource release even when no_cleanup is set (defaults to false).
              *
              * @throws Rethrows any exception that occurred during resource release.
-             *
-             * @note Resource release is skipped if params_t::no_cleanup is true and _force is false.
              *
              * @warning The method expects the memory resources to have a visible release() method.
              *          Aliasing the resources as other types may hide this method and prevent proper cleanup.
              */
-            static constexpr void release_resources(const params_t& _params, bool _force = false) {
+            static constexpr void release_resources(const params_t& _params) {
 
                 std::exception_ptr e { nullptr };
 
