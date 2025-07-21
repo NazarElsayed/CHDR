@@ -336,8 +336,10 @@ namespace test {
 
                             const auto [map, scenarios] = generator::gppc::generate<weight_t, coord_t, scalar_t>(entry.path(), scenarios_path);
 
-                            std::cout << map.metadata.name << ":\n";
-                                  log << map.metadata.name << ":\n";
+                            std::array<long double, tests.size()> averages;
+
+                            std::cout << "Map: \"" << map.metadata.name << "\":\n";
+                                  log << "Map: \"" << map.metadata.name << "\":\n";
 
                             for (size_t i = 0U; i != scenarios.size(); ++i) {
 
@@ -346,12 +348,14 @@ namespace test {
                                 std::cout << "Scenario " << (i + 1U) << " (Length: " << scenario.distance << "):\n";
                                       log << "Scenario " << (i + 1U) << " (Length: " << scenario.distance << "):\n";
 
-                                for (const auto& [name, variant] : tests) {
+                                for (size_t j = 0U; j != tests.size(); ++j) {
+
+                                    const auto& [name, variant] = tests[j];
 
                                     // Right-aligned print:
                                     std::cout << "\t";
                                           log << "\t";
-                                    for (size_t j = 0U; j < longest_solver_name - name.size(); ++j) {
+                                    for (size_t k = 0U; k < longest_solver_name - name.size(); ++k) {
                                         std::cout << " ";
                                               log << " ";
                                     }
@@ -389,14 +393,19 @@ namespace test {
                                                       homogeneous.__get_diagnostic_data().peak_allocated;
 #endif //CHDR_DIAGNOSTICS == 1
 
-                                        monotonic.reset();
-                                    heterogeneous.reset();
-                                      homogeneous.reset();
+                                    averages[j] += time;
 
                                     std::cout << " " << time << ", " << peak_memory_usage << "\n";
                                           log << " " << time << ", " << peak_memory_usage << "\n";
                                 }
                             }
+
+                            for (auto& item : averages) {
+                                item /= scenarios.size();
+                            }
+
+                            std::cout << "Map completed.\n Averages: " << averages[0U] << "\n";
+                                  log << "Map completed.\n Averages: " << averages[0U] << "\n";
                         }
                         catch (const std::exception& e) {
                             std::cout << e.what() << "\n";

@@ -337,6 +337,132 @@ namespace chdr::solvers {
             }
 
             /**
+             * @brief Resets allocated resources associated with the solver parameters.
+             *
+             * @details This method attempts to reset resources held by the polymorphic memory resources
+             *          specified in the parameters. It handles three types of resources:
+             *          - monotonic_pmr
+             *          - heterogeneous_pmr
+             *          - homogeneous_pmr
+             *
+             *          The method implements deferred exception handling, capturing the first exception
+             *          that occurs during resource release while attempting to release all resources.
+             *
+             * @param [in] _params The parameter object containing the resources to reset.
+             * @param [in] _force If true, forces resource reset even when no_cleanup is set (defaults to false).
+             *
+             * @throws Rethrows any exception that occurred during resource release.
+             *
+             * @note Resource release is skipped if params_t::no_cleanup is true and _force is false.
+             *
+             * @warning The method expects the memory resources to have a visible release() method.
+             *          Aliasing the resources as other types may hide this method and prevent proper cleanup.
+             */
+            static constexpr void reset_resources(const params_t& _params) {
+
+                std::exception_ptr e { nullptr };
+
+                /*
+                 * Reset resources with deferred exception handling:
+                 */
+
+                try {
+                    if constexpr (solver_utils::template has_method_reset_v<std::remove_pointer_t<std::decay_t<decltype(_params.monotonic_pmr)>>>) {
+                        if (_params.monotonic_pmr != nullptr) { _params.monotonic_pmr->reset(); }
+                    }
+                }
+                catch (...) { // NOLINT(*-empty-catch)
+                    if (e == nullptr) { e = std::current_exception(); }
+                }
+
+                try {
+                    if constexpr (solver_utils::template has_method_reset_v<std::remove_pointer_t<std::decay_t<decltype(_params.heterogeneous_pmr)>>>) {
+                        if (_params.heterogeneous_pmr != nullptr) { _params.heterogeneous_pmr->reset(); }
+                    }
+                }
+                catch (...) { // NOLINT(*-empty-catch)
+                    if (e == nullptr) { e = std::current_exception(); }
+                }
+
+                try {
+                    if constexpr (solver_utils::template has_method_reset_v<std::remove_pointer_t<std::decay_t<decltype(_params.homogeneous_pmr)>>>) {
+                        if (_params.homogeneous_pmr != nullptr) { _params.homogeneous_pmr->reset(); }
+                    }
+                }
+                catch (...) { // NOLINT(*-empty-catch)
+                    if (e == nullptr) { e = std::current_exception(); }
+                }
+
+                // Report first exception to occur:
+                if (e != nullptr) {
+                    std::rethrow_exception(e);
+                }
+            }
+
+            /**
+             * @brief Releases allocated resources associated with the solver parameters.
+             *
+             * @details This method attempts to release resources held by the polymorphic memory resources
+             *          specified in the parameters. It handles three types of resources:
+             *          - monotonic_pmr
+             *          - heterogeneous_pmr
+             *          - homogeneous_pmr
+             *
+             *          The method implements deferred exception handling, capturing the first exception
+             *          that occurs during resource release while attempting to release all resources.
+             *
+             * @param [in] _params The parameter object containing the resources to be released.
+             * @param [in] _force If true, forces resource release even when no_cleanup is set (defaults to false).
+             *
+             * @throws Rethrows any exception that occurred during resource release.
+             *
+             * @note Resource release is skipped if params_t::no_cleanup is true and _force is false.
+             *
+             * @warning The method expects the memory resources to have a visible release() method.
+             *          Aliasing the resources as other types may hide this method and prevent proper cleanup.
+             */
+            static constexpr void release_resources(const params_t& _params, bool _force = false) {
+
+                std::exception_ptr e { nullptr };
+
+                /*
+                 * Reset resources with deferred exception handling:
+                 */
+
+                try {
+                    if constexpr (solver_utils::template has_method_reset_v<std::remove_pointer_t<std::decay_t<decltype(_params.monotonic_pmr)>>>) {
+                        if (_params.monotonic_pmr != nullptr) { _params.monotonic_pmr->release(); }
+                    }
+                }
+                catch (...) { // NOLINT(*-empty-catch)
+                    if (e == nullptr) { e = std::current_exception(); }
+                }
+
+                try {
+                    if constexpr (solver_utils::template has_method_reset_v<std::remove_pointer_t<std::decay_t<decltype(_params.heterogeneous_pmr)>>>) {
+                        if (_params.heterogeneous_pmr != nullptr) { _params.heterogeneous_pmr->release(); }
+                    }
+                }
+                catch (...) { // NOLINT(*-empty-catch)
+                    if (e == nullptr) { e = std::current_exception(); }
+                }
+
+                try {
+                    if constexpr (solver_utils::template has_method_reset_v<std::remove_pointer_t<std::decay_t<decltype(_params.homogeneous_pmr)>>>) {
+                        if (_params.homogeneous_pmr != nullptr) { _params.homogeneous_pmr->release(); }
+                    }
+                }
+                catch (...) { // NOLINT(*-empty-catch)
+                    if (e == nullptr) { e = std::current_exception(); }
+                }
+
+                // Report first exception to occur:
+                if (e != nullptr) {
+                    std::rethrow_exception(e);
+                }
+            }
+
+            /**
              * @brief Constructs a reverse path from a given node to its root in a tree or graph structure.
              *
              * @details This function iteratively backtracks from the specified node `_node` to its root
@@ -624,34 +750,10 @@ namespace chdr::solvers {
                 exception = std::current_exception();
             }
 
-            /*
-             * Release resources with deferred exception handling:
-             */
-
+            // Reset memory resources:
             if constexpr (!params_t::no_cleanup::value) {
-
                 try {
-                    if constexpr (solver_utils::template has_method_reset_v<std::remove_pointer_t<std::decay_t<decltype(_params.monotonic_pmr)>>>) {
-                        if (_params.monotonic_pmr != nullptr) { _params.monotonic_pmr->reset(); }
-                    }
-                }
-                catch (...) { // NOLINT(*-empty-catch)
-                    if (exception == nullptr) { exception = std::current_exception(); }
-                }
-
-                try {
-                    if constexpr (solver_utils::template has_method_reset_v<std::remove_pointer_t<std::decay_t<decltype(_params.heterogeneous_pmr)>>>) {
-                        if (_params.heterogeneous_pmr != nullptr) { _params.heterogeneous_pmr->reset(); }
-                    }
-                }
-                catch (...) { // NOLINT(*-empty-catch)
-                    if (exception == nullptr) { exception = std::current_exception(); }
-                }
-
-                try {
-                    if constexpr (solver_utils::template has_method_reset_v<std::remove_pointer_t<std::decay_t<decltype(_params.homogeneous_pmr)>>>) {
-                        if (_params.homogeneous_pmr != nullptr) { _params.homogeneous_pmr->reset(); }
-                    }
+                    solver_utils::reset_resources(_params);
                 }
                 catch (...) { // NOLINT(*-empty-catch)
                     if (exception == nullptr) { exception = std::current_exception(); }

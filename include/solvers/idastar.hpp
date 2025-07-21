@@ -193,9 +193,14 @@ namespace chdr::solvers {
                 }
 
                 if (_open.size() > 1U) {
-                    _open.erase(_open.begin() + 1U, _open.end());
+                    _open.resize(1U);
                     stack.clear();
+
                     bound = min;
+
+                    if (min != std::numeric_limits<scalar_t>::max()) {
+                        solver_t::solver_utils::reset_resources(_params);
+                    }
                 }
                 else {
                     break;

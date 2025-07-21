@@ -170,11 +170,13 @@ namespace chdr::solvers {
                 }
 
 
-                if (!_open.empty()) {
-                     _open.erase(_open.begin() + 1U, _open.end());
+                if (_open.size() > 1U) {
+                    _open.resize(1U);
 
                       stack.clear();
                     _closed.clear();
+
+                    solver_t::solver_utils::reset_resources(_params);
                 }
                 else {
                     break;
