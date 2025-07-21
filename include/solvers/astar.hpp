@@ -82,9 +82,6 @@ namespace chdr::solvers {
         using  coord_t = typename params_t:: coord_type;
         using solver_t = solver<astar, params_t>;
 
-        static_assert(std::is_arithmetic_v<scalar_t>, "scalar_t must be an integral or floating point type.");
-        static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
-
         struct node final : unmanaged_node<index_t> {
 
             scalar_t m_gScore;

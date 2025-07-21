@@ -77,8 +77,6 @@ namespace chdr::solvers {
         using  coord_t = typename params_t:: coord_type;
         using solver_t = solver<dijkstra, params_t>;
 
-        static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
-
         [[maybe_unused, nodiscard]] HOT static constexpr auto invoke(const params_t& _params) {
 
             (void)_params;

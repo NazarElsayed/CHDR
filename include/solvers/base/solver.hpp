@@ -271,6 +271,71 @@ namespace chdr::solvers {
             static constexpr bool has_method_allocate_v = has_method_allocate<T>::value;
 
             /**
+             * @struct has_method_allocate
+             * @brief A utility trait for determining whether a type has a callable `allocate` method.
+             *
+             * @details This struct uses SFINAE (Substitution Failure Is Not An Error) to identify if a given type
+             *          contains a publicly accessible member function named `allocate`. The value of the trait will be
+             *          `true` if the `allocate` method exists, and `false` otherwise.
+             *
+             *          The trait is commonly used in template metaprogramming to conditionally enable functionality
+             *          based on whether a type provides allocation capabilities.
+             *
+             * @tparam T The type to be inspected for the presence of an `allocate` method.
+             */
+            template <typename T>
+            struct has_subscript_operator final {
+            private:
+                template <typename U>
+                static constexpr decltype(std::declval<U>()[0], std::true_type{}) has_operator([[maybe_unused]] int _i) {
+                    static_assert(std::true_type::value, "This function should not be called at run time.");
+                    return {};
+                }
+
+                template <typename>
+                static constexpr std::false_type has_operator(...) {
+                    static_assert(std::true_type::value, "This function should not be called at run time.");
+                    return {};
+                }
+
+            public:
+                /**
+                 * @brief Determines whether the specified type has a subscript operator.
+                 *
+                 * @details This constant expression evaluates to `true` if the type `T`
+                 *          contains a publicly accessible subscript operator that matches
+                 *          the expected signature. The implementation leverages a combination
+                 *          of SFINAE (Substitution Failure Is Not An Error) and the detection
+                 *          idiom to ascertain the existence of the operator.
+                 *
+                 * @note This is a static constexpr boolean value used at compile time for type traits
+                 *       evaluation.
+                 *
+                 * @tparam T The type being checked for the presence of a callable subscript operator.
+                 */
+                static constexpr bool value = decltype(has_operator<T>(0))::value;
+            };
+
+            /**
+             * @brief Determines whether the specified type possesses a subscript operator.
+             *
+             * @details This compile-time constant evaluates to `true` if the type `T`
+             *          contains an accessible subscript operator.
+             *          Utilises a type trait to perform the
+             *          detection through the use of template metaprogramming techniques.
+             *
+             * @note This value is commonly used in template specialisations or static
+             *       assertions to enable or restrict functionality depending on the
+             *       presence of the operator in the given type `T`.
+             *
+             * @tparam T The type being evaluated for the existence of a subscript operator.
+             *
+             * @return true, if the given type has the operator. Otherwise, false.
+             */
+            template <typename T>
+            static constexpr bool has_subscript_operator_v = has_subscript_operator<T>::value;
+
+            /**
              * @brief Estimates the preallocation quota for a given solve.
              *
              * @details This method estimates the required container capacity needed during maze-solving
@@ -813,6 +878,45 @@ namespace chdr::solvers {
         auto operator()(const params_t& _params) {
             return solve(_params);
         }
+
+        /*
+         * Statically-enforce the structure of params_t.
+         */
+
+        static_assert(std::is_arithmetic_v<typename params_t::weight_type>,
+            "weight_type must be an integral or floating point type.");
+
+        static_assert(std::numeric_limits<typename params_t::weight_type>::is_specialized,
+            "weight_type must have defined numeric limits.");
+
+        static_assert(std::is_arithmetic_v<typename params_t::scalar_type>,
+            "scalar_type must be an integral or floating point type.");
+
+        static_assert(std::numeric_limits<typename params_t::scalar_type>::is_specialized,
+            "scalar_type must have defined numeric limits.");
+
+        static_assert(std::is_integral_v<typename params_t::index_type>,
+            "index_type must be an integral type.");
+
+        static_assert(std::numeric_limits<typename params_t::index_type>::is_specialized,
+            "index_type must have defined numeric limits.");
+
+        static_assert(solver_utils::template has_subscript_operator_v<typename params_t::coord_type>,
+            "coord_type must support array subscript operator [].");
+
+        static_assert(std::is_arithmetic_v<std::decay_t<decltype(std::declval<typename params_t::coord_type>()[0])>>,
+            "coord_type must enumerate an arithmetic type.");
+
+        static_assert(std::numeric_limits<typename params_t::scalar_type>::is_specialized,
+            "coord_type must enumerate an arithmetic type with defined numeric limits.");
+
+        static_assert(std::is_same_v<typename params_t::lazy_sorting, std::true_type> || std::is_same_v<typename params_t::lazy_sorting, std::false_type>,
+            "lazy_sorting must be either std::true_type or std::false_type.");
+
+        static_assert(std::is_same_v<typename params_t::no_cleanup, std::true_type> || std::is_same_v<typename params_t::no_cleanup, std::false_type>,
+            "no_cleanup must be either std::true_type or std::false_type.");
+
+        // TODO: Further enforcement of params_t structure.
     };
 
 } //chdr::solvers

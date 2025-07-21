@@ -84,9 +84,6 @@ namespace chdr::solvers {
         using solver_t = solver<smastar, params_t>;
         using weight_t = typename params_t::weight_type;
 
-        static_assert(std::is_arithmetic_v<scalar_t>, "scalar_t must be an integral or floating point type.");
-        static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
-
         static constexpr auto null_v = std::numeric_limits< index_t>::max();
         static constexpr auto  inf_v = std::numeric_limits<scalar_t>::max();
 

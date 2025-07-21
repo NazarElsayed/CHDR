@@ -80,9 +80,6 @@ namespace chdr::solvers {
 
         static constexpr auto Kd = std::tuple_size_v<std::decay_t<typename params_t::coord_type>>;
 
-        static_assert(std::is_arithmetic_v<scalar_t>, "scalar_t must be an integral or floating point type.");
-        static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
-
         struct node final : managed_node<index_t, node> {
 
             scalar_t m_gScore;

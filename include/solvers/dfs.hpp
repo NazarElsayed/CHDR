@@ -74,8 +74,6 @@ namespace chdr::solvers {
         using solver_t = solver<dfs, params_t>;
         using     node = unmanaged_node<index_t>;
 
-        static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
-
         template <typename open_set_t, typename closed_set_t>
         [[nodiscard]] HOT static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, size_t _capacity, const params_t& _params) {
 

@@ -80,10 +80,6 @@ namespace chdr::solvers {
         using  coord_t = typename params_t:: coord_type;
         using solver_t = solver<idastar, params_t>;
 
-        static_assert(std::is_arithmetic_v<scalar_t>, "scalar_t must be an integral or floating point type.");
-        static_assert(std::numeric_limits<scalar_t>::is_specialized, "scalar_t must be a numeric type with defined numeric limits.");
-        static_assert(std::is_integral_v<index_t>, "index_t must be an integral type.");
-
         struct node final : bnode<index_t> {
 
             scalar_t m_gScore;
