@@ -174,7 +174,8 @@ namespace test {
         template <typename instanced_solver_t, typename params_t>
         static auto invoke_benchmark(const params_t& _params) {
 
-            auto result = std::numeric_limits<long double>::max();
+            auto min_duration = std::numeric_limits<long double>::max();
+            auto path_length = 0UL;
 
             try {
 
@@ -221,10 +222,10 @@ namespace test {
                     const auto sw_start = std::chrono::high_resolution_clock::now();
 
                     /* INVOKE SOLVE */
-                    (void)instanced_solver_t::solve(_params);
+                    path = instanced_solver_t::solve(_params);
 
-                    result = chdr::utils::min(
-                        result,
+                    min_duration = chdr::utils::min(
+                        min_duration,
                         std::chrono::duration_cast<std::chrono::duration<long double>>(
                             std::chrono::high_resolution_clock::now() - sw_start
                         ).count()
@@ -237,15 +238,16 @@ namespace test {
                     }
                 }
 
-                result = chdr::utils::max(result - noise_floor_min, std::numeric_limits<long double>::epsilon());
+                min_duration = chdr::utils::max(min_duration - noise_floor_min, std::numeric_limits<long double>::epsilon());
+                path_length = path.size();
             }
             catch (const std::exception& e) {
-                result = std::numeric_limits<long double>::max();
+                min_duration = std::numeric_limits<long double>::max();
 
                 debug::log(e);
             }
 
-            return result;
+            return std::make_pair(min_duration, path_length);
         }
 
         template <typename weight_t, typename coord_t, typename scalar_t, typename index_t>
@@ -405,6 +407,13 @@ namespace test {
                 auto   local_window_begin = std::chrono::high_resolution_clock::now();
                 size_t local_window_tests { 0U };
 
+                struct test_data {
+                    long double duration;
+                    size_t      memory;
+                };
+
+                std::unordered_map<std::string, std::map<long double, std::vector<test_data>>> global_averages{};
+
                 /* PARALLELISED BENCHMARKING */
                 #pragma omp parallel for schedule(dynamic) // Parallelise per-map (outer loop).
                 for (const auto& [map, scenarios] : maps) {
@@ -418,7 +427,8 @@ namespace test {
                             << "MAP: \"" << map.metadata.name << "\":\n";
 
                         try {
-                            std::array<long double, tests.size()> averages{};
+
+                            std::array<test_data, tests.size()> test_averages{};
 
                             #pragma omp parallel for schedule(guided) // Parallelise per-scenario (inner loop).
                             for (size_t index = 0U; index < scenarios.size(); ++index) {
@@ -433,6 +443,7 @@ namespace test {
                                            << "Scenario " << (i + 1U) << " (Length: " << scenario.distance << "):\n";
 
                                 for (size_t j = 0U; j < tests.size(); ++j) {
+
                                     const auto& [name, variant] = tests[j];
 
                                     // Right-aligned output:
@@ -446,22 +457,21 @@ namespace test {
                                     auto heterogeneous = chdr::heterogeneous_pool();
                                     auto homogeneous   = chdr::  homogeneous_pool();
 
-                                    auto time = std::visit(
-                                        [&](const auto& _t) -> long double {
-                                            return invoke_benchmark<std::decay_t<decltype(_t)>>(
-                                                params {
-                                                    map.maze,
-                                                    scenario.start,
-                                                    scenario.end,
-                                                    map.metadata.size,
-                                                    &chdr::heuristics::manhattan_distance<scalar_t, coord_t>,
-                                                    &monotonic,
-                                                    &heterogeneous,
-                                                    &homogeneous,
-                                                    1U,
-                                                    0U,
-                                                    (map.metadata.size[0U] / 2U) * (map.metadata.size[1U] / 2U)
-                                                });
+                                    auto [duration, length] = std::visit([&](const auto& _t) {
+                                        return invoke_benchmark<std::decay_t<decltype(_t)>>(
+                                            params{
+                                                map.maze,
+                                                scenario.start,
+                                                scenario.end,
+                                                map.metadata.size,
+                                                &chdr::heuristics::manhattan_distance<scalar_t, coord_t>,
+                                                &monotonic,
+                                                &heterogeneous,
+                                                &homogeneous,
+                                                1U,
+                                                0U,
+                                                (map.metadata.size[0U] / 2U) * (map.metadata.size[1U] / 2U)
+                                            });
                                         },
                                         variant
                                     );
@@ -474,13 +484,18 @@ namespace test {
                                                           homogeneous.__get_diagnostic_data().peak_allocated;
 #endif //CHDR_DIAGNOSTICS == 1
 
+                                    thread_log << " " << duration << ", " << peak_memory_usage << "\n";
+
+                                    global_averages[name][length].push_back(test_data { duration, peak_memory_usage });
+
                                     #pragma omp atomic
-                                    averages[j] += time;
+                                    test_averages[j].duration += duration;
+
+                                    #pragma omp atomic
+                                    test_averages[j].memory += peak_memory_usage;
 
                                     #pragma omp atomic
                                     ++tests_completed;
-
-                                    thread_log << " " << time << ", " << peak_memory_usage << "\n";
                                 }
 
                                 #pragma omp critical
@@ -533,7 +548,7 @@ namespace test {
                                             }
 
                                             secs = static_cast<size_t>(0.7L * static_cast<long double>( local_secs)) +
-                                                                      (0.3L * static_cast<long double>(global_secs));
+                                                   static_cast<size_t>(0.3L * static_cast<long double>(global_secs));
                                         }
 
                                         const auto years   = secs / 31536000UL; secs %= 31536000UL;
@@ -562,12 +577,12 @@ namespace test {
                                 const auto& [name, variant] = tests[j];
 
                                 // Right-aligned output:
-                                log << "\t";
                                 for (size_t k = 0U; k < longest_solver_name - name.size(); ++k) {
                                     log << " ";
                                 }
-                                log << name << ": "
-                                    << averages[j] / scenarios.size() << "\n";
+                                log << name << ":\n"
+                                    << "\t RUNTIME    (s): " << test_averages[j].duration / scenarios.size() << "\n"
+                                    << "\t MEMORY (bytes): " << test_averages[j].memory   / scenarios.size() << "\n";
                             }
                         }
                         catch (const std::exception& e) {
@@ -577,6 +592,51 @@ namespace test {
                     }
                     catch (const std::exception& e) {
                         debug::log(e, critical);
+                    }
+                }
+
+                std::ofstream log(log_dir / "summary.log");
+
+                std::cout << "GLOBAL AVERAGES:\n" << std::fixed << std::setprecision(9);
+                      log << "GLOBAL AVERAGES:\n" << std::fixed << std::setprecision(9);
+
+                for (auto& [name, distances] : global_averages) {
+                    std::cout << name << ":\n";
+                          log << name << ":\n";
+
+                    std::map<std::pair<size_t, size_t>, std::tuple<long double, size_t, size_t>> binned_averages;
+
+                    size_t lower_bin = 0, upper_bin = 1;
+                    for (const auto& [distance, entries] : distances) {
+
+                        while (distance > upper_bin) {
+                            lower_bin = upper_bin;
+                            upper_bin *= 2;
+                        }
+
+                        auto& [total_duration, total_memory, total_count] = binned_averages[{lower_bin, upper_bin}];
+                        for (const auto& entry : entries) {
+                            total_duration += entry.duration;
+                            total_memory   += entry.memory;
+                            total_count++;
+                        }
+                    }
+
+                    for (const auto& [bin, data] : binned_averages) {
+                        const auto [l, u] = bin;
+
+                        const auto& [total_duration, total_memory, total_count] = data;
+
+                        const auto avg_duration = total_duration / total_count;
+                        const auto avg_memory   = static_cast<long double>(total_memory) / total_count;
+
+                        std::cout << "\tDISTANCE BIN [" << l << ", " << u << "]:\n"
+                                  << "\t  AVERAGE RUNTIME  (s): "     << avg_duration << "\n"
+                                  << "\t  AVERAGE MEMORY   (bytes): " << avg_memory << "\n";
+
+                        log << "\tDISTANCE BIN [" << l << ", " << u << "]:\n"
+                            << "\t  AVERAGE RUNTIME  (s): "     << avg_duration << "\n"
+                            << "\t  AVERAGE MEMORY   (bytes): " << avg_memory << "\n";
                     }
                 }
             }
