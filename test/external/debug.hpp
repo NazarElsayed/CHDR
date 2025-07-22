@@ -44,11 +44,11 @@
 #include <unordered_map>
 #include <vector>
 
-#if __linux__ || __APPLE__
+#if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
 
     #include <execinfo.h>
 
-#elif _WIN32
+#elif defined(_WIN32) || defined(_WIN64)
 
     #include <windows.h>
     #include <intrin.h>
@@ -174,15 +174,7 @@ namespace {
 
         static void multiplatform(const std::string_view& _message, const log_type& _type, bool _makeInline) {
 
-#ifdef __linux__
-            try {
-                ansi(_message, _type, _makeInline);
-            }
-            catch (const std::exception&) {
-                fallback(_message, _type, _makeInline);
-                throw;
-            }
-#elif _WIN32
+#if defined(_WIN32) || defined(_WIN64)
             try {
                 win32(_message, _type, _makeInline);
             }
@@ -190,7 +182,15 @@ namespace {
                 fallback(_message, _type, _makeInline);
                 throw;
             }
-#elif __APPLE__
+#elif defined(__APPLE__)
+            try {
+                ansi(_message, _type, _makeInline);
+            }
+            catch (const std::exception&) {
+                fallback(_message, _type, _makeInline);
+                throw;
+            }
+#elif defined(__linux__) || defined(__unix__)
             try {
                 ansi(_message, _type, _makeInline);
             }
@@ -216,7 +216,7 @@ namespace {
             }
         }
 
-#if __linux__ | __APPLE__
+#if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
 
         static constexpr void ansi(const std::string_view& _message, const log_type& _type, bool _makeInline) {
 
@@ -327,7 +327,7 @@ namespace {
             }
         }
 
-#elif _WIN32
+#elif defined(_WIN32) || defined(_WIN64)
 
         void SetCAttr(void* _h, const WORD &_attribute) {
 
@@ -725,7 +725,7 @@ namespace {
 
             try {
 
-    #if __linux__ || __APPLE__
+    #if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
 
                 // Capture stack frames:
                 std::vector<void*> array(_frames);

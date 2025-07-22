@@ -14,8 +14,16 @@
 #include <filesystem>
 #include <iostream>
 #include <string_view>
+#include <omp.h>
 
 #include "core/application.hpp"
+
+#if defined(_WIN32) || defined(_WIN64)
+#include <windows.h>
+#elif defined(__linux__) || defined(__unix__)
+#include <pthread.h>
+#include <sched.h>
+#endif
 
 namespace test {
 
@@ -142,12 +150,35 @@ namespace test {
             throw std::runtime_error("ERROR: Could not create a solvable maze!");
         }
 
+        static void set_highest_thread_priority() {
+#if defined(_WIN32) || defined(_WIN64)
+            // Windows implementation
+            HANDLE thread = GetCurrentThread();
+            SetThreadPriority(thread, THREAD_PRIORITY_TIME_CRITICAL);
+#elif defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+            // POSIX (Linux/Unix) implementation
+            int policy;
+            struct sched_param param;
+
+            pthread_t thread = pthread_self();
+            if (pthread_getschedparam(thread, &policy, &param) != 0) {
+                return;
+            }
+
+            policy = SCHED_FIFO;
+            param.sched_priority = sched_get_priority_max(policy);
+            pthread_setschedparam(thread, policy, &param);
+#endif
+        }
+
         template <typename instanced_solver_t, typename params_t>
         static auto invoke_benchmark(const params_t& _params) {
 
             auto result = std::numeric_limits<long double>::max();
 
             try {
+
+                set_highest_thread_priority();
 
                 /* TEST SAMPLES */
     #ifndef NDEBUG
@@ -219,8 +250,6 @@ namespace test {
 
         template <typename weight_t, typename coord_t, typename scalar_t, typename index_t>
         static auto run_gppc_benchmarks() {
-
-            auto result = EXIT_FAILURE;
 
             struct params {
 
@@ -317,50 +346,95 @@ namespace test {
             const auto gppc_dir = std::filesystem::current_path() / "gppc";
             if (std::filesystem::exists(gppc_dir)) {
 
-                std::ofstream log("output.txt");
+                const auto log_dir = std::filesystem::current_path() / "log" / CHDR_VERSION;
+                if (!std::filesystem::exists(log_dir)) {
+                    std::filesystem::create_directories(log_dir);
+                }
 
-                std::cout << std::fixed << std::setprecision(9)
-                          << "~ Running Diagnostics (GPPC) ~\n\n"
-                          << "FORMAT = [SECONDS, BYTES]\n";
+                size_t tests_completed { 0U };
+                size_t total_tests     { 0U };
 
-                log << std::fixed << std::setprecision(9)
-                    << "~ Running Diagnostics (GPPC) ~\n\n"
-                    << "FORMAT = [SECONDS, BYTES]\n";
 
-                for (const auto& subdir : std::filesystem::directory_iterator(gppc_dir)) {
+                // Identify all benchmarking maps in advance:
+                std::vector<std::pair<
+                    generator::gppc::map<weight_t, coord_t>,
+                    std::vector<generator::gppc::scenario<coord_t, scalar_t>>
+                >> maps;
 
-                    for (const auto& entry : std::filesystem::directory_iterator(subdir)) {
+                try {
+                    // Ensure the directory exists.
+                    if (std::filesystem::exists(gppc_dir)) {
+                        for (const auto& entry : std::filesystem::recursive_directory_iterator(gppc_dir, std::filesystem::directory_options::skip_permission_denied)) {
+
+                            if (entry.is_regular_file() && entry.path().extension() == ".map") {
+                                try {
+                                    const auto scenarios_path = std::filesystem::path{ entry.path().string() + ".scen" };
+                                    maps.push_back(generator::gppc::generate<weight_t, coord_t, scalar_t>(entry, scenarios_path));
+
+                                    total_tests += maps.back().second.size() * tests.size();
+                                }
+                                catch (const std::exception& e) {
+                                    debug::log(e);
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        throw std::filesystem::filesystem_error("Directory not found.", gppc_dir, std::error_code());
+                    }
+                }
+                catch (const std::exception& e) {
+                    debug::log(e);
+                }
+
+                std::cout << "~ Running Diagnostics (GPPC) ~\n"
+                          << "OMP: "
+                #ifdef _OPENMP
+                          << "ENABLED.\n";
+                #else //!_OPENMP
+                          << "DISABLED.\n";
+                #endif //!_OPENMP
+
+                omp_set_nested(1); // Enable nested parallelism
+                omp_set_max_active_levels(2); // Allow two levels of parallelism
+
+                constexpr auto log_interval = std::chrono::seconds(1);
+                auto next_log = std::chrono::high_resolution_clock::now() + log_interval;
+
+                /* PARALLELISED BENCHMARKING */
+                #pragma omp parallel for schedule(dynamic) // Parallelise per-map (outer loop).
+                for (const auto& [map, scenarios] : maps) {
+
+                    try {
+
+                        std::ofstream log(log_dir / (map.metadata.name + ".log"));
+                        log << std::fixed << std::setprecision(9)
+                            << "~ Running Diagnostics (GPPC) ~\n"
+                            << "FORMAT: [SECONDS, BYTES]\n"
+                            << "MAP: \"" << map.metadata.name << "\":\n";
 
                         try {
-                            const auto scenarios_path = std::filesystem::path { entry.path().string() + ".scen" };
+                            std::array<long double, tests.size()> averages{};
 
-                            const auto [map, scenarios] = generator::gppc::generate<weight_t, coord_t, scalar_t>(entry.path(), scenarios_path);
-
-                            std::array<long double, tests.size()> averages;
-
-                            std::cout << "Map: \"" << map.metadata.name << "\":\n";
-                                  log << "Map: \"" << map.metadata.name << "\":\n";
-
-                            for (size_t i = 0U; i != scenarios.size(); ++i) {
+                            #pragma omp parallel for schedule(dynamic) // Parallelise per-scenario (inner loop).
+                            for (size_t i = 0U; i < scenarios.size(); ++i) {
 
                                 const auto& scenario = scenarios[i];
 
-                                std::cout << "Scenario " << (i + 1U) << " (Length: " << scenario.distance << "):\n";
-                                      log << "Scenario " << (i + 1U) << " (Length: " << scenario.distance << "):\n";
+                                // Each thread builds an in-memory log BEFORE writing.
+                                std::ostringstream thread_log;
+                                thread_log << std::fixed << std::setprecision(9)
+                                           << "Scenario " << (i + 1U) << " (Length: " << scenario.distance << "):\n";
 
-                                for (size_t j = 0U; j != tests.size(); ++j) {
-
+                                for (size_t j = 0U; j < tests.size(); ++j) {
                                     const auto& [name, variant] = tests[j];
 
-                                    // Right-aligned print:
-                                    std::cout << "\t";
-                                          log << "\t";
+                                    // Right-aligned output:
+                                    thread_log << "\t";
                                     for (size_t k = 0U; k < longest_solver_name - name.size(); ++k) {
-                                        std::cout << " ";
-                                              log << " ";
+                                        thread_log << " ";
                                     }
-                                    std::cout << name << ": " << std::flush;
-                                          log << name << ": ";
+                                    thread_log << name << ": ";
 
                                     auto monotonic     = chdr::    monotonic_pool();
                                     auto heterogeneous = chdr::heterogeneous_pool();
@@ -387,35 +461,63 @@ namespace test {
                                     );
 
                                     size_t peak_memory_usage { 0U };
+
 #if CHDR_DIAGNOSTICS == 1
-                                    peak_memory_usage = monotonic.__get_diagnostic_data().peak_allocated +
-                                                    heterogeneous.__get_diagnostic_data().peak_allocated +
-                                                      homogeneous.__get_diagnostic_data().peak_allocated;
+                                        peak_memory_usage = monotonic.__get_diagnostic_data().peak_allocated +
+                                                        heterogeneous.__get_diagnostic_data().peak_allocated +
+                                                          homogeneous.__get_diagnostic_data().peak_allocated;
 #endif //CHDR_DIAGNOSTICS == 1
 
+                                    #pragma omp atomic
                                     averages[j] += time;
 
-                                    std::cout << " " << time << ", " << peak_memory_usage << "\n";
-                                          log << " " << time << ", " << peak_memory_usage << "\n";
+                                    #pragma omp atomic
+                                    ++tests_completed;
+
+                                    thread_log << " " << time << ", " << peak_memory_usage << "\n";
+                                }
+
+                                #pragma omp critical
+                                log << thread_log.str();
+
+                                auto now = std::chrono::high_resolution_clock::now();
+                                if (now >= next_log || tests_completed == total_tests) {
+                                    next_log = now + log_interval;
+
+                                    std::stringstream percentage;
+                                    percentage << std::fixed << std::setprecision(2)
+                                               << (static_cast<long double>(tests_completed) / static_cast<long double>(total_tests)) * 100.0L << "%";
+
+                                    debug::log(std::to_string(tests_completed) + " / " + std::to_string(total_tests) + " (" + percentage.str() + ")");
                                 }
                             }
 
-                            for (auto& item : averages) {
-                                item /= scenarios.size();
-                            }
+                            log << "\nMAP COMPLETED.\nAVERAGES:\n";
 
-                            std::cout << "Map completed.\n Averages: " << averages[0U] << "\n";
-                                  log << "Map completed.\n Averages: " << averages[0U] << "\n";
+                            for (size_t j = 0U; j < tests.size(); ++j) {
+                                const auto& [name, variant] = tests[j];
+
+                                // Right-aligned output:
+                                log << "\t";
+                                for (size_t k = 0U; k < longest_solver_name - name.size(); ++k) {
+                                    log << " ";
+                                }
+                                log << name << ": "
+                                    << averages[j] / scenarios.size() << "\n";
+                            }
                         }
                         catch (const std::exception& e) {
-                            std::cout << e.what() << "\n";
-                                  log << e.what() << "\n";
+                            log << e.what() << "\n";
+                            debug::log(e, critical);
                         }
+                    }
+                    catch (const std::exception& e) {
+                        debug::log(e, critical);
                     }
                 }
             }
 
-            return result;
+            return EXIT_SUCCESS;
         }
 
         template <typename weight_t, typename coord_t>

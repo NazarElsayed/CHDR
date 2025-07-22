@@ -23,7 +23,7 @@ namespace test {
         static constexpr auto* s_empty_str = "  ";
         static constexpr auto*  s_wall_str = "██";
 
-#ifdef _WIN32
+#if defined(_WIN32) || defined(_WIN64)
         static constexpr auto* start_str = "00";
         static constexpr auto*   end_str = "11";
         static constexpr auto*  path_str = "--";
@@ -42,7 +42,7 @@ namespace test {
 
             static_assert(std::is_integral_v<weight_t>, "Maze type must be an integral type.");
 
-#ifdef _WIN32
+#if defined(_WIN32) || defined(_WIN64)
             SetConsoleOutputCP(CP_UTF8);
 #endif
 
@@ -108,7 +108,7 @@ namespace test {
 
             static_assert(std::is_integral_v<weight_t>, "Maze type must be an integral type.");
 
-#ifdef _WIN32
+#if defined(_WIN32) || defined(_WIN64)
             SetConsoleOutputCP(CP_UTF8);
 #endif
 
