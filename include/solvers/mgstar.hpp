@@ -98,12 +98,24 @@ namespace chdr::solvers {
             }
         };
 
+        static constexpr auto rbacktrack(const node& _node, const coord_t& _size, size_t _depth) {
+
+            std::vector<coord_t> result(_depth);
+
+            const auto* RESTRICT t = &_node;
+            for (size_t i = 0U; i != _depth; ++i) {
+                result[(result.size() - 1U) - i] = utils::to_nd(t->m_index, _size);
+                t = static_cast<const node*>(t->m_parent);
+            }
+
+            return result;
+        }
+
         template <typename closed_set_t>
         HOT static void bitwise_regression(const managed_node<index_t, node>* _parent, closed_set_t& _closed) {
-            auto* p = _parent;
-            while (p != nullptr && _closed.contains(p->m_index)) {
+
+            for (auto* p = _parent; p->m_parent != nullptr && _closed.contains(p->m_index); p = p->m_parent) {
                 _closed.erase(p->m_index);
-                p = p->m_parent;
             }
         }
 
@@ -207,7 +219,9 @@ namespace chdr::solvers {
                         best_solution.emplace(std::move(curr));
 
                         bool full = memory_usage() >= _params.memory_limit;
-                        if (full && (full = !_open.empty())) {
+
+                        // ReSharper disable once CppUsingResultOfAssignmentAsCondition
+                        if (full && ((full = !_open.empty()))) {
                             _open.clear();
                         }
 
@@ -227,7 +241,7 @@ namespace chdr::solvers {
             _closed = closed_set_t{};
 
             return best_solution.has_value() ?
-                solver_t::solver_utils::rbacktrack(best_solution.value(), _params.size, best_solution.value().m_gScore) :
+                rbacktrack(best_solution.value(), _params.size, best_solution->m_gScore) :
                 std::vector<coord_t>{};
         }
 
