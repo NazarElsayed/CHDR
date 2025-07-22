@@ -185,7 +185,7 @@ namespace test {
     #ifndef NDEBUG
                 constexpr size_t base_samples = 1UL;
     #else //!NDEBUG
-                constexpr size_t base_samples = 10000000UL;
+                constexpr size_t base_samples = 100000000UL;
     #endif //!NDEBUG
 
                 size_t test_samples = chdr::utils::max(base_samples / _params.maze.count(), static_cast<size_t>(1U));
@@ -357,35 +357,22 @@ namespace test {
                 size_t total_tests     { 0U };
 
                 // Identify all benchmarking maps in advance:
-                std::vector<std::pair<
-                    generator::gppc::map<weight_t, coord_t>,
-                    std::vector<generator::gppc::scenario<coord_t, scalar_t>>
-                >> maps;
+                std::vector<std::pair<generator::gppc::map<weight_t, coord_t>, std::vector<generator::gppc::scenario<coord_t, scalar_t>>>> maps;
 
-                try {
-                    // Ensure the directory exists.
-                    if (std::filesystem::exists(gppc_dir)) {
-                        for (const auto& entry : std::filesystem::recursive_directory_iterator(gppc_dir, std::filesystem::directory_options::skip_permission_denied)) {
+                // Ensure the directory exists.
+                if (std::filesystem::exists(gppc_dir)) {
+                    for (const auto& entry : std::filesystem::recursive_directory_iterator(gppc_dir, std::filesystem::directory_options::skip_permission_denied)) {
 
-                            if (entry.is_regular_file() && entry.path().extension() == ".map") {
-                                try {
-                                    const auto scenarios_path = std::filesystem::path{ entry.path().string() + ".scen" };
-                                    maps.push_back(generator::gppc::generate<weight_t, coord_t, scalar_t>(entry, scenarios_path));
+                        if (entry.is_regular_file() && entry.path().extension() == ".map") {
+                            const auto scenarios_path = std::filesystem::path{ entry.path().string() + ".scen" };
+                            maps.push_back(generator::gppc::generate<weight_t, coord_t, scalar_t>(entry, scenarios_path));
 
-                                    total_tests += maps.back().second.size() * tests.size();
-                                }
-                                catch (const std::exception& e) {
-                                    debug::log(e);
-                                }
-                            }
+                            total_tests += maps.back().second.size() * tests.size();
                         }
                     }
-                    else {
-                        throw std::filesystem::filesystem_error("Directory not found.", gppc_dir, std::error_code());
-                    }
                 }
-                catch (const std::exception& e) {
-                    debug::log(e);
+                else {
+                    throw std::filesystem::filesystem_error("Directory not found.", gppc_dir, std::error_code());
                 }
 
                 std::cout << "~ Running Diagnostics (GPPC) ~\n"
@@ -479,20 +466,21 @@ namespace test {
                                     size_t peak_memory_usage { 0U };
 
 #if CHDR_DIAGNOSTICS == 1
-                                        peak_memory_usage = monotonic.__get_diagnostic_data().peak_allocated +
-                                                        heterogeneous.__get_diagnostic_data().peak_allocated +
-                                                          homogeneous.__get_diagnostic_data().peak_allocated;
+                                    peak_memory_usage = monotonic.__get_diagnostic_data().peak_allocated +
+                                                    heterogeneous.__get_diagnostic_data().peak_allocated +
+                                                      homogeneous.__get_diagnostic_data().peak_allocated;
 #endif //CHDR_DIAGNOSTICS == 1
 
                                     thread_log << " " << duration << ", " << peak_memory_usage << "\n";
 
-                                    global_averages[name][length].push_back(test_data { duration, peak_memory_usage });
+                                    global_averages[name][scenario.distance].push_back(test_data { duration, peak_memory_usage });
 
                                     #pragma omp atomic
                                     test_averages[j].duration += duration;
 
                                     #pragma omp atomic
                                     test_averages[j].memory += peak_memory_usage;
+
 
                                     #pragma omp atomic
                                     ++tests_completed;
@@ -614,7 +602,7 @@ namespace test {
                             upper_bin *= 2;
                         }
 
-                        auto& [total_duration, total_memory, total_count] = binned_averages[{lower_bin, upper_bin}];
+                        auto& [total_duration, total_memory, total_count] = binned_averages[{ lower_bin, upper_bin }];
                         for (const auto& entry : entries) {
                             total_duration += entry.duration;
                             total_memory   += entry.memory;
