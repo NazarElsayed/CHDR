@@ -354,7 +354,6 @@ namespace test {
                 size_t tests_completed { 0U };
                 size_t total_tests     { 0U };
 
-
                 // Identify all benchmarking maps in advance:
                 std::vector<std::pair<
                     generator::gppc::map<weight_t, coord_t>,
@@ -398,8 +397,9 @@ namespace test {
                 omp_set_nested(1); // Enable nested parallelism
                 omp_set_max_active_levels(2); // Allow two levels of parallelism
 
-                constexpr auto log_interval = std::chrono::seconds(1);
-                auto next_log = std::chrono::high_resolution_clock::now() + log_interval;
+                constexpr auto log_interval = std::chrono::seconds(1UL);
+                auto start = std::chrono::high_resolution_clock::now();
+                auto next_log = start + log_interval;
 
                 /* PARALLELISED BENCHMARKING */
                 #pragma omp parallel for schedule(dynamic) // Parallelise per-map (outer loop).
@@ -416,8 +416,10 @@ namespace test {
                         try {
                             std::array<long double, tests.size()> averages{};
 
-                            #pragma omp parallel for schedule(dynamic) // Parallelise per-scenario (inner loop).
-                            for (size_t i = 0U; i < scenarios.size(); ++i) {
+                            #pragma omp parallel for schedule(guided) // Parallelise per-scenario (inner loop).
+                            for (size_t index = 0U; index < scenarios.size(); ++index) {
+
+                                size_t i = (scenarios.size() - 1U) - index;
 
                                 const auto& scenario = scenarios[i];
 
@@ -478,17 +480,43 @@ namespace test {
                                 }
 
                                 #pragma omp critical
-                                log << thread_log.str();
+                                {
+                                    log << thread_log.str();
 
-                                auto now = std::chrono::high_resolution_clock::now();
-                                if (now >= next_log || tests_completed == total_tests) {
-                                    next_log = now + log_interval;
+                                    auto now = std::chrono::high_resolution_clock::now();
+                                    if (now >= next_log || tests_completed == total_tests) {
+                                        next_log = now + log_interval;
 
-                                    std::stringstream percentage;
-                                    percentage << std::fixed << std::setprecision(2)
-                                               << (static_cast<long double>(tests_completed) / static_cast<long double>(total_tests)) * 100.0L << "%";
+                                        auto progress = static_cast<long double>(tests_completed) / static_cast<long double>(total_tests);
 
-                                    debug::log(std::to_string(tests_completed) + " / " + std::to_string(total_tests) + " (" + percentage.str() + ")");
+                                        std::stringstream percentage;
+                                        percentage << std::fixed << std::setprecision(2)
+                                                   << (progress * 100.0L) << "%";
+
+                                        const auto delta = std::chrono::duration_cast<std::chrono::seconds>(now - start);
+
+                                        const auto end       = start + (delta * (1.0L / progress));
+                                        const auto remaining = std::chrono::duration_cast<std::chrono::seconds>(end - now);
+                                        size_t     secs      = remaining.count();
+
+                                        const auto years = secs / 31536000UL;
+                                        secs %= 31536000UL;
+                                        const auto days    = secs / 86400UL;    secs %= 86400UL;
+                                        const auto hours   = secs / 3600UL;     secs %= 3600UL;
+                                        const auto minutes = secs / 60UL;       secs %= 60UL;
+
+                                        std::stringstream time_remaining;
+                                        if (years   != 0UL) { time_remaining << years   << "y "; }
+                                        if (days    != 0UL) { time_remaining << days    << "d "; }
+                                        if (hours   != 0UL) { time_remaining << hours   << "h "; }
+                                        if (minutes != 0UL) { time_remaining << minutes << "m "; }
+                                        time_remaining << secs    << "s";
+
+                                        debug::log(
+                                            std::to_string(tests_completed) + " / " + std::to_string(total_tests) + " (" + percentage.str() + ") " +
+                                            time_remaining.str() + " remaining."
+                                        );
+                                    }
                                 }
                             }
 
