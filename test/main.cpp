@@ -184,7 +184,7 @@ namespace test {
     #ifndef NDEBUG
                 constexpr size_t base_samples = 1UL;
     #else //!NDEBUG
-                constexpr size_t base_samples = 100000000UL;
+                constexpr size_t base_samples = 10000000UL;
     #endif //!NDEBUG
 
                 size_t test_samples = chdr::utils::max(base_samples / _params.maze.count(), static_cast<size_t>(1U));
@@ -397,9 +397,13 @@ namespace test {
                 omp_set_nested(1); // Enable nested parallelism
                 omp_set_max_active_levels(2); // Allow two levels of parallelism
 
-                constexpr auto log_interval = std::chrono::seconds(1UL);
-                auto start = std::chrono::high_resolution_clock::now();
-                auto next_log = start + log_interval;
+                constexpr auto log_interval = std::chrono::seconds(3UL);
+                auto next_log = std::chrono::high_resolution_clock::now() + log_interval;
+
+                constexpr auto local_window_size = std::chrono::seconds(10UL);
+                auto  global_window_begin = std::chrono::high_resolution_clock::now();
+                auto   local_window_begin = std::chrono::high_resolution_clock::now();
+                size_t local_window_tests { 0U };
 
                 /* PARALLELISED BENCHMARKING */
                 #pragma omp parallel for schedule(dynamic) // Parallelise per-map (outer loop).
@@ -487,20 +491,52 @@ namespace test {
                                     if (now >= next_log || tests_completed == total_tests) {
                                         next_log = now + log_interval;
 
-                                        auto progress = static_cast<long double>(tests_completed) / static_cast<long double>(total_tests);
+                                        const auto progress = static_cast<long double>(tests_completed) / static_cast<long double>(total_tests);
 
                                         std::stringstream percentage;
                                         percentage << std::fixed << std::setprecision(2)
                                                    << (progress * 100.0L) << "%";
 
-                                        const auto delta = std::chrono::duration_cast<std::chrono::seconds>(now - start);
+                                        size_t secs { 0U };
+                                        {
+                                            size_t  local_secs { 0U };
+                                            size_t global_secs { 0U };
 
-                                        const auto end       = start + (delta * (1.0L / progress));
-                                        const auto remaining = std::chrono::duration_cast<std::chrono::seconds>(end - now);
-                                        size_t     secs      = remaining.count();
+                                            { // Local window:
 
-                                        const auto years = secs / 31536000UL;
-                                        secs %= 31536000UL;
+                                                const auto window_progress =
+                                                    static_cast<long double>(tests_completed - local_window_tests) /
+                                                        static_cast<long double>(total_tests - local_window_tests);
+
+                                                const auto delta     = std::chrono::duration_cast<std::chrono::seconds>(now - local_window_begin);
+                                                const auto end       = local_window_begin + (delta * (1.0L / window_progress));
+                                                const auto remaining = std::chrono::duration_cast<std::chrono::seconds>(end - now);
+
+                                                if (std::chrono::duration_cast<std::chrono::seconds>(now - local_window_begin) > local_window_size) {
+                                                    local_window_begin = now;
+                                                    local_window_tests = tests_completed;
+                                                }
+
+                                                local_secs = static_cast<size_t>(remaining.count());
+                                            }
+                                            { // Global window:
+
+                                                const auto window_progress =
+                                                    static_cast<long double>(tests_completed) /
+                                                        static_cast<long double>(total_tests);
+
+                                                const auto delta     = std::chrono::duration_cast<std::chrono::seconds>(now - global_window_begin);
+                                                const auto end       = global_window_begin + (delta * (1.0L / window_progress));
+                                                const auto remaining = std::chrono::duration_cast<std::chrono::seconds>(end - now);
+
+                                                global_secs = static_cast<size_t>(remaining.count());
+                                            }
+
+                                            secs = static_cast<size_t>(0.7L * static_cast<long double>( local_secs)) +
+                                                                      (0.3L * static_cast<long double>(global_secs));
+                                        }
+
+                                        const auto years   = secs / 31536000UL; secs %= 31536000UL;
                                         const auto days    = secs / 86400UL;    secs %= 86400UL;
                                         const auto hours   = secs / 3600UL;     secs %= 3600UL;
                                         const auto minutes = secs / 60UL;       secs %= 60UL;
@@ -510,7 +546,7 @@ namespace test {
                                         if (days    != 0UL) { time_remaining << days    << "d "; }
                                         if (hours   != 0UL) { time_remaining << hours   << "h "; }
                                         if (minutes != 0UL) { time_remaining << minutes << "m "; }
-                                        time_remaining << secs    << "s";
+                                                              time_remaining << secs    << "s";
 
                                         debug::log(
                                             std::to_string(tests_completed) + " / " + std::to_string(total_tests) + " (" + percentage.str() + ") " +
