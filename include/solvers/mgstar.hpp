@@ -252,7 +252,7 @@ namespace chdr::solvers {
             existence_set closed(_params.monotonic_pmr);
             closed.reserve(capacity);
 
-            std::pmr::multiset<node> open(_params.homogeneous_pmr);
+            std::pmr::multiset<node> open(_params.heterogeneous_pmr);
 
             return solve_internal(open, closed, capacity, _params);
         }

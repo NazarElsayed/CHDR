@@ -383,9 +383,6 @@ namespace test {
                           << "DISABLED.\n";
                 #endif //!_OPENMP
 
-                omp_set_nested(1); // Enable nested parallelism
-                omp_set_max_active_levels(2); // Allow two levels of parallelism
-
                 constexpr auto log_interval = std::chrono::seconds(3UL);
                 auto next_log = std::chrono::high_resolution_clock::now() + log_interval;
 
@@ -399,10 +396,10 @@ namespace test {
                     size_t      memory;
                 };
 
-                std::unordered_map<std::string, std::map<long double, std::vector<test_data>>> global_averages{};
+                std::pmr::synchronized_pool_resource pmr;
+                std::pmr::unordered_map<std::string, std::pmr::map<long double, std::pmr::vector<test_data>>> global_averages(&pmr);
 
                 /* PARALLELISED BENCHMARKING */
-                #pragma omp parallel for schedule(dynamic) // Parallelise per-map (outer loop).
                 for (const auto& [map, scenarios] : maps) {
 
                     try {
@@ -429,8 +426,8 @@ namespace test {
                                 thread_log << std::fixed << std::setprecision(9)
                                            << "Scenario " << (i + 1U) << " (Length: " << scenario.distance << "):\n";
 
-                                for (size_t j = 0U; j < tests.size(); ++j) {
-
+                                for (size_t j = 0U; j < tests.size(); ++j)
+                                {
                                     const auto& [name, variant] = tests[j];
 
                                     // Right-aligned output:
@@ -473,17 +470,43 @@ namespace test {
 
                                     thread_log << " " << duration << ", " << peak_memory_usage << "\n";
 
-                                    global_averages[name][scenario.distance].push_back(test_data { duration, peak_memory_usage });
-
                                     #pragma omp atomic
                                     test_averages[j].duration += duration;
 
                                     #pragma omp atomic
                                     test_averages[j].memory += peak_memory_usage;
 
-
                                     #pragma omp atomic
                                     ++tests_completed;
+
+                                    std::pmr::vector<test_data>* bin = nullptr;
+                                    {
+                                        std::pmr::map<long double, std::pmr::vector<test_data>>* distance_map;
+
+                                        auto s1 = global_averages.find(name);
+                                        if (s1 == global_averages.end()) {
+                                            #pragma omp critical
+                                            distance_map = &(
+                                                global_averages.try_emplace(name, std::pmr::map<long double, std::pmr::vector<test_data>>(&pmr)).first->second
+                                            );
+                                        }
+                                        else {
+                                            distance_map = &(s1->second);
+                                        }
+
+                                        auto s2 = distance_map->find(scenario.distance);
+                                        if (s2 == distance_map->end()) {
+                                            #pragma omp critical
+                                            bin = &(
+                                                distance_map->try_emplace(scenario.distance, std::pmr::vector<test_data>(&pmr))
+                                            ).first->second;
+                                        }
+                                        else {
+                                            bin = &(s2->second);
+                                        }
+                                    }
+
+                                    bin->push_back(test_data { duration, peak_memory_usage });
                                 }
 
                                 #pragma omp critical
@@ -491,14 +514,16 @@ namespace test {
                                     log << thread_log.str();
 
                                     auto now = std::chrono::high_resolution_clock::now();
-                                    if (now >= next_log || tests_completed == total_tests) {
+                                    if (now >= next_log || tests_completed == total_tests)
+                                    {
                                         next_log = now + log_interval;
 
-                                        const auto progress = static_cast<long double>(tests_completed) / static_cast<long double>(total_tests);
+                                        const auto progress = static_cast<long double>(tests_completed) / static_cast<
+                                            long double>(total_tests);
 
                                         std::stringstream percentage;
                                         percentage << std::fixed << std::setprecision(2)
-                                                   << (progress * 100.0L) << "%";
+                                            << (progress * 100.0L) << "%";
 
                                         size_t secs { 0U };
                                         {
@@ -549,7 +574,7 @@ namespace test {
                                         if (days    != 0UL) { time_remaining << days    << "d "; }
                                         if (hours   != 0UL) { time_remaining << hours   << "h "; }
                                         if (minutes != 0UL) { time_remaining << minutes << "m "; }
-                                                              time_remaining << secs    << "s";
+                                        time_remaining << secs    << "s";
 
                                         debug::log(
                                             std::to_string(tests_completed) + " / " + std::to_string(total_tests) + " (" + percentage.str() + ") " +

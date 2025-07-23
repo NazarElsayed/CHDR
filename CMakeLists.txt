@@ -137,7 +137,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 endif()
 
 # DIFFERENT BUILD MODES:
-set(CMAKE_CXX_FLAGS_DEBUG        "${WARNINGS} -O0 -fsanitize=address,leak,undefined -fopenmp -fno-inline -fno-strict-aliasing -fno-omit-frame-pointer -fno-rtti -g")
+set(CMAKE_CXX_FLAGS_DEBUG        "${WARNINGS} -O1 -fsanitize=address,leak,undefined -fopenmp -march=native -mtune=native -funroll-loops -ftree-vectorize -ffast-math -fstrict-aliasing -fno-strict-overflow -fdata-sections -ffunction-sections -fomit-frame-pointer -fno-rtti -g -gdwarf-5")
 set(CMAKE_CXX_FLAGS_NOSANITIZERS "${WARNINGS} -O3                                   -fopenmp -fno-inline -fno-strict-aliasing -fno-omit-frame-pointer -fno-rtti -fno-verbose-asm -flto -g -gdwarf-5")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${WARNINGS} -O2 -fopenmp -march=native -mtune=native -funroll-loops -ftree-vectorize -ffast-math -fstrict-aliasing -fno-strict-overflow -fdata-sections -ffunction-sections -fomit-frame-pointer -fno-rtti -DNDEBUG")
 
