@@ -196,7 +196,7 @@ namespace chdr {
         }
 
         /**
-         * @brief Computes the Cosine distance between two nodes.
+         * @brief Computes the cosine distance between two nodes.
          * @details Measures angle-based similarity, normalized by magnitude.
          * @remarks Ideal for problems dealing with directions or high-dimensional data similarity.
          * @param _a The first node.

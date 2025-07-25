@@ -1,5 +1,5 @@
 <map id="sqrt" name="sqrt">
-<area shape="rect" id="Node000001" title="Computes the square root of a given value." alt="" coords="228,5,268,28"/>
-<area shape="rect" id="Node000002" href="$de/d17/group__Heuristics_gaa5fb3dbd83ab54f1935edc280461c87c.html#gaa5fb3dbd83ab54f1935edc280461c87c" title="Computes the Cosine distance between two nodes." alt="" coords="5,5,180,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="214,19,180,19,180,14,214,14"/>
+<area shape="rect" id="Node000001" title="Computes the square root of a given value." alt="" coords="256,5,299,28"/>
+<area shape="rect" id="Node000002" href="$de/d17/group__Heuristics_gaa5fb3dbd83ab54f1935edc280461c87c.html#gaa5fb3dbd83ab54f1935edc280461c87c" title="Computes the cosine distance between two nodes." alt="" coords="5,5,208,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="242,19,208,19,208,14,242,14"/>
 </map>
