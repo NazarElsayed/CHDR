@@ -52,6 +52,7 @@ namespace chdr::solvers {
      *     using   coord_type [[maybe_unused]] = ...; // chdr::coord<uint32_t, 2>
      *
      *     using lazy_sorting [[maybe_unused]] = ...; // std::false_type / std::true_type;
+     *     using   no_cleanup [[maybe_unused]] = ...; // std::false_type / std::true_type;
      *
      *     const        ... maze;  // i.e. chdr::grid, chdr::graph
      *     const coord_type start;
