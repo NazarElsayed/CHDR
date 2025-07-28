@@ -1,7 +1,7 @@
 <map id="to_nd" name="to_nd">
-<area shape="rect" id="Node000001" title="Maps a one&#45;dimensional index to a multidimensional coordinate representation." alt="" coords="317,29,367,52"/>
-<area shape="rect" id="Node000002" href="$dd/de3/classchdr_1_1mazes_1_1grid_ad242ff0ed9416b32cc9de01ef6ea09cf.html#ad242ff0ed9416b32cc9de01ef6ea09cf" title="Retrieves the neighbours of a node within the grid." alt="" coords="45,5,229,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="303,39,229,30,230,25,304,34"/>
-<area shape="rect" id="Node000003" href="$de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_ad242ff0ed9416b32cc9de01ef6ea09cf.html#ad242ff0ed9416b32cc9de01ef6ea09cf" title="Retrieves the neighbours of a node within the grid." alt="" coords="5,52,269,75"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="304,47,240,55,240,49,303,42"/>
+<area shape="rect" id="Node000001" title="Maps a one&#45;dimensional index to a multidimensional coordinate representation." alt="" coords="360,29,412,52"/>
+<area shape="rect" id="Node000002" href="$dd/de3/classchdr_1_1mazes_1_1grid_ad242ff0ed9416b32cc9de01ef6ea09cf.html#ad242ff0ed9416b32cc9de01ef6ea09cf" title="Retrieves the neighbours of a node within the grid." alt="" coords="53,5,265,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="346,39,265,31,265,25,346,34"/>
+<area shape="rect" id="Node000003" href="$de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_ad242ff0ed9416b32cc9de01ef6ea09cf.html#ad242ff0ed9416b32cc9de01ef6ea09cf" title="Retrieves the neighbours of a node within the grid." alt="" coords="5,52,312,75"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="346,47,273,55,272,49,346,42"/>
 </map>

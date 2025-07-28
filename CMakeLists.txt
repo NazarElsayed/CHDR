@@ -169,6 +169,8 @@ if (UNIX)
     else ()
         target_link_options(chdr PRIVATE -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined)
     endif ()
+else()
+    target_link_options(chdr PRIVATE -static)
 endif (UNIX)
 
 message(NOTICE "NOTICE: Generating documentation with Doxygen:")
