@@ -116,7 +116,7 @@ namespace test {
                 const      size_t memoryLimit  = static_cast<size_t>(-1U);
             };
 
-            if (_size.size() >= 2U && _size[0U] > 1U && _size[1U] > 1U) {
+            if (_size.size() >= 2U && _size[0U] > 2U && _size[1U] > 2U) {
 
                 // Generate random 2-KD mazes:
                 for (size_t i = 0U; i < _iterations; ++i) {
