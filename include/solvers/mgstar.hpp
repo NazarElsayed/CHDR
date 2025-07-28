@@ -15,6 +15,7 @@
 
 #include <cstddef>
 #include <set>
+#include <optional>
 
 #include "../solvers/base/managed_node.hpp"
 #include "../types/containers/existence_set.hpp"

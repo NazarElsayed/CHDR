@@ -158,9 +158,9 @@ namespace test {
 #elif defined(__linux__) || defined(__unix__) || defined(__APPLE__)
             // POSIX (Linux/Unix) implementation
             int policy;
-            struct sched_param param;
+            sched_param param;
 
-            pthread_t thread = pthread_self();
+            auto thread = pthread_self();
             if (pthread_getschedparam(thread, &policy, &param) != 0) {
                 return;
             }
@@ -443,7 +443,7 @@ namespace test {
 
                                     auto [duration, length] = std::visit([&](const auto& _t) {
                                         return invoke_benchmark<std::decay_t<decltype(_t)>>(
-                                            params{
+                                            params {
                                                 map.maze,
                                                 scenario.start,
                                                 scenario.end,
@@ -518,12 +518,11 @@ namespace test {
                                     {
                                         next_log = now + log_interval;
 
-                                        const auto progress = static_cast<long double>(tests_completed) / static_cast<
-                                            long double>(total_tests);
+                                        const auto progress = static_cast<long double>(tests_completed) / static_cast<long double>(total_tests);
 
                                         std::stringstream percentage;
                                         percentage << std::fixed << std::setprecision(2)
-                                            << (progress * 100.0L) << "%";
+                                                   << (progress * 100.0L) << "%";
 
                                         size_t secs { 0U };
                                         {

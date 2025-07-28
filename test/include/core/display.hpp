@@ -24,9 +24,9 @@ namespace test {
         static constexpr auto*  s_wall_str = "██";
 
 #if defined(_WIN32) || defined(_WIN64)
-        static constexpr auto* start_str = "00";
-        static constexpr auto*   end_str = "11";
-        static constexpr auto*  path_str = "--";
+        static constexpr auto* s_start_str = "00";
+        static constexpr auto*   s_end_str = "11";
+        static constexpr auto*  s_path_str = "--";
 #else
         static constexpr auto* s_start_str = "🏠";
         static constexpr auto*   s_end_str = "🧀";

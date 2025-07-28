@@ -329,7 +329,7 @@ namespace {
 
 #elif defined(_WIN32) || defined(_WIN64)
 
-        void SetCAttr(void* _h, const WORD &_attribute) {
+        static void SetCAttr(void* _h, const WORD &_attribute) {
 
             if (!SetConsoleTextAttribute(_h, _attribute)) {
                 throw std::runtime_error("Failed to set the console text attribute.");
@@ -693,7 +693,7 @@ namespace {
          * By default, the log type is set to `debug`.
          *
          * @param[in] _message The message to be logged.
-         * @param[in] _type (optional) The log type for the message (default is `LogType::debug`).
+         * @param[in] _type (optional) The log type for the message (default is `log_type::debug`).
          * @param[in] _makeInline (optional) Specifies whether the log message should be displayed inline (default is `false`).
          */
         template <typename T>
@@ -743,7 +743,7 @@ namespace {
                     result.emplace_back("...");
                 }
     #else
-                debug::log("Stack trace support not been implemented for this platform!", LogType::warning);
+                debug::log("Stack trace support not been implemented for this platform!", log_type::warning);
     #endif
 
                 (void)_frames; // Suppress unused variable warning.
