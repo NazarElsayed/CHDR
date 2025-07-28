@@ -340,7 +340,6 @@ namespace {
 
             constexpr auto FOREGROUND_BLACK   [[maybe_unused]] = 0x0;
             constexpr auto FOREGROUND_CYAN    [[maybe_unused]] = 0x3;
-            constexpr auto FOREGROUND_RED     [[maybe_unused]] = 0x4;
             constexpr auto FOREGROUND_MAGENTA [[maybe_unused]] = 0x5;
             constexpr auto FOREGROUND_YELLOW  [[maybe_unused]] = 0x6;
             constexpr auto FOREGROUND_WHITE   [[maybe_unused]] = 0x7;

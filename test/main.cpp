@@ -15,6 +15,7 @@
 #include <iostream>
 #include <string_view>
 #include <omp.h>
+#include <variant>
 
 #include "core/application.hpp"
 
@@ -664,7 +665,7 @@ namespace test {
             using scalar_t = uint32_t;
             using  index_t = uint32_t;
 
-            return run_gppc_benchmarks<weight_t, coord_t, scalar_t, index_t>();
+            // return run_gppc_benchmarks<weight_t, coord_t, scalar_t, index_t>();
 
             /* GENERATE MAZE */
             constexpr size_t seed { 0U };
