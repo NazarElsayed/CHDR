@@ -11,6 +11,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <sys/wait.h>
 #include <filesystem>
 #include <iostream>
 #include <string_view>
@@ -240,7 +241,7 @@ namespace test {
                 }
 
                 min_duration = chdr::utils::max(min_duration - noise_floor_min, std::numeric_limits<long double>::epsilon());
-                path_length = path.size();
+                path_length  = path.size();
             }
             catch (const std::exception& e) {
                 min_duration = std::numeric_limits<long double>::max();
@@ -400,6 +401,12 @@ namespace test {
                 std::pmr::synchronized_pool_resource pmr;
                 std::pmr::unordered_map<std::string, std::pmr::map<long double, std::pmr::vector<test_data>>> global_averages(&pmr);
 
+                constexpr auto timeout = std::chrono::seconds(30UL);
+                std::pmr::unordered_map<std::string, scalar_t> max_distances(&pmr);
+                for (const auto& [name, variant] : tests) {
+                    max_distances[name] = 2048UL;
+                }
+
                 /* PARALLELISED BENCHMARKING */
                 for (const auto& [map, scenarios] : maps) {
 
@@ -418,7 +425,7 @@ namespace test {
                             #pragma omp parallel for schedule(guided) // Parallelise per-scenario (inner loop).
                             for (size_t index = 0U; index < scenarios.size(); ++index) {
 
-                                size_t i = (scenarios.size() - 1U) - index;
+                                size_t i = index; //(scenarios.size() - 1U) - index;
 
                                 const auto& scenario = scenarios[i];
 
@@ -438,13 +445,34 @@ namespace test {
                                     }
                                     thread_log << name << ": ";
 
-                                    auto monotonic     = chdr::    monotonic_pool();
-                                    auto heterogeneous = chdr::heterogeneous_pool();
-                                    auto homogeneous   = chdr::  homogeneous_pool();
+                                    if (scenario.distance >= max_distances[name]) {
+                                        thread_log << "SKIPPED\n";
+                                    }
+                                    else {
+
+                                        struct result_data {
+                                            std::pair<long double, size_t> path_runtime;
+                                            size_t peak_memory;
+                                        };
+
+                                        result_data data{{ -1.0L, 0U }, { 0U }};
+                                        {
+                                            int pipefd[2];
+                                            if (pipe(pipefd) == -1) {
+                                                perror("pipe");
+                                            }
+
+                                            pid_t child_pid = fork();
+                                            if (child_pid == 0) {
+                                                close(pipefd[0]);
+
+                                                auto monotonic     = chdr::monotonic_pool();
+                                                auto heterogeneous = chdr::heterogeneous_pool();
+                                                auto homogeneous   = chdr::homogeneous_pool();
 
                                     auto [duration, length] = std::visit([&](const auto& _t) {
                                         return invoke_benchmark<std::decay_t<decltype(_t)>>(
-                                            params {
+                                            params{
                                                 map.maze,
                                                 scenario.start,
                                                 scenario.end,
@@ -461,53 +489,86 @@ namespace test {
                                         variant
                                     );
 
-                                    size_t peak_memory_usage { 0U };
+    #if CHDR_DIAGNOSTICS == 1
+                                                data.peak_memory = monotonic.__get_diagnostic_data().peak_allocated +
+                                                               heterogeneous.__get_diagnostic_data().peak_allocated +
+                                                                 homogeneous.__get_diagnostic_data().peak_allocated;
+    #endif //CHDR_DIAGNOSTICS == 1
 
-#if CHDR_DIAGNOSTICS == 1
-                                    peak_memory_usage = monotonic.__get_diagnostic_data().peak_allocated +
-                                                    heterogeneous.__get_diagnostic_data().peak_allocated +
-                                                      homogeneous.__get_diagnostic_data().peak_allocated;
-#endif //CHDR_DIAGNOSTICS == 1
+                                                write(pipefd[1], &data, sizeof(data));
+                                                close(pipefd[1]);
+                                                exit(0);
+                                            }
+                                            else if (child_pid > 0) {
+                                                close(pipefd[1]);
+                                                auto future = std::async(std::launch::async, [&]() {
+                                                    int status;
+                                                    waitpid(child_pid, &status, 0);
+                                                    return (WIFEXITED(status) && WEXITSTATUS(status) == 0);
+                                                });
 
-                                    thread_log << " " << duration << ", " << peak_memory_usage << "\n";
+                                                if (future.wait_for(timeout) == std::future_status::ready && future.get()) {
+                                                    read(pipefd[0], &data, sizeof(data));
+                                                }
+                                                else {
+                                                    kill(child_pid, SIGKILL);
+                                                }
 
-                                    #pragma omp atomic
-                                    test_averages[j].duration += duration;
+                                                close(pipefd[0]);
+                                            }
+                                        }
 
-                                    #pragma omp atomic
-                                    test_averages[j].memory += peak_memory_usage;
+                                        const auto& [duration, length] = data.path_runtime;
 
-                                    #pragma omp atomic
-                                    ++tests_completed;
-
-                                    std::pmr::vector<test_data>* bin = nullptr;
-                                    {
-                                        std::pmr::map<long double, std::pmr::vector<test_data>>* distance_map;
-
-                                        auto s1 = global_averages.find(name);
-                                        if (s1 == global_averages.end()) {
-                                            #pragma omp critical
-                                            distance_map = &(
-                                                global_averages.try_emplace(name, std::pmr::map<long double, std::pmr::vector<test_data>>(&pmr)).first->second
-                                            );
+                                        if (duration < 0.0L) {
+                                            if (scenario.distance >= max_distances[name]) {
+                                                max_distances[name] /= static_cast<scalar_t>(2.0L);
+                                            }
+                                            thread_log << " ERR: TIMEOUT\n";
                                         }
                                         else {
-                                            distance_map = &(s1->second);
-                                        }
 
-                                        auto s2 = distance_map->find(scenario.distance);
-                                        if (s2 == distance_map->end()) {
-                                            #pragma omp critical
-                                            bin = &(
-                                                distance_map->try_emplace(scenario.distance, std::pmr::vector<test_data>(&pmr))
-                                            ).first->second;
-                                        }
-                                        else {
-                                            bin = &(s2->second);
+                                            thread_log << " " << duration << ", " << data.peak_memory << "\n";
+
+                                            #pragma omp atomic
+                                            test_averages[j].duration += duration;
+
+                                            #pragma omp atomic
+                                            test_averages[j].memory += data.peak_memory;
+
+                                            std::pmr::vector<test_data>* bin = nullptr;
+                                            {
+                                                std::pmr::map<long double, std::pmr::vector<test_data>>* distance_map;
+
+                                                auto s1 = global_averages.find(name);
+                                                if (s1 == global_averages.end())
+                                                {
+                                                    #pragma omp critical
+                                                    distance_map = &(
+                                                        global_averages.try_emplace(name, std::pmr::map<long double, std::pmr::vector<test_data>>(&pmr)).first->second
+                                                    );
+                                                }
+                                                else {
+                                                    distance_map = &(s1->second);
+                                                }
+
+                                                auto s2 = distance_map->find(scenario.distance);
+                                                if (s2 == distance_map->end()) {
+                                                    #pragma omp critical
+                                                    bin = &(
+                                                        distance_map->try_emplace(scenario.distance, std::pmr::vector<test_data>(&pmr))
+                                                    ).first->second;
+                                                }
+                                                else {
+                                                    bin = &(s2->second);
+                                                }
+                                            }
+
+                                            bin->push_back(test_data { duration, data.peak_memory });
                                         }
                                     }
-
-                                    bin->push_back(test_data { duration, peak_memory_usage });
+                                    #pragma omp atomic
+                                    ++tests_completed;
                                 }
 
                                 #pragma omp critical
@@ -515,8 +576,7 @@ namespace test {
                                     log << thread_log.str();
 
                                     auto now = std::chrono::high_resolution_clock::now();
-                                    if (now >= next_log || tests_completed == total_tests)
-                                    {
+                                    if (now >= next_log || tests_completed == total_tests) {
                                         next_log = now + log_interval;
 
                                         const auto progress = static_cast<long double>(tests_completed) / static_cast<long double>(total_tests);
@@ -574,7 +634,7 @@ namespace test {
                                         if (days    != 0UL) { time_remaining << days    << "d "; }
                                         if (hours   != 0UL) { time_remaining << hours   << "h "; }
                                         if (minutes != 0UL) { time_remaining << minutes << "m "; }
-                                        time_remaining << secs    << "s";
+                                                              time_remaining << secs    << "s";
 
                                         debug::log(
                                             std::to_string(tests_completed) + " / " + std::to_string(total_tests) + " (" + percentage.str() + ") " +
@@ -665,7 +725,7 @@ namespace test {
             using scalar_t = uint32_t;
             using  index_t = uint32_t;
 
-            // return run_gppc_benchmarks<weight_t, coord_t, scalar_t, index_t>();
+            return run_gppc_benchmarks<weight_t, coord_t, scalar_t, index_t>();
 
             /* GENERATE MAZE */
             constexpr size_t seed { 0U };
@@ -682,10 +742,10 @@ namespace test {
             // const auto grid = chdr::mazes::grid<coord_t, weight_t>(_size, nodes);
 
             // Random grid:
-            // const auto grid = make_solvable_random_grid_maze<weight_t, coord_t, scalar_t, index_t>(start, end, _size, seed);
+            const auto grid = make_solvable_random_grid_maze<weight_t, coord_t, scalar_t, index_t>(start, end, _size, seed);
 
             // Maze grid:
-            const auto grid = generator::grid::generate<weight_t>(start, end, _size, 0.0, 0.0, seed);
+            // const auto grid = generator::grid::generate<weight_t>(start, end, _size, 0.0, 0.0, seed);
             //debug::log(_size[0] + _size[1] - 2U);
 
             const auto& test = grid;
@@ -704,7 +764,7 @@ namespace test {
                 using   coord_type [[maybe_unused]] =  coord_t;
 
                 using lazy_sorting [[maybe_unused]] = std::false_type;
-                using   no_cleanup [[maybe_unused]] = std::true_type;
+                using   no_cleanup [[maybe_unused]] = std::false_type;
 
                 const decltype(test)& maze;
                 const     coord_type  start;
