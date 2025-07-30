@@ -851,10 +851,10 @@ namespace test {
 
             using index_t = uint32_t;
 
-            //     if (static_cast<size_t>(_argc - 1) == X) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 1U> { std::stoul(_argv[X]) }); }
-            if (static_cast<size_t>(_argc - 1) == Y) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 2U> { std::stoul(_argv[X]), std::stoul(_argv[Y]) }); }
-            //else if (static_cast<size_t>(_argc - 1) == Z) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 3U> { std::stoul(_argv[X]), std::stoul(_argv[Y]), std::stoul(_argv[Z]) }); }
-            //else if (static_cast<size_t>(_argc - 1) == W) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 4U> { std::stoul(_argv[X]), std::stoul(_argv[Y]), std::stoul(_argv[Z]), std::stoul(_argv[W]) }); }
+                 // if (static_cast<size_t>(_argc - 1) == X) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 1U> { static_cast<index_t>(std::stoul(_argv[X])) }); }
+            if (static_cast<size_t>(_argc - 1) == Y) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 2U> { static_cast<index_t>(std::stoul(_argv[X])), static_cast<index_t>(std::stoul(_argv[Y])) }); }
+            // else if (static_cast<size_t>(_argc - 1) == Z) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 3U> { static_cast<index_t>(std::stoul(_argv[X])), static_cast<index_t>(std::stoul(_argv[Y])), static_cast<index_t>(std::stoul(_argv[Z])) }); }
+            // else if (static_cast<size_t>(_argc - 1) == W) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 4U> { static_cast<index_t>(std::stoul(_argv[X])), static_cast<index_t>(std::stoul(_argv[Y])), static_cast<index_t>(std::stoul(_argv[Z])), static_cast<index_t>(std::stoul(_argv[W])) }); }
             else {
                 debug::log("ERROR: Invalid Dimensionality!", error);
             }
