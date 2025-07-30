@@ -764,7 +764,7 @@ namespace test {
                 using   coord_type [[maybe_unused]] =  coord_t;
 
                 using lazy_sorting [[maybe_unused]] = std::false_type;
-                using   no_cleanup [[maybe_unused]] = std::false_type;
+                using   no_cleanup [[maybe_unused]] = std:: true_type;
 
                 const decltype(test)& maze;
                 const     coord_type  start;
