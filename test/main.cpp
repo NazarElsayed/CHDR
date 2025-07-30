@@ -725,7 +725,7 @@ namespace test {
             using scalar_t = uint32_t;
             using  index_t = uint32_t;
 
-            return run_gppc_benchmarks<weight_t, coord_t, scalar_t, index_t>();
+            //return run_gppc_benchmarks<weight_t, coord_t, scalar_t, index_t>();
 
             /* GENERATE MAZE */
             constexpr size_t seed { 0U };
@@ -742,10 +742,10 @@ namespace test {
             // const auto grid = chdr::mazes::grid<coord_t, weight_t>(_size, nodes);
 
             // Random grid:
-            const auto grid = make_solvable_random_grid_maze<weight_t, coord_t, scalar_t, index_t>(start, end, _size, seed);
+            // const auto grid = make_solvable_random_grid_maze<weight_t, coord_t, scalar_t, index_t>(start, end, _size, seed);
 
             // Maze grid:
-            // const auto grid = generator::grid::generate<weight_t>(start, end, _size, 0.0, 0.0, seed);
+            const auto grid = generator::grid::generate<weight_t>(start, end, _size, 0.0, 0.0, seed);
             //debug::log(_size[0] + _size[1] - 2U);
 
             const auto& test = grid;
@@ -849,7 +849,7 @@ namespace test {
 
             auto result = EXIT_FAILURE;
 
-            using index_t = uint64_t;
+            using index_t = uint32_t;
 
             //     if (static_cast<size_t>(_argc - 1) == X) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 1U> { std::stoul(_argv[X]) }); }
             if (static_cast<size_t>(_argc - 1) == Y) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 2U> { std::stoul(_argv[X]), std::stoul(_argv[Y]) }); }
