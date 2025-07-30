@@ -139,7 +139,9 @@ namespace test {
                     auto result = chdr::mazes::grid<coord_t, weight_t>(_size, nodes);
 
                     // Check if maze is solvable:
-                    if (!(chdr::solvers::solver<chdr::solvers::gbest_first, params>::solve({ result, _start, _end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &heterogeneous, &homogeneous }).empty())) {
+                    auto path = chdr::solvers::solver<chdr::solvers::gbest_first, params>::solve({ result, _start, _end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &heterogeneous, &homogeneous });
+                    if (!(path.empty())) {
+                        std::cout << "Solution depth (d) = " << path.size() << "\n";
                         return result; // Return if solvable.
                     }
                 }
@@ -740,13 +742,13 @@ namespace test {
             // Empty grid:
             // const std::vector<weight_t> nodes(chdr::utils::product<size_t>(_size), std::numeric_limits<weight_t>::lowest());
             // const auto grid = chdr::mazes::grid<coord_t, weight_t>(_size, nodes);
+            //debug::log(_size[0] + _size[1] - 2U);
 
             // Random grid:
-            // const auto grid = make_solvable_random_grid_maze<weight_t, coord_t, scalar_t, index_t>(start, end, _size, seed);
+            const auto grid = make_solvable_random_grid_maze<weight_t, coord_t, scalar_t, index_t>(start, end, _size, seed);
 
             // Maze grid:
-            const auto grid = generator::grid::generate<weight_t>(start, end, _size, 0.0, 0.0, seed);
-            //debug::log(_size[0] + _size[1] - 2U);
+            // const auto grid = generator::grid::generate<weight_t>(start, end, _size, 0.0, 0.0, seed);
 
             const auto& test = grid;
             // auto graph_pool = chdr::heterogeneous_pool(); const auto test = chdr::mazes::graph<index_t, scalar_t>(grid, &graph_pool);
