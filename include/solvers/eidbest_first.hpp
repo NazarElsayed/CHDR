@@ -179,32 +179,25 @@ namespace chdr::solvers {
                             }
                         }
                         else {
-                            _open.pop_back();
+                            if (_open.size() > 1U) {
+                                _open.pop_back();
+                            }
                             stack.pop();
                         }
                     }
                     else {
                         min = utils::min(min, curr.m_hScore);
-                        _open.pop_back();
+                        if (_open.size() > 1U) {
+                            _open.pop_back();
+                        }
                         stack.pop();
                     }
                 }
 
-                if (_open.size() > 1U) {
-                    _open.resize(1U);
+                bound = min;
 
-                                  stack.clear();
-                    transposition_table.clear();
-
-                    bound = min;
-
-                    if (min != std::numeric_limits<scalar_t>::max()) {
-                        solver_t::solver_utils::reset_resources(_params);
-                    }
-                }
-                else {
-                    break;
-                }
+                              stack.clear();
+                transposition_table.clear();
             }
             while (bound != std::numeric_limits<scalar_t>::max());
 

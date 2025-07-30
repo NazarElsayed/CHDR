@@ -60,7 +60,9 @@ namespace test::generator::utils {
         template <size_t Index>
         static constexpr void compute_single_axis(const coord_t& _coord, const coord_t& _size, neighbour_t& _negOutput, neighbour_t& _posOutput) noexcept {
 
-            constexpr size_t step(1U);
+            using element_t = typename std::decay_t<decltype(std::declval<coord_t>()[0U])>;
+
+            constexpr element_t step { 1 };
 
             coord_t dir{};
 
@@ -228,9 +230,11 @@ namespace test::generator::utils {
                         // Randomly knock down walls if the maze is meant to contain loops:
                         for (size_t i = 1U; i < result.size(); ++i) {
 
-                            const auto c = chdr::utils::to_nd(i, _size);
+                                using element_t = typename std::decay_t<decltype(std::declval<coord_t>()[0U])>;
 
-                            if (is_link(c) && !is_edge(c, _size)) {
+                                const auto c = chdr::utils::to_nd(static_cast<element_t>(i), _size);
+
+                                if (is_link(c) && !is_edge(c, _size)) {
 
                                 if (const auto obstacle_chance = static_cast<double>(rng()) / static_cast<double>(rng_engine_t::max());
                                     obstacle_chance < _obstacles

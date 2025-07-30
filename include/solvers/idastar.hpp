@@ -177,13 +177,17 @@ namespace chdr::solvers {
                             }
                         }
                         else {
-                            _open.pop_back();
+                            if (_open.size() > 1U) {
+                                _open.pop_back();
+                            }
                             stack.pop();
                         }
                     }
                     else {
                         min = utils::min(min, curr.m_fScore);
-                        _open.pop_back();
+                        if (_open.size() > 1U) {
+                            _open.pop_back();
+                        }
                         stack.pop();
                     }
                 }
@@ -192,14 +196,9 @@ namespace chdr::solvers {
 
                 stack.clear();
 
-                if (_open.size() > 1U) {
-                    _open.resize(1U);
-                }
-                else {
-                    if (min != std::numeric_limits<scalar_t>::max()) {
-                        if constexpr (solver_t::solver_utils::template has_method_reset_v<std::remove_pointer_t<std::decay_t<decltype(_params.monotonic_pmr)>>>) {
-                            _params.monotonic_pmr->reset();
-                        }
+                if (min != std::numeric_limits<scalar_t>::max()) {
+                    if constexpr (solver_t::solver_utils::template has_method_reset_v<std::remove_pointer_t<std::decay_t<decltype(_params.monotonic_pmr)>>>) {
+                        _params.monotonic_pmr->reset();
                     }
                 }
             }
