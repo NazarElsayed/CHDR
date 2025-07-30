@@ -81,6 +81,12 @@ namespace test {
                     path = chdr::solvers::solver<solver_t, params_t>::solve(_params);
                 }
 
+                if (i != test_samples - 1U) {
+                    _params.    monotonic_pmr->reset();
+                    _params.heterogeneous_pmr->reset();
+                    _params.  homogeneous_pmr->reset();
+                }
+
                 result = chdr::utils::min(
                     result,
                     std::chrono::duration_cast<std::chrono::duration<long double>>(

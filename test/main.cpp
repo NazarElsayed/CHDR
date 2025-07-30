@@ -704,7 +704,7 @@ namespace test {
                 using   coord_type [[maybe_unused]] =  coord_t;
 
                 using lazy_sorting [[maybe_unused]] = std::false_type;
-                using   no_cleanup [[maybe_unused]] = std::false_type;
+                using   no_cleanup [[maybe_unused]] = std::true_type;
 
                 const decltype(test)& maze;
                 const     coord_type  start;
@@ -718,7 +718,7 @@ namespace test {
 
                 const scalar_type weight       =  1U;
                 const      size_t capacity     =  0U;
-                const      size_t memory_limit = 90U;
+                const      size_t memory_limit = -1U;
             };
 
             const params args { test, start, end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &heterogeneous, &homogeneous};
@@ -748,6 +748,16 @@ namespace test {
             else {
                 debug::log("ERROR: Unknown solver \"" + std::string(_solver) + "\"!", error);
             }
+
+#if CHDR_DIAGNOSTICS == 1
+
+            auto peak_memory_usage = monotonic.__get_diagnostic_data().peak_allocated +
+                                 heterogeneous.__get_diagnostic_data().peak_allocated +
+                                   homogeneous.__get_diagnostic_data().peak_allocated;
+
+            std::cout << peak_memory_usage << "\n";
+
+#endif //CHDR_DIAGNOSTICS == 1
 
             return result;
         }
@@ -779,7 +789,7 @@ namespace test {
 
             auto result = EXIT_FAILURE;
 
-            using index_t = unsigned long;
+            using index_t = uint64_t;
 
             //     if (static_cast<size_t>(_argc - 1) == X) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 1U> { std::stoul(_argv[X]) }); }
             if (static_cast<size_t>(_argc - 1) == Y) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 2U> { std::stoul(_argv[X]), std::stoul(_argv[Y]) }); }

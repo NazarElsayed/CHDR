@@ -22,7 +22,7 @@
  */
 
 /** @brief Full version string of the CHDR library. */
-#define CHDR_VERSION          "0.1.0-dev+a8561412"
+#define CHDR_VERSION          "0.1.0-dev+ebbf899c"
 
 /** @brief CHDR major version number. */
 #define CHDR_VERSION_MAJOR     0
@@ -37,11 +37,11 @@
 #define CHDR_VERSION_TWEAK    "dev"
 
 /** @brief CHDR version metadata string. */
-#define CHDR_VERSION_METADATA "a8561412"
+#define CHDR_VERSION_METADATA "ebbf899c"
 
 /** @brief Flag indicating whether or not diagnostics should be output by the library (0 = off, 1 = on). */
 #ifndef CHDR_DIAGNOSTICS
-#define CHDR_DIAGNOSTICS 0
+#define CHDR_DIAGNOSTICS 1
 #endif //CHDR_DIAGNOSTICS
 
 /* ReSharper enable CppUnusedIncludeDirective */
