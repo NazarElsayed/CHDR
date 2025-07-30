@@ -140,7 +140,7 @@ namespace chdr::solvers {
 
             _open.emplace_back(s, 0, bound);
 
-            stack<state<neighbours_t>> stack(_params.heterogeneous_pmr);
+            stack<state<neighbours_t>> stack(_params.monotonic_pmr);
 
             do {
 
@@ -188,18 +188,19 @@ namespace chdr::solvers {
                     }
                 }
 
+                bound = min;
+
+                stack.clear();
+
                 if (_open.size() > 1U) {
                     _open.resize(1U);
-                    stack.clear();
-
-                    bound = min;
-
-                    if (min != std::numeric_limits<scalar_t>::max()) {
-                        solver_t::solver_utils::reset_resources(_params);
-                    }
                 }
                 else {
-                    break;
+                    if (min != std::numeric_limits<scalar_t>::max()) {
+                        if constexpr (solver_t::solver_utils::template has_method_reset_v<std::remove_pointer_t<std::decay_t<decltype(_params.monotonic_pmr)>>>) {
+                            _params.monotonic_pmr->reset();
+                        }
+                    }
                 }
             }
             while (bound != std::numeric_limits<scalar_t>::max());

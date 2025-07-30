@@ -127,7 +127,7 @@ namespace chdr::solvers {
 
             _open.emplace_back(s, 0U);
 
-            stack<state<neighbours_t>> stack(_params.heterogeneous_pmr);
+            stack<state<neighbours_t>> stack(_params.monotonic_pmr);
 
             for (size_t bound = 0U; bound < std::numeric_limits<size_t>::max(); ++bound) {
 
@@ -161,23 +161,16 @@ namespace chdr::solvers {
                         }
                     }
                     else {
-                          _open.pop_back();
-                          stack.pop();
-                        _closed.erase(curr.m_index);
+                        if (_open.size() > 1U) {
+                            _open.pop_back();
+                        }
+                        stack.pop();
+                        _closed.emplace(curr.m_index);
                     }
                 }
 
-
-                if (_open.size() > 1U) {
-                    _open.resize(1U);
-
-                      stack.clear();
-                    _closed.clear();
-
-                    solver_t::solver_utils::reset_resources(_params);
-                }
-                else {
-                    break;
+                if constexpr (solver_t::solver_utils::template has_method_reset_v<std::remove_pointer_t<std::decay_t<decltype(_params.monotonic_pmr)>>>) {
+                    _params.monotonic_pmr->reset();
                 }
             }
 
@@ -188,7 +181,7 @@ namespace chdr::solvers {
 
             const auto capacity = solver_t::solver_utils::determine_capacity(_params);
 
-            existence_set closed(_params.monotonic_pmr);
+            existence_set closed(_params.heterogeneous_pmr);
             closed.reserve(capacity);
 
             std::pmr::vector<node> open(_params.heterogeneous_pmr);
