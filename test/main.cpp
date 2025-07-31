@@ -745,10 +745,10 @@ namespace test {
             //debug::log(_size[0] + _size[1] - 2U);
 
             // Random grid:
-            const auto grid = make_solvable_random_grid_maze<weight_t, coord_t, scalar_t, index_t>(start, end, _size, seed);
+            //const auto grid = make_solvable_random_grid_maze<weight_t, coord_t, scalar_t, index_t>(start, end, _size, seed);
 
             // Maze grid:
-            // const auto grid = generator::grid::generate<weight_t>(start, end, _size, 0.0, 0.0, seed);
+            const auto grid = generator::grid::generate<weight_t>(start, end, _size, 0.0, 0.0, seed);
 
             const auto& test = grid;
             // auto graph_pool = chdr::heterogeneous_pool(); const auto test = chdr::mazes::graph<index_t, scalar_t>(grid, &graph_pool);
@@ -783,7 +783,7 @@ namespace test {
                 const      size_t memory_limit = -1U;
             };
 
-            const params args { test, start, end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &heterogeneous, &homogeneous};
+            const params args { test, start, end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &heterogeneous, &homogeneous };
 
                  if (_solver == "astar"        ) { result = invoke<chdr::solvers::        astar, params>(args); }
             else if (_solver == "best_first"   ) { result = invoke<chdr::solvers::   best_first, params>(args); }
