@@ -115,8 +115,10 @@ namespace chdr::solvers {
         template <typename closed_set_t>
         HOT static void bitwise_regression(const managed_node<index_t, node>* _parent, closed_set_t& _closed) {
 
-            for (auto* p = _parent; p->m_parent != nullptr && _closed.contains(p->m_index); p = p->m_parent) {
-                _closed.erase(p->m_index);
+            if (_parent != nullptr) {
+                for (auto* p = _parent; p->m_parent != nullptr && _closed.contains(p->m_index); p = p->m_parent) {
+                    _closed.erase(p->m_index);
+                }
             }
         }
 
