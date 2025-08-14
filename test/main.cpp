@@ -254,6 +254,116 @@ namespace test {
             return std::make_pair(min_duration, path_length);
         }
 
+        template <typename weight_t, typename coord_t, typename scalar_t, typename index_t, typename maze_t>
+        static auto run_range_tests(const maze_t& _maze, const coord_t& _start, const coord_t& _end, const coord_t& _size) {
+
+            size_t  low = _maze.count() / 3U;
+            size_t high = _maze.count();
+
+            size_t limit1 = high; // Default to high if no solution is found
+            while (low <= high) {
+
+                size_t mid = low + (high - low) / 2U;
+
+                auto     monotonic = chdr::monotonic_pool();
+                auto heterogeneous = chdr::heterogeneous_pool();
+                auto   homogeneous = chdr::homogeneous_pool();
+
+                struct params {
+
+                    using  weight_type [[maybe_unused]] = weight_t;
+                    using  scalar_type [[maybe_unused]] = scalar_t;
+                    using   index_type [[maybe_unused]] =  index_t;
+                    using   coord_type [[maybe_unused]] =  coord_t;
+
+                    using lazy_sorting [[maybe_unused]] = std::false_type;
+                    using   no_cleanup [[maybe_unused]] = std::false_type;
+
+                    const         maze_t& maze;
+                    const     coord_type  start;
+                    const     coord_type  end;
+                    const     coord_type  size;
+                    scalar_type  (*h)(const coord_type&, const coord_type&) noexcept;
+
+                    decltype(    monotonic)*     monotonic_pmr;
+                    decltype(heterogeneous)* heterogeneous_pmr;
+                    decltype(  homogeneous)*   homogeneous_pmr;
+
+                    const scalar_type weight       =  1U;
+                    const      size_t capacity     =  0U;
+                    const      size_t memory_limit =  0U;
+                };
+
+                const params args { _maze, _start, _end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &heterogeneous, &homogeneous, 1U, 0U, mid };
+
+                auto [duration, length] = invoke_benchmark<chdr::solvers::solver<chdr::solvers::mgstar, params>, params>(args);
+                if (length != 0U) {
+                    limit1 = mid;  // Record the current mid as it works
+                    high = mid - 1U; // Try smaller values
+                }
+                else {
+                    low = mid + 1U;  // Try larger values
+                }
+            }
+
+            std::cout << "MG*: " << limit1 << "\n";
+
+             low = limit1;
+            high = _maze.count();
+
+            size_t limit2 = high; // Default to high if no solution is found
+            while (low <= high) {
+
+                size_t mid = low + (high - low) / 2U;
+
+                auto     monotonic = chdr::monotonic_pool();
+                auto heterogeneous = chdr::heterogeneous_pool();
+                auto   homogeneous = chdr::homogeneous_pool();
+
+                struct params {
+
+                    using  weight_type [[maybe_unused]] = weight_t;
+                    using  scalar_type [[maybe_unused]] = scalar_t;
+                    using   index_type [[maybe_unused]] =  index_t;
+                    using   coord_type [[maybe_unused]] =  coord_t;
+
+                    using lazy_sorting [[maybe_unused]] = std::false_type;
+                    using   no_cleanup [[maybe_unused]] = std::false_type;
+
+                    const         maze_t& maze;
+                    const     coord_type  start;
+                    const     coord_type  end;
+                    const     coord_type  size;
+                    scalar_type  (*h)(const coord_type&, const coord_type&) noexcept;
+
+                    decltype(    monotonic)*     monotonic_pmr;
+                    decltype(heterogeneous)* heterogeneous_pmr;
+                    decltype(  homogeneous)*   homogeneous_pmr;
+
+                    const scalar_type weight       =  1U;
+                    const      size_t capacity     =  0U;
+                    const      size_t memory_limit =  0U;
+                };
+
+                const params args { _maze, _start, _end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &heterogeneous, &homogeneous, 1U, 0U, mid };
+
+                auto [duration, length] = invoke_benchmark<chdr::solvers::solver<chdr::solvers::smastar, params>, params>(args);
+                if (length != 0U) {
+                    limit2 = mid;  // Record the current mid as it works
+                    high = mid - 1U; // Try smaller values
+                }
+                else {
+                    low = mid + 1U;  // Try larger values
+                }
+            }
+
+            std::cout << "SMA*: " << limit2 << "\n";
+
+            std::cout << "Delta R = " << static_cast<float>(limit2) / static_cast<float>(limit1) << "\n";
+
+            return EXIT_SUCCESS;
+        }
+
         template <typename weight_t, typename coord_t, typename scalar_t, typename index_t>
         static auto run_gppc_benchmarks() {
 
@@ -474,7 +584,7 @@ namespace test {
 
                                     auto [duration, length] = std::visit([&](const auto& _t) {
                                         return invoke_benchmark<std::decay_t<decltype(_t)>>(
-                                            params{
+                                            params {
                                                 map.maze,
                                                 scenario.start,
                                                 scenario.end,
@@ -727,6 +837,7 @@ namespace test {
             using scalar_t = uint32_t;
             using  index_t = uint32_t;
 
+            // Uncomment divert execution to running run benchmarks using the GPPC dataset (very slow).
             //return run_gppc_benchmarks<weight_t, coord_t, scalar_t, index_t>();
 
             /* GENERATE MAZE */
@@ -754,6 +865,9 @@ namespace test {
             // auto graph_pool = chdr::heterogeneous_pool(); const auto test = chdr::mazes::graph<index_t, scalar_t>(grid, &graph_pool);
             // const auto test = generator::graph::generate<weight_t, index_t, coord_t, scalar_t>(start, end, size, seed);
 
+            // Uncomment to test differences in search range between memory-bounded solvers:
+            //return run_range_tests<weight_t, coord_t, scalar_t, index_t>(test, start, end, _size);
+
             auto     monotonic = chdr::monotonic_pool();
             auto heterogeneous = chdr::heterogeneous_pool();
             auto   homogeneous = chdr::homogeneous_pool();
@@ -772,7 +886,7 @@ namespace test {
                 const     coord_type  start;
                 const     coord_type  end;
                 const     coord_type  size;
-                         scalar_type  (*h)(const coord_type&, const coord_type&) noexcept;
+                scalar_type  (*h)(const coord_type&, const coord_type&) noexcept;
 
                 decltype(    monotonic)*     monotonic_pmr;
                 decltype(heterogeneous)* heterogeneous_pmr;
@@ -780,7 +894,7 @@ namespace test {
 
                 const scalar_type weight       =  1U;
                 const      size_t capacity     =  0U;
-                const      size_t memory_limit = -1U;
+                const      size_t memory_limit = 90U;
             };
 
             const params args { test, start, end, _size, chdr::heuristics::manhattan_distance<scalar_t, coord_t>, &monotonic, &heterogeneous, &homogeneous };

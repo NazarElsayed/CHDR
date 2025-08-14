@@ -148,6 +148,8 @@ namespace chdr::solvers {
         template <typename open_set_t, typename closed_set_t>
         [[maybe_unused, nodiscard]] HOT static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, size_t _capacity, const params_t& _params) {
 
+            constexpr bool optimising = true;
+
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
@@ -221,15 +223,18 @@ namespace chdr::solvers {
                     if (!best_solution.has_value() || curr.m_gScore < best_solution->m_gScore) {
                         best_solution.emplace(std::move(curr));
 
-                        bool full = memory_usage() >= _params.memory_limit;
+                        if constexpr (optimising) { // Optimising mechanism:
 
-                        // ReSharper disable once CppUsingResultOfAssignmentAsCondition
-                        if (full && ((full = !_open.empty()))) {
-                            _open.clear();
-                        }
+                            bool full = memory_usage() >= _params.memory_limit;
 
-                        if (!full) {
-                            _open.emplace(s, static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
+                            // ReSharper disable once CppUsingResultOfAssignmentAsCondition
+                            if (full && ((full = !_open.empty()))) {
+                                _open.clear();
+                            }
+
+                            if (!full) {
+                                _open.emplace(s, static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
+                            }
                         }
                     }
                 }
