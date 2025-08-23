@@ -149,12 +149,12 @@ namespace test::generator {
 
                 if (version == 0.0F) {
                     while (fs >> bunk >> str >> start_x >> start_y >> end_x >> end_y >> distance) {
-                        scenarios.emplace_back(coord_t { start_x, start_y}, coord_t { end_x, end_y }, distance);
+                        scenarios.emplace_back(coord_t { static_cast<scalar_t>(start_x), static_cast<scalar_t>(start_y) }, coord_t { static_cast<scalar_t>(end_x), static_cast<scalar_t>(end_y) }, distance);
                     }
                 }
                 else if (version == 1.0F) {
                     while (fs >> bunk >> str >> bunk >> bunk >> start_x >> start_y >> end_x >> end_y >> distance) {
-                        scenarios.emplace_back(coord_t { start_x, start_y}, coord_t { end_x, end_y }, distance);
+                        scenarios.emplace_back(coord_t { static_cast<scalar_t>(start_x), static_cast<scalar_t>(start_y) }, coord_t { static_cast<scalar_t>(end_x), static_cast<scalar_t>(end_y) }, distance);
                     }
                 }
                 else {
