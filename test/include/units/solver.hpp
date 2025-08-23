@@ -20,7 +20,6 @@
 #include "core/display.hpp"
 
 // ReSharper disable CppUnusedIncludeDirective
-#include "generator/gppc.hpp"       // NOLINT(*-include-cleaner)
 #include "generator/graph.hpp"      // NOLINT(*-include-cleaner)
 #include "generator/grid.hpp"       // NOLINT(*-include-cleaner)
 #include "generator/obstacles.hpp"  // NOLINT(*-include-cleaner)
