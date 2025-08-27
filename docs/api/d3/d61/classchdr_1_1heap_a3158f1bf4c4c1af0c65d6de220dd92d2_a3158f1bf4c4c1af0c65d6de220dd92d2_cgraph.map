@@ -1,9 +1,0 @@
-<map id="enqueue" name="enqueue">
-<area shape="rect" id="Node000001" title="Adds a new element to the heap container using perfect forwarding." alt="" coords="5,5,69,28"/>
-<area shape="rect" id="Node000002" href="$d3/d61/classchdr_1_1heap_add55c8b8d3e3d6419e57210d3313fd09.html#add55c8b8d3e3d6419e57210d3313fd09" title="Adds a new element to the heap container using perfect forwarding." alt="" coords="117,5,180,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="70,14,104,14,104,19,70,19"/>
-<area shape="rect" id="Node000003" href="$d3/d61/classchdr_1_1heap_ab3bf20f6c00b1d3c85593ed5a5c4c3a1.html#ab3bf20f6c00b1d3c85593ed5a5c4c3a1" title="Adjusts the position of an item in the heap by moving it upwards towards the root." alt="" coords="228,5,287,28"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="180,14,214,14,214,19,180,19"/>
-<area shape="rect" id="Node000004" href="$d3/d61/classchdr_1_1heap_a3caedb145a667c26028740417dcf32c3.html#a3caedb145a667c26028740417dcf32c3" title="Retrieves the number of elements currently stored in the heap." alt="" coords="335,5,375,28"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="287,14,321,14,321,19,287,19"/>
-</map>

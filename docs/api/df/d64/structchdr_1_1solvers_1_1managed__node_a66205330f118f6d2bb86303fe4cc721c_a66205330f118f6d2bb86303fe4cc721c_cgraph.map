@@ -1,5 +1,0 @@
-<map id="managed_node" name="managed_node">
-<area shape="rect" id="Node000001" title="Constructs a node with a specified index and an optional parent pointer." alt="" coords="5,5,103,28"/>
-<area shape="rect" id="Node000002" href="$da/d98/structchdr_1_1solvers_1_1bnode_a7bc8e5ab7555f3803cacfde2b0866b44.html#a7bc8e5ab7555f3803cacfde2b0866b44" title="Constructs an uninitialized BNode." alt="" coords="151,5,305,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,14,137,14,137,19,103,19"/>
-</map>

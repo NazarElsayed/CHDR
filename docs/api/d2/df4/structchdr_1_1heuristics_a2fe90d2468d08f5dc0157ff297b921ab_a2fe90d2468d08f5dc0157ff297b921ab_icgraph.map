@@ -1,5 +1,0 @@
-<map id="sqr_euclidean_distance" name="sqr_euclidean_distance">
-<area shape="rect" id="Node000001" title="Computes the squared Euclidean distance between two nodes." alt="" coords="165,5,299,28"/>
-<area shape="rect" id="Node000002" href="$d2/df4/structchdr_1_1heuristics_a9af3a430ef8b7efb6fec1dc3069a2e16.html#a9af3a430ef8b7efb6fec1dc3069a2e16" title="Computes the Euclidean distance between two nodes." alt="" coords="5,5,117,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,19,118,19,118,14,152,14"/>
-</map>

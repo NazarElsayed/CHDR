@@ -1,8 +1,0 @@
-<map id="id_node.hpp" name="id_node.hpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,95,28"/>
-<area shape="rect" id="Node000002" href="$d9/d96/chdr_8hpp.html" title=" " alt="" coords="15,147,85,169"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="46,42,39,76,41,115,49,146,44,147,36,115,34,76,41,41"/>
-<area shape="rect" id="Node000003" href="$d9/de9/graph_8hpp.html" title=" " alt="" coords="49,76,128,99"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="65,39,85,75,81,77,60,41"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="79,112,58,148,53,145,74,109"/>
-</map>

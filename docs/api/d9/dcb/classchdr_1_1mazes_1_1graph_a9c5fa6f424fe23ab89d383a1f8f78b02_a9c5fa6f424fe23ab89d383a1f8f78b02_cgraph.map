@@ -1,5 +1,0 @@
-<map id="graph" name="graph">
-<area shape="rect" id="Node000001" title="Constructs a graph instance from an adjacency list." alt="" coords="5,5,56,28"/>
-<area shape="rect" id="Node000002" href="$d9/dcb/classchdr_1_1mazes_1_1graph_ab41a4e064828273b133921f8d05a7540.html#ab41a4e064828273b133921f8d05a7540" title="Adds a new vertex to the graph with the specified identifier." alt="" coords="104,5,144,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="56,14,90,14,90,19,56,19"/>
-</map>

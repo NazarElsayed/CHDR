@@ -1,5 +1,0 @@
-<map id="emplace" name="emplace">
-<area shape="rect" id="Node000001" title="Constructs an element in place, adding it to the stack." alt="" coords="201,5,264,28"/>
-<area shape="rect" id="Node000002" href="$d9/dcb/classchdr_1_1mazes_1_1graph_a5ca1351a03df5ff49f85cc4b5669cefc.html#a5ca1351a03df5ff49f85cc4b5669cefc" title="Constructs a graph instance from a grid structure." alt="" coords="5,5,153,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="188,19,154,19,154,14,188,14"/>
-</map>

@@ -1,7 +1,0 @@
-<map id="allocate" name="allocate">
-<area shape="rect" id="Node000001" title="Preallocates memory based on the hash and bucket size." alt="" coords="5,31,72,56"/>
-<area shape="rect" id="Node000002" href="$d6/db9/classchdr_1_1existence__set_a4effe75935975bcddf86d9efd85776ef.html#a4effe75935975bcddf86d9efd85776ef" title="Get the capacity of the set." alt="" coords="120,5,191,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="72,34,106,26,107,31,73,39"/>
-<area shape="rect" id="Node000003" href="$d6/db9/classchdr_1_1existence__set_a7b902ff836387e412eb097c3996aacfc.html#a7b902ff836387e412eb097c3996aacfc" title="Reserves memory for the existence_set." alt="" coords="123,55,188,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="73,48,110,55,108,60,72,53"/>
-</map>

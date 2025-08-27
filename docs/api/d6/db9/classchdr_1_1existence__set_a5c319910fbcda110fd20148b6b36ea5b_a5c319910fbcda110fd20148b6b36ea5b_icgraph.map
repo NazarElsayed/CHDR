@@ -1,9 +1,0 @@
-<map id="chdr::existence_set::reserve" name="chdr::existence_set::reserve">
-<area shape="rect" id="Node000001" title="Reserves memory for the existence_set." alt="" coords="189,69,325,109"/>
-<area shape="rect" id="Node000002" href="$d6/db9/classchdr_1_1existence__set_a9493c46ed733e97f2f7a5596da2f39db.html#a9493c46ed733e97f2f7a5596da2f39db" title="Preallocates memory based on the hash and bucket size." alt="" coords="5,5,141,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,67,130,48,132,43,187,62"/>
-<area shape="rect" id="Node000003" href="$d6/db9/classchdr_1_1existence__set_af003de595bbe418a28adf02b1ec976dd.html#af003de595bbe418a28adf02b1ec976dd" title="Initialise set." alt="" coords="5,69,141,109"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="175,92,141,92,141,87,175,87"/>
-<area shape="rect" id="Node000004" href="$d6/db9/classchdr_1_1existence__set_ac309fb4763d3ecbe245cfa9fc10e76d6.html#ac309fb4763d3ecbe245cfa9fc10e76d6" title="Initialise set using a collection of items." alt="" coords="5,133,141,173"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="187,116,132,136,130,131,185,111"/>
-</map>

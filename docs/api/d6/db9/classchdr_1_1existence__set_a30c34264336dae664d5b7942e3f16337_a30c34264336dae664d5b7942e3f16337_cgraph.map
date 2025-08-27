@@ -1,9 +1,0 @@
-<map id="allocate" name="allocate">
-<area shape="rect" id="Node000001" title="Allocates additional capacity to accommodate the hash, ensuring an increase in storage is within the ..." alt="" coords="5,52,64,75"/>
-<area shape="rect" id="Node000002" href="$d6/db9/classchdr_1_1existence__set_a4effe75935975bcddf86d9efd85776ef.html#a4effe75935975bcddf86d9efd85776ef" title="Get the capacity of the set." alt="" coords="127,5,187,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="63,50,113,30,115,35,65,55"/>
-<area shape="rect" id="Node000003" href="$d2/dcb/structchdr_1_1utils_a2287d696e022b9c172ac719c733627e3.html#a2287d696e022b9c172ac719c733627e3" title="Returns the smaller of two values." alt="" coords="112,52,203,75"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="64,61,98,61,98,66,64,66"/>
-<area shape="rect" id="Node000004" href="$d6/db9/classchdr_1_1existence__set_aa66b014d5c0a1d4eb03fa4c8bac415c3.html#aa66b014d5c0a1d4eb03fa4c8bac415c3" title="Reserves memory for the set." alt="" coords="128,99,187,121"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="65,72,116,92,114,97,63,77"/>
-</map>

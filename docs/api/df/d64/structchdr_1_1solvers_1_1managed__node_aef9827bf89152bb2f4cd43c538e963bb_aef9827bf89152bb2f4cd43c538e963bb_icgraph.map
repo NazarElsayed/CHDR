@@ -1,5 +1,0 @@
-<map id="managed_node" name="managed_node">
-<area shape="rect" id="Node000001" title="Constructs an uninitialized node." alt="" coords="116,5,213,28"/>
-<area shape="rect" id="Node000002" href="$df/d64/structchdr_1_1solvers_1_1managed__node_a172f173b45dacde7490d252f7525476c.html#a172f173b45dacde7490d252f7525476c" title="Recursively releases dead nodes from the parent hierarchy." alt="" coords="5,5,68,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,19,68,19,68,14,103,14"/>
-</map>

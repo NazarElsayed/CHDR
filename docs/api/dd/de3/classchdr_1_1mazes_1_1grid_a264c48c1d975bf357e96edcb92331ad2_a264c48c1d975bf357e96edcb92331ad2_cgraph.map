@@ -1,7 +1,0 @@
-<map id="is_transitory" name="is_transitory">
-<area shape="rect" id="Node000001" title="Determines whether a cell at the given index is transitory." alt="" coords="5,29,84,52"/>
-<area shape="rect" id="Node000002" href="$dd/de3/classchdr_1_1mazes_1_1grid_ad6077e456dd6abb62d82087b55dc2331.html#ad6077e456dd6abb62d82087b55dc2331" title="Retrieves the total count of elements in the grid." alt="" coords="156,5,204,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,31,142,21,143,26,84,36"/>
-<area shape="rect" id="Node000003" href="$dd/de3/classchdr_1_1mazes_1_1grid_a0abdfb4af71cccf812fb2b7150f0cc72.html#a0abdfb4af71cccf812fb2b7150f0cc72" title="Retrieves the neighbours of a node within the grid." alt="" coords="132,52,228,75"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="84,45,119,50,118,56,84,50"/>
-</map>

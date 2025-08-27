@@ -1,5 +1,0 @@
-<map id="cosine_distance" name="cosine_distance">
-<area shape="rect" id="Node000001" title="Computes the cosine distance between two nodes." alt="" coords="5,5,116,28"/>
-<area shape="rect" id="Node000002" href="$d2/dcb/structchdr_1_1utils_a4414bbea278f4bd180d1d579a4b2fcfa.html#a4414bbea278f4bd180d1d579a4b2fcfa" title="Computes the square root of a given value." alt="" coords="164,5,271,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="116,14,150,14,150,19,116,19"/>
-</map>

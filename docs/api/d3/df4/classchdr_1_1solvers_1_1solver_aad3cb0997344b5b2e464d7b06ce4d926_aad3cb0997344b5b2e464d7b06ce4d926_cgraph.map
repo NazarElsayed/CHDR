@@ -1,5 +1,0 @@
-<map id="solve" name="solve">
-<area shape="rect" id="Node000001" title="Executes the solver with the provided parameters." alt="" coords="5,5,56,28"/>
-<area shape="rect" id="Node000002" href="$d2/dcb/structchdr_1_1utils_a5741e93a4c4f5630e7c86bda862cf611.html#a5741e93a4c4f5630e7c86bda862cf611" title="Maps a multidimensional index to a one&#45;dimensional array index." alt="" coords="104,5,219,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="56,14,90,14,90,19,56,19"/>
-</map>

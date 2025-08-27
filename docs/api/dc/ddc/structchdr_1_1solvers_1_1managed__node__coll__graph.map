@@ -1,9 +1,0 @@
-<map id="managed_node&lt; index_t, derived &gt;" name="managed_node&lt; index_t, derived &gt;">
-<area shape="rect" id="Node000001" title="A hierarchical node in a pathfinding context, with a clean&#45;up mechanism." alt="" coords="5,316,511,460"/>
-<area shape="rect" id="Node000002" href="$da/d98/structchdr_1_1solvers_1_1bnode.html" title="Base class for pathfinding nodes." alt="" coords="191,5,314,63"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="256,76,260,316,254,316,251,76"/>
-<area shape="rect" id="Node000003" href="$df/d64/structchdr_1_1solvers_1_1managed__node.html" title="A hierarchical node in a pathfinding context, with a clean&#45;up mechanism." alt="" coords="273,112,779,256"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="317,67,396,110,393,114,314,72"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="433,258,367,308,364,304,430,254"/>
-<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="779,169,798,175,805,184,796,194,792,190,800,184,795,179,778,174"/>
-</map>

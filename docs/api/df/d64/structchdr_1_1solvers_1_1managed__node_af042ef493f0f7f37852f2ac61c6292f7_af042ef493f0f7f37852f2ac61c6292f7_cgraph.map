@@ -1,5 +1,0 @@
-<map id="expunge_one" name="expunge_one">
-<area shape="rect" id="Node000001" title="Decrements parent&#39;s successor count and checks if it can be released." alt="" coords="5,5,100,28"/>
-<area shape="rect" id="Node000002" href="$df/d64/structchdr_1_1solvers_1_1managed__node_acda8e1a76bed4a71e36efa61a9f3c59e.html#acda8e1a76bed4a71e36efa61a9f3c59e" title="Returns the current successor count." alt="" coords="148,5,201,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,14,134,14,134,19,100,19"/>
-</map>

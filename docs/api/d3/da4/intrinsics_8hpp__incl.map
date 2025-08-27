@@ -1,9 +1,0 @@
-<map id="intrinsics.hpp" name="intrinsics.hpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="73,5,167,28"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,76,64,99"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,30,60,70,56,65,106,26"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="89,76,151,99"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="123,28,123,62,117,62,117,28"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="176,76,235,99"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="134,26,184,65,180,70,131,30"/>
-</map>

@@ -1,9 +1,0 @@
-<map id="Single&#45;Target" name="Single&#45;Target">
-<area shape="rect" id="Node000006" href="$d9/d70/group__Memory-Bounded.html" title="Solvers which enforce an arbitrary limit on memory usage." alt="" coords="267,5,385,28"/>
-<area shape="rect" id="Node000001" title="Solvers which route to a single destination." alt="" coords="116,99,209,121"/>
-<area shape="rect" id="Node000003" href="$db/d80/group__SingleTargetCommon.html" title="General&#45;purpose solvers." alt="" coords="291,52,361,75"/>
-<area shape="rect" id="Node000004" href="$d1/d47/group__SingleTargetGraveyardOptimised.html" title="Graveyard solvers, which dynamically prune the search tree." alt="" coords="257,99,395,121"/>
-<area shape="rect" id="Node000005" href="$d5/d74/group__SingleTargetIterativeDeepening.html" title="Solvers which repeatedly traverse the search space at incrementally&#45;increasing depths." alt="" coords="261,145,391,168"/>
-<area shape="rect" id="Node000007" href="$dc/d80/group__SingleTargetSolutionChecking.html" title="Solvers for checking if a path to the target is possible." alt="" coords="266,192,386,215"/>
-<area shape="rect" id="Node000002" href="$d3/d24/group__Solvers.html" title="Graph traversal and pathfinding algorithms." alt="" coords="5,99,68,121"/>
-</map>

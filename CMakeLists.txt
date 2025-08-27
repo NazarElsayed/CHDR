@@ -172,31 +172,3 @@ if (UNIX)
 else()
     target_link_options(chdr PRIVATE -static)
 endif (UNIX)
-
-message(NOTICE "NOTICE: Generating documentation with Doxygen:")
-configure_file(Doxyfile.in ${CMAKE_SOURCE_DIR}/Doxyfile)
-message(STATUS "Generating Doxyfile...")
-execute_process(
-    COMMAND doxygen ${CMAKE_SOURCE_DIR}/Doxyfile
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    RESULT_VARIABLE DOXYGEN_RESULT
-)
-
-message(STATUS "Cleaning up...")
-
-if (DOXYGEN_RESULT EQUAL 0)
-
-    # Clean up potential junk files left by Doxygen.
-    if (EXISTS "${CMAKE_SOURCE_DIR}/docs/html")
-        file(REMOVE_RECURSE "${CMAKE_SOURCE_DIR}/docs/html")
-    endif ()
-    if (EXISTS "${CMAKE_SOURCE_DIR}/docs/latex")
-        file(REMOVE_RECURSE "${CMAKE_SOURCE_DIR}/docs/latex")
-    endif ()
-    if (EXISTS "${CMAKE_SOURCE_DIR}/html")
-        file(REMOVE_RECURSE "${CMAKE_SOURCE_DIR}/html")
-    endif ()
-    if (EXISTS "${CMAKE_SOURCE_DIR}/latex")
-        file(REMOVE_RECURSE "${CMAKE_SOURCE_DIR}/latex")
-    endif ()
-endif ()

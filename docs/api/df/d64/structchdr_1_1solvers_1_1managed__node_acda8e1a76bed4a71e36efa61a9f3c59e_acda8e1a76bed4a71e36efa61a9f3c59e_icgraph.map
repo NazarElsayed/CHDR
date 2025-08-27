@@ -1,5 +1,0 @@
-<map id="count" name="count">
-<area shape="rect" id="Node000001" title="Returns the current successor count." alt="" coords="123,5,176,28"/>
-<area shape="rect" id="Node000002" href="$df/d64/structchdr_1_1solvers_1_1managed__node_a347b686b64792776a7fe77145d90f928.html#a347b686b64792776a7fe77145d90f928" title="Recursively releases dead nodes from the parent hierarchy." alt="" coords="5,5,75,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,19,75,19,75,14,109,14"/>
-</map>

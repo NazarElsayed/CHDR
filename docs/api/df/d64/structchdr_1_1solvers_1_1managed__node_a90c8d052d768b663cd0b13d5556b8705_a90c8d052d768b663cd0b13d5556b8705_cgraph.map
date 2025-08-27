@@ -1,5 +1,0 @@
-<map id="forget_one" name="forget_one">
-<area shape="rect" id="Node000001" title="Decrements parent&#39;s successor count and checks if it can be released." alt="" coords="5,5,87,28"/>
-<area shape="rect" id="Node000002" href="$da/d98/structchdr_1_1solvers_1_1bnode_a7bc8e5ab7555f3803cacfde2b0866b44.html#a7bc8e5ab7555f3803cacfde2b0866b44" title="Constructs an uninitialized BNode." alt="" coords="135,5,313,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,14,121,14,121,19,87,19"/>
-</map>

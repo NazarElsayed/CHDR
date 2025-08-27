@@ -1,5 +1,0 @@
-<map id="erase" name="erase">
-<area shape="rect" id="Node000001" title="Removes a specified item from the heap, restoring the heap property after removal." alt="" coords="103,5,152,28"/>
-<area shape="rect" id="Node000002" href="$d3/d61/classchdr_1_1heap_acb6d4e6f53bcd4c93d386def0bd8be31.html#acb6d4e6f53bcd4c93d386def0bd8be31" title="Removes all elements in a given range from the heap while maintaining the heap property." alt="" coords="5,5,55,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,19,55,19,55,14,89,14"/>
-</map>

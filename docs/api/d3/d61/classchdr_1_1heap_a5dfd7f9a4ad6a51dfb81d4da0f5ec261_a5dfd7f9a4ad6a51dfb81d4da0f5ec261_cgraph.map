@@ -1,9 +1,0 @@
-<map id="insert" name="insert">
-<area shape="rect" id="Node000001" title="Inserts an element into the heap while maintaining the heap property." alt="" coords="5,5,53,28"/>
-<area shape="rect" id="Node000002" href="$d3/d61/classchdr_1_1heap_ab3bf20f6c00b1d3c85593ed5a5c4c3a1.html#ab3bf20f6c00b1d3c85593ed5a5c4c3a1" title="Adjusts the position of an item in the heap by moving it upwards towards the root." alt="" coords="101,5,160,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="54,14,88,14,88,19,54,19"/>
-<area shape="rect" id="Node000003" href="$d3/d61/classchdr_1_1heap_a3caedb145a667c26028740417dcf32c3.html#a3caedb145a667c26028740417dcf32c3" title="Retrieves the number of elements currently stored in the heap." alt="" coords="208,5,248,28"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="160,14,194,14,194,19,160,19"/>
-<area shape="rect" id="Node000004" href="$d2/dcb/structchdr_1_1utils_a05e8953d59fd314cf105f52b0c1272dd.html#a05e8953d59fd314cf105f52b0c1272dd" title="Determines the maximum of two comparable values." alt="" coords="296,5,389,28"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="248,14,282,14,282,19,248,19"/>
-</map>

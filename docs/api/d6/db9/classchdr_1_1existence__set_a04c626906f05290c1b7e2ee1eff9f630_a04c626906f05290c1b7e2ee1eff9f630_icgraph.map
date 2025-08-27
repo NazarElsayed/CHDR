@@ -1,5 +1,0 @@
-<map id="capacity" name="capacity">
-<area shape="rect" id="Node000001" title="Get the capacity of the set." alt="" coords="120,5,191,31"/>
-<area shape="rect" id="Node000002" href="$d6/db9/classchdr_1_1existence__set_afa3aeb0b93cffe9972e14f4dbe6523e5.html#afa3aeb0b93cffe9972e14f4dbe6523e5" title="Preallocates memory based on the hash and bucket size." alt="" coords="5,5,72,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,21,72,21,72,15,106,15"/>
-</map>

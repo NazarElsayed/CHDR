@@ -1,7 +1,0 @@
-<map id="chdr::existence_set::allocate" name="chdr::existence_set::allocate">
-<area shape="rect" id="Node000001" title="Preallocates memory based on the hash and bucket size." alt="" coords="5,37,141,77"/>
-<area shape="rect" id="Node000002" href="$d6/db9/classchdr_1_1existence__set_af7395e2b6dc6ff8c3575b135cd58edde.html#af7395e2b6dc6ff8c3575b135cd58edde" title="Get the capacity of the set." alt="" coords="189,5,325,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="141,43,176,37,176,42,142,48"/>
-<area shape="rect" id="Node000003" href="$d6/db9/classchdr_1_1existence__set_a5c319910fbcda110fd20148b6b36ea5b.html#a5c319910fbcda110fd20148b6b36ea5b" title="Reserves memory for the existence_set." alt="" coords="189,69,325,109"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="142,67,176,73,176,78,141,72"/>
-</map>

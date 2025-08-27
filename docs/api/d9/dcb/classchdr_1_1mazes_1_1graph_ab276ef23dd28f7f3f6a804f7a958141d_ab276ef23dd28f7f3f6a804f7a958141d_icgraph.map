@@ -1,9 +1,0 @@
-<map id="contains" name="contains">
-<area shape="rect" id="Node000001" title=" " alt="" coords="149,52,211,75"/>
-<area shape="rect" id="Node000002" href="$d9/dcb/classchdr_1_1mazes_1_1graph_ace796c1bb79d924991f558dccc4edb7f.html#ace796c1bb79d924991f558dccc4edb7f" title=" " alt="" coords="5,5,101,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="135,50,84,31,86,26,137,45"/>
-<area shape="rect" id="Node000003" href="$d9/dcb/classchdr_1_1mazes_1_1graph_a8b3691d2eabbeddb2f43e5dcaa641b39.html#a8b3691d2eabbeddb2f43e5dcaa641b39" title="Retrieves the vertex at a specified index." alt="" coords="19,52,88,75"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="136,66,88,66,88,61,136,61"/>
-<area shape="rect" id="Node000004" href="$d9/dcb/classchdr_1_1mazes_1_1graph_a50cc7fa4c48882e5665f24305a38fc3b.html#a50cc7fa4c48882e5665f24305a38fc3b" title=" " alt="" coords="24,99,83,121"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="137,82,84,102,82,97,135,77"/>
-</map>
