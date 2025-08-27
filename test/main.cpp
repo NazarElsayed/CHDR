@@ -94,10 +94,10 @@ namespace test {
             //debug::log(_size[0] + _size[1] - 2U);
 
             // Random grid:
-            const auto grid = generator::obstacles::generate<weight_t, index_t, coord_t, scalar_t>(start, end, _size, 0.1, std::numeric_limits<size_t>::max(), seed);
+            //const auto grid = generator::obstacles::generate<weight_t, index_t, coord_t, scalar_t>(start, end, _size, 0.1, std::numeric_limits<size_t>::max(), seed);
 
             // Maze grid:
-            //const auto grid = generator::grid::generate<weight_t>(start, end, _size, 0.0, 0.0, seed);
+            const auto grid = generator::grid::generate<weight_t, coord_t, scalar_t>(start, end, _size, 0.0, 0.0, seed);
 
             const auto& test = grid;
             // auto graph_pool = chdr::heterogeneous_pool(); const auto test = chdr::mazes::graph<index_t, scalar_t>(grid, &graph_pool);

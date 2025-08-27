@@ -22,7 +22,7 @@
  */
 
 /** @brief Full version string of the CHDR library. */
-#define CHDR_VERSION          "0.1.0-benchmarks"
+#define CHDR_VERSION          "0.1.0-dev+709487c3"
 
 /** @brief CHDR major version number. */
 #define CHDR_VERSION_MAJOR     0
@@ -34,10 +34,10 @@
 #define CHDR_VERSION_PATCH     0
 
 /** @brief CHDR version tweak string. */
-#define CHDR_VERSION_TWEAK    "benchmarks"
+#define CHDR_VERSION_TWEAK    "dev"
 
 /** @brief CHDR version metadata string. */
-#define CHDR_VERSION_METADATA ""
+#define CHDR_VERSION_METADATA "709487c3"
 
 /** @brief Flag indicating whether or not diagnostics should be output by the library (0 = off, 1 = on). */
 #ifndef CHDR_DIAGNOSTICS
