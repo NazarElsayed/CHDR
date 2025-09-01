@@ -21,9 +21,6 @@
 <script type="text/javascript" src="../../search/searchdata.js"></script>
 <script type="text/javascript" src="../../search/search.js"></script>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css" />
-<link href="../../doxygen-awesome.css" rel="stylesheet" type="text/css"/>
-<link href="../../doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
-<link href="../../doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
 <link href="../../doxygen-namespaces.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript">
     DoxygenAwesomeParagraphLink.init()
@@ -388,8 +385,8 @@ $(document).ready(function(){initNavTree('d9/de6/jps_8hpp_source.html','../../')
 <div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span> </div>
 <div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (Kd == 2U) {</div>
 <div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span> </div>
-<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>                <span class="keyword">const</span> <span class="keyword">auto</span> s = utils::to_1d(_params.start, _params.size);</div>
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>                <span class="keyword">const</span> <span class="keyword">auto</span> e = utils::to_1d(_params.end  , _params.size);</div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>                <span class="keyword">const</span> <span class="keyword">auto</span> s = params_t::reverse_equivalence::value ? utils::to_1d(_params.end,   _params.size) : utils::to_1d(_params.start, _params.size);</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>                <span class="keyword">const</span> <span class="keyword">auto</span> e = params_t::reverse_equivalence::value ? utils::to_1d(_params.start, _params.size) : utils::to_1d(_params.end,   _params.size);</div>
 <div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span> </div>
 <div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>                  _open.emplace_nosort(s, ZZ, <span class="keyword">static_cast&lt;</span>scalar_t<span class="keyword">&gt;</span>(0), _params.h(_params.start, _params.end) * _params.weight);</div>
 <div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>                _closed.emplace(s);</div>
@@ -441,35 +438,40 @@ $(document).ready(function(){initNavTree('d9/de6/jps_8hpp_source.html','../../')
 <div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>                        }</div>
 <div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>                        _closed = closed_set_t{};</div>
 <div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span> </div>
-<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>                        <span class="keywordflow">return</span> solver_t::solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);</div>
-<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>                    }</div>
-<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>                }</div>
-<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>            }</div>
-<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span> </div>
-<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>            <span class="keywordflow">return</span> std::vector&lt;coord_t&gt;{};</div>
-<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>        }</div>
-<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span> </div>
-<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>        [[maybe_unused, nodiscard]] <span class="keyword">static</span> <span class="keyword">auto</span> invoke(<span class="keyword">const</span> params_t&amp; _params) {</div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>                        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (params_t::reverse_equivalence::value) {</div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>                            <span class="keywordflow">return</span> solver_t::solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);</div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>                        }</div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>                        <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>                            <span class="keywordflow">return</span> solver_t::solver_utils::rbacktrack_noreverse(curr, _params.size, curr.m_gScore);</div>
+<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>                        }</div>
+<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>                    }</div>
+<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>                }</div>
+<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>            }</div>
 <div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span> </div>
-<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>            <span class="keyword">const</span> <span class="keyword">auto</span> capacity = solver_t::solver_utils::determine_capacity(_params);</div>
-<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span> </div>
-<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>            <a class="code hl_class" href="../../d6/db9/classchdr_1_1existence__set.html">existence_set</a> closed(_params.monotonic_pmr);</div>
-<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>            closed.<a class="code hl_function" href="../../d6/db9/classchdr_1_1existence__set_aa66b014d5c0a1d4eb03fa4c8bac415c3.html#aa66b014d5c0a1d4eb03fa4c8bac415c3">reserve</a>(capacity);</div>
+<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>            <span class="keywordflow">return</span> std::vector&lt;coord_t&gt;{};</div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>        }</div>
+<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span> </div>
+<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>        [[maybe_unused, nodiscard]] <span class="keyword">static</span> <span class="keyword">auto</span> invoke(<span class="keyword">const</span> params_t&amp; _params) {</div>
 <div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span> </div>
-<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>            <a class="code hl_class" href="../../d3/d61/classchdr_1_1heap.html">heap&lt;node&gt;</a> open(_params.heterogeneous_pmr);</div>
-<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>            <span class="keywordflow">try</span> {</div>
-<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>                open.<a class="code hl_function" href="../../d3/d61/classchdr_1_1heap_ab9e2b1611554d92929573ecd43d7847e.html#ab9e2b1611554d92929573ecd43d7847e">reserve</a>(capacity / 8U);</div>
-<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>            }</div>
-<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>            <span class="keywordflow">catch</span> (...) {} <span class="comment">// NOLINT(*-empty-catch)</span></div>
-<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span> </div>
-<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>            <span class="keywordflow">return</span> solve_internal(open, closed, capacity, _params);</div>
-<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>        }</div>
-<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>    };</div>
+<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>            <span class="keyword">const</span> <span class="keyword">auto</span> capacity = solver_t::solver_utils::determine_capacity(_params);</div>
+<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span> </div>
+<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>            <a class="code hl_class" href="../../d6/db9/classchdr_1_1existence__set.html">existence_set</a> closed(_params.monotonic_pmr);</div>
+<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>            closed.<a class="code hl_function" href="../../d6/db9/classchdr_1_1existence__set_aa66b014d5c0a1d4eb03fa4c8bac415c3.html#aa66b014d5c0a1d4eb03fa4c8bac415c3">reserve</a>(capacity);</div>
+<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span> </div>
+<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>            <a class="code hl_class" href="../../d3/d61/classchdr_1_1heap.html">heap&lt;node&gt;</a> open(_params.heterogeneous_pmr);</div>
+<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>            <span class="keywordflow">try</span> {</div>
+<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>                open.<a class="code hl_function" href="../../d3/d61/classchdr_1_1heap_ab9e2b1611554d92929573ecd43d7847e.html#ab9e2b1611554d92929573ecd43d7847e">reserve</a>(capacity / 8U);</div>
+<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>            }</div>
+<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>            <span class="keywordflow">catch</span> (...) {} <span class="comment">// NOLINT(*-empty-catch)</span></div>
+<div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span> </div>
+<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span>            <span class="keywordflow">return</span> solve_internal(open, closed, capacity, _params);</div>
+<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span>        }</div>
+<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>    };</div>
 </div>
-<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span> </div>
-<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>} <span class="comment">//chdr::solvers</span></div>
-<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span> </div>
-<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_JPS_HPP</span></div>
+<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span> </div>
+<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>} <span class="comment">//chdr::solvers</span></div>
+<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span> </div>
+<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span><span class="preprocessor">#endif </span><span class="comment">//CHDR_JPS_HPP</span></div>
 <div class="ttc" id="aclasschdr_1_1existence__set_aa66b014d5c0a1d4eb03fa4c8bac415c3_html_aa66b014d5c0a1d4eb03fa4c8bac415c3"><div class="ttname"><a href="../../d6/db9/classchdr_1_1existence__set_aa66b014d5c0a1d4eb03fa4c8bac415c3.html#aa66b014d5c0a1d4eb03fa4c8bac415c3">chdr::existence_set::reserve</a></div><div class="ttdeci">void reserve(size_t _new_capacity)</div><div class="ttdoc">Reserves memory for the set.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d62/existence__set_8hpp_source.html#l00344">existence_set.hpp:344</a></div></div>
 <div class="ttc" id="aclasschdr_1_1existence__set_html"><div class="ttname"><a href="../../d6/db9/classchdr_1_1existence__set.html">chdr::existence_set</a></div><div class="ttdoc">Represents a container for tracking the existence of elements.</div><div class="ttdef"><b>Definition</b> <a href="../../d8/d62/existence__set_8hpp_source.html#l00087">existence_set.hpp:87</a></div></div>
 <div class="ttc" id="aclasschdr_1_1heap_ab9e2b1611554d92929573ecd43d7847e_html_ab9e2b1611554d92929573ecd43d7847e"><div class="ttname"><a href="../../d3/d61/classchdr_1_1heap_ab9e2b1611554d92929573ecd43d7847e.html#ab9e2b1611554d92929573ecd43d7847e">chdr::heap::reserve</a></div><div class="ttdeci">void reserve(size_t _capacity)</div><div class="ttdoc">Reserves memory for at least the specified number of elements in the container.</div><div class="ttdef"><b>Definition</b> <a href="../../da/d45/heap_8hpp_source.html#l00635">heap.hpp:635</a></div></div>

@@ -112,6 +112,19 @@ namespace chdr::solvers {
             return result;
         }
 
+        static constexpr auto rbacktrack_noreverse(const node& _node, const coord_t& _size, size_t _depth) {
+
+            std::vector<coord_t> result(_depth);
+
+            const auto* RESTRICT t = &_node;
+            for (size_t i = 0U; i != _depth; ++i) {
+                result[i] = utils::to_nd(t->m_index, _size);
+                t = static_cast<const node*>(t->m_parent);
+            }
+
+            return result;
+        }
+
         template <typename closed_set_t>
         HOT static void bitwise_regression(const managed_node<index_t, node>* _parent, closed_set_t& _closed) {
 
@@ -248,9 +261,18 @@ namespace chdr::solvers {
             }
             _closed = closed_set_t{};
 
-            return best_solution.has_value() ?
-                rbacktrack(best_solution.value(), _params.size, best_solution->m_gScore) :
-                std::vector<coord_t>{};
+            if (best_solution.has_value()) {
+
+                if constexpr (params_t::reverse_equivalence::value) {
+                    return solver_t::solver_utils::rbacktrack(best_solution.value(), _params.size, best_solution->m_gScore);
+                }
+                else {
+                    return solver_t::solver_utils::rbacktrack_noreverse(best_solution.value(), _params.size, best_solution->m_gScore);
+                }
+            }
+            else {
+                return std::vector<coord_t>{};
+            }
         }
 
         [[maybe_unused, nodiscard]] static auto invoke(const params_t& _params) {

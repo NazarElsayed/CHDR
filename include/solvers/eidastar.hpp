@@ -134,8 +134,8 @@ namespace chdr::solvers {
 
             using neighbours_t = decltype(_params.maze.get_neighbours(std::declval<index_t>()));
 
-            const auto s = utils::to_1d(_params.start, _params.size);
-            const auto e = utils::to_1d(_params.end,   _params.size);
+            const auto s = params_t::reverse_equivalence::value ? utils::to_1d(_params.end,   _params.size) : utils::to_1d(_params.start, _params.size);
+            const auto e = params_t::reverse_equivalence::value ? utils::to_1d(_params.start, _params.size) : utils::to_1d(_params.end,   _params.size);
 
             auto bound = _params.h(_params.start, _params.end) * _params.weight;
 
@@ -180,7 +180,12 @@ namespace chdr::solvers {
                                         // ReSharper disable once CppDFAUnusedValue
                                         transposition_table = {};
 
-                                        return solver_t::solver_utils::ibacktrack(_open, _params.size);
+                                        if constexpr (params_t::reverse_equivalence::value) {
+                                            return solver_t::solver_utils::ibacktrack(_open, _params.size);
+                                        }
+                                        else {
+                                            return solver_t::solver_utils::ibacktrack_noreverse(_open, _params.size);
+                                        }
                                     }
                                 }
                             }

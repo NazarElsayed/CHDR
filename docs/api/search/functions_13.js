@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['value_0',['value',['../db/dc4/structchdr_1_1mazes_1_1weighted__node_a9a9d24859a5366d0b48f6496ed3574b5.html#a9a9d24859a5366d0b48f6496ed3574b5',1,'chdr::mazes::weighted_node::value() const noexcept'],['../db/dc4/structchdr_1_1mazes_1_1weighted__node_a62fb7a2e242a85d1a1191b2ee9cb4e4e.html#a62fb7a2e242a85d1a1191b2ee9cb4e4e',1,'chdr::mazes::weighted_node::value(weight_t _value) noexcept']]]
+  ['unmanaged_5fnode_0',['unmanaged_node',['../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_a05f3d6d2c925a1809848253d4f8caf9e.html#a05f3d6d2c925a1809848253d4f8caf9e',1,'chdr::solvers::unmanaged_node::unmanaged_node() noexcept'],['../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node_ac6f3473c2df4d3156ebc0e17ebbe63ff.html#ac6f3473c2df4d3156ebc0e17ebbe63ff',1,'chdr::solvers::unmanaged_node::unmanaged_node(index_t _index, const unmanaged_node *restrict const _parent=nullptr) noexcept']]],
+  ['upper_5fbounds_1',['upper_bounds',['../d3/d61/classchdr_1_1heap_ae7e6fc4739ca4f4f74e4f8384106548e.html#ae7e6fc4739ca4f4f74e4f8384106548e',1,'chdr::heap']]]
 ];

@@ -119,8 +119,8 @@ namespace chdr::solvers {
         template <typename open_set_t, typename closed_set_t>
         [[nodiscard]] HOT static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, size_t _capacity, const params_t& _params) {
 
-            const auto s = utils::to_1d(_params.start, _params.size);
-            const auto e = utils::to_1d(_params.end,   _params.size);
+            const auto s = params_t::reverse_equivalence::value ? utils::to_1d(_params.end,   _params.size) : utils::to_1d(_params.start, _params.size);
+            const auto e = params_t::reverse_equivalence::value ? utils::to_1d(_params.start, _params.size) : utils::to_1d(_params.end,   _params.size);
 
               _open.emplace_nosort(s, static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
             _closed.emplace(s);
@@ -167,7 +167,12 @@ namespace chdr::solvers {
                     }
                     _closed = closed_set_t{};
 
-                    return solver_t::solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);
+                    if constexpr (params_t::reverse_equivalence::value) {
+                        return solver_t::solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);
+                    }
+                    else {
+                        return solver_t::solver_utils::rbacktrack_noreverse(curr, _params.size, curr.m_gScore);
+                    }
                 }
             }
 

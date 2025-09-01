@@ -66,7 +66,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"da/dc4/md_docs_2manual_2getting__started.html#example-cmake"
+"da/dc4/md_docs_2manual_2getting__started.html#dependencies"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

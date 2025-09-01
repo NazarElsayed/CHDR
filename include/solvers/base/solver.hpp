@@ -563,6 +563,33 @@ namespace chdr::solvers {
             }
 
             /**
+             * @brief Constructs a path from a given node to its root in a tree or graph structure.
+             *
+             * @details This function iteratively backtracks from the specified node `_node` to its root
+             *          through its parent pointers, converting each node's index into a coordinate
+             *          using the dimensions provided in `_size`.
+             *          The depth of the path is dynamically determined during the traversal process.
+             *
+             * @param [in] _node The node to begin backtracking from. This is assumed to be part of a structure
+             *                   where nodes possess a parent pointer (`m_parent`) for traversal.
+             * @param [in] _size The coordinate dimensions, used to convert an index to n-dimensional coordinates.
+             *
+             * @return A vector of n-dimensional coordinates representing the path from the root node
+             *         to the provided `_node`.
+             */
+            template<typename node_t, typename coord_t>
+            static constexpr auto rbacktrack_noreverse(const node_t& _node, const coord_t& _size) {
+
+                std::vector<coord_t> result{};
+
+                for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent)) {
+                    result.emplace_back(utils::to_nd(t->m_index, _size));
+                }
+
+                return result;
+            }
+
+            /**
              * @brief Constructs a reverse path from a given node to its root in a tree or graph structure.
              *
              * @details This function iteratively backtracks from the specified node `_node` to its root
@@ -574,7 +601,7 @@ namespace chdr::solvers {
              * @param [in] _node The node to begin backtracking from. This is assumed to be part of a structure
              *                   where nodes possess a parent pointer (`m_parent`) for traversal.
              * @param [in] _size The coordinate dimensions, used to convert an index to n-dimensional coordinates.
-            *
+             *
              * @param _depth The depth of the hierarchy, which determines the length of the resulting vector.
              *
              * @return A vector of n-dimensional coordinates representing the path from the root node
@@ -595,7 +622,36 @@ namespace chdr::solvers {
             }
 
             /**
-             * @brief Constructs a sequence of coordinates by backtracking through the open set.
+             * @brief Constructs a path from a given node to its root in a tree or graph structure.
+             *
+             * @details This function iteratively backtracks from the specified node `_node` to its root
+             *          through its parent pointers, converting each node's index into a coordinate
+             *          using the dimensions provided in `_size`.
+             *          The depth of the path is static, provided using the `_depth` parameter.
+             *
+             * @param [in] _node The node to begin backtracking from. This is assumed to be part of a structure
+             *                   where nodes possess a parent pointer (`m_parent`) for traversal.
+             * @param [in] _size The coordinate dimensions, used to convert an index to n-dimensional coordinates.
+            *
+             * @param _depth The depth of the hierarchy, which determines the length of the resulting vector.
+             *
+             * @return A vector of n-dimensional coordinates representing the path from the root node
+             *         to the provided `_node`.
+             */
+            template<typename node_t, typename coord_t>
+            static constexpr auto rbacktrack_noreverse(const node_t& _node, const coord_t& _size, size_t _depth) {
+
+                std::vector<coord_t> result(_depth);
+
+                for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent)) {
+                    result.emplace_back(utils::to_nd(t->m_index, _size));
+                }
+
+                return result;
+            }
+
+            /**
+             * @brief Constructs a reversed sequence of coordinates by backtracking through the open set.
              *
              * @details This method processes the given open set in reverse order, transforming each index
              *          into a coordinate based on the provided size parameter.
@@ -614,6 +670,32 @@ namespace chdr::solvers {
 
                 const auto end = _open.rend();
                 for (auto it = _open.rbegin(); it != end; ++it) {
+                    result.emplace_back(utils::to_nd(it->m_index, _size));
+                }
+
+                return result;
+            }
+
+            /**
+             * @brief Constructs a sequence of coordinates by backtracking through the open set.
+             *
+             * @details This method processes the given open set in reverse order, transforming each index
+             *          into a coordinate based on the provided size parameter.
+             *
+             * @param [in] _open The open set container representing the path.
+             * @param [in] _size The coordinate dimensions, used to convert an index to n-dimensional coordinates.
+            *
+             * @return A vector of n-dimensional coordinates representing the path from the root node
+             *         to the provided `_node`.
+             */
+            template <typename open_set_t, typename coord_t>
+            [[nodiscard]] static constexpr auto ibacktrack_noreverse(const open_set_t& _open, const coord_t& _size) {
+
+                std::vector<coord_t> result{};
+                result.reserve(_open.size());
+
+                const auto end = _open.end();
+                for (auto it = _open.begin(); it != end; ++it) {
                     result.emplace_back(utils::to_nd(it->m_index, _size));
                 }
 

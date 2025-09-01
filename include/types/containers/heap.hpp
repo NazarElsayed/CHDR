@@ -912,6 +912,13 @@ namespace chdr {
             }
         }
 
+        /**
+         * @brief Returns the internal container representing the heap.
+         */
+        constexpr const auto& __internal_container() {
+            return c;
+        }
+
         [[maybe_unused, nodiscard]] constexpr iterator_t        begin()       noexcept { return c.begin()  + 1U; }
         [[maybe_unused, nodiscard]] constexpr const_iterator_t  begin() const noexcept { return c.begin()  + 1U; }
         [[maybe_unused, nodiscard]] constexpr const_iterator_t cbegin() const noexcept { return c.cbegin() + 1U; }
