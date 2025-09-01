@@ -163,10 +163,13 @@ namespace chdr::solvers {
 
             constexpr bool optimising = true;
 
-            const auto s = utils::to_1d(_params.start, _params.size);
-            const auto e = utils::to_1d(_params.end,   _params.size);
+            const auto&   end = params_t::reverse_equivalence::value ? _params.start : _params.end;
+            const auto& start = params_t::reverse_equivalence::value ? _params.end   : _params.start;
 
-              _open.emplace(s, static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
+            const auto s = utils::to_1d(start, _params.size);
+            const auto e = utils::to_1d(end,   _params.size);
+
+              _open.emplace(s, static_cast<scalar_t>(0), _params.h(start, end) * _params.weight);
             _closed.emplace(s);
 
             size_t dynamic_allocations(0U);
@@ -212,7 +215,7 @@ namespace chdr::solvers {
                                             curr_ptr = new (_params.homogeneous_pmr->allocate(sizeof(node), alignof(node))) node(std::move(curr)); dynamic_allocations++;
                                         }
 
-                                        _open.emplace(n.index, curr_ptr->m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight, curr_ptr);
+                                        _open.emplace(n.index, curr_ptr->m_gScore + n.distance, _params.h(n.coord, end) * _params.weight, curr_ptr);
                                     }
                                     else {
                                         // Memory saturated. Backup losslessly...
@@ -246,7 +249,7 @@ namespace chdr::solvers {
                             }
 
                             if (!full) {
-                                _open.emplace(s, static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
+                                _open.emplace(s, static_cast<scalar_t>(0), _params.h(start, end) * _params.weight);
                             }
                         }
                     }
