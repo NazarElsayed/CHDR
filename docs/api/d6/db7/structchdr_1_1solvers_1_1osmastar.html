@@ -109,7 +109,7 @@ $(document).ready(function(){initNavTree('d6/db7/structchdr_1_1solvers_1_1osmast
 </div><!--header-->
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">typename</a> <a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">params_t</a>&gt;<br />
+<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="../../da/d98/structchdr_1_1solvers_1_1bnode.html">typename</a> <a class="el" href="../../da/d98/structchdr_1_1solvers_1_1bnode.html">params_t</a>&gt;<br />
 struct chdr::solvers::osmastar&lt; params_t &gt;</div><p>Optimising Simplified Memory-Bounded A* search algorithm. </p>
 <p>OSMA* (Eriksson, L. 2025), is A variant of the SMA* algorithm (Russell, S., 1992), which helps to address the issues of path optimality by searching for improved routes until all paths within the memory limit have been exhausted.</p>
 <p>Advantages:</p><ul>
@@ -130,6 +130,7 @@ struct chdr::solvers::osmastar&lt; params_t &gt;</div><p>Optimising Simplified M
 <li>Russell, S., 1992. Efficient Memory-Bounded Search Methods. In: Neumann, B., ed. 10th European Conference on Artificial Intelligence, ECAI 92, Vienna, Austria, August 3-7, 1992. Proceedings [online]. John Wiley and Sons, 1–5. Available from: <a href="https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=388c0a934934a9e60da1c22c050566dbcd995702">https://citeseerx.ist.psu.edu/document?repid=rep1&amp;type=pdf&amp;doi=388c0a934934a9e60da1c22c050566dbcd995702</a>.</li>
 <li>Eriksson, L., 2025. MG*: An Improved Algorithm for Guaranteed Optimal-Cost Memory-Bounded Graph Search. Master’s. University of Exeter, Exeter, UK.</li>
 </ul>
+<dl class="section warning"><dt>Warning</dt><dd>Please note that OSMA* is entirely surpassed by Memory-Bounded Graveyard Search (MG*) (Eriksson, L. 2025). See <a class="el" href="../../d5/d1b/structchdr_1_1solvers_1_1mgstar.html">mgstar</a>.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="../../dc/dca/structchdr_1_1solvers_1_1smastar.html" title="Simplified Memory-Bounded A* search algorithm.">smastar</a> </dd>
 <dd>
 <a class="el" href="../../d5/d1b/structchdr_1_1solvers_1_1mgstar.html" title="Memory-Bounded Graveyard search algorithm.">mgstar</a> </dd></dl>
@@ -140,7 +141,7 @@ struct chdr::solvers::osmastar&lt; params_t &gt;</div><p>Optimising Simplified M
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d2/d94/osmastar_8hpp_source.html#l00072">72</a> of file <a class="el" href="../../d2/d94/osmastar_8hpp_source.html">osmastar.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d2/d94/osmastar_8hpp_source.html#l00075">75</a> of file <a class="el" href="../../d2/d94/osmastar_8hpp_source.html">osmastar.hpp</a>.</p>
 </div><div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Collaboration diagram for osmastar&lt; params_t &gt;:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">

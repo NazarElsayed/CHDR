@@ -64,6 +64,9 @@ namespace chdr::solvers {
      *   In: Neumann, B., ed. 10th European Conference on Artificial Intelligence, ECAI 92, Vienna, Austria, August 3-7, 1992. Proceedings [online]. John Wiley and Sons, 1–5. Available from: https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=388c0a934934a9e60da1c22c050566dbcd995702.
      * - Eriksson, L., 2025. MG*: An Improved Algorithm for Guaranteed Optimal-Cost Memory-Bounded Graph Search. Master’s. University of Exeter, Exeter, UK.
      *
+     * @warning Please note that OSMA* is entirely surpassed by Memory-Bounded Graveyard Search (MG*) (Eriksson, L. 2025).
+     *          See @ref mgstar "mgstar".
+     *
      * @see smastar
      * @see mgstar
      * @tparam params_t Type containing the search parameters.
