@@ -109,7 +109,7 @@ $(document).ready(function(){initNavTree('d5/d1b/structchdr_1_1solvers_1_1mgstar
 </div><!--header-->
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;typename params_t&gt;<br />
+<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="../../da/d98/structchdr_1_1solvers_1_1bnode.html">typename</a> <a class="el" href="../../da/d98/structchdr_1_1solvers_1_1bnode.html">params_t</a>&gt;<br />
 struct chdr::solvers::mgstar&lt; params_t &gt;</div><p>Memory-Bounded Graveyard search algorithm. </p>
 <p>MG* (Eriksson, L., 2025) is a heuristic-informed graph traversal and pathfinding algorithm for "single-source, single-target" (SSST) pathfinding problems. MG* maintains the number of expanded nodes in memory beneath an arbitrary limit, which it enforces through temporarily abandoning the worst-case search nodes to prioritise more promising candidates. Unlike the SMA* algorithm, MG* ensures an optimal solution by guaranteeing that prematurely discarded paths are explored fully before a final solution is reached.</p>
 <p>Advantages:</p><ul>

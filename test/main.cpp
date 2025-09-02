@@ -185,10 +185,10 @@ namespace test {
 
                      if (maze_format == "bit"   ) { result = deduce_solver<bool>    ( { _argv[SOLVER] }, _coord); }
                 else if (maze_format == "byte"  ) { result = deduce_solver<char>    ( { _argv[SOLVER] }, _coord); }
-                //else if (maze_format == "int32" ) { result = deduce_solver<int32_t> ( { _argv[SOLVER] }, _coord); }
+                //else if (maze_format == "int32" ) { result = deduce_solver< int32_t>( { _argv[SOLVER] }, _coord); }
                 //else if (maze_format == "uint32") { result = deduce_solver<uint32_t>( { _argv[SOLVER] }, _coord); }
-                //else if (maze_format == "int64" ) { result = deduce_solver<int32_t> ( { _argv[SOLVER] }, _coord); }
-                //else if (maze_format == "uint64") { result = deduce_solver<uint32_t>( { _argv[SOLVER] }, _coord); }
+                //else if (maze_format == "int64" ) { result = deduce_solver< int64_t>( { _argv[SOLVER] }, _coord); }
+                //else if (maze_format == "uint64") { result = deduce_solver<uint64_t>( { _argv[SOLVER] }, _coord); }
                 else {
                     debug::log("ERROR: Unknown maze format \"" + std::string(maze_format) + "\"!", error);
                 }

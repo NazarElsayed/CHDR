@@ -69,8 +69,8 @@ namespace chdr::solvers {
 
         ~unmanaged_node() noexcept = default;
 
-        constexpr unmanaged_node           (const unmanaged_node&) = delete;
-        constexpr unmanaged_node& operator=(const unmanaged_node&) = delete;
+        constexpr unmanaged_node           (const unmanaged_node&) = default;
+        constexpr unmanaged_node& operator=(const unmanaged_node&) = default;
 
         [[nodiscard]] HOT constexpr unmanaged_node(unmanaged_node&&) noexcept = default;
 
