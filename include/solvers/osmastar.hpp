@@ -49,7 +49,6 @@ namespace chdr::solvers {
      * - Able to modulate between a breadth-first and a best-first approach.
      * - Does not need a pre-pass, although performance can improve if the search space is pruned first.
      * - High performance in bounded (finite) search scenarios.
-     * - Likely to find faster routes than SMA*.
      *
      * Limitations:
      * - Typically slower than A*.

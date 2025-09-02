@@ -234,6 +234,7 @@ namespace chdr::solvers {
                     static_assert(std::true_type::value, "This function should not be called at run time.");
                     return {};
                 }
+
             public:
 
                 /**
@@ -287,7 +288,9 @@ namespace chdr::solvers {
              */
             template <typename T>
             struct has_subscript_operator final {
+
             private:
+
                 template <typename U>
                 static constexpr decltype(std::declval<U>()[0], std::true_type{}) has_operator([[maybe_unused]] int _i) {
                     static_assert(std::true_type::value, "This function should not be called at run time.");
@@ -301,6 +304,7 @@ namespace chdr::solvers {
                 }
 
             public:
+
                 /**
                  * @brief Determines whether the specified type has a subscript operator.
                  *
@@ -998,6 +1002,9 @@ namespace chdr::solvers {
             "lazy_sorting must be either std::true_type or std::false_type.");
 
         static_assert(std::is_same_v<typename params_t::no_cleanup, std::true_type> || std::is_same_v<typename params_t::no_cleanup, std::false_type>,
+            "no_cleanup must be either std::true_type or std::false_type.");
+
+        static_assert(std::is_same_v<typename params_t::reverse_equivalence, std::true_type> || std::is_same_v<typename params_t::reverse_equivalence, std::false_type>,
             "no_cleanup must be either std::true_type or std::false_type.");
 
         // TODO: Further enforcement of params_t structure.
