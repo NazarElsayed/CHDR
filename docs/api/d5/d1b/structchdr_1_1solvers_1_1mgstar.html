@@ -109,8 +109,29 @@ $(document).ready(function(){initNavTree('d5/d1b/structchdr_1_1solvers_1_1mgstar
 </div><!--header-->
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;typename params_t&gt;<br />
+<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">typename</a> <a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">params_t</a>&gt;<br />
 struct chdr::solvers::mgstar&lt; params_t &gt;</div><p>Memory-Bounded Graveyard search algorithm. </p>
+<p>MG* (Eriksson, L., 2025) is a heuristic-informed graph traversal and pathfinding algorithm for "single-source, single-target" (SSST) pathfinding problems. MG* maintains the number of expanded nodes in memory beneath an arbitrary limit, which it enforces through temporarily abandoning the worst-case search nodes to prioritise more promising candidates. Unlike the SMA* algorithm, MG* ensures an optimal solution by guaranteeing that prematurely discarded paths are explored fully before a final solution is reached.</p>
+<p>Advantages:</p><ul>
+<li>Generally faster than both SMA* and OSMA*.</li>
+<li>Improved search range and memory efficiency over SMA*.</li>
+<li>Guarantees the optimal solution for the given memory limit.</li>
+<li>Able to find solutions to search problems in memory-constrained contexts.</li>
+<li>Able to modulate between a breadth-first and a best-first approach.</li>
+<li>Does not need a pre-pass, although performance can improve if the search space is pruned first.</li>
+<li>High performance in bounded (finite) search scenarios.</li>
+</ul>
+<p>Limitations:</p><ul>
+<li>Slower than A*.</li>
+<li>Inefficient or complex search heuristics can reduce performance.</li>
+<li>Poor performance when searches lack solutions.</li>
+</ul>
+<p>References:</p><ul>
+<li>Eriksson, L., 2025. MG*: An Improved Algorithm for Guaranteed Optimal-Cost Memory-Bounded Graph Search. Master’s. University of Exeter, Exeter, UK.</li>
+</ul>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="../../dc/dca/structchdr_1_1solvers_1_1smastar.html" title="Simplified Memory-Bounded A* search algorithm.">smastar</a> </dd>
+<dd>
+<a class="el" href="../../d6/db7/structchdr_1_1solvers_1_1osmastar.html" title="Optimising Simplified Memory-Bounded A* search algorithm.">osmastar</a> </dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">params_t</td><td>Type containing the search parameters. </td></tr>
@@ -118,7 +139,7 @@ struct chdr::solvers::mgstar&lt; params_t &gt;</div><p>Memory-Bounded Graveyard 
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/ddf/mgstar_8hpp_source.html#l00057">57</a> of file <a class="el" href="../../d8/ddf/mgstar_8hpp_source.html">mgstar.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/ddf/mgstar_8hpp_source.html#l00082">82</a> of file <a class="el" href="../../d8/ddf/mgstar_8hpp_source.html">mgstar.hpp</a>.</p>
 </div><div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Collaboration diagram for mgstar&lt; params_t &gt;:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">

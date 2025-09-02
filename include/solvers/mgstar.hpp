@@ -58,19 +58,24 @@ namespace chdr::solvers {
      *          paths are explored fully before a final solution is reached.
      *
      * Advantages:
+     * - Generally faster than both SMA* and OSMA*.
+     * - Improved search range and memory efficiency over SMA*.
+     * - Guarantees the optimal solution for the given memory limit.
      * - Able to find solutions to search problems in memory-constrained contexts.
      * - Able to modulate between a breadth-first and a best-first approach.
      * - Does not need a pre-pass, although performance can improve if the search space is pruned first.
      * - High performance in bounded (finite) search scenarios.
-     * - Improved search range and memory efficiency over SMA*.
-     * - Generally improved search performance over SMA*.
-     * - Guarantees the optimal solution for the given memory limit.
      *
      * Limitations:
      * - Slower than A*.
      * - Inefficient or complex search heuristics can reduce performance.
      * - Poor performance when searches lack solutions.
      *
+     * References:
+     * - Eriksson, L., 2025. MG*: An Improved Algorithm for Guaranteed Optimal-Cost Memory-Bounded Graph Search. Master’s. University of Exeter, Exeter, UK.
+     *
+     * @see smastar
+     * @see osmastar
      * @tparam params_t Type containing the search parameters.
      */
     template<typename params_t>

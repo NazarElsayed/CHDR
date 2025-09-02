@@ -111,7 +111,7 @@ $(document).ready(function(){initNavTree('d3/df4/classchdr_1_1solvers_1_1solver.
 </div><!--header-->
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;template&lt; typename params_t &gt; typename solver_t, typename params_t&gt;<br />
+<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">template</a>&lt; <a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">typename</a> <a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">params_t</a> &gt; <a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">typename</a> solver_t, <a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">typename</a> <a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">params_t</a>&gt;<br />
 class chdr::solvers::solver&lt; solver_t, params_t &gt;</div><p>A static class serving as the core entry point for the CHDR library. </p>
 <p>The <code>solver</code> class provides a unified interface for instantiating, configuring, and invoking various solvers. It consolidates common utilities and functionalities required to create and manage search or optimisation instances. This class is designed for flexibility and extensibility, supporting a wide range of solvers through the use of template specialisations.</p>
 <p>Key features include:</p><ul>
@@ -120,44 +120,45 @@ class chdr::solvers::solver&lt; solver_t, params_t &gt;</div><p>A static class s
 <li>Support for user-defined solver implementations via the <code>solver_t</code> template parameter.</li>
 </ul>
 <div class="fragment"><div class="line"><span class="comment">// Example usage. Replace [...] with your values.</span></div>
-<div class="line"><span class="keyword">struct </span>params {</div>
+<div class="line"><span class="keyword">struct </span><a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">params</a> {</div>
 <div class="line"> </div>
-<div class="line">    <span class="keyword">using  </span>weight_type [[maybe_unused]] = ...; <span class="comment">// char</span></div>
-<div class="line">    <span class="keyword">using  </span>scalar_type [[maybe_unused]] = ...; <span class="comment">// uint32_t</span></div>
-<div class="line">    <span class="keyword">using   </span>index_type [[maybe_unused]] = ...; <span class="comment">// uint32_t</span></div>
-<div class="line">    <span class="keyword">using   </span>coord_type [[maybe_unused]] = ...; <span class="comment">// chdr::coord&lt;uint32_t, 2&gt;</span></div>
+<div class="line">    <span class="keyword">using  </span><a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">weight_type</a> [[<a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">maybe_unused</a>]] = ...; <span class="comment">// char</span></div>
+<div class="line">    <span class="keyword">using  </span><a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">scalar_type</a> [[<a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">maybe_unused</a>]] = ...; <span class="comment">// uint32_t</span></div>
+<div class="line">    <span class="keyword">using   </span><a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">index_type</a> [[<a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">maybe_unused</a>]] = ...; <span class="comment">// uint32_t</span></div>
+<div class="line">    <span class="keyword">using   </span><a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">coord_type</a> [[<a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">maybe_unused</a>]] = ...; <span class="comment">// chdr::coord&lt;uint32_t, 2&gt;</span></div>
 <div class="line"> </div>
-<div class="line">    <span class="keyword">using        </span>lazy_sorting [[maybe_unused]] = ...; <span class="comment">// std::false_type / std::true_type;</span></div>
-<div class="line">    <span class="keyword">using          </span>no_cleanup [[maybe_unused]] = ...; <span class="comment">// std::false_type / std::true_type;</span></div>
-<div class="line">    <span class="keyword">using </span>reverse_equivalence [[maybe_unused]] = ...; <span class="comment">// std::false_type / std::true_type;</span></div>
+<div class="line">    <span class="keyword">using        </span><a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">lazy_sorting</a> [[<a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">maybe_unused</a>]] = ...; <span class="comment">// std::false_type / std::true_type;</span></div>
+<div class="line">    <span class="keyword">using          </span><a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">no_cleanup</a> [[<a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">maybe_unused</a>]] = ...; <span class="comment">// std::false_type / std::true_type;</span></div>
+<div class="line">    <span class="keyword">using </span><a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">reverse_equivalence</a> [[<a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">maybe_unused</a>]] = ...; <span class="comment">// std::false_type / std::true_type;</span></div>
 <div class="line"> </div>
-<div class="line">    <span class="keyword">const</span>        ... maze;  <span class="comment">// i.e. chdr::grid, chdr::graph</span></div>
-<div class="line">    <span class="keyword">const</span> coord_type start;</div>
-<div class="line">    <span class="keyword">const</span> coord_type end;</div>
-<div class="line">    <span class="keyword">const</span> coord_type size;</div>
-<div class="line">         scalar_type (*h)(<span class="keyword">const</span> coord_type&amp;, <span class="keyword">const</span> coord_type&amp;) <span class="keyword">noexcept</span>;</div>
+<div class="line">    <span class="keyword">const</span>        ... <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">maze</a>;  <span class="comment">// i.e. chdr::grid, chdr::graph</span></div>
+<div class="line">    <span class="keyword">const</span> <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">coord_type</a> <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">start</a>;</div>
+<div class="line">    <span class="keyword">const</span> <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">coord_type</a> end;</div>
+<div class="line">    <span class="keyword">const</span> <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">coord_type</a> size;</div>
+<div class="line">         <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">scalar_type</a> (*<a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">h</a>)(<span class="keyword">const</span> <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">coord_type</a>&amp;, <span class="keyword">const</span> <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">coord_type</a>&amp;) <span class="keyword">noexcept</span>;</div>
 <div class="line"> </div>
-<div class="line">    ...*     monotonic_pmr;</div>
-<div class="line">    ...* heterogeneous_pmr;</div>
-<div class="line">    ...*   homogeneous_pmr;</div>
+<div class="line">    ...*     <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">monotonic_pmr</a>;</div>
+<div class="line">    ...* <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">heterogeneous_pmr</a>;</div>
+<div class="line">    ...*   <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">homogeneous_pmr</a>;</div>
 <div class="line"> </div>
-<div class="line">    <span class="keyword">const</span> scalar_type weight       = ...; <span class="comment">// 1</span></div>
+<div class="line">    <span class="keyword">const</span> <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">scalar_type</a> <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">weight</a>       = ...; <span class="comment">// 1</span></div>
 <div class="line">    <span class="keyword">const</span>      <span class="keywordtype">size_t</span> capacity     = ...; <span class="comment">// 0</span></div>
-<div class="line">    <span class="keyword">const</span>      <span class="keywordtype">size_t</span> memoryLimit  = ...; <span class="comment">// MAX</span></div>
+<div class="line">    <span class="keyword">const</span>      <span class="keywordtype">size_t</span> <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">memoryLimit</a>  = ...; <span class="comment">// MAX</span></div>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Invoke with chosen algorithm and parameters. Here, A* is used:</span></div>
-<div class="line"><span class="keyword">auto</span> path = <a class="code hl_function" href="../../d3/df4/classchdr_1_1solvers_1_1solver_a096fe8cb528641fed6813df1f40bd347.html#a096fe8cb528641fed6813df1f40bd347">chdr::solvers::solver&lt;chdr::solvers::astar, params&gt;::solve</a>(</div>
-<div class="line">    my_maze,</div>
-<div class="line">    my_start,</div>
-<div class="line">    my_end,</div>
-<div class="line">    my_size,</div>
+<div class="line"><span class="keyword">auto</span> <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">path</a> = <a class="code hl_function" href="../../d3/df4/classchdr_1_1solvers_1_1solver_a096fe8cb528641fed6813df1f40bd347.html#a096fe8cb528641fed6813df1f40bd347">chdr::solvers::solver&lt;chdr::solvers::astar, params&gt;::solve</a>(</div>
+<div class="line">    <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">my_maze</a>,</div>
+<div class="line">    <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">my_start</a>,</div>
+<div class="line">    <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">my_end</a>,</div>
+<div class="line">    <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">my_size</a>,</div>
 <div class="line">    chdr::heuristics::manhattan_distance&lt;params::scalar_t, params::coord_t&gt;,</div>
-<div class="line">    my_monotonic_pmr,</div>
-<div class="line">    my_polytonic_pmr,</div>
-<div class="line">    my_homogeneous_pmr</div>
+<div class="line">    <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">my_monotonic_pmr</a>,</div>
+<div class="line">    <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">my_polytonic_pmr</a>,</div>
+<div class="line">    <a class="code hl_struct" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">my_homogeneous_pmr</a></div>
 <div class="line">);</div>
-<div class="ttc" id="aclasschdr_1_1solvers_1_1solver_a096fe8cb528641fed6813df1f40bd347_html_a096fe8cb528641fed6813df1f40bd347"><div class="ttname"><a href="../../d3/df4/classchdr_1_1solvers_1_1solver_a096fe8cb528641fed6813df1f40bd347.html#a096fe8cb528641fed6813df1f40bd347">chdr::solvers::solver::solve</a></div><div class="ttdeci">static auto solve(Args &amp;&amp;... _args)</div><div class="ttdoc">Executes the solver with the provided parameters. Parameters are constructed using perfect forwarding...</div><div class="ttdef"><b>Definition</b> <a href="../../d2/d1c/solver_8hpp_source.html#l00844">solver.hpp:844</a></div></div>
+<div class="ttc" id="aclasschdr_1_1solvers_1_1solver_a096fe8cb528641fed6813df1f40bd347_html_a096fe8cb528641fed6813df1f40bd347"><div class="ttname"><a href="../../d3/df4/classchdr_1_1solvers_1_1solver_a096fe8cb528641fed6813df1f40bd347.html#a096fe8cb528641fed6813df1f40bd347">chdr::solvers::solver::solve</a></div><div class="ttdeci">static auto solve(Args &amp;&amp;... _args)</div><div class="ttdoc">Executes the solver with the provided parameters. Parameters are constructed using perfect forwarding...</div><div class="ttdef"><b>Definition</b> <a href="../../d2/d1c/solver_8hpp_source.html#l00848">solver.hpp:848</a></div></div>
+<div class="ttc" id="astructchdr_1_1solvers_1_1unmanaged__node_html"><div class="ttname"><a href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">chdr::solvers::unmanaged_node</a></div><div class="ttdoc">A hierarchical node in a pathfinding context, requires manual memory management.</div><div class="ttdef"><b>Definition</b> <a href="../../d0/def/unmanaged__node_8hpp_source.html#l00039">unmanaged_node.hpp:39</a></div></div>
 </div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">solver_t</td><td>The solver algorithm to be used, which must adhere to the interface defined by the <code>solver</code> class. </td></tr>
@@ -169,27 +170,27 @@ class chdr::solvers::solver&lt; solver_t, params_t &gt;</div><p>A static class s
 <p class="definition">Definition at line <a class="el" href="../../d2/d1c/solver_8hpp_source.html#l00090">90</a> of file <a class="el" href="../../d2/d1c/solver_8hpp_source.html">solver.hpp</a>.</p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Constructors</h2></td></tr>
-<tr class="memitem:afd9ac73f57f4eae43f130211d9b95d86" id="r_afd9ac73f57f4eae43f130211d9b95d86"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/df4/classchdr_1_1solvers_1_1solver_afd9ac73f57f4eae43f130211d9b95d86.html#afd9ac73f57f4eae43f130211d9b95d86">solver</a> () noexcept=default</td></tr>
+<tr class="memitem:afd9ac73f57f4eae43f130211d9b95d86" id="r_afd9ac73f57f4eae43f130211d9b95d86"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/df4/classchdr_1_1solvers_1_1solver_afd9ac73f57f4eae43f130211d9b95d86.html#afd9ac73f57f4eae43f130211d9b95d86">solver</a> () <a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">noexcept</a>=<a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">default</a></td></tr>
 <tr class="memdesc:afd9ac73f57f4eae43f130211d9b95d86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for the <code>solver</code> class.  <br /></td></tr>
 <tr class="separator:afd9ac73f57f4eae43f130211d9b95d86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Methods</h2></td></tr>
 <tr class="memitem:a6721174d30d2100eef1e9faed0942eb2" id="r_a6721174d30d2100eef1e9faed0942eb2"><td class="memTemplParams" colspan="2">template&lt;typename... Args&gt; </td></tr>
-<tr class="memitem:a6721174d30d2100eef1e9faed0942eb2"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d3/df4/classchdr_1_1solvers_1_1solver_a6721174d30d2100eef1e9faed0942eb2.html#a6721174d30d2100eef1e9faed0942eb2">operator()</a> (Args &amp;&amp;... _args)</td></tr>
+<tr class="memitem:a6721174d30d2100eef1e9faed0942eb2"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d3/df4/classchdr_1_1solvers_1_1solver_a6721174d30d2100eef1e9faed0942eb2.html#a6721174d30d2100eef1e9faed0942eb2">operator()</a> (<a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">Args</a> &amp;&amp;... <a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">_args</a>)</td></tr>
 <tr class="memdesc:a6721174d30d2100eef1e9faed0942eb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes the solver with the provided parameters. Parameters are constructed using perfect forwarding.  <br /></td></tr>
 <tr class="separator:a6721174d30d2100eef1e9faed0942eb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad64d7208d682691a4776aeabf905c8c9" id="r_ad64d7208d682691a4776aeabf905c8c9"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/df4/classchdr_1_1solvers_1_1solver_ad64d7208d682691a4776aeabf905c8c9.html#ad64d7208d682691a4776aeabf905c8c9">operator()</a> (const params_t &amp;_params)</td></tr>
+<tr class="memitem:ad64d7208d682691a4776aeabf905c8c9" id="r_ad64d7208d682691a4776aeabf905c8c9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">auto</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/df4/classchdr_1_1solvers_1_1solver_ad64d7208d682691a4776aeabf905c8c9.html#ad64d7208d682691a4776aeabf905c8c9">operator()</a> (<a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">const</a> <a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">params_t</a> &amp;<a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">_params</a>)</td></tr>
 <tr class="memdesc:ad64d7208d682691a4776aeabf905c8c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes the solver with the provided parameters.  <br /></td></tr>
 <tr class="separator:ad64d7208d682691a4776aeabf905c8c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Methods</h2></td></tr>
 <tr class="memitem:a096fe8cb528641fed6813df1f40bd347" id="r_a096fe8cb528641fed6813df1f40bd347"><td class="memTemplParams" colspan="2">template&lt;typename... Args&gt; </td></tr>
-<tr class="memitem:a096fe8cb528641fed6813df1f40bd347"><td class="memTemplItemLeft" align="right" valign="top">static auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d3/df4/classchdr_1_1solvers_1_1solver_a096fe8cb528641fed6813df1f40bd347.html#a096fe8cb528641fed6813df1f40bd347">solve</a> (Args &amp;&amp;... _args)</td></tr>
+<tr class="memitem:a096fe8cb528641fed6813df1f40bd347"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">static</a> <a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d3/df4/classchdr_1_1solvers_1_1solver_a096fe8cb528641fed6813df1f40bd347.html#a096fe8cb528641fed6813df1f40bd347">solve</a> (<a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">Args</a> &amp;&amp;... <a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">_args</a>)</td></tr>
 <tr class="memdesc:a096fe8cb528641fed6813df1f40bd347"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes the solver with the provided parameters. Parameters are constructed using perfect forwarding.  <br /></td></tr>
 <tr class="separator:a096fe8cb528641fed6813df1f40bd347"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa62632bf43d0cf6db6a9f6de5e76b0ba" id="r_aa62632bf43d0cf6db6a9f6de5e76b0ba"><td class="memItemLeft" align="right" valign="top">static auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/df4/classchdr_1_1solvers_1_1solver_aa62632bf43d0cf6db6a9f6de5e76b0ba.html#aa62632bf43d0cf6db6a9f6de5e76b0ba">solve</a> (const params_t &amp;_params)</td></tr>
+<tr class="memitem:aa62632bf43d0cf6db6a9f6de5e76b0ba" id="r_aa62632bf43d0cf6db6a9f6de5e76b0ba"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">static</a> <a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">auto</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/df4/classchdr_1_1solvers_1_1solver_aa62632bf43d0cf6db6a9f6de5e76b0ba.html#aa62632bf43d0cf6db6a9f6de5e76b0ba">solve</a> (<a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">const</a> <a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">params_t</a> &amp;<a class="el" href="../../d6/d3c/structchdr_1_1solvers_1_1unmanaged__node.html">_params</a>)</td></tr>
 <tr class="memdesc:aa62632bf43d0cf6db6a9f6de5e76b0ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes the solver with the provided parameters.  <br /></td></tr>
 <tr class="separator:aa62632bf43d0cf6db6a9f6de5e76b0ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
