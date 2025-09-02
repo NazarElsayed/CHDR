@@ -51,8 +51,9 @@ namespace chdr::solvers {
      *     using   index_type [[maybe_unused]] = ...; // uint32_t
      *     using   coord_type [[maybe_unused]] = ...; // chdr::coord<uint32_t, 2>
      *
-     *     using lazy_sorting [[maybe_unused]] = ...; // std::false_type / std::true_type;
-     *     using   no_cleanup [[maybe_unused]] = ...; // std::false_type / std::true_type;
+     *     using        lazy_sorting [[maybe_unused]] = ...; // std::false_type / std::true_type;
+     *     using          no_cleanup [[maybe_unused]] = ...; // std::false_type / std::true_type;
+     *     using reverse_equivalence [[maybe_unused]] = ...; // std::false_type / std::true_type;
      *
      *     const        ... maze;  // i.e. chdr::grid, chdr::graph
      *     const coord_type start;
@@ -60,9 +61,9 @@ namespace chdr::solvers {
      *     const coord_type size;
      *          scalar_type (*h)(const coord_type&, const coord_type&) noexcept;
      *
-     *     ...*   monotonic_pmr;
-     *     ...*   heterogeneous_pmr;
-     *     ...* homogeneous_pmr;
+     *     ...*     monotonic_pmr;
+     *     ...* heterogeneous_pmr;
+     *     ...*   homogeneous_pmr;
      *
      *     const scalar_type weight       = ...; // 1
      *     const      size_t capacity     = ...; // 0
