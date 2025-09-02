@@ -11,6 +11,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <cstring>
 #include <sys/wait.h>
 #include <filesystem>
 #include <iostream>
@@ -134,15 +135,16 @@ namespace test {
         template <typename weight_t, typename coord_t, typename scalar_t, typename index_t>
         static auto run_gppc_benchmarks() {
 
-            struct params {
+            struct params final {
 
                 using weight_type [[maybe_unused]] = weight_t;
                 using scalar_type [[maybe_unused]] = scalar_t;
                 using  index_type [[maybe_unused]] = index_t;
                 using  coord_type [[maybe_unused]] = coord_t;
 
-                using lazy_sorting [[maybe_unused]] = std::false_type;
-                using   no_cleanup [[maybe_unused]] = std::true_type;
+                using        lazy_sorting [[maybe_unused]] = std::false_type;
+                using          no_cleanup [[maybe_unused]] = std::true_type;
+                using reverse_equivalence [[maybe_unused]] = std::true_type;
 
                 const decltype(generator::gppc::map<weight_t, coord_t>::maze)& maze;
 
@@ -375,7 +377,10 @@ namespace test {
                                                                  homogeneous.__get_diagnostic_data().peak_allocated;
     #endif //CHDR_DIAGNOSTICS == 1
 
-                                                write(pipefd[1], &data, sizeof(data));
+                                                ssize_t bytes_written = write(pipefd[1], &data, sizeof(data));
+                                                if (bytes_written == static_cast<ssize_t>(-1)) {
+                                                    throw std::runtime_error("Failed to read data from pipe: " + std::string(strerror(errno)));
+                                                }
                                                 close(pipefd[1]);
                                                 exit(0);
                                             }
@@ -388,7 +393,10 @@ namespace test {
                                                 });
 
                                                 if (future.wait_for(timeout) == std::future_status::ready && future.get()) {
-                                                    read(pipefd[0], &data, sizeof(data));
+                                                    ssize_t bytes_read = read(pipefd[0], &data, sizeof(data));
+                                                    if (bytes_read == static_cast<ssize_t>(-1)) {
+                                                        throw std::runtime_error("Failed to read data from pipe: " + std::string(strerror(errno)));
+                                                    }
                                                 }
                                                 else {
                                                     kill(child_pid, SIGKILL);

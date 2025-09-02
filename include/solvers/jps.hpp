@@ -327,10 +327,13 @@ namespace chdr::solvers {
 
             if constexpr (Kd == 2U) {
 
-                const auto s = utils::to_1d(_params.start, _params.size);
-                const auto e = utils::to_1d(_params.end  , _params.size);
+                const auto&   end = params_t::reverse_equivalence::value ? _params.start : _params.end;
+                const auto& start = params_t::reverse_equivalence::value ? _params.end   : _params.start;
 
-                  _open.emplace_nosort(s, ZZ, static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
+                const auto s = utils::to_1d(start, _params.size);
+                const auto e = utils::to_1d(end,   _params.size);
+
+                  _open.emplace_nosort(s, ZZ, static_cast<scalar_t>(0), _params.h(start, end) * _params.weight);
                 _closed.emplace(s);
 
                 // Main loop:
@@ -345,7 +348,7 @@ namespace chdr::solvers {
 
                         const auto coord = utils::to_nd(curr.m_index, _params.size);
 
-                        for (const auto& n_data : go_find_jump_points(_params.maze, coord, curr.m_direction, _params.end)) {
+                        for (const auto& n_data : go_find_jump_points(_params.maze, coord, curr.m_direction, end)) {
 
                             if (const auto& [nActive, nCoord] = n_data; nActive) {
 
@@ -361,10 +364,10 @@ namespace chdr::solvers {
                                     }
 
                                     if constexpr (params_t::lazy_sorting::value) {
-                                        _open.emplace_nosort(n, get_direction(coord, nCoord), curr_ptr->m_gScore + nDistance, _params.h(nCoord, _params.end) * _params.weight, curr_ptr);
+                                        _open.emplace_nosort(n, get_direction(coord, nCoord), curr_ptr->m_gScore + nDistance, _params.h(nCoord, end) * _params.weight, curr_ptr);
                                     }
                                     else {
-                                        _open.emplace(n, get_direction(coord, nCoord), curr_ptr->m_gScore + nDistance, _params.h(nCoord, _params.end) * _params.weight, curr_ptr);
+                                        _open.emplace(n, get_direction(coord, nCoord), curr_ptr->m_gScore + nDistance, _params.h(nCoord, end) * _params.weight, curr_ptr);
                                     }
                                 }
                             }
@@ -380,7 +383,12 @@ namespace chdr::solvers {
                         }
                         _closed = closed_set_t{};
 
-                        return solver_t::solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);
+                        if constexpr (params_t::reverse_equivalence::value) {
+                            return solver_t::solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);
+                        }
+                        else {
+                            return solver_t::solver_utils::rbacktrack_noreverse(curr, _params.size, curr.m_gScore);
+                        }
                     }
                 }
             }

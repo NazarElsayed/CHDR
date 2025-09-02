@@ -134,10 +134,13 @@ namespace chdr::solvers {
 
             using neighbours_t = decltype(_params.maze.get_neighbours(std::declval<index_t>()));
 
-            const auto s = utils::to_1d(_params.start, _params.size);
-            const auto e = utils::to_1d(_params.end,   _params.size);
+            const auto&   end = params_t::reverse_equivalence::value ? _params.start : _params.end;
+            const auto& start = params_t::reverse_equivalence::value ? _params.end   : _params.start;
 
-            auto bound = _params.h(_params.start, _params.end) * _params.weight;
+            const auto s = utils::to_1d(start, _params.size);
+            const auto e = utils::to_1d(end,   _params.size);
+
+            auto bound = _params.h(start, end) * _params.weight;
 
             _open.emplace_back(s, static_cast<scalar_t>(0), bound);
 
@@ -164,7 +167,7 @@ namespace chdr::solvers {
                             if (const auto& n = solver_t::get_data(_.neighbours[(_.neighbours.size() - 1U) - (_.neighbours_idx++)], _params); n.active) {
 
                                 auto g = curr.m_gScore + n.distance;
-                                auto f = g + (_params.h(n.coord, _params.end) * _params.weight);
+                                auto f = g + (_params.h(n.coord, end) * _params.weight);
 
                                 auto search = transposition_table.find(n.index);
                                 if (!(search != transposition_table.end() && f >= search->second)) {
@@ -180,7 +183,12 @@ namespace chdr::solvers {
                                         // ReSharper disable once CppDFAUnusedValue
                                         transposition_table = {};
 
-                                        return solver_t::solver_utils::ibacktrack(_open, _params.size);
+                                        if constexpr (params_t::reverse_equivalence::value) {
+                                            return solver_t::solver_utils::ibacktrack(_open, _params.size);
+                                        }
+                                        else {
+                                            return solver_t::solver_utils::ibacktrack_noreverse(_open, _params.size);
+                                        }
                                     }
                                 }
                             }

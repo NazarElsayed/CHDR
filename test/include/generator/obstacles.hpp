@@ -63,20 +63,21 @@ namespace test::generator {
                         auto heterogeneous = chdr::heterogeneous_pool();
                         auto homogeneous   = chdr::homogeneous_pool();
 
-                        struct params {
+                        struct params final {
 
                             using  weight_type [[maybe_unused]] = weight_t;
                             using  scalar_type [[maybe_unused]] = scalar_t;
                             using   index_type [[maybe_unused]] =  index_t;
                             using   coord_type [[maybe_unused]] =  coord_t;
 
-                            using lazy_sorting [[maybe_unused]] = std::true_type;
-                            using   no_cleanup [[maybe_unused]] = std::false_type;
+                            using        lazy_sorting [[maybe_unused]] = std::true_type;
+                            using          no_cleanup [[maybe_unused]] = std::false_type;
+                            using reverse_equivalence [[maybe_unused]] = std::true_type;
 
                             const chdr::mazes::grid<coord_t, weight_t>& maze;
-                            const     coord_type start;
-                            const     coord_type end;
-                            const     coord_type size;
+                            const coord_type start;
+                            const coord_type end;
+                            const coord_type size;
                             scalar_type (*h)(const coord_type&, const coord_type&) noexcept;
 
                             decltype(    monotonic)* monotonic_pmr;

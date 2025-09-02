@@ -119,10 +119,13 @@ namespace chdr::solvers {
         template <typename open_set_t, typename closed_set_t>
         [[nodiscard]] HOT static constexpr auto solve_internal(open_set_t& _open, open_set_t& _next, closed_set_t& _closed, size_t _capacity, const params_t& _params) {
 
-            const auto s = utils::to_1d(_params.start, _params.size);
-            const auto e = utils::to_1d(_params.end,   _params.size);
+            const auto&   end = params_t::reverse_equivalence::value ? _params.start : _params.end;
+            const auto& start = params_t::reverse_equivalence::value ? _params.end   : _params.start;
 
-            auto max_threshold = _params.h(_params.start, _params.end) * _params.weight;
+            const auto s = utils::to_1d(start, _params.size);
+            const auto e = utils::to_1d(end,   _params.size);
+
+            auto max_threshold = _params.h(start, end) * _params.weight;
 
               _open.emplace_back(s, static_cast<scalar_t>(0), max_threshold);
             _closed.emplace(s);
@@ -143,7 +146,7 @@ namespace chdr::solvers {
                             if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
 
                                 const auto g = curr.m_gScore + n.distance;
-                                const auto f = g + (_params.h(n.coord, _params.end) * _params.weight);
+                                const auto f = g + (_params.h(n.coord, end) * _params.weight);
 
                                 if (f <= max_threshold) {
 
@@ -189,7 +192,12 @@ namespace chdr::solvers {
                         _next   = std::move(open_set_t());
                         _closed = closed_set_t{};
 
-                        return solver_t::solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);
+                        if constexpr (params_t::reverse_equivalence::value) {
+                            return solver_t::solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);
+                        }
+                        else {
+                            return solver_t::solver_utils::rbacktrack_noreverse(curr, _params.size, curr.m_gScore);
+                        }
                     }
                 }
 

@@ -119,10 +119,13 @@ namespace chdr::solvers {
         template <typename open_set_t, typename closed_set_t>
         [[nodiscard]] HOT static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, size_t _capacity, const params_t& _params) {
 
+            const auto&   end = params_t::reverse_equivalence::value ? _params.start : _params.end;
+            const auto& start = params_t::reverse_equivalence::value ? _params.end   : _params.start;
+
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);
 
-              _open.emplace_nosort(s, static_cast<scalar_t>(0), _params.h(_params.start, _params.end) * _params.weight);
+              _open.emplace_nosort(s, static_cast<scalar_t>(0), _params.h(start, end) * _params.weight);
             _closed.emplace(s);
 
             // Main loop:
@@ -148,10 +151,10 @@ namespace chdr::solvers {
                                 }
 
                                 if constexpr (params_t::lazy_sorting::value) {
-                                    _open.emplace_nosort(n.index, curr_ptr->m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight, curr_ptr);
+                                    _open.emplace_nosort(n.index, curr_ptr->m_gScore + n.distance, _params.h(n.coord, end) * _params.weight, curr_ptr);
                                 }
                                 else {
-                                    _open.emplace(n.index, curr_ptr->m_gScore + n.distance, _params.h(n.coord, _params.end) * _params.weight, curr_ptr);
+                                    _open.emplace(n.index, curr_ptr->m_gScore + n.distance, _params.h(n.coord, end) * _params.weight, curr_ptr);
                                 }
                             }
                         }
@@ -167,7 +170,12 @@ namespace chdr::solvers {
                     }
                     _closed = closed_set_t{};
 
-                    return solver_t::solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);
+                    if constexpr (params_t::reverse_equivalence::value) {
+                        return solver_t::solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);
+                    }
+                    else {
+                        return solver_t::solver_utils::rbacktrack_noreverse(curr, _params.size, curr.m_gScore);
+                    }
                 }
             }
 

@@ -117,7 +117,7 @@ configure_file(README.md.in ${CMAKE_SOURCE_DIR}/README.md)
 message(NOTICE "NOTICE: Building test application:")
 
 # EXTREME WARNINGS:
-set(WARNINGS_BASE "-Wall -Wextra -Wpedantic -Wformat-security -Wconversion -Wsign-conversion -Wimplicit-fallthrough -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Woverloaded-virtual -Wnull-dereference -Wdouble-promotion -Wvla -Wformat=2 -Wmissing-declarations -Wsuggest-override -Wstrict-overflow=5 -Wuninitialized -Wswitch-enum -Wswitch-default -Wcast-qual -Wwrite-strings -Wpointer-arith -Wfloat-equal -Wtrampolines") # -Wbidi-chars=any") # -Wc++20-extensions
+set(WARNINGS_BASE "-Wall -Wextra -Wpedantic -Wformat-security -Wconversion -Wsign-conversion -Wimplicit-fallthrough -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Woverloaded-virtual -Wnull-dereference -Wdouble-promotion -Wvla -Wformat=2 -Wmissing-declarations -Wsuggest-override -Wstrict-overflow=5 -Wuninitialized -Wswitch-enum -Wswitch-default -Wcast-qual -Wwrite-strings -Wpointer-arith -Wfloat-equal -Wtrampolines") # -Wbidi-chars=any -Wc++20-extensions
 
 if (DEFINED SUPER_PEDANTIC)
     message(WARNING "WARNING: \"SUPER_PEDANTIC\" enabled. Build system may catch warnings as errors.")
@@ -137,9 +137,9 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 endif()
 
 # DIFFERENT BUILD MODES:
-set(CMAKE_CXX_FLAGS_DEBUG        "${WARNINGS} -O0 -fsanitize=address,leak,undefined -fopenmp -fno-inline -fno-strict-aliasing -fno-omit-frame-pointer -fno-rtti -fno-verbose-asm -flto -g")
-set(CMAKE_CXX_FLAGS_NOSANITIZERS "${WARNINGS} -O3                                   -fopenmp -fno-inline -fno-strict-aliasing -fno-omit-frame-pointer -fno-rtti -fno-verbose-asm -flto -g -gdwarf-5")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${WARNINGS} -O2 -fopenmp -march=native -mtune=native -funroll-loops -ftree-vectorize -ffast-math -fstrict-aliasing -fno-strict-overflow -fdata-sections -ffunction-sections -fomit-frame-pointer -fno-rtti -DNDEBUG")
+set(CMAKE_CXX_FLAGS_DEBUG        "${WARNINGS} -O0 -fsanitize=address,leak,undefined -fno-inline -fno-strict-aliasing -fno-omit-frame-pointer -fno-rtti -fno-verbose-asm -flto -g")
+set(CMAKE_CXX_FLAGS_NOSANITIZERS "${WARNINGS} -O3                                   -fno-inline -fno-strict-aliasing -fno-omit-frame-pointer -fno-rtti -fno-verbose-asm -flto -g -gdwarf-5")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${WARNINGS} -O2 -march=native -mtune=native -funroll-loops -ftree-vectorize -ffast-math -fstrict-aliasing -fno-strict-overflow -fdata-sections -ffunction-sections -fomit-frame-pointer -fno-rtti -DNDEBUG")
 
 # DEFINE LIBRARIES:
 add_library(libdebug INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/test/external/debug.hpp)
