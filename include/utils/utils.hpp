@@ -524,15 +524,13 @@ namespace chdr {
          * @returns A string containing the scaled and formatted duration, including its
          *          appropriate time unit (e.g. "s" for seconds, "ms" for milliseconds).
          */
-        [[nodiscard]] static std::string to_string(const long double _duration, long double _scale = std::numeric_limits<long double>::epsilon()) {
+        [[nodiscard]] static std::string to_string(long double _duration, long double _scale = std::numeric_limits<long double>::epsilon()) {
 
             constexpr std::array<const char* const, 4U> units { "s", "ms", "µs", "ns" };
 
-            auto result = _duration;
-
             size_t i = 0U;
-            while (i < units.size() && abs(result) < 1.0L) {
-                result *= 1000.0L;
+            while (i < units.size() && abs(_duration) < 1.0L) {
+                _duration *= 1000.0L;
                 ++i;
             }
 
@@ -540,7 +538,7 @@ namespace chdr {
 
             return trim_trailing_zeros(
                 std::to_string(
-                    std::floor((result / _scale) + 0.5L) * _scale
+                    std::floor((_duration / _scale) + 0.5L) * _scale
                 )
             ) + units[i];
         }
