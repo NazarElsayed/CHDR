@@ -82,7 +82,7 @@ namespace test::generator {
             /* LOAD MAP */
             map<weight_t, coord_t> map;
             {
-                map.metadata.name = _map.filename();
+                map.metadata.name = _map.filename().string();
                 fs >> str >> map.metadata.type;
                 fs >> str >> map.metadata.size[0];
                 fs >> str >> map.metadata.size[1];
