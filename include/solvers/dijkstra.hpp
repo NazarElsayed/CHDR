@@ -162,9 +162,9 @@ namespace chdr::solvers {
 
             const auto e = utils::to_1d(_params.end, _params.size);
 
-            multi_result result(_params.size, _params.capacity);
-
             _open.emplace_nosort(e, static_cast<scalar_t>(0));
+
+            multi_result result(_params.size, _params.capacity);
 
             // Main loop:
             while (LIKELY(!_open.empty())) {

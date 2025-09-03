@@ -118,9 +118,10 @@ namespace chdr::solvers {
 
         template <typename open_set_t, typename closed_set_t>
         [[nodiscard]] HOT static constexpr auto solve_internal(open_set_t& _open, open_set_t& _next, closed_set_t& _closed, size_t _capacity, const params_t& _params) {
+            constexpr bool do_reverse = !solver_t::solver_utils::template is_graph_v<decltype(_params.maze)> && params_t::reverse_equivalence::value;
 
-            const auto&   end = params_t::reverse_equivalence::value ? _params.start : _params.end;
-            const auto& start = params_t::reverse_equivalence::value ? _params.end   : _params.start;
+            const auto&   end = do_reverse ? _params.start : _params.end;
+            const auto& start = do_reverse ? _params.end   : _params.start;
 
             const auto s = utils::to_1d(start, _params.size);
             const auto e = utils::to_1d(end,   _params.size);
