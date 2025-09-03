@@ -200,7 +200,7 @@ namespace test {
                 MAKE_TEST_VARIANT(   best_first),
                 MAKE_TEST_VARIANT(          bfs),
                 MAKE_TEST_VARIANT(          dfs),
-                // MAKE_TEST_VARIANT(     dijkstra),
+                MAKE_TEST_VARIANT(     dijkstra),
                 MAKE_TEST_VARIANT(     eidastar),
                 MAKE_TEST_VARIANT(eidbest_first),
                 MAKE_TEST_VARIANT(       eiddfs),
