@@ -426,7 +426,7 @@ namespace chdr::solvers {
              * @warning The method expects the memory resources to have a visible release() method.
              *          Aliasing the resources as other types may hide this method and prevent proper cleanup.
              */
-            static constexpr void reset_resources(const params_t& _params) {
+            static void reset_resources(const params_t& _params) {
 
                 std::exception_ptr e { nullptr };
 
@@ -486,7 +486,7 @@ namespace chdr::solvers {
              * @warning The method expects the memory resources to have a visible release() method.
              *          Aliasing the resources as other types may hide this method and prevent proper cleanup.
              */
-            static constexpr void release_resources(const params_t& _params) {
+            static void release_resources(const params_t& _params) {
 
                 std::exception_ptr e { nullptr };
 
