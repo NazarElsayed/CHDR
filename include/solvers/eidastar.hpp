@@ -133,9 +133,10 @@ namespace chdr::solvers {
         [[nodiscard]] HOT static constexpr auto solve_internal(open_set_t& _open, const params_t& _params) {
 
             using neighbours_t = decltype(_params.maze.get_neighbours(std::declval<index_t>()));
+            constexpr bool do_reverse = !solver_t::solver_utils::template is_graph_v<decltype(_params.maze)> && params_t::reverse_equivalence::value;
 
-            const auto&   end = params_t::reverse_equivalence::value ? _params.start : _params.end;
-            const auto& start = params_t::reverse_equivalence::value ? _params.end   : _params.start;
+            const auto&   end = do_reverse ? _params.start : _params.end;
+            const auto& start = do_reverse ? _params.end   : _params.start;
 
             const auto s = utils::to_1d(start, _params.size);
             const auto e = utils::to_1d(end,   _params.size);

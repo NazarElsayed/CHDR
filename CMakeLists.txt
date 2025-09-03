@@ -160,6 +160,15 @@ target_link_libraries(chdr PRIVATE
         libdebug
 )
 
+# LINK OMP (IF POSSIBLE):
+find_package(OpenMP QUIET)
+if (OpenMP_CXX_FOUND)
+  message(STATUS "OpenMP found.")
+  target_link_libraries(chdr PRIVATE OpenMP::OpenMP_CXX)
+else()
+  message(STATUS "OpenMP not found.")
+endif()
+
 target_precompile_headers(chdr INTERFACE stdafx.hpp)
 
 ## LINK OPTIONS:

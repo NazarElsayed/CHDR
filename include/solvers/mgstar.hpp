@@ -50,7 +50,32 @@ namespace chdr::solvers {
     /**
      * @struct mgstar
      * @brief Memory-Bounded Graveyard search algorithm.
+     * @details MG* (Eriksson, L., 2025) is a heuristic-informed graph traversal and pathfinding algorithm for
+     *          "single-source, single-target" (SSST) pathfinding problems.
+     *          MG* maintains the number of expanded nodes in memory beneath an arbitrary limit, which it enforces
+     *          through temporarily abandoning the worst-case search nodes to prioritise more promising candidates.
+     *          Unlike the SMA* algorithm, MG* ensures an optimal solution by guaranteeing that prematurely discarded
+     *          paths are explored fully before a final solution is reached.
      *
+     * Advantages:
+     * - Generally faster than both SMA* and OSMA*.
+     * - Improved search range and memory efficiency over SMA*.
+     * - Guarantees the optimal solution for the given memory limit.
+     * - Able to find solutions to search problems in memory-constrained contexts.
+     * - Able to modulate between a breadth-first and a best-first approach.
+     * - Does not need a pre-pass, although performance can improve if the search space is pruned first.
+     * - High performance in bounded (finite) search scenarios.
+     *
+     * Limitations:
+     * - Slower than A*.
+     * - Inefficient or complex search heuristics can reduce performance.
+     * - Poor performance when searches lack solutions.
+     *
+     * References:
+     * - Eriksson, L., 2025. MG*: An Improved Algorithm for Guaranteed Optimal-Cost Memory-Bounded Graph Search. Master’s. University of Exeter, Exeter, UK.
+     *
+     * @see smastar
+     * @see osmastar
      * @tparam params_t Type containing the search parameters.
      */
     template<typename params_t>
@@ -162,9 +187,10 @@ namespace chdr::solvers {
         [[maybe_unused, nodiscard]] HOT static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, size_t _capacity, const params_t& _params) {
 
             constexpr bool optimising = true;
+            constexpr bool do_reverse = !solver_t::solver_utils::template is_graph_v<decltype(_params.maze)> && params_t::reverse_equivalence::value;
 
-            const auto&   end = params_t::reverse_equivalence::value ? _params.start : _params.end;
-            const auto& start = params_t::reverse_equivalence::value ? _params.end   : _params.start;
+            const auto&   end = do_reverse ? _params.start : _params.end;
+            const auto& start = do_reverse ? _params.end   : _params.start;
 
             const auto s = utils::to_1d(start, _params.size);
             const auto e = utils::to_1d(end,   _params.size);

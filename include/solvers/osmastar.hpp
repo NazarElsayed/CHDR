@@ -41,15 +41,14 @@ namespace chdr::solvers {
     /**
      * @struct osmastar
      * @brief Optimising Simplified Memory-Bounded A* search algorithm.
-     * @details A variant of the SMA* algorithm (Russell, S., 1992), which helps to address the issues of path optimality
-     *          by searching for improved routes until all paths within the memory limit have been exhausted.
+     * @details OSMA* (Eriksson, L. 2025), is A variant of the SMA* algorithm (Russell, S., 1992), which helps to address the issues
+     *          of path optimality by searching for improved routes until all paths within the memory limit have been exhausted.
      *
      * Advantages:
      * - Able to find solutions to search problems in memory-constrained contexts.
      * - Able to modulate between a breadth-first and a best-first approach.
      * - Does not need a pre-pass, although performance can improve if the search space is pruned first.
      * - High performance in bounded (finite) search scenarios.
-     * - Likely to find faster routes than SMA*.
      *
      * Limitations:
      * - Typically slower than A*.
@@ -58,7 +57,18 @@ namespace chdr::solvers {
      * - Inefficient or complex search heuristics can reduce performance.
      * - Poor performance when searches lack solutions.
      *
+     * References:
+     * - Chakrabarti, P. P., Ghose, S., Acharya, A. and Sarkar, S. C. de, 1989. Heuristic search in restricted memory.
+     *   Artificial Intelligence, 41 (2), 197–221.
+     * - Russell, S., 1992. Efficient Memory-Bounded Search Methods.
+     *   In: Neumann, B., ed. 10th European Conference on Artificial Intelligence, ECAI 92, Vienna, Austria, August 3-7, 1992. Proceedings [online]. John Wiley and Sons, 1–5. Available from: https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=388c0a934934a9e60da1c22c050566dbcd995702.
+     * - Eriksson, L., 2025. MG*: An Improved Algorithm for Guaranteed Optimal-Cost Memory-Bounded Graph Search. Master’s. University of Exeter, Exeter, UK.
+     *
+     * @warning Please note that OSMA* is entirely surpassed by Memory-Bounded Graveyard Search (MG*) (Eriksson, L. 2025).
+     *          See @ref mgstar "mgstar".
+     *
      * @see smastar
+     * @see mgstar
      * @tparam params_t Type containing the search parameters.
      */
     template<typename params_t>

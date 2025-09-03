@@ -51,8 +51,9 @@ namespace chdr::solvers {
      *     using   index_type [[maybe_unused]] = ...; // uint32_t
      *     using   coord_type [[maybe_unused]] = ...; // chdr::coord<uint32_t, 2>
      *
-     *     using lazy_sorting [[maybe_unused]] = ...; // std::false_type / std::true_type;
-     *     using   no_cleanup [[maybe_unused]] = ...; // std::false_type / std::true_type;
+     *     using        lazy_sorting [[maybe_unused]] = ...; // std::false_type / std::true_type;
+     *     using          no_cleanup [[maybe_unused]] = ...; // std::false_type / std::true_type;
+     *     using reverse_equivalence [[maybe_unused]] = ...; // std::false_type / std::true_type;
      *
      *     const        ... maze;  // i.e. chdr::grid, chdr::graph
      *     const coord_type start;
@@ -60,9 +61,9 @@ namespace chdr::solvers {
      *     const coord_type size;
      *          scalar_type (*h)(const coord_type&, const coord_type&) noexcept;
      *
-     *     ...*   monotonic_pmr;
-     *     ...*   heterogeneous_pmr;
-     *     ...* homogeneous_pmr;
+     *     ...*     monotonic_pmr;
+     *     ...* heterogeneous_pmr;
+     *     ...*   homogeneous_pmr;
      *
      *     const scalar_type weight       = ...; // 1
      *     const      size_t capacity     = ...; // 0
@@ -233,6 +234,7 @@ namespace chdr::solvers {
                     static_assert(std::true_type::value, "This function should not be called at run time.");
                     return {};
                 }
+
             public:
 
                 /**
@@ -286,7 +288,9 @@ namespace chdr::solvers {
              */
             template <typename T>
             struct has_subscript_operator final {
+
             private:
+
                 template <typename U>
                 static constexpr decltype(std::declval<U>()[0], std::true_type{}) has_operator([[maybe_unused]] int _i) {
                     static_assert(std::true_type::value, "This function should not be called at run time.");
@@ -300,6 +304,7 @@ namespace chdr::solvers {
                 }
 
             public:
+
                 /**
                  * @brief Determines whether the specified type has a subscript operator.
                  *
@@ -421,7 +426,7 @@ namespace chdr::solvers {
              * @warning The method expects the memory resources to have a visible release() method.
              *          Aliasing the resources as other types may hide this method and prevent proper cleanup.
              */
-            static constexpr void reset_resources(const params_t& _params) {
+            static void reset_resources(const params_t& _params) {
 
                 std::exception_ptr e { nullptr };
 
@@ -481,7 +486,7 @@ namespace chdr::solvers {
              * @warning The method expects the memory resources to have a visible release() method.
              *          Aliasing the resources as other types may hide this method and prevent proper cleanup.
              */
-            static constexpr void release_resources(const params_t& _params) {
+            static void release_resources(const params_t& _params) {
 
                 std::exception_ptr e { nullptr };
 
@@ -997,6 +1002,9 @@ namespace chdr::solvers {
             "lazy_sorting must be either std::true_type or std::false_type.");
 
         static_assert(std::is_same_v<typename params_t::no_cleanup, std::true_type> || std::is_same_v<typename params_t::no_cleanup, std::false_type>,
+            "no_cleanup must be either std::true_type or std::false_type.");
+
+        static_assert(std::is_same_v<typename params_t::reverse_equivalence, std::true_type> || std::is_same_v<typename params_t::reverse_equivalence, std::false_type>,
             "no_cleanup must be either std::true_type or std::false_type.");
 
         // TODO: Further enforcement of params_t structure.

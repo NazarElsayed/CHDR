@@ -20,6 +20,7 @@
 
 // ReSharper disable once CppUnusedIncludeDirective
 #include "../utils/intrinsics.hpp" // NOLINT(*-include-cleaner)
+#include "include/types/pmr/monotonic_pool.hpp"
 
 namespace chdr::solvers {
 
@@ -35,14 +36,14 @@ namespace chdr::solvers {
      * @{
      */
 
-    /**
+     /**
      * @struct dijkstra
      * @brief Dijkstra's algorithm [unfinished].
      * @details Dijkstra's algorithm (Dijkstra, E. W. 1959) is a graph traversal and pathfinding algorithm.
      *          It is a "single-source, multiple-target" (SSMT) algorithm, providing a technique for resolving
-     *          the shortest path between a source and every other node in a graph.\n\n
+     *          the shortest path between one source and every other node in a graph.\n\n
      *
-     * @warning This algorithm is not yet implemented.
+     * @warning This implementation of Dijkstra's algorithm is not yet finished.
      *
      * Advantages:
      * - Guarantees the lowest-cost path in graphs with non-negative edge weights.
@@ -92,8 +93,8 @@ namespace chdr::solvers {
 
             ~node() = default;
 
-            node           (const node&) = delete;
-            node& operator=(const node&) = delete;
+            node           (const node&) = default;
+            node& operator=(const node&) = default;
 
             [[nodiscard]] HOT constexpr node(node&& _other) noexcept = default;
 
@@ -107,86 +108,112 @@ namespace chdr::solvers {
             }
         };
 
-        struct paths final {
+        /**
+         * @struct multi_result
+         * @brief Encapsulates a predecessor map for Dijkstra's algorithm results.
+         * @details This structure maintains a mapping of nodes to their predecessors,
+         *          allowing for path reconstruction from any reached node back to the source.
+         *          It uses a monotonic memory resource for efficient memory allocation
+         *          during the path construction process.
+         */
+        struct multi_result {
+
+            friend dijkstra;
 
         private:
 
-            const coord_t m_size;
+            coord_t m_size;
 
-            std::vector<node> m_memory;
+            // ReSharper disable once CppRedundantQualifier
+            chdr::monotonic_pool<> m_resource;
 
-            std::unordered_map<coord_t, node> m_map;
+            std::pmr::unordered_map<size_t, node> m_data;
 
         public:
 
-            [[nodiscard]] HOT constexpr const auto& operator[](const coord_t& _coord) const noexcept {
+            // ReSharper disable once CppRedundantMemberInitializer
+            multi_result(coord_t _size, size_t _capacity = 0U) :
+                m_size     (_size),
+                m_resource (),
+                m_data     (&m_resource)
+            {
+                m_data.reserve(_capacity);
+            }
 
-                auto search = m_map.find(_coord);
+            HOT auto get(coord_t _coord) const {
 
-                return LIKELY(search != m_map.end()) ?
-                    solver_t::solver_utils::rbacktrack(*search, m_size) :
-                    std::vector<coord_t>{};
+                std::vector<coord_t> result;
+
+                if (const auto search = m_data.find(utils::to_1d(_coord, m_size)); search != m_data.end()) {
+
+                    result.emplace_back(_coord);
+
+                    for (const auto* RESTRICT t = search->second.m_parent; t != nullptr; t = t->m_parent) {
+                        result.emplace_back(utils::to_nd(t->m_index, m_size));
+                    }
+                }
+
+                return result;
             }
         };
 
-        template <typename open_set_t, typename closed_set_t>
-        [[nodiscard]] HOT static constexpr auto solve_internal(open_set_t& _open, closed_set_t& _closed, size_t _capacity, const params_t& _params) {
+        template <typename open_set_t>
+        [[nodiscard]] HOT static constexpr auto solve_internal(open_set_t& _open, const params_t& _params) {
 
-            const auto s = utils::to_1d(_params.start, _params.size);
-            const auto e = utils::to_1d(_params.end,   _params.size);
+            const auto e = utils::to_1d(_params.end, _params.size);
 
-              _open.emplace_nosort(e, static_cast<scalar_t>(0));
-            _closed.emplace(e);
+            _open.emplace_nosort(e, static_cast<scalar_t>(0));
+
+            multi_result result(_params.size, _params.capacity);
 
             // Main loop:
             while (LIKELY(!_open.empty())) {
 
-                auto curr(std::move(_open.top()));
+                auto _ = std::move(_open.top());
                 _open.pop();
 
-                if (curr.m_index != s) { // SEARCH FOR SOLUTION...
+                auto& curr = result.m_data.emplace(_.m_index, std::move(_)).first->second;
 
-                    node* RESTRICT curr_ptr(nullptr);
+                for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
 
-                    for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
+                    if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
 
-                        if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
+                        auto g = curr.m_gScore + n.distance;
 
-                            // Check if node is not already visited:
-                            if (!_closed.contains(n.index)) {
-                                solver_t::solver_utils::preallocate_emplace(_closed, n.index, _capacity, _params.maze.count());
+                        if (const auto search = result.m_data.find(n.index); search != result.m_data.end()) {
 
-                                if (curr_ptr == nullptr) {
-                                    curr_ptr = new (_params.monotonic_pmr->allocate(sizeof(node), alignof(node))) node(std::move(curr));
-                                }
+                            if (auto& child = search->second; g < child.m_gScore) {
+
+                                child.m_gScore = g;
+                                child.m_parent = &curr;
 
                                 if constexpr (params_t::lazy_sorting::value) {
-                                    _open.emplace_nosort(n.index, curr_ptr->m_gScore + n.distance, curr_ptr);
+                                    _open.emplace_nosort(child);
                                 }
                                 else {
-                                    _open.emplace(n.index, curr_ptr->m_gScore + n.distance, curr_ptr);
+                                    _open.emplace(child);
                                 }
+                            }
+                        }
+                        else {
+                            if constexpr (params_t::lazy_sorting::value) {
+                                _open.emplace_nosort(n.index, g, &curr);
+                            }
+                            else {
+                                _open.emplace(n.index, g, &curr);
                             }
                         }
                     }
                 }
-                else { // SOLUTION REACHED...
-
-                    _closed = closed_set_t{};
-
-                    return solver_t::solver_utils::rbacktrack(curr, _params.size);
-                }
             }
 
-            return std::vector<coord_t>{};
+            // TODO: return multi_result instead of std::vector<coord_t>.
+            return result.get(_params.start);
         }
 
         [[maybe_unused, nodiscard]] static auto invoke(const params_t& _params) {
 
             const auto capacity = solver_t::solver_utils::determine_capacity(_params);
-
-            existence_set closed(_params.monotonic_pmr);
-            closed.reserve(capacity);
 
             heap<node> open(_params.heterogeneous_pmr);
             try {
@@ -194,7 +221,7 @@ namespace chdr::solvers {
             }
             catch (...) {} // NOLINT(*-empty-catch)
 
-            return solve_internal(open, closed, capacity, _params);
+            return solve_internal(open, _params);
         }
 
     };

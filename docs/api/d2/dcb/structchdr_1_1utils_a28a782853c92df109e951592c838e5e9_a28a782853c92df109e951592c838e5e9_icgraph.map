@@ -1,0 +1,5 @@
+<map id="trim_trailing_zeros" name="trim_trailing_zeros">
+<area shape="rect" id="Node000001" title="Removes trailing zeroes from a numeric string." alt="" coords="123,5,244,28"/>
+<area shape="rect" id="Node000002" href="$d2/dcb/structchdr_1_1utils_adb33afbaf9ed795be953475e0d6df54c.html#adb33afbaf9ed795be953475e0d6df54c" title="Converts a duration in seconds to a formatted string representation." alt="" coords="5,5,75,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,19,75,19,75,14,109,14"/>
+</map>

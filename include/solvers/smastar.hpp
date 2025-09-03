@@ -69,6 +69,9 @@ namespace chdr::solvers {
      *
      * @note SMA* does not guarantee solution optimality unless the memory limit is sufficient to contain the entire search tree.
      * @remarks SMA* is an improvement of the original Memory-Bounded A* (MA*) design by Chakrabarti et al. (1989).
+     *
+     * @see osmastar
+     * @see mgstar
      * @tparam params_t Type containing the search parameters.
      */
     template<typename params_t>
