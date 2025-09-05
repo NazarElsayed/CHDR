@@ -104,6 +104,8 @@
     #include <xmmintrin.h>
 #elif defined(__MMX__)
     #include <mmintrin.h>
+#elif defined(__ARM_NEON)
+    #include <arm_neon.h>
 #endif
 
 // NOLINTEND(*-include-cleaner)
@@ -111,7 +113,11 @@
 
 namespace chdr {
 
+#if defined(__i386__) || defined(__x86_64__)
+
 #ifdef _MSC_VER
+
+    #define CHDR_INTRINSTICS_HPP_N_NO_OP
 
     /** @brief Enables vectorised loops (platform-specific). */
     #define IVDEP __pragma(loop(ivdep))
@@ -142,6 +148,8 @@ namespace chdr {
 
 #elif defined(__INTEL_COMPILER) || defined(__INTEL_LLVM_COMPILER)
 
+    #define CHDR_INTRINSTICS_HPP_N_NO_OP
+
     /** @brief Enables vectorised loops (platform-specific). */
     #define IVDEP _Pragma("ivdep")
 
@@ -170,6 +178,8 @@ namespace chdr {
     #define COLD __attribute__((cold))
 
 #elif defined(__clang__)
+
+    #define CHDR_INTRINSTICS_HPP_N_NO_OP
 
     /** @brief Enables vectorised loops (platform-specific). */
     #define IVDEP _Pragma("clang loop vectorise(enable)")
@@ -200,6 +210,8 @@ namespace chdr {
 
 #elif defined(__GNUC__)
 
+    #define CHDR_INTRINSTICS_HPP_N_NO_OP
+
     /** @brief Enables vectorised loops (platform-specific). */
     #define IVDEP _Pragma("GCC ivdep")
 
@@ -227,7 +239,11 @@ namespace chdr {
     /** @brief Marks a function as less frequently called (platform-specific). */
     #define COLD __attribute__((cold))
 
-#else
+#endif
+
+#endif
+
+#ifndef CHDR_INTRINSTICS_HPP_N_NO_OP
 
     /** @brief Enables vectorised loops (platform-specific). */
     #define IVDEP
