@@ -245,6 +245,14 @@ namespace chdr {
 
 #ifndef CHDR_INTRINSTICS_HPP_N_NO_OP
 
+#ifndef _MM_HINT_T0
+    #define _MM_HINT_T0 3
+#endif
+
+#ifndef _MM_HINT_NTA
+    #define _MM_HINT_NTA 0
+#endif
+
     /** @brief Enables vectorised loops (platform-specific). */
     #define IVDEP
 
