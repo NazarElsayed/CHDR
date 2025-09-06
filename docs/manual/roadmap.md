@@ -23,6 +23,8 @@
 | Iterative-Deepening Depth-First Search (IDDFS)           |  Completed ✔️  |
 | Jump-Point Search (JPS)                                  | Completed ✔️️  |
 
+*Please note that the current implementation of Dijkstra's algorithm only supports undirected topologies. Support for directed topologies is planned.*
+
 
 ## Maze Types
 
@@ -34,8 +36,6 @@
 | Tree      |  Planned 📝  |
 | Mesh      |  Planned 📝  |
 | Hierarchy |  Planned 📝  |
-
-*Please note that the above graph refers to undirected topologies. Support for directed topologies is currently in progress.*
 
 
 ## Post-Processing

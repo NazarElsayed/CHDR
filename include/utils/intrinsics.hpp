@@ -104,6 +104,8 @@
     #include <xmmintrin.h>
 #elif defined(__MMX__)
     #include <mmintrin.h>
+#elif defined(__ARM_NEON)
+    #include <arm_neon.h>
 #endif
 
 // NOLINTEND(*-include-cleaner)
@@ -113,11 +115,40 @@ namespace chdr {
 
 #ifdef _MSC_VER
 
+    #define CHDR_INTRINSTICS_HPP_N_NO_OP
+
     /** @brief Enables vectorised loops (platform-specific). */
     #define IVDEP __pragma(loop(ivdep))
 
     /** @brief Forces vectorisation of loops (platform-specific). */
     #define VECTOR_ALWAYS
+
+#if defined(__has_cpp_attribute)
+
+    #if __has_cpp_attribute(likely)
+
+        /** @brief Hints to the compiler that the condition is likely to be true (platform-specific). */
+        #define LIKELY(x) ((x) [[likely]])
+
+    #else
+
+        /** @brief Hints to the compiler that the condition is likely to be true (platform-specific). */
+        #define LIKELY(x) (x)
+
+    #endif
+    #if __has_cpp_attribute(unlikely)
+
+        /** @brief Hints to the compiler that the condition is likely to be false (platform-specific). */
+        #define UNLIKELY(x) ((x) [[unlikely]])
+
+    #else
+
+        /** @brief Hints to the compiler that the condition is likely to be false (platform-specific). */
+        #define UNLIKELY(x) (x)
+
+    #endif
+
+#else
 
     /** @brief Hints to the compiler that the condition is likely to be true (platform-specific). */
     #define LIKELY(x) (x)
@@ -125,8 +156,19 @@ namespace chdr {
     /** @brief Hints to the compiler that the condition is likely to be false (platform-specific). */
     #define UNLIKELY(x) (x)
 
+#endif
+
+#if defined(__i386__) || defined(__x86_64__)
+
     /** @brief Provides a compiler hint to prefetch memory (platform-specific). */
-    #define PREFETCH(P, I) ((void))
+    #define PREFETCH(P, RW, I) _mm_prefetch(reinterpret_cast<const char*>(P), I);
+
+#else
+
+    /** @brief Provides a compiler hint to prefetch memory (platform-specific). */
+    #define PREFETCH(P, RW, I) ((void))
+
+#endif
 
     /** @brief Specifies pointer aliasing restrictions to improve optimisation (platform-specific). */
     #define RESTRICT restrict
@@ -142,6 +184,8 @@ namespace chdr {
 
 #elif defined(__INTEL_COMPILER) || defined(__INTEL_LLVM_COMPILER)
 
+    #define CHDR_INTRINSTICS_HPP_N_NO_OP
+
     /** @brief Enables vectorised loops (platform-specific). */
     #define IVDEP _Pragma("ivdep")
 
@@ -155,7 +199,7 @@ namespace chdr {
     #define UNLIKELY(x) __builtin_expect(!!(x), 0)
 
     /** @brief Provides a compiler hint to prefetch memory (platform-specific). */
-    #define PREFETCH(P, I) _mm_prefetch(reinterpret_cast<const char*>(P), I)
+    #define PREFETCH(P, RW, I) __builtin_prefetch(reinterpret_cast<const char*>(P), RW, I)
 
     /** @brief Specifies pointer aliasing restrictions to improve optimisation (platform-specific). */
     #define RESTRICT __restrict__
@@ -171,6 +215,8 @@ namespace chdr {
 
 #elif defined(__clang__)
 
+    #define CHDR_INTRINSTICS_HPP_N_NO_OP
+
     /** @brief Enables vectorised loops (platform-specific). */
     #define IVDEP _Pragma("clang loop vectorise(enable)")
 
@@ -184,7 +230,7 @@ namespace chdr {
     #define UNLIKELY(x) __builtin_expect(!!(x), 0)
 
     /** @brief Provides a compiler hint to prefetch memory (platform-specific). */
-    #define PREFETCH(P, I) _mm_prefetch(reinterpret_cast<const char*>(P), I)
+    #define PREFETCH(P, RW, I) __builtin_prefetch(reinterpret_cast<const char*>(P), RW, I)
 
     /** @brief Specifies pointer aliasing restrictions to improve optimisation (platform-specific). */
     #define RESTRICT __restrict__
@@ -200,6 +246,8 @@ namespace chdr {
 
 #elif defined(__GNUC__)
 
+    #define CHDR_INTRINSTICS_HPP_N_NO_OP
+
     /** @brief Enables vectorised loops (platform-specific). */
     #define IVDEP _Pragma("GCC ivdep")
 
@@ -213,7 +261,7 @@ namespace chdr {
     #define UNLIKELY(x) __builtin_expect(!!(x), 0)
 
     /** @brief Provides a compiler hint to prefetch memory (platform-specific). */
-    #define PREFETCH(P, I) _mm_prefetch(reinterpret_cast<const char*>(P), I)
+    #define PREFETCH(P, RW, I) __builtin_prefetch(reinterpret_cast<const char*>(P), RW, I)
 
     /** @brief Specifies pointer aliasing restrictions to improve optimisation (platform-specific). */
     #define RESTRICT __restrict__
@@ -227,7 +275,9 @@ namespace chdr {
     /** @brief Marks a function as less frequently called (platform-specific). */
     #define COLD __attribute__((cold))
 
-#else
+#endif
+
+#ifndef CHDR_INTRINSTICS_HPP_N_NO_OP
 
     /** @brief Enables vectorised loops (platform-specific). */
     #define IVDEP
