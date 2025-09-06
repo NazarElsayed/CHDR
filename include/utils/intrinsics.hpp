@@ -113,8 +113,6 @@
 
 namespace chdr {
 
-#if defined(__i386__) || defined(__x86_64__)
-
 #ifdef _MSC_VER
 
     #define CHDR_INTRINSTICS_HPP_N_NO_OP
@@ -125,14 +123,52 @@ namespace chdr {
     /** @brief Forces vectorisation of loops (platform-specific). */
     #define VECTOR_ALWAYS
 
+#if defined(__has_cpp_attribute)
+
+    #if __has_cpp_attribute(likely)
+
+        /** @brief Hints to the compiler that the condition is likely to be true (platform-specific). */
+        #define LIKELY(x) ((x) [[likely]])
+
+    #else
+
+        /** @brief Hints to the compiler that the condition is likely to be true (platform-specific). */
+        #define LIKELY(x) (x)
+
+    #endif
+    #if __has_cpp_attribute(unlikely)
+
+        /** @brief Hints to the compiler that the condition is likely to be false (platform-specific). */
+        #define UNLIKELY(x) ((x) [[unlikely]])
+
+    #else
+
+        /** @brief Hints to the compiler that the condition is likely to be false (platform-specific). */
+        #define UNLIKELY(x) (x)
+
+    #endif
+
+#else
+
     /** @brief Hints to the compiler that the condition is likely to be true (platform-specific). */
     #define LIKELY(x) (x)
 
     /** @brief Hints to the compiler that the condition is likely to be false (platform-specific). */
     #define UNLIKELY(x) (x)
 
+#endif
+
+#if defined(__i386__) || defined(__x86_64__)
+
     /** @brief Provides a compiler hint to prefetch memory (platform-specific). */
-    #define PREFETCH(P, I) ((void))
+    #define PREFETCH(P, RW, I) _mm_prefetch(reinterpret_cast<const char*>(P), I);
+
+#else
+
+    /** @brief Provides a compiler hint to prefetch memory (platform-specific). */
+    #define PREFETCH(P, RW, I) ((void))
+
+#endif
 
     /** @brief Specifies pointer aliasing restrictions to improve optimisation (platform-specific). */
     #define RESTRICT restrict
@@ -163,7 +199,7 @@ namespace chdr {
     #define UNLIKELY(x) __builtin_expect(!!(x), 0)
 
     /** @brief Provides a compiler hint to prefetch memory (platform-specific). */
-    #define PREFETCH(P, I) _mm_prefetch(reinterpret_cast<const char*>(P), I)
+    #define PREFETCH(P, RW, I) __builtin_prefetch(reinterpret_cast<const char*>(P), RW, I)
 
     /** @brief Specifies pointer aliasing restrictions to improve optimisation (platform-specific). */
     #define RESTRICT __restrict__
@@ -194,7 +230,7 @@ namespace chdr {
     #define UNLIKELY(x) __builtin_expect(!!(x), 0)
 
     /** @brief Provides a compiler hint to prefetch memory (platform-specific). */
-    #define PREFETCH(P, I) _mm_prefetch(reinterpret_cast<const char*>(P), I)
+    #define PREFETCH(P, RW, I) __builtin_prefetch(reinterpret_cast<const char*>(P), RW, I)
 
     /** @brief Specifies pointer aliasing restrictions to improve optimisation (platform-specific). */
     #define RESTRICT __restrict__
@@ -225,7 +261,7 @@ namespace chdr {
     #define UNLIKELY(x) __builtin_expect(!!(x), 0)
 
     /** @brief Provides a compiler hint to prefetch memory (platform-specific). */
-    #define PREFETCH(P, I) _mm_prefetch(reinterpret_cast<const char*>(P), I)
+    #define PREFETCH(P, RW, I) __builtin_prefetch(reinterpret_cast<const char*>(P), RW, I)
 
     /** @brief Specifies pointer aliasing restrictions to improve optimisation (platform-specific). */
     #define RESTRICT __restrict__
@@ -241,17 +277,7 @@ namespace chdr {
 
 #endif
 
-#endif
-
 #ifndef CHDR_INTRINSTICS_HPP_N_NO_OP
-
-#ifndef _MM_HINT_T0
-    #define _MM_HINT_T0 3
-#endif
-
-#ifndef _MM_HINT_NTA
-    #define _MM_HINT_NTA 0
-#endif
 
     /** @brief Enables vectorised loops (platform-specific). */
     #define IVDEP

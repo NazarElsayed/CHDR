@@ -241,7 +241,7 @@ namespace chdr {
                 throw std::bad_alloc();
             }
 
-            PREFETCH(aligned_ptr, _MM_HINT_T0);
+            PREFETCH(aligned_ptr, 1, 1);
 
 #if CHDR_DIAGNOSTICS == 1
 
