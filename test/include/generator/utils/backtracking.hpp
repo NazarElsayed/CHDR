@@ -31,7 +31,7 @@ namespace test::generator::utils {
 
     private:
 
-        using  neighbour_t = std::pair<bool, coord_t>;
+        using neighbour_t = std::pair<bool, coord_t>;
 
         static constexpr size_t null_v = static_cast<size_t>(-1U);
 
