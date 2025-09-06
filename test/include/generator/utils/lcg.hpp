@@ -18,7 +18,7 @@ namespace test::generator::utils {
 
         static_assert(std::is_integral_v<T>, "Template parameter T must be an integral type");
 
-        using result_type = T;
+        using result_type = std::make_unsigned_t<T>;
 
         result_type state;
 
@@ -31,7 +31,7 @@ namespace test::generator::utils {
             static_cast<result_type>(1442695040888963407ULL);       // MMIX
 
         static constexpr result_type modulus = sizeof(T) == 4U ?
-            static_cast<result_type>(1U << 31U) :                   // ranqd1
+            static_cast<result_type>(1U   << 31U) :                 // ranqd1
             static_cast<result_type>(1ULL << 63ULL);                // MMIX
 
         [[maybe_unused]] constexpr explicit lcg(const result_type& _seed = 0) noexcept :
@@ -41,7 +41,7 @@ namespace test::generator::utils {
             state = _seed < 0 ? -_seed : _seed;
         }
 
-        [[maybe_unused]] constexpr const result_type& operator()() noexcept {
+        [[maybe_unused]] constexpr result_type operator()() noexcept {
             return state = static_cast<result_type>((multiplier * static_cast<std::make_unsigned_t<result_type>>(state) + increment) % modulus);
         }
 
