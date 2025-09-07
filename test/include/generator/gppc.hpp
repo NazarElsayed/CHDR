@@ -58,7 +58,7 @@ namespace test::generator {
         };
 
         template <typename weight_t, typename coord_t, typename scalar_t>
-        static constexpr auto generate(const std::filesystem::path& _map, const std::filesystem::path& _scenarios) {
+        static auto generate(const std::filesystem::path& _map, const std::filesystem::path& _scenarios) {
 
             static_assert(std::is_integral_v<weight_t>, "Type T must be an integral type.");
 
