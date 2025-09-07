@@ -15,8 +15,6 @@
 #include <sys/wait.h>
 #include <filesystem>
 #include <iostream>
-#include <string_view>
-#include <omp.h>
 #include <variant>
 
 #include "generator/gppc.hpp"
@@ -614,7 +612,7 @@ namespace test {
             (void)_argc;
             (void)_argv;
 
-            using weight_t = bool;
+            using weight_t = char;
             using  index_t = uint32_t;
             using scalar_t = uint32_t;
             using  coord_t = chdr::coord<scalar_t, 2U>;
