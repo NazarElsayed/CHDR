@@ -218,7 +218,7 @@ namespace chdr {
     #define CHDR_INTRINSTICS_HPP_N_NO_OP
 
     /** @brief Enables vectorised loops (platform-specific). */
-    #define IVDEP _Pragma("clang loop vectorise(enable)")
+    #define IVDEP _Pragma("clang loop vectorize(enable)")
 
     /** @brief Forces vectorisation of loops (platform-specific). */
     #define VECTOR_ALWAYS
