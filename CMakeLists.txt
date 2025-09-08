@@ -117,7 +117,12 @@ configure_file(README.md.in ${CMAKE_SOURCE_DIR}/README.md)
 message(NOTICE "NOTICE: Building test application:")
 
 # EXTREME WARNINGS:
-set(WARNINGS_BASE "-Wall -Wextra -Wpedantic -Wformat-security -Wconversion -Wsign-conversion -Wimplicit-fallthrough -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Woverloaded-virtual -Wnull-dereference -Wdouble-promotion -Wvla -Wformat=2 -Wmissing-declarations -Wsuggest-override -Wstrict-overflow=5 -Wuninitialized -Wswitch-enum -Wswitch-default -Wcast-qual -Wwrite-strings -Wpointer-arith -Wfloat-equal -Wtrampolines") # -Wbidi-chars=any -Wc++20-extensions
+set(WARNINGS_BASE "-Wall -Wextra -Wpedantic -Wformat-security -Wconversion -Wsign-conversion -Wimplicit-fallthrough -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Woverloaded-virtual -Wnull-dereference -Wdouble-promotion -Wvla -Wformat=2 -Wmissing-declarations -Wsuggest-override -Wstrict-overflow=5 -Wuninitialized -Wswitch-enum -Wswitch-default -Wcast-qual -Wwrite-strings -Wpointer-arith -Wfloat-equal -Wc++20-extensions")
+
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    set(WARNINGS_BASE "${WARNINGS_BASE} -Wtrampolines -Wbidi-chars=any")
+endif ()
+
 
 if (DEFINED SUPER_PEDANTIC)
     message(WARNING "WARNING: \"SUPER_PEDANTIC\" enabled. Build system may catch warnings as errors.")

@@ -27,7 +27,11 @@ namespace test::generator {
     public:
 
         template <typename weight_t, typename index_t, typename coord_t, typename scalar_t>
-        static constexpr auto generate(const coord_t& _start, coord_t& _end, const coord_t& _size, double _obstacles, size_t _iterations = std::numeric_limits<size_t>::max(), size_t _seed = null_v) {
+        static
+#if __cplusplus >= 202300L
+        constexpr
+#endif // __cplusplus >= 202300L
+        auto generate(const coord_t& _start, coord_t& _end, const coord_t& _size, double _obstacles, size_t _iterations = std::numeric_limits<size_t>::max(), size_t _seed = null_v) {
 
             static_assert(std::is_integral_v<weight_t>, "Type T must be an integral type.");
 
