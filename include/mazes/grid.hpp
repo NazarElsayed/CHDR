@@ -803,7 +803,8 @@ namespace chdr::mazes {
          */
         [[nodiscard]] HOT constexpr auto operator[](size_t _id) const {
             assert(contains(_id) && "Out of bounds access.");
-            return weighted_node { m_nodes[_id] };
+            // ReSharper disable once CppTemplateArgumentsCanBeDeduced
+            return weighted_node<bool> { m_nodes[_id] };
         }
 
         using               iterator_t = std::vector<bool>::              iterator;

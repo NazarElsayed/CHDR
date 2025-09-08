@@ -16,7 +16,8 @@ namespace test::generator::utils {
     template <typename T = uint32_t>
     struct [[maybe_unused]] lcg {
 
-        static_assert(std::is_integral_v<T>, "Template parameter T must be an integral type");
+        static_assert(std::is_integral_v<T>, "Template parameter T must be an integral type.");
+        static_assert(std::is_unsigned_v<T>, "Template parameter T must be unsigned.");
 
         using result_type = std::make_unsigned_t<T>;
 
@@ -34,20 +35,21 @@ namespace test::generator::utils {
             static_cast<result_type>(1U   << 31U) :                 // ranqd1
             static_cast<result_type>(1ULL << 63ULL);                // MMIX
 
-        [[maybe_unused]] constexpr explicit lcg(const result_type& _seed = 0) noexcept :
-            state(_seed < 0 ? -_seed : _seed) {}
+        [[maybe_unused]] constexpr explicit lcg(result_type _seed = 0) noexcept :
+            state(_seed) {}
 
-        [[maybe_unused]] constexpr void seed(const result_type& _seed) noexcept {
-            state = _seed < 0 ? -_seed : _seed;
+        [[maybe_unused]] HOT constexpr void seed(result_type _seed) noexcept {
+            state = _seed;
         }
 
-        [[maybe_unused]] constexpr result_type operator()() noexcept {
-            return state = static_cast<result_type>((multiplier * static_cast<std::make_unsigned_t<result_type>>(state) + increment) % modulus);
+        [[maybe_unused]] HOT constexpr result_type operator()() noexcept {
+            state = (multiplier * state + increment) % modulus;
+            return state;
         }
 
-        [[maybe_unused]] static constexpr result_type min() noexcept { return 0; }
+        [[maybe_unused]] HOT static constexpr result_type min() noexcept { return 0; }
 
-        [[maybe_unused]] static constexpr result_type max() noexcept { return modulus - 1; }
+        [[maybe_unused]] HOT static constexpr result_type max() noexcept { return modulus - 1; }
     };
 
 } //test::generator::utils
