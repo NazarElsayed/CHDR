@@ -94,7 +94,7 @@ namespace test::generator::utils {
             const diff_t length = (_last - _first) - 1;
 
             for (diff_t i = length; i > 0; --i) {
-                std::iter_swap(_first + i, _first + static_cast<diff_t>(_rng() % length));
+                std::iter_swap(_first + i, _first + (static_cast<diff_t>(_rng()) % length));
             }
         }
 
@@ -105,9 +105,8 @@ namespace test::generator::utils {
 #endif // defined(__cpp_constexpr_dynamic_alloc) && (__cpp_constexpr_dynamic_alloc >= 201907L)
         void carve_from(const coord_t& _coord, std::pair<coord_t, size_t>& _farthest, const coord_t& _size, container_t& _grid, rng_engine_t& _rng) {
 
-            static_assert(std::is_invocable_v<decltype(static_cast<typename container_t::reference (container_t::*)(size_t)>(&container_t::operator[])),
-                          container_t&, size_t>,
-                          "container_t must implement the subscript operator []");
+            static_assert(std::is_invocable_v<decltype(static_cast<typename container_t::reference (container_t::*)(size_t)>(&container_t::operator[])), container_t&, size_t>,
+                "container_t must implement the subscript operator []");
 
             chdr::stack<std::pair<coord_t, size_t>> stack{};
             stack.emplace(_coord, 0U);
@@ -123,8 +122,8 @@ namespace test::generator::utils {
                 }
 
                 auto dirs = get_directions(currentCoord, _size);
-                std::shuffle(dirs.begin(), dirs.end(), _rng);
-                //constexpr_shuffle(dirs.begin(), dirs.end(), _rng);
+                //std::shuffle(dirs.begin(), dirs.end(), _rng); // Not working correctly on libc++.
+                constexpr_shuffle(dirs.begin(), dirs.end(), _rng);
 
                 bool hasUnvisited = false;
                 for (const auto& [inBounds, dir] : dirs) {
