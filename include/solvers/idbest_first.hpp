@@ -152,7 +152,7 @@ namespace chdr::solvers {
 
                     if (curr.m_hScore <= bound) {
 
-                        if (_.neighbours_idx != _.neighbours.size()) {
+                        if (static_cast<size_t>(_.neighbours_idx) != _.neighbours.size()) {
 
                             if (const auto& n = solver_t::get_data(_.neighbours[(_.neighbours.size() - 1U) - (_.neighbours_idx++)], _params); n.active) {
 

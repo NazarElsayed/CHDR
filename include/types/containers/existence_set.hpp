@@ -86,7 +86,6 @@ namespace chdr {
     template <typename width_t = char>
     class existence_set {
 
-        // Validate the template parameter.
         static_assert(std::is_integral_v<width_t>, "width_t must be an integral type.");
         static_assert(std::is_convertible_v<width_t, bool>, "width_t must be convertible to bool.");
 

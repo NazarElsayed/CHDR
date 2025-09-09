@@ -560,7 +560,7 @@ namespace chdr::solvers {
 
                 size_t i = 0U;
                 for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent)) {
-                    result[(result.size() - 1U) - i] = utils::to_nd(t->m_index, _size);
+                    result[(result.size() - 1U) - i] = utils::to_nd(static_cast<typename coord_t::value_type>(t->m_index), _size);
                     ++i;
                 }
 
@@ -588,7 +588,7 @@ namespace chdr::solvers {
                 std::vector<coord_t> result{};
 
                 for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent)) {
-                    result.emplace_back(utils::to_nd(t->m_index, _size));
+                    result.emplace_back(utils::to_nd(static_cast<typename coord_t::value_type>(t->m_index), _size));
                 }
 
                 return result;
@@ -619,7 +619,7 @@ namespace chdr::solvers {
 
                 size_t i = 0U;
                 for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent)) {
-                    result[(result.size() - 1U) - i] = utils::to_nd(t->m_index, _size);
+                    result[(result.size() - 1U) - i] = utils::to_nd(static_cast<typename coord_t::value_type>(t->m_index), _size);
                     ++i;
                 }
 
@@ -649,7 +649,7 @@ namespace chdr::solvers {
                 std::vector<coord_t> result(_depth);
 
                 for (const auto* RESTRICT t = &_node; t->m_parent != nullptr; t = static_cast<const node_t*>(t->m_parent)) {
-                    result.emplace_back(utils::to_nd(t->m_index, _size));
+                    result.emplace_back(utils::to_nd(static_cast<typename coord_t::value_type>(t->m_index), _size));
                 }
 
                 return result;
@@ -675,7 +675,7 @@ namespace chdr::solvers {
 
                 const auto end = _open.rend();
                 for (auto it = _open.rbegin(); it != end; ++it) {
-                    result.emplace_back(utils::to_nd(it->m_index, _size));
+                    result.emplace_back(utils::to_nd(static_cast<typename coord_t::value_type>(it->m_index), _size));
                 }
 
                 return result;
@@ -701,7 +701,7 @@ namespace chdr::solvers {
 
                 const auto end = _open.end();
                 for (auto it = _open.begin(); it != end; ++it) {
-                    result.emplace_back(utils::to_nd(it->m_index, _size));
+                    result.emplace_back(utils::to_nd(static_cast<typename coord_t::value_type>(it->m_index), _size));
                 }
 
                 return result;

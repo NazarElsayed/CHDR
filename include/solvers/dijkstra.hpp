@@ -127,7 +127,7 @@ namespace chdr::solvers {
             // ReSharper disable once CppRedundantQualifier
             chdr::monotonic_pool<> m_resource;
 
-            std::pmr::unordered_map<size_t, node> m_data;
+            std::pmr::unordered_map<index_t, node> m_data;
 
         public:
 
@@ -144,7 +144,7 @@ namespace chdr::solvers {
 
                 std::vector<coord_t> result;
 
-                if (const auto search = m_data.find(utils::to_1d(_coord, m_size)); search != m_data.end()) {
+                if (const auto search = m_data.find(static_cast<index_t>(utils::to_1d(_coord, m_size))); search != m_data.end()) {
 
                     result.emplace_back(_coord);
 

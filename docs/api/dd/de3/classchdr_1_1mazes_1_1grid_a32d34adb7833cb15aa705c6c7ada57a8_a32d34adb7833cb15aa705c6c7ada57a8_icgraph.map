@@ -1,9 +1,9 @@
 <map id="size" name="size">
-<area shape="rect" id="Node000001" title="Retrieves the size of the grid." alt="" coords="317,52,357,75"/>
-<area shape="rect" id="Node000002" href="$d9/dcb/classchdr_1_1mazes_1_1graph_a5ca1351a03df5ff49f85cc4b5669cefc.html#a5ca1351a03df5ff49f85cc4b5669cefc" title="Constructs a graph instance from a grid structure." alt="" coords="63,5,211,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="304,53,269,42,211,30,212,24,270,37,305,48"/>
-<area shape="rect" id="Node000003" href="$dd/de3/classchdr_1_1mazes_1_1grid_ad242ff0ed9416b32cc9de01ef6ea09cf.html#ad242ff0ed9416b32cc9de01ef6ea09cf" title="Retrieves the neighbours of a node within the grid." alt="" coords="89,52,185,75"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="304,66,186,66,186,61,304,61"/>
-<area shape="rect" id="Node000004" href="$de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_ad242ff0ed9416b32cc9de01ef6ea09cf.html#ad242ff0ed9416b32cc9de01ef6ea09cf" title="Retrieves the neighbours of a node within the grid." alt="" coords="5,99,269,121"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="305,78,270,89,212,101,211,96,269,83,303,73"/>
+<area shape="rect" id="Node000001" title="Retrieves the size of the grid." alt="" coords="360,52,404,75"/>
+<area shape="rect" id="Node000002" href="$d9/dcb/classchdr_1_1mazes_1_1graph_a5ca1351a03df5ff49f85cc4b5669cefc.html#a5ca1351a03df5ff49f85cc4b5669cefc" title="Constructs a graph instance from a grid structure." alt="" coords="73,5,244,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="346,53,311,42,244,29,245,24,313,37,348,48"/>
+<area shape="rect" id="Node000003" href="$dd/de3/classchdr_1_1mazes_1_1grid_a687d32619ba5c3eea0a9ab1ac599ffb8.html#a687d32619ba5c3eea0a9ab1ac599ffb8" title="Retrieves the neighbours of a node within the grid." alt="" coords="105,52,212,75"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="346,66,212,66,212,61,346,61"/>
+<area shape="rect" id="Node000004" href="$de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_a687d32619ba5c3eea0a9ab1ac599ffb8.html#a687d32619ba5c3eea0a9ab1ac599ffb8" title="Retrieves the neighbours of a node within the grid." alt="" coords="5,99,312,121"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="348,78,313,89,248,101,247,96,311,83,346,73"/>
 </map>

@@ -173,10 +173,10 @@ namespace chdr::solvers {
                     _closed = closed_set_t{};
 
                     if constexpr (params_t::reverse_equivalence::value) {
-                        return solver_t::solver_utils::rbacktrack(curr, _params.size, curr.m_gScore);
+                        return solver_t::solver_utils::rbacktrack(curr, _params.size, static_cast<size_t>(curr.m_gScore));
                     }
                     else {
-                        return solver_t::solver_utils::rbacktrack_noreverse(curr, _params.size, curr.m_gScore);
+                        return solver_t::solver_utils::rbacktrack_noreverse(curr, _params.size, static_cast<size_t>(curr.m_gScore));
                     }
                 }
             }

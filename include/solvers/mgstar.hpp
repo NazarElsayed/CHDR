@@ -293,10 +293,10 @@ namespace chdr::solvers {
             if (best_solution.has_value()) {
 
                 if constexpr (params_t::reverse_equivalence::value) {
-                    return solver_t::solver_utils::rbacktrack(best_solution.value(), _params.size, best_solution->m_gScore);
+                    return solver_t::solver_utils::rbacktrack(best_solution.value(), _params.size, static_cast<size_t>(best_solution->m_gScore));
                 }
                 else {
-                    return solver_t::solver_utils::rbacktrack_noreverse(best_solution.value(), _params.size, best_solution->m_gScore);
+                    return solver_t::solver_utils::rbacktrack_noreverse(best_solution.value(), _params.size, static_cast<size_t>(best_solution->m_gScore));
                 }
             }
             else {

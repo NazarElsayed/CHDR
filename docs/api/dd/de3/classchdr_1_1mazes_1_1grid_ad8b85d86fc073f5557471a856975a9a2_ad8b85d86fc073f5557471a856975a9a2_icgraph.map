@@ -1,4 +1,10 @@
 <map id="operator[]" name="operator[]">
-<area shape="rect" id="Node000001" title="Retrieves the node at a specified coordinate." alt="" coords="5,29,75,52"/>
-<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="50,17,47,10,40,8,34,10,31,14,32,29,27,29,25,12,31,5,40,3,51,6,55,14"/>
+<area shape="rect" id="Node000001" title="Retrieves the node at a specified coordinate." alt="" coords="329,52,407,75"/>
+<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="408,42,405,38,399,34,368,31,344,33,331,37,329,43,337,50,333,54,324,44,327,34,342,28,368,25,400,29,409,34,412,40"/>
+<area shape="rect" id="Node000002" href="$de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_a7d575542c2bf3cf37dfbebf1d56a7bc9.html#a7d575542c2bf3cf37dfbebf1d56a7bc9" title="Retrieves the node at a specified coordinate." alt="" coords="5,5,281,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="316,51,281,42,222,31,223,25,282,37,317,46"/>
+<area shape="rect" id="Node000003" href="$dd/de3/classchdr_1_1mazes_1_1grid_a0804aafbf4991cf2d51f4aba926792a3.html#a0804aafbf4991cf2d51f4aba926792a3" title="Retrieves the node at a specified index." alt="" coords="105,52,182,75"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="315,66,182,66,182,61,315,61"/>
+<area shape="rect" id="Node000004" href="$de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_afd69e166d5e3ad92fcc4f685b73cee3c.html#afd69e166d5e3ad92fcc4f685b73cee3c" title="Retrieves the node at a specified index." alt="" coords="5,99,281,121"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="317,80,282,89,217,101,216,96,281,83,315,75"/>
 </map>

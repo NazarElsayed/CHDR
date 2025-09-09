@@ -76,7 +76,7 @@ namespace test {
             auto result = EXIT_FAILURE;
 
             using scalar_t = uint32_t;
-            using  index_t = uint32_t;
+            using  index_t = typename coord_t::value_type;
 
             /* GENERATE MAZE */
             constexpr size_t seed { 0U };
@@ -85,7 +85,7 @@ namespace test {
                   coord_t end;
 
             for (size_t i = 0U; i < _size.size(); ++i) {
-                end[i] = _size[i] - 1U;
+                end[i] = _size[i] - static_cast<typename coord_t::value_type>(1U);
             }
 
             // Empty grid:
@@ -203,10 +203,10 @@ namespace test {
 
             using index_t = uint32_t;
 
-                 // if (static_cast<size_t>(_argc - 1) == X) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 1U> { static_cast<index_t>(std::stoul(_argv[X])) }); }
-            if (static_cast<size_t>(_argc - 1) == Y) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 2U> { static_cast<index_t>(std::stoul(_argv[X])), static_cast<index_t>(std::stoul(_argv[Y])) }); }
-            // else if (static_cast<size_t>(_argc - 1) == Z) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 3U> { static_cast<index_t>(std::stoul(_argv[X])), static_cast<index_t>(std::stoul(_argv[Y])), static_cast<index_t>(std::stoul(_argv[Z])) }); }
-            // else if (static_cast<size_t>(_argc - 1) == W) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 4U> { static_cast<index_t>(std::stoul(_argv[X])), static_cast<index_t>(std::stoul(_argv[Y])), static_cast<index_t>(std::stoul(_argv[Z])), static_cast<index_t>(std::stoul(_argv[W])) }); }
+                 if (static_cast<size_t>(_argc - 1) == X) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 1U> { static_cast<index_t>(std::stoul(_argv[X])) }); }
+            else if (static_cast<size_t>(_argc - 1) == Y) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 2U> { static_cast<index_t>(std::stoul(_argv[X])), static_cast<index_t>(std::stoul(_argv[Y])) }); }
+            else if (static_cast<size_t>(_argc - 1) == Z) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 3U> { static_cast<index_t>(std::stoul(_argv[X])), static_cast<index_t>(std::stoul(_argv[Y])), static_cast<index_t>(std::stoul(_argv[Z])) }); }
+            else if (static_cast<size_t>(_argc - 1) == W) { result = deduce_weight(_argc, _argv, chdr::coord<index_t, 4U> { static_cast<index_t>(std::stoul(_argv[X])), static_cast<index_t>(std::stoul(_argv[Y])), static_cast<index_t>(std::stoul(_argv[Z])), static_cast<index_t>(std::stoul(_argv[W])) }); }
             else {
                 debug::log("ERROR: Invalid Dimensionality!", error);
             }

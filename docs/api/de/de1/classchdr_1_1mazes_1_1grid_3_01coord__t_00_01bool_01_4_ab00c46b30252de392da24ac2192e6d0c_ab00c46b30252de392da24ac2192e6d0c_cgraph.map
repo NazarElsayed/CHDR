@@ -1,5 +1,5 @@
 <map id="contains" name="contains">
-<area shape="rect" id="Node000001" title="Determines whether the given identifier is within the bounds of the grid." alt="" coords="5,5,67,28"/>
-<area shape="rect" id="Node000002" href="$dd/de3/classchdr_1_1mazes_1_1grid_ad6077e456dd6abb62d82087b55dc2331.html#ad6077e456dd6abb62d82087b55dc2331" title="Retrieves the total count of elements in the grid." alt="" coords="115,5,251,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="67,14,101,14,101,19,67,19"/>
+<area shape="rect" id="Node000001" title="Retrieves the node at a specified index." alt="" coords="5,5,75,28"/>
+<area shape="rect" id="Node000002" href="$dd/de3/classchdr_1_1mazes_1_1grid_ad6077e456dd6abb62d82087b55dc2331.html#ad6077e456dd6abb62d82087b55dc2331" title="Retrieves the total count of elements in the grid." alt="" coords="123,5,281,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="75,14,108,14,108,19,75,19"/>
 </map>

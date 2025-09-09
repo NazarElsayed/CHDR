@@ -96,8 +96,8 @@ namespace test {
             }
 
             if constexpr (std::is_base_of_v<chdr::mazes::grid<typename params_t::coord_type, typename params_t::weight_type>, std::decay_t<decltype(_params.maze)>>) {
-                if (_params.maze.size()[0U] <= 100U &&
-                    _params.maze.size()[1U] <= 100U &&
+                if (_params.maze.size()[0U] <= static_cast<typename params_t::coord_type::value_type>(100U) &&
+                    _params.maze.size()[1U] <= static_cast<typename params_t::coord_type::value_type>(100U) &&
                     Kd > 0U &&
                     Kd < 3U
                 ) {

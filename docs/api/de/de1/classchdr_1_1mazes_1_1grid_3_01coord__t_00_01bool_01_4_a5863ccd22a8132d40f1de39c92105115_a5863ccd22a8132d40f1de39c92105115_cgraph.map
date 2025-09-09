@@ -1,5 +1,5 @@
 <map id="operator[]" name="operator[]">
-<area shape="rect" id="Node000001" title="Retrieves the node at a specified index." alt="" coords="5,5,75,28"/>
-<area shape="rect" id="Node000002" href="$dd/de3/classchdr_1_1mazes_1_1grid_a46e18201c09becda23eeaa0290ff1a21.html#a46e18201c09becda23eeaa0290ff1a21" title="Determines whether the provided coordinate is within the bounds of the grid." alt="" coords="123,5,272,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="75,14,109,14,109,19,75,19"/>
+<area shape="rect" id="Node000001" title="Retrieves the node at a specified index." alt="" coords="5,5,83,28"/>
+<area shape="rect" id="Node000002" href="$dd/de3/classchdr_1_1mazes_1_1grid_a46e18201c09becda23eeaa0290ff1a21.html#a46e18201c09becda23eeaa0290ff1a21" title="Determines whether the provided coordinate is within the bounds of the grid." alt="" coords="131,5,305,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,14,117,14,117,19,83,19"/>
 </map>

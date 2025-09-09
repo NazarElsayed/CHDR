@@ -36,11 +36,11 @@ namespace test::generator::utils {
         static constexpr size_t null_v = static_cast<size_t>(-1U);
 
         static constexpr bool valid_dimensionality(const coord_t& _size) {
-            return std::all_of(_size.begin(), _size.end(), [](const auto _item) { return _item != 0U; });
+            return std::all_of(_size.begin(), _size.end(), [](const auto _item) { return _item != static_cast<typename coord_t::value_type>(0U); });
         }
 
         static constexpr bool is_link(const coord_t& _coord) {
-            return std::any_of(_coord.begin(), _coord.end(), [](const auto _item) { return _item % 2U == 0U; });
+            return std::any_of(_coord.begin(), _coord.end(), [](const auto _item) { return _item % static_cast<typename coord_t::value_type>(2U) == static_cast<typename coord_t::value_type>(0U); });
         }
 
         static constexpr bool is_edge(const coord_t& _coord, const coord_t& _size) {
@@ -48,7 +48,7 @@ namespace test::generator::utils {
             bool result = false;
 
             for (size_t k = 0U; k < Kd; ++k) {
-                if (_coord[k] >= _size[k] - 1U) {
+                if (_coord[k] >= _size[k] - static_cast<typename coord_t::value_type>(1U)) {
                     result = true;
                     break;
                 }
@@ -114,7 +114,7 @@ namespace test::generator::utils {
             while (!stack.empty()) {
 
                 auto& [currentCoord, depth] = stack.top();
-                _grid[chdr::utils::to_1d(currentCoord, _size)] = PATH;
+                _grid[static_cast<typename container_t::size_type>(chdr::utils::to_1d(currentCoord, _size))] = PATH;
 
                 if (depth > _farthest.second) {
                     _farthest.first = currentCoord;
@@ -136,8 +136,8 @@ namespace test::generator::utils {
                         bool validCellNeighbor = true;
                         for (size_t j = 0U; j < Kd; ++j) {
 
-                            lc[j] +=      dir[j];
-                            cc[j] += 2U * dir[j];
+                            lc[j] +=                                        dir[j];
+                            cc[j] += static_cast<typename coord_t::value_type>(2U) * dir[j];
 
                             if (cc[j] >= _size[j]) {
                                 validCellNeighbor = false;
@@ -145,9 +145,9 @@ namespace test::generator::utils {
                             }
                         }
 
-                        if (validCellNeighbor && _grid[chdr::utils::to_1d(cc, _size)] == WALL) {
+                        if (validCellNeighbor && _grid[static_cast<typename container_t::size_type>(chdr::utils::to_1d(cc, _size))] == WALL) {
 
-                            _grid[chdr::utils::to_1d(lc, _size)] = PATH;
+                            _grid[static_cast<typename container_t::size_type>(chdr::utils::to_1d(lc, _size))] = PATH;
                             stack.emplace(cc, depth + 1U);
                             hasUnvisited = true;
                             break;
