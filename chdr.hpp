@@ -22,7 +22,7 @@
  */
 
 /** @brief Full version string of the CHDR library. */
-#define CHDR_VERSION          "0.1.0-dev+a350c64e"
+#define CHDR_VERSION          "0.1.0-dev+2128ed87"
 
 /** @brief CHDR major version number. */
 #define CHDR_VERSION_MAJOR     0
@@ -37,7 +37,7 @@
 #define CHDR_VERSION_TWEAK    "dev"
 
 /** @brief CHDR version metadata string. */
-#define CHDR_VERSION_METADATA "a350c64e"
+#define CHDR_VERSION_METADATA "2128ed87"
 
 /** @brief Flag indicating whether or not diagnostics should be output by the library (0 = off, 1 = on). */
 #ifndef CHDR_DIAGNOSTICS

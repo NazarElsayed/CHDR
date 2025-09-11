@@ -117,7 +117,7 @@ namespace test::generator::utils {
                 _grid[static_cast<typename container_t::size_type>(chdr::utils::to_1d(currentCoord, _size))] = PATH;
 
                 if (depth > _farthest.second) {
-                    _farthest.first = currentCoord;
+                    _farthest.first  = currentCoord;
                     _farthest.second = depth;
                 }
 

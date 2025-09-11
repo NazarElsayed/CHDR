@@ -879,13 +879,13 @@ namespace chdr::solvers {
              */
 
             try {
+
                 const auto s = static_cast<typename params_t::index_type>(utils::to_1d(_params.start, _params.size));
                 const auto e = static_cast<typename params_t::index_type>(utils::to_1d(_params.end,   _params.size));
 
                 if (_params.maze.contains(s) && _params.maze[s].is_active() &&
                     _params.maze.contains(e) && _params.maze[e].is_active()
                 ) {
-
                     result = s != e ?
                         solver_t<params_t>::invoke(_params) :
                         std::vector<typename params_t::coord_type> { _params.end };

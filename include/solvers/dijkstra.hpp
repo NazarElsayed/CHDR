@@ -43,7 +43,7 @@ namespace chdr::solvers {
      *          It is a "single-source, multiple-target" (SSMT) algorithm, providing a technique for resolving
      *          the shortest path between one source and every other node in a graph.\n\n
      *
-     * @warning This implementation of Dijkstra's algorithm is not yet finished.
+     * @warning Please note that the current implementation of Dijkstra's algorithm only supports undirected topologies. Support for directed topologies is planned.
      *
      * Advantages:
      * - Guarantees the lowest-cost path in graphs with non-negative edge weights.
