@@ -78,7 +78,7 @@ namespace chdr::solvers {
 
         struct node final : bnode<index_t> {
 
-            index_t m_depth;
+            size_t m_depth;
 
             /**
              * @brief Constructs an uninitialized node.
@@ -86,7 +86,7 @@ namespace chdr::solvers {
             // ReSharper disable once CppPossiblyUninitializedMember
             [[nodiscard]] constexpr node() noexcept : bnode<index_t>() {} // NOLINT(*-pro-type-member-init, *-use-equals-default)
 
-            [[nodiscard]] constexpr node(index_t _index, index_t _depth) noexcept : bnode<index_t>(_index),
+            [[nodiscard]] constexpr node(index_t _index, size_t _depth) noexcept : bnode<index_t>(_index),
                 m_depth(_depth) {}
 
             [[nodiscard]] HOT friend constexpr bool operator < (const node& _a, const node& _b) noexcept {
@@ -97,8 +97,8 @@ namespace chdr::solvers {
         template <typename neighbours_t>
         struct state final {
 
-            neighbours_t neighbours;
-            index_t      neighbours_idx;
+                     neighbours_t            neighbours;
+            typename neighbours_t::size_type neighbours_idx;
 
             [[nodiscard]] state(const node& _curr, const params_t& _params) :
                 neighbours(_params.maze.get_neighbours(_curr.m_index)),
@@ -139,7 +139,7 @@ namespace chdr::solvers {
                     auto& _    = stack.top();
                     auto& curr = _open.back();
 
-                    if (curr.m_depth <= bound && _.neighbours_idx != _.neighbours.size()) {
+                    if (curr.m_depth <= bound && static_cast<size_t>(_.neighbours_idx) != _.neighbours.size()) {
 
                         if (const auto& n = solver_t::get_data(_.neighbours[(_.neighbours.size() - 1U) - (_.neighbours_idx++)], _params); n.active) {
 
@@ -165,7 +165,7 @@ namespace chdr::solvers {
                             _open.pop_back();
                         }
                         stack.pop();
-                        _closed.emplace(curr.m_index);
+                        _closed.erase(curr.m_index);
                     }
                 }
 

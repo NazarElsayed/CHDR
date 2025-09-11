@@ -255,8 +255,10 @@ namespace chdr::mazes {
          *
          * @warning In the resulting array of pairs, if a node is inactive, its corresponding coordinate is invalid and should be used.
          */
-        template<bool IncludeDiagonals = false>
-        [[nodiscard]] HOT constexpr auto get_neighbours(size_t _id) const noexcept {
+        template <bool IncludeDiagonals = false>
+        [[nodiscard]] HOT constexpr auto get_neighbours(typename coord_t::value_type _id) const noexcept {
+
+            static_assert(std::is_convertible_v<typename coord_t::value_type, size_t>, "coord_t::value_type must be convertible to size_t");
 
             using element_t = typename std::decay_t<decltype(std::declval<coord_t>()[0U])>;
 
@@ -309,7 +311,28 @@ namespace chdr::mazes {
          * @return `true` if the identifier is within the valid range; otherwise, `false`.
          * @see count()
          */
-        [[nodiscard]] constexpr bool contains(size_t _id) const noexcept { return _id < count(); }
+        template <typename T = typename coord_t::value_type, typename = std::enable_if_t<!std::is_same_v<T, size_t>>>
+        [[nodiscard]] constexpr bool contains(T _id) const noexcept {
+            static_assert(std::is_convertible_v<T, size_t>, "coord_t::value_type must be convertible to size_t");
+
+            return static_cast<size_t>(_id) < count();
+        }
+
+        /**
+         * @brief Determines whether the given identifier is within the bounds of the grid.
+         *
+         * @details Checks if the provided identifier is less than the total count of nodes,
+         *          thus confirming its validity within the bounds of the grid.
+         *
+         * @param _id The identifier to be checked.
+         * @return `true` if the identifier is within the valid range; otherwise, `false`.
+         * @see count()
+         */
+        [[nodiscard]] constexpr bool contains(size_t _id) const noexcept {
+            static_assert(std::is_convertible_v<typename coord_t::value_type, size_t>, "coord_t::value_type must be convertible to size_t");
+
+            return _id < count();
+        }
 
         /**
          * @brief Determines whether a cell at the given index is transitory.
@@ -373,7 +396,25 @@ namespace chdr::mazes {
          * @see operator[]()
          */
         [[nodiscard]] constexpr auto& operator[](const coord_t& _id) const noexcept {
-            return operator[](utils::to_1d(_id, m_size));
+            static_assert(std::is_convertible_v<typename coord_t::value_type, size_t>, "coord_t::value_type must be convertible to size_t");
+
+            return operator[](static_cast<size_t>(utils::to_1d(_id, m_size)));
+        }
+
+        /**
+         * @brief Retrieves the node at a specified index.
+         * @param _id Coordinate of the node to retrieve.
+         * @pre `_id` must reference a valid node, which exists in the grid.
+         * @warning If the specified coordinate is out of bounds, calling this function is undefined behaviour.
+         * @return Node at a specified coordinate within the grid.
+         * @see contains()
+         * @see operator[]()
+         */
+        template <typename T = typename coord_t::value_type, typename = std::enable_if_t<!std::is_same_v<T, size_t>>>
+        [[nodiscard]] constexpr auto& operator[](T _id) const noexcept {
+            static_assert(std::is_convertible_v<T, size_t>, "coord_t::value_type must be convertible to size_t");
+
+            return operator[](static_cast<size_t>(_id));
         }
 
         /**
@@ -437,7 +478,7 @@ namespace chdr::mazes {
             coord_t coord = _id;
 
             for (size_t i = 0U; i < s_rank; ++i) {
-                coord[i] += (direction[i] - 1U);
+                coord[i] += (direction[i] - static_cast<typename coord_t::value_type>(1U));
 
                 if (coord[i] >= m_size[i]) {
                     oob = true;
@@ -460,8 +501,8 @@ namespace chdr::mazes {
             --nCoord[Index];
             ++pCoord[Index];
 
-            _negative = { _id[Index] > 0U                 && operator[](nCoord).is_active(), nCoord };
-            _positive = { _id[Index] < m_size[Index] - 1U && operator[](pCoord).is_active(), pCoord };
+            _negative = { _id[Index] >                 static_cast<typename coord_t::value_type>(0U) && operator[](nCoord).is_active(), nCoord };
+            _positive = { _id[Index] < m_size[Index] - static_cast<typename coord_t::value_type>(1U) && operator[](pCoord).is_active(), pCoord };
         }
     };
 
@@ -676,7 +717,9 @@ namespace chdr::mazes {
          * @warning In the resulting array of pairs, if a node is inactive, its corresponding coordinate is invalid and should be used.
          */
         template <bool IncludeDiagonals = false>
-        [[nodiscard]] HOT constexpr auto get_neighbours(size_t _id) const noexcept {
+        [[nodiscard]] HOT constexpr auto get_neighbours(typename coord_t::value_type _id) const noexcept {
+
+            static_assert(std::is_convertible_v<typename coord_t::value_type, size_t>, "coord_t::value_type must be convertible to size_t");
 
             using element_t = typename std::decay_t<decltype(std::declval<coord_t>()[0U])>;
 
@@ -729,7 +772,27 @@ namespace chdr::mazes {
          * @return `true` if the identifier is within the valid range; otherwise, `false`.
          * @see count()
          */
-        [[nodiscard]] constexpr bool contains(size_t _id) const noexcept { return _id < count(); }
+        template <typename T = typename coord_t::value_type, typename = std::enable_if_t<!std::is_same_v<T, size_t>>>
+        [[nodiscard]] constexpr bool contains(T _id) const noexcept {
+            static_assert(std::is_convertible_v<T, size_t>, "coord_t::value_type must be convertible to size_t");
+
+            return static_cast<size_t>(_id) < count();
+        }
+
+        /**
+         * @brief Retrieves the node at a specified index.
+         * @param _id Coordinate of the node to retrieve.
+         * @pre `_id` must reference a valid node, which exists in the grid.
+         * @warning If the specified coordinate is out of bounds, calling this function is undefined behaviour.
+         * @return Node at a specified coordinate within the grid.
+         * @see contains()
+         * @see operator[]()
+         */
+        [[nodiscard]] constexpr bool contains(size_t _id) const noexcept {
+            static_assert(std::is_convertible_v<typename coord_t::value_type, size_t>, "coord_t::value_type must be convertible to size_t");
+
+            return _id < count();
+        }
 
         /**
          * @brief Determines whether a cell at the given index is transitory.
@@ -790,7 +853,27 @@ namespace chdr::mazes {
          * @see contains()
          * @see operator[]()
          */
-        [[nodiscard]] constexpr auto operator[](const coord_t& _id) const { return operator[](utils::to_1d(_id, m_size)); }
+        [[nodiscard]] constexpr auto operator[](const coord_t& _id) const {
+            static_assert(std::is_convertible_v<typename coord_t::value_type, size_t>, "coord_t::value_type must be convertible to size_t");
+
+            return operator[](static_cast<size_t>(utils::to_1d(_id, m_size)));
+        }
+
+        /**
+         * @brief Retrieves the node at a specified index.
+         * @param _id Coordinate of the node to retrieve.
+         * @pre `_id` must reference a valid node, which exists in the grid.
+         * @warning If the specified coordinate is out of bounds, calling this function is undefined behaviour.
+         * @return Node at a specified coordinate within the grid.
+         * @see contains()
+         * @see operator[]()
+         */
+        template <typename T = typename coord_t::value_type, typename = std::enable_if_t<!std::is_same_v<T, size_t>>>
+        [[nodiscard]] constexpr auto operator[](T _id) const noexcept {
+            static_assert(std::is_convertible_v<T, size_t>, "coord_t::value_type must be convertible to size_t");
+
+            return operator[](static_cast<size_t>(_id));
+        }
 
         /**
          * @brief Retrieves the node at a specified index.
@@ -854,7 +937,7 @@ namespace chdr::mazes {
             coord_t coord = _id;
 
             for (size_t i = 0U; i < s_rank; ++i) {
-                coord[i] += (direction[i] - 1U);
+                coord[i] += (direction[i] - static_cast<typename coord_t::value_type>(1U));
 
                 if (coord[i] >= m_size[i]) {
                     oob = true;
@@ -877,8 +960,8 @@ namespace chdr::mazes {
             --nCoord[Index];
             ++pCoord[Index];
 
-            _negative = { _id[Index] > 0U                 && operator[](utils::to_1d(nCoord, m_size)).is_active(), nCoord };
-            _positive = { _id[Index] < m_size[Index] - 1U && operator[](utils::to_1d(pCoord, m_size)).is_active(), pCoord };
+            _negative = { _id[Index] >                 static_cast<typename coord_t::value_type>(0U) && operator[](utils::to_1d(nCoord, m_size)).is_active(), nCoord };
+            _positive = { _id[Index] < m_size[Index] - static_cast<typename coord_t::value_type>(1U) && operator[](utils::to_1d(pCoord, m_size)).is_active(), pCoord };
         }
     };
 

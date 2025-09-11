@@ -106,8 +106,8 @@ namespace chdr::solvers {
 
             node curr;
 
-            neighbours_t neighbours;
-            index_t      neighbours_idx;
+                     neighbours_t            neighbours;
+            typename neighbours_t::size_type neighbours_idx;
 
             [[nodiscard]] state(node& _curr, const params_t& _params) :
                 curr(_curr.m_index, _curr.m_gScore, _curr.m_fScore),
@@ -163,7 +163,7 @@ namespace chdr::solvers {
 
                     if (curr.m_fScore <= bound) {
 
-                        if (_.neighbours_idx != _.neighbours.size()) {
+                        if (static_cast<size_t>(_.neighbours_idx) != _.neighbours.size()) {
 
                             if (const auto& n = solver_t::get_data(_.neighbours[(_.neighbours.size() - 1U) - (_.neighbours_idx++)], _params); n.active) {
 

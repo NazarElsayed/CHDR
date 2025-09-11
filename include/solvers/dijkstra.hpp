@@ -43,7 +43,7 @@ namespace chdr::solvers {
      *          It is a "single-source, multiple-target" (SSMT) algorithm, providing a technique for resolving
      *          the shortest path between one source and every other node in a graph.\n\n
      *
-     * @warning This implementation of Dijkstra's algorithm is not yet finished.
+     * @warning Please note that the current implementation of Dijkstra's algorithm only supports undirected topologies. Support for directed topologies is planned.
      *
      * Advantages:
      * - Guarantees the lowest-cost path in graphs with non-negative edge weights.
@@ -127,7 +127,7 @@ namespace chdr::solvers {
             // ReSharper disable once CppRedundantQualifier
             chdr::monotonic_pool<> m_resource;
 
-            std::pmr::unordered_map<size_t, node> m_data;
+            std::pmr::unordered_map<index_t, node> m_data;
 
         public:
 
@@ -144,7 +144,7 @@ namespace chdr::solvers {
 
                 std::vector<coord_t> result;
 
-                if (const auto search = m_data.find(utils::to_1d(_coord, m_size)); search != m_data.end()) {
+                if (const auto search = m_data.find(static_cast<index_t>(utils::to_1d(_coord, m_size))); search != m_data.end()) {
 
                     result.emplace_back(_coord);
 

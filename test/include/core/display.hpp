@@ -112,8 +112,8 @@ namespace test {
             SetConsoleOutputCP(CP_UTF8);
 #endif
 
-            const auto s = chdr::utils::to_1d(_start, _maze.size());
-            const auto e = chdr::utils::to_1d(_end,   _maze.size());
+            const auto s = static_cast<size_t>(chdr::utils::to_1d(_start, _maze.size()));
+            const auto e = static_cast<size_t>(chdr::utils::to_1d(_end,   _maze.size()));
 
             chdr::existence_set path_set(_path.size());
 
@@ -121,11 +121,13 @@ namespace test {
                 path_set.push(chdr::utils::to_1d(item, _maze.size()));
             }
 
-            const bool even_width = _maze.size()[0U] % 2U == 0U;
+            const auto width = static_cast<size_t>(_maze.size()[0U]);
+
+            const bool even_width = width % 2U == 0U;
 
             // Add an upper boundary:
             {
-                const auto columns = _maze.size()[0U] + (even_width ? 1U : 2U);
+                const auto columns = width + (even_width ? 1U : 2U);
 
                 for (size_t i = 0U; i < columns; ++i) {
                     std::cout << s_wall_str;
@@ -136,7 +138,7 @@ namespace test {
             size_t i = 0U;
             for (auto node : _maze) {
 
-                if (i % _maze.size()[0U] == 0U) { std::cout << s_wall_str; }
+                if (i % width == 0U) { std::cout << s_wall_str; }
 
                 if      (i == s) { std::cout << s_start_str; }
                 else if (i == e) { std::cout << s_end_str; }
@@ -165,7 +167,7 @@ namespace test {
                     }
 
                     // Handle end of line:
-                    if ([[maybe_unused]] const bool end_of_line = (_maze.s_rank == 1U && i == _maze.size()[0U] - 1U) || (i + 1U) % _maze.size()[0U] == 0U) {
+                    if ([[maybe_unused]] const bool end_of_line = (_maze.s_rank == 1U && i == width - 1U) || (i + 1U) % width == 0U) {
                         if (!even_width) {
                             std::cout << s_wall_str;
                         }
@@ -177,11 +179,12 @@ namespace test {
 
             // Handle the addition of a lower boundary:
             {
-                if (const bool even_height = _maze.s_rank > 1U && _maze.size()[1U] % 2U == 0U;
+
+                if (const bool even_height = _maze.s_rank > 1U && static_cast<size_t>(_maze.size()[1U]) % 2U == 0U;
                     !even_height
                 ) {
 
-                    const auto columns = _maze.size()[0U] + (even_width ? 1U : 2U);
+                    const auto columns = width + (even_width ? 1U : 2U);
                     for (size_t j = 0U; j < columns; ++j) {
                         std::cout << s_wall_str;
                     }

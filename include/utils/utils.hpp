@@ -94,7 +94,7 @@ namespace chdr {
             T result{1};
 
             for (size_t i = 0U; i < Kd; ++i) {
-                result = overflow_safe_multiply<T>(result, _coord[i]);
+                result = overflow_safe_multiply<T>(result, static_cast<T>(_coord[i]));
             }
 
             return result;

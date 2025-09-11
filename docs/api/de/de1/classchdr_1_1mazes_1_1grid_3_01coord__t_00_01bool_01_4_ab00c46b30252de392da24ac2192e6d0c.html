@@ -104,7 +104,7 @@ $(document).ready(function(){initNavTree('de/de1/classchdr_1_1mazes_1_1grid_3_01
 
 <div class="contents">
 <a id="ab00c46b30252de392da24ac2192e6d0c" name="ab00c46b30252de392da24ac2192e6d0c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab00c46b30252de392da24ac2192e6d0c">&#9670;&#160;</a></span>contains() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ab00c46b30252de392da24ac2192e6d0c">&#9670;&#160;</a></span>contains() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -129,24 +129,27 @@ template&lt;typename coord_t &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Determines whether the given identifier is within the bounds of the grid. </p>
-<p>Checks if the provided identifier is less than the total count of nodes, thus confirming its validity within the bounds of the grid.</p>
+<p>Retrieves the node at a specified index. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">_id</td><td>The identifier to be checked. </td></tr>
+    <tr><td class="paramname">_id</td><td>Coordinate of the node to retrieve. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>true</code> if the identifier is within the valid range; otherwise, <code>false</code>. </dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="../../de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_ad6077e456dd6abb62d82087b55dc2331.html#ad6077e456dd6abb62d82087b55dc2331" title="Retrieves the total count of elements in the grid.">count()</a> </dd></dl>
+<dl class="section pre"><dt>Precondition</dt><dd><code>_id</code> must reference a valid node, which exists in the grid. </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>If the specified coordinate is out of bounds, calling this function is undefined behaviour. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Node at a specified coordinate within the grid. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="../../de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_a46e18201c09becda23eeaa0290ff1a21.html#a46e18201c09becda23eeaa0290ff1a21" title="Determines whether the provided coordinate is within the bounds of the grid.">contains()</a> </dd>
+<dd>
+<a class="el" href="../../de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_a7d575542c2bf3cf37dfbebf1d56a7bc9.html#a7d575542c2bf3cf37dfbebf1d56a7bc9" title="Retrieves the node at a specified coordinate.">operator[]()</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/d8a/grid_8hpp_source.html#l00732">732</a> of file <a class="el" href="../../dc/d8a/grid_8hpp_source.html">grid.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/d8a/grid_8hpp_source.html#l00791">791</a> of file <a class="el" href="../../dc/d8a/grid_8hpp_source.html">grid.hpp</a>.</p>
 <div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_ab00c46b30252de392da24ac2192e6d0c_ab00c46b30252de392da24ac2192e6d0c_cgraph.svg" width="256" height="34"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_ab00c46b30252de392da24ac2192e6d0c_ab00c46b30252de392da24ac2192e6d0c_cgraph.svg" width="287" height="34"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
