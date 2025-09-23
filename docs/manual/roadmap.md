@@ -23,7 +23,7 @@
 | Iterative-Deepening Depth-First Search (IDDFS)           | Completed ✔️  |
 | Jump-Point Search (JPS)                                  | Completed ✔️️ |
 
-*Please note that the current implementation of Dijkstra's algorithm only supports undirected topologies. Support for directed topologies is planned.*
+*Please note that the current implementation of Dijkstra's algorithm only supports undirected topologies. Support for directed topologies is planned for a future release.*
 
 
 ## Maze Types
@@ -61,5 +61,6 @@
 | Compile-Time Routing                 |   Planned 📝    |
 | Concurrent Capabilities              | In Progress 🏗️ |
 | Dynamic Mazes and Obstacle-Avoidance |   Planned 📝    |
-| Maze Optimisation (Baking)           | In Progress 🏗️ |
+| Maze Simplification (Pruning)        |  Completed ✔️   |
+| Maze Precomputation (Baked Weights)  | In Progress 🏗️ |
 | Runtime K-dimensionality             | In Progress 🏗️ |
