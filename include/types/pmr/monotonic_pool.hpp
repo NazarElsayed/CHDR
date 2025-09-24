@@ -196,65 +196,69 @@ namespace chdr {
          */
         [[nodiscard]] virtual HOT void* do_allocate(const size_t _bytes, const size_t _alignment) override {
 
-            assert(_bytes > 0U && "Allocation size must be greater than zero.");
             assert((_alignment & (_alignment - 1U)) == 0U && "Alignment must be a power of two.");
 
-            uint8_t* aligned_ptr { nullptr };
-
-            // Attempt to allocate from the stack block:
-            if (m_stack_write < StackSize) {
-
-                if (const size_t aligned_bytes = (_bytes + _alignment - 1U) & ~(_alignment - 1U);
-                    aligned_bytes < MaxStackAllocationSize &&
-                    m_stack_write + aligned_bytes <= s_stack_block_size
-                ) {
-                    aligned_ptr = m_stack_block + ((m_stack_write + _alignment - 1U) & ~(_alignment - 1U));
-                    m_stack_write = static_cast<size_t>(aligned_ptr - m_stack_block) + aligned_bytes;
-                }
+            if (_bytes == 0U) {
+                return nullptr; // No-op. (See C++17 standard.)
             }
+            else {
+                uint8_t* aligned_ptr { nullptr };
 
-            if (aligned_ptr == nullptr) {
+                // Attempt to allocate from the stack block:
+                if (m_stack_write < StackSize) {
 
-                // If the stack block is exhausted, fall back to dynamic blocks:
-                if (LIKELY(!m_blocks.empty() && m_blocks[m_active_block_index].size >= m_block_width)) {
-
-                    auto*  raw_ptr = static_cast<void*>(static_cast<uint8_t*>(m_blocks[m_active_block_index].data) + m_block_write);
-                    size_t space   = m_blocks[m_active_block_index].size - m_block_write;
-
-                    aligned_ptr = static_cast<uint8_t*>(std::align(_alignment, _bytes, raw_ptr, space));
-                    if (aligned_ptr != nullptr) {
-                        m_block_write = static_cast<size_t>(static_cast<uint8_t*>(aligned_ptr) - static_cast<uint8_t*>(m_blocks[m_active_block_index].data)) + _bytes;
+                    if (const size_t aligned_bytes = (_bytes + _alignment - 1U) & ~(_alignment - 1U);
+                        aligned_bytes < MaxStackAllocationSize &&
+                        m_stack_write + aligned_bytes <= s_stack_block_size
+                    ) {
+                        aligned_ptr = m_stack_block + ((m_stack_write + _alignment - 1U) & ~(_alignment - 1U));
+                        m_stack_write = static_cast<size_t>(aligned_ptr - m_stack_block) + aligned_bytes;
                     }
                 }
-                else {
-                    aligned_ptr = nullptr;
+
+                if (aligned_ptr == nullptr) {
+
+                    // If the stack block is exhausted, fall back to dynamic blocks:
+                    if (LIKELY(!m_blocks.empty() && m_blocks[m_active_block_index].size >= m_block_width)) {
+
+                        auto*  raw_ptr = static_cast<void*>(static_cast<uint8_t*>(m_blocks[m_active_block_index].data) + m_block_write);
+                        size_t space   = m_blocks[m_active_block_index].size - m_block_write;
+
+                        aligned_ptr = static_cast<uint8_t*>(std::align(_alignment, _bytes, raw_ptr, space));
+                        if (aligned_ptr != nullptr) {
+                            m_block_write = static_cast<size_t>(static_cast<uint8_t*>(aligned_ptr) - static_cast<uint8_t*>(m_blocks[m_active_block_index].data)) + _bytes;
+                        }
+                    }
+                    else {
+                        aligned_ptr = nullptr;
+                    }
+
+                    // Expand if no valid candidate for allocation was found.
+                    if (UNLIKELY(aligned_ptr == nullptr)) {
+                        aligned_ptr = expand(_bytes, _alignment);
+                    }
+
+                    // Update write position.
+                    m_block_write += static_cast<size_t>(aligned_ptr + _bytes - (m_blocks[m_active_block_index].data + m_block_write));
                 }
 
-                // Expand if no valid candidate for allocation was found.
+                // ReSharper disable once CppDFAConstantConditions
                 if (UNLIKELY(aligned_ptr == nullptr)) {
-                    aligned_ptr = expand(_bytes, _alignment);
+                    // ReSharper disable once CppDFAUnreachableCode
+                    throw std::bad_alloc();
                 }
 
-                // Update write position.
-                m_block_write += static_cast<size_t>(aligned_ptr + _bytes - (m_blocks[m_active_block_index].data + m_block_write));
-            }
-
-            // ReSharper disable once CppDFAConstantConditions
-            if (UNLIKELY(aligned_ptr == nullptr)) {
-                // ReSharper disable once CppDFAUnreachableCode
-                throw std::bad_alloc();
-            }
-
-            PREFETCH(aligned_ptr, 1, 1);
+                PREFETCH(aligned_ptr, 1, 1);
 
 #if CHDR_DIAGNOSTICS == 1
 
-            __diagnostic_data. num_allocated += _bytes;
-            __diagnostic_data.peak_allocated  = utils::max(__diagnostic_data.peak_allocated, __diagnostic_data.num_allocated);
+                __diagnostic_data. num_allocated += _bytes;
+                __diagnostic_data.peak_allocated  = utils::max(__diagnostic_data.peak_allocated, __diagnostic_data.num_allocated);
 
 #endif //CHDR_DIAGNOSTICS == 1
 
-            return aligned_ptr;
+                return aligned_ptr;
+            }
         }
 
         /**
