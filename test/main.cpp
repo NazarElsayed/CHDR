@@ -16,6 +16,7 @@
 #include <filesystem>
 #include <iostream>
 #include <variant>
+#include <random>
 
 #include "generator/gppc.hpp"
 
@@ -28,7 +29,9 @@
 
 namespace test {
 
-    class cli final {
+    class tests final {
+
+    public:
 
         static void set_highest_thread_priority() {
 #if defined(_WIN32) || defined(_WIN64)
@@ -125,7 +128,7 @@ namespace test {
                 min_duration = std::numeric_limits<long double>::max();
 
                 debug::log(e);
-            }
+            };
 
             return std::make_pair(min_duration, path_length);
         }
@@ -603,9 +606,211 @@ namespace test {
             return EXIT_SUCCESS;
         }
 
+        static auto run_procedural_benchmarks() {
+            return EXIT_SUCCESS;
+        }
+
+        static auto run_basic_correctness_checks() {
+
+            std::cout << "Running basic correctness checks...\n";
+            std::cout << "Check 1: Testing custom allocators...\n";
+
+            struct test_data {
+                char        c{};
+                double      d{};
+                bool        b{};
+                int64_t     i{};
+                uint8_t     u{};
+                float       f{};
+                char        chars[3]{};
+                void*       ptr{};
+                int16_t     s{};
+                long double ld{};
+            };
+
+            const size_t memory_validation_objects = 1000000U;
+            const size_t memory_validation_blocks  = 100U;
+            const size_t memory_validation_passes  = 100U;
+
+            {
+                std::cout << "Check 1.1: Monotonic Allocator...\n";
+
+                std::cout << "Testing object instantiation...\n";
+                auto pmr = chdr::monotonic_pool();
+                for (size_t i = 0U; i < memory_validation_passes; ++i) {
+
+                    std::cout << "Pass " << i << "...";
+
+                    for (size_t j = 0U; j < memory_validation_objects; ++j) {
+                        const auto ptr = new (pmr.allocate(sizeof(test_data), alignof(test_data))) test_data();
+                        (void)ptr; // ignored.
+                    }
+
+                    pmr.reset();
+                    std::cout << " Done.\n";
+                }
+
+                std::cout << "\nFinalising...\n";
+                pmr.release();
+
+                std::cout << "Testing block instantiation...\n";
+
+                std::mt19937 gen(0U);
+                std::uniform_int_distribution dist(0UL , 32UL * 1024UL * 1024UL);
+
+                for (size_t i = 0U; i < memory_validation_passes; ++i) {
+
+                    std::cout << "Pass " << i << "...";
+
+                    for (size_t j = 0U; j < memory_validation_blocks; ++j) {
+                        const auto size = dist(gen);
+                        auto ptr = pmr.allocate(size);
+                        (void)std::memset(ptr, 0x42, size);
+                    }
+
+                    pmr.reset();
+                    std::cout << " Done.\n";
+                }
+
+                std::cout << "\nFinalising...\n";
+                pmr.release();
+            }
+
+            {
+                std::cout << "Check 1.2: Heterogeneous Allocator...\n";
+
+                std::cout << "Testing object instantiation...\n";
+                auto pmr = chdr::heterogeneous_pool();
+
+                std::vector<std::tuple<void*, size_t, size_t>> allocations;
+
+                for (size_t i = 0U; i < memory_validation_passes; ++i) {
+
+                    std::cout << "Pass " << i << "...";
+
+                    for (size_t j = 0U; j < memory_validation_objects; ++j) {
+                        allocations.emplace_back(new (pmr.allocate(sizeof(test_data), alignof(test_data))) test_data(), sizeof(test_data), alignof(test_data));
+                    }
+
+                    for (auto& [ptr, size, alignment] : allocations) {
+                        pmr.deallocate(ptr, size, alignment);
+                    }
+                    allocations.clear();
+
+                    std::cout << " Done.\n";
+                }
+
+                std::cout << "\nFinalising...\n";
+                pmr.release();
+
+                std::cout << "Testing block instantiation...\n";
+
+                std::mt19937 gen(0U);
+                std::uniform_int_distribution  size_dist(0UL , 32UL * 1024UL * 1024UL);
+                std::uniform_int_distribution align_dist(1UL , 6UL);
+
+                for (size_t i = 0U; i < memory_validation_passes; ++i) {
+
+                    std::cout << "Pass " << i << "...";
+
+                    for (size_t j = 0U; j < memory_validation_blocks; ++j) {
+
+                        const auto block_size  = size_dist(gen);
+                        const auto block_align = chdr::utils::powui(2UL, align_dist(gen));
+
+                        auto [ptr, size, alignment] = allocations.emplace_back(pmr.allocate(block_size, block_align), block_size, block_align);
+                        (void)std::memset(ptr, 0x42, size);
+                    }
+
+                    for (auto& [ptr, size, alignment] : allocations) {
+                        pmr.deallocate(ptr, size, alignment);
+                    }
+                    allocations.clear();
+
+                    pmr.reset();
+                    std::cout << " Done.\n";
+                }
+
+                std::cout << "\nFinalising...\n";
+                pmr.release();
+            }
+
+            {
+                std::cout << "Check 1.3: Homogeneous Allocator...\n";
+
+                std::vector<std::tuple<void*, size_t, size_t>> allocations;
+
+                {
+                    std::cout << "Testing object instantiation...\n";
+
+                    auto pmr = chdr::homogeneous_pool();
+
+                    for (size_t i = 0U; i < memory_validation_passes; ++i) {
+
+                        std::cout << "Pass " << i << "...";
+
+                        for (size_t j = 0U; j < memory_validation_objects; ++j) {
+                            allocations.emplace_back(new (pmr.allocate(sizeof(test_data), alignof(test_data))) test_data(), sizeof(test_data), alignof(test_data));
+                        }
+
+                        for (auto& [ptr, size, alignment] : allocations) {
+                            pmr.deallocate(ptr, size, alignment);
+                        }
+                        allocations.clear();
+
+                        std::cout << " Done.\n";
+                    }
+
+                    std::cout << "\nFinalising...\n";
+                    pmr.release();
+                }
+
+                {
+                    std::cout << "Testing block instantiation...\n";
+
+                    const size_t block_size = 32UL * 1024UL * 1024UL;
+                    const size_t block_align = 64UL;
+
+                    auto pmr = chdr::homogeneous_pool<4096UL, std::numeric_limits<size_t>::max(), block_size>(block_size); // reset.
+
+                    for (size_t i = 0U; i < memory_validation_passes; ++i) {
+
+                        std::cout << "Pass " << i << "...";
+
+                        for (size_t j = 0U; j < memory_validation_blocks; ++j) {
+
+                            auto [ptr, size, alignment] = allocations.emplace_back(pmr.allocate(block_size, block_align), block_size, block_align);
+                            (void)std::memset(ptr, 0x42, size);
+                        }
+
+                        for (auto& [ptr, size, alignment] : allocations) {
+                            pmr.deallocate(ptr, size, alignment);
+                        }
+                        allocations.clear();
+
+                        pmr.reset();
+                        std::cout << " Done.\n" << std::flush;
+                    }
+
+                    std::cout << "\nFinalising...\n";
+                    pmr.release();
+                }
+            }
+
+            std::cout << "Basic correctness tests successful.\n";
+
+            return EXIT_SUCCESS;
+        }
+
+    };
+
+    class cli final {
+
     public:
 
         static int main(const int _argc, const char* const _argv[]) {
+
+            return tests::run_basic_correctness_checks();
 
             // TODO: Load test description from file.
 
@@ -617,7 +822,7 @@ namespace test {
             using scalar_t = uint32_t;
             using  coord_t = chdr::coord<scalar_t, 2U>;
 
-            return run_gppc_benchmarks<weight_t, coord_t, scalar_t, index_t>();
+            return tests::run_gppc_benchmarks<weight_t, coord_t, scalar_t, index_t>();
         }
     };
 

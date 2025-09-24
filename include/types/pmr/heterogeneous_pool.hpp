@@ -246,45 +246,49 @@ namespace chdr {
          */
         [[nodiscard]] virtual HOT void* do_allocate(const size_t _bytes, const size_t _alignment) override {
 
-            assert(_bytes > 0U && "Allocation size must be greater than zero.");
             assert((_alignment & (_alignment - 1U)) == 0U && "Alignment must be a power of two.");
 
-            const size_t aligned_bytes = (_bytes + _alignment - 1U) & ~(_alignment - 1U);
-
-            uint8_t* aligned_ptr { nullptr };
-
-            // Attempt to allocate from the stack block:
-            if (aligned_bytes < MaxStackAllocationSize && m_stack_write + aligned_bytes <= s_stack_block_size) {
-
-                aligned_ptr = m_stack_block + ((m_stack_write + _alignment - 1U) & ~(_alignment - 1U));
-                m_stack_write = static_cast<size_t>(aligned_ptr - m_stack_block) + aligned_bytes;
+            if (_bytes == 0U) {
+                return nullptr; // No-op. (See C++17 standard.)
             }
+            else {
+                const size_t aligned_bytes = (_bytes + _alignment - 1U) & ~(_alignment - 1U);
 
-            if (aligned_ptr == nullptr) {
+                uint8_t* aligned_ptr { nullptr };
 
-                // Attempt to find a free block, or create one otherwise:
-                aligned_ptr = allocate_from_free(aligned_bytes);
-                if (UNLIKELY(aligned_ptr == nullptr)) {
-                    aligned_ptr = expand(_bytes, _alignment);
+                // Attempt to allocate from the stack block:
+                if (aligned_bytes < MaxStackAllocationSize && m_stack_write + aligned_bytes <= s_stack_block_size) {
+
+                    aligned_ptr = m_stack_block + ((m_stack_write + _alignment - 1U) & ~(_alignment - 1U));
+                    m_stack_write = static_cast<size_t>(aligned_ptr - m_stack_block) + aligned_bytes;
                 }
-            }
 
-            // ReSharper disable once CppDFAConstantConditions
-            if (UNLIKELY(aligned_ptr == nullptr)) {
-                // ReSharper disable once CppDFAUnreachableCode
-                throw std::bad_alloc();
-            }
+                if (aligned_ptr == nullptr) {
 
-            PREFETCH(aligned_ptr, 1, 1);
+                    // Attempt to find a free block, or create one otherwise:
+                    aligned_ptr = allocate_from_free(aligned_bytes);
+                    if (UNLIKELY(aligned_ptr == nullptr)) {
+                        aligned_ptr = expand(_bytes, _alignment);
+                    }
+                }
+
+                // ReSharper disable once CppDFAConstantConditions
+                if (UNLIKELY(aligned_ptr == nullptr)) {
+                    // ReSharper disable once CppDFAUnreachableCode
+                    throw std::bad_alloc();
+                }
+
+                PREFETCH(aligned_ptr, 1, 1);
 
 #if CHDR_DIAGNOSTICS == 1
 
-            __diagnostic_data. num_allocated += _bytes;
-            __diagnostic_data.peak_allocated  = utils::max(__diagnostic_data.peak_allocated, __diagnostic_data.num_allocated);
+                __diagnostic_data. num_allocated += _bytes;
+                __diagnostic_data.peak_allocated  = utils::max(__diagnostic_data.peak_allocated, __diagnostic_data.num_allocated);
 
 #endif //CHDR_DIAGNOSTICS == 1
 
-            return aligned_ptr;
+                return aligned_ptr;
+            }
         }
 
         /**
@@ -311,46 +315,51 @@ namespace chdr {
          * @post After this operation, the memory should not be used. Doing so is undefined behaviour.
          */
         virtual HOT void do_deallocate(void* _p, size_t _bytes, size_t _alignment) override {
-            assert(_p != nullptr && "Cannot deallocate null pointer.");
+
             assert(_bytes > 0U && "Allocation size must be greater than zero.");
             assert((_alignment & (_alignment - 1U)) == 0U && "Alignment must be a power of two.");
 
-            if (((m_stack_write + (_bytes + _alignment - 1U)) & ~(_alignment - 1U)) > s_stack_block_size) {
+            if (_bytes != 0U) {
+                // No-op. (See C++17 standard.)
+            }
+            else {
+                if (((m_stack_write + (_bytes + _alignment - 1U)) & ~(_alignment - 1U)) > s_stack_block_size) {
 
-                if constexpr (Coalescing) {
+                    if constexpr (Coalescing) {
 
-                    auto it = m_free.lower_bound(_bytes);
+                        auto it = m_free.lower_bound(_bytes);
 
-                    // Merge with next block if adjacent:
-                    if (it != m_free.end() && _bytes + static_cast<uint8_t*>(_p) == it->second.data) {
-                        _bytes    += it->second.size;
-                        _alignment = utils::max(it->second.alignment, _alignment);
-
-                        it = m_free.erase(it);
-                    }
-
-                    // Merge with previous block if adjacent:
-                    if (it != m_free.begin()) {
-                        --it;
-
-                        if (it->second.data + it->second.size == _p) {
-                            _p         = it->second.data;
+                        // Merge with next block if adjacent:
+                        if (it != m_free.end() && _bytes + static_cast<uint8_t*>(_p) == it->second.data) {
                             _bytes    += it->second.size;
                             _alignment = utils::max(it->second.alignment, _alignment);
 
-                            m_free.erase(it);
+                            it = m_free.erase(it);
+                        }
+
+                        // Merge with previous block if adjacent:
+                        if (it != m_free.begin()) {
+                            --it;
+
+                            if (it->second.data + it->second.size == _p) {
+                                _p         = it->second.data;
+                                _bytes    += it->second.size;
+                                _alignment = utils::max(it->second.alignment, _alignment);
+
+                                m_free.erase(it);
+                            }
                         }
                     }
-                }
 
-                m_free.try_emplace(_bytes, _bytes, _alignment, static_cast<uint8_t*>(_p));
-            }
+                    m_free.try_emplace(_bytes, _bytes, _alignment, static_cast<uint8_t*>(_p));
+                }
 
 #if CHDR_DIAGNOSTICS == 1
 
-            __diagnostic_data.num_allocated = (_bytes > __diagnostic_data.num_allocated) ? 0U : (__diagnostic_data.num_allocated - _bytes);
+                __diagnostic_data.num_allocated = (_bytes > __diagnostic_data.num_allocated) ? 0U : (__diagnostic_data.num_allocated - _bytes);
 
 #endif //CHDR_DIAGNOSTICS == 1
+            }
         }
 
         /**
