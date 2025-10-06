@@ -154,7 +154,8 @@ add_library(libchdr INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/chdr.hpp)
 target_include_directories(libchdr INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 # TEST:
-add_executable(chdr test/main.cpp)
+add_executable(chdr test/main.cpp
+        test/include/generator/gppc.hpp)
 
 target_include_directories(chdr PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/test/include
