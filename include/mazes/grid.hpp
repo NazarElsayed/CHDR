@@ -472,7 +472,7 @@ namespace chdr::mazes {
         constexpr void compute_single_diagonal(const coord_t& _id, neighbour_t& _output) const noexcept {
 
             constexpr  size_t sampleIndex = (Index >= s_neighbour_count / 2U) ? (Index + 1U) : Index; // Skips the middle value
-            constexpr coord_t direction   = utils::to_nd(sampleIndex, coord_t { 3U });
+            constexpr coord_t direction   = utils::to_nd(sampleIndex, utils::make_kernel<coord_t>());
 
             bool oob = false;
             coord_t coord = _id;
@@ -931,7 +931,7 @@ namespace chdr::mazes {
         constexpr void compute_single_diagonal(const coord_t& _id, neighbour_t& _output) const noexcept {
 
             constexpr  size_t sampleIndex = (Index >= s_neighbour_count / 2U) ? (Index + 1U) : Index; // Skips the middle value
-            constexpr coord_t direction   = utils::to_nd(sampleIndex, coord_t { 3U });
+            constexpr coord_t direction = utils::to_nd(sampleIndex, utils::make_kernel<coord_t>());
 
             bool oob = false;
             coord_t coord = _id;

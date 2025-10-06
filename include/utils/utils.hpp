@@ -110,6 +110,25 @@ namespace chdr {
         ~utils()                        = delete;
 
         /**
+         * @brief Creates a simple K-dimensional kernel with an order of 3.
+         *
+         * @tparam coord_t The type of the kernel container. Must support ranged-for iteration.
+         *
+         * @return A coord_t object with all elements set to 3.
+         */
+        template <typename coord_t>
+        static constexpr auto make_kernel() noexcept {
+
+            coord_t kernel{};
+
+            for (auto& element : kernel) {
+                element = 3U;
+            }
+
+            return kernel;
+        }
+
+        /**
          * @brief Calculates the product of all elements in a coordinate or array.
          *
          * @details Recursively calculates the product of all elements in a multidimensional array-like structure,

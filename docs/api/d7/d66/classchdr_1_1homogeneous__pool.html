@@ -127,9 +127,10 @@ class chdr::homogeneous_pool&lt; StackSize, MaxStackAllocationSize, MaxHeapBlock
   </table>
   </dd>
 </dl>
+<dl class="section warning"><dt>Warning</dt><dd>Please note that it is not safe to request allocations greater than the initial block width or maximum block sizes when using this allocator. To facilitate larger allocation sizes, increase these values using the template and constructor parameters.</dd></dl>
 <dl class="section remark"><dt>Remarks</dt><dd>Inherits from <code>std::pmr::memory_resource</code> to integrate with the PMR (Polymorphic Memory Resource) framework provided in the C++ Standard Library. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d5/d3c/homogeneous__pool_8hpp_source.html#l00058">58</a> of file <a class="el" href="../../d5/d3c/homogeneous__pool_8hpp_source.html">homogeneous_pool.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d5/d3c/homogeneous__pool_8hpp_source.html#l00062">62</a> of file <a class="el" href="../../d5/d3c/homogeneous__pool_8hpp_source.html">homogeneous_pool.hpp</a>.</p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Constructors</h2></td></tr>
 <tr class="memitem:ac7282a29216923fff4803e920bf80095" id="r_ac7282a29216923fff4803e920bf80095"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d66/classchdr_1_1homogeneous__pool_ac7282a29216923fff4803e920bf80095.html#ac7282a29216923fff4803e920bf80095">homogeneous_pool</a> (size_t _initial_block_width=s_default_heap_block_size, size_t _capacity=32U) noexcept</td></tr>
