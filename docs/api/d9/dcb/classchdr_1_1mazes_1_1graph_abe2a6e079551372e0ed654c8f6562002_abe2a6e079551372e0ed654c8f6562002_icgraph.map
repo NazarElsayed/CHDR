@@ -1,0 +1,25 @@
+<map id="get_neighbours" name="get_neighbours">
+<area shape="rect" id="Node000001" title=" " alt="" coords="232,180,328,203"/>
+<area shape="poly" id="edge11_Node000001_Node000001" title=" " alt="" coords="301,169,295,162,280,159,267,161,260,165,259,171,264,179,259,181,254,172,256,163,265,156,280,154,298,157,305,165"/>
+<area shape="rect" id="Node000002" href="$d9/dcb/classchdr_1_1mazes_1_1graph_a5ca1351a03df5ff49f85cc4b5669cefc.html#a5ca1351a03df5ff49f85cc4b5669cefc" title="Constructs a graph instance from a grid structure." alt="" coords="15,8,65,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="271,168,260,133,243,92,217,52,201,36,183,22,154,11,122,8,92,10,66,15,65,10,91,5,122,3,155,6,185,17,205,32,222,49,248,89,265,131,276,166"/>
+<area shape="rect" id="Node000003" href="$d9/dcb/classchdr_1_1mazes_1_1graph_a9c5fa6f424fe23ab89d383a1f8f78b02.html#a9c5fa6f424fe23ab89d383a1f8f78b02" title="Constructs a graph instance from an adjacency list." alt="" coords="15,68,65,91"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="255,173,222,146,183,121,120,98,65,86,66,81,122,93,185,116,225,141,259,169"/>
+<area shape="rect" id="Node000004" href="$d9/dcb/classchdr_1_1mazes_1_1graph_ab41a4e064828273b133921f8d05a7540.html#ab41a4e064828273b133921f8d05a7540" title="Adds a new vertex to the graph with the specified identifier." alt="" coords="133,32,173,55"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="259,171,182,76,164,57,168,54,186,73,263,167"/>
+<area shape="rect" id="Node000005" href="$d9/dcb/classchdr_1_1mazes_1_1graph_a8e662ec5003e04b135c5d7cdb6c91db7.html#a8e662ec5003e04b135c5d7cdb6c91db7" title="Adds a new edge to the graph with the specified identifier." alt="" coords="133,131,173,154"/>
+<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="236,178,173,152,175,147,238,173"/>
+<area shape="rect" id="Node000006" href="$d9/dcb/classchdr_1_1mazes_1_1graph_ab276ef23dd28f7f3f6a804f7a958141d.html#ab276ef23dd28f7f3f6a804f7a958141d" title=" " alt="" coords="123,230,184,252"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="254,212,185,239,183,235,252,207"/>
+<area shape="rect" id="Node000007" href="$d9/dcb/classchdr_1_1mazes_1_1graph_a8b3691d2eabbeddb2f43e5dcaa641b39.html#a8b3691d2eabbeddb2f43e5dcaa641b39" title="Retrieves the vertex at a specified index." alt="" coords="5,206,75,228"/>
+<area shape="poly" id="edge12_Node000001_Node000007" title=" " alt="" coords="218,201,75,216,74,211,218,196"/>
+<area shape="rect" id="Node000008" href="$d9/dcb/classchdr_1_1mazes_1_1graph_a50cc7fa4c48882e5665f24305a38fc3b.html#a50cc7fa4c48882e5665f24305a38fc3b" title=" " alt="" coords="11,254,69,276"/>
+<area shape="poly" id="edge14_Node000001_Node000008" title=" " alt="" coords="261,216,227,244,185,268,155,275,124,277,69,273,70,268,124,271,154,269,183,263,224,240,257,212"/>
+<area shape="rect" id="Node000009" href="$d9/dcb/classchdr_1_1mazes_1_1graph_a5d9e7e33eb15c5778780e40b320d4632.html#a5d9e7e33eb15c5778780e40b320d4632" title="Prunes the graph of transitory nodes." alt="" coords="128,328,179,351"/>
+<area shape="poly" id="edge13_Node000001_Node000009" title=" " alt="" coords="263,216,186,311,168,330,164,326,182,307,259,213"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="119,39,65,28,66,22,120,34"/>
+<area shape="poly" id="edge5_Node000004_Node000003" title=" " alt="" coords="121,57,66,74,65,69,119,51"/>
+<area shape="poly" id="edge8_Node000006_Node000001" title=" " alt="" coords="180,221,231,199,233,204,182,226"/>
+<area shape="poly" id="edge9_Node000006_Node000007" title=" " alt="" coords="108,234,74,227,76,222,110,229"/>
+<area shape="poly" id="edge10_Node000006_Node000008" title=" " alt="" coords="110,253,70,262,69,256,108,248"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="grid" name="grid">
+<area shape="rect" id="Node000001" title="Constructs a grid instance with specified size and initial node values using move semantics." alt="" coords="5,29,45,52"/>
+<area shape="rect" id="Node000002" href="$dd/de3/classchdr_1_1mazes_1_1grid_a0abdfb4af71cccf812fb2b7150f0cc72.html#a0abdfb4af71cccf812fb2b7150f0cc72" title="Retrieves the neighbours of a node within the grid." alt="" coords="93,29,189,52"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="45,38,79,38,79,43,45,43"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="122,30,117,21,119,12,127,5,141,3,158,6,165,14,160,18,155,11,141,8,130,10,124,14,123,20,127,28"/>
+</map>
