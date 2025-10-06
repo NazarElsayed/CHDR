@@ -54,6 +54,7 @@ namespace chdr::solvers {
      *     using        lazy_sorting [[maybe_unused]] = ...; // std::false_type / std::true_type;
      *     using          no_cleanup [[maybe_unused]] = ...; // std::false_type / std::true_type;
      *     using reverse_equivalence [[maybe_unused]] = ...; // std::false_type / std::true_type;
+     *     using   octile_neighbours [[maybe_unused]] = ...; // std::false_type / std::true_type;
      *
      *     const        ... maze;  // i.e. chdr::grid, chdr::graph
      *     const coord_type start;

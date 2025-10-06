@@ -8,7 +8,7 @@ var classchdr_1_1mazes_1_1graph =
     [ "clear", "d9/dcb/classchdr_1_1mazes_1_1graph_a03bfacfaaba9195e4498375659f43531.html#a03bfacfaaba9195e4498375659f43531", null ],
     [ "contains", "d9/dcb/classchdr_1_1mazes_1_1graph_ab276ef23dd28f7f3f6a804f7a958141d.html#ab276ef23dd28f7f3f6a804f7a958141d", null ],
     [ "count", "d9/dcb/classchdr_1_1mazes_1_1graph_ad6077e456dd6abb62d82087b55dc2331.html#ad6077e456dd6abb62d82087b55dc2331", null ],
-    [ "get_neighbours", "d9/dcb/classchdr_1_1mazes_1_1graph_ace796c1bb79d924991f558dccc4edb7f.html#ace796c1bb79d924991f558dccc4edb7f", null ],
+    [ "get_neighbours", "d9/dcb/classchdr_1_1mazes_1_1graph_abe2a6e079551372e0ed654c8f6562002.html#abe2a6e079551372e0ed654c8f6562002", null ],
     [ "operator[]", "d9/dcb/classchdr_1_1mazes_1_1graph_a8b3691d2eabbeddb2f43e5dcaa641b39.html#a8b3691d2eabbeddb2f43e5dcaa641b39", null ],
     [ "prune", "d9/dcb/classchdr_1_1mazes_1_1graph_a5d9e7e33eb15c5778780e40b320d4632.html#a5d9e7e33eb15c5778780e40b320d4632", null ],
     [ "remove", "d9/dcb/classchdr_1_1mazes_1_1graph_a50cc7fa4c48882e5665f24305a38fc3b.html#a50cc7fa4c48882e5665f24305a38fc3b", null ]

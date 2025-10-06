@@ -87,7 +87,7 @@ namespace chdr::solvers {
 
                     if (curr != e) { // SEARCH FOR SOLUTION...
 
-                        for (const auto& n_data : _params.maze.get_neighbours(curr)) {
+                        for (const auto& n_data : _params.maze.template get_neighbours<params_t::octile_neighbours::value>(curr)) {
 
                             if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
 

@@ -117,6 +117,7 @@ namespace test {
                 using        lazy_sorting [[maybe_unused]] = std::false_type;
                 using          no_cleanup [[maybe_unused]] = std:: true_type;
                 using reverse_equivalence [[maybe_unused]] = std:: true_type;
+                using   octile_neighbours [[maybe_unused]] = std::false_type;
 
                 const decltype(test)& maze;
                 const     coord_type  start;

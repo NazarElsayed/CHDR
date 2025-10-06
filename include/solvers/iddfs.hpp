@@ -102,7 +102,7 @@ namespace chdr::solvers {
             typename neighbours_t::size_type neighbours_idx;
 
             [[nodiscard]] state(const node& _curr, const params_t& _params) :
-                neighbours(_params.maze.get_neighbours(_curr.m_index)),
+                neighbours(_params.maze.template get_neighbours<params_t::octile_neighbours::value>(_curr.m_index)),
                 neighbours_idx(0U) {}
 
             ~state() = default;
@@ -121,7 +121,7 @@ namespace chdr::solvers {
         template <typename open_set_t>
         [[nodiscard]] HOT static constexpr auto solve_internal(open_set_t& _open, const params_t& _params) {
 
-            using neighbours_t = decltype(_params.maze.get_neighbours(std::declval<index_t>()));
+            using neighbours_t = decltype(_params.maze.template get_neighbours<params_t::octile_neighbours::value>(std::declval<index_t>()));
 
             const auto s = utils::to_1d(_params.start, _params.size);
             const auto e = utils::to_1d(_params.end,   _params.size);

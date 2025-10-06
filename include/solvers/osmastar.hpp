@@ -146,7 +146,7 @@ namespace chdr::solvers {
 
                     auto min_f = inf_v;
 
-                    for (const auto& n_data : _params.maze.get_neighbours(p->second.m_index)) {
+                    for (const auto& n_data : _params.maze.template get_neighbours<params_t::octile_neighbours::value>(p->second.m_index)) {
 
                         if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
 
@@ -260,7 +260,7 @@ namespace chdr::solvers {
 
                     if (curr.m_gScore < min_g && curr.m_fScore != inf_v) {
 
-                        for (const auto& n_data : _params.maze.get_neighbours(curr.m_index)) {
+                        for (const auto& n_data : _params.maze.template get_neighbours<params_t::octile_neighbours::value>(curr.m_index)) {
 
                             if (const auto& n = solver_t::get_data(n_data, _params); n.active) {
 

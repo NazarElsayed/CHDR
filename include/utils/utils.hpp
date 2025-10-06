@@ -109,6 +109,22 @@ namespace chdr {
         utils& operator=(const utils&&) = delete;
         ~utils()                        = delete;
 
+#ifndef __CHDR_UTILS_STATIC_WARNING_NIF
+
+#define __CHDR_UTILS_STRINGIFY_IMPL(x) #x
+#define __CHDR_UTILS_STRINGIFY(x) __CHDR_UTILS_STRINGIFY_IMPL(x)
+
+#define __CHDR_UTILS_STATIC_WARNING_NIF(condition, msg)                                         \
+    do {                                                                                        \
+        [[maybe_unused]] constexpr bool __chdr_condition = (condition);                         \
+        if constexpr (!__chdr_condition) {                                                      \
+            _Pragma(__CHDR_UTILS_STRINGIFY(                                                     \
+                message("Warning: " msg " in " __FILE__ ":" __CHDR_UTILS_STRINGIFY(__LINE__)))) \
+        }                                                                                       \
+    } while (0)
+
+#endif // __CHDR_UTILS_STATIC_WARNING_NIF
+
         /**
          * @brief Creates a simple K-dimensional kernel with an order of 3.
          *

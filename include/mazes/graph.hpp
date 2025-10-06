@@ -437,14 +437,22 @@ namespace chdr::mazes {
          *
          * This method fetches a constant reference to the neighbours of the vertex with the given identifier.
          *
+         * @tparam IncludeDiagonals [obsolete] Boolean template parameter indicating whether to include diagonal neighbours.
+         *         - This parameter is included for interface-like interoperability with 'grid.hpp'.
+         *           Modifying it has no effect on this type of maze.
+         *
          * @param _id [in] The index of the node whose neighbours are to be retrieved.
          * @pre `_id` must reference a valid node, which exists in the graph.
          * @return A constant reference to the neighbours associated with the specified node ID.
          * @warning If the requested node does not exist within the graph, calling this function invokes undefined behaviour.
          * @see contains()
          */
+        template <bool IncludeDiagonals = false>
         [[maybe_unused, nodiscard]] HOT constexpr const neighbours_t& get_neighbours(index_t _id) const {
+
             assert(contains(_id) && "Node with the specified ID does not exist in the graph.");
+            (void)IncludeDiagonals;
+
             return m_entries.find(_id)->second;
         }
 

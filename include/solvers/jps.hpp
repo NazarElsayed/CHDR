@@ -325,6 +325,8 @@ namespace chdr::solvers {
             static_assert(std::is_base_of_v<mazes::grid<coord_t, weight_t>, std::remove_cv_t<std::remove_reference_t<decltype(_params.maze)>>>,
                           "JPS only supports grid mazes.");
 
+            __CHDR_UTILS_STATIC_WARNING_NIF(params_t::octile_neighbours::value, "This implementations of JPS only supports octile grids.");
+
             if constexpr (Kd == 2U) {
 
                 const auto&   end = params_t::reverse_equivalence::value ? _params.start : _params.end;

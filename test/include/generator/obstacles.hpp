@@ -74,9 +74,10 @@ namespace test::generator {
                             using   index_type [[maybe_unused]] =  index_t;
                             using   coord_type [[maybe_unused]] =  coord_t;
 
-                            using        lazy_sorting [[maybe_unused]] = std::true_type;
+                            using        lazy_sorting [[maybe_unused]] = std:: true_type;
                             using          no_cleanup [[maybe_unused]] = std::false_type;
-                            using reverse_equivalence [[maybe_unused]] = std::true_type;
+                            using reverse_equivalence [[maybe_unused]] = std:: true_type;
+                            using   octile_neighbours [[maybe_unused]] = std::false_type;
 
                             const chdr::mazes::grid<coord_t, weight_t>& maze;
                             const     coord_type start;
