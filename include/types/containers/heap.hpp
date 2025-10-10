@@ -496,10 +496,12 @@ namespace chdr {
 
             if (size() > 0U) {
                 c[1U] = std::move(c.back());
+                c.pop_back();
             }
-            c.pop_back();
 
-            sort_down(c[1U]);
+            if (size() > 1U) {
+                sort_down(c[1U]);
+            }
         }
 
         /**
@@ -575,8 +577,6 @@ namespace chdr {
                     const size_t cn = c0 + (Kd - 1U); // Last child index in range
 
                     if (c0 < c.size()) {
-                        PREFETCH(&c[c0], 1, 0);
-                        PREFETCH(&c[cn], 1, 0);
 
                         // Find best candidate child to swap with:
                         size_t best_child = c0;
