@@ -856,11 +856,12 @@ int main(const int _argc, const char* const _argv[]) noexcept {
         debug::log("During this time, the system may be otherwise unresponsive, and other programs running on the system may not work correctly.");
         debug::log("Increased power draw, and high thermal load is expected.");
         debug::log("Ensure that the system has sufficient cooling, and take precautions to safely back up important data before continuing.");
+        debug::log("It is recommended to close other non-essential applications, and discontinue use of the system while the tests are running.");
 
         debug::log("");
-        debug::log("By continuing to run this software, you acknowledge that you are entirely responsibile for ");
-        debug::log("any and all consequences arising from its use, including (but not limited to) data loss, hardware damage, instability, downtime, monetary loss, and any indirect or consequential damages that may occur.");
-        debug::log("Otherwise, terminate this program.");
+        debug::log("By continuing to run this software, you acknowledge that you are entirely responsibile for any and all consequences arising from its use,");
+        debug::log("including (but not limited to) data loss, hardware damage, instability, downtime, monetary loss, and any indirect or consequential damages that may occur.");
+        debug::log("Otherwise, you must immediately terminate this program.");
 
         debug::log("");
         debug::log("To proceed with running the test suite, explicitly confirm your acceptance of these risks by entering \"I AGREE\" in the dialogue below:");
@@ -882,7 +883,7 @@ int main(const int _argc, const char* const _argv[]) noexcept {
             debug::log("Response accepted. Tests will begin momentarily.");
             debug::log("If this was in error, please manually terminate the program.");
 
-            std::this_thread::sleep_for(std::chrono::seconds(30));
+            std::this_thread::sleep_for(std::chrono::seconds(20));
             result = test::cli::main(_argc, _argv);
         }
         else {
