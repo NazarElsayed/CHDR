@@ -12,11 +12,11 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
-#include <sys/wait.h>
 #include <filesystem>
 #include <iostream>
-#include <variant>
 #include <random>
+#include <sys/wait.h>
+#include <variant>
 
 #include "generator/gppc.hpp"
 
@@ -803,6 +803,39 @@ namespace test {
             return EXIT_SUCCESS;
         }
 
+        static void report_instruments() {
+
+#ifndef NDEBUG
+            debug::log("Assertions are enabled. (!NDEBUG)", info);
+#else //NDEBUG
+            debug::log("Assertions are disabled.", info);
+#endif //NDEBUG
+
+#ifdef __SANITIZE_ADDRESS__
+            debug::log("AddressSanitizer detected.", info);
+#endif //__SANITIZE_ADDRESS__
+
+#if __SANITIZE_MEMORY__
+            debug::log("MemorySanitizer detected.", info);
+#endif //__SANITIZE_MEMORY__
+
+#if __SANITIZE_THREAD__
+            debug::log("ThreadSanitizer detected.", info);
+#endif //__SANITIZE_THREAD__
+
+#ifdef __SANITIZE_UNDEFINED__
+            debug::log("Running under UndefinedBehaviorSanitizer.", info);
+#endif //__SANITIZE_UNDEFINED__
+
+#ifdef __SANITIZE_LEAK__
+            debug::log("Running under LeakSanitizer.", info);
+#endif //__SANITIZE_LEAK__
+
+#ifdef __Fuzzer__
+            debug::log("Running under Fuzzer.", info);
+#endif //__Fuzzer__
+
+        }
     };
 
     class cli final {
@@ -815,8 +848,17 @@ namespace test {
             (void)_argc;
             (void)_argv;
 
-            assert(tests::run_basic_correctness_checks() == EXIT_SUCCESS);
-            assert(tests::run_procedural_benchmarks() == EXIT_SUCCESS);
+            tests::report_instruments();
+
+            if (tests::run_basic_correctness_checks() != EXIT_SUCCESS) {
+                debug::log("Basic correctness checks failed.", critical);
+                return EXIT_FAILURE;
+            }
+
+            if (tests::run_procedural_benchmarks() != EXIT_SUCCESS) {
+                debug::log("Procedural benchmarks failed.", critical);
+                return EXIT_FAILURE;
+            }
 
             return EXIT_SUCCESS;
 
@@ -883,12 +925,11 @@ int main(const int _argc, const char* const _argv[]) noexcept {
             debug::log("Response accepted. Tests will begin momentarily.");
             debug::log("If this was in error, please manually terminate the program.");
 
-            std::this_thread::sleep_for(std::chrono::seconds(20));
+            std::this_thread::sleep_for(std::chrono::seconds(10));
             result = test::cli::main(_argc, _argv);
         }
-        else {
-            debug::log("Terminating program.");
-        }
+
+        debug::log("Terminating program.");
     }
     catch(...) {} //NOLINT(*-empty-catch)
 
