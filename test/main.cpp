@@ -811,12 +811,14 @@ namespace test {
 
         static int main(const int _argc, const char* const _argv[]) {
 
-            return tests::run_basic_correctness_checks();
-
             // TODO: Load test description from file.
-
             (void)_argc;
             (void)_argv;
+
+            assert(tests::run_basic_correctness_checks() == EXIT_SUCCESS);
+            assert(tests::run_procedural_benchmarks() == EXIT_SUCCESS);
+
+            return EXIT_SUCCESS;
 
             using weight_t = char;
             using  index_t = uint32_t;
@@ -838,13 +840,54 @@ int main(const int _argc, const char* const _argv[]) noexcept {
     auto result = EXIT_FAILURE;
 
     try {
-        debug::log("CHDR " CHDR_VERSION);
+        debug::log("CHDR Benchmarking Suite " CHDR_VERSION);
         debug::log("Copyright (c) 2024 by Nazar Elsayed & Louis Eriksson");
         debug::log("Licensed under CC BY-NC-ND 4.0");
-
         debug::log("main()", info);
 
-        result = test::cli::main(_argc, _argv);
+        debug::log("");
+        debug::log("DISCLAIMER: This is a testing build of the CHDR project.");
+        debug::log("This software will execute a variety of test scenarios as a means of holistically validating the CHDR library.");
+        debug::log("These tests are explicitly designed to trigger potential issues within the CHDR library.");
+        debug::log("While unlikely, this could result in critical errors that may PERMANENTLY disrupt the normal operation of your system or the integrity of your data.");
+
+        debug::log("");
+        debug::log("Tests are expected to take (up to) several DAYS or WEEKS to complete.");
+        debug::log("During this time, the system may be otherwise unresponsive, and other programs running on the system may not work correctly.");
+        debug::log("Increased power draw, and high thermal load is expected.");
+        debug::log("Ensure that the system has sufficient cooling, and take precautions to safely back up important data before continuing.");
+
+        debug::log("");
+        debug::log("By continuing to run this software, you acknowledge that you are entirely responsibile for ");
+        debug::log("any and all consequences arising from its use, including (but not limited to) data loss, hardware damage, instability, downtime, monetary loss, and any indirect or consequential damages that may occur.");
+        debug::log("Otherwise, terminate this program.");
+
+        debug::log("");
+        debug::log("To proceed with running the test suite, explicitly confirm your acceptance of these risks by entering \"I AGREE\" in the dialogue below:");
+
+        volatile bool agreed = false;
+        {
+            const std::string agree_text { "I AGREE" };
+            std::string input {};
+
+            std::cout << "> ";
+            std::getline(std::cin, input);
+
+            if (std::cin.good() && (input == agree_text)) {
+                agreed = true;
+            }
+        }
+
+        if (agreed) {
+            debug::log("Response accepted. Tests will begin momentarily.");
+            debug::log("If this was in error, please manually terminate the program.");
+
+            std::this_thread::sleep_for(std::chrono::seconds(30));
+            result = test::cli::main(_argc, _argv);
+        }
+        else {
+            debug::log("Terminating program.");
+        }
     }
     catch(...) {} //NOLINT(*-empty-catch)
 
