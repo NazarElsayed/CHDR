@@ -895,11 +895,11 @@ int main(const int _argc, const char* const _argv[]) noexcept {
                      "or the integrity of your data.\n"
                      "\n"
                      "Tests are expected to take (up to) several DAYS or WEEKS to complete."
-                     "During this time, the system may be otherwise unresponsive, and other programs running on the "
-                     "system may not work correctly. Increased power draw, and high thermal load is expected."
+                     "During this time, the system may be otherwise unresponsive, and other running programs may not "
+                     "work correctly. Increased power draw, and high thermal load is expected."
                      "Ensure that the system has sufficient cooling, and take precautions to safely back up important "
-                     "data before continuing. It is recommended to close other non-essential applications, and "
-                     "discontinue use of the system while the tests are running.\n"
+                     "data before continuing. It is recommended to close non-essential applications, and discontinue "
+                     "use of the system while the tests are running.\n"
                      "\n"
                      "By continuing to run this software, you acknowledge that you are entirely responsibile for any and "
                      "all consequences arising from its use, including (but not limited to) data loss, hardware damage, "
@@ -930,7 +930,7 @@ int main(const int _argc, const char* const _argv[]) noexcept {
             result = test::cli::main(_argc, _argv);
         }
 
-        debug::log("Terminating program.");
+        debug::log("Program exit.", info);
     }
     catch(...) {} //NOLINT(*-empty-catch)
 
