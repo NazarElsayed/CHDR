@@ -887,26 +887,27 @@ int main(const int _argc, const char* const _argv[]) noexcept {
         debug::log("Licensed under CC BY-NC-ND 4.0");
         debug::log("main()", info);
 
-        debug::log("");
-        debug::log("DISCLAIMER: This is a testing build of the CHDR project.");
-        debug::log("This software will execute a variety of test scenarios as a means of holistically validating the CHDR library.");
-        debug::log("These tests are explicitly designed to trigger potential issues within the CHDR library.");
-        debug::log("While unlikely, this could result in critical errors that may PERMANENTLY disrupt the normal operation of your system or the integrity of your data.");
-
-        debug::log("");
-        debug::log("Tests are expected to take (up to) several DAYS or WEEKS to complete.");
-        debug::log("During this time, the system may be otherwise unresponsive, and other programs running on the system may not work correctly.");
-        debug::log("Increased power draw, and high thermal load is expected.");
-        debug::log("Ensure that the system has sufficient cooling, and take precautions to safely back up important data before continuing.");
-        debug::log("It is recommended to close other non-essential applications, and discontinue use of the system while the tests are running.");
-
-        debug::log("");
-        debug::log("By continuing to run this software, you acknowledge that you are entirely responsibile for any and all consequences arising from its use,");
-        debug::log("including (but not limited to) data loss, hardware damage, instability, downtime, monetary loss, and any indirect or consequential damages that may occur.");
-        debug::log("Otherwise, you must immediately terminate this program.");
-
-        debug::log("");
-        debug::log("To proceed with running the test suite, explicitly confirm your acceptance of these risks by entering \"I AGREE\" in the dialogue below:");
+        std::cout << "\n"
+                     "DISCLAIMER:\n"
+                     "This software will execute a variety of test scenarios as a means of holistically validating the "
+                     "CHDR library. These tests are explicitly designed to trigger potential issues and, while unlikely, "
+                     "could result in critical errors that may PERMANENTLY disrupt the normal operation of your system "
+                     "or the integrity of your data.\n"
+                     "\n"
+                     "Tests are expected to take (up to) several DAYS or WEEKS to complete."
+                     "During this time, the system may be otherwise unresponsive, and other programs running on the "
+                     "system may not work correctly. Increased power draw, and high thermal load is expected."
+                     "Ensure that the system has sufficient cooling, and take precautions to safely back up important "
+                     "data before continuing. It is recommended to close other non-essential applications, and "
+                     "discontinue use of the system while the tests are running.\n"
+                     "\n"
+                     "By continuing to run this software, you acknowledge that you are entirely responsibile for any and "
+                     "all consequences arising from its use, including (but not limited to) data loss, hardware damage, "
+                     "instability, downtime, and any indirect or consequential damages that may occur. "
+                     "Otherwise, you must immediately terminate this program.\n"
+                     "\n"
+                     "To proceed with running the test suite, explicitly confirm your acceptance of these risks by "
+                     "entering \"I AGREE\" in the dialogue below:\n";
 
         volatile bool agreed = false;
         {
