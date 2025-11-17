@@ -907,14 +907,14 @@ int main(const int _argc, const char* const _argv[]) noexcept {
                      "Otherwise, you must immediately terminate this program.\n"
                      "\n"
                      "To proceed with running the test suite, explicitly confirm your acceptance of these risks by "
-                     "entering \"I AGREE\" in the dialogue below:\n";
+                     "entering \"I AGREE\" in the dialogue below:\n" << std::flush;
 
         volatile bool agreed = false;
         {
             const std::string agree_text { "I AGREE" };
             std::string input {};
 
-            std::cout << "> ";
+            std::cout << "> " << std::flush;
             std::getline(std::cin, input);
 
             if (std::cin.good() && (input == agree_text)) {
@@ -923,8 +923,8 @@ int main(const int _argc, const char* const _argv[]) noexcept {
         }
 
         if (agreed) {
-            debug::log("Response accepted. Tests will begin momentarily.");
-            debug::log("If this was in error, please manually terminate the program.");
+            std::cout << "Response accepted. Tests will begin momentarily.\n"
+                         "If this was in error, please manually terminate the program.\n" << std::flush;
 
             std::this_thread::sleep_for(std::chrono::seconds(10));
             result = test::cli::main(_argc, _argv);
