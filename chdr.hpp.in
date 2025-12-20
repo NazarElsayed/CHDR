@@ -9,6 +9,10 @@
 #ifndef CHDR_COMMON_HPP
 #define CHDR_COMMON_HPP
 
+#ifndef __cplusplus
+#error "<chdr.hpp> is for C++ only."
+#endif
+
 /**
  * @file chdr.hpp
  *

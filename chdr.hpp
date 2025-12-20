@@ -9,6 +9,10 @@
 #ifndef CHDR_COMMON_HPP
 #define CHDR_COMMON_HPP
 
+#ifndef __cplusplus
+#error "<chdr.hpp> is for C++ only."
+#endif
+
 /**
  * @file chdr.hpp
  *
@@ -22,7 +26,7 @@
  */
 
 /** @brief Full version string of the CHDR library. */
-#define CHDR_VERSION          "0.1.0-dev+5b56d2ae"
+#define CHDR_VERSION          "0.1.0-dev+d121e25a"
 
 /** @brief CHDR major version number. */
 #define CHDR_VERSION_MAJOR     0
@@ -37,7 +41,7 @@
 #define CHDR_VERSION_TWEAK    "dev"
 
 /** @brief CHDR version metadata string. */
-#define CHDR_VERSION_METADATA "5b56d2ae"
+#define CHDR_VERSION_METADATA "d121e25a"
 
 /** @brief Flag indicating whether or not diagnostics should be output by the library (0 = off, 1 = on). */
 #ifndef CHDR_DIAGNOSTICS
