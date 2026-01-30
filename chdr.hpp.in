@@ -41,7 +41,7 @@
 
 /** @brief Flag indicating whether or not diagnostics should be output by the library (0 = off, 1 = on). */
 #ifndef CHDR_DIAGNOSTICS
-#define CHDR_DIAGNOSTICS 0
+#define CHDR_DIAGNOSTICS 1 // Memory diagnostics on by default when benchmarking.
 #endif //CHDR_DIAGNOSTICS
 
 /* ReSharper enable CppUnusedIncludeDirective */
