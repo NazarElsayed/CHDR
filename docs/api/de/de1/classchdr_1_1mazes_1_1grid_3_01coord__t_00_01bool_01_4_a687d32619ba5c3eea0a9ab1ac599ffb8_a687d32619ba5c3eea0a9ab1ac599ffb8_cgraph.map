@@ -1,7 +1,10 @@
 <map id="get_neighbours" name="get_neighbours">
-<area shape="rect" id="Node000001" title="Retrieves the neighbours of a node within the grid." alt="" coords="5,29,101,52"/>
-<area shape="rect" id="Node000002" href="$dd/de3/classchdr_1_1mazes_1_1grid_a32d34adb7833cb15aa705c6c7ada57a8.html#a32d34adb7833cb15aa705c6c7ada57a8" title="Retrieves the size of the grid." alt="" coords="149,5,277,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,31,135,26,136,31,102,36"/>
-<area shape="rect" id="Node000003" href="$d2/dcb/structchdr_1_1utils_aa56b3789fceb847816a4fef606f80dfb.html#aa56b3789fceb847816a4fef606f80dfb" title="Maps a one&#45;dimensional index to a multidimensional coordinate representation." alt="" coords="163,52,263,75"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="102,45,150,52,149,57,101,50"/>
+<area shape="rect" id="Node000001" title="Retrieves the neighbours of a node within the grid." alt="" coords="5,76,101,99"/>
+<area shape="rect" id="Node000002" href="$dd/de3/classchdr_1_1mazes_1_1grid_a0abdfb4af71cccf812fb2b7150f0cc72.html#a0abdfb4af71cccf812fb2b7150f0cc72" title="Retrieves the neighbours of a node within the grid." alt="" coords="149,29,333,52"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,73,149,61,181,53,182,58,150,66,100,79"/>
+<area shape="rect" id="Node000003" href="$dd/de3/classchdr_1_1mazes_1_1grid_a32d34adb7833cb15aa705c6c7ada57a8.html#a32d34adb7833cb15aa705c6c7ada57a8" title="Retrieves the size of the grid." alt="" coords="177,76,305,99"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="101,85,164,85,164,90,101,90"/>
+<area shape="rect" id="Node000004" href="$d2/dcb/structchdr_1_1utils_aa56b3789fceb847816a4fef606f80dfb.html#aa56b3789fceb847816a4fef606f80dfb" title="Maps a one&#45;dimensional index to a multidimensional coordinate representation." alt="" coords="191,123,291,145"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="101,96,182,117,181,122,99,101"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="211,31,204,21,207,11,220,5,241,3,268,6,278,16,274,20,266,11,241,8,221,10,211,15,209,20,216,27"/>
 </map>

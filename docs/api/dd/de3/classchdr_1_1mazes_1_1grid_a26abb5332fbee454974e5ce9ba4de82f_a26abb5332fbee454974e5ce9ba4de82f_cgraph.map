@@ -1,5 +1,8 @@
 <map id="is_transitory" name="is_transitory">
-<area shape="rect" id="Node000001" title="Determines whether a cell is transitory based on its neighbours." alt="" coords="5,5,84,28"/>
-<area shape="rect" id="Node000002" href="$dd/de3/classchdr_1_1mazes_1_1grid_ad6077e456dd6abb62d82087b55dc2331.html#ad6077e456dd6abb62d82087b55dc2331" title="Retrieves the total count of elements in the grid." alt="" coords="132,5,180,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,14,118,14,118,19,84,19"/>
+<area shape="rect" id="Node000001" title="Determines whether a cell is transitory based on its neighbours." alt="" coords="5,41,84,64"/>
+<area shape="rect" id="Node000002" href="$dd/de3/classchdr_1_1mazes_1_1grid_ad6077e456dd6abb62d82087b55dc2331.html#ad6077e456dd6abb62d82087b55dc2331" title="Retrieves the total count of elements in the grid." alt="" coords="156,5,204,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,40,142,24,143,29,85,45"/>
+<area shape="rect" id="Node000003" href="$dd/de3/classchdr_1_1mazes_1_1grid_a0abdfb4af71cccf812fb2b7150f0cc72.html#a0abdfb4af71cccf812fb2b7150f0cc72" title="Retrieves the neighbours of a node within the grid." alt="" coords="132,76,228,99"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="85,60,123,70,121,75,83,65"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="158,77,153,68,155,58,164,52,180,49,199,53,207,61,203,65,196,58,180,55,166,57,159,61,158,67,162,74"/>
 </map>

@@ -1,8 +1,12 @@
 <map id="operator[]" name="operator[]">
-<area shape="rect" id="Node000001" title="Retrieves the node at a specified index." alt="" coords="5,29,75,52"/>
-<area shape="rect" id="Node000002" href="$dd/de3/classchdr_1_1mazes_1_1grid_ad8b85d86fc073f5557471a856975a9a2.html#ad8b85d86fc073f5557471a856975a9a2" title="Retrieves the node at a specified coordinate." alt="" coords="123,29,192,52"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="75,38,109,38,109,43,75,43"/>
-<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="137,30,133,21,135,12,143,5,157,3,174,6,181,14,177,18,171,11,157,8,145,10,139,14,138,20,142,28"/>
-<area shape="rect" id="Node000003" href="$d2/dcb/structchdr_1_1utils_a5741e93a4c4f5630e7c86bda862cf611.html#a5741e93a4c4f5630e7c86bda862cf611" title="Maps a multidimensional index to a one&#45;dimensional array index." alt="" coords="240,29,340,52"/>
-<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="192,38,226,38,226,43,192,43"/>
+<area shape="rect" id="Node000001" title="Retrieves the node at a specified index." alt="" coords="5,53,75,76"/>
+<area shape="rect" id="Node000002" href="$dd/de3/classchdr_1_1mazes_1_1grid_a0abdfb4af71cccf812fb2b7150f0cc72.html#a0abdfb4af71cccf812fb2b7150f0cc72" title="Retrieves the neighbours of a node within the grid." alt="" coords="242,29,338,52"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="75,56,122,50,228,41,228,47,123,55,75,62"/>
+<area shape="rect" id="Node000003" href="$dd/de3/classchdr_1_1mazes_1_1grid_ad8b85d86fc073f5557471a856975a9a2.html#ad8b85d86fc073f5557471a856975a9a2" title="Retrieves the node at a specified coordinate." alt="" coords="123,89,192,112"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="76,73,110,83,109,89,74,78"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="268,30,263,21,265,11,274,5,290,3,309,6,316,15,312,18,306,11,290,8,276,10,270,14,268,20,273,28"/>
+<area shape="poly" id="edge4_Node000003_Node000002" title=" " alt="" coords="183,87,250,56,252,60,185,92"/>
+<area shape="poly" id="edge5_Node000003_Node000003" title=" " alt="" coords="137,90,133,81,135,72,143,65,157,63,174,66,181,74,177,78,171,71,157,68,145,70,139,74,138,80,142,88"/>
+<area shape="rect" id="Node000004" href="$d2/dcb/structchdr_1_1utils_a5741e93a4c4f5630e7c86bda862cf611.html#a5741e93a4c4f5630e7c86bda862cf611" title="Maps a multidimensional index to a one&#45;dimensional array index." alt="" coords="240,89,340,112"/>
+<area shape="poly" id="edge6_Node000003_Node000004" title=" " alt="" coords="192,98,226,98,226,103,192,103"/>
 </map>

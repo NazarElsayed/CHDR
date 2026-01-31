@@ -1,5 +1,8 @@
 <map id="contains" name="contains">
-<area shape="rect" id="Node000001" title="Retrieves the node at a specified index." alt="" coords="5,5,67,28"/>
-<area shape="rect" id="Node000002" href="$dd/de3/classchdr_1_1mazes_1_1grid_ad6077e456dd6abb62d82087b55dc2331.html#ad6077e456dd6abb62d82087b55dc2331" title="Retrieves the total count of elements in the grid." alt="" coords="115,5,251,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="67,14,101,14,101,19,67,19"/>
+<area shape="rect" id="Node000001" title="Retrieves the node at a specified index." alt="" coords="5,41,67,64"/>
+<area shape="rect" id="Node000002" href="$dd/de3/classchdr_1_1mazes_1_1grid_ad6077e456dd6abb62d82087b55dc2331.html#ad6077e456dd6abb62d82087b55dc2331" title="Retrieves the total count of elements in the grid." alt="" coords="139,5,275,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="66,44,138,28,140,33,68,49"/>
+<area shape="rect" id="Node000003" href="$dd/de3/classchdr_1_1mazes_1_1grid_a0abdfb4af71cccf812fb2b7150f0cc72.html#a0abdfb4af71cccf812fb2b7150f0cc72" title="Retrieves the neighbours of a node within the grid." alt="" coords="115,76,299,99"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="68,56,137,71,136,76,66,61"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="179,77,172,68,175,58,187,52,207,49,231,53,240,62,237,66,228,58,207,55,188,57,179,61,178,67,183,74"/>
 </map>

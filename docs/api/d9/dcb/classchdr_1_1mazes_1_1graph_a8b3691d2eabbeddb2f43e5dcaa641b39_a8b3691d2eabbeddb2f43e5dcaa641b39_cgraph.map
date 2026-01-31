@@ -1,5 +1,10 @@
 <map id="operator[]" name="operator[]">
-<area shape="rect" id="Node000001" title="Retrieves the vertex at a specified index." alt="" coords="5,5,75,28"/>
-<area shape="rect" id="Node000002" href="$d9/dcb/classchdr_1_1mazes_1_1graph_ab276ef23dd28f7f3f6a804f7a958141d.html#ab276ef23dd28f7f3f6a804f7a958141d" title=" " alt="" coords="123,5,184,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="75,14,109,14,109,19,75,19"/>
+<area shape="rect" id="Node000001" title="Retrieves the vertex at a specified index." alt="" coords="5,55,75,77"/>
+<area shape="rect" id="Node000002" href="$d9/dcb/classchdr_1_1mazes_1_1graph_ab276ef23dd28f7f3f6a804f7a958141d.html#ab276ef23dd28f7f3f6a804f7a958141d" title=" " alt="" coords="123,29,184,52"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="75,56,109,48,110,53,76,61"/>
+<area shape="rect" id="Node000003" href="$d9/dcb/classchdr_1_1mazes_1_1graph_abe2a6e079551372e0ed654c8f6562002.html#abe2a6e079551372e0ed654c8f6562002" title=" " alt="" coords="232,29,328,52"/>
+<area shape="poly" id="edge5_Node000001_Node000003" title=" " alt="" coords="75,65,126,65,184,61,226,53,227,58,184,66,127,70,75,70"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="184,46,218,47,218,52,184,51"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="232,35,197,35,197,29,232,29"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="259,30,254,21,256,12,265,5,280,3,298,6,305,14,301,18,295,11,280,8,267,10,260,14,259,20,264,28"/>
 </map>

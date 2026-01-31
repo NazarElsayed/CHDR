@@ -1,6 +1,12 @@
 <map id="prune" name="prune">
-<area shape="rect" id="Node000001" title="Prunes the graph of transitory nodes." alt="" coords="5,29,56,52"/>
-<area shape="rect" id="Node000002" href="$d7/d65/intrinsics_8hpp_a2d6187f2cbd7367ae341413476f8ba92.html#a2d6187f2cbd7367ae341413476f8ba92" title="Forces heap defragmentation and consolidation by the internal memory allocator." alt="" coords="104,29,243,52"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="56,38,90,38,90,43,56,43"/>
-<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="150,30,144,21,147,11,157,5,173,3,193,6,202,15,198,18,191,11,173,8,158,10,151,15,150,20,155,28"/>
+<area shape="rect" id="Node000001" title="Prunes the graph of transitory nodes." alt="" coords="5,65,56,88"/>
+<area shape="rect" id="Node000002" href="$d9/dcb/classchdr_1_1mazes_1_1graph_abe2a6e079551372e0ed654c8f6562002.html#abe2a6e079551372e0ed654c8f6562002" title=" " alt="" coords="125,29,221,52"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="56,68,114,53,115,58,57,73"/>
+<area shape="rect" id="Node000004" href="$d7/d65/intrinsics_8hpp_a2d6187f2cbd7367ae341413476f8ba92.html#a2d6187f2cbd7367ae341413476f8ba92" title="Forces heap defragmentation and consolidation by the internal memory allocator." alt="" coords="104,100,243,123"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="57,80,113,94,112,99,56,85"/>
+<area shape="poly" id="edge4_Node000002_Node000002" title=" " alt="" coords="150,30,144,21,147,11,157,5,173,3,193,6,202,15,198,18,191,11,173,8,158,10,151,15,150,20,155,28"/>
+<area shape="rect" id="Node000003" href="$d9/dcb/classchdr_1_1mazes_1_1graph_ab276ef23dd28f7f3f6a804f7a958141d.html#ab276ef23dd28f7f3f6a804f7a958141d" title=" " alt="" coords="291,29,352,52"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="221,46,277,46,277,52,221,52"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="291,36,235,34,235,29,291,31"/>
+<area shape="poly" id="edge6_Node000004_Node000004" title=" " alt="" coords="150,101,144,92,147,82,157,76,173,73,193,77,202,85,198,89,191,82,173,79,158,81,151,85,150,91,155,98"/>
 </map>

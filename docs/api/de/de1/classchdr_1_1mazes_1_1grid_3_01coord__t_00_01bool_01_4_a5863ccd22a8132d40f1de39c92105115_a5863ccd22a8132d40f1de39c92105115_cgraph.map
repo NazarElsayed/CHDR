@@ -1,5 +1,9 @@
 <map id="operator[]" name="operator[]">
-<area shape="rect" id="Node000001" title="Retrieves the node at a specified index." alt="" coords="5,5,75,28"/>
+<area shape="rect" id="Node000001" title="Retrieves the node at a specified index." alt="" coords="5,31,75,53"/>
 <area shape="rect" id="Node000002" href="$dd/de3/classchdr_1_1mazes_1_1grid_a46e18201c09becda23eeaa0290ff1a21.html#a46e18201c09becda23eeaa0290ff1a21" title="Determines whether the provided coordinate is within the bounds of the grid." alt="" coords="123,5,272,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="75,14,109,14,109,19,75,19"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,34,112,28,113,33,75,39"/>
+<area shape="rect" id="Node000003" href="$dd/de3/classchdr_1_1mazes_1_1grid_a0abdfb4af71cccf812fb2b7150f0cc72.html#a0abdfb4af71cccf812fb2b7150f0cc72" title="Retrieves the neighbours of a node within the grid." alt="" coords="320,31,504,53"/>
+<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="75,39,306,39,306,45,75,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="273,23,307,27,306,32,272,28"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="378,32,370,22,373,12,388,6,412,4,443,8,451,13,454,19,450,21,448,17,441,13,412,9,389,11,377,16,375,21,382,29"/>
 </map>

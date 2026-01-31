@@ -1,22 +1,19 @@
 <map id="count" name="count">
-<area shape="rect" id="Node000001" title="Retrieves the total count of elements in the grid." alt="" coords="496,198,544,221"/>
-<area shape="rect" id="Node000002" href="$d9/dcb/classchdr_1_1mazes_1_1graph_a5ca1351a03df5ff49f85cc4b5669cefc.html#a5ca1351a03df5ff49f85cc4b5669cefc" title="Constructs a graph instance from a grid structure." alt="" coords="5,174,153,197"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="514,185,507,152,495,114,476,77,462,61,446,48,414,29,384,16,356,10,328,8,300,12,270,20,203,48,162,75,129,111,104,147,89,175,84,173,100,144,125,108,159,71,200,43,268,15,299,7,328,3,356,4,386,11,416,24,450,43,466,57,480,74,500,112,513,151,519,184"/>
-<area shape="rect" id="Node000003" href="$dd/de3/classchdr_1_1mazes_1_1grid_ab00c46b30252de392da24ac2192e6d0c.html#ab00c46b30252de392da24ac2192e6d0c" title="Determines whether the given identifier is within the bounds of the grid." alt="" coords="294,58,355,81"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="508,186,486,138,468,114,446,94,425,83,401,76,355,71,356,66,402,71,427,78,450,90,472,111,490,136,513,184"/>
-<area shape="rect" id="Node000004" href="$de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_ab00c46b30252de392da24ac2192e6d0c.html#ab00c46b30252de392da24ac2192e6d0c" title="Retrieves the node at a specified index." alt="" coords="210,105,439,128"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="500,189,477,163,447,141,419,130,421,125,449,137,480,159,504,185"/>
-<area shape="rect" id="Node000005" href="$dd/de3/classchdr_1_1mazes_1_1grid_aa4c65b07bb99339e36866bae671d47f6.html#aa4c65b07bb99339e36866bae671d47f6" title="Determines whether the given identifier is within the bounds of the grid." alt="" coords="294,152,355,174"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="482,199,447,188,355,170,356,164,449,183,483,194"/>
-<area shape="rect" id="Node000006" href="$de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_aa4c65b07bb99339e36866bae671d47f6.html#aa4c65b07bb99339e36866bae671d47f6" title="Determines whether the given identifier is within the bounds of the grid." alt="" coords="210,198,439,221"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="482,212,440,212,440,207,482,207"/>
-<area shape="rect" id="Node000007" href="$dd/de3/classchdr_1_1mazes_1_1grid_a26abb5332fbee454974e5ce9ba4de82f.html#a26abb5332fbee454974e5ce9ba4de82f" title="Determines whether a cell is transitory based on its neighbours." alt="" coords="285,245,364,268"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="484,224,449,235,365,252,364,247,447,230,482,219"/>
-<area shape="rect" id="Node000008" href="$de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_a26abb5332fbee454974e5ce9ba4de82f.html#a26abb5332fbee454974e5ce9ba4de82f" title="Determines whether a cell is transitory based on its neighbours." alt="" coords="201,292,448,314"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="504,234,480,259,449,281,417,294,415,289,447,277,476,255,500,230"/>
-<area shape="rect" id="Node000009" href="$dd/de3/classchdr_1_1mazes_1_1grid_a264c48c1d975bf357e96edcb92331ad2.html#a264c48c1d975bf357e96edcb92331ad2" title="Determines whether a cell at the given index is transitory." alt="" coords="285,338,364,361"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="513,235,490,283,472,307,450,328,429,339,407,346,365,352,364,347,406,341,427,334,446,323,468,304,485,280,508,233"/>
-<area shape="rect" id="Node000010" href="$de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_a264c48c1d975bf357e96edcb92331ad2.html#a264c48c1d975bf357e96edcb92331ad2" title="Determines whether a cell at the given index is transitory." alt="" coords="201,385,448,408"/>
-<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="518,235,511,267,498,305,478,343,450,374,428,387,425,383,446,370,474,340,493,303,505,266,513,234"/>
-<area shape="poly" id="edge9_Node000009_Node000002" title=" " alt="" coords="271,350,235,342,200,328,160,298,127,261,85,199,89,196,131,258,164,294,203,323,237,337,272,344"/>
+<area shape="rect" id="Node000001" title="Retrieves the total count of elements in the grid." alt="" coords="300,169,348,192"/>
+<area shape="rect" id="Node000002" href="$dd/de3/classchdr_1_1mazes_1_1grid_ab00c46b30252de392da24ac2192e6d0c.html#ab00c46b30252de392da24ac2192e6d0c" title="Determines whether the given identifier is within the bounds of the grid." alt="" coords="98,5,159,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="315,157,294,98,275,67,250,41,229,30,205,22,159,18,160,12,206,17,231,25,254,37,279,64,298,95,320,155"/>
+<area shape="rect" id="Node000003" href="$de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_ab00c46b30252de392da24ac2192e6d0c.html#ab00c46b30252de392da24ac2192e6d0c" title="Retrieves the node at a specified index." alt="" coords="14,52,243,75"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="309,158,286,121,269,103,251,88,227,77,230,72,253,84,273,99,290,118,314,155"/>
+<area shape="rect" id="Node000004" href="$dd/de3/classchdr_1_1mazes_1_1grid_aa4c65b07bb99339e36866bae671d47f6.html#aa4c65b07bb99339e36866bae671d47f6" title="Determines whether the given identifier is within the bounds of the grid." alt="" coords="98,99,159,121"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="297,163,275,148,251,135,203,121,159,115,160,109,205,116,253,130,278,143,300,159"/>
+<area shape="rect" id="Node000005" href="$de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_aa4c65b07bb99339e36866bae671d47f6.html#aa4c65b07bb99339e36866bae671d47f6" title="Determines whether the given identifier is within the bounds of the grid." alt="" coords="14,145,243,168"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="286,179,221,171,221,165,286,173"/>
+<area shape="rect" id="Node000006" href="$dd/de3/classchdr_1_1mazes_1_1grid_a26abb5332fbee454974e5ce9ba4de82f.html#a26abb5332fbee454974e5ce9ba4de82f" title="Determines whether a cell is transitory based on its neighbours." alt="" coords="89,192,168,215"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="287,188,168,202,168,196,286,182"/>
+<area shape="rect" id="Node000007" href="$de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_a26abb5332fbee454974e5ce9ba4de82f.html#a26abb5332fbee454974e5ce9ba4de82f" title="Determines whether a cell is transitory based on its neighbours." alt="" coords="5,239,252,261"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="299,202,253,228,211,241,210,236,251,224,296,198"/>
+<area shape="rect" id="Node000008" href="$dd/de3/classchdr_1_1mazes_1_1grid_a264c48c1d975bf357e96edcb92331ad2.html#a264c48c1d975bf357e96edcb92331ad2" title="Determines whether a cell at the given index is transitory." alt="" coords="89,285,168,308"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="313,206,289,242,273,260,253,275,211,292,169,299,168,293,210,287,251,270,269,256,285,239,309,203"/>
+<area shape="rect" id="Node000009" href="$de/de1/classchdr_1_1mazes_1_1grid_3_01coord__t_00_01bool_01_4_a264c48c1d975bf357e96edcb92331ad2.html#a264c48c1d975bf357e96edcb92331ad2" title="Determines whether a cell at the given index is transitory." alt="" coords="5,332,252,355"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="320,206,298,265,279,296,254,321,231,334,229,329,250,317,275,292,293,262,315,204"/>
 </map>

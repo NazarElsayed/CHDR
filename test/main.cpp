@@ -129,7 +129,7 @@ namespace test {
                 min_duration = std::numeric_limits<long double>::max();
 
                 debug::log(e);
-            };
+            }
 
             return std::make_pair(min_duration, path_length);
         }
@@ -720,9 +720,6 @@ namespace test {
                 std::filesystem::create_directories(log_dir);
             }
 
-            size_t tests_completed { 0U };
-            size_t total_tests     { 0U };
-
             constexpr auto log_interval = std::chrono::seconds(3UL);
             auto next_log = std::chrono::high_resolution_clock::now() + log_interval;
 
@@ -771,11 +768,14 @@ namespace test {
 
                 for (size_t i = 0U; i < mazes.size(); ++i) {
                     (void)scenarios.emplace_back(
-                        coord_t {},
-                        mazes[i],
+                        coord_t { 0, 0 },
+                        coord_t { mazes[i][0U] - 1U, mazes[i][1U] - 1U },
                         chdr::heuristics::euclidean_distance<scalar_t>({}, mazes[i])
                     );
                 }
+
+                size_t tests_completed { 0U };
+                size_t total_tests     { tests.size() * scenarios.size() };
 
                 std::ofstream log(log_dir / "empty.log");
                 log << std::fixed << std::setprecision(9)
@@ -826,16 +826,16 @@ namespace test {
                                         perror("pipe");
                                     }
 
-                                    pid_t child_pid = fork();
-                                    if (child_pid == 0) {
-                                        close(pipefd[0]);
+                                    // pid_t child_pid = fork();
+                                    // if (child_pid == 0) {
+                                    //     close(pipefd[0]);
 
                                         auto monotonic     = chdr::monotonic_pool();
                                         auto heterogeneous = chdr::heterogeneous_pool();
                                         auto homogeneous   = chdr::homogeneous_pool();
 
                                         typename generator::gppc::template map<weight_t, coord_t> map;
-                                        map.maze = chdr::mazes::grid<coord_t, weight_t>(scenario.end);
+                                        map.maze = chdr::mazes::grid<coord_t, weight_t>(coord_t { scenario.end[0U] + 1U, scenario.end[1U] + 1U });
 
                                         {
                                             std::stringstream map_name{};
@@ -881,35 +881,33 @@ namespace test {
                                                          homogeneous.__get_diagnostic_data().peak_allocated;
 #endif //CHDR_DIAGNOSTICS == 1
 
-                                        std::cout << data.peak_memory << std::endl;
-
                                         ssize_t bytes_written = write(pipefd[1], &data, sizeof(data));
                                         if (bytes_written == static_cast<ssize_t>(-1)) {
                                             throw std::runtime_error("Failed to read data from pipe: " + std::string(strerror(errno)));
                                         }
-                                        close(pipefd[1]);
-                                        exit(0);
-                                    }
-                                    else if (child_pid > 0) {
-                                        close(pipefd[1]);
-                                        auto future = std::async(std::launch::async, [&]() {
-                                            int status;
-                                            waitpid(child_pid, &status, 0);
-                                            return (WIFEXITED(status) && WEXITSTATUS(status) == 0);
-                                        });
+                                    //     close(pipefd[1]);
+                                    //     exit(0);
+                                    // }
+                                    // else if (child_pid > 0) {
+                                    //     close(pipefd[1]);
+                                        // auto future = std::async(std::launch::async, [&]() {
+                                        //     int status;
+                                        //     waitpid(child_pid, &status, 0);
+                                        //     return (WIFEXITED(status) && WEXITSTATUS(status) == 0);
+                                        // });
 
-                                        if (future.wait_for(timeout) == std::future_status::ready && future.get()) {
-                                            ssize_t bytes_read = read(pipefd[0], &data, sizeof(data));
-                                            if (bytes_read == static_cast<ssize_t>(-1)) {
-                                                throw std::runtime_error("Failed to read data from pipe: " + std::string(strerror(errno)));
-                                            }
-                                        }
-                                        else {
-                                            kill(child_pid, SIGKILL);
-                                        }
-
-                                        close(pipefd[0]);
-                                    }
+                                    //     if (future.wait_for(timeout) == std::future_status::ready && future.get()) {
+                                    //         ssize_t bytes_read = read(pipefd[0], &data, sizeof(data));
+                                    //         if (bytes_read == static_cast<ssize_t>(-1)) {
+                                    //             throw std::runtime_error("Failed to read data from pipe: " + std::string(strerror(errno)));
+                                    //         }
+                                    //     }
+                                    //     else {
+                                    //         kill(child_pid, SIGKILL);
+                                    //     }
+                                    //
+                                    //     close(pipefd[0]);
+                                    // }
                                 }
 
                                 const auto& [duration, length] = data.path_runtime;

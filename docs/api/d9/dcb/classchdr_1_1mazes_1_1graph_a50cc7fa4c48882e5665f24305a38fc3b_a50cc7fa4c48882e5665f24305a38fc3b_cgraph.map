@@ -1,5 +1,10 @@
 <map id="remove" name="remove">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,64,28"/>
-<area shape="rect" id="Node000002" href="$d9/dcb/classchdr_1_1mazes_1_1graph_ab276ef23dd28f7f3f6a804f7a958141d.html#ab276ef23dd28f7f3f6a804f7a958141d" title=" " alt="" coords="112,5,173,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="64,14,98,14,98,19,64,19"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,55,64,77"/>
+<area shape="rect" id="Node000002" href="$d9/dcb/classchdr_1_1mazes_1_1graph_ab276ef23dd28f7f3f6a804f7a958141d.html#ab276ef23dd28f7f3f6a804f7a958141d" title=" " alt="" coords="112,29,173,52"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="64,57,98,48,99,54,65,62"/>
+<area shape="rect" id="Node000003" href="$d9/dcb/classchdr_1_1mazes_1_1graph_abe2a6e079551372e0ed654c8f6562002.html#abe2a6e079551372e0ed654c8f6562002" title=" " alt="" coords="221,29,317,52"/>
+<area shape="poly" id="edge5_Node000001_Node000003" title=" " alt="" coords="64,65,115,65,173,61,215,53,216,58,174,66,115,70,64,70"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="173,46,207,47,207,52,173,51"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="221,35,187,35,187,29,221,29"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="248,30,243,21,245,12,254,5,269,3,287,6,295,14,291,18,284,11,269,8,256,10,250,14,249,20,253,28"/>
 </map>

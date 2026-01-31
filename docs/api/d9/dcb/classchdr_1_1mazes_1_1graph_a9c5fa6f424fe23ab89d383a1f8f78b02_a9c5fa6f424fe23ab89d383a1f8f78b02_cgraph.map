@@ -1,5 +1,12 @@
 <map id="graph" name="graph">
-<area shape="rect" id="Node000001" title="Constructs a graph instance from an adjacency list." alt="" coords="5,5,56,28"/>
+<area shape="rect" id="Node000001" title="Constructs a graph instance from an adjacency list." alt="" coords="5,31,56,53"/>
 <area shape="rect" id="Node000002" href="$d9/dcb/classchdr_1_1mazes_1_1graph_ab41a4e064828273b133921f8d05a7540.html#ab41a4e064828273b133921f8d05a7540" title="Adds a new vertex to the graph with the specified identifier." alt="" coords="104,5,144,28"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="56,14,90,14,90,19,56,19"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="56,33,90,23,91,28,57,38"/>
+<area shape="rect" id="Node000003" href="$d9/dcb/classchdr_1_1mazes_1_1graph_abe2a6e079551372e0ed654c8f6562002.html#abe2a6e079551372e0ed654c8f6562002" title=" " alt="" coords="192,31,288,53"/>
+<area shape="poly" id="edge6_Node000001_Node000003" title=" " alt="" coords="56,39,178,39,178,45,56,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="145,18,179,26,178,31,143,23"/>
+<area shape="poly" id="edge5_Node000003_Node000003" title=" " alt="" coords="221,32,216,22,218,13,226,6,240,4,256,7,263,16,259,19,253,12,240,9,228,11,222,16,221,22,225,29"/>
+<area shape="rect" id="Node000004" href="$d9/dcb/classchdr_1_1mazes_1_1graph_ab276ef23dd28f7f3f6a804f7a958141d.html#ab276ef23dd28f7f3f6a804f7a958141d" title=" " alt="" coords="336,31,397,53"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="288,48,322,48,322,53,288,53"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="336,37,302,36,302,30,336,32"/>
 </map>
